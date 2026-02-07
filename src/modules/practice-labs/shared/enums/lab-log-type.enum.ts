@@ -1,0 +1,6 @@
+export enum LabLogType {
+  PAYMENT = 'PAYMENT',
+  COUPON = 'COUPON',
+  AUTH_ATTEMPT = 'AUTH_ATTEMPT',
+  FILE_ACTION = 'FILE_ACTION',
+}
