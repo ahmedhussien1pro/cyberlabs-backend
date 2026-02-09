@@ -19,18 +19,36 @@ export class MailService {
   ) {
     this.logger.setContext('MailService');
 
-    // ✅ أضف logging للـ config values
-    const appEnv = this.configService.get('app.env');
-    this.logger.log(`🔍 Current environment: ${appEnv}`); // ✅ Debug log
+    // ✅ Get environment
+    const appEnv = this.configService.get<string>('app.env');
+    this.logger.log(`🔍 Environment: ${appEnv}`);
 
-    this.isDevelopment = appEnv === 'development';
+    // ✅ Check credentials
+    const mailUsername = this.configService.get<string>('mail.username');
+    const mailPassword = this.configService.get<string>('mail.password');
+
+    this.logger.log(
+      `📧 Mail Username: ${mailUsername ? '✅ Found' : '❌ Missing'}`,
+    );
+    this.logger.log(
+      `🔐 Mail Password: ${mailPassword ? '✅ Found' : '❌ Missing'}`,
+    );
+
+    // ✅ Determine mode
+    if (!mailUsername || !mailPassword || appEnv === 'development') {
+      this.isDevelopment = true;
+      this.logger.warn('⚠️ Running in DEVELOPMENT mode (console logging only)');
+    } else {
+      this.isDevelopment = false;
+    }
+
     this.MAIL_BANNER_PATH = path.join(__dirname, 'assets', 'mail_photo.png');
     this.initializeTransporter();
   }
 
   private initializeTransporter() {
     if (this.isDevelopment) {
-      // Development mode - just log emails
+      // Development mode - console logging
       this.transporter = nodemailer.createTransport({
         streamTransport: true,
         newline: 'unix',
@@ -39,19 +57,19 @@ export class MailService {
       this.logger.log('📧 Mail service initialized in DEVELOPMENT mode');
     } else {
       // Production mode - Gmail SMTP
-      const mailUsername = this.configService.get('mail.username'); // ✅ Debug
-      const mailFromName = this.configService.get('mail.fromName'); // ✅ Debug
-
-      this.logger.log(`📧 Initializing mail service for: ${mailUsername}`); // ✅ Debug log
+      const mailUsername = this.configService.get<string>('mail.username');
+      const mailPassword = this.configService.get<string>('mail.password');
 
       this.transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
           user: mailUsername,
-          pass: this.configService.get('mail.password'),
+          pass: mailPassword,
         },
       });
-      this.logger.log('📧 Mail service initialized in PRODUCTION mode');
+      this.logger.log(
+        `📧 Mail service initialized in PRODUCTION mode for: ${mailUsername}`,
+      );
     }
   }
 
@@ -74,8 +92,11 @@ export class MailService {
     html: string;
   }): Promise<void> {
     const bannerAttachment = this.buildBannerAttachment();
+    const fromName = this.configService.get<string>('mail.fromName');
+    const fromAddress = this.configService.get<string>('mail.fromAddress');
+
     const mailOptions = {
-      from: `"${this.configService.get('mail.fromName')}" <${this.configService.get('mail.fromAddress')}>`,
+      from: `"${fromName}" <${fromAddress}>`,
       to: options.to,
       subject: options.subject,
       html: options.html,
@@ -122,7 +143,6 @@ export class MailService {
    * Send OTP Email for Verification
    */
   async sendOTPEmail(email: string, name: string, otp: string): Promise<void> {
-    // ✅ أضف logging
     this.logger.log(`📤 Preparing to send OTP to: ${email}`);
 
     const bannerAttachment = this.buildBannerAttachment();

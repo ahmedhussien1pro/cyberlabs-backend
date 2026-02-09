@@ -27,15 +27,17 @@ export class EmailVerificationService {
 
   /**
    * Send OTP verification email
+   * ✅ CRITICAL: ValidationNumber is created FIRST, then email is attempted
    */
   async sendVerificationEmail(userId: string, email: string): Promise<void> {
     // Generate OTP
     const otp = this.generateOTP();
     const expirationTime = Date.now() + 10 * 60 * 1000; // 10 minutes
 
-    // ✅ Step 1: Create ValidationNumber first (this MUST succeed)
+    // ✅ STEP 1: Create ValidationNumber FIRST (this MUST succeed)
+    // This ensures OTP exists in DB even if email fails
     try {
-      // Delete old validation number for this user
+      // Delete old validation numbers for this user
       await this.prisma.validationNumber.deleteMany({
         where: { userId },
       });
@@ -51,39 +53,50 @@ export class EmailVerificationService {
         },
       });
 
-      this.logger.log(`✅ ValidationNumber created for user: ${userId}`);
+      this.logger.log(
+        `✅ ValidationNumber created successfully for user: ${userId}, OTP: ${otp}`,
+      );
     } catch (error) {
       this.logger.error(
-        `❌ Failed to create ValidationNumber: ${error.message}`,
+        `❌ CRITICAL: Failed to create ValidationNumber for user ${userId}: ${error.message}`,
+        error.stack,
       );
-      throw error; // This should fail registration if DB fails
+      // This MUST fail registration - can't proceed without ValidationNumber
+      throw new Error('Failed to create verification code. Please try again.');
     }
 
-    // ✅ Step 2: Send email (can fail without breaking registration)
+    // ✅ STEP 2: Get user details
+    let userName = 'User'; // Default fallback
     try {
-      // Get user name
       const user = await this.prisma.user.findUnique({
         where: { id: userId },
         select: { name: true },
       });
 
-      if (!user) {
-        throw new NotFoundException('User not found');
+      if (user && user.name) {
+        userName = user.name;
       }
-
-      // Send email with OTP
-      await this.mailService.sendOTPEmail(email, user.name, otp);
-
-      this.logger.log(`✅ OTP email sent to ${email}`);
     } catch (error) {
-      // ⚠️ Log but don't throw - ValidationNumber already created
+      this.logger.warn(
+        `⚠️ Could not fetch user name for ${userId}, using default`,
+      );
+    }
+
+    // ✅ STEP 3: Try to send email (can fail without breaking registration)
+    try {
+      await this.mailService.sendOTPEmail(email, userName, otp);
+      this.logger.log(`✅ OTP email sent successfully to ${email}`);
+    } catch (error) {
+      // ⚠️ Email failed but ValidationNumber already exists
       this.logger.error(
         `❌ Failed to send OTP email to ${email}: ${error.message}`,
+        error.stack,
       );
       this.logger.warn(
-        `⚠️ ValidationNumber created but email not sent. User can request resend.`,
+        `⚠️ ValidationNumber exists in DB but email not sent. User can use resend endpoint.`,
       );
-      // Don't throw - let registration succeed
+      // ✅ DON'T throw - ValidationNumber already created successfully
+      // User can request resend later via /resend-verification endpoint
     }
   }
 
@@ -144,12 +157,15 @@ export class EmailVerificationService {
     // Try to send welcome email (non-critical)
     try {
       await this.mailService.sendWelcomeEmail(email, user.name);
+      this.logger.log(`✅ Welcome email sent to ${email}`);
     } catch (error) {
-      this.logger.error(`❌ Failed to send welcome email: ${error.message}`);
+      this.logger.error(
+        `❌ Failed to send welcome email to ${email}: ${error.message}`,
+      );
       // Don't fail verification if welcome email fails
     }
 
-    this.logger.log(`✅ Email verified for user: ${email}`);
+    this.logger.log(`✅ Email verified successfully for user: ${email}`);
   }
 
   /**

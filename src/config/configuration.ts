@@ -1,8 +1,8 @@
 export default () => ({
   app: {
     name: process.env.APP_NAME || 'CyberLabs Backend',
-    env: process.env.NODE_ENV || 'development',
-    port: parseInt(process.env.PORT || '3000', 10),
+    env: process.env.NODE_ENV || 'production',
+    port: parseInt(process.env.PORT || '8080', 10),
     apiPrefix: `${process.env.API_PREFIX}/${process.env.API_VERSION}`,
     url: process.env.APP_URL,
     frontendUrl: process.env.FRONTEND_URL,
@@ -42,13 +42,13 @@ export default () => ({
     encryptionIvLength: parseInt(process.env.ENCRYPTION_IV_LENGTH || '16', 10),
   },
 
-  email: {
+  mail: {
     host: process.env.MAIL_HOST || 'smtp.gmail.com',
     port: parseInt(process.env.MAIL_PORT || '587', 10),
     secure: false,
     username: process.env.MAIL_USERNAME,
     password: process.env.MAIL_PASSWORD,
-    from: process.env.MAIL_FROM_ADDRESS,
+    fromAddress: process.env.MAIL_FROM_ADDRESS,
     fromName: process.env.MAIL_FROM_NAME || 'CyberLabs',
   },
 
