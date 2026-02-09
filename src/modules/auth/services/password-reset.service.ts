@@ -2,21 +2,20 @@ import {
   Injectable,
   BadRequestException,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { PrismaService } from '../../../core/database';
 import { LoggerService } from '../../../core/logger';
-import { HashingService } from '../../../core/security';
-import { JwtTokenService } from './jwt.service';
-import { ConfigService } from '@nestjs/config';
+import { MailService } from '../../../core/mail';
+import * as bcrypt from 'bcrypt';
+import { randomBytes } from 'crypto';
 
 @Injectable()
 export class PasswordResetService {
   constructor(
     private prisma: PrismaService,
-    private jwtService: JwtTokenService,
-    private hashingService: HashingService,
     private logger: LoggerService,
-    private configService: ConfigService,
+    private mailService: MailService,
   ) {
     this.logger.setContext('PasswordResetService');
   }
@@ -30,64 +29,88 @@ export class PasswordResetService {
     });
 
     if (!user) {
-      // Don't reveal if user exists
+      // Don't reveal if user exists (security best practice)
       this.logger.warn(
         `Password reset requested for non-existent email: ${email}`,
       );
       return;
     }
 
-    // Generate reset token
-    const token = this.jwtService.generatePasswordResetToken(user.id, email);
+    // Generate token
+    const token = randomBytes(32).toString('hex'); // 🎯 استخدم randomBytes مباشرة
+    const expiresAt = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
 
-    // Create reset URL
-    const frontendUrl =
-      this.configService.get<string>('app.frontendUrl') ||
-      'http://localhost:5173';
-    const resetUrl = `${frontendUrl}/reset-password?token=${token}`;
+    // Delete old reset tokens for this user
+    await this.prisma.passwordResetToken.deleteMany({
+      where: { userId: user.id },
+    });
 
-    // TODO: Send email using mail service
-    this.logger.log(`Password reset URL for ${email}: ${resetUrl}`);
+    // Save new token
+    await this.prisma.passwordResetToken.create({
+      data: {
+        userId: user.id,
+        token,
+        expiresAt,
+      },
+    });
 
-    // In production:
-    // await this.mailService.sendPasswordResetEmail(email, resetUrl);
+    // Send email
+    await this.mailService.sendPasswordResetEmail(user.email, user.name, token);
+
+    this.logger.log(`✅ Password reset email sent to ${email}`);
   }
 
   /**
    * Reset password with token
    */
   async resetPassword(token: string, newPassword: string): Promise<void> {
-    try {
-      // Verify token
-      const payload = this.jwtService.verifyPasswordResetToken(token);
+    const resetToken = await this.prisma.passwordResetToken.findUnique({
+      where: { token },
+      include: { user: true },
+    });
 
-      // Get user
-      const user = await this.prisma.user.findUnique({
-        where: { id: payload.sub },
-      });
-
-      if (!user) {
-        throw new NotFoundException('User not found');
-      }
-
-      // Hash new password
-      const hashedPassword = await this.hashingService.hash(newPassword);
-
-      // Update password
-      await this.prisma.user.update({
-        where: { id: user.id },
-        data: { password: hashedPassword },
-      });
-
-      this.logger.log(`Password reset successful for user: ${user.email}`);
-    } catch (error) {
-      this.logger.error('Password reset failed', error.stack);
+    if (!resetToken) {
       throw new BadRequestException('Invalid or expired reset token');
     }
+
+    // Check if token expired
+    if (new Date() > resetToken.expiresAt) {
+      await this.prisma.passwordResetToken.delete({
+        where: { id: resetToken.id },
+      });
+      throw new BadRequestException('Reset token has expired');
+    }
+
+    // Check if already used
+    if (resetToken.usedAt) {
+      throw new BadRequestException('Reset token already used');
+    }
+
+    // Hash new password
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    // Update password
+    await this.prisma.user.update({
+      where: { id: resetToken.userId },
+      data: {
+        password: hashedPassword,
+        lastPasswordChange: new Date(),
+      },
+    });
+
+    // Mark token as used
+    await this.prisma.passwordResetToken.update({
+      where: { id: resetToken.id },
+      data: { usedAt: new Date() },
+    });
+
+    this.logger.log(
+      `✅ Password reset successfully for user: ${resetToken.user.email}`,
+    );
   }
 
   /**
-   * Change password (for authenticated users)
+   * Change password for authenticated user
    */
   async changePassword(
     userId: string,
@@ -103,24 +126,26 @@ export class PasswordResetService {
     }
 
     // Verify current password
-    const isValid = await this.hashingService.compare(
+    const isPasswordValid = await bcrypt.compare(
       currentPassword,
       user.password,
     );
-
-    if (!isValid) {
-      throw new BadRequestException('Current password is incorrect');
+    if (!isPasswordValid) {
+      throw new UnauthorizedException('Current password is incorrect');
     }
 
     // Hash new password
-    const hashedPassword = await this.hashingService.hash(newPassword);
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
 
     // Update password
     await this.prisma.user.update({
       where: { id: userId },
-      data: { password: hashedPassword },
+      data: {
+        password: hashedPassword,
+        lastPasswordChange: new Date(),
+      },
     });
 
-    this.logger.log(`Password changed for user: ${user.email}`);
+    this.logger.log(`✅ Password changed successfully for user: ${user.email}`);
   }
 }

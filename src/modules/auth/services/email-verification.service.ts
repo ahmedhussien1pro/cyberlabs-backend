@@ -5,74 +5,134 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from '../../../core/database';
 import { LoggerService } from '../../../core/logger';
-import { JwtTokenService } from './jwt.service';
-import { ConfigService } from '@nestjs/config';
+import { MailService } from '../../../core/mail';
+import * as crypto from 'crypto';
 
 @Injectable()
 export class EmailVerificationService {
   constructor(
     private prisma: PrismaService,
-    private jwtService: JwtTokenService,
     private logger: LoggerService,
-    private configService: ConfigService,
+    private mailService: MailService,
   ) {
     this.logger.setContext('EmailVerificationService');
   }
 
   /**
-   * Send verification email
+   * Generate 6-digit OTP
    */
-  async sendVerificationEmail(userId: string, email: string): Promise<void> {
-    // Generate verification token
-    const token = this.jwtService.generateVerificationToken(userId, email);
-
-    // Create verification URL
-    const frontendUrl = this.configService.get<string>('app.frontendUrl');
-    const verificationUrl = `${frontendUrl}/verify-email?token=${token}`;
-
-    // TODO: Send email using mail service (we'll create this later)
-    // For now, just log it
-    this.logger.log(`Verification URL for ${email}: ${verificationUrl}`);
-
-    // In production, you would use nodemailer or a service like SendGrid:
-    // await this.mailService.sendVerificationEmail(email, verificationUrl);
+  private generateOTP(): string {
+    return crypto.randomInt(100000, 999999).toString();
   }
 
   /**
-   * Verify email with token
+   * Send OTP verification email
    */
-  async verifyEmail(token: string): Promise<void> {
+  async sendVerificationEmail(userId: string, email: string): Promise<void> {
     try {
-      // Verify token
-      const payload = this.jwtService.verifyVerificationToken(token);
+      // Generate OTP
+      const otp = this.generateOTP();
+      const expirationTime = Date.now() + 10 * 60 * 1000; // 10 minutes
 
-      // Update user
-      const user = await this.prisma.user.findUnique({
-        where: { id: payload.sub },
+      // Delete old validation number for this user (إذا موجود)
+      await this.prisma.validationNumber.deleteMany({
+        where: { userId },
       });
 
+      // Create new validation number
+      await this.prisma.validationNumber.create({
+        data: {
+          userId,
+          number: otp,
+          expiration: BigInt(expirationTime),
+          isVerified: false,
+          used: false,
+        },
+      });
+
+      // Get user name
+      const user = await this.prisma.user.findUnique({
+        where: { id: userId },
+        select: { name: true },
+      });
+
+      // تحقق من وجود المستخدم 🎯
       if (!user) {
         throw new NotFoundException('User not found');
       }
 
-      if (user.isEmailVerified) {
-        throw new BadRequestException('Email already verified');
-      }
+      // Send email with OTP
+      await this.mailService.sendOTPEmail(email, user.name, otp);
 
-      await this.prisma.user.update({
-        where: { id: payload.sub },
-        data: { isEmailVerified: true },
-      });
-
-      this.logger.log(`Email verified for user: ${user.email}`);
+      this.logger.log(`✅ OTP sent to ${email}`);
     } catch (error) {
-      this.logger.error('Email verification failed', error.stack);
-      throw new BadRequestException('Invalid or expired verification token');
+      this.logger.error(`❌ Failed to send OTP: ${error.message}`);
+      throw error;
     }
   }
 
   /**
-   * Resend verification email
+   * Verify email with OTP
+   */
+  async verifyEmailWithOTP(email: string, otp: string): Promise<void> {
+    // Find user by email
+    const user = await this.prisma.user.findUnique({
+      where: { email },
+      include: {
+        ValidationNumber: true,
+      },
+    });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    // Check if already verified
+    if (user.isEmailVerified) {
+      throw new BadRequestException('Email already verified');
+    }
+
+    // Find validation number
+    const validationNumber = user.ValidationNumber.find(
+      (vn) => vn.number === otp && !vn.used,
+    );
+
+    if (!validationNumber) {
+      throw new BadRequestException('Invalid OTP code');
+    }
+
+    // Check if expired
+    const now = BigInt(Date.now());
+    if (now > validationNumber.expiration) {
+      await this.prisma.validationNumber.delete({
+        where: { id: validationNumber.id },
+      });
+      throw new BadRequestException('OTP code has expired');
+    }
+
+    // Mark as verified and used
+    await this.prisma.validationNumber.update({
+      where: { id: validationNumber.id },
+      data: {
+        isVerified: true,
+        used: true,
+      },
+    });
+
+    // Update user email verification
+    await this.prisma.user.update({
+      where: { id: user.id },
+      data: { isEmailVerified: true },
+    });
+
+    // Send welcome email
+    await this.mailService.sendWelcomeEmail(email, user.name);
+
+    this.logger.log(`✅ Email verified for user: ${email}`);
+  }
+
+  /**
+   * Resend verification OTP
    */
   async resendVerificationEmail(email: string): Promise<void> {
     const user = await this.prisma.user.findUnique({
@@ -88,5 +148,14 @@ export class EmailVerificationService {
     }
 
     await this.sendVerificationEmail(user.id, user.email);
+  }
+
+  /**
+   * Verify email with token (للـ backward compatibility)
+   * @deprecated استخدم verifyEmailWithOTP بدلاً منها */
+  async verifyEmail(token: string): Promise<void> {
+    throw new BadRequestException(
+      'Token verification is deprecated. Please use OTP verification instead.',
+    );
   }
 }
