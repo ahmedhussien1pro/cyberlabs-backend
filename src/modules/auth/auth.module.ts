@@ -23,10 +23,11 @@ import { JwtStrategy, GoogleStrategy, GithubStrategy } from './strategies';
 import { DatabaseModule } from '../../core/database';
 import { SecurityModule } from '../../core/security';
 import { LoggerModule } from '../../core/logger';
-
+import { MailModule } from '../../core/mail';
 @Module({
   imports: [
     ConfigModule,
+    MailModule,
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register({}),
     DatabaseModule,

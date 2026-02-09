@@ -20,7 +20,9 @@ import {
   ResetPasswordDto,
   ChangePasswordDto,
   RefreshTokenDto,
+  VerifyOTPDto,
 } from '../dto';
+
 import { JwtAuthGuard } from '../../../common/guards';
 import { Public } from '../../../common/decorators';
 import { CurrentUser } from '../../../common/decorators';
@@ -280,6 +282,22 @@ export class AuthController {
     return {
       success: true,
       message: 'Code verified successfully',
+    };
+  }
+
+  /**
+   * Verify email with OTP
+   * POST /api/v1/auth/verify-email-otp
+   * @public
+   */
+  @Public()
+  @Post('verify-email-otp')
+  @HttpCode(HttpStatus.OK)
+  async verifyEmailWithOTP(@Body() dto: VerifyOTPDto) {
+    await this.emailVerificationService.verifyEmailWithOTP(dto.email, dto.otp);
+    return {
+      success: true,
+      message: 'Email verified successfully',
     };
   }
 }

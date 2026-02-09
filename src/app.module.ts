@@ -27,6 +27,7 @@ import { JwtAuthGuard } from './common/guards';
 // Config
 import configuration from './config/configuration';
 import { envValidationSchema } from './config/env.validation';
+import { MailModule } from './core/mail';
 
 @Module({
   imports: [
@@ -45,6 +46,7 @@ import { envValidationSchema } from './config/env.validation';
     DatabaseModule,
     LoggerModule,
     SecurityModule,
+    MailModule,
 
     // Feature Modules
     AuthModule,
