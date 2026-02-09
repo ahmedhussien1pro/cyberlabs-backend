@@ -59,10 +59,24 @@ export class AuthService {
       },
     });
 
-    await this.emailVerificationService.sendVerificationEmail(
-      user.id,
-      user.email,
-    );
+    // ✅ Wrap email sending in try-catch to ensure registration succeeds even if email fails
+    try {
+      await this.emailVerificationService.sendVerificationEmail(
+        user.id,
+        user.email,
+      );
+      this.logger.log(
+        `✅ Verification email sent successfully to ${user.email}`,
+      );
+    } catch (error) {
+      // ⚠️ Log error but don't fail registration
+      this.logger.error(
+        `❌ Failed to send verification email to ${user.email}: ${error.message}`,
+        error.stack,
+      );
+      // ValidationNumber should still be created by EmailVerificationService
+      // User can request resend later
+    }
 
     this.logger.log(`New user registered: ${user.email}`);
 

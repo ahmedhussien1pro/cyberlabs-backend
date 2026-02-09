@@ -29,12 +29,13 @@ export class EmailVerificationService {
    * Send OTP verification email
    */
   async sendVerificationEmail(userId: string, email: string): Promise<void> {
-    try {
-      // Generate OTP
-      const otp = this.generateOTP();
-      const expirationTime = Date.now() + 10 * 60 * 1000; // 10 minutes
+    // Generate OTP
+    const otp = this.generateOTP();
+    const expirationTime = Date.now() + 10 * 60 * 1000; // 10 minutes
 
-      // Delete old validation number for this user (إذا موجود)
+    // ✅ Step 1: Create ValidationNumber first (this MUST succeed)
+    try {
+      // Delete old validation number for this user
       await this.prisma.validationNumber.deleteMany({
         where: { userId },
       });
@@ -50,13 +51,22 @@ export class EmailVerificationService {
         },
       });
 
+      this.logger.log(`✅ ValidationNumber created for user: ${userId}`);
+    } catch (error) {
+      this.logger.error(
+        `❌ Failed to create ValidationNumber: ${error.message}`,
+      );
+      throw error; // This should fail registration if DB fails
+    }
+
+    // ✅ Step 2: Send email (can fail without breaking registration)
+    try {
       // Get user name
       const user = await this.prisma.user.findUnique({
         where: { id: userId },
         select: { name: true },
       });
 
-      // تحقق من وجود المستخدم 🎯
       if (!user) {
         throw new NotFoundException('User not found');
       }
@@ -64,10 +74,16 @@ export class EmailVerificationService {
       // Send email with OTP
       await this.mailService.sendOTPEmail(email, user.name, otp);
 
-      this.logger.log(`✅ OTP sent to ${email}`);
+      this.logger.log(`✅ OTP email sent to ${email}`);
     } catch (error) {
-      this.logger.error(`❌ Failed to send OTP: ${error.message}`);
-      throw error;
+      // ⚠️ Log but don't throw - ValidationNumber already created
+      this.logger.error(
+        `❌ Failed to send OTP email to ${email}: ${error.message}`,
+      );
+      this.logger.warn(
+        `⚠️ ValidationNumber created but email not sent. User can request resend.`,
+      );
+      // Don't throw - let registration succeed
     }
   }
 
@@ -125,8 +141,13 @@ export class EmailVerificationService {
       data: { isEmailVerified: true },
     });
 
-    // Send welcome email
-    await this.mailService.sendWelcomeEmail(email, user.name);
+    // Try to send welcome email (non-critical)
+    try {
+      await this.mailService.sendWelcomeEmail(email, user.name);
+    } catch (error) {
+      this.logger.error(`❌ Failed to send welcome email: ${error.message}`);
+      // Don't fail verification if welcome email fails
+    }
 
     this.logger.log(`✅ Email verified for user: ${email}`);
   }
@@ -151,8 +172,9 @@ export class EmailVerificationService {
   }
 
   /**
-   * Verify email with token (للـ backward compatibility)
-   * @deprecated استخدم verifyEmailWithOTP بدلاً منها */
+   * Verify email with token (backward compatibility)
+   * @deprecated Use verifyEmailWithOTP instead
+   */
   async verifyEmail(token: string): Promise<void> {
     throw new BadRequestException(
       'Token verification is deprecated. Please use OTP verification instead.',
