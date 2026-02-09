@@ -18,7 +18,12 @@ export class MailService {
     private logger: LoggerService,
   ) {
     this.logger.setContext('MailService');
-    this.isDevelopment = this.configService.get('app.env') === 'development';
+
+    // ✅ أضف logging للـ config values
+    const appEnv = this.configService.get('app.env');
+    this.logger.log(`🔍 Current environment: ${appEnv}`); // ✅ Debug log
+
+    this.isDevelopment = appEnv === 'development';
     this.MAIL_BANNER_PATH = path.join(__dirname, 'assets', 'mail_photo.png');
     this.initializeTransporter();
   }
@@ -34,10 +39,15 @@ export class MailService {
       this.logger.log('📧 Mail service initialized in DEVELOPMENT mode');
     } else {
       // Production mode - Gmail SMTP
+      const mailUsername = this.configService.get('mail.username'); // ✅ Debug
+      const mailFromName = this.configService.get('mail.fromName'); // ✅ Debug
+
+      this.logger.log(`📧 Initializing mail service for: ${mailUsername}`); // ✅ Debug log
+
       this.transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
-          user: this.configService.get('mail.username'),
+          user: mailUsername,
           pass: this.configService.get('mail.password'),
         },
       });
@@ -112,6 +122,9 @@ export class MailService {
    * Send OTP Email for Verification
    */
   async sendOTPEmail(email: string, name: string, otp: string): Promise<void> {
+    // ✅ أضف logging
+    this.logger.log(`📤 Preparing to send OTP to: ${email}`);
+
     const bannerAttachment = this.buildBannerAttachment();
     const html = `
       <div style="font-family: 'Segoe UI', Tahoma, sans-serif; max-width: 600px; margin: 0 auto; background: linear-gradient(150deg, #0b1b3b, #114c8f); color: #f5f8ff; border-radius: 12px; overflow: hidden;">
