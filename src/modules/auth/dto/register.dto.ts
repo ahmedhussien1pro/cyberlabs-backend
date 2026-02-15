@@ -32,5 +32,5 @@ export class RegisterDto {
 
   @IsOptional()
   @IsEnum(UserRole)
-  role?: UserRole; // Only admin can set this
+  role?: UserRole;
 }

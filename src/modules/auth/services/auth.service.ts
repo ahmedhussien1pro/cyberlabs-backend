@@ -1,6 +1,5 @@
 import {
   Injectable,
-  BadRequestException,
   UnauthorizedException,
   ConflictException,
 } from '@nestjs/common';
@@ -10,7 +9,7 @@ import { LoggerService } from '../../../core/logger';
 import { JwtTokenService } from './jwt.service';
 import { EmailVerificationService } from './email-verification.service';
 import { RegisterDto, LoginDto } from '../dto';
-import { UserRole, Language } from '../../../common/enums';
+import { UserRole } from '../../../common/enums';
 import { OAuthProfile } from '../../../common/types';
 
 @Injectable()
@@ -32,7 +31,13 @@ export class AuthService {
     const existingUser = await this.prisma.user.findUnique({
       where: { email: dto.email },
     });
+    const existingName = await this.prisma.user.findUnique({
+      where: { name: dto.name },
+    });
 
+    if (existingName) {
+      throw new ConflictException('Name already registered');
+    }
     if (existingUser) {
       throw new ConflictException('Email already registered');
     }
@@ -69,13 +74,10 @@ export class AuthService {
         `✅ Verification email sent successfully to ${user.email}`,
       );
     } catch (error) {
-      // ⚠️ Log error but don't fail registration
       this.logger.error(
         `❌ Failed to send verification email to ${user.email}: ${error.message}`,
         error.stack,
       );
-      // ValidationNumber should still be created by EmailVerificationService
-      // User can request resend later
     }
 
     this.logger.log(`New user registered: ${user.email}`);
@@ -239,6 +241,13 @@ export class AuthService {
       const existingUser = await this.prisma.user.findUnique({
         where: { email: profile.email },
       });
+      const existingName = await this.prisma.user.findUnique({
+        where: { name: `${profile.firstName} ${profile.lastName}` },
+      });
+
+      if (existingName) {
+        throw new ConflictException('Name already registered');
+      }
 
       if (existingUser) {
         await this.prisma.oAuthAccount.create({
