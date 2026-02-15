@@ -36,10 +36,14 @@ export class AuthService {
     });
 
     if (existingName) {
-      throw new ConflictException('Name already registered');
+      throw new ConflictException(
+        'UserName already registered, please choose another one',
+      );
     }
     if (existingUser) {
-      throw new ConflictException('Email already registered');
+      throw new ConflictException(
+        'Email already registered, please login or Forgot Password instead',
+      );
     }
 
     const hashedPassword = await this.hashingService.hash(dto.password);
