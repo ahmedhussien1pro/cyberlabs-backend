@@ -15,7 +15,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
         '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',
       callbackURL:
         configService.get<string>('oauth.google.callbackUrl') ||
-        'https://cyberlabs-tech-dhzpa.ondigitalocean.app/api/v1/auth/google/callback',
+        'https://cyberlabs-backend-v1.vercel.app/api/v1/auth/google/callback',
       scope: ['email', 'profile'],
     });
   }

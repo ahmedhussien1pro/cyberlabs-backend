@@ -15,7 +15,7 @@ export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
         '79424fd15d60b82753917c34dcadd886ce088c15',
       callbackURL:
         configService.get<string>('oauth.github.callbackUrl') ||
-        'https://cyberlabs-tech-dhzpa.ondigitalocean.app/api/v1/auth/github/callback',
+        'https://cyberlabs-backend-v1.vercel.app/api/v1/auth/github/callback',
       scope: ['user:email'],
     });
   }
