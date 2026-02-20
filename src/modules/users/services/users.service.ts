@@ -4,18 +4,29 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { PrismaService } from '../../../core/database';
-import { UpdateProfileDto, UserQueryDto, ChangePasswordDto } from '../dto';
-import { UserProfileSerializer, UserStatsSerializer } from '../serializers';
+import {
+  UpdateProfileDto,
+  UserQueryDto,
+  ChangePasswordDto,
+  UserActivityDto,
+} from '../dto';
+import { UserStatsSerializer } from '../serializers';
+import { R2Service } from '../../../core/storage';
+import { ConfigService } from '@nestjs/config';
 import { plainToClass } from 'class-transformer';
 
 @Injectable()
 export class UsersService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private r2: R2Service,
+    private config: ConfigService,
+  ) {}
 
   /**
    * Get user profile by ID
    */
-  async getUserProfile(userId: string): Promise<UserProfileSerializer> {
+  async getUserProfile(userId: string) {
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
       select: {
@@ -35,82 +46,153 @@ export class UsersService {
         isActive: true,
         createdAt: true,
         lastLoginAt: true,
-        // Exclude sensitive fields
+        socialLinks: {
+          select: { id: true, type: true, url: true },
+        },
+        skills: {
+          select: {
+            id: true,
+            level: true,
+            progress: true,
+            skill: {
+              select: { id: true, name: true, ar_name: true, category: true },
+            },
+          },
+        },
+        education: {
+          select: {
+            id: true,
+            institution: true,
+            ar_institution: true,
+            degree: true,
+            field: true,
+            startYear: true,
+            endYear: true,
+            isCurrent: true,
+          },
+          orderBy: { startYear: 'desc' },
+        },
+        certifications: {
+          select: {
+            id: true,
+            title: true,
+            issuer: true,
+            issueDate: true,
+            expireDate: true,
+            credentialId: true,
+            credentialUrl: true,
+          },
+          orderBy: { issueDate: 'desc' },
+        },
+        badges: {
+          select: {
+            id: true,
+            awardedAt: true,
+            context: true,
+            badge: {
+              select: {
+                title: true,
+                ar_title: true,
+                description: true,
+                iconUrl: true,
+                type: true,
+                xpReward: true,
+              },
+            },
+          },
+          orderBy: { awardedAt: 'desc' },
+        },
+        achievements: {
+          select: {
+            id: true,
+            achievedAt: true,
+            progress: true,
+            achievement: {
+              select: {
+                title: true,
+                description: true,
+                iconUrl: true,
+                category: true,
+                xpReward: true,
+              },
+            },
+          },
+        },
+        careerPaths: {
+          select: {
+            id: true,
+            progress: true,
+            startedAt: true,
+            completedAt: true,
+            careerPath: {
+              select: {
+                name: true,
+                ar_name: true,
+                description: true,
+                iconUrl: true,
+              },
+            },
+          },
+        },
         password: false,
         refreshToken: false,
         twoFactorSecret: false,
       },
     });
 
-    if (!user) {
-      throw new NotFoundException('User not found');
-    }
-
-    return plainToClass(UserProfileSerializer, user, {
-      excludeExtraneousValues: true,
-    });
+    if (!user) throw new NotFoundException('User not found');
+    return user;
   }
 
   /**
    * Update user profile
    */
-  async updateProfile(
-    userId: string,
-    updateData: UpdateProfileDto,
-  ): Promise<UserProfileSerializer> {
-    // Check if user exists
+  async updateProfile(userId: string, updateData: UpdateProfileDto) {
     const existingUser = await this.prisma.user.findUnique({
       where: { id: userId },
     });
 
-    if (!existingUser) {
-      throw new NotFoundException('User not found');
-    }
+    if (!existingUser) throw new NotFoundException('User not found');
 
-    // If updating name, check uniqueness
     if (updateData.name && updateData.name !== existingUser.name) {
       const nameExists = await this.prisma.user.findUnique({
         where: { name: updateData.name },
       });
-
-      if (nameExists) {
-        throw new BadRequestException('Username already taken');
-      }
+      if (nameExists) throw new BadRequestException('Username already taken');
     }
 
-    // Update user
-    const updatedUser = await this.prisma.user.update({
-      where: { id: userId },
-      data: {
-        ...updateData,
-        birthday: updateData.birthday
-          ? new Date(updateData.birthday)
-          : undefined,
-        updatedAt: new Date(),
-      },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        bio: true,
-        ar_bio: true,
-        avatarUrl: true,
-        address: true,
-        birthday: true,
-        phoneNumber: true,
-        role: true,
-        internalRole: true,
-        isVerified: true,
-        isEmailVerified: true,
-        isActive: true,
-        createdAt: true,
-        lastLoginAt: true,
-      },
-    });
+    const { socialLinks, ...profileData } = updateData;
 
-    return plainToClass(UserProfileSerializer, updatedUser, {
-      excludeExtraneousValues: true,
-    });
+    const [updatedUser] = await this.prisma.$transaction([
+      this.prisma.user.update({
+        where: { id: userId },
+        data: {
+          ...profileData,
+          birthday: profileData.birthday
+            ? new Date(profileData.birthday)
+            : undefined,
+          updatedAt: new Date(),
+        },
+      }),
+      ...(socialLinks !== undefined
+        ? [
+            this.prisma.socialLink.deleteMany({ where: { userId } }),
+            ...(socialLinks.length > 0
+              ? [
+                  this.prisma.socialLink.createMany({
+                    data: socialLinks.map((l) => ({
+                      userId,
+                      type: l.type,
+                      url: l.url,
+                    })),
+                  }),
+                ]
+              : []),
+          ]
+        : []),
+    ]);
+
+    return this.getUserProfile(updatedUser.id);
   }
 
   /**
@@ -387,5 +469,58 @@ export class UsersService {
       pointsToNextLevel: Math.max(0, pointsToNextLevel),
       xpForNextLevel,
     };
+  }
+
+  async getUserActivity(userId: string): Promise<UserActivityDto[]> {
+    const since = new Date();
+
+    const activities = await this.prisma.userActivity.findMany({
+      where: {
+        userId,
+        date: { gte: since },
+      },
+      select: {
+        date: true,
+        activeMinutes: true,
+        completedTasks: true,
+        labsSolved: true,
+      },
+      orderBy: { date: 'asc' },
+    });
+
+    return activities.map((a) => ({
+      date: a.date.toISOString(),
+      activeMinutes: a.activeMinutes,
+      completedTasks: a.completedTasks,
+      labsSolved: a.labsSolved,
+    }));
+  }
+  async requestAvatarUpload(userId: string, contentType: string) {
+    return this.r2.getPresignedUploadUrl(userId, contentType);
+  }
+
+  async confirmAvatarUpload(userId: string, key: string): Promise<string> {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: { avatarUrl: true },
+    });
+
+    // Delete old avatar from R2
+    if (user?.avatarUrl) {
+      const oldKey = this.r2.extractKey(user.avatarUrl);
+      if (oldKey) {
+        await this.r2.deleteObject(oldKey).catch(() => null); // ignore errors
+      }
+    }
+
+    const publicUrl = this.config.get<string>('R2_PUBLIC_URL');
+    const avatarUrl = `${publicUrl}/${key}`;
+
+    await this.prisma.user.update({
+      where: { id: userId },
+      data: { avatarUrl, updatedAt: new Date() },
+    });
+
+    return avatarUrl;
   }
 }

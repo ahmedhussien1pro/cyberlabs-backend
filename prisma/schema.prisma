@@ -223,9 +223,10 @@ model User {
   labGenericUsers    LabGenericUser[]
   labGenericBanks    LabGenericBank[]
   labGenericContents LabGenericContent[]
-   labGenericLogs LabGenericLog[]
+  labGenericLogs LabGenericLog[]
   // Activity & stats
   dayActivity UserActivity[]
+  
   stats       UserStats?
 
   // Security & logs
@@ -609,15 +610,18 @@ model LeaderboardEntry {
 }
 
 model UserActivity {
-  id             String   @id @default(uuid())
-  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id             String   @id @default(cuid())
   userId         String
-  date           DateTime @db.Date
+  date           DateTime @db.Date     
   activeMinutes  Int      @default(0)
   completedTasks Int      @default(0)
   labsSolved     Int      @default(0)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 
-  @@unique([userId, date])
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, date])              
   @@index([userId, date])
   @@map("user_activities")
 }
@@ -948,10 +952,9 @@ model Lab {
   timeLimit      Int?
   xpReward       Int        @default(0)
   pointsReward   Int        @default(0)
-// إضافات التقييم والـ Isolation
-  pointsPerHint   Int      @default(10)   // مقدار الخصم عند فتح هينت
-  pointsPerFail   Int      @default(5)    // مقدار الخصم عند محاولة خاطئة
-  initialState    Json     @default("{}") // الحالة البدائية للاب (أرصدة، مستخدمين، إلخ)
+  pointsPerHint   Int      @default(10)   
+  pointsPerFail   Int      @default(5)   
+  initialState    Json     @default("{}") 
   isolationMode   String    @default("database") 
   
   steps Json?
@@ -1411,24 +1414,24 @@ model LabSubmission {
 // ============================================================================
 // LAB-SPECIFIC MODELS (Keep as is for vulnerable labs)
 // ============================================================================
-// يخدم لابات الـ Login, JWT, SQLi, Broken Auth
+// Login, JWT, SQLi, Broken Auth
 model LabGenericUser {
   id        String   @id @default(cuid())
-  userId    String   // الطالب
-  labId     String   // اللاب
+  userId    String   
+  labId     String  
   username  String
   password  String
   role      String   @default("user")
   email     String?
-  isStatic  Boolean  @default(false) // لو "true" يبقا اليوزر ده تارجت ثابت مش بتاع الطالب
-  meta      Json?    // لأي بيانات إضافية (token, bio, إلخ)
+  isStatic  Boolean  @default(false) 
+  meta      Json?   
 
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   lab       Lab      @relation(fields: [labId], references: [id], onDelete: Cascade)
   @@unique([userId, labId, username])
 }
 
-// يخدم لابات الـ Money, IDOR, Race Condition, CSRF
+// Money, IDOR, Race Condition, CSRF
 model LabGenericBank {
   id        String   @id @default(cuid())
   userId    String
@@ -1442,7 +1445,7 @@ model LabGenericBank {
   @@unique([userId, labId, accountNo])
 }
 
-// يخدم لابات الـ Posts, Comments, Files (XSS, SSTI, Path Traversal)
+// Posts, Comments, Files (XSS, SSTI, Path Traversal)
 model LabGenericContent {
   id        String   @id @default(cuid())
   userId    String
@@ -1458,15 +1461,15 @@ model LabGenericContent {
   @@index([userId, labId])
 }
 
-// يخدم أي لاب فيه سجلات (Payments, Logs, Coupons)
+// (Payments, Logs, Coupons)
 model LabGenericLog {
   id        String   @id @default(cuid())
   userId    String
   labId     String
   type      String   // "PAYMENT" | "COUPON" | "LOGIN_LOG" | "FILE_UPLOAD"
-  value     Float?   // السعر، الخصم، أو أي رقم
-  action    String?  // كود الكوبون، اسم الملف، أو وصف العملية
-  meta      Json?    // لتخزين أي داتا مرنة (مثل: isValid, ipAddress)
+  value     Float?  
+  action    String?  
+  meta      Json?   
   createdAt DateTime @default(now())
 
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)

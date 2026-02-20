@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
+import { StorageModule } from './core/storage';
 
 // Controllers
 import { AppController } from './app.controller';
@@ -47,7 +48,7 @@ import { MailModule } from './core/mail';
     LoggerModule,
     SecurityModule,
     MailModule,
-
+    StorageModule,
     // Feature Modules
     AuthModule,
     UsersModule,
