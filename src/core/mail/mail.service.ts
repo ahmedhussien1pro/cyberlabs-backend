@@ -250,6 +250,7 @@ export class MailService {
   /**
    * Send Contact Email
    */
+
   async sendContactEmail(data: {
     name: string;
     email: string;
