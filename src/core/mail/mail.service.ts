@@ -258,6 +258,14 @@ export class MailService {
   }): Promise<void> {
     const adminEmail = this.configService.get<string>('mail.username');
 
+    // ✅ Fix: guard against undefined — mail.username is required
+    if (!adminEmail) {
+      this.logger.warn(
+        '⚠️ mail.username (MAIL_USERNAME) is not set — skipping contact email',
+      );
+      return;
+    }
+
     const html = `
     <div style="font-family:'Segoe UI',Tahoma,sans-serif;max-width:600px;margin:0 auto;
                 background:linear-gradient(150deg,#0b1b3b,#114c8f);color:#f5f8ff;
@@ -295,7 +303,7 @@ export class MailService {
   `;
 
     await this.sendEmail({
-      to: adminEmail,
+      to: adminEmail, // ✅ الآن string مضمون
       subject: `[Contact] ${data.subject} — from ${data.name}`,
       html,
     });
