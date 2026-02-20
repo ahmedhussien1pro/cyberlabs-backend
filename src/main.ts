@@ -24,14 +24,43 @@ async function bootstrap() {
   app.use(helmet());
   app.use(cookieParser());
 
-  // CORS
+  // ─── CORS ──────────────────────────────────────────────────────────
+  const rawFrontendUrls =
+    configService.get<string>('app.frontendUrl') || 'http://localhost:5173';
+
+  const allowedOrigins = rawFrontendUrls
+    .split(',')
+    .map((url) => url.trim().replace(/\/+$/, ''))
+    .filter(Boolean);
+
+  logger.log(`🌐 Allowed CORS origins: ${allowedOrigins.join(' | ')}`);
+
   app.enableCors({
-    origin:
-      configService.get<string>('app.frontendUrl') || 'http://localhost:3000',
+    origin: (requestOrigin, callback) => {
+      if (!requestOrigin) return callback(null, true);
+
+      const normalized = requestOrigin.trim().replace(/\/+$/, '');
+
+      if (allowedOrigins.includes(normalized)) {
+        return callback(null, true);
+      }
+
+      logger.warn(`🚫 CORS blocked: ${requestOrigin}`);
+      return callback(
+        new Error(`CORS blocked for origin: ${requestOrigin}`),
+        false,
+      );
+    },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+    allowedHeaders: [
+      'Content-Type',
+      'Authorization',
+      'X-Requested-With',
+      'X-CSRF-Token',
+    ],
   });
+  // ───────────────────────────────────────────────────────────────────
 
   // Global validation pipe
   app.useGlobalPipes(
