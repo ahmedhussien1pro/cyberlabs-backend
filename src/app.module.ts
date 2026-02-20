@@ -20,7 +20,7 @@ import { EnrollmentsModule } from './modules/enrollments';
 import { LabsModule } from './modules/labs';
 import { ProgressModule } from './modules/progress';
 import { PracticeLabsModule } from './modules/practice-labs/practice-labs.module';
-
+import { ContactModule } from './modules/contact/contact.module';
 // Guards
 import { JwtAuthGuard } from './common/guards';
 
@@ -55,6 +55,7 @@ import { MailModule } from './core/mail';
     EnrollmentsModule,
     ProgressModule,
     PracticeLabsModule,
+    ContactModule,
   ],
   controllers: [AppController],
   providers: [

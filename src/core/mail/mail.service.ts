@@ -19,11 +19,9 @@ export class MailService {
   ) {
     this.logger.setContext('MailService');
 
-    // ✅ Get environment
     const appEnv = this.configService.get<string>('app.env');
     this.logger.log(`🔍 Environment: ${appEnv}`);
 
-    // ✅ Check credentials
     const mailUsername = this.configService.get<string>('mail.username');
     const mailPassword = this.configService.get<string>('mail.password');
 
@@ -246,6 +244,59 @@ export class MailService {
     await this.sendEmail({
       to: email,
       subject: 'Welcome to CyberLabs! 🚀',
+      html,
+    });
+  }
+  /**
+   * Send Contact Email
+   */
+  async sendContactEmail(data: {
+    name: string;
+    email: string;
+    subject: string;
+    message: string;
+  }): Promise<void> {
+    const adminEmail = this.configService.get<string>('mail.username');
+
+    const html = `
+    <div style="font-family:'Segoe UI',Tahoma,sans-serif;max-width:600px;margin:0 auto;
+                background:linear-gradient(150deg,#0b1b3b,#114c8f);color:#f5f8ff;
+                border-radius:12px;overflow:hidden;">
+      <div style="background:#04102c;padding:20px 30px;">
+        <h1 style="margin:0;font-size:24px;letter-spacing:1px;">📩 New Contact Message</h1>
+        <p style="margin:8px 0 0;color:#9fb4dd;">CyberLabs Contact Form</p>
+      </div>
+      <div style="padding:30px;">
+        <table style="width:100%;border-collapse:collapse;">
+          <tr>
+            <td style="padding:8px 0;color:#9fb4dd;width:100px;">Name</td>
+            <td style="padding:8px 0;font-weight:600;">${data.name}</td>
+          </tr>
+          <tr>
+            <td style="padding:8px 0;color:#9fb4dd;">Email</td>
+            <td style="padding:8px 0;">
+              <a href="mailto:${data.email}" style="color:#50c4ff;">${data.email}</a>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:8px 0;color:#9fb4dd;">Subject</td>
+            <td style="padding:8px 0;">${data.subject}</td>
+          </tr>
+        </table>
+        <div style="margin-top:20px;padding:16px;background:#0b2447;border-radius:8px;
+                    border:1px solid #1b4b8c;">
+          <p style="margin:0;color:#d0def5;line-height:1.6;">${data.message}</p>
+        </div>
+        <p style="margin:20px 0 0;color:#9fb4dd;font-size:13px;">
+          Sent from CyberLabs Contact Form
+        </p>
+      </div>
+    </div>
+  `;
+
+    await this.sendEmail({
+      to: adminEmail,
+      subject: `[Contact] ${data.subject} — from ${data.name}`,
       html,
     });
   }
