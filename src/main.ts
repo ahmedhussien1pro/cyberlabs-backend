@@ -33,7 +33,7 @@ async function bootstrap() {
     .map((url) => url.trim().replace(/\/+$/, ''))
     .filter(Boolean);
 
-  logger.log(`🌐 Allowed CORS origins: ${allowedOrigins.join(' | ')}`);
+  logger.log(`Allowed CORS origins: ${allowedOrigins.join(' | ')}`);
 
   app.enableCors({
     origin: (requestOrigin, callback) => {
