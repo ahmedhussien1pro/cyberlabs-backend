@@ -473,6 +473,7 @@ export class UsersService {
 
   async getUserActivity(userId: string): Promise<UserActivityDto[]> {
     const since = new Date();
+    since.setFullYear(since.getFullYear() - 1);
 
     const activities = await this.prisma.userActivity.findMany({
       where: {
