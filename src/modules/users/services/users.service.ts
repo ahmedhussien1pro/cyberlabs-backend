@@ -2,6 +2,7 @@ import {
   Injectable,
   NotFoundException,
   BadRequestException,
+  ForbiddenException,
 } from '@nestjs/common';
 import { PrismaService } from '../../../core/database';
 import {
@@ -9,6 +10,8 @@ import {
   UserQueryDto,
   ChangePasswordDto,
   UserActivityDto,
+  UpdateNotificationPrefsDto,
+  DeleteAccountDto,
 } from '../dto';
 import { UserStatsSerializer } from '../serializers';
 import { R2Service } from '../../../core/storage';

@@ -114,10 +114,8 @@ export class ProgressController {
     @CurrentUser('id') userId: string,
     @Param('courseId') courseId: string,
   ) {
-    const progress = await this.progressService.getCourseProgressById(
-      userId,
-      courseId,
-    );
+    const allProgress = await this.progressService.getCourseProgress(userId);
+    const progress = allProgress.find((p) => p.courseId === courseId) ?? null;
     return { success: true, data: progress };
   }
   /**
