@@ -524,4 +524,127 @@ export class UsersService {
 
     return avatarUrl;
   }
+  // ── Sessions ──────────────────────────────────────────────────────
+  async getUserSessions(userId: string) {
+    return this.prisma.refreshToken.findMany({
+      where: { userId, revokedAt: null, expiresAt: { gt: new Date() } },
+      select: {
+        id: true,
+        userAgent: true,
+        ip: true,
+        createdAt: true,
+        expiresAt: true,
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+  }
+
+  async revokeSession(userId: string, sessionId: string) {
+    const session = await this.prisma.refreshToken.findUnique({
+      where: { id: sessionId },
+    });
+    if (!session || session.userId !== userId)
+      throw new ForbiddenException('Session not found');
+    await this.prisma.refreshToken.update({
+      where: { id: sessionId },
+      data: { revokedAt: new Date() },
+    });
+  }
+
+  // ── Notification Preferences ──────────────────────────────────────
+  async getNotificationPreferences(userId: string) {
+    return this.prisma.notificationSettings.upsert({
+      where: { userId },
+      create: { userId },
+      update: {},
+    });
+  }
+
+  async updateNotificationPreferences(
+    userId: string,
+    dto: UpdateNotificationPrefsDto,
+  ) {
+    return this.prisma.notificationSettings.upsert({
+      where: { userId },
+      create: { userId, ...dto },
+      update: dto,
+    });
+  }
+
+  // ── Username lookup ───────────────────────────────────────────────
+  async getUserByUsername(username: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { name: username }, // `name` is @unique in schema
+      select: {
+        id: true,
+        name: true,
+        avatarUrl: true,
+        bio: true,
+        ar_bio: true,
+        role: true,
+        createdAt: true,
+        _count: {
+          select: {
+            badges: true,
+            achievements: true,
+          },
+        },
+      },
+    });
+    if (!user) throw new NotFoundException('User not found');
+    return user;
+  }
+
+  // ── Soft delete ───────────────────────────────────────────────────
+  async softDeleteAccount(userId: string, reason?: string) {
+    await this.prisma.user.update({
+      where: { id: userId },
+      data: {
+        isActive: false,
+        deletedAt: new Date(),
+        deletionReason: reason ?? null,
+        // Revoke all sessions
+        refreshTokens: {
+          updateMany: {
+            where: { revokedAt: null },
+            data: { revokedAt: new Date() },
+          },
+        },
+      },
+    });
+  }
+
+  // ── GDPR Export ───────────────────────────────────────────────────
+  async exportUserData(userId: string) {
+    const [user, points, stats, achievements, badges, goals] =
+      await this.prisma.$transaction([
+        this.prisma.user.findUnique({
+          where: { id: userId },
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            bio: true,
+            createdAt: true,
+            lastLoginAt: true,
+            socialLinks: true,
+            education: true,
+            certifications: true,
+          },
+        }),
+        this.prisma.userPoints.findUnique({ where: { userId } }),
+        this.prisma.userStats.findUnique({ where: { userId } }),
+        this.prisma.userAchievement.findMany({
+          where: { userId },
+          include: { achievement: { select: { title: true } } },
+        }),
+        this.prisma.userBadge.findMany({
+          where: { userId },
+          include: { badge: { select: { title: true } } },
+        }),
+        this.prisma.goal.findMany({ where: { userId } }),
+      ]);
+
+    return { user, points, stats, achievements, badges, goals };
+  }
 }

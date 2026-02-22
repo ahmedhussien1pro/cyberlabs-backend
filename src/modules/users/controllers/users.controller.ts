@@ -1,9 +1,9 @@
-// src/modules/users/controllers/users.controller.ts
 import {
   Controller,
   Get,
   Put,
   Post,
+  Delete,
   Body,
   Param,
   Query,
@@ -18,6 +18,8 @@ import {
   ChangePasswordDto,
   UserQueryDto,
   RequestAvatarUploadDto,
+  UpdateNotificationPrefsDto,
+  DeleteAccountDto,
 } from '../dto';
 import { JwtAuthGuard } from '../../../common/guards';
 import { CurrentUser } from '../../../common/decorators';
@@ -165,6 +167,92 @@ export class UsersController {
     return {
       success: true,
       data: await this.usersService.getUserStats(userId),
+    };
+  }
+  // ─────────────────────────────────────────────────────────
+  // SESSIONS (RefreshToken listing & revoke)
+  // ─────────────────────────────────────────────────────────
+
+  /** GET /api/v1/users/me/sessions */
+  @Get('me/sessions')
+  @HttpCode(HttpStatus.OK)
+  async getMySessions(@CurrentUser('id') userId: string) {
+    return {
+      success: true,
+      data: await this.usersService.getUserSessions(userId),
+    };
+  }
+
+  /** DELETE /api/v1/users/me/sessions/:id */
+  @Delete('me/sessions/:id')
+  @HttpCode(HttpStatus.OK)
+  async revokeSession(
+    @CurrentUser('id') userId: string,
+    @Param('id') sessionId: string,
+  ) {
+    await this.usersService.revokeSession(userId, sessionId);
+    return { success: true, message: 'Session revoked' };
+  }
+
+  // ─────────────────────────────────────────────────────────
+  // NOTIFICATION PREFERENCES
+  // ─────────────────────────────────────────────────────────
+
+  /** GET /api/v1/users/me/notifications/preferences */
+  @Get('me/notifications/preferences')
+  @HttpCode(HttpStatus.OK)
+  async getNotificationPrefs(@CurrentUser('id') userId: string) {
+    return {
+      success: true,
+      data: await this.usersService.getNotificationPreferences(userId),
+    };
+  }
+
+  /** PUT /api/v1/users/me/notifications/preferences */
+  @Put('me/notifications/preferences')
+  @HttpCode(HttpStatus.OK)
+  async updateNotificationPrefs(
+    @CurrentUser('id') userId: string,
+    @Body() dto: UpdateNotificationPrefsDto,
+  ) {
+    return {
+      success: true,
+      data: await this.usersService.updateNotificationPreferences(userId, dto),
+    };
+  }
+
+  // ─────────────────────────────────────────────────────────
+  // ACCOUNT MANAGEMENT
+  // ─────────────────────────────────────────────────────────
+
+  /** GET /api/v1/users/username/:username */
+  @Get('username/:username')
+  @HttpCode(HttpStatus.OK)
+  async getUserByUsername(@Param('username') username: string) {
+    return {
+      success: true,
+      data: await this.usersService.getUserByUsername(username),
+    };
+  }
+
+  /** DELETE /api/v1/users/me — soft delete */
+  @Delete('me')
+  @HttpCode(HttpStatus.OK)
+  async deleteAccount(
+    @CurrentUser('id') userId: string,
+    @Body() dto: DeleteAccountDto,
+  ) {
+    await this.usersService.softDeleteAccount(userId, dto.reason);
+    return { success: true, message: 'Account scheduled for deletion' };
+  }
+
+  /** GET /api/v1/users/me/export — GDPR */
+  @Get('me/export')
+  @HttpCode(HttpStatus.OK)
+  async exportMyData(@CurrentUser('id') userId: string) {
+    return {
+      success: true,
+      data: await this.usersService.exportUserData(userId),
     };
   }
 }

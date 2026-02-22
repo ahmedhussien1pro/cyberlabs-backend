@@ -1,6 +1,7 @@
 import {
   Controller,
   Get,
+  Param,
   Query,
   UseGuards,
   HttpStatus,
@@ -90,5 +91,53 @@ export class ProgressController {
       success: true,
       data: streaks,
     };
+  }
+  /**
+   * Alias: GET /api/v1/progress  → overview
+   * (frontend PROGRESS.BASE)
+   */
+  @Get()
+  @HttpCode(HttpStatus.OK)
+  async getProgressBase(
+    @CurrentUser('id') userId: string,
+    @Query() query: ProgressQueryDto,
+  ) {
+    return this.getOverallProgress(userId, query);
+  }
+  /**
+   * Alias: GET /api/v1/progress/course/:courseId
+   * (frontend PROGRESS.BY_COURSE)
+   */
+  @Get('course/:courseId')
+  @HttpCode(HttpStatus.OK)
+  async getProgressByCourse(
+    @CurrentUser('id') userId: string,
+    @Param('courseId') courseId: string,
+  ) {
+    const progress = await this.progressService.getCourseProgressById(
+      userId,
+      courseId,
+    );
+    return { success: true, data: progress };
+  }
+  /**
+   * Alias: GET /api/v1/progress/dashboard
+   * (frontend PROGRESS.DASHBOARD)
+   */
+  @Get('dashboard')
+  @HttpCode(HttpStatus.OK)
+  async getProgressDashboard(@CurrentUser('id') userId: string) {
+    return this.getOverallProgress(userId, {});
+  }
+
+  /**
+   * Alias: GET /api/v1/progress/chart
+   * (frontend PROGRESS.CHART_DATA)
+   */
+  @Get('chart')
+  @HttpCode(HttpStatus.OK)
+  async getProgressChart(@CurrentUser('id') userId: string) {
+    const data = await this.progressService.getLabProgress(userId);
+    return { success: true, data };
   }
 }
