@@ -63,3 +63,5 @@ report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 
 # Added: Prisma migrations (if applicable)
 prisma/migrations
+
+package-lock.json

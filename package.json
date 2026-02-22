@@ -24,11 +24,15 @@
     "prisma:migrate": "prisma migrate dev",
     "prisma:deploy": "prisma migrate deploy",
     "prisma:studio": "prisma studio",
+    "seed": "ts-node --transpile-only prisma/seed.ts",
     "prisma:seed": "ts-node prisma/seed.ts",
     "db:migrate": "npm run prisma:migrate",
     "db:deploy": "npm run prisma:deploy",
     "db:seed": "npm run prisma:seed",
     "db:reset": "prisma migrate reset && npm run db:seed"
+  },
+  "prisma": {
+    "seed": "ts-node --transpile-only -r tsconfig-paths/register prisma/seed.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.994.0",
@@ -48,6 +52,7 @@
     "class-validator": "^0.14.3",
     "compression": "^1.8.1",
     "cookie-parser": "^1.4.7",
+    "date-fns": "^4.1.0",
     "handlebars": "^4.7.8",
     "helmet": "^8.1.0",
     "joi": "^18.0.2",

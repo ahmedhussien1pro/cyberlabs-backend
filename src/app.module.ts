@@ -22,6 +22,11 @@ import { LabsModule } from './modules/labs';
 import { ProgressModule } from './modules/progress';
 import { PracticeLabsModule } from './modules/practice-labs/practice-labs.module';
 import { ContactModule } from './modules/contact/contact.module';
+import { NotificationsModule } from './modules/notifications/notifications.module';
+import { DashboardModule } from './modules/dashboard/dashboard.module';
+import { GoalsModule } from './modules/goals/goals.module';
+import { ProfileModule } from './modules/profile/profile.module';
+
 // Guards
 import { JwtAuthGuard } from './common/guards';
 
@@ -57,6 +62,10 @@ import { MailModule } from './core/mail';
     ProgressModule,
     PracticeLabsModule,
     ContactModule,
+    NotificationsModule,
+    DashboardModule,
+    GoalsModule,
+    ProfileModule,
   ],
   controllers: [AppController],
   providers: [

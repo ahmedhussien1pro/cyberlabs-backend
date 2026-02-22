@@ -213,7 +213,7 @@ model User {
   pointsLogs         PointsLog[]
   leaderboardEntries LeaderboardEntry[]
   userRewards        UserReward[]
-
+  goals       Goal[]
   // Learning progress
   labProgress           UserLabProgress[]
   courseRegistrations   CourseRegistration[]
@@ -433,11 +433,12 @@ model Notification {
   body      String?
   ar_body   String?
   isRead    Boolean              @default(false)
+  isArchived Boolean             @default(false)
   actionUrl String?
   priority  NotificationPriority @default(MEDIUM)
   expiresAt DateTime?
   createdAt DateTime             @default(now())
-
+@@index([userId, isArchived])
   @@index([userId, isRead])
   @@index([createdAt])
   @@map("notifications")
@@ -1338,6 +1339,44 @@ model Subscription {
   @@index([userId])
   @@index([planId])
   @@map("subscriptions")
+}
+// ============================================================================
+// GOALS
+// ============================================================================
+
+enum GoalFrequency {
+  DAILY
+  WEEKLY
+  MONTHLY
+  CUSTOM
+}
+
+enum GoalStatus {
+  ACTIVE
+  COMPLETED
+  PAUSED
+  ARCHIVED
+}
+
+model Goal {
+  id          String        @id @default(uuid())
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String
+  title       String
+  ar_title    String?
+  description String?
+  targetValue Int           @default(1)
+  currentValue Int          @default(0)
+  frequency   GoalFrequency @default(WEEKLY)
+  status      GoalStatus    @default(ACTIVE)
+  dueDate     DateTime?
+  completedAt DateTime?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@index([userId, status])
+  @@index([userId, frequency])
+  @@map("goals")
 }
 
 // ============================================================================
