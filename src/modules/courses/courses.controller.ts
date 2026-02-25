@@ -8,6 +8,8 @@ import {
   Post,
   Put,
   UseGuards,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 import { CoursesService } from './courses.service';
 import { CourseFiltersDto } from './dto/course-filters.dto';
@@ -15,7 +17,7 @@ import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { SubscriptionGuard } from '../../common/guards';
 
-@Controller('api/v1/courses')
+@Controller('courses') // Base path is typically prefixed globally with /api/v1 in NestJS main.ts
 export class CoursesController {
   constructor(private readonly coursesService: CoursesService) {}
 
@@ -54,12 +56,14 @@ export class CoursesController {
   }
 
   @Post(':courseId/enroll')
+  @HttpCode(HttpStatus.OK)
   @UseGuards(JwtAuthGuard)
   async enroll(@Param('courseId') courseId: string, @CurrentUser() user: any) {
     return this.coursesService.enroll(user.id, courseId);
   }
 
   @Post(':courseId/topics/:topicId/complete')
+  @HttpCode(HttpStatus.OK)
   @UseGuards(JwtAuthGuard)
   async complete(
     @Param('courseId') courseId: string,
@@ -70,6 +74,7 @@ export class CoursesController {
   }
 
   @Put('me/favorites')
+  @HttpCode(HttpStatus.OK)
   @UseGuards(JwtAuthGuard)
   async syncFavorite(
     @Body('courseId') courseId: string,
