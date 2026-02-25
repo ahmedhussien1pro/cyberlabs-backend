@@ -1,7 +1,4 @@
-import {
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../../core/database';
 import { GetNotificationsDto, NotificationTab } from '../dto';
 
@@ -58,11 +55,11 @@ export class NotificationsService {
       where: { id: notificationId, userId },
       data: { isRead: true },
     });
-    
+
     if (result.count === 0) {
       throw new NotFoundException('Notification not found or access denied');
     }
-    
+
     return { success: true };
   }
 
@@ -81,24 +78,24 @@ export class NotificationsService {
       where: { id: notificationId, userId },
       data: { isArchived: true, isRead: true },
     });
-    
+
     if (result.count === 0) {
       throw new NotFoundException('Notification not found or access denied');
     }
-    
+
     return { success: true };
   }
 
   // ── DELETE /notifications/:id ─────────────────────────────────────
   async deleteOne(userId: string, notificationId: string) {
-    const result = await this.prisma.notification.deleteMany({ 
-      where: { id: notificationId, userId } 
+    const result = await this.prisma.notification.deleteMany({
+      where: { id: notificationId, userId },
     });
-    
+
     if (result.count === 0) {
       throw new NotFoundException('Notification not found or access denied');
     }
-    
+
     return { success: true };
   }
 
@@ -114,5 +111,8 @@ export class NotificationsService {
     priority?: 'LOW' | 'MEDIUM' | 'HIGH' | 'URGENT';
   }) {
     return this.prisma.notification.create({ data });
+  }
+  async clearAll(userId: string) {
+    return this.prisma.notification.deleteMany({ where: { userId } });
   }
 }

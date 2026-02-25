@@ -68,4 +68,9 @@ export class NotificationsController {
   ) {
     return this.notificationsService.deleteOne(userId, notificationId);
   }
+  @Delete('all')
+  @UseGuards(JwtAuthGuard)
+  async clearAll(@CurrentUser() user: User) {
+    return this.notificationsService.clearAll(user.id);
+  }
 }
