@@ -1,10 +1,15 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { OnEvent } from '@nestjs/event-emitter';
 import { PrismaService } from '../../../core/database';
 import { GetNotificationsDto, NotificationTab } from '../dto';
+import { NotificationsGateway } from '../gateways/notifications.gateway';
 
 @Injectable()
 export class NotificationsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly gateway: NotificationsGateway,
+  ) {}
 
   // ── GET /notifications ─────────────────────────────────────────────
   async getNotifications(userId: string, query: GetNotificationsDto) {
@@ -99,7 +104,13 @@ export class NotificationsService {
     return { success: true };
   }
 
-  // ── Internal: create notification (called by other services) ──────
+  async clearAll(userId: string) {
+    return this.prisma.notification.deleteMany({ where: { userId } });
+  }
+
+  // ── Internal: create notification ─────────────────────────────────
+  // Can be called directly or via event emitter
+  @OnEvent('notification.create')
   async createNotification(data: {
     userId: string;
     type: string;
@@ -110,9 +121,11 @@ export class NotificationsService {
     actionUrl?: string;
     priority?: 'LOW' | 'MEDIUM' | 'HIGH' | 'URGENT';
   }) {
-    return this.prisma.notification.create({ data });
-  }
-  async clearAll(userId: string) {
-    return this.prisma.notification.deleteMany({ where: { userId } });
+    const notification = await this.prisma.notification.create({ data });
+    
+    // Emit real-time update
+    this.gateway.sendToUser(data.userId, notification);
+    
+    return notification;
   }
 }
