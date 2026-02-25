@@ -1,5 +1,4 @@
-// src/modules/courses/dto/course-filters.dto.ts
-import { IsEnum, IsNumber, IsOptional, IsString, Min } from 'class-validator';
+import { IsEnum, IsNumber, IsOptional, IsString, Min, Max } from 'class-validator';
 import { Type } from 'class-transformer';
 import {
   CourseAccess,
@@ -23,7 +22,7 @@ export class CourseFiltersDto {
 
   @IsOptional()
   @IsString()
-  category?: string; // نفلتر بها على enum CATEGORY أو tags حسب ما تحب
+  category?: string;
 
   @IsOptional()
   @IsEnum(CourseContentType)
@@ -34,12 +33,15 @@ export class CourseFiltersDto {
   status?: STATE;
 
   @IsOptional()
+  @Type(() => Boolean)
   onlyFavorites?: boolean;
 
   @IsOptional()
+  @Type(() => Boolean)
   onlyEnrolled?: boolean;
 
   @IsOptional()
+  @Type(() => Boolean)
   onlyCompleted?: boolean;
 
   @Type(() => Number)
@@ -52,5 +54,6 @@ export class CourseFiltersDto {
   @IsOptional()
   @IsNumber()
   @Min(1)
+  @Max(50, { message: 'Limit cannot exceed 50 items per page' })
   limit?: number = 12;
 }
