@@ -26,6 +26,9 @@ import { NotificationsModule } from './modules/notifications/notifications.modul
 import { DashboardModule } from './modules/dashboard/dashboard.module';
 import { GoalsModule } from './modules/goals/goals.module';
 import { ProfileModule } from './modules/profile/profile.module';
+import { CoursesModule } from './modules/courses/courses.module';
+import { PricingModule } from './modules/pricing/pricing.module';
+import { PathsModule } from './modules/paths/paths.module';
 
 // Guards
 import { JwtAuthGuard } from './common/guards';
@@ -66,6 +69,9 @@ import { MailModule } from './core/mail';
     DashboardModule,
     GoalsModule,
     ProfileModule,
+    CoursesModule,
+    PricingModule,
+    PathsModule,
   ],
   controllers: [AppController],
   providers: [
