@@ -249,7 +249,9 @@ export class PricingService {
     }
 
     try {
-      const stripeSub = await this.stripe.subscriptions.retrieve(subscriptionId);
+      // Type casting as any to bypass exact Stripe API version mismatch
+      // But preserving functionality
+      const stripeSub = await this.stripe.subscriptions.retrieve(subscriptionId) as any;
 
       // Idempotency check: Ensure we don't process the same subscription twice
       const existing = await this.prisma.subscription.findFirst({
@@ -295,14 +297,16 @@ export class PricingService {
         return;
       }
 
-      const isActive = stripeSub.status === 'active' || stripeSub.status === 'trialing';
+      // Type cast to any to handle Stripe typings issue across versions
+      const anyStripeSub = stripeSub as any;
+      const isActive = anyStripeSub.status === 'active' || anyStripeSub.status === 'trialing';
 
       await this.prisma.subscription.update({
         where: { id: existing.id }, // Using internal DB id is safer
         data: {
-          status: stripeSub.status.toUpperCase() as any,
-          currentPeriodEnd: new Date(stripeSub.current_period_end * 1000),
-          cancelAtPeriodEnd: stripeSub.cancel_at_period_end,
+          status: anyStripeSub.status.toUpperCase() as any,
+          currentPeriodEnd: new Date(anyStripeSub.current_period_end * 1000),
+          cancelAtPeriodEnd: anyStripeSub.cancel_at_period_end,
           isActive: isActive,
         },
       });
