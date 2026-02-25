@@ -48,22 +48,29 @@ describe('ProfileService', () => {
     jest.clearAllMocks();
   });
 
-  it('getAchievements returns user achievements', async () => {
+  it('getAchievements returns user achievements with a limit', async () => {
     const result = await service.getAchievements('u1');
     expect(result[0].achievement.title).toBe('First Blood');
+    expect(prismaMock.userAchievement.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({ take: 100 })
+    );
   });
 
-  it('getCertificates returns only ACTIVE certs', async () => {
+  it('getCertificates returns only ACTIVE certs with a limit', async () => {
     await service.getCertificates('u1');
     expect(prismaMock.issuedCertificate.findMany).toHaveBeenCalledWith(
       expect.objectContaining({
         where: expect.objectContaining({ status: 'ACTIVE' }),
+        take: 100,
       }),
     );
   });
 
-  it('getActivity formats dates as yyyy-MM-dd strings', async () => {
+  it('getActivity formats dates as yyyy-MM-dd strings and uses a limit', async () => {
     const result = await service.getActivity('u1');
     expect(result[0].date).toBe('2026-02-01');
+    expect(prismaMock.userActivity.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({ take: 60 })
+    );
   });
 });
