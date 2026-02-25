@@ -1,7 +1,6 @@
 import {
   Injectable,
   NotFoundException,
-  ForbiddenException,
 } from '@nestjs/common';
 import { PrismaService } from '../../../core/database';
 import { GetNotificationsDto, NotificationTab } from '../dto';
@@ -13,7 +12,8 @@ export class NotificationsService {
   // ── GET /notifications ─────────────────────────────────────────────
   async getNotifications(userId: string, query: GetNotificationsDto) {
     const { tab, page = 1, limit = 20 } = query;
-    const skip = (page - 1) * limit;
+    const safeLimit = Math.min(Number(limit), 50); // Prevent huge queries
+    const skip = (Math.max(Number(page), 1) - 1) * safeLimit;
 
     const isArchived = tab === NotificationTab.ARCHIVED;
 
@@ -22,7 +22,7 @@ export class NotificationsService {
         where: { userId, isArchived },
         orderBy: { createdAt: 'desc' },
         skip,
-        take: limit,
+        take: safeLimit,
         select: {
           id: true,
           type: true,
@@ -47,18 +47,22 @@ export class NotificationsService {
       notifications,
       unreadCount,
       total,
-      page,
-      totalPages: Math.ceil(total / limit),
+      page: Number(page),
+      totalPages: Math.ceil(total / safeLimit) || 1,
     };
   }
 
   // ── PATCH /notifications/:id/read ──────────────────────────────────
   async markAsRead(userId: string, notificationId: string) {
-    await this._assertOwnership(userId, notificationId);
-    await this.prisma.notification.update({
-      where: { id: notificationId },
+    const result = await this.prisma.notification.updateMany({
+      where: { id: notificationId, userId },
       data: { isRead: true },
     });
+    
+    if (result.count === 0) {
+      throw new NotFoundException('Notification not found or access denied');
+    }
+    
     return { success: true };
   }
 
@@ -73,18 +77,28 @@ export class NotificationsService {
 
   // ── PATCH /notifications/:id/archive ──────────────────────────────
   async archive(userId: string, notificationId: string) {
-    await this._assertOwnership(userId, notificationId);
-    await this.prisma.notification.update({
-      where: { id: notificationId },
+    const result = await this.prisma.notification.updateMany({
+      where: { id: notificationId, userId },
       data: { isArchived: true, isRead: true },
     });
+    
+    if (result.count === 0) {
+      throw new NotFoundException('Notification not found or access denied');
+    }
+    
     return { success: true };
   }
 
   // ── DELETE /notifications/:id ─────────────────────────────────────
   async deleteOne(userId: string, notificationId: string) {
-    await this._assertOwnership(userId, notificationId);
-    await this.prisma.notification.delete({ where: { id: notificationId } });
+    const result = await this.prisma.notification.deleteMany({ 
+      where: { id: notificationId, userId } 
+    });
+    
+    if (result.count === 0) {
+      throw new NotFoundException('Notification not found or access denied');
+    }
+    
     return { success: true };
   }
 
@@ -100,17 +114,5 @@ export class NotificationsService {
     priority?: 'LOW' | 'MEDIUM' | 'HIGH' | 'URGENT';
   }) {
     return this.prisma.notification.create({ data });
-  }
-
-  // ── Private helpers ───────────────────────────────────────────────
-  private async _assertOwnership(userId: string, notificationId: string) {
-    const notification = await this.prisma.notification.findUnique({
-      where: { id: notificationId },
-      select: { userId: true },
-    });
-    if (!notification) throw new NotFoundException('Notification not found');
-    if (notification.userId !== userId)
-      throw new ForbiddenException('Access denied');
-    return notification;
   }
 }
