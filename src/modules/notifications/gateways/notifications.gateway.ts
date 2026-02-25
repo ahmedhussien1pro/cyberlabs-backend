@@ -10,10 +10,7 @@ import { ConfigService } from '@nestjs/config';
 import { Logger } from '@nestjs/common';
 
 @WebSocketGateway({
-  cors: {
-    origin: process.env.FRONTEND_URL || 'http://localhost:5173',
-    credentials: true,
-  },
+  // Removed hardcoded cors block, relies on CustomIoAdapter in main.ts
   namespace: 'notifications',
 })
 export class NotificationsGateway
