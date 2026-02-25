@@ -11,7 +11,7 @@ import { PathsService } from './paths.service';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { Type } from 'class-transformer';
-import { IsNumber, IsOptional, Min, Max } from 'class-validator';
+import { IsNumber, IsOptional, Min, Max, IsString } from 'class-validator';
 
 export class PathFiltersDto {
   @Type(() => Number)
@@ -26,6 +26,14 @@ export class PathFiltersDto {
   @Min(1)
   @Max(50)
   limit?: number = 10;
+
+  @IsOptional()
+  @IsString()
+  difficulty?: string;
+
+  @IsOptional()
+  @IsString()
+  search?: string;
 }
 
 @Controller('paths')
