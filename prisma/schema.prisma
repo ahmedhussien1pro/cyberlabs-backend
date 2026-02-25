@@ -17,6 +17,20 @@ datasource db {
 // ENUMS
 // ============================================================================
 
+enum PathModuleType {
+  COURSE
+  LAB
+  QUIZ
+  PROJECT
+}
+
+enum PathModuleStatus {
+  PUBLISHED
+  COMING_SOON
+  DRAFT
+}
+
+
 enum Role {
   ADMIN
   USER
@@ -786,7 +800,7 @@ model Course {
   lessons     Lesson[]
   reviews     Review[]
   favorites   CourseFavorite[]
-  paths       PathCourse[]
+  pathModules  PathModule[]
 
   // Original relations (keep intact)
   modules             Module[]
@@ -1025,6 +1039,7 @@ model Lab {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
+  pathModules     PathModule[]
   usersProgress   UserLabProgress[]
   hints           LabHint[]
   discussions     Discussion[]
@@ -1437,39 +1452,68 @@ model CourseFavorite {
 }
 
 model LearningPath {
-  id             String       @id @default(uuid())
-  slug           String       @unique
-  title          String
-  ar_title       String?
-  description    String?
-  ar_description String?
-  image          String?
-  color          CourseColor  @default(BLUE)
-  access         CourseAccess @default(FREE)
-  difficulty     Difficulty   @default(BEGINNER)
-  estimatedHours Int?
-  isFeatured     Boolean      @default(false)
-  isPublished    Boolean      @default(false)
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
+  id              String       @id @default(uuid())
+  slug            String       @unique
+  title           String
+  ar_title        String?
+  description     String?
+  ar_description  String?
+  longDescription String?      @db.Text
+  ar_longDescription String?   @db.Text
+  iconName        String       @default("Map")
+  color           CourseColor  @default(BLUE)
+  difficulty      Difficulty   @default(BEGINNER)
+  order           Int          @default(0)
 
-  courses     PathCourse[]
+  totalModules    Int          @default(0)
+  totalCourses    Int          @default(0)
+  totalLabs       Int          @default(0)
+  estimatedHours  Int          @default(0)
+
+  tags            String[]
+  ar_tags         String[]
+  prerequisites   String[]
+  ar_prerequisites String[]
+  skills          String[]
+  ar_skills       String[]
+
+  isNew           Boolean      @default(false)
+  isFeatured      Boolean      @default(false)
+  isComingSoon    Boolean      @default(false)
+  isPublished     Boolean      @default(false)
+
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+
+  modules     PathModule[]
   enrollments PathEnrollment[]
 
   @@map("learning_paths")
 }
 
-model PathCourse {
-  id       String       @id @default(uuid())
-  pathId   String
-  path     LearningPath @relation(fields: [pathId], references: [id], onDelete: Cascade)
-  courseId String
-  course   Course       @relation(fields: [courseId], references: [id], onDelete: Cascade)
-  order    Int
+model PathModule {
+  id             String       @id @default(uuid())
+  pathId         String
+  path           LearningPath @relation(fields: [pathId], references: [id], onDelete: Cascade)
 
-  @@unique([pathId, courseId])
+  order          Int
+  title          String
+  ar_title       String?
+  description    String?
+  ar_description String?
+  type           PathModuleType   @default(COURSE)
+  status         PathModuleStatus @default(PUBLISHED)
+  estimatedHours Int          @default(0)
+  isLocked       Boolean      @default(false)
+
+  // Link to existing resources (optional, used if type is COURSE or LAB)
+  courseId       String?
+  course         Course?      @relation(fields: [courseId], references: [id], onDelete: SetNull)
+  labId          String?
+  lab            Lab?         @relation(fields: [labId], references: [id], onDelete: SetNull)
+
   @@unique([pathId, order])
-  @@map("path_courses")
+  @@map("path_modules")
 }
 
 model PathEnrollment {
