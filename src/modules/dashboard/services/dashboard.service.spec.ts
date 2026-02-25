@@ -25,6 +25,9 @@ const prismaMock = {
   enrollment: { findMany: jest.fn().mockResolvedValue([]) },
   userLabProgress: { findMany: jest.fn().mockResolvedValue([]) },
   xPLog: { findMany: jest.fn().mockResolvedValue([]) },
+  user: {
+    findUnique: jest.fn().mockResolvedValue({ name: 'Current User', avatarUrl: null })
+  },
   $transaction: jest.fn().mockImplementation((ops) => Promise.all(ops)),
 };
 
@@ -99,11 +102,10 @@ describe('DashboardService', () => {
   describe('getLeaderboard', () => {
     it('returns current user rank when not in top 10', async () => {
       prismaMock.userPoints.findMany.mockResolvedValueOnce([]);
-      prismaMock.userPoints.findUnique.mockResolvedValueOnce({
-        userId: 'u1',
-        totalXP: 50,
-        level: 1,
-      });
+      prismaMock.$transaction.mockResolvedValueOnce([
+        { userId: 'u1', totalXP: 50, level: 1 },
+        { name: 'MyName', avatarUrl: null }
+      ]);
       prismaMock.userPoints.count.mockResolvedValueOnce(5); // 5 users > him → rank 6
 
       const result = await service.getLeaderboard('u1');
