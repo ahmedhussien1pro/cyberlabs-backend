@@ -122,10 +122,10 @@ export class NotificationsService {
     priority?: 'LOW' | 'MEDIUM' | 'HIGH' | 'URGENT';
   }) {
     const notification = await this.prisma.notification.create({ data });
-    
+
     // Emit real-time update
     this.gateway.sendToUser(data.userId, notification);
-    
+
     return notification;
   }
 }

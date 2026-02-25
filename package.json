@@ -53,6 +53,7 @@
     "compression": "^1.8.1",
     "cookie-parser": "^1.4.7",
     "date-fns": "^4.1.0",
+    "event-emitter": "^0.3.5",
     "handlebars": "^4.7.8",
     "helmet": "^8.1.0",
     "joi": "^18.0.2",
