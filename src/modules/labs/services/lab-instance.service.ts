@@ -6,44 +6,38 @@ export class LabInstanceService {
   constructor(private prisma: PrismaService) {}
 
   /**
-   * Get or create user's lab instance
+   * Get or create user's lab instance securely using upsert
    */
   async getOrCreateInstance(userId: string, labId: string) {
-    // Check if instance exists
-    let instance = await this.prisma.labInstance.findUnique({
+    const lab = await this.prisma.lab.findUnique({
+      where: { id: labId },
+      select: {
+        id: true,
+        initialState: true,
+      },
+    });
+
+    if (!lab) {
+      throw new NotFoundException('Lab not found');
+    }
+
+    // Use upsert to prevent race conditions when two concurrent requests try to create an instance
+    const instance = await this.prisma.labInstance.upsert({
       where: {
         userId_labId: {
           userId,
           labId,
         },
       },
+      update: {}, // Do nothing if it already exists
+      create: {
+        userId,
+        labId,
+        state: lab.initialState ?? {},
+        balance: 5000, // Default balance
+        isActive: true,
+      },
     });
-
-    // Create new instance if not exists
-    if (!instance) {
-      // Get lab default state
-      const lab = await this.prisma.lab.findUnique({
-        where: { id: labId },
-        select: {
-          id: true,
-          initialState: true, // Add this field to Lab model
-        },
-      });
-
-      if (!lab) {
-        throw new NotFoundException('Lab not found');
-      }
-
-      instance = await this.prisma.labInstance.create({
-        data: {
-          userId,
-          labId,
-          state: lab.initialState || {}, // Default state from lab config
-          balance: 5000, // Default balance
-          isActive: true,
-        },
-      });
-    }
 
     return instance;
   }
@@ -78,6 +72,10 @@ export class LabInstanceService {
       select: { initialState: true },
     });
 
+    if (!lab) {
+      throw new NotFoundException('Lab not found');
+    }
+
     const instance = await this.prisma.labInstance.update({
       where: {
         userId_labId: {
@@ -86,7 +84,7 @@ export class LabInstanceService {
         },
       },
       data: {
-        state: lab?.initialState || {},
+        state: lab.initialState ?? {},
         balance: 5000,
         isActive: true,
         startedAt: new Date(),
