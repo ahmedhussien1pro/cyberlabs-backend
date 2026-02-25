@@ -9,6 +9,7 @@ export class ProfileService {
   async getAchievements(userId: string) {
     return this.prisma.userAchievement.findMany({
       where: { userId },
+      take: 100, // Hard limit to prevent data dumping
       include: {
         achievement: {
           select: {
@@ -28,6 +29,7 @@ export class ProfileService {
   async getCertificates(userId: string) {
     return this.prisma.issuedCertificate.findMany({
       where: { userId, status: 'ACTIVE' },
+      take: 100, // Hard limit
       include: {
         course: {
           select: { title: true, ar_title: true, thumbnail: true },
@@ -41,6 +43,7 @@ export class ProfileService {
     const since = subDays(new Date(), 30);
     const activities = await this.prisma.userActivity.findMany({
       where: { userId, date: { gte: since } },
+      take: 60, // Security limit (max 60 days if logic changes)
       orderBy: { date: 'desc' },
     });
     return activities.map((a) => ({
