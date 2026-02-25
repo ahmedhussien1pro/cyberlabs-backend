@@ -1464,12 +1464,12 @@ model LearningPath {
   color           CourseColor  @default(BLUE)
   difficulty      Difficulty   @default(BEGINNER)
   order           Int          @default(0)
-
+  
   totalModules    Int          @default(0)
   totalCourses    Int          @default(0)
   totalLabs       Int          @default(0)
   estimatedHours  Int          @default(0)
-
+  
   tags            String[]
   ar_tags         String[]
   prerequisites   String[]
@@ -1495,7 +1495,7 @@ model PathModule {
   id             String       @id @default(uuid())
   pathId         String
   path           LearningPath @relation(fields: [pathId], references: [id], onDelete: Cascade)
-
+  
   order          Int
   title          String
   ar_title       String?
@@ -1505,7 +1505,7 @@ model PathModule {
   status         PathModuleStatus @default(PUBLISHED)
   estimatedHours Int          @default(0)
   isLocked       Boolean      @default(false)
-
+  
   // Link to existing resources (optional, used if type is COURSE or LAB)
   courseId       String?
   course         Course?      @relation(fields: [courseId], references: [id], onDelete: SetNull)
