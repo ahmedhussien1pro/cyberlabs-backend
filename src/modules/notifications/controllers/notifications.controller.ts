@@ -58,6 +58,12 @@ export class NotificationsController {
   ) {
     return this.notificationsService.archive(userId, notificationId);
   }
+  /** DELETE /api/v1/notifications/all */
+  @Delete('all')
+  @HttpCode(HttpStatus.OK)
+  async clearAll(@CurrentUser('id') userId: string) {
+    return this.notificationsService.clearAll(userId);
+  }
 
   /** DELETE /api/v1/notifications/:id */
   @Delete(':id')
@@ -67,10 +73,5 @@ export class NotificationsController {
     @Param('id') notificationId: string,
   ) {
     return this.notificationsService.deleteOne(userId, notificationId);
-  }
-  @Delete('all')
-  @UseGuards(JwtAuthGuard)
-  async clearAll(@CurrentUser() user: User) {
-    return this.notificationsService.clearAll(user.id);
   }
 }
