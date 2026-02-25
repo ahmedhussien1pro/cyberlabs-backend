@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 import { APP_GUARD } from '@nestjs/core';
 import { StorageModule } from './core/storage';
 
@@ -50,6 +51,9 @@ import { MailModule } from './core/mail';
         allowUnknown: true,
       },
     }),
+    
+    // Core event emitter for notifications
+    EventEmitterModule.forRoot(),
 
     // Core Modules
     DatabaseModule,
