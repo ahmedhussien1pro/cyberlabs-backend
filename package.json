@@ -65,6 +65,7 @@
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
     "speakeasy": "^2.0.0",
+    "stripe": "^20.3.1",
     "uuid": "^13.0.0",
     "winston": "^3.19.0"
   },
@@ -85,6 +86,7 @@
     "@types/passport-jwt": "^4.0.1",
     "@types/qrcode": "^1.5.6",
     "@types/speakeasy": "^2.0.10",
+    "@types/stripe": "^8.0.416",
     "@types/supertest": "^6.0.2",
     "@types/winston": "^2.4.4",
     "eslint": "^9.18.0",

@@ -6,14 +6,12 @@
 
 generator client {
   provider = "prisma-client-js"
-  
 }
 
 datasource db {
   provider = "postgresql"
-   url      = env("DATABASE_URL")
+  url      = env("DATABASE_URL")
 }
-
 
 // ============================================================================
 // ENUMS
@@ -120,9 +118,51 @@ enum NotificationPriority {
 }
 
 enum CATEGORY {
+  WEB_SECURITY
+  PENETRATION_TESTING
+  MALWARE_ANALYSIS
+  CLOUD_SECURITY
   FUNDAMENTALS
-  TOOLS
-  VULNERABILITIES
+  CRYPTOGRAPHY
+  NETWORK_SECURITY
+  TOOLS_AND_TECHNIQUES
+  CAREER_AND_INDUSTRY
+}
+
+enum CourseAccess {
+  FREE
+  PRO
+  PREMIUM
+}
+
+enum CourseColor {
+  EMERALD
+  BLUE
+  VIOLET
+  ORANGE
+  ROSE
+  CYAN
+}
+
+enum CourseContentType {
+  PRACTICAL
+  THEORETICAL
+  MIXED
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  TRIALING
+  PAST_DUE
+  CANCELED
+  INCOMPLETE
+  INCOMPLETE_EXPIRED
+  UNPAID
+}
+
+enum BillingCycle {
+  MONTHLY
+  ANNUAL
 }
 
 enum CertificateStatus {
@@ -131,7 +171,6 @@ enum CertificateStatus {
   EXPIRED
 }
 
-// إضافة Enums للـ LMS
 enum LessonType {
   VIDEO
   ARTICLE
@@ -181,13 +220,15 @@ model User {
   lastLoginAt         DateTime?
 
   // LMS Relations
-  enrollments       Enrollment[]
-  reviews           Review[]
-  lessonCompletions LessonCompletion[]
-  labSubmissions    LabSubmission[]
-  labInstances LabInstance[]
+  enrollments         Enrollment[]
+  reviews             Review[]
+  lessonCompletions   LessonCompletion[]
+  labSubmissions      LabSubmission[]
+  labInstances        LabInstance[]
+  courseFavorites     CourseFavorite[]
+  pathEnrollments     PathEnrollment[]
   // Course instructor relation
-  coursesAsInstructor Course[] @relation("CourseInstructor")
+  coursesAsInstructor Course[]           @relation("CourseInstructor")
 
   // File management
   files File[]
@@ -204,30 +245,30 @@ model User {
   certifications Certification[]
 
   // Gamification
-  achievements       UserAchievement[]
-  badges             UserBadge[]
-  careerPaths        UserCareerPath[]
-  points             UserPoints?
-  pointsHistory      PointsHistory[]
-  xplogs             XPLog[]
-  pointsLogs         PointsLog[]
-  leaderboardEntries LeaderboardEntry[]
-  userRewards        UserReward[]
-  goals       Goal[]
+  achievements          UserAchievement[]
+  badges                UserBadge[]
+  careerPaths           UserCareerPath[]
+  points                UserPoints?
+  pointsHistory         PointsHistory[]
+  xplogs                XPLog[]
+  pointsLogs            PointsLog[]
+  leaderboardEntries    LeaderboardEntry[]
+  userRewards           UserReward[]
+  goals                 Goal[]
   // Learning progress
   labProgress           UserLabProgress[]
   courseRegistrations   CourseRegistration[]
   assessmentSubmissions AssessmentSubmission[]
   lessonProgress        LessonProgress[]
   issuedCertificates    IssuedCertificate[]
-  labGenericUsers    LabGenericUser[]
-  labGenericBanks    LabGenericBank[]
-  labGenericContents LabGenericContent[]
-  labGenericLogs LabGenericLog[]
+  labGenericUsers       LabGenericUser[]
+  labGenericBanks       LabGenericBank[]
+  labGenericContents    LabGenericContent[]
+  labGenericLogs        LabGenericLog[]
   // Activity & stats
-  dayActivity UserActivity[]
-  
-  stats       UserStats?
+  dayActivity           UserActivity[]
+
+  stats UserStats?
 
   // Security & logs
   security             UserSecurity?
@@ -424,21 +465,22 @@ model Image {
 // ============================================================================
 
 model Notification {
-  id        String               @id @default(uuid())
-  user      User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    String
-  type      String
-  title     String
-  ar_title  String?
-  body      String?
-  ar_body   String?
-  isRead    Boolean              @default(false)
-  isArchived Boolean             @default(false)
-  actionUrl String?
-  priority  NotificationPriority @default(MEDIUM)
-  expiresAt DateTime?
-  createdAt DateTime             @default(now())
-@@index([userId, isArchived])
+  id         String               @id @default(uuid())
+  user       User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     String
+  type       String
+  title      String
+  ar_title   String?
+  body       String?
+  ar_body    String?
+  isRead     Boolean              @default(false)
+  isArchived Boolean              @default(false)
+  actionUrl  String?
+  priority   NotificationPriority @default(MEDIUM)
+  expiresAt  DateTime?
+  createdAt  DateTime             @default(now())
+
+  @@index([userId, isArchived])
   @@index([userId, isRead])
   @@index([createdAt])
   @@map("notifications")
@@ -613,16 +655,16 @@ model LeaderboardEntry {
 model UserActivity {
   id             String   @id @default(cuid())
   userId         String
-  date           DateTime @db.Date     
+  date           DateTime @db.Date
   activeMinutes  Int      @default(0)
   completedTasks Int      @default(0)
   labsSolved     Int      @default(0)
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
-  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@unique([userId, date])              
+  @@unique([userId, date])
   @@index([userId, date])
   @@map("user_activities")
 }
@@ -690,42 +732,60 @@ model PointsHistory {
 // ============================================================================
 
 model Course {
-  id              String     @id @default(uuid())
-  title           String
-  ar_title        String?
-  description     String?
-  ar_description  String?
-  thumbnail       String?
-  backgroundImage String?
-  difficulty      Difficulty @default(BEGINNER)
-  duration        Int        @default(120)
-  estimatedHours  Int?
-  image           String?
-  link            String?
-  topics          String[]
-  ar_topics       String[]
-  category        CATEGORY[]
-  state           STATE      @default(PUBLISHED)
+  id                 String            @id @default(uuid())
+  slug               String            @unique
+  title              String
+  ar_title           String?
+  description        String?
+  ar_description     String?
+  longDescription    String?           @db.Text
+  ar_longDescription String?           @db.Text
+  thumbnail          String?
+  backgroundImage    String?
+  difficulty         Difficulty        @default(BEGINNER)
+  ar_difficulty      String?
+  duration           Int               @default(120)
+  estimatedHours     Int?
+  image              String?
+  link               String?
+  topics             String[]
+  ar_topics          String[]
+  skills             String[]
+  ar_skills          String[]
+  prerequisites      String[]
+  ar_prerequisites   String[]
+  tags               String[]
+  labsLink           String?
+  isNew              Boolean           @default(false)
+  category           CATEGORY          @default(FUNDAMENTALS)
+  ar_category        String?
+  contentType        CourseContentType @default(MIXED)
+  access             CourseAccess      @default(FREE)
+  color              CourseColor       @default(BLUE)
+  state              STATE             @default(PUBLISHED)
 
   // LMS specific fields
   instructorId    String
   price           Float     @default(0)
   enrollmentCount Int       @default(0)
   averageRating   Float     @default(0)
+  reviewCount     Int       @default(0)
+  totalTopics     Int       @default(0)
   isPublished     Boolean   @default(false)
   publishedAt     DateTime?
   isFeatured      Boolean   @default(false)
-  prerequisites   String[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   // Relations
-  instructor  User         @relation("CourseInstructor", fields: [instructorId], references: [id])
+  instructor  User             @relation("CourseInstructor", fields: [instructorId], references: [id])
   enrollments Enrollment[]
   sections    Section[]
   lessons     Lesson[]
   reviews     Review[]
+  favorites   CourseFavorite[]
+  paths       PathCourse[]
 
   // Original relations (keep intact)
   modules             Module[]
@@ -953,48 +1013,50 @@ model Lab {
   timeLimit      Int?
   xpReward       Int        @default(0)
   pointsReward   Int        @default(0)
-  pointsPerHint   Int      @default(10)   
-  pointsPerFail   Int      @default(5)   
-  initialState    Json     @default("{}") 
-  isolationMode   String    @default("database") 
-  
+  pointsPerHint  Int        @default(10)
+  pointsPerFail  Int        @default(5)
+  initialState   Json       @default("{}")
+  isolationMode  String     @default("database")
+
   steps Json?
 
   isPublished Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  usersProgress UserLabProgress[]
-  hints         LabHint[]
-  discussions   Discussion[]
-  reviews       LabReview[]
-  submissions   LabSubmission[]
-  instances LabInstance[]
+  usersProgress   UserLabProgress[]
+  hints           LabHint[]
+  discussions     Discussion[]
+  reviews         LabReview[]
+  submissions     LabSubmission[]
+  instances       LabInstance[]
   genericUsers    LabGenericUser[]
   genericBanks    LabGenericBank[]
   genericContents LabGenericContent[]
-  genericLogs LabGenericLog[]
+  genericLogs     LabGenericLog[]
+
   @@index([courseId])
   @@index([difficulty])
   @@index([isPublished])
   @@map("labs")
 }
+
 model LabInstance {
-  id        String   @id @default(cuid())
-  userId    String
-  labId     String
-  
+  id     String @id @default(cuid())
+  userId String
+  labId  String
+
   // Lab-specific state (stored as JSON)
-  state     Json     @default("{}")
-  
+  state Json @default("{}")
+
   // Example for IDOR lab:
-  balance   Int      @default(5000)
-  
+  balance Int @default(5000)
+
   // Metadata
-  isActive  Boolean  @default(true)
-  startedAt DateTime @default(now())
+  isActive  Boolean   @default(true)
+  startedAt DateTime  @default(now())
   expiresAt DateTime? // Optional: auto-cleanup old instances
-  
+
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   lab  Lab  @relation(fields: [labId], references: [id], onDelete: Cascade)
 
@@ -1327,19 +1389,103 @@ model SubscriptionPlan {
 }
 
 model Subscription {
-  id        String           @id @default(uuid())
-  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    String
-  plan      SubscriptionPlan @relation(fields: [planId], references: [id], onDelete: Cascade)
-  planId    String
-  startDate DateTime         @default(now())
-  endDate   DateTime
-  isActive  Boolean          @default(true)
+  id     String           @id @default(uuid())
+  user   User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+  plan   SubscriptionPlan @relation(fields: [planId], references: [id], onDelete: Cascade)
+  planId String
+
+  // Stripe & Payment Fields
+  stripeCustomerId     String?
+  stripeSubscriptionId String?            @unique
+  stripePriceId        String?
+  status               SubscriptionStatus @default(ACTIVE)
+  billingCycle         BillingCycle       @default(MONTHLY)
+  currentPeriodEnd     DateTime?
+  cancelAtPeriodEnd    Boolean            @default(false)
+  trialEnd             DateTime?
+  paymobOrderId        String? // Placeholder for Paymob integration later
+
+  startDate DateTime  @default(now())
+  endDate   DateTime?
+  isActive  Boolean   @default(true)
 
   @@index([userId])
   @@index([planId])
+  @@index([stripeSubscriptionId])
   @@map("subscriptions")
 }
+
+// ============================================================================
+// FAVORITES & LEARNING PATHS (NEW V2)
+// ============================================================================
+
+model CourseFavorite {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  courseId  String
+  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, courseId])
+  @@index([userId])
+  @@index([courseId])
+  @@map("course_favorites")
+}
+
+model LearningPath {
+  id             String       @id @default(uuid())
+  slug           String       @unique
+  title          String
+  ar_title       String?
+  description    String?
+  ar_description String?
+  image          String?
+  color          CourseColor  @default(BLUE)
+  access         CourseAccess @default(FREE)
+  difficulty     Difficulty   @default(BEGINNER)
+  estimatedHours Int?
+  isFeatured     Boolean      @default(false)
+  isPublished    Boolean      @default(false)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  courses     PathCourse[]
+  enrollments PathEnrollment[]
+
+  @@map("learning_paths")
+}
+
+model PathCourse {
+  id       String       @id @default(uuid())
+  pathId   String
+  path     LearningPath @relation(fields: [pathId], references: [id], onDelete: Cascade)
+  courseId String
+  course   Course       @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  order    Int
+
+  @@unique([pathId, courseId])
+  @@unique([pathId, order])
+  @@map("path_courses")
+}
+
+model PathEnrollment {
+  id          String       @id @default(uuid())
+  userId      String
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  pathId      String
+  path        LearningPath @relation(fields: [pathId], references: [id], onDelete: Cascade)
+  progress    Float        @default(0)
+  isCompleted Boolean      @default(false)
+  enrolledAt  DateTime     @default(now())
+  completedAt DateTime?
+
+  @@unique([userId, pathId])
+  @@index([userId])
+  @@map("path_enrollments")
+}
+
 // ============================================================================
 // GOALS
 // ============================================================================
@@ -1359,20 +1505,20 @@ enum GoalStatus {
 }
 
 model Goal {
-  id          String        @id @default(uuid())
-  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId      String
-  title       String
-  ar_title    String?
-  description String?
-  targetValue Int           @default(1)
-  currentValue Int          @default(0)
-  frequency   GoalFrequency @default(WEEKLY)
-  status      GoalStatus    @default(ACTIVE)
-  dueDate     DateTime?
-  completedAt DateTime?
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
+  id           String        @id @default(uuid())
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId       String
+  title        String
+  ar_title     String?
+  description  String?
+  targetValue  Int           @default(1)
+  currentValue Int           @default(0)
+  frequency    GoalFrequency @default(WEEKLY)
+  status       GoalStatus    @default(ACTIVE)
+  dueDate      DateTime?
+  completedAt  DateTime?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
 
   @@index([userId, status])
   @@index([userId, frequency])
@@ -1423,80 +1569,82 @@ model ContactSubmission {
 }
 
 model LabSubmission {
-  id        String   @id @default(uuid())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  labId     String
-  lab       Lab      @relation(fields: [labId], references: [id], onDelete: Cascade)
-  
+  id     String @id @default(uuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  labId  String
+  lab    Lab    @relation(fields: [labId], references: [id], onDelete: Cascade)
+
   // Submission data
-  code          String?   @db.Text
-  flagAnswer    String?
-  isCorrect     Boolean   @default(false)
-  
+  code       String? @db.Text
+  flagAnswer String?
+  isCorrect  Boolean @default(false)
+
   // Points calculation
-  timeTaken     Int       // seconds
-  attemptNumber Int       @default(1)
-  pointsEarned  Int       @default(0)
-  xpEarned      Int       @default(0)
-  
+  timeTaken     Int // seconds
+  attemptNumber Int @default(1)
+  pointsEarned  Int @default(0)
+  xpEarned      Int @default(0)
+
   // Metadata
-  submittedAt   DateTime  @default(now())
-  ipAddress     String?
-  
+  submittedAt DateTime @default(now())
+  ipAddress   String?
+
   @@index([userId, labId])
   @@index([submittedAt])
   @@map("lab_submissions")
 }
-
 
 // ============================================================================
 // LAB-SPECIFIC MODELS (Keep as is for vulnerable labs)
 // ============================================================================
 // Login, JWT, SQLi, Broken Auth
 model LabGenericUser {
-  id        String   @id @default(cuid())
-  userId    String   
-  labId     String  
-  username  String
-  password  String
-  role      String   @default("user")
-  email     String?
-  isStatic  Boolean  @default(false) 
-  meta      Json?   
+  id       String  @id @default(cuid())
+  userId   String
+  labId    String
+  username String
+  password String
+  role     String  @default("user")
+  email    String?
+  isStatic Boolean @default(false)
+  meta     Json?
 
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  lab       Lab      @relation(fields: [labId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lab  Lab  @relation(fields: [labId], references: [id], onDelete: Cascade)
+
   @@unique([userId, labId, username])
 }
 
 // Money, IDOR, Race Condition, CSRF
 model LabGenericBank {
-  id        String   @id @default(cuid())
+  id        String  @id @default(cuid())
   userId    String
   labId     String
   accountNo String
-  balance   Float    @default(1000)
+  balance   Float   @default(1000)
   ownerName String?
 
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  lab       Lab      @relation(fields: [labId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lab  Lab  @relation(fields: [labId], references: [id], onDelete: Cascade)
+
   @@unique([userId, labId, accountNo])
 }
 
 // Posts, Comments, Files (XSS, SSTI, Path Traversal)
 model LabGenericContent {
-  id        String   @id @default(cuid())
-  userId    String
-  labId     String
-  title     String?
-  body      String   @db.Text
-  isPublic  Boolean  @default(true)
-  author    String?
-  fileUrl   String?
+  id       String  @id @default(cuid())
+  userId   String
+  labId    String
+  title    String?
+  body     String  @db.Text
+  isPublic Boolean @default(true)
+  author   String?
+  fileUrl  String?
 
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  lab       Lab      @relation(fields: [labId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lab  Lab  @relation(fields: [labId], references: [id], onDelete: Cascade)
+
   @@index([userId, labId])
 }
 
@@ -1505,14 +1653,14 @@ model LabGenericLog {
   id        String   @id @default(cuid())
   userId    String
   labId     String
-  type      String   // "PAYMENT" | "COUPON" | "LOGIN_LOG" | "FILE_UPLOAD"
-  value     Float?  
-  action    String?  
-  meta      Json?   
+  type      String // "PAYMENT" | "COUPON" | "LOGIN_LOG" | "FILE_UPLOAD"
+  value     Float?
+  action    String?
+  meta      Json?
   createdAt DateTime @default(now())
 
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  lab       Lab      @relation(fields: [labId], references: [id], onDelete: Cascade)
-  
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lab  Lab  @relation(fields: [labId], references: [id], onDelete: Cascade)
+
   @@index([userId, labId])
 }
