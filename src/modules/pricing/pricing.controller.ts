@@ -1,7 +1,15 @@
-import { Controller, Get, Post, Body, UseGuards } from '@nestjs/common';
-import { Req, Res, RawBodyRequest } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  UseGuards,
+  Req,
+  Res,
+  RawBodyRequest,
+  BadRequestException,
+} from '@nestjs/common';
 import { Request, Response } from 'express';
-
 import { PricingService } from './pricing.service';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
@@ -25,7 +33,7 @@ export class PricingController {
   @UseGuards(JwtAuthGuard)
   async checkout(
     @Body('planId') planId: string,
-    @Body('billingCycle') billingCycle: 'MONTHLY' | 'ANNUAL',
+    @Body('billingCycle') billingCycle: 'MONTHLY' | 'YEARLY',
     @Body('successUrl') successUrl: string,
     @CurrentUser() user: any,
   ) {
@@ -48,18 +56,22 @@ export class PricingController {
   async cancel(@CurrentUser() user: any) {
     return this.pricingService.cancelSubscription(user.id);
   }
+
   @Post('webhooks/stripe')
   async stripeWebhook(
     @Req() req: RawBodyRequest<Request>,
     @Res() res: Response,
   ) {
-    const signature = req.headers['stripe-signature'];
+    const signature = req.headers['stripe-signature'] as string;
+
+    if (!req.rawBody) {
+      throw new BadRequestException(
+        'Raw body is missing. Ensure rawBody is enabled in main.ts',
+      );
+    }
 
     try {
-      const event = this.pricingService.handleStripeWebhook(
-        req.rawBody,
-        signature,
-      );
+      this.pricingService.handleStripeWebhook(req.rawBody, signature);
       res.json({ received: true });
     } catch (err) {
       res.status(400).send(`Webhook Error: ${err.message}`);

@@ -6,6 +6,7 @@ import {
 import { PrismaService } from '../../core/database';
 import Stripe from 'stripe';
 import { ConfigService } from '@nestjs/config';
+import { SubscriptionDuration } from '@prisma/client';
 
 @Injectable()
 export class PricingService {
@@ -15,12 +16,12 @@ export class PricingService {
     private prisma: PrismaService,
     private config: ConfigService,
   ) {
-    this.stripe = new Stripe(this.config.get<string>('STRIPE_SECRET_KEY'), {
-      apiVersion: '2023-10-16',
+    // تم إضافة ! لتأكيد أن المتغير موجود
+    this.stripe = new Stripe(this.config.get<string>('STRIPE_SECRET_KEY')!, {
+      apiVersion: '2023-10-16' as any,
     });
   }
 
-  // 1. GET /api/plans
   async getPlans() {
     return this.prisma.subscriptionPlan.findMany({
       where: { isActive: true },
@@ -28,18 +29,17 @@ export class PricingService {
     });
   }
 
-  // 2. GET /api/subscriptions/me
   async getMySubscription(userId: string) {
     const sub = await this.prisma.subscription.findFirst({
       where: { userId, isActive: true },
       include: { plan: true },
-      orderBy: { createdAt: 'desc' },
+      orderBy: { startDate: 'desc' },
     });
 
     if (!sub) return null;
 
     return {
-      planId: sub.plan.name.toLowerCase(), // 'free', 'pro', 'team'
+      planId: sub.plan.name.toLowerCase(),
       status: sub.status.toLowerCase(),
       billingCycle: sub.billingCycle.toLowerCase(),
       currentPeriodEnd: sub.currentPeriodEnd?.toISOString(),
@@ -47,27 +47,30 @@ export class PricingService {
     };
   }
 
-  // 3. POST /api/subscriptions/checkout
   async createCheckoutSession(
     userId: string,
     planId: string,
-    billingCycle: 'MONTHLY' | 'ANNUAL',
+    billingCycle: 'MONTHLY' | 'YEARLY',
     successUrl: string,
   ) {
     const user = await this.prisma.user.findUnique({ where: { id: userId } });
     if (!user) throw new NotFoundException('User not found');
 
+    const durationEnum =
+      billingCycle === 'YEARLY'
+        ? SubscriptionDuration.YEARLY
+        : SubscriptionDuration.MONTHLY;
+
     const plan = await this.prisma.subscriptionPlan.findFirst({
       where: {
         name: { equals: planId, mode: 'insensitive' },
-        duration: billingCycle,
+        duration: durationEnum,
       },
     });
 
-    if (!plan)
-      throw new NotFoundException(
-        'Plan not found for the selected billing cycle',
-      );
+    if (!plan || !plan.stripePriceId) {
+      throw new NotFoundException('Plan or Stripe Price ID not found');
+    }
 
     let customerId = user.stripeCustomerId;
 
@@ -80,7 +83,7 @@ export class PricingService {
       customerId = customer.id;
       await this.prisma.user.update({
         where: { id: user.id },
-        data: {},
+        data: { stripeCustomerId: customerId },
       });
     }
 
@@ -107,12 +110,9 @@ export class PricingService {
     return { checkoutUrl: session.url, sessionId: session.id };
   }
 
-  // 4. POST /api/subscriptions/portal
   async createPortalSession(userId: string) {
     const user = await this.prisma.user.findUnique({ where: { id: userId } });
-
-    // const customerId = user?.stripeCustomerId;
-    const customerId = 'cus_placeholder';
+    const customerId = user?.stripeCustomerId;
 
     if (!customerId)
       throw new BadRequestException('No active Stripe customer found');
@@ -125,7 +125,6 @@ export class PricingService {
     return { portalUrl: session.url };
   }
 
-  // 5. Cancel Subscription (Manual fallback)
   async cancelSubscription(userId: string) {
     const sub = await this.prisma.subscription.findFirst({
       where: { userId, isActive: true },
@@ -153,14 +152,15 @@ export class PricingService {
       cancelAtPeriodEnd: updatedSub.cancelAtPeriodEnd,
     };
   }
-  handleStripeWebhook(rawBody: Buffer, signature: string | string[]) {
+
+  handleStripeWebhook(rawBody: Buffer, signature: string) {
     let event: Stripe.Event;
 
     try {
       event = this.stripe.webhooks.constructEvent(
         rawBody,
         signature,
-        this.config.get<string>('STRIPE_WEBHOOK_SECRET'),
+        this.config.get<string>('STRIPE_WEBHOOK_SECRET')!,
       );
     } catch (err) {
       throw new BadRequestException(`Webhook Error: ${err.message}`);
@@ -178,16 +178,17 @@ export class PricingService {
         this.updateSubscriptionStatus(subscription);
         break;
       }
-      default:
-        console.log(`Unhandled event type ${event.type}`);
     }
 
     return event;
   }
 
   private async fulfillSubscription(session: Stripe.Checkout.Session) {
-    const { userId, planId, billingCycle } = session.metadata;
+    const metadata = session.metadata || {};
+    const { userId, planId, billingCycle } = metadata;
     const subscriptionId = session.subscription as string;
+
+    if (!userId || !planId) return;
 
     const stripeSub = await this.stripe.subscriptions.retrieve(subscriptionId);
 
@@ -198,7 +199,9 @@ export class PricingService {
         stripeSubscriptionId: subscriptionId,
         status: 'ACTIVE',
         billingCycle: billingCycle as any,
-        currentPeriodEnd: new Date(stripeSub.current_period_end * 1000),
+        currentPeriodEnd: new Date(
+          (stripeSub as any).current_period_end * 1000,
+        ),
         isActive: true,
       },
     });
@@ -209,7 +212,9 @@ export class PricingService {
       where: { stripeSubscriptionId: stripeSub.id },
       data: {
         status: stripeSub.status.toUpperCase() as any,
-        currentPeriodEnd: new Date(stripeSub.current_period_end * 1000),
+        currentPeriodEnd: new Date(
+          (stripeSub as any).current_period_end * 1000,
+        ),
         cancelAtPeriodEnd: stripeSub.cancel_at_period_end,
         isActive:
           stripeSub.status === 'active' || stripeSub.status === 'trialing',

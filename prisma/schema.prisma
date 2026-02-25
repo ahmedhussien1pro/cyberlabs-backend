@@ -218,6 +218,7 @@ model User {
   preferences         Json?
   isActive            Boolean   @default(true)
   lastLoginAt         DateTime?
+  stripeCustomerId String?
 
   // LMS Relations
   enrollments         Enrollment[]
@@ -1376,6 +1377,7 @@ model SubscriptionPlan {
   description    String?
   ar_description String?
   price          Float
+  stripePriceId String?
   duration       SubscriptionDuration
   features       String[]
   ar_features    String[]
