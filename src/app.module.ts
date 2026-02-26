@@ -15,6 +15,7 @@ import { LoggerModule } from './core/logger';
 import { SecurityModule } from './core/security';
 
 // Feature Modules
+
 import { AuthModule } from './modules/auth';
 import { UsersModule } from './modules/users';
 import { EnrollmentsModule } from './modules/enrollments';
