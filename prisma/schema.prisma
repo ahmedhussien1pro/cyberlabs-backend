@@ -286,6 +286,7 @@ model User {
   labGenericBanks       LabGenericBank[]
   labGenericContents    LabGenericContent[]
   labGenericLogs        LabGenericLog[]
+  labLaunchTokens       LabLaunchToken[]
   // Activity & stats
   dayActivity           UserActivity[]
 
@@ -1062,6 +1063,7 @@ model Lab {
   reviews         LabReview[]
   submissions     LabSubmission[]
   instances       LabInstance[]
+  launchTokens    LabLaunchToken[]
   genericUsers    LabGenericUser[]
   genericBanks    LabGenericBank[]
   genericContents LabGenericContent[]
@@ -1088,6 +1090,9 @@ model LabInstance {
   isActive  Boolean   @default(true)
   startedAt DateTime  @default(now())
   expiresAt DateTime? // Optional: auto-cleanup old instances
+  
+  // Launch token reference
+  launchTokens LabLaunchToken[]
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   lab  Lab  @relation(fields: [labId], references: [id], onDelete: Cascade)
@@ -1096,6 +1101,26 @@ model LabInstance {
   @@index([userId])
   @@index([labId])
   @@map("LabInstance")
+}
+
+// Opaque launch code for lab redirects
+model LabLaunchToken {
+  id         String   @id @default(uuid())
+  token      String   @unique
+  userId     String
+  labId      String
+  instanceId String
+  expiresAt  DateTime
+  usedAt     DateTime?
+  createdAt  DateTime @default(now())
+
+  user     User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lab      Lab         @relation(fields: [labId], references: [id], onDelete: Cascade)
+  instance LabInstance @relation(fields: [instanceId], references: [id], onDelete: Cascade)
+
+  @@index([token])
+  @@index([expiresAt])
+  @@map("lab_launch_tokens")
 }
 
 model LabHint {
