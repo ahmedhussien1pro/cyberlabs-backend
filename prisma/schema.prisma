@@ -5,12 +5,12 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
+  provider = \"prisma-client-js\"
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider = \"postgresql\"
+  url      = env(\"DATABASE_URL\")
 }
 
 // ============================================================================
@@ -198,6 +198,12 @@ enum CourseLevel {
   EXPERT
 }
 
+enum LabExecutionMode {
+  FRONTEND
+  SHARED_BACKEND
+  DOCKER
+}
+
 // ============================================================================
 // CORE USER MODEL
 // ============================================================================
@@ -214,7 +220,7 @@ model User {
   address     String?
   birthday    DateTime?
   phoneNumber String?
-  isVerified  Boolean   @default(false) @map("is_verified")
+  isVerified  Boolean   @default(false) @map(\"is_verified\")
 
   // Security fields
   lastPasswordChange DateTime?
@@ -243,7 +249,7 @@ model User {
   courseFavorites     CourseFavorite[]
   pathEnrollments     PathEnrollment[]
   // Course instructor relation
-  coursesAsInstructor Course[]           @relation("CourseInstructor")
+  coursesAsInstructor Course[]           @relation(\"CourseInstructor\")
 
   // File management
   files File[]
@@ -312,7 +318,7 @@ model User {
   @@index([createdAt])
   @@index([role])
   @@index([isVerified])
-  @@map("users")
+  @@map(\"users\")
 }
 
 // ============================================================================
@@ -332,13 +338,13 @@ model RefreshToken {
 
   @@index([userId])
   @@index([expiresAt])
-  @@map("refresh_tokens")
+  @@map(\"refresh_tokens\")
 }
 
 model ValidationNumber {
   id         String   @id @default(uuid())
   number     String
-  isVerified Boolean  @default(false) @map("is_verified")
+  isVerified Boolean  @default(false) @map(\"is_verified\")
   createdAt  DateTime @default(now())
   expiration BigInt
   used       Boolean  @default(false)
@@ -362,7 +368,7 @@ model PasswordResetToken {
   @@index([userId])
   @@index([token])
   @@index([expiresAt])
-  @@map("password_reset_tokens")
+  @@map(\"password_reset_tokens\")
 }
 
 model EmailChangeRequest {
@@ -378,7 +384,7 @@ model EmailChangeRequest {
   @@index([userId])
   @@index([token])
   @@index([expiresAt])
-  @@map("email_change_requests")
+  @@map(\"email_change_requests\")
 }
 
 model TwoFactorBackupCode {
@@ -391,7 +397,7 @@ model TwoFactorBackupCode {
 
   @@index([userId])
   @@index([code])
-  @@map("two_factor_backup_codes")
+  @@map(\"two_factor_backup_codes\")
 }
 
 model OAuthAccount {
@@ -406,7 +412,7 @@ model OAuthAccount {
 
   @@unique([provider, providerId])
   @@index([userId])
-  @@map("oauth_accounts")
+  @@map(\"oauth_accounts\")
 }
 
 model SecurityLog {
@@ -422,7 +428,7 @@ model SecurityLog {
 
   @@index([userId, createdAt])
   @@index([createdAt])
-  @@map("security_logs")
+  @@map(\"security_logs\")
 }
 
 model UserSecurity {
@@ -439,7 +445,7 @@ model UserSecurity {
   twoFactorSecret     String?
   twoFactorVerifiedAt DateTime?
 
-  @@map("user_security")
+  @@map(\"user_security\")
 }
 
 // ============================================================================
@@ -459,7 +465,7 @@ model File {
   userId    String?
 
   @@index([userId])
-  @@map("files")
+  @@map(\"files\")
 }
 
 model Image {
@@ -468,11 +474,11 @@ model Image {
   name      String
   mimeType  String
   alt       String?
-  url       String   @default("placeholder.png")
+  url       String   @default(\"placeholder.png\")
   userId    String   @unique
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@map("images")
+  @@map(\"images\")
 }
 
 // ============================================================================
@@ -498,7 +504,7 @@ model Notification {
   @@index([userId, isArchived])
   @@index([userId, isRead])
   @@index([createdAt])
-  @@map("notifications")
+  @@map(\"notifications\")
 }
 
 model NotificationSettings {
@@ -513,7 +519,7 @@ model NotificationSettings {
   weeklyDigest       Boolean @default(true)
   marketingEmails    Boolean @default(false)
 
-  @@map("notification_settings")
+  @@map(\"notification_settings\")
 }
 
 // ============================================================================
@@ -536,7 +542,7 @@ model Badge {
 
   userBadges UserBadge[]
 
-  @@map("badges")
+  @@map(\"badges\")
 }
 
 model UserBadge {
@@ -554,7 +560,7 @@ model UserBadge {
   @@unique([userId, badgeId, context])
   @@index([userId])
   @@index([badgeId])
-  @@map("user_badges")
+  @@map(\"user_badges\")
 }
 
 model Achievement {
@@ -573,7 +579,7 @@ model Achievement {
 
   userAchievements UserAchievement[]
 
-  @@map("achievements")
+  @@map(\"achievements\")
 }
 
 model UserAchievement {
@@ -592,7 +598,7 @@ model UserAchievement {
   @@unique([userId, achievementId])
   @@index([userId])
   @@index([achievementId])
-  @@map("user_achievements")
+  @@map(\"user_achievements\")
 }
 
 model XPLog {
@@ -608,7 +614,7 @@ model XPLog {
 
   @@index([userId])
   @@index([createdAt])
-  @@map("xp_logs")
+  @@map(\"xp_logs\")
 }
 
 model PointsLog {
@@ -623,7 +629,7 @@ model PointsLog {
 
   @@index([userId])
   @@index([createdAt])
-  @@map("points_logs")
+  @@map(\"points_logs\")
 }
 
 model Level {
@@ -634,7 +640,7 @@ model Level {
   ar_title  String?
   createdAt DateTime @default(now())
 
-  @@map("levels")
+  @@map(\"levels\")
 }
 
 model Leaderboard {
@@ -647,7 +653,7 @@ model Leaderboard {
   entries LeaderboardEntry[]
 
   @@index([period, periodStart, periodEnd])
-  @@map("leaderboards")
+  @@map(\"leaderboards\")
 }
 
 model LeaderboardEntry {
@@ -664,7 +670,7 @@ model LeaderboardEntry {
   @@unique([leaderboardId, userId])
   @@index([leaderboardId, rank])
   @@index([userId])
-  @@map("leaderboard_entries")
+  @@map(\"leaderboard_entries\")
 }
 
 model UserActivity {
@@ -681,7 +687,7 @@ model UserActivity {
 
   @@unique([userId, date])
   @@index([userId, date])
-  @@map("user_activities")
+  @@map(\"user_activities\")
 }
 
 model Reward {
@@ -699,7 +705,7 @@ model Reward {
 
   redemptions UserReward[]
 
-  @@map("rewards")
+  @@map(\"rewards\")
 }
 
 model UserReward {
@@ -713,7 +719,7 @@ model UserReward {
 
   @@index([userId])
   @@index([rewardId])
-  @@map("user_rewards")
+  @@map(\"user_rewards\")
 }
 
 model UserPoints {
@@ -725,7 +731,7 @@ model UserPoints {
   level       Int      @default(1)
   updatedAt   DateTime @updatedAt
 
-  @@map("user_points")
+  @@map(\"user_points\")
 }
 
 model PointsHistory {
@@ -739,7 +745,7 @@ model PointsHistory {
 
   @@index([userId])
   @@index([createdAt])
-  @@map("points_history")
+  @@map(\"points_history\")
 }
 
 // ============================================================================
@@ -794,7 +800,7 @@ model Course {
   updatedAt DateTime @updatedAt
 
   // Relations
-  instructor  User             @relation("CourseInstructor", fields: [instructorId], references: [id])
+  instructor  User             @relation(\"CourseInstructor\", fields: [instructorId], references: [id])
   enrollments Enrollment[]
   sections    Section[]
   lessons     Lesson[]
@@ -816,7 +822,7 @@ model Course {
   @@index([difficulty])
   @@index([isPublished])
   @@index([createdAt])
-  @@map("courses")
+  @@map(\"courses\")
 }
 
 // ============================================================================
@@ -842,7 +848,7 @@ model Enrollment {
   @@index([userId])
   @@index([courseId])
   @@index([isCompleted])
-  @@map("enrollments")
+  @@map(\"enrollments\")
 }
 
 model Section {
@@ -861,7 +867,7 @@ model Section {
 
   @@unique([courseId, order])
   @@index([courseId])
-  @@map("sections")
+  @@map(\"sections\")
 }
 
 model Lesson {
@@ -897,7 +903,7 @@ model Lesson {
   @@index([sectionId])
   @@index([courseId])
   @@index([moduleId])
-  @@map("lessons")
+  @@map(\"lessons\")
 }
 
 model LessonCompletion {
@@ -913,7 +919,7 @@ model LessonCompletion {
   @@unique([userId, lessonId])
   @@index([userId])
   @@index([lessonId])
-  @@map("lesson_completions")
+  @@map(\"lesson_completions\")
 }
 
 model Review {
@@ -936,7 +942,7 @@ model Review {
   @@index([userId])
   @@index([courseId])
   @@index([rating])
-  @@map("reviews")
+  @@map(\"reviews\")
 }
 
 model ReviewHelpful {
@@ -950,7 +956,7 @@ model ReviewHelpful {
 
   @@unique([userId, reviewId])
   @@index([reviewId])
-  @@map("review_helpful")
+  @@map(\"review_helpful\")
 }
 
 // ============================================================================
@@ -973,7 +979,7 @@ model Module {
 
   @@unique([courseId, order])
   @@index([courseId])
-  @@map("modules")
+  @@map(\"modules\")
 }
 
 model LessonProgress {
@@ -988,7 +994,7 @@ model LessonProgress {
 
   @@unique([userId, lessonId])
   @@index([userId])
-  @@map("lesson_progress")
+  @@map(\"lesson_progress\")
 }
 
 model CourseRegistration {
@@ -1004,7 +1010,7 @@ model CourseRegistration {
   @@unique([userId, courseId])
   @@index([userId])
   @@index([courseId])
-  @@map("course_registrations")
+  @@map(\"course_registrations\")
 }
 
 // ============================================================================
@@ -1021,8 +1027,18 @@ model Lab {
   description    String?
   ar_description String?
   difficulty     Difficulty @default(BEGINNER)
+  
+  // -- NEW FIELDS FOR LAB ENGINE V2 --
+  category       CATEGORY   @default(WEB_SECURITY)
+  executionMode  LabExecutionMode @default(SHARED_BACKEND)
+  scenario       String?    @db.Text
+  ar_scenario    String?    @db.Text
+  engineConfig   Json?      // Stores targetUrl, specific DB type, Docker compose path, etc.
+  skills         String[]   // e.g., [\"SQLi\", \"Reconnaissance\"]
+  // ----------------------------------
+  
   duration       Int?
-  labUrl         String?
+  labUrl         String? // Keep for legacy, but engineConfig.targetUrl is better for V2
   flagAnswer     String?
   maxAttempts    Int?
   timeLimit      Int?
@@ -1030,8 +1046,8 @@ model Lab {
   pointsReward   Int        @default(0)
   pointsPerHint  Int        @default(10)
   pointsPerFail  Int        @default(5)
-  initialState   Json       @default("{}")
-  isolationMode  String     @default("database")
+  initialState   Json       @default(\"{}\")
+  isolationMode  String     @default(\"database\")
 
   steps Json?
 
@@ -1054,7 +1070,7 @@ model Lab {
   @@index([courseId])
   @@index([difficulty])
   @@index([isPublished])
-  @@map("labs")
+  @@map(\"labs\")
 }
 
 model LabInstance {
@@ -1063,7 +1079,7 @@ model LabInstance {
   labId  String
 
   // Lab-specific state (stored as JSON)
-  state Json @default("{}")
+  state Json @default(\"{}\")
 
   // Example for IDOR lab:
   balance Int @default(5000)
@@ -1079,7 +1095,7 @@ model LabInstance {
   @@unique([userId, labId])
   @@index([userId])
   @@index([labId])
-  @@map("LabInstance")
+  @@map(\"LabInstance\")
 }
 
 model LabHint {
@@ -1093,7 +1109,7 @@ model LabHint {
 
   @@unique([labId, order])
   @@index([labId])
-  @@map("lab_hints")
+  @@map(\"lab_hints\")
 }
 
 model UserLabProgress {
@@ -1115,7 +1131,7 @@ model UserLabProgress {
   @@index([userId])
   @@index([labId])
   @@index([completedAt])
-  @@map("user_lab_progress")
+  @@map(\"user_lab_progress\")
 }
 
 // ============================================================================
@@ -1139,7 +1155,7 @@ model Assessment {
   submissions AssessmentSubmission[]
 
   @@index([courseId])
-  @@map("assessments")
+  @@map(\"assessments\")
 }
 
 model AssessmentSubmission {
@@ -1156,7 +1172,7 @@ model AssessmentSubmission {
   @@index([userId])
   @@index([assessmentId])
   @@index([submittedAt])
-  @@map("assessment_submissions")
+  @@map(\"assessment_submissions\")
 }
 
 // ============================================================================
@@ -1172,7 +1188,7 @@ model CertificateTemplate {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  @@map("certificate_templates")
+  @@map(\"certificate_templates\")
 }
 
 model IssuedCertificate {
@@ -1192,7 +1208,7 @@ model IssuedCertificate {
   @@unique([userId, courseId])
   @@index([userId])
   @@index([verificationId])
-  @@map("issued_certificates")
+  @@map(\"issued_certificates\")
 }
 
 // ============================================================================
@@ -1206,7 +1222,7 @@ model Skill {
   category String?
   users    UserSkill[]
 
-  @@map("skills")
+  @@map(\"skills\")
 }
 
 model UserSkill {
@@ -1221,7 +1237,7 @@ model UserSkill {
 
   @@unique([userId, skillId])
   @@index([userId])
-  @@map("user_skills")
+  @@map(\"user_skills\")
 }
 
 model Education {
@@ -1239,7 +1255,7 @@ model Education {
   isCurrent      Boolean @default(false)
 
   @@index([userId])
-  @@map("education")
+  @@map(\"education\")
 }
 
 model SocialLink {
@@ -1250,7 +1266,7 @@ model SocialLink {
   url    String
 
   @@index([userId])
-  @@map("social_links")
+  @@map(\"social_links\")
 }
 
 model Certification {
@@ -1267,7 +1283,7 @@ model Certification {
   credentialUrl String?
 
   @@index([userId])
-  @@map("certifications")
+  @@map(\"certifications\")
 }
 
 model CareerPath {
@@ -1280,7 +1296,7 @@ model CareerPath {
 
   users UserCareerPath[]
 
-  @@map("career_paths")
+  @@map(\"career_paths\")
 }
 
 model UserCareerPath {
@@ -1295,7 +1311,7 @@ model UserCareerPath {
 
   @@unique([userId, careerPathId])
   @@index([userId])
-  @@map("user_career_paths")
+  @@map(\"user_career_paths\")
 }
 
 // ============================================================================
@@ -1326,7 +1342,7 @@ model Discussion {
   @@index([labId])
   @@index([userId])
   @@index([createdAt])
-  @@map("discussions")
+  @@map(\"discussions\")
 }
 
 model Comment {
@@ -1344,7 +1360,7 @@ model Comment {
   @@index([discussionId])
   @@index([userId])
   @@index([createdAt])
-  @@map("comments")
+  @@map(\"comments\")
 }
 
 model LabReview {
@@ -1361,7 +1377,7 @@ model LabReview {
   @@unique([labId, userId])
   @@index([labId])
   @@index([userId])
-  @@map("lab_reviews")
+  @@map(\"lab_reviews\")
 }
 
 model CourseReview {
@@ -1378,7 +1394,7 @@ model CourseReview {
   @@unique([courseId, userId])
   @@index([courseId])
   @@index([userId])
-  @@map("course_reviews")
+  @@map(\"course_reviews\")
 }
 
 // ============================================================================
@@ -1402,7 +1418,7 @@ model SubscriptionPlan {
 
   subscriptions Subscription[]
 
-  @@map("subscription_plans")
+  @@map(\"subscription_plans\")
 }
 
 model Subscription {
@@ -1430,7 +1446,7 @@ model Subscription {
   @@index([userId])
   @@index([planId])
   @@index([stripeSubscriptionId])
-  @@map("subscriptions")
+  @@map(\"subscriptions\")
 }
 
 // ============================================================================
@@ -1448,7 +1464,7 @@ model CourseFavorite {
   @@unique([userId, courseId])
   @@index([userId])
   @@index([courseId])
-  @@map("course_favorites")
+  @@map(\"course_favorites\")
 }
 
 model LearningPath {
@@ -1460,7 +1476,7 @@ model LearningPath {
   ar_description  String?
   longDescription String?      @db.Text
   ar_longDescription String?   @db.Text
-  iconName        String       @default("Map")
+  iconName        String       @default(\"Map\")
   color           CourseColor  @default(BLUE)
   difficulty      Difficulty   @default(BEGINNER)
   order           Int          @default(0)
@@ -1488,7 +1504,7 @@ model LearningPath {
   modules     PathModule[]
   enrollments PathEnrollment[]
 
-  @@map("learning_paths")
+  @@map(\"learning_paths\")
 }
 
 model PathModule {
@@ -1513,7 +1529,7 @@ model PathModule {
   lab            Lab?         @relation(fields: [labId], references: [id], onDelete: SetNull)
 
   @@unique([pathId, order])
-  @@map("path_modules")
+  @@map(\"path_modules\")
 }
 
 model PathEnrollment {
@@ -1529,7 +1545,7 @@ model PathEnrollment {
 
   @@unique([userId, pathId])
   @@index([userId])
-  @@map("path_enrollments")
+  @@map(\"path_enrollments\")
 }
 
 // ============================================================================
@@ -1568,7 +1584,7 @@ model Goal {
 
   @@index([userId, status])
   @@index([userId, frequency])
-  @@map("goals")
+  @@map(\"goals\")
 }
 
 // ============================================================================
@@ -1591,7 +1607,7 @@ model UserStats {
   lastActivityDate    DateTime?
   updatedAt           DateTime  @updatedAt
 
-  @@map("user_stats")
+  @@map(\"user_stats\")
 }
 
 // ============================================================================
@@ -1611,7 +1627,7 @@ model ContactSubmission {
 
   @@index([createdAt])
   @@index([isRead])
-  @@map("contact_submissions")
+  @@map(\"contact_submissions\")
 }
 
 model LabSubmission {
@@ -1638,7 +1654,7 @@ model LabSubmission {
 
   @@index([userId, labId])
   @@index([submittedAt])
-  @@map("lab_submissions")
+  @@map(\"lab_submissions\")
 }
 
 // ============================================================================
@@ -1651,7 +1667,7 @@ model LabGenericUser {
   labId    String
   username String
   password String
-  role     String  @default("user")
+  role     String  @default(\"user\")
   email    String?
   isStatic Boolean @default(false)
   meta     Json?
@@ -1699,7 +1715,7 @@ model LabGenericLog {
   id        String   @id @default(cuid())
   userId    String
   labId     String
-  type      String // "PAYMENT" | "COUPON" | "LOGIN_LOG" | "FILE_UPLOAD"
+  type      String // \"PAYMENT\" | \"COUPON\" | \"LOGIN_LOG\" | \"FILE_UPLOAD\"
   value     Float?
   action    String?
   meta      Json?
