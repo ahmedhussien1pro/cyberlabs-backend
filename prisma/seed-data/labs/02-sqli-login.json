@@ -1,36 +1,36 @@
 {
-  \"title\": \"SQL Injection Login Bypass\",
-  \"ar_title\": \"تجاوز تسجيل الدخول باستخدام SQLi\",
-  \"description\": \"A common vulnerability in legacy applications. The login endpoint uses string concatenation to build the query. Use SQL injection to bypass authentication.\",
-  \"ar_description\": \"ثغرة شائعة في التطبيقات القديمة. واجهة تسجيل الدخول تقوم بدمج النصوص لبناء الاستعلام. استخدم حقن SQL لتخطي المصادقة.\",
-  \"difficulty\": \"BEGINNER\",
-  \"category\": \"WEB_SECURITY\",
-  \"executionMode\": \"SHARED_BACKEND\",
-  \"skills\": [\"SQL Injection\", \"Authentication Bypass\", \"MySQL\"],
-  \"scenario\": \"The target is an admin panel for a corporate portal. Bypass the login form as an admin user to retrieve the hidden flag.\",
-  \"ar_scenario\": \"الهدف هو لوحة تحكم لبوابة شركة. تخطى نموذج تسجيل الدخول كمسؤول لاستخراج العلم المخفي.\",
-  \"duration\": 20,
-  \"flagAnswer\": \"CYBERLABS{B4D_L0G1N_QU3RY}\",
-  \"xpReward\": 60,
-  \"pointsReward\": 15,
-  \"isPublished\": true,
-  \"engineConfig\": {
-    \"targetUrl\": \"/api/sandbox/sqli/login-bypass\",
-    \"dbType\": \"mysql\",
-    \"mockTables\": [\"LabGenericUser\"]
+  "title": "SQL Injection Login Bypass",
+  "ar_title": "تجاوز تسجيل الدخول باستخدام SQLi",
+  "description": "A common vulnerability in legacy applications. The login endpoint uses string concatenation to build the query. Use SQL injection to bypass authentication.",
+  "ar_description": "ثغرة شائعة في التطبيقات القديمة. واجهة تسجيل الدخول تقوم بدمج النصوص لبناء الاستعلام. استخدم حقن SQL لتخطي المصادقة.",
+  "difficulty": "BEGINNER",
+  "category": "WEB_SECURITY",
+  "executionMode": "SHARED_BACKEND",
+  "skills": ["SQL Injection", "Authentication Bypass", "MySQL"],
+  "scenario": "The target is an admin panel for a corporate portal. Bypass the login form as an admin user to retrieve the hidden flag.",
+  "ar_scenario": "الهدف هو لوحة تحكم لبوابة شركة. تخطى نموذج تسجيل الدخول كمسؤول لاستخراج العلم المخفي.",
+  "duration": 20,
+  "flagAnswer": "CYBERLABS{B4D_L0G1N_QU3RY}",
+  "xpReward": 60,
+  "pointsReward": 15,
+  "isPublished": true,
+  "engineConfig": {
+    "targetUrl": "/api/sandbox/sqli/login-bypass",
+    "dbType": "mysql",
+    "mockTables": ["LabGenericUser"]
   },
-  \"hints\": [
+  "hints": [
     {
-      \"content\": \"How do you comment out the rest of a SQL query in MySQL? Try `--` or `#`.\",
-      \"ar_content\": \"كيف تقوم بعمل تعليق لباقي استعلام SQL في قواعد بيانات MySQL؟ جرب استخدام `--` أو `#`.\",
-      \"order\": 1,
-      \"xpCost\": 5
+      "content": "How do you comment out the rest of a SQL query in MySQL? Try `--` or `#`.",
+      "ar_content": "كيف تقوم بعمل تعليق لباقي استعلام SQL في قواعد بيانات MySQL؟ جرب استخدام `--` أو `#`.",
+      "order": 1,
+      "xpCost": 5
     },
     {
-      \"content\": \"The query might look like: `SELECT * FROM users WHERE username = '$username' AND password = '$password'`. Can you make the WHERE clause always true?\",
-      \"ar_content\": \"الاستعلام قد يكون بهذا الشكل: `SELECT * FROM users WHERE username = '$username' AND password = '$password'`. هل يمكنك جعل شرط الـ WHERE دائمًا صحيح؟\",
-      \"order\": 2,
-      \"xpCost\": 10
+      "content": "The query might look like: `SELECT * FROM users WHERE username = '$username' AND password = '$password'`. Can you make the WHERE clause always true?",
+      "ar_content": "الاستعلام قد يكون بهذا الشكل: `SELECT * FROM users WHERE username = '$username' AND password = '$password'`. هل يمكنك جعل شرط الـ WHERE دائمًا صحيح؟",
+      "order": 2,
+      "xpCost": 10
     }
   ]
 }

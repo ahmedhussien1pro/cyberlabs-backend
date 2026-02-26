@@ -1,1 +1,50 @@
-import { PrismaClient } from '@prisma/client';\nimport * as fs from 'fs';\nimport * as path from 'path';\n\nconst prisma = new PrismaClient();\n\nasync function seedCourses() {\n  const coursesDir = path.join(__dirname, 'seed-data/courses');\n  if (!fs.existsSync(coursesDir)) return;\n\n  const files = fs.readdirSync(coursesDir).filter((f) => f.endsWith('.json'));\n  for (const file of files) {\n    const courseData = JSON.parse(\n      fs.readFileSync(path.join(coursesDir, file), 'utf-8'),\n    );\n\n    await prisma.course.upsert({\n      where: { slug: courseData.slug },\n      update: courseData,\n      create: courseData,\n    });\n    console.log(`✅ Seeded course: ${courseData.title}`);\n  }\n}\n\nasync function seedLabs() {\n  const labsDir = path.join(__dirname, 'seed-data/labs');\n  if (!fs.existsSync(labsDir)) return;\n\n  const files = fs.readdirSync(labsDir).filter((f) => f.endsWith('.json'));\n  for (const file of files) {\n    const labData = JSON.parse(\n      fs.readFileSync(path.join(labsDir, file), 'utf-8'),\n    );\n\n    // Handle relationships if needed (like lab hints)\n    const { hints, ...labFields } = labData;\n\n    const createdLab = await prisma.lab.create({\n      data: {\n        ...labFields,\n        hints: hints ? {\n          create: hints\n        } : undefined\n      }\n    });\n    console.log(`✅ Seeded lab: ${createdLab.title}`);\n  }\n}\n\nasync function main() {\n  await seedCourses();\n  await seedLabs();\n}\n\nmain()\n  .catch(console.error)\n  .finally(() => prisma.$disconnect());\n
+import { PrismaClient } from '@prisma/client';
+import * as fs from 'fs';
+import * as path from 'path';
+const prisma = new PrismaClient();
+// async function seedCourses() {
+//   const coursesDir = path.join(__dirname, 'seed-data/courses');
+//   if (!fs.existsSync(coursesDir)) return;
+//   const files = fs.readdirSync(coursesDir).filter((f) => f.endsWith('.json'));
+//   for (const file of files) {
+//     const courseData = JSON.parse(
+//       fs.readFileSync(path.join(coursesDir, file), 'utf-8'),
+//     );
+//     await prisma.course.upsert({
+//       where: { slug: courseData.slug },
+//       update: courseData,
+//       create: courseData,
+//     });
+//     console.log(`✅ Seeded course: ${courseData.title}`);
+//   }
+// }
+async function seedLabs() {
+  const labsDir = path.join(__dirname, 'seed-data/labs');
+  if (!fs.existsSync(labsDir)) return;
+  const files = fs.readdirSync(labsDir).filter((f) => f.endsWith('.json'));
+  for (const file of files) {
+    const labData = JSON.parse(
+      fs.readFileSync(path.join(labsDir, file), 'utf-8'),
+    );
+    // Handle relationships if needed (like lab hints)
+    const { hints, ...labFields } = labData;
+    const createdLab = await prisma.lab.create({
+      data: {
+        ...labFields,
+        hints: hints
+          ? {
+              create: hints,
+            }
+          : undefined,
+      },
+    });
+    console.log(`✅ Seeded lab: ${createdLab.title}`);
+  }
+}
+async function main() {
+  //   await seedCourses();
+  await seedLabs();
+}
+main()
+  .catch(console.error)
+  .finally(() => prisma.$disconnect());
