@@ -3,27 +3,8 @@ import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { AppModule } from './app.module';
 import { LoggerService } from './core/logger';
-import { IoAdapter } from '@nestjs/platform-socket.io';
 import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
-
-export class CustomIoAdapter extends IoAdapter {
-  constructor(private app: any, private corsOrigins: string[]) {
-    super(app);
-  }
-
-  createIOServer(port: number, options?: any): any {
-    const optionsWithCors = {
-      ...options,
-      cors: {
-        origin: this.corsOrigins,
-        methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-        credentials: true,
-      },
-    };
-    return super.createIOServer(port, optionsWithCors);
-  }
-}
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -69,9 +50,6 @@ async function bootstrap() {
       'X-CSRF-Token',
     ],
   });
-  
-  // Set up WebSockets with CORS matching regular HTTP
-  app.useWebSocketAdapter(new CustomIoAdapter(app, allowedOrigins));
   // ───────────────────────────────────────────────────────
 
   app.useGlobalPipes(
