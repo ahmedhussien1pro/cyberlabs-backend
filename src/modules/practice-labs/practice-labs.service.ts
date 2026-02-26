@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException, HttpException, HttpStatus } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  HttpException,
+  HttpStatus,
+} from '@nestjs/common';
 import { PrismaService } from '../../core/database';
 import { ConfigService } from '@nestjs/config';
 import * as jwt from 'jsonwebtoken';
@@ -125,7 +130,7 @@ export class PracticeLabsService {
       },
       update: {
         isActive: true,
-        lastAccess: new Date(), // Assuming we might add lastAccess to LabInstance later, or just update startedAt. Wait, let's just update isActive
+        startedAt: new Date(), // Assuming we might add lastAccess to LabInstance later, or just update startedAt. Wait, let's just update isActive
       },
       create: {
         userId,
@@ -152,18 +157,21 @@ export class PracticeLabsService {
 
     // 3. Generate a short-lived launch token (valid for 1 minute)
     // We use standard jsonwebtoken here to create a specific launch token signed with the JWT_SECRET
-    const jwtSecret = this.configService.get<string>('JWT_SECRET') || 'default-secret-change-me';
-    const labsSubdomain = this.configService.get<string>('LABS_URL') || 'https://labs.cyberlabs.io';
-    
+    const jwtSecret =
+      this.configService.get<string>('JWT_SECRET') ||
+      'default-secret-change-me';
+    const labsSubdomain =
+      this.configService.get<string>('LABS_URL') || 'https://labs.cyberlabs.io';
+
     const launchToken = jwt.sign(
-      { 
+      {
         sub: userId,
         labId: lab.id,
         instanceId: instance.id,
-        type: 'lab_launch'
+        type: 'lab_launch',
       },
       jwtSecret,
-      { expiresIn: '1m' }
+      { expiresIn: '1m' },
     );
 
     // 4. Return the launch URL
@@ -176,7 +184,6 @@ export class PracticeLabsService {
       executionMode: lab.executionMode,
     };
   }
-
 
   /**
    * Submit flag
@@ -391,7 +398,7 @@ export class PracticeLabsService {
           return acc;
         }, {}),
       },
-    });
+    };
   }
 
   // ============ Helper Methods ============
