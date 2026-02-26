@@ -1,10 +1,14 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, HttpException, HttpStatus } from '@nestjs/common';
 import { PrismaService } from '../../core/database';
-import { Difficulty } from '@prisma/client';
+import { ConfigService } from '@nestjs/config';
+import * as jwt from 'jsonwebtoken';
 
 @Injectable()
 export class PracticeLabsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private configService: ConfigService,
+  ) {}
 
   /**
    * Get all labs organized by category
@@ -101,7 +105,81 @@ export class PracticeLabsService {
   }
 
   /**
-   * Submit lab flag
+   * Launch Lab
+   * Creates or retrieves a LabInstance and generates a short-lived launch token
+   */
+  async launchLab(labId: string, userId: string) {
+    // 1. Verify lab exists
+    const lab = await this.prisma.lab.findUnique({
+      where: { id: labId, isPublished: true },
+    });
+
+    if (!lab) {
+      throw new NotFoundException('Lab not found');
+    }
+
+    // 2. Create or update LabInstance for this user
+    const instance = await this.prisma.labInstance.upsert({
+      where: {
+        userId_labId: { userId, labId },
+      },
+      update: {
+        isActive: true,
+        lastAccess: new Date(), // Assuming we might add lastAccess to LabInstance later, or just update startedAt. Wait, let's just update isActive
+      },
+      create: {
+        userId,
+        labId,
+        isActive: true,
+      },
+    });
+
+    // Also initialize UserLabProgress if it doesn't exist
+    await this.prisma.userLabProgress.upsert({
+      where: {
+        userId_labId: { userId, labId },
+      },
+      update: {
+        lastAccess: new Date(),
+      },
+      create: {
+        userId,
+        labId,
+        attempts: 0,
+        startedAt: new Date(),
+      },
+    });
+
+    // 3. Generate a short-lived launch token (valid for 1 minute)
+    // We use standard jsonwebtoken here to create a specific launch token signed with the JWT_SECRET
+    const jwtSecret = this.configService.get<string>('JWT_SECRET') || 'default-secret-change-me';
+    const labsSubdomain = this.configService.get<string>('LABS_URL') || 'https://labs.cyberlabs.io';
+    
+    const launchToken = jwt.sign(
+      { 
+        sub: userId,
+        labId: lab.id,
+        instanceId: instance.id,
+        type: 'lab_launch'
+      },
+      jwtSecret,
+      { expiresIn: '1m' }
+    );
+
+    // 4. Return the launch URL
+    const launchUrl = `${labsSubdomain}/launch?token=${launchToken}`;
+
+    return {
+      success: true,
+      launchUrl,
+      instanceId: instance.id,
+      executionMode: lab.executionMode,
+    };
+  }
+
+
+  /**
+   * Submit flag
    */
   async submitFlag(labId: string, userId: string, flagAnswer: string) {
     const lab = await this.prisma.lab.findUnique({
@@ -313,7 +391,7 @@ export class PracticeLabsService {
           return acc;
         }, {}),
       },
-    };
+    });
   }
 
   // ============ Helper Methods ============
