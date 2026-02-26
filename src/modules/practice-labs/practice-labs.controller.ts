@@ -59,6 +59,16 @@ export class PracticeLabsController {
   }
 
   /**
+   * Launch Lab
+   * POST /api/practice-labs/:labId/launch
+   * Returns a short-lived secure token/URL to redirect to the labs subdomain
+   */
+  @Post(':labId/launch')
+  async launchLab(@Param('labId') labId: string, @Req() req: any) {
+    return this.practiceLabsService.launchLab(labId, req.user.id);
+  }
+
+  /**
    * Submit flag
    * POST /api/practice-labs/:labId/submit
    */
