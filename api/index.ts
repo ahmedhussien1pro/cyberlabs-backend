@@ -1,1 +1,73 @@
-import { NestFactory } from '@nestjs/core';\nimport { ValidationPipe } from '@nestjs/common';\nimport { ConfigService } from '@nestjs/config';\nimport { AppModule } from '../src/app.module';\nimport { LoggerService } from '../src/core/logger';\nimport cookieParser from 'cookie-parser';\nimport helmet from 'helmet';\n\nlet cachedApp;\n\nasync function bootstrap() {\n  if (!cachedApp) {\n    const app = await NestFactory.create(AppModule, {\n      bufferLogs: true,\n      rawBody: true,\n    });\n\n    const configService = app.get(ConfigService);\n    const logger = app.get(LoggerService);\n    logger.setContext('Bootstrap');\n\n    const apiPrefix = configService.get<string>('app.apiPrefix') || 'api/v1';\n    app.setGlobalPrefix(apiPrefix);\n\n    app.use(helmet());\n    app.use(cookieParser());\n\n    // ─── CORS ──────────────────────────────────────────────\n    const rawFrontendUrls =\n      configService.get<string>('app.frontendUrl') || 'http://localhost:5173';\n\n    const allowedOrigins = rawFrontendUrls\n      .split(',')\n      .map((u) => u.trim().replace(/\\/+$/, ''))\n      .filter(Boolean);\n\n    app.enableCors({\n      origin: (requestOrigin, callback) => {\n        if (!requestOrigin) return callback(null, true);\n        const clean = requestOrigin.trim().replace(/\\/+$/, '');\n        if (allowedOrigins.includes(clean)) return callback(null, true);\n        return callback(new Error(`CORS blocked: ${requestOrigin}`), false);\n      },\n      credentials: true,\n      methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],\n      allowedHeaders: [\n        'Content-Type',\n        'Authorization',\n        'X-Requested-With',\n        'X-CSRF-Token',\n      ],\n    });\n    // ───────────────────────────────────────────────────────\n\n    app.useGlobalPipes(\n      new ValidationPipe({\n        whitelist: true,\n        forbidNonWhitelisted: true,\n        transform: true,\n        transformOptions: { enableImplicitConversion: true },\n      }),\n    );\n\n    await app.init();\n    cachedApp = app.getHttpAdapter().getInstance();\n  }\n  return cachedApp;\n}\n\nexport default async function handler(req, res) {\n  const app = await bootstrap();\n  return app(req, res);\n}\n
+import { NestFactory } from '@nestjs/core';
+import { ValidationPipe } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { AppModule } from '../src/app.module';
+import { LoggerService } from '../src/core/logger';
+import cookieParser from 'cookie-parser';
+import helmet from 'helmet';
+
+let cachedApp;
+
+async function bootstrap() {
+  if (!cachedApp) {
+    const app = await NestFactory.create(AppModule, {
+      bufferLogs: true,
+      rawBody: true,
+    });
+
+    const configService = app.get(ConfigService);
+    const logger = app.get(LoggerService);
+    logger.setContext('Bootstrap');
+
+    const apiPrefix = configService.get<string>('app.apiPrefix') || 'api/v1';
+    app.setGlobalPrefix(apiPrefix);
+
+    app.use(helmet());
+    app.use(cookieParser());
+
+    // ─── CORS ──────────────────────────────────────────────
+    const rawFrontendUrls =
+      configService.get<string>('app.frontendUrl') || 'http://localhost:5173';
+
+    const allowedOrigins = rawFrontendUrls
+      .split(',')
+      .map((u) => u.trim().replace(/\/+$/, ''))
+      .filter(Boolean);
+
+    app.enableCors({
+      origin: (requestOrigin, callback) => {
+        if (!requestOrigin) return callback(null, true);
+        const clean = requestOrigin.trim().replace(/\/+$/, '');
+        if (allowedOrigins.includes(clean)) return callback(null, true);
+        return callback(new Error(`CORS blocked: ${requestOrigin}`), false);
+      },
+      credentials: true,
+      methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+      allowedHeaders: [
+        'Content-Type',
+        'Authorization',
+        'X-Requested-With',
+        'X-CSRF-Token',
+      ],
+    });
+    // ───────────────────────────────────────────────────────
+
+    app.useGlobalPipes(
+      new ValidationPipe({
+        whitelist: true,
+        forbidNonWhitelisted: true,
+        transform: true,
+        transformOptions: { enableImplicitConversion: true },
+      }),
+    );
+
+    await app.init();
+    cachedApp = app.getHttpAdapter().getInstance();
+  }
+  return cachedApp;
+}
+
+export default async function handler(req, res) {
+  const app = await bootstrap();
+  return app(req, res);
+}
