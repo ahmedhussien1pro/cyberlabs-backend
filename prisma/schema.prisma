@@ -1038,7 +1038,8 @@ model Lab {
   engineConfig   Json?      // Stores targetUrl, specific DB type, Docker compose path, etc.
   skills         String[]   // e.g., ["SQLi", "Reconnaissance"]
   // ----------------------------------
-  
+  slug           String @unique
+  imageUrl       String?
   duration       Int?
   labUrl         String? // Keep for legacy, but engineConfig.targetUrl is better for V2
   flagAnswer     String?
