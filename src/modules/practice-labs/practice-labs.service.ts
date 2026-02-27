@@ -1,6 +1,7 @@
 import {
   Injectable,
   NotFoundException,
+  BadRequestException,
   HttpException,
   HttpStatus,
 } from '@nestjs/common';
@@ -399,24 +400,54 @@ export class PracticeLabsService {
       },
     };
   }
+
+  async consumeToken(token: string, userId: string) {
+    const launchToken = await this.prisma.labLaunchToken.findFirst({
+      where: {
+        token,
+        usedAt: null,
+        expiresAt: { gt: new Date() },
+        userId, // حماية: التوكن تبع نفس اليوزر
+      },
+      include: {
+        lab: {
+          select: {
+            id: true,
+            title: true,
+            ar_title: true,
+            executionMode: true,
+            engineConfig: true,
+            initialState: true,
+            difficulty: true,
+          },
+        },
+      },
+    });
+
+    if (!launchToken) {
+      throw new BadRequestException('Token invalid, expired, or already used');
+    }
+
+    // Atomic burn
+    await this.prisma.labLaunchToken.update({
+      where: { id: launchToken.id },
+      data: { usedAt: new Date() },
+    });
+
+    return {
+      success: true,
+      labId: launchToken.labId,
+      instanceId: launchToken.instanceId,
+      lab: launchToken.lab,
+    };
+  }
+
   //
   //   // ============ Helper Methods ============
   //
   private groupLabsByCategory(labs: any[]) {
-    // Extract category from lab title (e.g., \"Command Injection - Lab 1\")
     const grouped = labs.reduce((acc, lab) => {
-      // Simple categorization based on title
-      let category = 'miscellaneous';
-
-      if (lab.title.toLowerCase().includes('command injection')) {
-        category = 'command-injection';
-      } else if (lab.title.toLowerCase().includes('sql injection')) {
-        category = 'sql-injection';
-      } else if (lab.title.toLowerCase().includes('xss')) {
-        category = 'xss';
-      }
-      //       // Add more categories...
-
+      const category = lab.category || 'miscellaneous';
       if (!acc[category]) {
         acc[category] = {
           id: category,
@@ -425,11 +456,9 @@ export class PracticeLabsService {
           labs: [],
         };
       }
-      //
       acc[category].labs.push(lab);
       return acc;
     }, {});
-
     return Object.values(grouped);
   }
 

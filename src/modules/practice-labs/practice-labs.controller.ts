@@ -49,6 +49,11 @@ export class PracticeLabsController {
     return this.practiceLabsService.getUserProgress(req.user.id, labId);
   }
 
+  @Post('launch/consume')
+  async consumeToken(@Body('token') token: string, @Req() req: any) {
+    return this.practiceLabsService.consumeToken(token, req.user.id);
+  }
+
   /**
    * Get single lab details
    * GET /api/practice-labs/:labId

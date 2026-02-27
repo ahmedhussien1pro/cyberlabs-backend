@@ -15,11 +15,9 @@ import { LoggerModule } from './core/logger';
 import { SecurityModule } from './core/security';
 
 // Feature Modules
-
 import { AuthModule } from './modules/auth';
 import { UsersModule } from './modules/users';
 import { EnrollmentsModule } from './modules/enrollments';
-import { LabsModule } from './modules/labs';
 import { ProgressModule } from './modules/progress';
 import { PracticeLabsModule } from './modules/practice-labs/practice-labs.module';
 import { ContactModule } from './modules/contact/contact.module';
@@ -61,7 +59,6 @@ import { MailModule } from './core/mail';
     // Feature Modules
     AuthModule,
     UsersModule,
-    LabsModule,
     EnrollmentsModule,
     ProgressModule,
     PracticeLabsModule,
