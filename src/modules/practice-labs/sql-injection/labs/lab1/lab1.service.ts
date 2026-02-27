@@ -43,7 +43,7 @@ export class Lab1Service {
           success: true,
           username: user.username,
           role: user.role,
-          flag: 'FLAG{SQLI_AUTH_BYPASS_MASTER}',
+          flag: 'FLAG{SQLI_AUTH_BYPASS_SUCCESS}',
           exploited: true,
           message: 'SQL Injection successful! Logged in as admin',
         };
