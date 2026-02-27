@@ -28,7 +28,6 @@ export class PracticeLabsService {
             id: true,
             order: true,
             xpCost: true,
-            // Don't include content until user requests hint
           },
           orderBy: { order: 'asc' },
         },
@@ -38,7 +37,6 @@ export class PracticeLabsService {
             usersProgress: true,
           },
         },
-        //         // Include user progress if userId provided
         ...(userId && {
           usersProgress: {
             where: { userId },
@@ -54,8 +52,7 @@ export class PracticeLabsService {
       },
       orderBy: [{ difficulty: 'asc' }, { createdAt: 'asc' }],
     });
-    //
-    //     // Group by category (extract from lab title or use tags)
+    // Group by category (extract from lab title or use tags)
     const categories = this.groupLabsByCategory(labs);
 
     return {
@@ -64,10 +61,9 @@ export class PracticeLabsService {
       totalLabs: labs.length,
     };
   }
-  //
-  //   /**
-  //    * Get single lab details
-  //    */
+  /**
+   * Get single lab details
+   */
   async getLabById(labId: string, userId?: string) {
     const lab = await this.prisma.lab.findUnique({
       where: { id: labId, isPublished: true },
@@ -103,17 +99,16 @@ export class PracticeLabsService {
     if (!lab) {
       throw new NotFoundException('Lab not found');
     }
-    //
     return {
       success: true,
       lab,
     };
   }
-  //
-  //   /**
-  //    * Launch Lab
-  //    * Creates or retrieves a LabInstance and generates a short-lived secure opaque launch token
-  //    */
+
+  /**
+   * Launch Lab
+   * Creates or retrieves a LabInstance and generates a short-lived secure opaque launch token
+   */
   async launchLab(labId: string, userId: string) {
     // 1. Verify lab exists
     const lab = await this.prisma.lab.findUnique({
@@ -171,7 +166,7 @@ export class PracticeLabsService {
     //
     //     // 4. Return the launch URL
     const labsSubdomain =
-      this.configService.get<string>('LABS_URL') || 'https://labs.cyberlabs.io';
+      this.configService.get<string>('LABS_URL') || 'http://localhost:5174';
     const launchUrl = `${labsSubdomain}/launch/${tokenStr}`;
     //
     return {
@@ -463,23 +458,33 @@ export class PracticeLabsService {
   }
 
   private getCategoryName(category: string): string {
-    const names = {
-      'command-injection': 'Command Injection',
-      'sql-injection': 'SQL Injection',
-      xss: 'Cross-Site Scripting (XSS)',
-      //       // Add more...
+    const names: Record<string, string> = {
+      WEB_SECURITY: 'Web Security',
+      PENETRATION_TESTING: 'Penetration Testing',
+      MALWARE_ANALYSIS: 'Malware Analysis',
+      CLOUD_SECURITY: 'Cloud Security',
+      FUNDAMENTALS: 'Fundamentals',
+      CRYPTOGRAPHY: 'Cryptography',
+      NETWORK_SECURITY: 'Network Security',
+      TOOLS_AND_TECHNIQUES: 'Tools & Techniques',
+      CAREER_AND_INDUSTRY: 'Career & Industry',
     };
-    return names[category] || category;
+    return names[category] ?? category;
   }
-  //
+
   private getCategoryNameAr(category: string): string {
-    const names = {
-      'command-injection': 'حقن الأوامر',
-      'sql-injection': 'حقن SQL',
-      xss: 'البرمجة النصية عبر المواقع',
-      //       // Add more...
+    const names: Record<string, string> = {
+      WEB_SECURITY: 'أمن الويب',
+      PENETRATION_TESTING: 'اختبار الاختراق',
+      MALWARE_ANALYSIS: 'تحليل البرمجيات الخبيثة',
+      CLOUD_SECURITY: 'أمن السحابة',
+      FUNDAMENTALS: 'الأساسيات',
+      CRYPTOGRAPHY: 'التشفير',
+      NETWORK_SECURITY: 'أمن الشبكات',
+      TOOLS_AND_TECHNIQUES: 'الأدوات والتقنيات',
+      CAREER_AND_INDUSTRY: 'المسار المهني',
     };
-    return names[category] || category;
+    return names[category] ?? category;
   }
 
   private async awardXP(

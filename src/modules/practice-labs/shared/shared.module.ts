@@ -1,9 +1,11 @@
 import { Module } from '@nestjs/common';
+import { DatabaseModule } from '../../../core/database';
 import { PracticeLabStateService } from './services/practice-lab-state.service';
 import { LabProgressService } from './services/lab-progress.service';
 import { LabValidationService } from './services/lab-validation.service';
 
 @Module({
+  imports: [DatabaseModule],
   providers: [
     PracticeLabStateService,
     LabProgressService,

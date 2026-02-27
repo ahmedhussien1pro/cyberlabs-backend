@@ -6,104 +6,92 @@ import {
   Param,
   Query,
   UseGuards,
-  Req,
   HttpException,
   HttpStatus,
 } from '@nestjs/common';
 import { PracticeLabsService } from './practice-labs.service';
 import { JwtAuthGuard } from '../../common/guards';
+import { GetUser } from './shared/decorators/get-user.decorator';
 
 @Controller('practice-labs')
 @UseGuards(JwtAuthGuard)
 export class PracticeLabsController {
   constructor(private readonly practiceLabsService: PracticeLabsService) {}
 
-  /**
-   * Get all labs
-   * GET /api/practice-labs
-   */
+  // GET /api/practice-labs
   @Get()
-  async getAllLabs(@Req() req: any) {
-    return this.practiceLabsService.getAllLabs(req.user?.id);
+  async getAllLabs(@GetUser('id') userId: string) {
+    return this.practiceLabsService.getAllLabs(userId);
   }
 
-  /**
-   * Get statistics
-   * GET /api/practice-labs/stats
-   */
+  // GET /api/practice-labs/stats
   @Get('stats')
   async getStats() {
     return this.practiceLabsService.getStats();
   }
 
-  /**
-   * Get user progress (all labs or specific lab using query param)
-   * GET /api/practice-labs/progress
-   * GET /api/practice-labs/progress?labId=xxx
-   */
+  // GET /api/practice-labs/progress?labId=xxx
   @Get('progress')
   async getUserProgress(
     @Query('labId') labId: string | undefined,
-    @Req() req: any,
+    @GetUser('id') userId: string,
   ) {
-    return this.practiceLabsService.getUserProgress(req.user.id, labId);
+    return this.practiceLabsService.getUserProgress(userId, labId);
   }
 
+  // POST /api/practice-labs/launch/consume
   @Post('launch/consume')
-  async consumeToken(@Body('token') token: string, @Req() req: any) {
-    return this.practiceLabsService.consumeToken(token, req.user.id);
+  async consumeToken(
+    @Body('token') token: string,
+    @GetUser('id') userId: string,
+  ) {
+    if (!token) {
+      throw new HttpException('Token is required', HttpStatus.BAD_REQUEST);
+    }
+    return this.practiceLabsService.consumeToken(token, userId);
   }
 
-  /**
-   * Get single lab details
-   * GET /api/practice-labs/:labId
-   */
+  // GET /api/practice-labs/:labId
   @Get(':labId')
-  async getLabById(@Param('labId') labId: string, @Req() req: any) {
-    return this.practiceLabsService.getLabById(labId, req.user?.id);
+  async getLabById(
+    @Param('labId') labId: string,
+    @GetUser('id') userId: string,
+  ) {
+    return this.practiceLabsService.getLabById(labId, userId);
   }
 
-  /**
-   * Launch Lab
-   * POST /api/practice-labs/:labId/launch
-   * Returns a short-lived secure token/URL to redirect to the labs subdomain
-   */
+  // POST /api/practice-labs/:labId/launch
   @Post(':labId/launch')
-  async launchLab(@Param('labId') labId: string, @Req() req: any) {
-    return this.practiceLabsService.launchLab(labId, req.user.id);
+  async launchLab(
+    @Param('labId') labId: string,
+    @GetUser('id') userId: string,
+  ) {
+    return this.practiceLabsService.launchLab(labId, userId);
   }
 
-  /**
-   * Submit flag
-   * POST /api/practice-labs/:labId/submit
-   */
+  // POST /api/practice-labs/:labId/submit
   @Post(':labId/submit')
   async submitFlag(
     @Param('labId') labId: string,
     @Body() body: { flag: string },
-    @Req() req: any,
+    @GetUser('id') userId: string,
   ) {
     if (!body.flag) {
       throw new HttpException('Flag is required', HttpStatus.BAD_REQUEST);
     }
-
-    return this.practiceLabsService.submitFlag(labId, req.user.id, body.flag);
+    return this.practiceLabsService.submitFlag(labId, userId, body.flag);
   }
 
-  /**
-   * Get hint
-   * POST /api/practice-labs/:labId/hint
-   */
+  // POST /api/practice-labs/:labId/hint
   @Post(':labId/hint')
   async getHint(
     @Param('labId') labId: string,
     @Body() body: { hintOrder: number },
-    @Req() req: any,
+    @GetUser('id') userId: string,
   ) {
     if (!body.hintOrder) {
       throw new HttpException('Hint order is required', HttpStatus.BAD_REQUEST);
     }
-
-    return this.practiceLabsService.getHint(labId, req.user.id, body.hintOrder);
+    return this.practiceLabsService.getHint(labId, userId, body.hintOrder);
   }
 }
