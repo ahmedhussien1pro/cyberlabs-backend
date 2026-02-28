@@ -239,7 +239,7 @@ export class PracticeLabsService {
 
     const labsSubdomain =
       this.configService.get<string>('LABS_URL') ??
-      'https://cyberlabs-frontend-labs-wszx.vercel.app';
+      'https://www.labs-test.cyber-labs.tech';
 
     return {
       success: true,
