@@ -22,22 +22,48 @@ async function bootstrap() {
   app.use(helmet());
   app.use(cookieParser());
 
-  // ─── CORS ──────────────────────────────────────────────
-  const rawFrontendUrls =
-    configService.get<string>('app.frontendUrl') || 'http://localhost:5173';
+  // ─── CORS ──────────────────────────────────────────────────────────────────
+  const env = configService.get<string>('app.env') ?? 'production';
+  const corsDomain = configService.get<string>('app.corsDomain'); // e.g. cyber-labs.tech
+  const legacyUrl = configService.get<string>('app.frontendUrl'); // fallback
 
-  const allowedOrigins = rawFrontendUrls
-    .split(',')
-    .map((u) => u.trim().replace(/\/+$/, ''))
-    .filter(Boolean);
+  const patterns: RegExp[] = [];
 
-  logger.log(`🌐 CORS origins: ${allowedOrigins.join(' | ')}`);
+  if (corsDomain) {
+    // Allows: https://cyber-labs.tech  AND  https://*.cyber-labs.tech
+    const escaped = corsDomain.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    patterns.push(new RegExp(`^https?:\\/\\/(([\\w-]+)\\.)?${escaped}$`));
+    logger.log(`🌐 CORS domain   : *.${corsDomain}`);
+  }
+
+  if (legacyUrl) {
+    const clean = legacyUrl.trim().replace(/\/+$/, '');
+    const escaped = clean.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    patterns.push(new RegExp(`^${escaped}$`));
+    logger.log(`🌐 CORS legacy   : ${clean}`);
+  }
+
+  if (env !== 'production') {
+    patterns.push(/^http:\/\/localhost(:\d+)?$/);
+    logger.log(`🌐 CORS dev      : http://localhost:* (non-production)`);
+  }
+
+  if (patterns.length === 0) {
+    logger.warn(
+      '⚠️  No CORS origins configured! Set CORS_DOMAIN or FRONTEND_URL.',
+    );
+  }
 
   app.enableCors({
     origin: (requestOrigin, callback) => {
+      // No origin = server-to-server / curl → allow
       if (!requestOrigin) return callback(null, true);
+
       const clean = requestOrigin.trim().replace(/\/+$/, '');
-      if (allowedOrigins.includes(clean)) return callback(null, true);
+      const allowed = patterns.some((p) => p.test(clean));
+
+      if (allowed) return callback(null, true);
+
       logger.warn(`🚫 CORS blocked: ${requestOrigin}`);
       return callback(new Error(`CORS blocked: ${requestOrigin}`), false);
     },
@@ -50,7 +76,7 @@ async function bootstrap() {
       'X-CSRF-Token',
     ],
   });
-  // ───────────────────────────────────────────────────────
+  // ───────────────────────────────────────────────────────────────────────────
 
   app.useGlobalPipes(
     new ValidationPipe({
@@ -65,9 +91,9 @@ async function bootstrap() {
     process.env.PORT || configService.get<number>('app.port') || 8080;
   await app.listen(port);
 
-  logger.log(`🚀 Running: http://localhost:${port}/${apiPrefix}`);
-  logger.log(`📚 Health: http://localhost:${port}/${apiPrefix}/health`);
-  logger.log(`🔒 Env: ${configService.get<string>('app.env')}`);
+  logger.log(`🚀 Running  : http://localhost:${port}/${apiPrefix}`);
+  logger.log(`📚 Health   : http://localhost:${port}/${apiPrefix}/health`);
+  logger.log(`🔒 Env      : ${env}`);
 }
 
 bootstrap();

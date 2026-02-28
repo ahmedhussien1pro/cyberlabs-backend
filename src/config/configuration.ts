@@ -3,9 +3,11 @@ export default () => ({
     name: process.env.APP_NAME || 'CyberLabs Backend',
     env: process.env.NODE_ENV || 'production',
     port: parseInt(process.env.PORT || '8080', 10),
-    apiPrefix: `${process.env.API_PREFIX}/${process.env.API_VERSION}`,
+    apiPrefix: `${process.env.API_PREFIX || 'api'}/${process.env.API_VERSION || 'v1'}`,
     url: process.env.APP_URL,
-    frontendUrl: process.env.FRONTEND_URL,
+    frontendUrl: process.env.FRONTEND_URL, // legacy fallback (optional)
+    corsDomain: process.env.CORS_DOMAIN, // e.g. cyber-labs.tech
+    allowLocalhost: process.env.CORS_ALLOW_LOCALHOST,
   },
 
   database: {
