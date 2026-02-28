@@ -22,17 +22,21 @@ async function bootstrap() {
   app.use(helmet());
   app.use(cookieParser());
 
-  // ─── CORS ──────────────────────────────────────────────────────────────────
+  // ─── CORS ─────────────────────────────────────────────────────────────────
   const env = configService.get<string>('app.env') ?? 'production';
   const corsDomain = configService.get<string>('app.corsDomain'); // e.g. cyber-labs.tech
   const legacyUrl = configService.get<string>('app.frontendUrl'); // fallback
+  const allowLocalhost = process.env.CORS_ALLOW_LOCALHOST === 'true'; // explicit flag for Vercel
 
   const patterns: RegExp[] = [];
 
   if (corsDomain) {
-    // Allows: https://cyber-labs.tech  AND  https://*.cyber-labs.tech
     const escaped = corsDomain.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    patterns.push(new RegExp(`^https?:\\/\\/(([\\w-]+)\\.)?${escaped}$`));
+    // [\w.-]+ supports multi-level subdomains:
+    //   www.test.cyber-labs.tech  ✓
+    //   labs-test.cyber-labs.tech ✓
+    //   cyber-labs.tech           ✓
+    patterns.push(new RegExp(`^https?:\\/\\/([\\w.-]+\\.)?${escaped}$`));
     logger.log(`🌐 CORS domain   : *.${corsDomain}`);
   }
 
@@ -43,9 +47,9 @@ async function bootstrap() {
     logger.log(`🌐 CORS legacy   : ${clean}`);
   }
 
-  if (env !== 'production') {
+  if (allowLocalhost || env !== 'production') {
     patterns.push(/^http:\/\/localhost(:\d+)?$/);
-    logger.log(`🌐 CORS dev      : http://localhost:* (non-production)`);
+    logger.log(`🌐 CORS localhost : http://localhost:* (enabled)`);
   }
 
   if (patterns.length === 0) {
@@ -56,8 +60,7 @@ async function bootstrap() {
 
   app.enableCors({
     origin: (requestOrigin, callback) => {
-      // No origin = server-to-server / curl → allow
-      if (!requestOrigin) return callback(null, true);
+      if (!requestOrigin) return callback(null, true); // server-to-server / curl
 
       const clean = requestOrigin.trim().replace(/\/+$/, '');
       const allowed = patterns.some((p) => p.test(clean));
@@ -76,7 +79,7 @@ async function bootstrap() {
       'X-CSRF-Token',
     ],
   });
-  // ───────────────────────────────────────────────────────────────────────────
+  // ─────────────────────────────────────────────────────────────────────────
 
   app.useGlobalPipes(
     new ValidationPipe({
