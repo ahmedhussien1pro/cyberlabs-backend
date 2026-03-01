@@ -13,6 +13,7 @@ import { UserRole } from '../../../common/enums';
 import { OAuthProfile } from '../../../common/types';
 import { NotificationsService } from '../../notifications/services/notifications.service';
 import { NotificationEvents } from '../../notifications/notifications.events';
+
 @Injectable()
 export class AuthService {
   constructor(
@@ -106,9 +107,11 @@ export class AuthService {
   }
 
   /**
-   * Login user
+   * Login user.
+   * Returns { requires2fa: true, userId } if TOTP is enabled.
+   * Returns { user, accessToken, refreshToken } on normal login.
    */
-  async login(dto: LoginDto) {
+  async login(dto: LoginDto): Promise<any> {
     const user = await this.prisma.user.findUnique({
       where: { email: dto.email },
       select: {
@@ -140,16 +143,20 @@ export class AuthService {
     if (!isPasswordValid) {
       throw new UnauthorizedException('Invalid credentials');
     }
+
+    // 2FA is enabled — frontend must complete TOTP challenge before getting tokens
     if (user.twoFactorEnabled) {
       return {
         requires2fa: true,
         userId: user.id,
-      } as any;
+      };
     }
+
     this.logger.log(`User logged in: ${user.email}`);
     this.notifications
       .notify(user.id, NotificationEvents.login())
       .catch(() => {});
+
     const accessToken = this.jwtService.generateAccessToken(
       user.id,
       user.email,
@@ -160,11 +167,52 @@ export class AuthService {
     const { password, ...userWithoutPassword } = user;
 
     return {
-      user: { ...userWithoutPassword, twoFactorEnabled: user.twoFactorEnabled },
+      user: userWithoutPassword,
       accessToken,
       refreshToken,
       expiresIn: 2000,
     };
+  }
+
+  /**
+   * Issue a full session after successful 2FA TOTP verification.
+   */
+  async getUserForToken(userId: string): Promise<any> {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        avatarUrl: true,
+        role: true,
+        isEmailVerified: true,
+        isActive: true,
+        twoFactorEnabled: true,
+      },
+    });
+
+    if (!user) {
+      throw new UnauthorizedException('User not found');
+    }
+
+    if (!user.isActive) {
+      throw new UnauthorizedException('Account is deactivated');
+    }
+
+    this.logger.log(`User logged in via 2FA: ${user.email}`);
+    this.notifications
+      .notify(user.id, NotificationEvents.login())
+      .catch(() => {});
+
+    const accessToken = this.jwtService.generateAccessToken(
+      user.id,
+      user.email,
+      user.role as UserRole,
+    );
+    const refreshToken = this.jwtService.generateRefreshToken(user.id);
+
+    return { user, accessToken, refreshToken, expiresIn: 2000 };
   }
 
   /**
@@ -327,29 +375,5 @@ export class AuthService {
       refreshToken,
       expiresIn: 2000,
     };
-  }
-  async getUserForToken(userId: string) {
-    const user = await this.prisma.user.findUnique({
-      where: { id: userId },
-      select: {
-        id: true,
-        email: true,
-        name: true,
-        avatarUrl: true,
-        role: true,
-        isEmailVerified: true,
-        isActive: true,
-        twoFactorEnabled: true,
-      },
-    });
-    if (!user) throw new UnauthorizedException('User not found');
-
-    const accessToken = this.jwtService.generateAccessToken(
-      user.id,
-      user.email,
-      user.role as UserRole,
-    );
-    const refreshToken = this.jwtService.generateRefreshToken(user.id);
-    return { user, accessToken, refreshToken, expiresIn: 2000 };
   }
 }
