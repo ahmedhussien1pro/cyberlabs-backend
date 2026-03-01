@@ -34,6 +34,10 @@ export class PathFiltersDto {
   @IsOptional()
   @IsString()
   search?: string;
+
+  // Allow the _t cache buster parameter that React Query/Axios might send
+  @IsOptional()
+  _t?: any;
 }
 
 @Controller('paths')
