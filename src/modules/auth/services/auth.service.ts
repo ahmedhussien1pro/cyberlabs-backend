@@ -97,7 +97,7 @@ export class AuthService {
       user,
       accessToken,
       refreshToken,
-      expiresIn: 900,
+      expiresIn: 2000,
     };
   }
 
@@ -151,7 +151,7 @@ export class AuthService {
       user: userWithoutPassword,
       accessToken,
       refreshToken,
-      expiresIn: 900,
+      expiresIn: 2000,
     };
   }
 
@@ -190,7 +190,7 @@ export class AuthService {
       return {
         accessToken: newAccessToken,
         refreshToken: newRefreshToken,
-        expiresIn: 900,
+        expiresIn: 2000,
       };
     } catch (error) {
       throw new UnauthorizedException('Invalid refresh token');
@@ -308,7 +308,7 @@ export class AuthService {
       user,
       accessToken,
       refreshToken,
-      expiresIn: 900,
+      expiresIn: 2000,
     };
   }
 }
