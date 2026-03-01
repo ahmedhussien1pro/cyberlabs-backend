@@ -280,6 +280,10 @@ export class PracticeLabsService {
             xpReward: true,
             pointsReward: true,
             duration: true,
+            hints: {
+              select: { id: true, order: true, xpCost: true },
+              orderBy: { order: 'asc' },
+            },
           },
         },
       },
