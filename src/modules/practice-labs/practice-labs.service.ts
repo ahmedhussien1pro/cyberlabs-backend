@@ -264,6 +264,7 @@ export class PracticeLabsService {
         lab: {
           select: {
             id: true,
+            slug: true,
             title: true,
             ar_title: true,
             description: true,
