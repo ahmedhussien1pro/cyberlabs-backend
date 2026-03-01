@@ -34,7 +34,7 @@ import type { RequestUser } from '../../../common/types';
 import { Serialize } from '../../../common/decorators';
 import { AuthResponseSerializer } from '../serializers';
 
-// ── httpOnly Cookie helpers ─────────────────────────────────────────────────
+// ── httpOnly Cookie helpers ───────────────────────────────────────────────────────────
 const REFRESH_COOKIE = 'cyb_rt';
 
 function getRefreshCookieOpts(): CookieOptions {
@@ -89,15 +89,28 @@ export class AuthController {
     return result;
   }
 
+  /**
+   * Login endpoint.
+   * Returns either:
+   *  - { requires2fa: true, userId } when TOTP is enabled (no cookie set)
+   *  - { user, accessToken, refreshToken, expiresIn } on normal login
+   *
+   * Note: @Serialize is intentionally omitted so requires2fa response passes through.
+   */
   @Public()
   @Post('login')
   @HttpCode(HttpStatus.OK)
-  @Serialize(AuthResponseSerializer)
   async login(
     @Body() dto: LoginDto,
     @Res({ passthrough: true }) res: Response,
   ) {
     const result = await this.authService.login(dto);
+
+    // 2FA required — return the challenge without issuing a cookie
+    if ('requires2fa' in result && result.requires2fa) {
+      return result;
+    }
+
     res.cookie(REFRESH_COOKIE, result.refreshToken, getRefreshCookieOpts());
     return result;
   }
@@ -237,6 +250,10 @@ export class AuthController {
     return { success: true, ...result };
   }
 
+  /**
+   * Step-up login: verify TOTP code and issue a full session.
+   * Called after login returns { requires2fa: true, userId }.
+   */
   @Public()
   @Post('2fa/verify')
   @HttpCode(HttpStatus.OK)
@@ -253,9 +270,9 @@ export class AuthController {
       throw new UnauthorizedException('Invalid verification code');
     }
 
-    const user = await this.authService.getUserForToken(body.userId);
-    res.cookie(REFRESH_COOKIE, user.refreshToken, getRefreshCookieOpts());
-    return user;
+    const result = await this.authService.getUserForToken(body.userId);
+    res.cookie(REFRESH_COOKIE, result.refreshToken, getRefreshCookieOpts());
+    return result;
   }
 
   @Public()
