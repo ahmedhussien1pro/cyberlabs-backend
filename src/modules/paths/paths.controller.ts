@@ -11,7 +11,7 @@ import { PathsService } from './paths.service';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { Type } from 'class-transformer';
-import { IsNumber, IsOptional, Min, Max, IsString } from 'class-validator';
+import { IsNumber, IsOptional, Min, Max, IsString, Allow } from 'class-validator';
 
 export class PathFiltersDto {
   @Type(() => Number)
@@ -34,6 +34,11 @@ export class PathFiltersDto {
   @IsOptional()
   @IsString()
   search?: string;
+
+  // @Allow() is required for class-validator when whitelist: true is enabled
+  // without it, even if a property is declared, it will be stripped/rejected
+  @Allow()
+  _t?: any;
 }
 
 @Controller('paths')
