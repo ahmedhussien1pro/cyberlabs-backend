@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { lab1Metadata } from '../src/modules/practice-labs/sql-injection/labs/lab1/lab1.metadata';
+import { seedLearningPaths } from './seed-data/paths';
 
 const prisma = new PrismaClient();
 const ALL_LABS = [lab1Metadata];
@@ -65,11 +66,16 @@ async function seedLabsMetaData() {
 
     console.log(`  ✅ ${meta.slug} seeded`);
   }
-
-  console.log('🎉 Done!');
 }
+
 async function main() {
-  await seedLabsMetaData();
+  try {
+    await seedLabsMetaData();
+    await seedLearningPaths(prisma);
+    console.log('🎉 Done!');
+  } catch (error) {
+    console.error('Error during seeding:', error);
+  }
 }
 
 main()

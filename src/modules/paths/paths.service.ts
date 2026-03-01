@@ -10,14 +10,26 @@ import { Prisma } from '@prisma/client';
 export class PathsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async listPaths(userId: string | null, filters: { page?: number; limit?: number }) {
-    const { page = 1, limit = 10 } = filters;
+  async listPaths(userId: string | null, filters: { page?: number; limit?: number; difficulty?: string; search?: string }) {
+    const { page = 1, limit = 10, difficulty, search } = filters;
     const safeLimit = Math.min(Number(limit), 50);
     const skip = (Math.max(Number(page), 1) - 1) * safeLimit;
 
     const where: Prisma.LearningPathWhereInput = {
       isPublished: true,
     };
+
+    if (difficulty && difficulty.toLowerCase() !== 'all') {
+      where.difficulty = difficulty.toUpperCase() as any;
+    }
+
+    if (search) {
+      where.OR = [
+        { title: { contains: search, mode: 'insensitive' } },
+        { ar_title: { contains: search, mode: 'insensitive' } },
+        { tags: { has: search } },
+      ];
+    }
 
     const [total, paths] = await this.prisma.$transaction([
       this.prisma.learningPath.count({ where }),
