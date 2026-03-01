@@ -27,7 +27,6 @@ export class NotificationsService {
       },
     });
 
-    // Push realtime (fire-and-forget — لو الـ user مش online مش مشكلة)
     try {
       this.gateway.sendToUser(userId, notification);
     } catch {

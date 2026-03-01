@@ -240,14 +240,22 @@ export class AuthController {
   @Public()
   @Post('2fa/verify')
   @HttpCode(HttpStatus.OK)
-  async verifyTwoFactor(@Body() body: { userId: string; code: string }) {
+  async verifyTwoFactor(
+    @Body() body: { userId: string; code: string },
+    @Res({ passthrough: true }) res: Response,
+  ) {
     const isValid = await this.twoFactorService.verifyTwoFactorCode(
       body.userId,
       body.code,
     );
-    return isValid
-      ? { success: true, message: 'Code verified successfully' }
-      : { success: false, message: 'Invalid verification code' };
+
+    if (!isValid) {
+      throw new UnauthorizedException('Invalid verification code');
+    }
+
+    const user = await this.authService.getUserForToken(body.userId);
+    res.cookie(REFRESH_COOKIE, user.refreshToken, getRefreshCookieOpts());
+    return user;
   }
 
   @Public()

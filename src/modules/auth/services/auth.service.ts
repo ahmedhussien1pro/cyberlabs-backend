@@ -120,6 +120,7 @@ export class AuthService {
         role: true,
         isEmailVerified: true,
         isActive: true,
+        twoFactorEnabled: true,
       },
     });
 
@@ -139,7 +140,12 @@ export class AuthService {
     if (!isPasswordValid) {
       throw new UnauthorizedException('Invalid credentials');
     }
-
+    if (user.twoFactorEnabled) {
+      return {
+        requires2fa: true,
+        userId: user.id,
+      } as any;
+    }
     this.logger.log(`User logged in: ${user.email}`);
     this.notifications
       .notify(user.id, NotificationEvents.login())
@@ -154,7 +160,7 @@ export class AuthService {
     const { password, ...userWithoutPassword } = user;
 
     return {
-      user: userWithoutPassword,
+      user: { ...userWithoutPassword, twoFactorEnabled: user.twoFactorEnabled },
       accessToken,
       refreshToken,
       expiresIn: 2000,
@@ -321,5 +327,29 @@ export class AuthService {
       refreshToken,
       expiresIn: 2000,
     };
+  }
+  async getUserForToken(userId: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        avatarUrl: true,
+        role: true,
+        isEmailVerified: true,
+        isActive: true,
+        twoFactorEnabled: true,
+      },
+    });
+    if (!user) throw new UnauthorizedException('User not found');
+
+    const accessToken = this.jwtService.generateAccessToken(
+      user.id,
+      user.email,
+      user.role as UserRole,
+    );
+    const refreshToken = this.jwtService.generateRefreshToken(user.id);
+    return { user, accessToken, refreshToken, expiresIn: 2000 };
   }
 }
