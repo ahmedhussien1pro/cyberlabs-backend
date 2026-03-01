@@ -1,3 +1,5 @@
+// src/modules/auth/controllers/auth.controller.ts
+
 import {
   Controller,
   Post,
@@ -6,7 +8,11 @@ import {
   HttpStatus,
   UseGuards,
   Get,
+  Res,
+  Req,
+  UnauthorizedException,
 } from '@nestjs/common';
+import type { Response, Request, CookieOptions } from 'express';
 import { AuthService } from '../services/auth.service';
 import { EmailVerificationService } from '../services/email-verification.service';
 import { PasswordResetService } from '../services/password-reset.service';
@@ -19,16 +25,45 @@ import {
   ForgotPasswordDto,
   ResetPasswordDto,
   ChangePasswordDto,
-  RefreshTokenDto,
   VerifyOTPDto,
 } from '../dto';
-
 import { JwtAuthGuard } from '../../../common/guards';
 import { Public } from '../../../common/decorators';
 import { CurrentUser } from '../../../common/decorators';
 import type { RequestUser } from '../../../common/types';
 import { Serialize } from '../../../common/decorators';
 import { AuthResponseSerializer } from '../serializers';
+
+// ── httpOnly Cookie helpers ─────────────────────────────────────────────────
+const REFRESH_COOKIE = 'cyb_rt';
+
+function getRefreshCookieOpts(): CookieOptions {
+  const isProd = process.env.NODE_ENV !== 'development';
+  return {
+    httpOnly: true,
+    secure: isProd,
+    sameSite: 'lax',
+    ...(isProd
+      ? { domain: process.env.COOKIE_DOMAIN ?? '.cyber-labs.tech' }
+      : {}),
+    path: '/api/v1/auth/refresh',
+    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+  };
+}
+
+function clearRefreshCookieOpts(): CookieOptions {
+  const isProd = process.env.NODE_ENV !== 'development';
+  return {
+    httpOnly: true,
+    secure: isProd,
+    sameSite: 'lax',
+    ...(isProd
+      ? { domain: process.env.COOKIE_DOMAIN ?? '.cyber-labs.tech' }
+      : {}),
+    path: '/api/v1/auth/refresh',
+  };
+}
+// ───────────────────────────────────────────────────────────────────────────
 
 @Controller('auth')
 export class AuthController {
@@ -41,111 +76,95 @@ export class AuthController {
 
   // ==================== Authentication ====================
 
-  /**
-   * Register new user
-   * POST /api/v1/auth/register
-   * @public
-   */
   @Public()
   @Post('register')
   @HttpCode(HttpStatus.CREATED)
   @Serialize(AuthResponseSerializer)
-  async register(@Body() dto: RegisterDto) {
-    return this.authService.register(dto);
+  async register(
+    @Body() dto: RegisterDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const result = await this.authService.register(dto);
+    res.cookie(REFRESH_COOKIE, result.refreshToken, getRefreshCookieOpts());
+    return result;
   }
 
-  /**
-   * Login user
-   * POST /api/v1/auth/login
-   * @public
-   */
   @Public()
   @Post('login')
   @HttpCode(HttpStatus.OK)
   @Serialize(AuthResponseSerializer)
-  async login(@Body() dto: LoginDto) {
-    return this.authService.login(dto);
+  async login(
+    @Body() dto: LoginDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const result = await this.authService.login(dto);
+    res.cookie(REFRESH_COOKIE, result.refreshToken, getRefreshCookieOpts());
+    return result;
   }
 
   /**
-   * Refresh access token
-   * POST /api/v1/auth/refresh
-   * @public
+   * Dual-mode refresh:
+   *  - Cookie mode  (*.cyber-labs.tech): reads cyb_rt cookie automatically
+   *  - Legacy mode  (localhost dev)    : reads refreshToken from body
    */
   @Public()
   @Post('refresh')
   @HttpCode(HttpStatus.OK)
-  async refreshToken(@Body() dto: RefreshTokenDto) {
-    return this.authService.refreshToken(dto.refreshToken);
+  async refreshToken(
+    @Body('refreshToken') bodyRefreshToken: string | undefined,
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const cookies = req.cookies as Record<string, string> | undefined;
+    const cookieToken = cookies?.[REFRESH_COOKIE];
+    const refreshToken = cookieToken || bodyRefreshToken;
+
+    if (!refreshToken) {
+      throw new UnauthorizedException('No refresh token provided');
+    }
+
+    const result = await this.authService.refreshToken(refreshToken);
+    res.cookie(REFRESH_COOKIE, result.refreshToken, getRefreshCookieOpts());
+    return result;
   }
 
-  /**
-   * Logout user
-   * POST /api/v1/auth/logout
-   * @protected
-   */
   @UseGuards(JwtAuthGuard)
   @Post('logout')
   @HttpCode(HttpStatus.OK)
-  async logout(@CurrentUser() user: RequestUser) {
+  async logout(
+    @CurrentUser() user: RequestUser,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    res.clearCookie(REFRESH_COOKIE, clearRefreshCookieOpts());
     return this.authService.logout(user.id);
   }
 
-  /**
-   * Get current authenticated user
-   * GET /api/v1/auth/me
-   * @protected
-   */
   @UseGuards(JwtAuthGuard)
   @Get('me')
   async getMe(@CurrentUser() user: RequestUser) {
-    return {
-      success: true,
-      user,
-    };
+    return { success: true, user };
   }
 
   // ==================== Email Verification ====================
 
-  /**
-   * Verify email with token
-   * POST /api/v1/auth/verify-email
-   * @public
-   */
   @Public()
   @Post('verify-email')
   @HttpCode(HttpStatus.OK)
   async verifyEmail(@Body() dto: VerifyEmailDto) {
     await this.emailVerificationService.verifyEmail(dto.token);
-    return {
-      success: true,
-      message: 'Email verified successfully',
-    };
+    return { success: true, message: 'Email verified successfully' };
   }
 
-  /**
-   * Resend verification email
-   * POST /api/v1/auth/resend-verification
-   * @public
-   */
   @Public()
   @Post('resend-verification')
   @HttpCode(HttpStatus.OK)
   async resendVerification(@Body() dto: ResendVerificationDto) {
     await this.emailVerificationService.resendVerificationEmail(dto.email);
-    return {
-      success: true,
-      message: 'Verification email sent successfully',
-    };
+    return { success: true, message: 'Verification email sent successfully' };
   }
 
   // ==================== Password Management ====================
 
-  /**
-   * Request password reset email
-   * POST /api/v1/auth/forgot-password
-   * @public
-   */
   @Public()
   @Post('forgot-password')
   @HttpCode(HttpStatus.OK)
@@ -157,27 +176,14 @@ export class AuthController {
     };
   }
 
-  /**
-   * Reset password with token
-   * POST /api/v1/auth/reset-password
-   * @public
-   */
   @Public()
   @Post('reset-password')
   @HttpCode(HttpStatus.OK)
   async resetPassword(@Body() dto: ResetPasswordDto) {
     await this.passwordResetService.resetPassword(dto.token, dto.newPassword);
-    return {
-      success: true,
-      message: 'Password reset successfully',
-    };
+    return { success: true, message: 'Password reset successfully' };
   }
 
-  /**
-   * Change password (authenticated users)
-   * POST /api/v1/auth/change-password
-   * @protected
-   */
   @UseGuards(JwtAuthGuard)
   @Post('change-password')
   @HttpCode(HttpStatus.OK)
@@ -190,35 +196,19 @@ export class AuthController {
       dto.currentPassword,
       dto.newPassword,
     );
-    return {
-      success: true,
-      message: 'Password changed successfully',
-    };
+    return { success: true, message: 'Password changed successfully' };
   }
 
   // ==================== Two-Factor Authentication ====================
 
-  /**
-   * Generate 2FA secret and QR code
-   * POST /api/v1/auth/2fa/generate
-   * @protected
-   */
   @UseGuards(JwtAuthGuard)
   @Post('2fa/generate')
   @HttpCode(HttpStatus.OK)
   async generateTwoFactor(@CurrentUser() user: RequestUser) {
     const result = await this.twoFactorService.generateTwoFactorSecret(user.id);
-    return {
-      success: true,
-      data: result,
-    };
+    return { success: true, data: result };
   }
 
-  /**
-   * Enable 2FA by verifying code
-   * POST /api/v1/auth/2fa/enable
-   * @protected
-   */
   @UseGuards(JwtAuthGuard)
   @Post('2fa/enable')
   @HttpCode(HttpStatus.OK)
@@ -230,17 +220,9 @@ export class AuthController {
       user.id,
       body.code,
     );
-    return {
-      success: true,
-      ...result,
-    };
+    return { success: true, ...result };
   }
 
-  /**
-   * Disable 2FA
-   * POST /api/v1/auth/2fa/disable
-   * @protected
-   */
   @UseGuards(JwtAuthGuard)
   @Post('2fa/disable')
   @HttpCode(HttpStatus.OK)
@@ -252,17 +234,9 @@ export class AuthController {
       user.id,
       body.code,
     );
-    return {
-      success: true,
-      ...result,
-    };
+    return { success: true, ...result };
   }
 
-  /**
-   * Verify 2FA code during login
-   * POST /api/v1/auth/2fa/verify
-   * @public
-   */
   @Public()
   @Post('2fa/verify')
   @HttpCode(HttpStatus.OK)
@@ -271,33 +245,16 @@ export class AuthController {
       body.userId,
       body.code,
     );
-
-    if (!isValid) {
-      return {
-        success: false,
-        message: 'Invalid verification code',
-      };
-    }
-
-    return {
-      success: true,
-      message: 'Code verified successfully',
-    };
+    return isValid
+      ? { success: true, message: 'Code verified successfully' }
+      : { success: false, message: 'Invalid verification code' };
   }
 
-  /**
-   * Verify email with OTP
-   * POST /api/v1/auth/verify-email-otp
-   * @public
-   */
   @Public()
   @Post('verify-email-otp')
   @HttpCode(HttpStatus.OK)
   async verifyEmailWithOTP(@Body() dto: VerifyOTPDto) {
     await this.emailVerificationService.verifyEmailWithOTP(dto.email, dto.otp);
-    return {
-      success: true,
-      message: 'Email verified successfully',
-    };
+    return { success: true, message: 'Email verified successfully' };
   }
 }
