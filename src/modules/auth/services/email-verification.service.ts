@@ -7,13 +7,15 @@ import { PrismaService } from '../../../core/database';
 import { LoggerService } from '../../../core/logger';
 import { MailService } from '../../../core/mail';
 import * as crypto from 'crypto';
-
+import { NotificationsService } from '../../notifications/services/notifications.service';
+import { NotificationEvents } from '../../notifications/notifications.events';
 @Injectable()
 export class EmailVerificationService {
   constructor(
     private prisma: PrismaService,
     private logger: LoggerService,
     private mailService: MailService,
+    private readonly notifications: NotificationsService,
   ) {
     this.logger.setContext('EmailVerificationService');
   }
@@ -166,6 +168,9 @@ export class EmailVerificationService {
     }
 
     this.logger.log(`✅ Email verified successfully for user: ${email}`);
+    this.notifications
+      .notify(user.id, NotificationEvents.emailVerified())
+      .catch(() => {});
   }
 
   /**

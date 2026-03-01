@@ -6,7 +6,7 @@ import { ConfigModule } from '@nestjs/config';
 // Controllers
 import { AuthController } from './controllers/auth.controller';
 import { OAuthController } from './controllers/oauth.controller';
-
+import { NotificationsModule } from '../notifications/notifications.module';
 // Services
 import {
   AuthService,
@@ -33,6 +33,7 @@ import { MailModule } from '../../core/mail';
     DatabaseModule,
     SecurityModule,
     LoggerModule,
+    NotificationsModule,
   ],
   controllers: [AuthController, OAuthController],
   providers: [

@@ -9,13 +9,15 @@ import { LoggerService } from '../../../core/logger';
 import { MailService } from '../../../core/mail';
 import * as bcrypt from 'bcrypt';
 import { randomBytes } from 'crypto';
-
+import { NotificationsService } from '../../notifications/services/notifications.service';
+import { NotificationEvents } from '../../notifications/notifications.events';
 @Injectable()
 export class PasswordResetService {
   constructor(
     private prisma: PrismaService,
     private logger: LoggerService,
     private mailService: MailService,
+    private readonly notifications: NotificationsService,
   ) {
     this.logger.setContext('PasswordResetService');
   }
@@ -37,8 +39,8 @@ export class PasswordResetService {
     }
 
     // Generate token
-    const token = randomBytes(32).toString('hex'); // 🎯 استخدم randomBytes مباشرة
-    const expiresAt = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
+    const token = randomBytes(32).toString('hex');
+    const expiresAt = new Date(Date.now() + 60 * 60 * 1000);
 
     // Delete old reset tokens for this user
     await this.prisma.passwordResetToken.deleteMany({
@@ -58,6 +60,9 @@ export class PasswordResetService {
     await this.mailService.sendPasswordResetEmail(user.email, user.name, token);
 
     this.logger.log(`✅ Password reset email sent to ${email}`);
+    this.notifications
+      .notify(user.id, NotificationEvents.passwordResetRequested())
+      .catch(() => {});
   }
 
   /**
@@ -107,6 +112,9 @@ export class PasswordResetService {
     this.logger.log(
       `✅ Password reset successfully for user: ${resetToken.user.email}`,
     );
+    this.notifications
+      .notify(resetToken.userId, NotificationEvents.passwordChanged())
+      .catch(() => {});
   }
 
   /**
@@ -147,5 +155,8 @@ export class PasswordResetService {
     });
 
     this.logger.log(`✅ Password changed successfully for user: ${user.email}`);
+    this.notifications
+      .notify(userId, NotificationEvents.passwordChanged())
+      .catch(() => {});
   }
 }

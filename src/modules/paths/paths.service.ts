@@ -5,12 +5,25 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from '../../core/database';
 import { Prisma } from '@prisma/client';
+import { NotificationsService } from '../notifications/services/notifications.service';
+import { NotificationEvents } from '../notifications/notifications.events';
 
 @Injectable()
 export class PathsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly notifications: NotificationsService,
+  ) {}
 
-  async listPaths(userId: string | null, filters: { page?: number; limit?: number; difficulty?: string; search?: string }) {
+  async listPaths(
+    userId: string | null,
+    filters: {
+      page?: number;
+      limit?: number;
+      difficulty?: string;
+      search?: string;
+    },
+  ) {
     const { page = 1, limit = 10, difficulty, search } = filters;
     const safeLimit = Math.min(Number(limit), 50);
     const skip = (Math.max(Number(page), 1) - 1) * safeLimit;
@@ -56,7 +69,7 @@ export class PathsService {
     const formattedPaths = paths.map((path) => {
       const isEnrolled = userId && path.enrollments?.length > 0;
       const progress = isEnrolled ? path.enrollments[0].progress : 0;
-      
+
       const { enrollments, ...rest } = path;
       return {
         ...rest,
@@ -95,9 +108,9 @@ export class PathsService {
                   enrollments: {
                     where: { userId },
                     select: { progress: true, isCompleted: true },
-                  }
-                })
-              }
+                  },
+                }),
+              },
             },
             lab: {
               select: {
@@ -109,12 +122,12 @@ export class PathsService {
                 ...(userId && {
                   usersProgress: {
                     where: { userId },
-                    select: { progress: true, completedAt: true }
-                  }
-                })
-              }
-            }
-          }
+                    select: { progress: true, completedAt: true },
+                  },
+                }),
+              },
+            },
+          },
         },
         ...(userId && {
           enrollments: {
@@ -133,7 +146,7 @@ export class PathsService {
     const progress = isEnrolled ? path.enrollments[0].progress : 0;
 
     // Clean up nested data
-    const formattedModules = path.modules.map(module => {
+    const formattedModules = path.modules.map((module) => {
       let isCompleted = false;
       let moduleProgress = 0;
 
@@ -153,8 +166,8 @@ export class PathsService {
         ...module,
         userProgress: {
           progress: moduleProgress,
-          isCompleted
-        }
+          isCompleted,
+        },
       };
     });
 
@@ -172,7 +185,7 @@ export class PathsService {
   async enroll(userId: string, slug: string) {
     const path = await this.prisma.learningPath.findUnique({
       where: { slug },
-      select: { id: true, isPublished: true },
+      select: { id: true, isPublished: true, title: true, slug: true },
     });
 
     if (!path || !path.isPublished) {
@@ -188,14 +201,16 @@ export class PathsService {
         return {
           success: true,
           enrolledAt: existing.enrolledAt,
-          message: 'Already enrolled'
+          message: 'Already enrolled',
         };
       }
 
       const enrollment = await tx.pathEnrollment.create({
         data: { userId, pathId: path.id },
       });
-
+      this.notifications
+        .notify(userId, NotificationEvents.pathEnrolled(path.title, path.slug))
+        .catch(() => {});
       return {
         success: true,
         enrolledAt: enrollment.enrolledAt,
@@ -209,9 +224,9 @@ export class PathsService {
       where: { id: pathId },
       include: {
         modules: {
-          select: { courseId: true, labId: true }
-        }
-      }
+          select: { courseId: true, labId: true },
+        },
+      },
     });
 
     if (!path || path.modules.length === 0) return;
@@ -221,18 +236,20 @@ export class PathsService {
     for (const mod of path.modules) {
       if (mod.courseId) {
         const courseEnrollment = await this.prisma.enrollment.findUnique({
-          where: { userId_courseId: { userId, courseId: mod.courseId } }
+          where: { userId_courseId: { userId, courseId: mod.courseId } },
         });
         if (courseEnrollment?.isCompleted) completedModulesCount++;
       } else if (mod.labId) {
         const labProgress = await this.prisma.userLabProgress.findUnique({
-          where: { userId_labId: { userId, labId: mod.labId } }
+          where: { userId_labId: { userId, labId: mod.labId } },
         });
         if (labProgress?.completedAt) completedModulesCount++;
       }
     }
 
-    const progress = Math.round((completedModulesCount / path.modules.length) * 100);
+    const progress = Math.round(
+      (completedModulesCount / path.modules.length) * 100,
+    );
     const isCompleted = progress >= 100;
 
     await this.prisma.pathEnrollment.update({
@@ -241,7 +258,12 @@ export class PathsService {
         progress,
         isCompleted,
         completedAt: isCompleted ? new Date() : null,
-      }
+      },
     });
+    if (isCompleted) {
+      this.notifications
+        .notify(userId, NotificationEvents.pathCompleted(path.title, path.slug))
+        .catch(() => {});
+    }
   }
 }

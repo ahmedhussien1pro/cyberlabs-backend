@@ -8,13 +8,15 @@ import { LoggerService } from '../../../core/logger';
 import * as speakeasy from 'speakeasy';
 import * as qrcode from 'qrcode';
 import { ConfigService } from '@nestjs/config';
-
+import { NotificationsService } from '../../notifications/services/notifications.service';
+import { NotificationEvents } from '../../notifications/notifications.events';
 @Injectable()
 export class TwoFactorService {
   constructor(
     private prisma: PrismaService,
     private logger: LoggerService,
     private configService: ConfigService,
+    private readonly notifications: NotificationsService,
   ) {
     this.logger.setContext('TwoFactorService');
   }
@@ -101,7 +103,9 @@ export class TwoFactorService {
     });
 
     this.logger.log(`2FA enabled for user: ${user.email}`);
-
+    this.notifications
+      .notify(userId, NotificationEvents.twoFactorEnabled())
+      .catch(() => {});
     return {
       message: 'Two-factor authentication enabled successfully',
     };

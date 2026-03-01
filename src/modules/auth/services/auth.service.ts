@@ -11,7 +11,8 @@ import { EmailVerificationService } from './email-verification.service';
 import { RegisterDto, LoginDto } from '../dto';
 import { UserRole } from '../../../common/enums';
 import { OAuthProfile } from '../../../common/types';
-
+import { NotificationsService } from '../../notifications/services/notifications.service';
+import { NotificationEvents } from '../../notifications/notifications.events';
 @Injectable()
 export class AuthService {
   constructor(
@@ -20,6 +21,7 @@ export class AuthService {
     private jwtService: JwtTokenService,
     private emailVerificationService: EmailVerificationService,
     private logger: LoggerService,
+    private readonly notifications: NotificationsService,
   ) {
     this.logger.setContext('AuthService');
   }
@@ -85,7 +87,9 @@ export class AuthService {
     }
 
     this.logger.log(`New user registered: ${user.email}`);
-
+    this.notifications
+      .notify(user.id, NotificationEvents.register(user.name))
+      .catch(() => {});
     const accessToken = this.jwtService.generateAccessToken(
       user.id,
       user.email,
@@ -137,7 +141,9 @@ export class AuthService {
     }
 
     this.logger.log(`User logged in: ${user.email}`);
-
+    this.notifications
+      .notify(user.id, NotificationEvents.login())
+      .catch(() => {});
     const accessToken = this.jwtService.generateAccessToken(
       user.id,
       user.email,
@@ -295,6 +301,11 @@ export class AuthService {
           `New user registered via ${profile.provider}: ${user.email}`,
         );
       }
+    }
+    if (oauthAccount) {
+      this.notifications
+        .notify(user.id, NotificationEvents.login())
+        .catch(() => {});
     }
 
     const accessToken = this.jwtService.generateAccessToken(

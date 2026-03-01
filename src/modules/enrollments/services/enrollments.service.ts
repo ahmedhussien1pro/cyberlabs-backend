@@ -11,11 +11,14 @@ import {
   EnrollmentDetailsSerializer,
 } from '../serializers';
 import { plainToClass } from 'class-transformer';
-
+import { NotificationsService } from '../../notifications/services/notifications.service';
+import { NotificationEvents } from '../../notifications/notifications.events';
 @Injectable()
 export class EnrollmentsService {
-  constructor(private prisma: PrismaService) {}
-
+  constructor(
+    private prisma: PrismaService,
+    private readonly notifications: NotificationsService,
+  ) {}
   /**
    * Enroll user in a course
    */
@@ -30,6 +33,7 @@ export class EnrollmentsService {
       where: { id: courseId },
       select: {
         id: true,
+        slug: true,
         title: true,
         ar_title: true,
         thumbnail: true,
@@ -78,6 +82,7 @@ export class EnrollmentsService {
             id: true,
             title: true,
             ar_title: true,
+            slug: true,
             thumbnail: true,
             difficulty: true,
             duration: true,
@@ -96,7 +101,12 @@ export class EnrollmentsService {
         },
       },
     });
-
+    this.notifications
+      .notify(
+        userId,
+        NotificationEvents.courseEnrolled(course.title, course.slug),
+      )
+      .catch(() => {});
     return plainToClass(EnrollmentSerializer, enrollment, {
       excludeExtraneousValues: true,
     });
@@ -171,6 +181,7 @@ export class EnrollmentsService {
             id: true,
             title: true,
             ar_title: true,
+            slug: true,
             description: true,
             ar_description: true,
             thumbnail: true,
@@ -202,7 +213,7 @@ export class EnrollmentsService {
   /**
    * Get user enrollments with pagination
    */
-   async getUserEnrollments(userId: string, query: EnrollmentQueryDto) {
+  async getUserEnrollments(userId: string, query: EnrollmentQueryDto) {
     const {
       page = 1,
       limit = 10,
@@ -231,6 +242,7 @@ export class EnrollmentsService {
             id: true,
             title: true,
             ar_title: true,
+            slug: true,
             thumbnail: true,
             difficulty: true,
             duration: true,
@@ -244,7 +256,7 @@ export class EnrollmentsService {
 
     // ✅ Return data directly without serializer
     return {
-      data: enrollments,  // ← بدون plainToClass
+      data: enrollments, // ← بدون plainToClass
       meta: {
         total,
         page,
@@ -253,7 +265,6 @@ export class EnrollmentsService {
       },
     };
   }
-
 
   /**
    * Get enrollment details with progress breakdown
@@ -408,6 +419,7 @@ export class EnrollmentsService {
           select: {
             id: true,
             title: true,
+            slug: true,
             ar_title: true,
             thumbnail: true,
             difficulty: true,
@@ -417,7 +429,23 @@ export class EnrollmentsService {
         },
       },
     });
-
+    if (
+      (updateData.isCompleted || updateData.progress === 100) &&
+      !enrollment.isCompleted
+    ) {
+      const course = await this.prisma.course.findUnique({
+        where: { id: courseId },
+        select: { title: true, slug: true },
+      });
+      if (course) {
+        this.notifications
+          .notify(
+            userId,
+            NotificationEvents.courseCompleted(course.title, course.slug),
+          )
+          .catch(() => {});
+      }
+    }
     return plainToClass(EnrollmentSerializer, updatedEnrollment, {
       excludeExtraneousValues: true,
     });
