@@ -34,7 +34,7 @@ import type { RequestUser } from '../../../common/types';
 import { Serialize } from '../../../common/decorators';
 import { AuthResponseSerializer } from '../serializers';
 
-// ── httpOnly Cookie helpers ─────────────────────────────────────────────────
+// ── httpOnly Cookie helpers ───────────────────────────────────────────────────────────
 const REFRESH_COOKIE = 'cyb_rt';
 
 function getRefreshCookieOpts(): CookieOptions {
@@ -89,15 +89,26 @@ export class AuthController {
     return result;
   }
 
+  /**
+   * Login.
+   * • Normal login  → sets refreshToken cookie + returns { user, accessToken, ... }
+   * • 2FA required  → returns { requires2fa: true, userId } — NO cookie set
+   *
+   * @Serialize is intentionally omitted so requires2fa payload is never stripped.
+   */
   @Public()
   @Post('login')
   @HttpCode(HttpStatus.OK)
-  @Serialize(AuthResponseSerializer)
   async login(
     @Body() dto: LoginDto,
     @Res({ passthrough: true }) res: Response,
   ) {
     const result = await this.authService.login(dto);
+
+    if ('requires2fa' in result && result.requires2fa) {
+      return result;
+    }
+
     res.cookie(REFRESH_COOKIE, result.refreshToken, getRefreshCookieOpts());
     return result;
   }
@@ -206,7 +217,8 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   async generateTwoFactor(@CurrentUser() user: RequestUser) {
     const result = await this.twoFactorService.generateTwoFactorSecret(user.id);
-    return { success: true, data: result };
+    // Spread directly so frontend receives { qrCode, secret } at root level
+    return { success: true, ...result };
   }
 
   @UseGuards(JwtAuthGuard)
@@ -237,6 +249,9 @@ export class AuthController {
     return { success: true, ...result };
   }
 
+  /**
+   * Step-up login: verify TOTP code then issue a full session.
+   */
   @Public()
   @Post('2fa/verify')
   @HttpCode(HttpStatus.OK)
@@ -253,9 +268,9 @@ export class AuthController {
       throw new UnauthorizedException('Invalid verification code');
     }
 
-    const user = await this.authService.getUserForToken(body.userId);
-    res.cookie(REFRESH_COOKIE, user.refreshToken, getRefreshCookieOpts());
-    return user;
+    const result = await this.authService.getUserForToken(body.userId);
+    res.cookie(REFRESH_COOKIE, result.refreshToken, getRefreshCookieOpts());
+    return result;
   }
 
   @Public()
