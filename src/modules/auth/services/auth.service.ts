@@ -3,6 +3,7 @@ import {
   UnauthorizedException,
   ConflictException,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '../../../core/database';
 import { HashingService } from '../../../core/security';
 import { LoggerService } from '../../../core/logger';
@@ -13,19 +14,43 @@ import { UserRole } from '../../../common/enums';
 import { OAuthProfile } from '../../../common/types';
 import { NotificationsService } from '../../notifications/services/notifications.service';
 import { NotificationEvents } from '../../notifications/notifications.events';
+
 @Injectable()
 export class AuthService {
+  private readonly accessExpirySeconds: number;
+
   constructor(
     private prisma: PrismaService,
     private hashingService: HashingService,
     private jwtService: JwtTokenService,
     private emailVerificationService: EmailVerificationService,
     private logger: LoggerService,
+    private configService: ConfigService,
     private readonly notifications: NotificationsService,
   ) {
     this.logger.setContext('AuthService');
+
+    // يقرأ الـ expiry من الـ env مرة واحدة عند الـ init
+    const raw = this.configService.get<string>('jwt.accessExpiry') ?? '15m';
+    this.accessExpirySeconds = this.parseExpiryToSeconds(raw);
   }
 
+  // ── helper: "15m" | "1h" | "7d" → seconds ─────────────────────────
+  private parseExpiryToSeconds(expiry: string): number {
+    const match = expiry.match(/^(\d+)([smhd])$/);
+    if (!match) return 900; // fallback 15m
+    const value = parseInt(match[1]);
+    const unit = match[2];
+    const multipliers: Record<string, number> = {
+      s: 1,
+      m: 60,
+      h: 3600,
+      d: 86400,
+    };
+    return value * (multipliers[unit] ?? 60);
+  }
+
+  // ─────────────────────────────────────────────────────────────────────
   /**
    * Register new user
    */
@@ -70,7 +95,7 @@ export class AuthService {
       },
     });
 
-    // ✅ Wrap email sending in try-catch to ensure registration succeeds even if email fails
+    // إرسال OTP email
     try {
       await this.emailVerificationService.sendVerificationEmail(
         user.id,
@@ -87,9 +112,12 @@ export class AuthService {
     }
 
     this.logger.log(`New user registered: ${user.email}`);
+
+    // إشعار ترحيب
     this.notifications
       .notify(user.id, NotificationEvents.register(user.name))
       .catch(() => {});
+
     const accessToken = this.jwtService.generateAccessToken(
       user.id,
       user.email,
@@ -101,10 +129,11 @@ export class AuthService {
       user,
       accessToken,
       refreshToken,
-      expiresIn: 2000,
+      expiresIn: this.accessExpirySeconds,
     };
   }
 
+  // ─────────────────────────────────────────────────────────────────────
   /**
    * Login user
    */
@@ -120,7 +149,6 @@ export class AuthService {
         role: true,
         isEmailVerified: true,
         isActive: true,
-        twoFactorEnabled: true,
       },
     });
 
@@ -140,16 +168,14 @@ export class AuthService {
     if (!isPasswordValid) {
       throw new UnauthorizedException('Invalid credentials');
     }
-    if (user.twoFactorEnabled) {
-      return {
-        requires2fa: true,
-        userId: user.id,
-      } as any;
-    }
+
     this.logger.log(`User logged in: ${user.email}`);
+
+    // إشعار تسجيل الدخول
     this.notifications
       .notify(user.id, NotificationEvents.login())
       .catch(() => {});
+
     const accessToken = this.jwtService.generateAccessToken(
       user.id,
       user.email,
@@ -160,13 +186,14 @@ export class AuthService {
     const { password, ...userWithoutPassword } = user;
 
     return {
-      user: { ...userWithoutPassword, twoFactorEnabled: user.twoFactorEnabled },
+      user: userWithoutPassword,
       accessToken,
       refreshToken,
-      expiresIn: 2000,
+      expiresIn: this.accessExpirySeconds,
     };
   }
 
+  // ─────────────────────────────────────────────────────────────────────
   /**
    * Refresh access token
    */
@@ -202,23 +229,23 @@ export class AuthService {
       return {
         accessToken: newAccessToken,
         refreshToken: newRefreshToken,
-        expiresIn: 2000,
+        expiresIn: this.accessExpirySeconds,
       };
     } catch (error) {
       throw new UnauthorizedException('Invalid refresh token');
     }
   }
 
+  // ─────────────────────────────────────────────────────────────────────
   /**
    * Logout user
    */
   async logout(userId: string) {
     this.logger.log(`User logged out: ${userId}`);
-    return {
-      message: 'Logged out successfully',
-    };
+    return { message: 'Logged out successfully' };
   }
 
+  // ─────────────────────────────────────────────────────────────────────
   /**
    * OAuth Login/Register (Google, GitHub)
    */
@@ -245,7 +272,8 @@ export class AuthService {
       },
     });
 
-    let user;
+    let user: any;
+    let isNewUser = false;
 
     if (oauthAccount) {
       user = oauthAccount.user;
@@ -303,12 +331,19 @@ export class AuthService {
           },
         });
 
+        isNewUser = true;
         this.logger.log(
           `New user registered via ${profile.provider}: ${user.email}`,
         );
       }
     }
-    if (oauthAccount) {
+
+    // ── Notifications ─────────────────────────────────────────────────
+    if (isNewUser) {
+      this.notifications
+        .notify(user.id, NotificationEvents.register(user.name))
+        .catch(() => {});
+    } else {
       this.notifications
         .notify(user.id, NotificationEvents.login())
         .catch(() => {});
@@ -325,31 +360,7 @@ export class AuthService {
       user,
       accessToken,
       refreshToken,
-      expiresIn: 2000,
+      expiresIn: this.accessExpirySeconds,
     };
-  }
-  async getUserForToken(userId: string) {
-    const user = await this.prisma.user.findUnique({
-      where: { id: userId },
-      select: {
-        id: true,
-        email: true,
-        name: true,
-        avatarUrl: true,
-        role: true,
-        isEmailVerified: true,
-        isActive: true,
-        twoFactorEnabled: true,
-      },
-    });
-    if (!user) throw new UnauthorizedException('User not found');
-
-    const accessToken = this.jwtService.generateAccessToken(
-      user.id,
-      user.email,
-      user.role as UserRole,
-    );
-    const refreshToken = this.jwtService.generateRefreshToken(user.id);
-    return { user, accessToken, refreshToken, expiresIn: 2000 };
   }
 }

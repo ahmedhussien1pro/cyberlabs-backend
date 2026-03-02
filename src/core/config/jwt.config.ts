@@ -28,4 +28,5 @@ export default registerAs('jwt', () => ({
     secret: process.env.JWT_PASSWORD_RESET_SECRET,
     expiresIn: process.env.JWT_PASSWORD_RESET_EXPIRATION || '7d',
   },
+  accessExpiry: process.env.JWT_ACCESS_EXPIRY || '15m',
 }));
