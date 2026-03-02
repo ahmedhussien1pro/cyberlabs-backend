@@ -1429,13 +1429,13 @@ model CourseReview {
 // ============================================================================
 
 model SubscriptionPlan {
-    id             String               @id @default(uuid())
-  name           String               @unique
+  id             String               @id @default(uuid())
+  name           String               // ✅ بدون @unique
   ar_name        String?
   description    String?
   ar_description String?
   price          Float
-  stripePriceId String?
+  stripePriceId  String?
   duration       SubscriptionDuration
   features       String[]
   ar_features    String[]
@@ -1444,9 +1444,12 @@ model SubscriptionPlan {
   updatedAt      DateTime             @updatedAt
 
   subscriptions Subscription[]
-@@unique([name, duration]) 
+
+  @@unique([name, duration]) 
+  @@index([name])             
   @@map("subscription_plans")
 }
+
 
 model Subscription {
     id     String           @id @default(uuid())

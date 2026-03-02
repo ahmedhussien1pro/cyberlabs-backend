@@ -396,4 +396,43 @@ export class CoursesService {
 
     return { success: true };
   }
+  async getCourseContent(slug: string) {
+    // 1. Verify course exists in DB
+    const course = await this.prisma.course.findUnique({
+      where: { slug },
+      select: { id: true, isPublished: true, title: true },
+    });
+
+    if (!course || !course.isPublished) {
+      throw new NotFoundException('Course not found');
+    }
+
+    // 2. Read JSON file using course.title (filename)
+    const jsonFileName = `${course.title}.json`;
+    const filePath = join(
+      process.cwd(),
+      'prisma/seed-data/course-data',
+      jsonFileName,
+    );
+
+    try {
+      const fileContent = readFileSync(filePath, 'utf-8');
+      const data = JSON.parse(fileContent);
+
+      // Return topics with elements
+      return {
+        courseId: course.id,
+        topics: data.topics ?? [],
+        metadata: data.landingData ?? {},
+      };
+    } catch (error) {
+      // Fallback: if JSON doesn't exist, return empty
+      console.warn(`JSON file not found for ${slug}: ${jsonFileName}`);
+      return {
+        courseId: course.id,
+        topics: [],
+        metadata: {},
+      };
+    }
+  }
 }

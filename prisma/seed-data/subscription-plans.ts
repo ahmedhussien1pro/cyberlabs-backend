@@ -7,15 +7,15 @@ type PlanSeed = {
   description: string;
   ar_description: string;
   duration: SubscriptionDuration;
-  price: number; // per month
-  stripePriceId: string | null; // <-- fill later
-  isActive: boolean; // false => coming soon
+  price: number;
+  stripePriceId: string;
+  isActive: boolean;
   features: string[];
   ar_features: string[];
 };
 
 export const SUBSCRIPTION_PLANS: PlanSeed[] = [
-  // ── FREE (monthly only) ─────────────────────────
+  // ── FREE ────────────────────────────────────────────────────────────────────
   {
     name: 'free',
     ar_name: 'مجاني',
@@ -25,7 +25,7 @@ export const SUBSCRIPTION_PLANS: PlanSeed[] = [
       'ابدأ بتعلّم الأساسيات مع عدد محدود من المختبرات وإمكانية الوصول للمجتمع.',
     duration: SubscriptionDuration.MONTHLY,
     price: 0,
-    stripePriceId: 'prod_U4mqKmVw6Trc6H',
+    stripePriceId: 'prod_U4mqKmVw6Trc6H', // Free product ID (not a price ID)
     isActive: true,
     features: [
       'Access to selected beginner labs',
@@ -41,7 +41,7 @@ export const SUBSCRIPTION_PLANS: PlanSeed[] = [
     ],
   },
 
-  // ── PRO (monthly + yearly) ──────────────────────
+  // ── PRO MONTHLY ─────────────────────────────────────────────────────────────
   {
     name: 'pro',
     ar_name: 'برو',
@@ -51,7 +51,7 @@ export const SUBSCRIPTION_PLANS: PlanSeed[] = [
       'وصول كامل لكل المختبرات والكورسات، مع شهادات ومسارات متقدمة.',
     duration: SubscriptionDuration.MONTHLY,
     price: 14,
-    stripePriceId: 'price_1T6dDcPFsjrIMgRe8LkEdp0P', // <-- price_...
+    stripePriceId: 'price_1T6dDcPFsjrIMgRe8LkEdp0P',
     isActive: true,
     features: [
       'Unlimited labs (real-world scenarios)',
@@ -68,6 +68,8 @@ export const SUBSCRIPTION_PLANS: PlanSeed[] = [
       'دعم عبر البريد الإلكتروني',
     ],
   },
+
+  // ── PRO YEARLY ──────────────────────────────────────────────────────────────
   {
     name: 'pro',
     ar_name: 'برو',
@@ -75,8 +77,8 @@ export const SUBSCRIPTION_PLANS: PlanSeed[] = [
       'Full access to all labs and courses — billed yearly (best value).',
     ar_description: 'وصول كامل لكل المختبرات والكورسات — دفع سنوي (أفضل قيمة).',
     duration: SubscriptionDuration.YEARLY,
-    price: 9, // shown as $/mo in UI, billed annually in Stripe
-    stripePriceId: 'price_1T6dFxPFsjrIMgReW0fD8iQp', // <-- price_...
+    price: 9, // per-month display price; Stripe charges $108/year
+    stripePriceId: 'price_1T6dFxPFsjrIMgReW0fD8iQp',
     isActive: true,
     features: [
       'Everything in Pro Monthly',
@@ -94,7 +96,7 @@ export const SUBSCRIPTION_PLANS: PlanSeed[] = [
     ],
   },
 
-  // ── TEAM (coming soon) ──────────────────────────
+  // ── TEAM MONTHLY (coming soon) ──────────────────────────────────────────────
   {
     name: 'team',
     ar_name: 'فريق',
@@ -121,13 +123,15 @@ export const SUBSCRIPTION_PLANS: PlanSeed[] = [
       'دعم أولوية',
     ],
   },
+
+  // ── TEAM YEARLY (coming soon) ───────────────────────────────────────────────
   {
     name: 'team',
     ar_name: 'فريق',
     description: 'Team plan — billed yearly (coming soon).',
     ar_description: 'خطة الفريق — دفع سنوي (قريباً).',
     duration: SubscriptionDuration.YEARLY,
-    price: 420,
+    price: 35, // per-month display; Stripe charges $420/year
     stripePriceId: 'price_1T6dFVPFsjrIMgResRp5X3uE',
     isActive: false,
     features: [
@@ -146,7 +150,7 @@ export const SUBSCRIPTION_PLANS: PlanSeed[] = [
     ],
   },
 
-  // ── ENTERPRISE (coming soon) ────────────────────
+  // ── ENTERPRISE MONTHLY (coming soon) ────────────────────────────────────────
   {
     name: 'enterprise',
     ar_name: 'مؤسسات',
@@ -172,13 +176,15 @@ export const SUBSCRIPTION_PLANS: PlanSeed[] = [
       'فواتير مخصصة (مخطط)',
     ],
   },
+
+  // ── ENTERPRISE YEARLY (coming soon) ─────────────────────────────────────────
   {
     name: 'enterprise',
     ar_name: 'مؤسسات',
     description: 'Enterprise plan — billed yearly (coming soon).',
     ar_description: 'خطة المؤسسات — دفع سنوي (قريباً).',
     duration: SubscriptionDuration.YEARLY,
-    price: 1788,
+    price: 149, // per-month display; Stripe charges $1788/year
     stripePriceId: 'price_1T6dF0PFsjrIMgRehqjLK1F9',
     isActive: false,
     features: [
@@ -199,21 +205,29 @@ export const SUBSCRIPTION_PLANS: PlanSeed[] = [
 ];
 
 export async function seedSubscriptionPlans(prisma: PrismaClient) {
+  console.log('💳 Seeding subscription plans...');
+
   for (const p of SUBSCRIPTION_PLANS) {
-    // Requires @@unique([name, duration]) in schema
     await prisma.subscriptionPlan.upsert({
-      where: { name_duration: { name: p.name, duration: p.duration } } as any,
+      where: {
+        name_duration: { name: p.name, duration: p.duration },
+      },
       update: {
         ar_name: p.ar_name,
         description: p.description,
         ar_description: p.ar_description,
         price: p.price,
+        stripePriceId: p.stripePriceId,
         isActive: p.isActive,
         features: p.features,
         ar_features: p.ar_features,
-        // stripePriceId intentionally not overwritten if you fill it later manually
       },
-      create: p as any,
+      create: p,
     });
+    console.log(
+      `  ✅ ${p.name.padEnd(10)} | ${p.duration.padEnd(7)} | $${String(p.price).padStart(3)}/mo | active=${p.isActive}`,
+    );
   }
+
+  console.log(`💳 Done — ${SUBSCRIPTION_PLANS.length} plans seeded.`);
 }

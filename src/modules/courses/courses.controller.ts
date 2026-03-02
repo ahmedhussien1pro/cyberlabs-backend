@@ -36,9 +36,9 @@ export class CoursesController {
     return this.coursesService.getMyProgress(user.id);
   }
 
-  @Get(':slug/curriculum')
-  async getCurriculum(@Param('slug') slug: string) {
-    return this.coursesService.getCurriculum(slug);
+  @Get(':slug')
+  async get(@Param('slug') slug: string) {
+    return this.coursesService.getBySlug(slug);
   }
 
   @Get(':slug/topics')
@@ -55,16 +55,21 @@ export class CoursesController {
     return this.coursesService.getTopic(slug, topicId);
   }
 
-  @Get(':slug')
-  async get(@Param('slug') slug: string) {
-    return this.coursesService.getBySlug(slug);
+  // ✅ NEW: Get rich content from JSON file
+  @Get(':slug/content')
+  async getContent(@Param('slug') slug: string) {
+    return this.coursesService.getCourseContent(slug);
   }
 
-  @Post(':courseId/enroll')
+  // ✅ FIXED: Support both courseId and slug
+  @Post(':courseIdOrSlug/enroll')
   @HttpCode(HttpStatus.OK)
   @UseGuards(JwtAuthGuard)
-  async enroll(@Param('courseId') courseId: string, @CurrentUser() user: any) {
-    return this.coursesService.enroll(user.id, courseId);
+  async enroll(
+    @Param('courseIdOrSlug') courseIdOrSlug: string,
+    @CurrentUser() user: any,
+  ) {
+    return this.coursesService.enroll(user.id, courseIdOrSlug);
   }
 
   @Post(':courseId/topics/:topicId/complete')

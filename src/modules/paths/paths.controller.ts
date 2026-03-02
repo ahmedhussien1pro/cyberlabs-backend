@@ -3,6 +3,7 @@ import {
   Get,
   Param,
   Query,
+  Post,
   UseGuards,
   HttpCode,
   HttpStatus,
@@ -11,7 +12,14 @@ import { PathsService } from './paths.service';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { Type } from 'class-transformer';
-import { IsNumber, IsOptional, Min, Max, IsString, Allow } from 'class-validator';
+import {
+  IsNumber,
+  IsOptional,
+  Min,
+  Max,
+  IsString,
+  Allow,
+} from 'class-validator';
 
 export class PathFiltersDto {
   @Type(() => Number)
@@ -35,8 +43,6 @@ export class PathFiltersDto {
   @IsString()
   search?: string;
 
-  // @Allow() is required for class-validator when whitelist: true is enabled
-  // without it, even if a property is declared, it will be stripped/rejected
   @Allow()
   _t?: any;
 }
@@ -62,7 +68,8 @@ export class PathsController {
     return this.pathsService.getBySlug(slug, userId);
   }
 
-  @Get(':slug/enroll')
+  // ✅ FIXED: Changed from @Get to @Post
+  @Post(':slug/enroll')
   @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.OK)
   async enroll(@Param('slug') slug: string, @CurrentUser() user: any) {
