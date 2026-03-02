@@ -1444,7 +1444,7 @@ model SubscriptionPlan {
   updatedAt      DateTime             @updatedAt
 
   subscriptions Subscription[]
-
+@@unique([name, duration]) 
   @@map("subscription_plans")
 }
 

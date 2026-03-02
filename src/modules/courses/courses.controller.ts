@@ -54,7 +54,10 @@ export class CoursesController {
   ) {
     return this.coursesService.getTopic(slug, topicId);
   }
-
+  @Get(':slug/curriculum')
+  async getCurriculum(@Param('slug') slug: string) {
+    return this.coursesService.getCurriculum(slug);
+  }
   @Post(':courseId/enroll')
   @HttpCode(HttpStatus.OK)
   @UseGuards(JwtAuthGuard)
