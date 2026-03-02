@@ -1,3 +1,4 @@
+// src/modules/pricing/pricing.controller.ts
 import {
   Controller,
   Get,
@@ -11,59 +12,74 @@ import {
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
+import { IsString, IsIn, IsOptional } from 'class-validator';
 import { Request, Response } from 'express';
 import { PricingService } from './pricing.service';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import { Public } from '../../common/decorators/public.decorator';
 
-@Controller() // Removing 'api' here since Global Prefix 'api/v1' covers it. We map plans directly to /api/v1/plans
+// ── DTO ──────────────────────────────────────────────────────────────
+class CheckoutDto {
+  @IsString()
+  planId: string;
+
+  @IsIn(['MONTHLY', 'YEARLY'])
+  billingCycle: 'MONTHLY' | 'YEARLY';
+
+  @IsOptional()
+  @IsString()
+  successUrl?: string;
+}
+
+@Controller()
 export class PricingController {
   constructor(private readonly pricingService: PricingService) {}
 
+  // ── Public — no JWT needed ────────────────────────────────────────
+  @Public()
   @Get('plans')
   async getPlans() {
     return this.pricingService.getPlans();
   }
 
-  @Get('subscriptions/me')
+  // ── Protected routes ──────────────────────────────────────────────
   @UseGuards(JwtAuthGuard)
+  @Get('subscriptions/me')
   async getMySubscription(@CurrentUser() user: any) {
     return this.pricingService.getMySubscription(user.id);
   }
 
-  @Post('subscriptions/checkout')
-  @HttpCode(HttpStatus.OK)
   @UseGuards(JwtAuthGuard)
-  async checkout(
-    @Body('planId') planId: string,
-    @Body('billingCycle') billingCycle: 'MONTHLY' | 'YEARLY',
-    @Body('successUrl') successUrl: string,
-    @CurrentUser() user: any,
-  ) {
+  @HttpCode(HttpStatus.OK)
+  @Post('subscriptions/checkout')
+  async checkout(@Body() dto: CheckoutDto, @CurrentUser() user: any) {
     return this.pricingService.createCheckoutSession(
       user.id,
-      planId,
-      billingCycle,
-      successUrl,
+      dto.planId,
+      dto.billingCycle,
+      dto.successUrl,
     );
   }
 
-  @Post('subscriptions/portal')
-  @HttpCode(HttpStatus.OK)
   @UseGuards(JwtAuthGuard)
+  @HttpCode(HttpStatus.OK)
+  @Post('subscriptions/portal')
   async portal(@CurrentUser() user: any) {
     return this.pricingService.createPortalSession(user.id);
   }
 
-  @Post('subscriptions/cancel')
-  @HttpCode(HttpStatus.OK)
   @UseGuards(JwtAuthGuard)
+  @HttpCode(HttpStatus.OK)
+  @Post('subscriptions/cancel')
   async cancel(@CurrentUser() user: any) {
     return this.pricingService.cancelSubscription(user.id);
   }
 
-  @Post('webhooks/stripe')
+  // ── Stripe Webhook — Public (verified by signature) ───────────────
+  @Public()
   @HttpCode(HttpStatus.OK)
+  @Post('webhooks/stripe')
   async stripeWebhook(
     @Req() req: RawBodyRequest<Request>,
     @Res() res: Response,
@@ -77,8 +93,10 @@ export class PricingController {
     }
 
     try {
-      const result = this.pricingService.handleStripeWebhook(req.rawBody, signature);
-      // Sending immediate response to Stripe while async process runs in background
+      const result = this.pricingService.handleStripeWebhook(
+        req.rawBody,
+        signature,
+      );
       res.json(result);
     } catch (err: any) {
       res.status(HttpStatus.BAD_REQUEST).send(`Webhook Error: ${err.message}`);
