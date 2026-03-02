@@ -25,14 +25,12 @@ export class CoursesService {
 
     const baseDir = join(process.cwd(), 'prisma/seed-data/course-data');
 
-    // Normalize: strip special chars for fuzzy matching
     const normalize = (s: string) =>
       s.toLowerCase().replace(/[-_\s&.,!()'"+]/g, '');
 
     const slugNorm = normalize(courseSlug);
     const titleNorm = normalize(course.title);
 
-    // 1) Try exact filename matches first
     const exactCandidates = [
       join(baseDir, `${courseSlug}.json`),
       join(baseDir, `${course.title}.json`),
@@ -43,7 +41,6 @@ export class CoursesService {
       }
     }
 
-    // 2) Fuzzy match: scan all json files in directory
     const files = readdirSync(baseDir).filter(
       (f) => f.endsWith('.json') && f !== 'seed-courses.ts',
     );
@@ -63,7 +60,6 @@ export class CoursesService {
       }
     }
 
-    // 3) Return empty — don't throw, curriculum may not exist yet for this course
     return {
       success: true,
       data: { topics: [], totalTopics: 0, landingData: null },
@@ -176,7 +172,7 @@ export class CoursesService {
     return course;
   }
 
-  // ── Get topics (DB sections/lessons) ────────────────────────────────
+  // ── Get topics (DB sections) ─────────────────────────────────────────
   async getTopics(slug: string) {
     const course = await this.prisma.course.findUnique({
       where: { slug },
@@ -214,20 +210,61 @@ export class CoursesService {
     return lesson;
   }
 
-  // ── Enroll ────────────────────────────────────────────────────────────
-  async enroll(userId: string, courseId: string) {
+  // ── Get rich content from JSON (topics + elements) ───────────────────
+  async getCourseContent(slug: string) {
     const course = await this.prisma.course.findUnique({
-      where: { id: courseId },
-      select: { id: true, isPublished: true },
+      where: { slug },
+      select: { id: true, isPublished: true, title: true },
     });
 
     if (!course || !course.isPublished) {
       throw new NotFoundException('Course not found');
     }
 
+    const jsonFileName = `${course.title}.json`;
+    const filePath = join(
+      process.cwd(),
+      'prisma/seed-data/course-data',
+      jsonFileName,
+    );
+
+    try {
+      const fileContent = readFileSync(filePath, 'utf-8');
+      const data = JSON.parse(fileContent);
+
+      return {
+        courseId: course.id,
+        topics: data.topics ?? [],
+        metadata: data.landingData ?? {},
+      };
+    } catch {
+      console.warn(`JSON file not found for ${slug}: ${jsonFileName}`);
+      return {
+        courseId: course.id,
+        topics: [],
+        metadata: {},
+      };
+    }
+  }
+
+  // ── Enroll ────────────────────────────────────────────────────────────
+  async enroll(userId: string, courseId: string) {
+    // Support both UUID and slug
+    const course = await this.prisma.course.findFirst({
+      where: {
+        OR: [{ id: courseId }, { slug: courseId }],
+        isPublished: true,
+      },
+      select: { id: true, isPublished: true, title: true, slug: true },
+    });
+
+    if (!course) {
+      throw new NotFoundException('Course not found');
+    }
+
     return this.prisma.$transaction(async (tx) => {
       const existing = await tx.enrollment.findUnique({
-        where: { userId_courseId: { userId, courseId } },
+        where: { userId_courseId: { userId, courseId: course.id } },
       });
 
       if (existing) {
@@ -242,7 +279,7 @@ export class CoursesService {
       const enrollment = await tx.enrollment.create({
         data: {
           userId,
-          courseId,
+          courseId: course.id,
           progress: 0,
           isCompleted: false,
           enrolledAt: new Date(),
@@ -251,20 +288,31 @@ export class CoursesService {
       });
 
       await tx.course.update({
-        where: { id: courseId },
+        where: { id: course.id },
         data: { enrollmentCount: { increment: 1 } },
+      });
+
+      // Init UserStats if not exists
+      await tx.userStats.upsert({
+        where: { userId },
+        update: {},
+        create: { userId },
       });
 
       return {
         success: true,
         alreadyEnrolled: false,
+        courseId: course.id,
         enrolledAt: enrollment.enrolledAt.toISOString(),
       };
     });
   }
 
-  // ── Mark lesson complete ─────────────────────────────────────────────
-  async markComplete(userId: string, courseId: string, lessonId: string) {
+  // ── Mark topic (section) complete ────────────────────────────────────
+  // sectionId = the Section.id from DB (what frontend calls "topicId")
+  // Marks ALL lessons within the section as complete, then recalculates progress
+  async markComplete(userId: string, courseId: string, sectionId: string) {
+    // 1. Verify enrollment
     const enrollment = await this.prisma.enrollment.findUnique({
       where: { userId_courseId: { userId, courseId } },
     });
@@ -273,23 +321,29 @@ export class CoursesService {
       throw new NotFoundException('User is not enrolled in this course');
     }
 
-    const lesson = await this.prisma.lesson.findUnique({
-      where: { id: lessonId },
+    // 2. Find section + its lessons
+    const section = await this.prisma.section.findFirst({
+      where: { id: sectionId, courseId },
+      include: { lessons: { select: { id: true } } },
     });
 
-    if (!lesson || lesson.courseId !== courseId) {
-      throw new NotFoundException('Lesson not found in this course');
+    if (!section) {
+      throw new NotFoundException('Section not found in this course');
     }
 
     return this.prisma.$transaction(async (tx) => {
-      const existingCompletion = await tx.lessonCompletion.findUnique({
-        where: { userId_lessonId: { userId, lessonId } },
-      });
+      // 3. Upsert LessonCompletion for every lesson in section
+      await Promise.all(
+        section.lessons.map((lesson) =>
+          tx.lessonCompletion.upsert({
+            where: { userId_lessonId: { userId, lessonId: lesson.id } },
+            update: {},
+            create: { userId, lessonId: lesson.id },
+          }),
+        ),
+      );
 
-      if (!existingCompletion) {
-        await tx.lessonCompletion.create({ data: { userId, lessonId } });
-      }
-
+      // 4. Recalculate progress
       const totalLessons = await tx.lesson.count({ where: { courseId } });
       const completedLessons = await tx.lessonCompletion.count({
         where: { userId, lesson: { courseId } },
@@ -300,37 +354,62 @@ export class CoursesService {
         : 0;
 
       const isNowCompleted = progress >= 100;
-      const shouldUpdateCompletionDate =
-        isNowCompleted && !enrollment.isCompleted;
+      const wasAlreadyCompleted = enrollment.isCompleted;
 
-      const updatedEnrollment = await tx.enrollment.update({
+      // 5. Update enrollment
+      await tx.enrollment.update({
         where: { userId_courseId: { userId, courseId } },
         data: {
           progress,
-          isCompleted: enrollment.isCompleted || isNowCompleted,
-          completedAt: shouldUpdateCompletionDate
-            ? new Date()
-            : enrollment.completedAt,
+          isCompleted: wasAlreadyCompleted || isNowCompleted,
+          completedAt:
+            isNowCompleted && !wasAlreadyCompleted
+              ? new Date()
+              : enrollment.completedAt,
           lastAccessedAt: new Date(),
         },
       });
 
+      // 6. Upsert UserActivity for heatmap (one record per day)
+      const todayDate = new Date();
+      todayDate.setUTCHours(0, 0, 0, 0);
+
+      await tx.userActivity.upsert({
+        where: { userId_date: { userId, date: todayDate } },
+        update: { completedTasks: { increment: 1 } },
+        create: { userId, date: todayDate, completedTasks: 1 },
+      });
+
+      // 7. If course just completed → update UserStats
+      if (isNowCompleted && !wasAlreadyCompleted) {
+        await tx.userStats.upsert({
+          where: { userId },
+          update: { completedCourses: { increment: 1 } },
+          create: { userId, completedCourses: 1 },
+        });
+      }
+
       return {
         success: true,
-        completedAt:
-          updatedEnrollment.completedAt?.toISOString() ??
-          new Date().toISOString(),
-        progress: updatedEnrollment.progress,
-        isCompleted: updatedEnrollment.isCompleted,
+        progress,
+        isCompleted: wasAlreadyCompleted || isNowCompleted,
+        completedSectionId: sectionId,
       };
     });
   }
 
   // ── My progress ──────────────────────────────────────────────────────
+  // Returns section-level completion (not lesson-level) so frontend store
+  // can hydrate completedTopics: Record<courseId, sectionId[]> correctly
   async getMyProgress(userId: string) {
     const enrollments = await this.prisma.enrollment.findMany({
       where: { userId },
-      select: { courseId: true, isCompleted: true, progress: true },
+      select: {
+        courseId: true,
+        isCompleted: true,
+        progress: true,
+        enrolledAt: true,
+      },
     });
 
     const favorites = await this.prisma.courseFavorite.findMany({
@@ -338,26 +417,29 @@ export class CoursesService {
       select: { courseId: true },
     });
 
-    const completions = await this.prisma.lessonCompletion.findMany({
-      where: { userId },
-      select: {
-        lessonId: true,
-        lesson: { select: { courseId: true } },
+    // Get sections that have at least one completed lesson
+    const completedSections = await this.prisma.section.findMany({
+      where: {
+        courseId: { in: enrollments.map((e) => e.courseId) },
+        lessons: {
+          some: {
+            completions: { some: { userId } },
+          },
+        },
       },
+      select: { id: true, courseId: true },
     });
 
-    const enrolled = enrollments.map((e) => e.courseId);
-
+    // Build: courseId → sectionId[]
     const completed: Record<string, string[]> = {};
-    for (const c of completions) {
-      const cid = c.lesson.courseId;
-      if (!completed[cid]) completed[cid] = [];
-      completed[cid].push(c.lessonId);
+    for (const section of completedSections) {
+      if (!completed[section.courseId]) completed[section.courseId] = [];
+      completed[section.courseId].push(section.id);
     }
 
     return {
-      enrolled,
-      completed,
+      enrolled: enrollments.map((e) => e.courseId),
+      completed, // ← sectionId[] per courseId (matches Zustand store shape)
       favorites: favorites.map((f) => f.courseId),
       enrollments: enrollments.map((e) => ({
         courseId: e.courseId,
@@ -395,44 +477,5 @@ export class CoursesService {
     }
 
     return { success: true };
-  }
-  async getCourseContent(slug: string) {
-    // 1. Verify course exists in DB
-    const course = await this.prisma.course.findUnique({
-      where: { slug },
-      select: { id: true, isPublished: true, title: true },
-    });
-
-    if (!course || !course.isPublished) {
-      throw new NotFoundException('Course not found');
-    }
-
-    // 2. Read JSON file using course.title (filename)
-    const jsonFileName = `${course.title}.json`;
-    const filePath = join(
-      process.cwd(),
-      'prisma/seed-data/course-data',
-      jsonFileName,
-    );
-
-    try {
-      const fileContent = readFileSync(filePath, 'utf-8');
-      const data = JSON.parse(fileContent);
-
-      // Return topics with elements
-      return {
-        courseId: course.id,
-        topics: data.topics ?? [],
-        metadata: data.landingData ?? {},
-      };
-    } catch (error) {
-      // Fallback: if JSON doesn't exist, return empty
-      console.warn(`JSON file not found for ${slug}: ${jsonFileName}`);
-      return {
-        courseId: course.id,
-        topics: [],
-        metadata: {},
-      };
-    }
   }
 }
