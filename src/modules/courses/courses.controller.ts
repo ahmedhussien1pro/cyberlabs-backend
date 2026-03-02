@@ -17,7 +17,7 @@ import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { SubscriptionGuard } from '../../common/guards';
 
-@Controller('courses') // Base path is typically prefixed globally with /api/v1 in NestJS main.ts
+@Controller('courses')
 export class CoursesController {
   constructor(private readonly coursesService: CoursesService) {}
 
@@ -36,9 +36,9 @@ export class CoursesController {
     return this.coursesService.getMyProgress(user.id);
   }
 
-  @Get(':slug')
-  async get(@Param('slug') slug: string) {
-    return this.coursesService.getBySlug(slug);
+  @Get(':slug/curriculum')
+  async getCurriculum(@Param('slug') slug: string) {
+    return this.coursesService.getCurriculum(slug);
   }
 
   @Get(':slug/topics')
@@ -54,10 +54,12 @@ export class CoursesController {
   ) {
     return this.coursesService.getTopic(slug, topicId);
   }
-  @Get(':slug/curriculum')
-  async getCurriculum(@Param('slug') slug: string) {
-    return this.coursesService.getCurriculum(slug);
+
+  @Get(':slug')
+  async get(@Param('slug') slug: string) {
+    return this.coursesService.getBySlug(slug);
   }
+
   @Post(':courseId/enroll')
   @HttpCode(HttpStatus.OK)
   @UseGuards(JwtAuthGuard)
