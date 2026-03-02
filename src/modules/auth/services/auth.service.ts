@@ -135,9 +135,11 @@ export class AuthService {
 
   // ─────────────────────────────────────────────────────────────────────
   /**
-   * Login user
+   * Login user.
+   * Returns { requires2fa: true, userId } if TOTP is enabled.
+   * Returns { user, accessToken, refreshToken } on normal login.
    */
-  async login(dto: LoginDto) {
+  async login(dto: LoginDto): Promise<any> {
     const user = await this.prisma.user.findUnique({
       where: { email: dto.email },
       select: {
@@ -149,6 +151,7 @@ export class AuthService {
         role: true,
         isEmailVerified: true,
         isActive: true,
+        twoFactorEnabled: true,
       },
     });
 
@@ -169,6 +172,14 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
+    // 2FA is enabled — frontend must complete TOTP challenge before getting tokens
+    if (user.twoFactorEnabled) {
+      return {
+        requires2fa: true,
+        userId: user.id,
+      };
+    }
+
     this.logger.log(`User logged in: ${user.email}`);
 
     // إشعار تسجيل الدخول
@@ -187,6 +198,55 @@ export class AuthService {
 
     return {
       user: userWithoutPassword,
+      accessToken,
+      refreshToken,
+      expiresIn: this.accessExpirySeconds,
+    };
+  }
+
+  // ─────────────────────────────────────────────────────────────────────
+  /**
+   * Issue a full session after successful 2FA TOTP verification.
+   * Called by /auth/2fa/verify after verifyTwoFactorCode passes.
+   */
+  async getUserForToken(userId: string): Promise<any> {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        avatarUrl: true,
+        role: true,
+        isEmailVerified: true,
+        isActive: true,
+        twoFactorEnabled: true,
+      },
+    });
+
+    if (!user) {
+      throw new UnauthorizedException('User not found');
+    }
+
+    if (!user.isActive) {
+      throw new UnauthorizedException('Account is deactivated');
+    }
+
+    this.logger.log(`User logged in via 2FA: ${user.email}`);
+
+    this.notifications
+      .notify(user.id, NotificationEvents.login())
+      .catch(() => {});
+
+    const accessToken = this.jwtService.generateAccessToken(
+      user.id,
+      user.email,
+      user.role as UserRole,
+    );
+    const refreshToken = this.jwtService.generateRefreshToken(user.id);
+
+    return {
+      user,
       accessToken,
       refreshToken,
       expiresIn: this.accessExpirySeconds,
