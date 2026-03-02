@@ -1,12 +1,26 @@
-import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  ConflictException,
+} from '@nestjs/common';
 import { PrismaService } from '../../core/database';
 import { CourseFiltersDto } from './dto/course-filters.dto';
 import { Prisma } from '@prisma/client';
-
+import { readFileSync } from 'fs';
+import { join } from 'path';
 @Injectable()
 export class CoursesService {
   constructor(private readonly prisma: PrismaService) {}
+  getCurriculum(courseSlug: string) {
+    const filePath = join(
+      process.cwd(),
+      'prisma/seed-data/course-data',
+      `${courseSlug}.json`,
+    );
 
+    const fileContent = readFileSync(filePath, 'utf-8');
+    return JSON.parse(fileContent);
+  }
   async listCourses(userId: string | null, filters: CourseFiltersDto) {
     const {
       search,
@@ -93,7 +107,7 @@ export class CoursesService {
       where: { slug },
       include: {
         instructor: {
-          select: { id: true, name: true, avatarUrl: true, bio: true } // Avoid leaking sensitive instructor data
+          select: { id: true, name: true, avatarUrl: true, bio: true }, // Avoid leaking sensitive instructor data
         },
         sections: {
           include: { lessons: { orderBy: { order: 'asc' } } },
@@ -102,20 +116,22 @@ export class CoursesService {
       },
     });
 
-    if (!course || !course.isPublished) throw new NotFoundException('Course not found');
+    if (!course || !course.isPublished)
+      throw new NotFoundException('Course not found');
     return course;
   }
 
   async getTopics(slug: string) {
     const course = await this.prisma.course.findUnique({
       where: { slug },
-      select: { 
-        id: true, 
+      select: {
+        id: true,
         isPublished: true,
-        sections: { include: { lessons: true } } 
+        sections: { include: { lessons: true } },
       },
     });
-    if (!course || !course.isPublished) throw new NotFoundException('Course not found');
+    if (!course || !course.isPublished)
+      throw new NotFoundException('Course not found');
 
     return course.sections
       .flatMap((s) => s.lessons)
@@ -127,7 +143,8 @@ export class CoursesService {
       where: { slug },
       select: { id: true, isPublished: true },
     });
-    if (!course || !course.isPublished) throw new NotFoundException('Course not found');
+    if (!course || !course.isPublished)
+      throw new NotFoundException('Course not found');
 
     const lesson = await this.prisma.lesson.findFirst({
       where: { id: lessonId, courseId: course.id },
@@ -140,9 +157,9 @@ export class CoursesService {
   async enroll(userId: string, courseId: string) {
     const course = await this.prisma.course.findUnique({
       where: { id: courseId },
-      select: { id: true, isPublished: true }
+      select: { id: true, isPublished: true },
     });
-    
+
     if (!course || !course.isPublished) {
       throw new NotFoundException('Course not found');
     }
@@ -150,19 +167,19 @@ export class CoursesService {
     // Use transaction to ensure data consistency and prevent double-incrementing enrollmentCount
     return this.prisma.$transaction(async (tx) => {
       const existingEnrollment = await tx.enrollment.findUnique({
-        where: { userId_courseId: { userId, courseId } }
+        where: { userId_courseId: { userId, courseId } },
       });
 
       if (existingEnrollment) {
         return {
           success: true,
           enrolledAt: existingEnrollment.enrolledAt.toISOString(),
-          message: 'Already enrolled'
+          message: 'Already enrolled',
         };
       }
 
       const enrollment = await tx.enrollment.create({
-        data: { userId, courseId }
+        data: { userId, courseId },
       });
 
       await tx.course.update({
@@ -182,14 +199,14 @@ export class CoursesService {
     const enrollment = await this.prisma.enrollment.findUnique({
       where: { userId_courseId: { userId, courseId } },
     });
-    
+
     if (!enrollment) {
       throw new NotFoundException('User is not enrolled in this course');
     }
 
     // 2. Verify lesson belongs to course
     const lesson = await this.prisma.lesson.findUnique({
-      where: { id: lessonId }
+      where: { id: lessonId },
     });
 
     if (!lesson || lesson.courseId !== courseId) {
@@ -199,7 +216,7 @@ export class CoursesService {
     return this.prisma.$transaction(async (tx) => {
       // 3. Mark lesson as complete (Idempotent)
       const existingCompletion = await tx.lessonCompletion.findUnique({
-        where: { userId_lessonId: { userId, lessonId } }
+        where: { userId_lessonId: { userId, lessonId } },
       });
 
       if (!existingCompletion) {
@@ -212,7 +229,7 @@ export class CoursesService {
       const totalLessons = await tx.lesson.count({
         where: { courseId },
       });
-      
+
       const completedLessons = await tx.lessonCompletion.count({
         where: { userId, lesson: { courseId } },
       });
@@ -224,21 +241,26 @@ export class CoursesService {
       // 5. Update enrollment safely
       // Never un-complete a course if progress drops (e.g. if new lessons are added later)
       const isNowCompleted = progress >= 100;
-      const shouldUpdateCompletionDate = isNowCompleted && !enrollment.isCompleted;
+      const shouldUpdateCompletionDate =
+        isNowCompleted && !enrollment.isCompleted;
 
       const updatedEnrollment = await tx.enrollment.update({
         where: { userId_courseId: { userId, courseId } },
         data: {
           progress,
           isCompleted: enrollment.isCompleted || isNowCompleted,
-          completedAt: shouldUpdateCompletionDate ? new Date() : enrollment.completedAt,
+          completedAt: shouldUpdateCompletionDate
+            ? new Date()
+            : enrollment.completedAt,
           lastAccessedAt: new Date(),
         },
       });
 
       return {
         success: true,
-        completedAt: updatedEnrollment.completedAt?.toISOString() || new Date().toISOString(),
+        completedAt:
+          updatedEnrollment.completedAt?.toISOString() ||
+          new Date().toISOString(),
         progress: updatedEnrollment.progress,
         isCompleted: updatedEnrollment.isCompleted,
       };
@@ -288,7 +310,7 @@ export class CoursesService {
     // Verify course exists and is published
     const course = await this.prisma.course.findUnique({
       where: { id: courseId },
-      select: { id: true, isPublished: true }
+      select: { id: true, isPublished: true },
     });
 
     if (!course || !course.isPublished) {
