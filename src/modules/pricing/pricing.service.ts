@@ -56,11 +56,12 @@ export class PricingService {
     };
   }
 
+  // successUrl is optional — falls back to FRONTEND_URL/pricing?success=true
   async createCheckoutSession(
     userId: string,
     planId: string,
     billingCycle: 'MONTHLY' | 'YEARLY',
-    successUrl: string,
+    successUrl?: string,
   ) {
     const user = await this.prisma.user.findUnique({ where: { id: userId } });
     if (!user) throw new NotFoundException('User not found');
@@ -128,7 +129,7 @@ export class PricingService {
         metadata: {
           userId: user.id,
           planId: plan.id,
-          // Store 'YEARLY'|'MONTHLY' — will be mapped to 'ANNUAL'|'MONTHLY' on fulfill
+          // Store 'YEARLY'|'MONTHLY' — mapped to 'ANNUAL'|'MONTHLY' on fulfill
           billingCycle,
         },
       });
