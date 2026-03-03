@@ -1,3 +1,4 @@
+// src/modules/paths/paths.service.ts
 import {
   Injectable,
   NotFoundException,
@@ -7,6 +8,8 @@ import { PrismaService } from '../../core/database';
 import { Prisma } from '@prisma/client';
 import { NotificationsService } from '../notifications/services/notifications.service';
 import { NotificationEvents } from '../notifications/notifications.events';
+import { courseCardSelect } from '../../common/selects/course-card.select';
+import { toCourseCard } from '../../common/transformers/course-card.transformer';
 
 @Injectable()
 export class PathsService {
@@ -15,6 +18,7 @@ export class PathsService {
     private readonly notifications: NotificationsService,
   ) {}
 
+  // ── List Paths ────────────────────────────────────────────────────────
   async listPaths(
     userId: string | null,
     filters: {
@@ -28,13 +32,10 @@ export class PathsService {
     const safeLimit = Math.min(Number(limit), 50);
     const skip = (Math.max(Number(page), 1) - 1) * safeLimit;
 
-    const where: Prisma.LearningPathWhereInput = {
-      isPublished: true,
-    };
+    const where: Prisma.LearningPathWhereInput = { isPublished: true };
 
-    if (difficulty && difficulty.toLowerCase() !== 'all') {
+    if (difficulty && difficulty.toLowerCase() !== 'all')
       where.difficulty = difficulty.toUpperCase() as any;
-    }
 
     if (search) {
       where.OR = [
@@ -52,40 +53,38 @@ export class PathsService {
         take: safeLimit,
         orderBy: { order: 'asc' },
         include: {
-          _count: {
-            select: { modules: true },
-          },
-          ...(userId && {
-            enrollments: {
-              where: { userId },
-              select: { progress: true, isCompleted: true },
-            },
-          }),
+          _count: { select: { modules: true } },
+          ...(userId
+            ? {
+                enrollments: {
+                  where: { userId },
+                  select: { progress: true, isCompleted: true },
+                },
+              }
+            : {}),
         },
       }),
     ]);
 
-    // Format output
     const formattedPaths = paths.map((path) => {
-      const isEnrolled = userId && path.enrollments?.length > 0;
-      const progress = isEnrolled ? path.enrollments[0].progress : 0;
-
-      const { enrollments, ...rest } = path;
-      return {
-        ...rest,
-        isEnrolled: !!isEnrolled,
-        progress,
-      };
+      const isEnrolled = userId && (path as any).enrollments?.length > 0;
+      const progress = isEnrolled ? (path as any).enrollments[0].progress : 0;
+      const { enrollments, ...rest } = path as any;
+      return { ...rest, isEnrolled: !!isEnrolled, progress };
     });
-
-    const totalPages = Math.ceil(total / safeLimit) || 1;
 
     return {
       data: formattedPaths,
-      meta: { total, page: Number(page), limit: safeLimit, totalPages },
+      meta: {
+        total,
+        page: Number(page),
+        limit: safeLimit,
+        totalPages: Math.ceil(total / safeLimit) || 1,
+      },
     };
   }
 
+  // ── Get Path by slug ─────────────────────────────────────────────────
   async getBySlug(slug: string, userId: string | null) {
     const path = await this.prisma.learningPath.findUnique({
       where: { slug },
@@ -93,23 +92,15 @@ export class PathsService {
         modules: {
           orderBy: { order: 'asc' },
           include: {
+            // ✅ الآن course يرجع كل الحقول المطلوبة للـ CourseCard
             course: {
               select: {
-                id: true,
-                title: true,
-                ar_title: true,
-                description: true,
-                ar_description: true,
-                thumbnail: true,
-                difficulty: true,
-                duration: true,
-                slug: true,
-                ...(userId && {
-                  enrollments: {
-                    where: { userId },
-                    select: { progress: true, isCompleted: true },
-                  },
-                }),
+                ...courseCardSelect(userId),
+                // sections بـ id فقط للـ navigation (مش محتاجين lessons هنا)
+                sections: {
+                  select: { id: true, order: true },
+                  orderBy: { order: 'asc' },
+                },
               },
             },
             lab: {
@@ -119,91 +110,106 @@ export class PathsService {
                 ar_title: true,
                 difficulty: true,
                 duration: true,
-                ...(userId && {
-                  usersProgress: {
-                    where: { userId },
-                    select: { progress: true, completedAt: true },
-                  },
-                }),
+                ...(userId
+                  ? {
+                      usersProgress: {
+                        where: { userId },
+                        select: { progress: true, completedAt: true },
+                      },
+                    }
+                  : {}),
               },
             },
           },
         },
-        ...(userId && {
-          enrollments: {
-            where: { userId },
-            select: { progress: true, isCompleted: true, enrolledAt: true },
-          },
-        }),
+        ...(userId
+          ? {
+              enrollments: {
+                where: { userId },
+                select: { progress: true, isCompleted: true, enrolledAt: true },
+              },
+            }
+          : {}),
       },
     });
 
-    if (!path || !path.isPublished) {
+    if (!path || !path.isPublished)
       throw new NotFoundException('Learning path not found');
-    }
 
-    const isEnrolled = userId ? path.enrollments?.length > 0 : false;
-    const progress = isEnrolled ? path.enrollments[0].progress : 0;
+    const isEnrolled = userId ? (path as any).enrollments?.length > 0 : false;
+    const progress = isEnrolled ? (path as any).enrollments[0].progress : 0;
 
-    // Clean up nested data
+    // ✅ كل module.course يمر عبر toCourseCard → CourseCardDto موحّد
     const formattedModules = path.modules.map((module) => {
-      let isCompleted = false;
-      let moduleProgress = 0;
+      const rawCourse = (module as any).course;
+      const rawLab = (module as any).lab;
 
-      if (userId && module.course && module.course.enrollments?.length > 0) {
-        moduleProgress = module.course.enrollments[0].progress;
-        isCompleted = module.course.enrollments[0].isCompleted;
-      } else if (userId && module.lab && module.lab.usersProgress?.length > 0) {
-        moduleProgress = module.lab.usersProgress[0].progress;
-        isCompleted = !!module.lab.usersProgress[0].completedAt;
+      let moduleProgress = 0;
+      let isCompleted = false;
+
+      if (rawCourse) {
+        // userProgress يجي من toCourseCard عبر enrollments
+        const courseCard = toCourseCard(rawCourse);
+        const up = courseCard.userProgress;
+        if (up) {
+          moduleProgress = up.progress;
+          isCompleted = up.isCompleted;
+        }
+        return {
+          ...module,
+          course: courseCard, // ✅ CourseCardDto كامل
+          lab: null,
+          userProgress: { progress: moduleProgress, isCompleted },
+        };
       }
 
-      // Remove sensitive/internal data before sending to frontend
-      if (module.course) delete (module.course as any).enrollments;
-      if (module.lab) delete (module.lab as any).usersProgress;
+      if (rawLab) {
+        if (userId && rawLab.usersProgress?.length > 0) {
+          moduleProgress = rawLab.usersProgress[0].progress;
+          isCompleted = !!rawLab.usersProgress[0].completedAt;
+        }
+        const { usersProgress, ...labRest } = rawLab;
+        return {
+          ...module,
+          course: null,
+          lab: labRest,
+          userProgress: { progress: moduleProgress, isCompleted },
+        };
+      }
 
-      return {
-        ...module,
-        userProgress: {
-          progress: moduleProgress,
-          isCompleted,
-        },
-      };
+      return { ...module, userProgress: { progress: 0, isCompleted: false } };
     });
 
-    const { enrollments, ...rest } = path;
+    const { enrollments, ...rest } = path as any;
 
     return {
       ...rest,
       modules: formattedModules,
       isEnrolled,
       progress,
-      enrolledAt: isEnrolled ? path.enrollments[0].enrolledAt : null,
+      enrolledAt: isEnrolled ? (path as any).enrollments[0].enrolledAt : null,
     };
   }
 
+  // ── Enroll ────────────────────────────────────────────────────────────
   async enroll(userId: string, slug: string) {
     const path = await this.prisma.learningPath.findUnique({
       where: { slug },
       select: { id: true, isPublished: true, title: true, slug: true },
     });
-
-    if (!path || !path.isPublished) {
+    if (!path || !path.isPublished)
       throw new NotFoundException('Learning path not found');
-    }
 
     return this.prisma.$transaction(async (tx) => {
       const existing = await tx.pathEnrollment.findUnique({
         where: { userId_pathId: { userId, pathId: path.id } },
       });
-
-      if (existing) {
+      if (existing)
         return {
           success: true,
           enrolledAt: existing.enrolledAt,
           message: 'Already enrolled',
         };
-      }
 
       const enrollment = await tx.pathEnrollment.create({
         data: { userId, pathId: path.id },
@@ -211,45 +217,34 @@ export class PathsService {
       this.notifications
         .notify(userId, NotificationEvents.pathEnrolled(path.title, path.slug))
         .catch(() => {});
-      return {
-        success: true,
-        enrolledAt: enrollment.enrolledAt,
-      };
+      return { success: true, enrolledAt: enrollment.enrolledAt };
     });
   }
 
-  // Called via cron job or webhook when user finishes a course/lab to recalculate Path Progress
+  // ── Sync Path Progress ────────────────────────────────────────────────
   async syncPathProgress(userId: string, pathId: string) {
     const path = await this.prisma.learningPath.findUnique({
       where: { id: pathId },
-      include: {
-        modules: {
-          select: { courseId: true, labId: true },
-        },
-      },
+      include: { modules: { select: { courseId: true, labId: true } } },
     });
-
     if (!path || path.modules.length === 0) return;
 
-    let completedModulesCount = 0;
-
+    let completedCount = 0;
     for (const mod of path.modules) {
       if (mod.courseId) {
-        const courseEnrollment = await this.prisma.enrollment.findUnique({
+        const enrollment = await this.prisma.enrollment.findUnique({
           where: { userId_courseId: { userId, courseId: mod.courseId } },
         });
-        if (courseEnrollment?.isCompleted) completedModulesCount++;
+        if (enrollment?.isCompleted) completedCount++;
       } else if (mod.labId) {
         const labProgress = await this.prisma.userLabProgress.findUnique({
           where: { userId_labId: { userId, labId: mod.labId } },
         });
-        if (labProgress?.completedAt) completedModulesCount++;
+        if (labProgress?.completedAt) completedCount++;
       }
     }
 
-    const progress = Math.round(
-      (completedModulesCount / path.modules.length) * 100,
-    );
+    const progress = Math.round((completedCount / path.modules.length) * 100);
     const isCompleted = progress >= 100;
 
     await this.prisma.pathEnrollment.update({
@@ -260,6 +255,7 @@ export class PathsService {
         completedAt: isCompleted ? new Date() : null,
       },
     });
+
     if (isCompleted) {
       this.notifications
         .notify(userId, NotificationEvents.pathCompleted(path.title, path.slug))

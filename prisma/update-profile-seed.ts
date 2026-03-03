@@ -271,8 +271,6 @@ async function main() {
   });
   console.log('✅ Career path');
 
-  // ── 11. Pro Subscription (للتجربة) ───────────────────────
-  // أ) تأكد إن SubscriptionPlan للـ pro/MONTHLY موجود
   const proPlan = await prisma.subscriptionPlan.upsert({
     where: {
       name_duration: { name: 'pro', duration: SubscriptionDuration.MONTHLY },
@@ -292,15 +290,13 @@ async function main() {
   });
   console.log(`✅ SubscriptionPlan: pro/MONTHLY (id: ${proPlan.id})`);
 
-  // ب) حذف أي subscription قديمة للـ user (تجنّب تعارض unique stripeSubscriptionId)
   await prisma.subscription.deleteMany({
     where: {
       userId: user.id,
-      stripeSubscriptionId: null, // حذف seed subs فقط (بدون Stripe id)
+      stripeSubscriptionId: null,
     },
   });
 
-  // ج) إنشاء subscription جديدة
   const oneYearFromNow = new Date();
   oneYearFromNow.setFullYear(oneYearFromNow.getFullYear() + 1);
 

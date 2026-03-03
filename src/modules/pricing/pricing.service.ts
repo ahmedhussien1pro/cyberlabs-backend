@@ -56,7 +56,6 @@ export class PricingService {
     };
   }
 
-  // successUrl is optional — falls back to FRONTEND_URL/pricing?success=true
   async createCheckoutSession(
     userId: string,
     planId: string,
@@ -75,7 +74,6 @@ export class PricingService {
       );
     }
 
-    // ── Map 'YEARLY' → SubscriptionDuration.YEARLY for plan lookup ──
     const durationEnum =
       billingCycle === 'YEARLY'
         ? SubscriptionDuration.YEARLY
@@ -129,7 +127,6 @@ export class PricingService {
         metadata: {
           userId: user.id,
           planId: plan.id,
-          // Store 'YEARLY'|'MONTHLY' — mapped to 'ANNUAL'|'MONTHLY' on fulfill
           billingCycle,
         },
       });
@@ -155,7 +152,8 @@ export class PricingService {
     try {
       const session = await this.stripe.billingPortal.sessions.create({
         customer: customerId,
-        return_url: `${frontendUrl}/settings/billing`,
+        // ✅ FIXED: كانت /settings/billing → الآن الصفحة الصح
+        return_url: `${frontendUrl}/dashboard/settings?tab=billing`,
       });
       return { portalUrl: session.url };
     } catch (error: any) {
@@ -170,8 +168,28 @@ export class PricingService {
       include: { plan: true },
     });
 
-    if (!sub || !sub.stripeSubscriptionId) {
+    if (!sub) {
       throw new BadRequestException('No active subscription found');
+    }
+
+    // ✅ FIXED: لو الاشتراك seeded/manual (بدون stripeSubscriptionId)
+    // نحدّث الـ DB مباشرة بدون محاولة الاتصال بـ Stripe
+    if (!sub.stripeSubscriptionId) {
+      this.logger.warn(
+        `Subscription ${sub.id} has no stripeSubscriptionId — updating DB only`,
+      );
+      const updatedSub = await this.prisma.subscription.update({
+        where: { id: sub.id },
+        data: { cancelAtPeriodEnd: true },
+        include: { plan: true },
+      });
+      return {
+        planId: updatedSub.plan.name.toLowerCase(),
+        status: updatedSub.status.toLowerCase(),
+        billingCycle: updatedSub.billingCycle.toLowerCase(),
+        currentPeriodEnd: updatedSub.currentPeriodEnd?.toISOString(),
+        cancelAtPeriodEnd: updatedSub.cancelAtPeriodEnd,
+      };
     }
 
     try {
@@ -204,7 +222,6 @@ export class PricingService {
     let event: Stripe.Event;
     const webhookSecret = this.config.get<string>('STRIPE_WEBHOOK_SECRET');
 
-    // ✅ Log 1: Webhook received
     this.logger.log('🎣 Stripe webhook received');
     this.logger.log(`📝 Signature: ${signature?.substring(0, 20)}...`);
     this.logger.log(`📦 Body length: ${rawBody?.length} bytes`);
@@ -220,8 +237,6 @@ export class PricingService {
         signature,
         webhookSecret,
       );
-
-      // ✅ Log 2: Signature verified
       this.logger.log(`✅ Webhook verified: ${event.type}`);
       this.logger.log(`📄 Event ID: ${event.id}`);
     } catch (err: any) {
@@ -231,13 +246,12 @@ export class PricingService {
       throw new BadRequestException(`Webhook Error: ${err.message}`);
     }
 
-    // ✅ Log 3: Processing started
     this.logger.log(`⚙️  Processing event: ${event.type}`);
 
     this.processWebhookEvent(event).catch((err) => {
       this.logger.error(
         `❌ Error processing webhook event ${event.type}: ${err.message}`,
-        err.stack, // ← أضف stack trace
+        err.stack,
       );
     });
 
@@ -265,7 +279,6 @@ export class PricingService {
     const { userId, planId, billingCycle } = metadata;
     const subscriptionId = session.subscription as string;
 
-    // ✅ Log metadata
     this.logger.log('💳 Fulfilling subscription...');
     this.logger.log(`   User ID: ${userId}`);
     this.logger.log(`   Plan ID: ${planId}`);
@@ -285,7 +298,6 @@ export class PricingService {
         subscriptionId,
       )) as any;
 
-      // Idempotency check
       const existing = await this.prisma.subscription.findFirst({
         where: { stripeSubscriptionId: subscriptionId },
       });
@@ -294,13 +306,11 @@ export class PricingService {
         return;
       }
 
-      // Map billing cycle
       const dbBillingCycle: BillingCycle =
         billingCycle === 'YEARLY' ? BillingCycle.ANNUAL : BillingCycle.MONTHLY;
 
       this.logger.log(`   Mapped billing cycle: ${dbBillingCycle}`);
 
-      // Deactivate old subscriptions
       const deactivated = await this.prisma.subscription.updateMany({
         where: { userId, isActive: true },
         data: { isActive: false, status: 'CANCELED' as any },
@@ -310,7 +320,6 @@ export class PricingService {
         `   Deactivated ${deactivated.count} old subscription(s)`,
       );
 
-      // Create new subscription
       const newSub = await this.prisma.subscription.create({
         data: {
           userId,
