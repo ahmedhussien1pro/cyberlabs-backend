@@ -64,6 +64,15 @@ export class CoursesController {
   async getCourseLabs(@Param('slug') slug: string) {
     return this.coursesService.getCourseLabs(slug);
   }
+  @Get(':slug/curriculum')
+  async getCurriculum(@Param('slug') slug: string) {
+    return this.coursesService.getCurriculum(slug);
+  }
+
+  @Get(':slug/sections')
+  async getSections(@Param('slug') slug: string) {
+    return this.coursesService.getTopics(slug);
+  }
   // ✅ FIXED: Support both courseId and slug
   @Post(':courseIdOrSlug/enroll')
   @HttpCode(HttpStatus.OK)

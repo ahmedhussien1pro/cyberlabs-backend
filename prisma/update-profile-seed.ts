@@ -1,10 +1,13 @@
-// prisma/seed.ts
+// prisma/update-profile-seed.ts
 import {
   PrismaClient,
   SocialPlatform,
   SkillLevel,
   BadgeType,
   Role,
+  SubscriptionStatus,
+  BillingCycle,
+  SubscriptionDuration,
 } from '@prisma/client';
 
 const prisma = new PrismaClient();
@@ -14,7 +17,6 @@ const TARGET_EMAIL = 'ahmedhussien13520@gmail.com';
 async function main() {
   console.log(`🔍 Looking for user: ${TARGET_EMAIL}`);
 
-  // ── Find existing user (لا نمس الـ password أو الـ email)
   const user = await prisma.user.findUnique({
     where: { email: TARGET_EMAIL },
   });
@@ -73,7 +75,7 @@ async function main() {
   });
   console.log('✅ Profile fields updated');
 
-  // ── 4. Social Links (حذف القديمة وأضف الجديدة) ───────────
+  // ── 4. Social Links ───────────────────────────────────────
   await prisma.socialLink.deleteMany({ where: { userId: user.id } });
   await prisma.socialLink.createMany({
     data: [
@@ -174,7 +176,6 @@ async function main() {
   console.log('✅ Badges');
 
   // ── 7. Activity Heatmap (آخر 90 يوم) ────────────────────
-  // حذف فقط القديمة للـ 90 يوم الماضية — مش كل الـ history
   const since90 = new Date();
   since90.setDate(since90.getDate() - 90);
   await prisma.userActivity.deleteMany({
@@ -270,11 +271,59 @@ async function main() {
   });
   console.log('✅ Career path');
 
+  // ── 11. Pro Subscription (للتجربة) ───────────────────────
+  // أ) تأكد إن SubscriptionPlan للـ pro/MONTHLY موجود
+  const proPlan = await prisma.subscriptionPlan.upsert({
+    where: {
+      name_duration: { name: 'pro', duration: SubscriptionDuration.MONTHLY },
+    },
+    update: { isActive: true },
+    create: {
+      name: 'pro',
+      ar_name: 'برو',
+      description: 'Pro plan — full access',
+      ar_description: 'الخطة الاحترافية — وصول كامل',
+      price: 19,
+      duration: SubscriptionDuration.MONTHLY,
+      features: ['Full lab access', 'Priority support', 'Certificates'],
+      ar_features: ['وصول كامل للمعامل', 'دعم أولوية', 'شهادات'],
+      isActive: true,
+    },
+  });
+  console.log(`✅ SubscriptionPlan: pro/MONTHLY (id: ${proPlan.id})`);
+
+  // ب) حذف أي subscription قديمة للـ user (تجنّب تعارض unique stripeSubscriptionId)
+  await prisma.subscription.deleteMany({
+    where: {
+      userId: user.id,
+      stripeSubscriptionId: null, // حذف seed subs فقط (بدون Stripe id)
+    },
+  });
+
+  // ج) إنشاء subscription جديدة
+  const oneYearFromNow = new Date();
+  oneYearFromNow.setFullYear(oneYearFromNow.getFullYear() + 1);
+
+  await prisma.subscription.create({
+    data: {
+      userId: user.id,
+      planId: proPlan.id,
+      status: SubscriptionStatus.ACTIVE,
+      billingCycle: BillingCycle.MONTHLY,
+      currentPeriodEnd: oneYearFromNow,
+      cancelAtPeriodEnd: false,
+      isActive: true,
+      startDate: new Date(),
+    },
+  });
+  console.log('✅ Pro subscription created (expires in 1 year)');
+
   console.log('\n🎉 Seed complete!');
   console.log('──────────────────────────────────');
   console.log(`📧  Email:    ${TARGET_EMAIL}`);
   console.log(`🔑  Password: Moody123  (unchanged)`);
   console.log(`🆔  User ID:  ${user.id}`);
+  console.log(`💎  Plan:     Pro (MONTHLY) — active for 1 year`);
   console.log('──────────────────────────────────');
 }
 
