@@ -204,8 +204,13 @@ export class PricingService {
     let event: Stripe.Event;
     const webhookSecret = this.config.get<string>('STRIPE_WEBHOOK_SECRET');
 
+    // ✅ Log 1: Webhook received
+    this.logger.log('🎣 Stripe webhook received');
+    this.logger.log(`📝 Signature: ${signature?.substring(0, 20)}...`);
+    this.logger.log(`📦 Body length: ${rawBody?.length} bytes`);
+
     if (!webhookSecret) {
-      this.logger.error('STRIPE_WEBHOOK_SECRET is not configured');
+      this.logger.error('❌ STRIPE_WEBHOOK_SECRET is not configured');
       throw new BadRequestException('Webhook secret not configured');
     }
 
@@ -215,16 +220,24 @@ export class PricingService {
         signature,
         webhookSecret,
       );
+
+      // ✅ Log 2: Signature verified
+      this.logger.log(`✅ Webhook verified: ${event.type}`);
+      this.logger.log(`📄 Event ID: ${event.id}`);
     } catch (err: any) {
       this.logger.error(
-        `Webhook signature verification failed: ${err.message}`,
+        `❌ Webhook signature verification failed: ${err.message}`,
       );
       throw new BadRequestException(`Webhook Error: ${err.message}`);
     }
 
+    // ✅ Log 3: Processing started
+    this.logger.log(`⚙️  Processing event: ${event.type}`);
+
     this.processWebhookEvent(event).catch((err) => {
       this.logger.error(
-        `Error processing webhook event ${event.type}: ${err.message}`,
+        `❌ Error processing webhook event ${event.type}: ${err.message}`,
+        err.stack, // ← أضف stack trace
       );
     });
 
@@ -252,10 +265,18 @@ export class PricingService {
     const { userId, planId, billingCycle } = metadata;
     const subscriptionId = session.subscription as string;
 
+    // ✅ Log metadata
+    this.logger.log('💳 Fulfilling subscription...');
+    this.logger.log(`   User ID: ${userId}`);
+    this.logger.log(`   Plan ID: ${planId}`);
+    this.logger.log(`   Billing: ${billingCycle}`);
+    this.logger.log(`   Sub ID:  ${subscriptionId}`);
+
     if (!userId || !planId || !subscriptionId) {
       this.logger.error(
-        'Missing metadata or subscription ID in checkout session',
+        '❌ Missing metadata or subscription ID in checkout session',
       );
+      this.logger.error(`   Session: ${JSON.stringify(session, null, 2)}`);
       return;
     }
 
@@ -264,28 +285,33 @@ export class PricingService {
         subscriptionId,
       )) as any;
 
-      // Idempotency: skip if already processed
+      // Idempotency check
       const existing = await this.prisma.subscription.findFirst({
         where: { stripeSubscriptionId: subscriptionId },
       });
       if (existing) {
-        this.logger.log(`Subscription ${subscriptionId} already fulfilled`);
+        this.logger.log(`✅ Subscription ${subscriptionId} already fulfilled`);
         return;
       }
 
-      // ── Map Stripe metadata 'YEARLY' → Prisma BillingCycle 'ANNUAL' ──
-      // Prisma enum: BillingCycle { MONTHLY, ANNUAL }
-      // Stripe metadata stores: 'MONTHLY' | 'YEARLY'
+      // Map billing cycle
       const dbBillingCycle: BillingCycle =
         billingCycle === 'YEARLY' ? BillingCycle.ANNUAL : BillingCycle.MONTHLY;
 
-      // Inactivate previous subscriptions
-      await this.prisma.subscription.updateMany({
+      this.logger.log(`   Mapped billing cycle: ${dbBillingCycle}`);
+
+      // Deactivate old subscriptions
+      const deactivated = await this.prisma.subscription.updateMany({
         where: { userId, isActive: true },
         data: { isActive: false, status: 'CANCELED' as any },
       });
 
-      await this.prisma.subscription.create({
+      this.logger.log(
+        `   Deactivated ${deactivated.count} old subscription(s)`,
+      );
+
+      // Create new subscription
+      const newSub = await this.prisma.subscription.create({
         data: {
           userId,
           planId,
@@ -297,9 +323,11 @@ export class PricingService {
         },
       });
 
-      this.logger.log(`Subscription fulfilled for user ${userId}`);
+      this.logger.log(`✅ Subscription fulfilled for user ${userId}`);
+      this.logger.log(`   DB ID: ${newSub.id}`);
     } catch (error: any) {
-      this.logger.error(`Error fulfilling subscription: ${error.message}`);
+      this.logger.error(`❌ Error fulfilling subscription: ${error.message}`);
+      this.logger.error(`   Stack: ${error.stack}`);
       throw error;
     }
   }

@@ -1,3 +1,4 @@
+// prisma/seed-data/paths.ts
 import { PrismaClient, Difficulty, CourseColor } from '@prisma/client';
 
 export const learningPathsData = [
@@ -10,31 +11,28 @@ export const learningPathsData = [
     ar_description:
       'أتقن المفاهيم الأساسية لأنظمة التشغيل والبنية التحتية اللازمة للأمن السيبراني.',
     longDescription:
-      'This path covers the essential building blocks of IT, including lab setup, Windows architecture, and Linux fundamentals. Perfect for complete beginners starting their cybersecurity journey.',
+      'This path covers the essential building blocks of IT, including networking basics, protocols, and cybersecurity fundamentals.',
     ar_longDescription:
-      'يغطي هذا المسار اللبنات الأساسية لتكنولوجيا المعلومات، بما في ذلك إعداد المعامل، وهيكلية ويندوز، وأساسيات لينكس. مثالي للمبتدئين تماماً.',
+      'يغطي هذا المسار اللبنات الأساسية لتكنولوجيا المعلومات.',
     iconName: 'Laptop',
     color: 'BLUE' as CourseColor,
     difficulty: 'BEGINNER' as Difficulty,
     order: 1,
     isPublished: true,
     isFeatured: true,
-    tags: ['IT', 'OS', 'Windows', 'Linux', 'Fundamentals'],
-    ar_tags: [
-      'تكنولوجيا المعلومات',
-      'أنظمة التشغيل',
-      'ويندوز',
-      'لينكس',
-      'أساسيات',
-    ],
+    tags: ['IT', 'OS', 'Networking', 'Fundamentals'],
+    ar_tags: ['تكنولوجيا المعلومات', 'أنظمة التشغيل', 'شبكات', 'أساسيات'],
     courses: [
       {
-        slug: 'building-your-security-lab',
-        title: 'Building Your Security Lab',
+        slug: 'introduction-to-cyber-security-fundamentals',
+        title: 'Introduction to Cyber Security',
       },
-      { slug: 'windows-fundamentals', title: 'Windows Fundamentals' },
-      { slug: 'linux-fundamentals-part-1', title: 'Linux Fundamentals Part 1' },
-      { slug: 'linux-fundamentals-part-2', title: 'Linux Fundamentals Part 2' },
+      {
+        slug: 'networking-basics-part-1-v2',
+        title: 'Networking Basics Part 1',
+      },
+      { slug: 'networking-basics-part-2', title: 'Networking Basics Part 2' },
+      { slug: 'network-protocols', title: 'Network Protocols' },
     ],
   },
   {
@@ -46,9 +44,8 @@ export const learningPathsData = [
     ar_description:
       'افهم كيف يعمل الويب وتعلم المفاهيم الأساسية لأمن تطبيقات الويب.',
     longDescription:
-      'Dive into HTTP, web architectures, session management, and the core security mechanisms that protect modern web applications.',
-    ar_longDescription:
-      'تعمق في بروتوكول HTTP، وهيكلية الويب، وإدارة الجلسات، وآليات الأمان الأساسية التي تحمي تطبيقات الويب الحديثة.',
+      'Dive into HTTP, web architectures, and the core security mechanisms that protect modern web applications.',
+    ar_longDescription: 'تعمق في بروتوكول HTTP وهيكلية الويب وآليات الأمان.',
     iconName: 'Globe',
     color: 'CYAN' as CourseColor,
     difficulty: 'BEGINNER' as Difficulty,
@@ -58,14 +55,16 @@ export const learningPathsData = [
     tags: ['Web', 'HTTP', 'Security Basics'],
     ar_tags: ['ويب', 'بروتوكولات', 'أساسيات الأمن'],
     courses: [
-      { slug: 'how-the-web-works', title: 'How The Web Works' },
       {
-        slug: 'web-application-architecture',
-        title: 'Web Application Architecture',
+        slug: 'introduction-to-cyber-security-fundamentals',
+        title: 'Cyber Security Fundamentals',
       },
-      { slug: 'cookies-sessions-lab', title: 'Cookies & Sessions Lab' },
-      { slug: 'authentication-deep-dive', title: 'Authentication Deep Dive' },
-      { slug: 'web-security-basics', title: 'Web Security Basics' },
+      { slug: 'network-protocols', title: 'Network Protocols' },
+      { slug: 'owasp-top-10-xssandcsrf', title: 'OWASP: XSS & CSRF' },
+      {
+        slug: 'owasp-top-10-authentication-and-authorization',
+        title: 'OWASP: Authentication & Authorization',
+      },
     ],
   },
   {
@@ -74,34 +73,25 @@ export const learningPathsData = [
     ar_title: 'البرمجة والتشفير التطبيقي',
     description:
       'Learn automation, scripting, and the mathematics behind securing data.',
-    ar_description: 'تعلم الأتمتة، والبرمجة، والرياضيات وراء تأمين البيانات.',
+    ar_description: 'تعلم الأتمتة والبرمجة والرياضيات وراء تأمين البيانات.',
     longDescription:
-      'Automate tasks using Bash and Python, master regular expressions, and understand both the foundations and vulnerabilities of cryptographic systems.',
-    ar_longDescription:
-      'قم بأتمتة المهام باستخدام Bash و Python، وأتقن التعبيرات النمطية، وافهم أساسيات وثغرات أنظمة التشفير.',
+      'Automate tasks and understand both the foundations and vulnerabilities of cryptographic systems.',
+    ar_longDescription: 'قم بأتمتة المهام وافهم أساسيات وثغرات أنظمة التشفير.',
     iconName: 'Code',
     color: 'VIOLET' as CourseColor,
     difficulty: 'INTERMEDIATE' as Difficulty,
     order: 3,
     isPublished: true,
     isFeatured: false,
-    tags: ['Scripting', 'Python', 'Bash', 'Cryptography'],
-    ar_tags: ['برمجة', 'بايثون', 'باش', 'تشفير'],
+    tags: ['Scripting', 'Cryptography', 'Security'],
+    ar_tags: ['برمجة', 'تشفير', 'أمن'],
     courses: [
       {
-        slug: 'bash-scripting-for-security',
-        title: 'Bash Scripting for Security',
+        slug: 'security-frameworksandcompliance',
+        title: 'Security Frameworks & Compliance',
       },
-      {
-        slug: 'python-for-security-basics',
-        title: 'Python for Security Basics',
-      },
-      {
-        slug: 'regular-expressions-for-security',
-        title: 'Regular Expressions for Security',
-      },
-      { slug: 'cryptography-fundamentals', title: 'Cryptography Fundamentals' },
-      { slug: 'cryptography-attacks', title: 'Cryptography Attacks' },
+      { slug: 'threatsandrisk-management', title: 'Threats & Risk Management' },
+      { slug: 'network-security-tools', title: 'Network Security Tools' },
     ],
   },
   {
@@ -110,12 +100,10 @@ export const learningPathsData = [
     ar_title: 'أمن الشبكات وتحليل البيانات',
     description:
       'Master network protocols, discover vulnerabilities, and analyze network traffic.',
-    ar_description:
-      'أتقن بروتوكولات الشبكة، واكتشف الثغرات، وحلل حركة البيانات.',
+    ar_description: 'أتقن بروتوكولات الشبكة واكتشف الثغرات وحلل حركة البيانات.',
     longDescription:
-      'Learn to use essential tools like Nmap and Wireshark, understand wireless and VPN vulnerabilities, and learn how to defend network infrastructures.',
-    ar_longDescription:
-      'تعلم استخدام الأدوات الأساسية مثل Nmap و Wireshark، وافهم ثغرات الشبكات اللاسلكية والـ VPN، وكيفية الدفاع عن البنى التحتية للشبكات.',
+      'Learn to use essential tools, understand wireless and VPN vulnerabilities, and learn how to defend network infrastructures.',
+    ar_longDescription: 'تعلم استخدام الأدوات الأساسية وافهم ثغرات الشبكات.',
     iconName: 'Network',
     color: 'EMERALD' as CourseColor,
     difficulty: 'INTERMEDIATE' as Difficulty,
@@ -126,26 +114,16 @@ export const learningPathsData = [
     ar_tags: ['شبكات', 'تحليل بيانات', 'وايرشارك', 'إن ماب'],
     courses: [
       {
-        slug: 'vpn-secure-communications',
-        title: 'VPN & Secure Communications',
+        slug: 'networking-basics-part-1-v2',
+        title: 'Networking Basics Part 1',
       },
+      { slug: 'networking-basics-part-2', title: 'Networking Basics Part 2' },
+      { slug: 'network-protocols', title: 'Network Protocols' },
       {
-        slug: 'wireshark-packet-analysis-pro',
-        title: 'Wireshark Packet Analysis Pro',
+        slug: 'network-analysis-and-monitoring',
+        title: 'Network Analysis & Monitoring',
       },
-      {
-        slug: 'nmap-network-discovery-mastery',
-        title: 'Nmap Network Discovery Mastery',
-      },
-      {
-        slug: 'network-attacks-exploitation',
-        title: 'Network Attacks & Exploitation',
-      },
-      { slug: 'wireless-security-attacks', title: 'Wireless Security Attacks' },
-      {
-        slug: 'network-defense-hardening',
-        title: 'Network Defense & Hardening',
-      },
+      { slug: 'network-security-tools', title: 'Network Security Tools' },
     ],
   },
   {
@@ -157,29 +135,24 @@ export const learningPathsData = [
     ar_description:
       'تعلم كيفية اكتشاف واستغلال الثغرات الحرجة في تطبيقات الويب.',
     longDescription:
-      'Master Burp Suite and dive deep into OWASP Top 10 vulnerabilities including SQLi, XSS, CSRF, and API security flaws.',
+      'Dive deep into OWASP Top 10 vulnerabilities including SQLi, XSS, CSRF, and authentication flaws.',
     ar_longDescription:
-      'أتقن استخدام Burp Suite وتعمق في ثغرات الـ OWASP العشرة الأولى بما في ذلك حقن قواعد البيانات، والـ XSS، والـ CSRF، وثغرات الـ APIs.',
+      'تعمق في ثغرات الـ OWASP بما في ذلك حقن SQL والـ XSS والـ CSRF.',
     iconName: 'ShieldAlert',
     color: 'ROSE' as CourseColor,
     difficulty: 'ADVANCED' as Difficulty,
     order: 5,
     isPublished: true,
     isFeatured: true,
-    tags: ['Web Hacking', 'Bug Bounty', 'OWASP', 'Burp Suite'],
-    ar_tags: ['اختراق الويب', 'اكتشاف الثغرات', 'أواسب', 'بيرب سويت'],
+    tags: ['Web Hacking', 'Bug Bounty', 'OWASP', 'SQL Injection'],
+    ar_tags: ['اختراق الويب', 'اكتشاف الثغرات', 'أواسب', 'حقن SQL'],
     courses: [
+      { slug: 'sql-injection', title: 'SQL Injection' },
+      { slug: 'owasp-top-10-xssandcsrf', title: 'OWASP: XSS & CSRF' },
       {
-        slug: 'burp-suite-web-hacking-essentials',
-        title: 'Burp Suite Web Hacking Essentials',
+        slug: 'owasp-top-10-authentication-and-authorization',
+        title: 'OWASP: Authentication & Authorization',
       },
-      { slug: 'owasp-sql-injection-sqli', title: 'OWASP SQL Injection (SQLi)' },
-      { slug: 'owasp-xss-csrf', title: 'OWASP XSS & CSRF' },
-      {
-        slug: 'owasp-authentication-authorization',
-        title: 'OWASP Authentication & Authorization',
-      },
-      { slug: 'api-security-testing', title: 'API Security Testing' },
     ],
   },
   {
@@ -191,9 +164,9 @@ export const learningPathsData = [
     ar_description:
       'قم بالهجوم والدفاع عن بيئات الشركات مع التركيز على Active Directory.',
     longDescription:
-      'Understand Active Directory architecture, perform enumeration and attacks, and secure Windows enterprise environments.',
+      'Understand Active Directory architecture, perform enumeration and attacks.',
     ar_longDescription:
-      'افهم هيكلية الأكتيف دايركتوري، وقم بعمليات جمع المعلومات والهجمات، وقم بتأمين بيئات ويندوز للشركات.',
+      'افهم هيكلية Active Directory وقم بعمليات جمع المعلومات والهجمات.',
     iconName: 'Server',
     color: 'ORANGE' as CourseColor,
     difficulty: 'ADVANCED' as Difficulty,
@@ -203,14 +176,12 @@ export const learningPathsData = [
     tags: ['Active Directory', 'Enterprise', 'Windows', 'Red Team'],
     ar_tags: ['أكتيف دايركتوري', 'شركات', 'ويندوز', 'الفريق الأحمر'],
     courses: [
+      { slug: 'active-directory', title: 'Active Directory Fundamentals' },
       {
-        slug: 'active-directory-fundamentals',
-        title: 'Active Directory Fundamentals',
+        slug: 'active-directory-attacksandenumeration',
+        title: 'AD Attacks & Enumeration',
       },
-      { slug: 'ad-attacks-enumeration', title: 'AD Attacks & Enumeration' },
-      { slug: 'vpn-exploitation-security', title: 'VPN Exploitation Security' },
-      { slug: 'windows-security', title: 'Windows Security' },
-      { slug: 'windows-security-advanced', title: 'Windows Security Advanced' },
+      { slug: 'network-security-tools', title: 'Network Security Tools' },
     ],
   },
   {
@@ -222,33 +193,27 @@ export const learningPathsData = [
     ar_description:
       'ارتق بصلاحياتك للمستوى التالي من خلال تصعيد الصلاحيات على الأنظمة المستهدفة.',
     longDescription:
-      'Master the Metasploit framework, learn password cracking techniques, and escalate privileges on both Windows and Linux systems.',
+      'Master exploitation techniques and escalate privileges on Windows and Linux systems.',
     ar_longDescription:
-      'أتقن استخدام منصة Metasploit، وتعلم تقنيات كسر كلمات المرور، وقم بتصعيد صلاحياتك على أنظمة ويندوز ولينكس.',
+      'أتقن تقنيات الاستغلال وتصعيد الصلاحيات على أنظمة ويندوز ولينكس.',
     iconName: 'Key',
     color: 'ROSE' as CourseColor,
     difficulty: 'ADVANCED' as Difficulty,
     order: 7,
     isPublished: true,
     isFeatured: false,
-    tags: ['PrivEsc', 'Exploitation', 'Metasploit', 'Password Cracking'],
-    ar_tags: ['تصعيد صلاحيات', 'استغلال', 'ميتاسبلويت', 'كسر كلمات المرور'],
+    tags: ['PrivEsc', 'Exploitation', 'Metasploit'],
+    ar_tags: ['تصعيد صلاحيات', 'استغلال', 'ميتاسبلويت'],
     courses: [
       {
-        slug: 'metasploit-exploitation-basics',
-        title: 'Metasploit Exploitation Basics',
+        slug: 'active-directory-attacksandenumeration',
+        title: 'AD Attacks & Enumeration',
       },
+      { slug: 'sql-injection', title: 'SQL Injection' },
+      { slug: 'network-security-tools', title: 'Network Security Tools' },
       {
-        slug: 'password-cracking-techniques',
-        title: 'Password Cracking Techniques',
-      },
-      {
-        slug: 'windows-privilege-escalation',
-        title: 'Windows Privilege Escalation',
-      },
-      {
-        slug: 'linux-privilege-escalation',
-        title: 'Linux Privilege Escalation',
+        slug: 'owasp-top-10-authentication-and-authorization',
+        title: 'OWASP: Authentication & Authorization',
       },
     ],
   },
@@ -257,41 +222,32 @@ export const learningPathsData = [
     title: 'Defensive Security & Blue Teaming',
     ar_title: 'الأمن الدفاعي والاستجابة للحوادث',
     description: 'Learn to detect, analyze, and respond to cyber threats.',
-    ar_description:
-      'تعلم كيفية اكتشاف، وتحليل، والاستجابة للتهديدات السيبرانية.',
+    ar_description: 'تعلم كيفية اكتشاف وتحليل والاستجابة للتهديدات السيبرانية.',
     longDescription:
-      'Master log analysis, SIEM solutions, introductory digital forensics, malware analysis, and incident response methodologies.',
+      'Master log analysis, SIEM solutions, forensics, malware analysis, and incident response.',
     ar_longDescription:
-      'أتقن تحليل السجلات، وحلول إدارة الأحداث الأمنية، والمقدمة في الأدلة الجنائية الرقمية، وتحليل البرمجيات الخبيثة، ومنهجيات الاستجابة للحوادث.',
+      'أتقن تحليل السجلات وحلول SIEM والأدلة الجنائية الرقمية وتحليل البرمجيات الخبيثة.',
     iconName: 'ShieldCheck',
     color: 'EMERALD' as CourseColor,
     difficulty: 'INTERMEDIATE' as Difficulty,
     order: 8,
     isPublished: true,
     isFeatured: true,
-    tags: ['Blue Team', 'SIEM', 'Forensics', 'Incident Response', 'Malware'],
-    ar_tags: [
-      'الفريق الأزرق',
-      'سجلات',
-      'أدلة جنائية',
-      'استجابة للحوادث',
-      'برمجيات خبيثة',
-    ],
+    tags: ['Blue Team', 'SIEM', 'Forensics', 'Incident Response'],
+    ar_tags: ['الفريق الأزرق', 'سجلات', 'أدلة جنائية', 'استجابة للحوادث'],
     courses: [
-      { slug: 'linux-security-hardening', title: 'Linux Security Hardening' },
       {
-        slug: 'threat-intelligence-osint',
-        title: 'Threat Intelligence & OSINT',
+        slug: 'careers-in-cybersecurity-from-soc-to-cloud',
+        title: 'Careers in Cybersecurity',
       },
-      { slug: 'log-analysis-siem-basics', title: 'Log Analysis & SIEM Basics' },
+      { slug: 'threatsandrisk-management', title: 'Threats & Risk Management' },
       {
-        slug: 'malware-analysis-introduction',
-        title: 'Malware Analysis Introduction',
+        slug: 'security-frameworksandcompliance',
+        title: 'Security Frameworks & Compliance',
       },
-      { slug: 'digital-forensics-basics', title: 'Digital Forensics Basics' },
       {
-        slug: 'incident-response-methodology',
-        title: 'Incident Response Methodology',
+        slug: 'network-analysis-and-monitoring',
+        title: 'Network Analysis & Monitoring',
       },
     ],
   },
@@ -303,7 +259,6 @@ export async function seedLearningPaths(prisma: PrismaClient) {
   for (const pathData of learningPathsData) {
     const { courses: pathCourses, ...pathFields } = pathData;
 
-    // 1. Upsert LearningPath
     const learningPath = await prisma.learningPath.upsert({
       where: { slug: pathFields.slug },
       create: {
@@ -318,14 +273,10 @@ export async function seedLearningPaths(prisma: PrismaClient) {
       },
     });
 
-    // 2. Delete old PathModules (إعادة بناء النظيف)
     await prisma.pathModule.deleteMany({ where: { pathId: learningPath.id } });
 
-    // 3. Create PathModules مربوطة بالـ Course records
     for (let i = 0; i < pathCourses.length; i++) {
       const { slug, title } = pathCourses[i];
-
-      // Find the course (seeded in seedCourses step)
       const course = await prisma.course.findUnique({ where: { slug } });
 
       await prisma.pathModule.create({
@@ -335,9 +286,12 @@ export async function seedLearningPaths(prisma: PrismaClient) {
           title,
           type: 'COURSE',
           status: course ? 'PUBLISHED' : 'COMING_SOON',
-          courseId: course?.id ?? null, // ← الربط الفعلي
+          courseId: course?.id ?? null,
         },
       });
+
+      if (!course)
+        console.warn(`  ⚠️  Course not found: ${slug} — set as COMING_SOON`);
     }
 
     console.log(`  ✅ ${pathFields.slug} (${pathCourses.length} modules)`);
