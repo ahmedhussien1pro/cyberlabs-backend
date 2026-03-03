@@ -478,4 +478,31 @@ export class CoursesService {
 
     return { success: true };
   }
+  async getCourseLabs(slug: string) {
+    const course = await this.prisma.course.findUnique({
+      where: { slug },
+      select: { id: true, isPublished: true },
+    });
+
+    if (!course || !course.isPublished)
+      throw new NotFoundException('Course not found');
+
+    const labs = await this.prisma.lab.findMany({
+      where: { courseId: course.id, isPublished: true },
+      select: {
+        id: true,
+        slug: true,
+        title: true,
+        ar_title: true,
+        difficulty: true,
+        duration: true,
+        xpReward: true,
+        category: true,
+        imageUrl: true,
+      },
+      orderBy: { createdAt: 'asc' },
+    });
+
+    return { courseId: course.id, labs };
+  }
 }
