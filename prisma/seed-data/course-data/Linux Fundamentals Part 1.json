@@ -1,0 +1,1386 @@
+{
+  "landingData": {
+    "title": {
+      "en": "Linux Fundamentals Part 1: Complete Beginner's Guide",
+      "ar": "أساسيات لينكس الجزء الأول: دليل المبتدئين الشامل"
+    },
+    "description": {
+      "en": "Master Linux from the ground up with this comprehensive course covering distributions, virtual machine installation, file system hierarchy, and terminal navigation. Learn Ubuntu, Kali, Debian, and CentOS differences, explore critical directories like /home, /root, /etc, /var, and /tmp, and become confident with essential commands like pwd, ls, and cd. Perfect for aspiring cybersecurity professionals.",
+      "ar": "أتقن لينكس من الصفر مع هذا المسار الشامل الذي يغطي التوزيعات، التثبيت على الأجهزة الافتراضية، هيكل نظام الملفات، والتنقل في الطرفية. تعلم الفروقات بين أوبونتو وكالي وديبيان وسنت أو إس، استكشف المجلدات الحرجة مثل /home و /root و /etc و /var و /tmp، وكن واثقاً مع الأوامر الأساسية مثل pwd و ls و cd. مثالي للمتطلعين لدخول مجال الأمن السيبراني."
+    },
+    "difficulty": {
+      "en": "Beginner",
+      "ar": "مبتدئ"
+    },
+    "duration": {
+      "en": "120 Minutes",
+      "ar": "120 دقيقة"
+    },
+    "instructor": "CyberLab",
+    "rating": 4.9,
+    "students": 250
+  },
+  "topics": [
+    {
+      "id": "topic-1",
+      "title": {
+        "en": "Understanding Linux and Why It Matters",
+        "ar": "فهم لينكس ولماذا هو مهم"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "What Exactly Is Linux?",
+            "ar": "ما هو لينكس بالضبط؟"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "Linux is an operating system, just like Windows or macOS, but with a fundamental difference: it is open source. This means anyone can view, modify, and distribute its source code. Linux was created in 1991 by Linus Torvalds as a free alternative to expensive commercial systems. Today, it powers everything from smartphones to supercomputers.",
+            "ar": "لينكس هو نظام تشغيل مثل ويندوز أو ماك أو إس، لكن مع فرق جوهري: إنه مفتوح المصدر. هذا يعني أن أي شخص يمكنه الاطلاع على الشيفرة المصدرية وتعديلها وتوزيعها. تم إنشاء لينكس في عام 1991 من قبل لينوس تورفالدز كبديل مجاني للأنظمة التجارية المكلفة. اليوم، يشغل لينكس كل شيء من الهواتف الذكية إلى الحواسيب الفائقة."
+          }
+        },
+        {
+          "id": 1772465924420.288,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Linux%20Fundamentals%20Part%201/1-1-What%20Exactly%20Is%20Linux.webp"
+        },
+        {
+          "id": 4,
+          "type": "text",
+          "value": {
+            "en": "The core part of Linux is called the kernel. Think of the kernel as the brain that manages hardware resources like memory, processors, and storage. Around this kernel, different groups build complete operating systems by adding tools, interfaces, and applications. These complete packages are called distributions or distros.",
+            "ar": "الجزء الأساسي من لينكس يسمى النواة (Kernel). فكر في النواة كالدماغ الذي يدير موارد الأجهزة مثل الذاكرة والمعالجات والتخزين. حول هذه النواة، تقوم مجموعات مختلفة ببناء أنظمة تشغيل كاملة عبر إضافة أدوات وواجهات وتطبيقات. هذه الحزم الكاملة تسمى التوزيعات أو Distros."
+          }
+        },
+        {
+          "id": 5,
+          "type": "table",
+          "title": {
+            "en": "Linux vs Other Operating Systems",
+            "ar": "لينكس مقابل أنظمة التشغيل الأخرى"
+          },
+          "headers": {
+            "en": [
+              "Feature",
+              "Linux",
+              "Windows",
+              "macOS"
+            ],
+            "ar": [
+              "الخاصية",
+              "لينكس",
+              "ويندوز",
+              "ماك أو إس"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "Source Code",
+                "Open and public",
+                "Closed and proprietary",
+                "Closed and proprietary"
+              ],
+              "ar": [
+                "الشيفرة المصدرية",
+                "مفتوحة وعامة",
+                "مغلقة وملكية خاصة",
+                "مغلقة وملكية خاصة"
+              ]
+            },
+            {
+              "en": [
+                "Cost",
+                "Free (most distros)",
+                "Paid license",
+                "Paid with hardware"
+              ],
+              "ar": [
+                "التكلفة",
+                "مجاني (معظم التوزيعات)",
+                "ترخيص مدفوع",
+                "مدفوع مع الجهاز"
+              ]
+            },
+            {
+              "en": [
+                "Customization",
+                "Very high",
+                "Limited",
+                "Limited"
+              ],
+              "ar": [
+                "التخصيص",
+                "عالي جداً",
+                "محدود",
+                "محدود"
+              ]
+            },
+            {
+              "en": [
+                "Security Focus",
+                "Strong, community-driven",
+                "Moderate, frequent patches",
+                "Strong, controlled ecosystem"
+              ],
+              "ar": [
+                "التركيز الأمني",
+                "قوي ومدعوم من المجتمع",
+                "متوسط مع تحديثات متكررة",
+                "قوي مع نظام بيئي مُحكم"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 6,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Important clarification: When people say 'Linux', they often mean a complete Linux distribution, not just the kernel. Technically, the correct term is GNU/Linux, but in everyday language, we simply say Linux.",
+            "ar": "توضيح مهم: عندما يقول الناس \"لينكس\"، غالباً يقصدون توزيعة لينكس كاملة، وليس النواة فقط. من الناحية التقنية، المصطلح الصحيح هو GNU/Linux، لكن في اللغة اليومية نقول ببساطة لينكس."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 7,
+          "type": "text",
+          "value": {
+            "en": "For cybersecurity professionals, Linux is absolutely essential. Most web servers run Linux, making it the primary target and defense platform. Security tools like Nmap, Wireshark, and Metasploit were designed for Linux first. Understanding Linux means understanding how most of the internet's infrastructure works.",
+            "ar": "بالنسبة لمحترفي الأمن السيبراني، لينكس ضروري بشكل مطلق. معظم خوادم الويب تعمل على لينكس، مما يجعله المنصة الأساسية للهجوم والدفاع. أدوات الأمان مثل Nmap و Wireshark و Metasploit صُممت أولاً للينكس. فهم لينكس يعني فهم كيفية عمل معظم البنية التحتية للإنترنت."
+          }
+        },
+        {
+          "id": 8,
+          "type": "list",
+          "title": {
+            "en": "Why Security Experts Choose Linux",
+            "ar": "لماذا يختار خبراء الأمن لينكس"
+          },
+          "items": {
+            "en": [
+              "Complete control over every system component and process",
+              "Transparent security: you can inspect all code for vulnerabilities",
+              "Powerful command line for automation and scripting tasks",
+              "Active security community that quickly patches vulnerabilities",
+              "Native support for penetration testing and forensics tools",
+              "Server environments mirror real-world targets"
+            ],
+            "ar": [
+              "تحكم كامل في كل مكون وعملية في النظام",
+              "أمان شفاف: يمكنك فحص كل الشيفرة للبحث عن ثغرات",
+              "سطر أوامر قوي للأتمتة ومهام البرمجة النصية",
+              "مجتمع أمني نشط يُصلح الثغرات بسرعة",
+              "دعم أصلي لأدوات اختبار الاختراق والتحليل الجنائي",
+              "بيئات الخوادم تعكس الأهداف الواقعية"
+            ]
+          }
+        },
+        {
+          "id": 1772465963898.0437,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Linux%20Fundamentals%20Part%201/1-2-Linux%20vs%20Other%20Operating%20Systems.webp"
+        },
+        {
+          "id": 10,
+          "type": "text",
+          "value": {
+            "en": "Think of Linux like a library building where all the blueprints are publicly available. Anyone can study how the rooms are organized, how the security system works, and even suggest improvements. In contrast, proprietary systems are like private buildings where only the owner knows the internal structure. For security work, knowing the structure is critical.",
+            "ar": "فكر في لينكس كمبنى مكتبة حيث جميع المخططات متاحة للعامة. يمكن لأي شخص دراسة كيفية تنظيم الغرف، وكيف يعمل نظام الأمان، وحتى اقتراح تحسينات. بالمقابل، الأنظمة الملكية تشبه المباني الخاصة حيث المالك فقط يعرف الهيكل الداخلي. لعمل الأمان، معرفة الهيكل أمر حرج."
+          }
+        },
+        {
+          "id": 11,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "Common beginner mistake: Thinking open source means less secure. Actually, open source often means MORE secure because thousands of experts can review the code and find problems quickly. Security through transparency works better than security through obscurity.",
+            "ar": "خطأ شائع للمبتدئين: الاعتقاد بأن المصدر المفتوح يعني أماناً أقل. في الواقع، المصدر المفتوح غالباً يعني أماناً أكثر لأن آلاف الخبراء يمكنهم مراجعة الشيفرة واكتشاف المشاكل بسرعة. الأمان عبر الشفافية يعمل أفضل من الأمان عبر الغموض."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 12,
+          "type": "text",
+          "value": {
+            "en": "Linux skills are fundamental for multiple cybersecurity career paths. Penetration testers need Linux to run attack tools. Security analysts use Linux servers for log analysis. Incident responders examine Linux systems for breach evidence. Network engineers secure Linux firewalls and routers. Mastering Linux opens doors across the entire security field.",
+            "ar": "مهارات لينكس أساسية لمسارات وظيفية متعددة في الأمن السيبراني. مُختبرو الاختراق يحتاجون لينكس لتشغيل أدوات الهجوم. محللو الأمن يستخدمون خوادم لينكس لتحليل السجلات. مُستجيبو الحوادث يفحصون أنظمة لينكس للبحث عن أدلة الاختراق. مهندسو الشبكات يؤمّنون جدران الحماية والموجهات التي تعمل بلينكس. إتقان لينكس يفتح الأبواب عبر كامل مجال الأمن."
+          }
+        }
+      ]
+    },
+    {
+      "id": "topic-2",
+      "title": {
+        "en": "Linux Distributions Explained",
+        "ar": "شرح توزيعات لينكس"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "What Are Linux Distributions?",
+            "ar": "ما هي توزيعات لينكس؟"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "A Linux distribution (distro) is a complete operating system built around the Linux kernel. Each distribution packages the kernel with specific software, desktop environments, tools, and configuration choices. There are hundreds of distributions, each designed for different purposes and user preferences. Understanding distributions helps you choose the right tool for each security task.",
+            "ar": "توزيعة لينكس (Distro) هي نظام تشغيل كامل مبني حول نواة لينكس. كل توزيعة تُحزم النواة مع برامج معينة، وبيئات سطح مكتب، وأدوات، وخيارات إعدادات محددة. هناك مئات التوزيعات، كل منها مصممة لأغراض وتفضيلات مستخدمين مختلفة. فهم التوزيعات يساعدك على اختيار الأداة المناسبة لكل مهمة أمنية."
+          }
+        },
+        {
+          "id": 1772466015606.2722,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Linux%20Fundamentals%20Part%201/2-1-Linux%20Distributions.webp"
+        },
+        {
+          "id": 4,
+          "type": "text",
+          "value": {
+            "en": "Distributions are not just cosmetic differences. They use different package managers (tools for installing software), have different default security settings, update on different schedules, and target different use cases. Some prioritize stability for servers, others prioritize cutting-edge features for developers, and some focus specifically on security testing.",
+            "ar": "التوزيعات ليست مجرد اختلافات تجميلية. إنها تستخدم مديري حزم مختلفين (أدوات لتثبيت البرامج)، ولديها إعدادات أمان افتراضية مختلفة، وتُحدَّث وفق جداول زمنية مختلفة، وتستهدف حالات استخدام مختلفة. بعضها يُعطي الأولوية للاستقرار للخوادم، والبعض الآخر للميزات المتطورة للمطورين، وبعضها يركز تحديداً على اختبار الأمن."
+          }
+        },
+        {
+          "id": 5,
+          "type": "table",
+          "title": {
+            "en": "Major Linux Distributions for Cybersecurity",
+            "ar": "التوزيعات الرئيسية للينكس في الأمن السيبراني"
+          },
+          "headers": {
+            "en": [
+              "Distribution",
+              "Base",
+              "Main Purpose",
+              "Package Manager",
+              "Best For"
+            ],
+            "ar": [
+              "التوزيعة",
+              "الأساس",
+              "الغرض الرئيسي",
+              "مدير الحزم",
+              "الأفضل لـ"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "Ubuntu",
+                "Debian",
+                "General desktop and servers",
+                "APT (apt/apt-get)",
+                "Beginners learning Linux basics"
+              ],
+              "ar": [
+                "أوبونتو",
+                "دبيان",
+                "أجهزة المكتب والخوادم العامة",
+                "APT (apt/apt-get)",
+                "المبتدئين الذين يتعلمون أساسيات لينكس"
+              ]
+            },
+            {
+              "en": [
+                "Kali Linux",
+                "Debian",
+                "Penetration testing toolkit",
+                "APT (apt/apt-get)",
+                "Security professionals doing offensive testing"
+              ],
+              "ar": [
+                "كالي لينكس",
+                "دبيان",
+                "مجموعة أدوات اختبار الاختراق",
+                "APT (apt/apt-get)",
+                "محترفو الأمن الذين يقومون بالاختبار الهجومي"
+              ]
+            },
+            {
+              "en": [
+                "Debian",
+                "Independent",
+                "Stable server foundation",
+                "APT (apt/apt-get)",
+                "Production servers requiring maximum stability"
+              ],
+              "ar": [
+                "دبيان",
+                "مستقل",
+                "أساس خوادم مستقر",
+                "APT (apt/apt-get)",
+                "خوادم الإنتاج التي تتطلب استقراراً أقصى"
+              ]
+            },
+            {
+              "en": [
+                "CentOS / Rocky",
+                "Red Hat",
+                "Enterprise server environments",
+                "YUM/DNF",
+                "Enterprise data centers and web hosting"
+              ],
+              "ar": [
+                "سنت أو إس / روكي",
+                "ريد هات",
+                "بيئات خوادم المؤسسات",
+                "YUM/DNF",
+                "مراكز بيانات المؤسسات واستضافة الويب"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 6,
+          "type": "hr"
+        },
+        {
+          "id": 7,
+          "type": "title",
+          "value": {
+            "en": "Ubuntu: The Beginner-Friendly Starting Point",
+            "ar": "أوبونتو: نقطة البداية الصديقة للمبتدئين"
+          }
+        },
+        {
+          "id": 8,
+          "type": "text",
+          "value": {
+            "en": "Ubuntu is the most popular Linux distribution for newcomers. It provides a clean graphical interface similar to Windows or macOS, extensive documentation, and a huge community for support. Ubuntu releases new versions every six months, with Long Term Support (LTS) versions every two years that receive security updates for five years. For learning Linux fundamentals, Ubuntu Desktop LTS is the ideal choice.",
+            "ar": "أوبونتو هي أشهر توزيعة لينكس للقادمين الجدد. توفر واجهة رسومية نظيفة مشابهة لويندوز أو ماك أو إس، وتوثيقاً واسعاً، ومجتمعاً ضخماً للدعم. تُصدر أوبونتو نسخاً جديدة كل ستة أشهر، مع نسخ دعم طويل الأمد (LTS) كل سنتين تتلقى تحديثات أمنية لخمس سنوات. لتعلم أساسيات لينكس، أوبونتو سطح المكتب LTS هو الخيار المثالي."
+          }
+        },
+        {
+          "id": 9,
+          "type": "text",
+          "value": {
+            "en": "Ubuntu uses the APT package management system, which makes installing security tools straightforward. You can easily add repositories for specialized tools and keep your system updated with simple commands. Many cybersecurity tools provide Ubuntu-specific installation instructions, making it practical for building your first security lab environment.",
+            "ar": "تستخدم أوبونتو نظام إدارة الحزم APT، مما يجعل تثبيت أدوات الأمان واضحاً ومباشراً. يمكنك بسهولة إضافة مستودعات للأدوات المتخصصة والحفاظ على نظامك محدثاً بأوامر بسيطة. العديد من أدوات الأمن السيبراني توفر تعليمات تثبيت خاصة بأوبونتو، مما يجعلها عملية لبناء بيئة مختبر الأمان الأولى لديك."
+          }
+        },
+        {
+          "id": 10,
+          "type": "title",
+          "value": {
+            "en": "Kali Linux: The Specialized Security Distribution",
+            "ar": "كالي لينكس: التوزيعة الأمنية المتخصصة"
+          }
+        },
+        {
+          "id": 11,
+          "type": "text",
+          "value": {
+            "en": "Kali Linux is specifically designed for penetration testing and security auditing. It comes pre-installed with over 600 security tools covering every aspect of security testing: network scanning, vulnerability analysis, wireless attacks, password cracking, forensics, and exploitation. Kali is based on Debian, so it uses the same APT package system as Ubuntu.",
+            "ar": "كالي لينكس مصممة خصيصاً لاختبار الاختراق والتدقيق الأمني. تأتي مُثبتة مسبقاً بأكثر من 600 أداة أمنية تغطي كل جانب من جوانب الاختبار الأمني: مسح الشبكات، تحليل الثغرات، هجمات الشبكات اللاسلكية، كسر كلمات المرور، التحليل الجنائي، والاستغلال. كالي مبنية على دبيان، لذلك تستخدم نفس نظام الحزم APT مثل أوبونتو."
+          }
+        },
+        {
+          "id": 12,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "Critical warning: Do NOT use Kali as your first Linux distribution. Kali assumes you already understand Linux basics. Running as root by default and having powerful attack tools can be dangerous for beginners. Start with Ubuntu, learn the fundamentals, then transition to Kali when you understand what you're doing.",
+            "ar": "تحذير حرج: لا تستخدم كالي كتوزيعة لينكس الأولى لك. كالي تفترض أنك تفهم بالفعل أساسيات لينكس. التشغيل كمستخدم root افتراضياً وامتلاك أدوات هجوم قوية يمكن أن يكون خطيراً للمبتدئين. ابدأ بأوبونتو، تعلم الأساسيات، ثم انتقل إلى كالي عندما تفهم ما تفعله."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 1772466037923.2554,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Linux%20Fundamentals%20Part%201/2-2-Specialized%20Security%20Distribution.webp"
+        },
+        {
+          "id": 14,
+          "type": "title",
+          "value": {
+            "en": "Debian: The Stable Server Foundation",
+            "ar": "دبيان: أساس الخوادم المستقر"
+          }
+        },
+        {
+          "id": 15,
+          "type": "text",
+          "value": {
+            "en": "Debian is known for legendary stability and reliability. It's the parent distribution of both Ubuntu and Kali. Debian testing is extremely thorough, meaning packages are older but very stable. Many production web servers and critical infrastructure systems run Debian because downtime is unacceptable. For security professionals managing servers, understanding Debian's philosophy of stability over novelty is essential.",
+            "ar": "دبيان معروفة بالاستقرار والموثوقية الأسطورية. إنها التوزيعة الأم لكل من أوبونتو وكالي. اختبار دبيان شامل للغاية، مما يعني أن الحزم أقدم لكنها مستقرة جداً. العديد من خوادم الويب الإنتاجية وأنظمة البنية التحتية الحرجة تعمل على دبيان لأن التوقف عن العمل غير مقبول. لمحترفي الأمن الذين يديرون الخوادم، فهم فلسفة دبيان بتفضيل الاستقرار على الجدة أمر أساسي."
+          }
+        },
+        {
+          "id": 16,
+          "type": "title",
+          "value": {
+            "en": "CentOS and Rocky Linux: Enterprise Server Choice",
+            "ar": "سنت أو إس وروكي لينكس: خيار خوادم المؤسسات"
+          }
+        },
+        {
+          "id": 17,
+          "type": "text",
+          "value": {
+            "en": "CentOS (and its successor Rocky Linux) are built from Red Hat Enterprise Linux source code. They provide enterprise-grade stability with long support cycles (10 years). These distributions are common in corporate data centers, web hosting companies, and government infrastructure. They use YUM or DNF package managers instead of APT. Understanding Red Hat-based systems is crucial because you will encounter them frequently in professional environments.",
+            "ar": "سنت أو إس (وخليفتها روكي لينكس) مبنية من شيفرة المصدر لريد هات إنتربرايز لينكس. توفر استقراراً بمستوى المؤسسات مع دورات دعم طويلة (10 سنوات). هذه التوزيعات شائعة في مراكز بيانات الشركات، وشركات استضافة الويب، والبنية التحتية الحكومية. تستخدم مديري حزم YUM أو DNF بدلاً من APT. فهم الأنظمة المبنية على ريد هات حاسم لأنك ستواجهها بشكل متكرر في البيئات المهنية."
+          }
+        },
+        {
+          "id": 18,
+          "type": "text",
+          "value": {
+            "en": "Think of distributions like different branches of a bank chain. All branches provide core banking services (the Linux kernel), but each branch might specialize in different customer types. Ubuntu is like a retail branch for everyday customers (general users). Kali is like a specialized security auditing branch. Debian is the conservative main branch that never takes risks. CentOS/Rocky are the corporate banking branches serving large businesses.",
+            "ar": "فكر في التوزيعات كفروع مختلفة لسلسلة بنوك. كل الفروع تقدم خدمات مصرفية أساسية (نواة لينكس)، لكن كل فرع قد يتخصص في أنواع عملاء مختلفة. أوبونتو مثل فرع التجزئة للعملاء اليوميين (المستخدمون العامون). كالي مثل فرع تدقيق أمني متخصص. دبيان هو الفرع الرئيسي المحافظ الذي لا يخاطر أبداً. سنت أو إس/روكي هي فروع الخدمات المصرفية للشركات التي تخدم الأعمال الكبيرة."
+          }
+        },
+        {
+          "id": 19,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Professional tip: Learn one distribution deeply first (Ubuntu recommended), then the skills transfer easily to others. The fundamental Linux concepts—file system, permissions, processes, networking—are identical across all distributions. Only package management commands and some configuration file locations differ.",
+            "ar": "نصيحة احترافية: تعلم توزيعة واحدة بعمق أولاً (يُنصح بأوبونتو)، ثم تنتقل المهارات بسهولة للأخرى. المفاهيم الأساسية للينكس—نظام الملفات، الصلاحيات، العمليات، الشبكات—متطابقة عبر كل التوزيعات. فقط أوامر إدارة الحزم وبعض مواقع ملفات الإعدادات تختلف."
+          },
+          "link": "",
+          "isLab": false
+        }
+      ]
+    },
+    {
+      "id": "topic-3",
+      "title": {
+        "en": "Installing Linux in a Virtual Machine",
+        "ar": "تثبيت لينكس في جهاز افتراضي"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "Why Virtual Machines Are Essential for Security Learning",
+            "ar": "لماذا الأجهزة الافتراضية ضرورية لتعلم الأمن"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "A virtual machine (VM) is a complete computer system running as software inside your physical computer. It has its own virtual CPU, RAM, hard drive, and network adapter, but everything is simulated. VMs allow you to run multiple operating systems simultaneously on one physical machine. For cybersecurity students, VMs are absolutely essential because they provide safe, isolated environments for learning and testing.",
+            "ar": "الجهاز الافتراضي (VM) هو نظام حاسوبي كامل يعمل كبرنامج داخل حاسوبك الفعلي. لديه معالج افتراضي خاص، وذاكرة RAM، وقرص صلب، ومحول شبكة، لكن كل شيء مُحاكى. الأجهزة الافتراضية تسمح لك بتشغيل أنظمة تشغيل متعددة في نفس الوقت على جهاز فعلي واحد. لطلاب الأمن السيبراني، الأجهزة الافتراضية ضرورية تماماً لأنها توفر بيئات آمنة ومعزولة للتعلم والاختبار."
+          }
+        },
+        {
+          "id": 1772466096202.6233,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Linux%20Fundamentals%20Part%201/3-1-Virtual%20Machines.webp"
+        },
+        {
+          "id": 4,
+          "type": "list",
+          "title": {
+            "en": "Critical Benefits of VMs for Security Practice",
+            "ar": "الفوائد الحرجة للأجهزة الافتراضية في ممارسة الأمن"
+          },
+          "items": {
+            "en": [
+              "Isolation: Mistakes or malware in VM cannot damage your host system",
+              "Snapshots: Save VM state before risky experiments, restore instantly if something breaks",
+              "Multiple labs: Run attacker VM and victim VM simultaneously for realistic scenarios",
+              "Safe testing: Practice dangerous commands without fear of destroying your main system",
+              "Easy reset: Delete and recreate VMs in minutes instead of hours of reinstallation",
+              "Resource sharing: One physical computer can host entire network security labs"
+            ],
+            "ar": [
+              "العزل: الأخطاء أو البرمجيات الخبيثة في الجهاز الافتراضي لا يمكنها الإضرار بنظامك المضيف",
+              "اللقطات: احفظ حالة الجهاز الافتراضي قبل التجارب الخطرة، واستعدها فوراً إذا تعطل شيء",
+              "مختبرات متعددة: شغّل جهاز افتراضي للمهاجم وجهاز افتراضي للضحية في نفس الوقت لسيناريوهات واقعية",
+              "اختبار آمن: تمرّن على الأوامر الخطرة دون خوف من تدمير نظامك الرئيسي",
+              "إعادة ضبط سهلة: احذف وأعد إنشاء الأجهزة الافتراضية في دقائق بدلاً من ساعات من إعادة التثبيت",
+              "مشاركة الموارد: حاسوب فعلي واحد يمكنه استضافة مختبرات أمن شبكات كاملة"
+            ]
+          }
+        },
+        {
+          "id": 5,
+          "type": "text",
+          "value": {
+            "en": "Think of a VM like a training flight simulator for pilots. Pilots can practice emergency procedures, crashes, and dangerous maneuvers in the simulator without risking real lives or expensive aircraft. Similarly, security students can practice penetration testing, analyze malware, and experiment with system configurations in VMs without risking real production systems or personal data.",
+            "ar": "فكر في الجهاز الافتراضي كمحاكي طيران تدريبي للطيارين. يمكن للطيارين ممارسة إجراءات الطوارئ، والتحطمات، والمناورات الخطرة في المحاكي دون المخاطرة بأرواح حقيقية أو طائرات باهظة الثمن. بالمثل، يمكن لطلاب الأمن ممارسة اختبار الاختراق، وتحليل البرمجيات الخبيثة، والتجريب بإعدادات النظام في الأجهزة الافتراضية دون المخاطرة بأنظمة إنتاج حقيقية أو بيانات شخصية."
+          }
+        },
+        {
+          "id": 6,
+          "type": "hr"
+        },
+        {
+          "id": 7,
+          "type": "title",
+          "value": {
+            "en": "Choosing Hypervisor Software",
+            "ar": "اختيار برنامج المحاكاة الافتراضية"
+          }
+        },
+        {
+          "id": 8,
+          "type": "text",
+          "value": {
+            "en": "Hypervisor software creates and manages virtual machines. There are two excellent free options for beginners: VirtualBox and VMware Workstation Player. VirtualBox is completely open source and runs on Windows, macOS, and Linux hosts. VMware Workstation Player is free for non-commercial use and offers slightly better performance. Both are industry-standard tools used by professionals. For this course, we recommend VirtualBox because it's fully free and has extensive community documentation.",
+            "ar": "برنامج المحاكاة الافتراضية (Hypervisor) ينشئ ويدير الأجهزة الافتراضية. هناك خياران ممتازان مجانيان للمبتدئين: VirtualBox و VMware Workstation Player. VirtualBox مفتوح المصدر بالكامل ويعمل على أنظمة ويندوز وماك أو إس ولينكس المضيفة. VMware Workstation Player مجاني للاستخدام غير التجاري ويقدم أداءً أفضل قليلاً. كلاهما أدوات معيارية صناعية يستخدمها المحترفون. لهذا المسار، نوصي بـ VirtualBox لأنه مجاني تماماً ولديه توثيق مجتمعي واسع."
+          }
+        },
+        {
+          "id": 9,
+          "type": "table",
+          "title": {
+            "en": "VirtualBox vs VMware: Quick Comparison",
+            "ar": "VirtualBox مقابل VMware: مقارنة سريعة"
+          },
+          "headers": {
+            "en": [
+              "Feature",
+              "VirtualBox",
+              "VMware Workstation Player"
+            ],
+            "ar": [
+              "الخاصية",
+              "VirtualBox",
+              "VMware Workstation Player"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "License",
+                "Fully open source and free",
+                "Free for personal use only"
+              ],
+              "ar": [
+                "الترخيص",
+                "مفتوح المصدر ومجاني تماماً",
+                "مجاني للاستخدام الشخصي فقط"
+              ]
+            },
+            {
+              "en": [
+                "Host OS Support",
+                "Windows, macOS, Linux, Solaris",
+                "Windows and Linux only"
+              ],
+              "ar": [
+                "دعم نظام المضيف",
+                "ويندوز، ماك أو إس، لينكس، سولاريس",
+                "ويندوز ولينكس فقط"
+              ]
+            },
+            {
+              "en": [
+                "Performance",
+                "Good for learning",
+                "Slightly better performance"
+              ],
+              "ar": [
+                "الأداء",
+                "جيد للتعلم",
+                "أداء أفضل قليلاً"
+              ]
+            },
+            {
+              "en": [
+                "Snapshots",
+                "Yes, full snapshot support",
+                "Yes, full snapshot support"
+              ],
+              "ar": [
+                "اللقطات",
+                "نعم، دعم كامل للقطات",
+                "نعم، دعم كامل للقطات"
+              ]
+            },
+            {
+              "en": [
+                "Networking Options",
+                "Extensive and flexible",
+                "Extensive and flexible"
+              ],
+              "ar": [
+                "خيارات الشبكات",
+                "واسعة ومرنة",
+                "واسعة ومرنة"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 10,
+          "type": "orderedList",
+          "title": {
+            "en": "Complete Step-by-Step Ubuntu VM Installation",
+            "ar": "تثبيت جهاز افتراضي أوبونتو خطوة بخطوة كاملة"
+          },
+          "items": [
+            {
+              "subtitle": {
+                "en": "Step 1: Download and Install VirtualBox",
+                "ar": "الخطوة 1: تحميل وتثبيت VirtualBox"
+              },
+              "text": {
+                "en": "Visit the official VirtualBox website and download the installer for your host operating system (Windows, macOS, or Linux). Run the installer and follow the default installation options. The installer will also install necessary drivers for networking. Restart your computer if prompted to ensure drivers load correctly.",
+                "ar": "قم بزيارة موقع VirtualBox الرسمي وحمّل المُثبّت لنظام التشغيل المضيف لديك (ويندوز، ماك أو إس، أو لينكس). شغّل المُثبّت واتبع خيارات التثبيت الافتراضية. سيقوم المُثبّت أيضاً بتثبيت التعريفات الضرورية للشبكات. أعد تشغيل حاسوبك إذا طُلب منك ذلك للتأكد من تحميل التعريفات بشكل صحيح."
+              },
+              "example": {
+                "en": "Example: On Windows, download VirtualBox-7.0.x-Win.exe, run it, accept the defaults, and restart when installation completes.",
+                "ar": "مثال: على ويندوز، حمّل VirtualBox-7.0.x-Win.exe، شغّله، اقبل الإعدادات الافتراضية، وأعد التشغيل عند اكتمال التثبيت."
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Step 2: Download Ubuntu Desktop ISO",
+                "ar": "الخطوة 2: تحميل ملف ISO لأوبونتو سطح المكتب"
+              },
+              "text": {
+                "en": "Go to the official Ubuntu website and download the latest LTS (Long Term Support) Desktop ISO image. LTS versions are supported for five years, making them ideal for learning. The ISO file is typically 3-4 GB in size. Verify the download checksum if you want to ensure file integrity, though this is optional for learning purposes.",
+                "ar": "اذهب إلى موقع أوبونتو الرسمي وحمّل أحدث صورة ISO لسطح المكتب من نوع LTS (دعم طويل الأمد). نسخ LTS مدعومة لمدة خمس سنوات، مما يجعلها مثالية للتعلم. حجم ملف الـ ISO عادة 3-4 جيجابايت. تحقق من مجموع التحقق (Checksum) للتنزيل إذا أردت ضمان سلامة الملف، رغم أن هذا اختياري لأغراض التعلم."
+              },
+              "example": {
+                "en": "Example: Download ubuntu-22.04.3-desktop-amd64.iso (approximately 3.6 GB) and save it to your Downloads folder.",
+                "ar": "مثال: حمّل ubuntu-22.04.3-desktop-amd64.iso (حوالي 3.6 جيجابايت) واحفظه في مجلد التنزيلات لديك."
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Step 3: Create New Virtual Machine",
+                "ar": "الخطوة 3: إنشاء جهاز افتراضي جديد"
+              },
+              "text": {
+                "en": "Open VirtualBox and click the 'New' button. Give your VM a meaningful name like 'Ubuntu-22-Lab'. VirtualBox will auto-detect Linux and Ubuntu based on the name. Choose 'Linux' as Type and 'Ubuntu (64-bit)' as Version. Click Next to proceed to memory allocation. The name you choose will help you identify this VM later when you have multiple machines.",
+                "ar": "افتح VirtualBox واضغط على زر \"New\". أعط جهازك الافتراضي اسماً ذا معنى مثل \"Ubuntu-22-Lab\". سيكتشف VirtualBox تلقائياً لينكس وأوبونتو بناءً على الاسم. اختر \"Linux\" كنوع و\"Ubuntu (64-bit)\" كإصدار. اضغط Next للمتابعة إلى تخصيص الذاكرة. الاسم الذي تختاره سيساعدك على تحديد هذا الجهاز الافتراضي لاحقاً عندما يكون لديك أجهزة متعددة."
+              },
+              "example": {
+                "en": "Example: Name = 'Ubuntu-Security-Lab', Type = Linux, Version = Ubuntu (64-bit), then click Next.",
+                "ar": "مثال: الاسم = \"Ubuntu-Security-Lab\"، النوع = Linux، الإصدار = Ubuntu (64-bit)، ثم اضغط Next."
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Step 4: Allocate Memory (RAM)",
+                "ar": "الخطوة 4: تخصيص الذاكرة (RAM)"
+              },
+              "text": {
+                "en": "Allocate at least 2048 MB (2 GB) of RAM for Ubuntu Desktop. If your host has 8 GB or more total RAM, you can safely give the VM 4096 MB (4 GB) for better performance. Stay in the green zone on the slider—never allocate more than half your total physical RAM or your host system will become unstable. Click Next after setting memory.",
+                "ar": "خصص على الأقل 2048 ميجابايت (2 جيجابايت) من الذاكرة لأوبونتو سطح المكتب. إذا كان لدى المضيف لديك 8 جيجابايت أو أكثر من إجمالي الذاكرة، يمكنك بأمان إعطاء الجهاز الافتراضي 4096 ميجابايت (4 جيجابايت) لأداء أفضل. ابقَ في المنطقة الخضراء على المنزلق—لا تُخصص أبداً أكثر من نصف ذاكرتك الفعلية الكلية وإلا سيصبح نظام المضيف غير مستقر. اضغط Next بعد تعيين الذاكرة."
+              },
+              "example": {
+                "en": "Example: If host has 16 GB RAM total, allocate 4096 MB to VM, leaving 12 GB for host OS.",
+                "ar": "مثال: إذا كان لدى المضيف 16 جيجابايت RAM إجمالاً، خصص 4096 ميجابايت للجهاز الافتراضي، مما يترك 12 جيجابايت لنظام المضيف."
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Step 5: Create Virtual Hard Disk",
+                "ar": "الخطوة 5: إنشاء قرص صلب افتراضي"
+              },
+              "text": {
+                "en": "Select 'Create a virtual hard disk now' and click Create. Choose 'VDI (VirtualBox Disk Image)' as the format. Select 'Dynamically allocated' so the disk file only grows as needed rather than consuming full space immediately. Set size to at least 25 GB for Ubuntu Desktop with room for tools and updates. The dynamic allocation means a 25 GB virtual disk might only use 8 GB of real space initially.",
+                "ar": "اختر \"Create a virtual hard disk now\" واضغط Create. اختر \"VDI (VirtualBox Disk Image)\" كصيغة. اختر \"Dynamically allocated\" حتى ينمو ملف القرص حسب الحاجة بدلاً من استهلاك المساحة الكاملة فوراً. عيّن الحجم إلى 25 جيجابايت على الأقل لأوبونتو سطح المكتب مع مساحة للأدوات والتحديثات. التخصيص الديناميكي يعني أن قرصاً افتراضياً بحجم 25 جيجابايت قد يستخدم 8 جيجابايت فقط من المساحة الحقيقية في البداية."
+              },
+              "example": {
+                "en": "Example: Format = VDI, Storage = Dynamically allocated, Size = 30 GB for comfortable learning environment.",
+                "ar": "مثال: الصيغة = VDI، التخزين = Dynamically allocated، الحجم = 30 جيجابايت لبيئة تعليمية مريحة."
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Step 6: Configure VM Settings",
+                "ar": "الخطوة 6: تكوين إعدادات الجهاز الافتراضي"
+              },
+              "text": {
+                "en": "Before starting the VM, click Settings to optimize configuration. Under System > Processor, allocate 2 CPU cores if available. Under Display, increase Video Memory to 128 MB for smooth graphics. Under Storage, click the empty optical drive, then click the disk icon and choose 'Choose a disk file' to select your downloaded Ubuntu ISO. Under Network, ensure Adapter 1 is enabled and set to NAT for internet access.",
+                "ar": "قبل تشغيل الجهاز الافتراضي، اضغط على Settings لتحسين التكوين. تحت System > Processor، خصص نواتي معالج إذا كانت متاحة. تحت Display، زد Video Memory إلى 128 ميجابايت للرسومات السلسة. تحت Storage، اضغط على محرك الأقراص البصرية الفارغ، ثم اضغط على أيقونة القرص واختر \"Choose a disk file\" لتحديد ملف ISO لأوبونتو الذي حمّلته. تحت Network، تأكد من تفعيل Adapter 1 وضبطه على NAT للوصول للإنترنت."
+              },
+              "example": {
+                "en": "Example: Processor = 2 cores, Video Memory = 128 MB, Storage = ubuntu-22.04.3-desktop-amd64.iso attached, Network = NAT.",
+                "ar": "مثال: المعالج = نواتان، ذاكرة الفيديو = 128 ميجابايت، التخزين = ubuntu-22.04.3-desktop-amd64.iso مرفق، الشبكة = NAT."
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Step 7: Start VM and Install Ubuntu",
+                "ar": "الخطوة 7: تشغيل الجهاز الافتراضي وتثبيت أوبونتو"
+              },
+              "text": {
+                "en": "Click Start to boot the VM from the ISO. Ubuntu will load a live environment—you can try Ubuntu without installing. Click 'Install Ubuntu' to begin installation. Choose your language, keyboard layout, and select 'Normal installation' with 'Download updates while installing' checked. When asked about installation type, choose 'Erase disk and install Ubuntu'—this only affects the virtual disk, not your real computer. Create your username and strong password when prompted.",
+                "ar": "اضغط Start لتقليع الجهاز الافتراضي من الـ ISO. سيُحمّل أوبونتو بيئة مباشرة—يمكنك تجربة أوبونتو دون التثبيت. اضغط \"Install Ubuntu\" لبدء التثبيت. اختر لغتك، تخطيط لوحة المفاتيح، واختر \"Normal installation\" مع تفعيل \"Download updates while installing\". عندما يُسأل عن نوع التثبيت، اختر \"Erase disk and install Ubuntu\"—هذا يؤثر فقط على القرص الافتراضي وليس حاسوبك الحقيقي. أنشئ اسم مستخدمك وكلمة مرور قوية عند الطلب."
+              },
+              "example": {
+                "en": "Example: Language = English, Keyboard = English (US), Installation = Normal, Username = securitystudent, Password = Strong12#Pass.",
+                "ar": "مثال: اللغة = English، لوحة المفاتيح = English (US)، التثبيت = Normal، اسم المستخدم = securitystudent، كلمة المرور = Strong12#Pass."
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Step 8: Complete Installation and First Boot",
+                "ar": "الخطوة 8: إكمال التثبيت والإقلاع الأول"
+              },
+              "text": {
+                "en": "Installation takes 10-30 minutes depending on your system. When complete, click 'Restart Now'. The VM will eject the ISO automatically and boot into your new Ubuntu system. Log in with the password you created. Ubuntu will offer to update software—accept this to get latest security patches. After updates, take your first snapshot named 'Fresh Install' so you can always return to this clean state.",
+                "ar": "يستغرق التثبيت من 10 إلى 30 دقيقة حسب نظامك. عند الانتهاء، اضغط \"Restart Now\". سيُخرج الجهاز الافتراضي الـ ISO تلقائياً ويُقلع إلى نظام أوبونتو الجديد لديك. سجّل الدخول بكلمة المرور التي أنشأتها. سيعرض أوبونتو تحديث البرامج—اقبل ذلك للحصول على أحدث تصحيحات الأمان. بعد التحديثات، أنشئ لقطتك الأولى المسماة \"Fresh Install\" حتى تتمكن دائماً من العودة إلى هذه الحالة النظيفة."
+              },
+              "example": {
+                "en": "Example: After first login and updates, go to Machine > Take Snapshot, name it 'Ubuntu Fresh Install 2024-03-01'.",
+                "ar": "مثال: بعد أول تسجيل دخول والتحديثات، اذهب إلى Machine > Take Snapshot، وسمها \"Ubuntu Fresh Install 2024-03-01\"."
+              }
+            }
+          ]
+        },
+        {
+          "id": 1772466110164.9421,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Linux%20Fundamentals%20Part%201/3-2-snapshot.webp"
+        },
+        {
+          "id": 11,
+          "type": "text",
+          "value": {
+            "en": "[INFOGRAPHIC_HINT] Mid-topic process flow image: Create a 16:9 installation flowchart with 8 boxes connected by arrows, matching the 8 steps above. Each box contains a simple icon (download, gear, disk, RAM chip, settings, play button, install symbol, snapshot camera) and step number. Use flat design, white background, progressive blue gradient from light to dark as steps advance.",
+            "ar": "[INFOGRAPHIC_HINT] صورة تدفق عملية في منتصف الموضوع: أنشئ مخطط تدفق تثبيت بنسبة 16:9 مع 8 صناديق متصلة بأسهم، تطابق الـ 8 خطوات أعلاه. كل صندوق يحتوي على أيقونة بسيطة (تحميل، ترس، قرص، شريحة RAM، إعدادات، زر تشغيل، رمز تثبيت، كاميرا لقطة) ورقم الخطوة. استخدم تصميماً مسطحاً، خلفية بيضاء، تدرجاً أزرق تصاعدياً من الفاتح إلى الداكن مع تقدم الخطوات."
+          }
+        },
+        {
+          "id": 12,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "Critical security reminder: When choosing 'Erase disk and install Ubuntu' during Step 7, you are ONLY erasing the virtual disk inside the VM, never your physical computer's disk. This is safe because everything happens in the isolated VM environment. However, always double-check you are working inside the VM window, not accidentally on your host system.",
+            "ar": "تذكير أمني حرج: عند اختيار \"Erase disk and install Ubuntu\" أثناء الخطوة 7، أنت تمسح فقط القرص الافتراضي داخل الجهاز الافتراضي، ولن تمسح أبداً قرص حاسوبك الفعلي. هذا آمن لأن كل شيء يحدث في بيئة الجهاز الافتراضي المعزولة. لكن تحقق دائماً مرتين أنك تعمل داخل نافذة الجهاز الافتراضي، وليس عن طريق الخطأ على نظام المضيف لديك."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 13,
+          "type": "text",
+          "value": {
+            "en": "Understanding snapshots is crucial for security learning. A snapshot captures the complete state of your VM at a specific moment—all files, installed software, and system configuration. Before experimenting with potentially dangerous commands, malware analysis, or system modifications, always take a snapshot. If something goes wrong, you can restore to the snapshot in seconds rather than spending hours reinstalling and reconfiguring.",
+            "ar": "فهم اللقطات (Snapshots) حاسم لتعلم الأمن. اللقطة تلتقط الحالة الكاملة لجهازك الافتراضي في لحظة معينة—كل الملفات والبرامج المثبتة وإعدادات النظام. قبل التجريب بأوامر خطرة محتملاً، أو تحليل برمجيات خبيثة، أو تعديلات النظام، أنشئ لقطة دائماً. إذا حدث خطأ ما، يمكنك الاستعادة إلى اللقطة في ثوانٍ بدلاً من قضاء ساعات في إعادة التثبيت وإعادة التكوين."
+          }
+        },
+        {
+          "id": 14,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Professional practice: Create a snapshot naming convention. Use format: 'Purpose-Date', like 'Fresh-Install-2024-03', 'Before-Tools-Install', 'Pre-Malware-Lab'. Clear names help you find the right restoration point quickly, especially when you have multiple snapshots.",
+            "ar": "ممارسة احترافية: أنشئ اتفاقية تسمية للقطات. استخدم صيغة: \"الغرض-التاريخ\"، مثل \"Fresh-Install-2024-03\"، \"Before-Tools-Install\"، \"Pre-Malware-Lab\". الأسماء الواضحة تساعدك على إيجاد نقطة الاستعادة الصحيحة بسرعة، خاصة عندما يكون لديك لقطات متعددة."
+          },
+          "link": "",
+          "isLab": false
+        }
+      ]
+    },
+    {
+      "id": "topic-4",
+      "title": {
+        "en": "Linux File System Structure Deep Dive",
+        "ar": "الغوص العميق في هيكل نظام ملفات لينكس"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "The Linux File System Hierarchy Explained",
+            "ar": "شرح التسلسل الهرمي لنظام ملفات لينكس"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "Linux organizes everything as files in a single unified tree structure starting from the root directory '/'. Unlike Windows with separate C:  D: and E: drives, Linux mounts all storage devices and partitions as branches in this one tree. Understanding this hierarchy is essential for security work because every configuration file, log entry, user document, and system binary has a specific predictable location.",
+            "ar": "ينظم لينكس كل شيء كملفات في بنية شجرية موحدة تبدأ من الدليل الجذر '/'. على عكس ويندوز بأقراص C: و D: و E: المنفصلة، يُحمّل لينكs كل أجهزة التخزين والأقسام كفروع في هذه الشجرة الواحدة. فهم هذا التسلسل الهرمي ضروري لعمل الأمن لأن كل ملف إعدادات، وإدخال سجل، ووثيقة مستخدم، وملف نظام ثنائي له موقع محدد يمكن التنبؤ به."
+          }
+        },
+        {
+          "id": 1772466166558.1128,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Linux%20Fundamentals%20Part%201/4-1-Linux%20File%20System%20Hierarchy.webp"
+        },
+        {
+          "id": 4,
+          "type": "text",
+          "value": {
+            "en": "Think of the Linux file system like a library building organization. The root '/' is the main entrance. From there, different wings serve different purposes: the user reading rooms (/home), the librarian's office (/root), the policy manual archives (/etc), the daily transaction logs (/var), the temporary study desks (/tmp). Every item has its designated place following a strict logical structure.",
+            "ar": "فكر في نظام ملفات لينكس كتنظيم مبنى مكتبة. الجذر '/' هو المدخل الرئيسي. من هناك، أجنحة مختلفة تخدم أغراضاً مختلفة: غرف قراءة المستخدمين (/home)، مكتب أمين المكتبة (/root)، أرشيف دليل السياسات (/etc)، سجلات المعاملات اليومية (/var)، مكاتب الدراسة المؤقتة (/tmp). كل عنصر له مكانه المحدد يتبع بنية منطقية صارمة."
+          }
+        },
+        {
+          "id": 5,
+          "type": "hr"
+        },
+        {
+          "id": 6,
+          "type": "title",
+          "value": {
+            "en": "Critical Directories for Security Professionals",
+            "ar": "الأدلة الحرجة لمحترفي الأمن"
+          }
+        },
+        {
+          "id": 7,
+          "type": "text",
+          "value": {
+            "en": "The /home directory contains personal directories for regular users. Each user gets a subdirectory like /home/john or /home/alice where they store documents, downloads, and personal configurations. This is where most user activity happens and where user-level malware typically operates. When investigating user accounts, you will spend significant time examining /home directories for suspicious files or unauthorized access.",
+            "ar": "يحتوي دليل /home على أدلة شخصية للمستخدمين العاديين. كل مستخدم يحصل على دليل فرعي مثل /home/john أو /home/alice حيث يخزنون الوثائق والتنزيلات والإعدادات الشخصية. هذا هو المكان الذي يحدث فيه معظم نشاط المستخدم وحيث تعمل البرمجيات الخبيثة على مستوى المستخدم عادةً. عند التحقيق في حسابات المستخدمين، ستقضي وقتاً كبيراً في فحص أدلة /home للبحث عن ملفات مريبة أو وصول غير مصرح به."
+          }
+        },
+        {
+          "id": 8,
+          "type": "text",
+          "value": {
+            "en": "The /root directory is the home directory specifically for the root user (system administrator). This is completely separate from the '/' root directory—do not confuse them. Only the root account can access /root by default. This directory contains administrator configurations, security tools, and sensitive administrative scripts. Unauthorized access to /root indicates a complete system compromise.",
+            "ar": "دليل /root هو الدليل الشخصي خصيصاً لمستخدم root (مسؤول النظام). هذا منفصل تماماً عن الدليل الجذر '/'—لا تخلط بينهما. فقط حساب root يمكنه الوصول إلى /root افتراضياً. يحتوي هذا الدليل على إعدادات المسؤول، وأدوات الأمان، والسكربتات الإدارية الحساسة. الوصول غير المصرح به إلى /root يشير إلى اختراق كامل للنظام."
+          }
+        },
+        {
+          "id": 9,
+          "type": "table",
+          "title": {
+            "en": "Essential Linux Directories and Security Significance",
+            "ar": "الأدلة الأساسية للينكس والأهمية الأمنية"
+          },
+          "headers": {
+            "en": [
+              "Directory",
+              "Purpose",
+              "Contents",
+              "Security Importance"
+            ],
+            "ar": [
+              "الدليل",
+              "الغرض",
+              "المحتويات",
+              "الأهمية الأمنية"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "/home",
+                "User personal directories",
+                "User files, downloads, configs",
+                "User malware, data exfiltration evidence"
+              ],
+              "ar": [
+                "/home",
+                "أدلة المستخدمين الشخصية",
+                "ملفات المستخدمين، التنزيلات، الإعدادات",
+                "البرمجيات الخبيثة للمستخدم، أدلة تسريب البيانات"
+              ]
+            },
+            {
+              "en": [
+                "/root",
+                "Root user home directory",
+                "Admin tools, root configs",
+                "Complete compromise indicator if breached"
+              ],
+              "ar": [
+                "/root",
+                "الدليل الشخصي لمستخدم root",
+                "أدوات الإدارة، إعدادات root",
+                "مؤشر اختراق كامل إذا تم اختراقه"
+              ]
+            },
+            {
+              "en": [
+                "/etc",
+                "System configuration files",
+                "Network, users, services configs",
+                "Attackers modify configs for persistence"
+              ],
+              "ar": [
+                "/etc",
+                "ملفات إعدادات النظام",
+                "إعدادات الشبكة، المستخدمين، الخدمات",
+                "المهاجمون يعدلون الإعدادات للثبات"
+              ]
+            },
+            {
+              "en": [
+                "/var",
+                "Variable data",
+                "Logs, mail queues, databases",
+                "Critical forensic evidence in /var/log"
+              ],
+              "ar": [
+                "/var",
+                "البيانات المتغيرة",
+                "السجلات، طوابير البريد، قواعد البيانات",
+                "أدلة جنائية حرجة في /var/log"
+              ]
+            },
+            {
+              "en": [
+                "/tmp",
+                "Temporary files",
+                "Session data, temp downloads",
+                "Malware staging area, often cleaned on reboot"
+              ],
+              "ar": [
+                "/tmp",
+                "الملفات المؤقتة",
+                "بيانات الجلسة، التنزيلات المؤقتة",
+                "منطقة تجهيز البرمجيات الخبيثة، غالباً يتم تنظيفها عند إعادة التشغيل"
+              ]
+            },
+            {
+              "en": [
+                "/usr",
+                "User programs and data",
+                "Applications, libraries, documentation",
+                "Legitimate-looking malware installation location"
+              ],
+              "ar": [
+                "/usr",
+                "برامج وبيانات المستخدم",
+                "التطبيقات، المكتبات، التوثيق",
+                "موقع تثبيت برمجيات خبيثة تبدو شرعية"
+              ]
+            },
+            {
+              "en": [
+                "/bin",
+                "Essential system binaries",
+                "Basic commands like ls, cp, mv",
+                "Trojanized binaries for command hijacking"
+              ],
+              "ar": [
+                "/bin",
+                "الملفات الثنائية الأساسية للنظام",
+                "أوامر أساسية مثل ls و cp و mv",
+                "ملفات ثنائية مخترقة لاختطاف الأوامر"
+              ]
+            },
+            {
+              "en": [
+                "/boot",
+                "Boot loader files",
+                "Kernel, boot configuration",
+                "Bootkit and rootkit installation target"
+              ],
+              "ar": [
+                "/boot",
+                "ملفات محمل الإقلاع",
+                "النواة، إعدادات الإقلاع",
+                "هدف تثبيت Bootkit و Rootkit"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 10,
+          "type": "text",
+          "value": {
+            "en": "The /etc directory (pronounced 'et-see') holds system-wide configuration files. Critical security files live here: /etc/passwd and /etc/shadow contain user account information and password hashes, /etc/ssh/sshd_config controls SSH server security, /etc/hosts defines hostname mappings, and /etc/crontab schedules automated tasks. Attackers often modify /etc files to maintain persistent access or escalate privileges.",
+            "ar": "يحتوي دليل /etc (يُنطق 'إيت-سي') على ملفات إعدادات على مستوى النظام. ملفات أمنية حرجة توجد هنا: /etc/passwd و /etc/shadow تحتوي على معلومات حسابات المستخدمين وهاشات كلمات المرور، /etc/ssh/sshd_config يتحكم في أمان خادم SSH، /etc/hosts يعرّف تعيينات أسماء المضيفين، و /etc/crontab يجدول المهام الآلية. المهاجمون غالباً يعدلون ملفات /etc للحفاظ على وصول ثابت أو تصعيد الصلاحيات."
+          }
+        },
+        {
+          "id": 1772466175554.522,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Linux%20Fundamentals%20Part%201/4-2-%20Linux%20Directories%20and%20Security%20Significance.webp"
+        },
+        {
+          "id": 11,
+          "type": "text",
+          "value": {
+            "en": "[INFOGRAPHIC_HINT] Mid-topic security focus image: Create a 16:9 diagram showing /var/log as a central filing cabinet with three drawers labeled 'auth.log' (login attempts), 'syslog' (system events), and 'apache2/access.log' (web traffic). Show a magnifying glass examining the drawers, and arrows pointing from each drawer to small icons representing security insights: failed logins, system errors, suspicious requests. Use white background and security-themed colors (blue and amber).",
+            "ar": "[INFOGRAPHIC_HINT] صورة تركيز أمني في منتصف الموضوع: أنشئ مخططاً بنسبة 16:9 يُظهر /var/log كخزانة ملفات مركزية مع ثلاثة أدراج مسماة 'auth.log' (محاولات تسجيل الدخول)، و 'syslog' (أحداث النظام)، و 'apache2/access.log' (حركة الويب). أظهر عدسة مكبرة تفحص الأدراج، وأسهماً تشير من كل درج إلى أيقونات صغيرة تمثل رؤى أمنية: عمليات تسجيل دخول فاشلة، أخطاء النظام، طلبات مريبة. استخدم خلفية بيضاء وألوان ذات طابع أمني (أزرق وكهرماني)."
+          }
+        },
+        {
+          "id": 12,
+          "type": "text",
+          "value": {
+            "en": "The /var directory contains variable data that changes during normal system operation. Most importantly for security, /var/log stores all system log files. These logs are your primary forensic evidence during incident investigation. The file /var/log/auth.log records all authentication attempts (successful and failed logins). The file /var/log/syslog captures general system messages. Web servers write access and error logs to /var/log/apache2 or /var/log/nginx. Understanding logs in /var is fundamental to security monitoring.",
+            "ar": "يحتوي دليل /var على بيانات متغيرة تتغير أثناء التشغيل العادي للنظام. الأهم للأمن، يخزن /var/log جميع ملفات سجلات النظام. هذه السجلات هي أدلتك الجنائية الأساسية أثناء التحقيق في الحوادث. الملف /var/log/auth.log يسجل كل محاولات المصادقة (عمليات تسجيل دخول ناجحة وفاشلة). الملف /var/log/syslog يلتقط رسائل النظام العامة. خوادم الويب تكتب سجلات الوصول والأخطاء إلى /var/log/apache2 أو /var/log/nginx. فهم السجلات في /var أساسي لمراقبة الأمن."
+          }
+        },
+        {
+          "id": 13,
+          "type": "text",
+          "value": {
+            "en": "The /tmp directory stores temporary files that any user can create. Files here are typically deleted on system reboot. Attackers love /tmp because it's world-writable, meaning anyone can place files there. Malware often stages payloads in /tmp before execution. The /tmp directory commonly holds exploit scripts, downloaded attack tools, and temporary backdoors. During security investigations, always check /tmp for suspicious recently-created files.",
+            "ar": "يخزن دليل /tmp الملفات المؤقتة التي يمكن لأي مستخدم إنشاؤها. الملفات هنا عادةً تُحذف عند إعادة تشغيل النظام. المهاجمون يحبون /tmp لأنه قابل للكتابة من العالم (world-writable)، مما يعني أن أي شخص يمكنه وضع ملفات هناك. البرمجيات الخبيثة غالباً تُجهز الحمولات (Payloads) في /tmp قبل التنفيذ. دليل /tmp عادةً يحتوي على سكربتات استغلال، وأدوات هجوم محملة، وأبواب خلفية مؤقتة. أثناء التحقيقات الأمنية، تحقق دائماً من /tmp بحثاً عن ملفات مريبة تم إنشاؤها مؤخراً."
+          }
+        },
+        {
+          "id": 14,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "Security warning: Never run executable files from /tmp without careful analysis. Because /tmp is world-writable, any user or compromised process can place malicious executables there. Legitimate software should never install or run from /tmp. Finding executables in /tmp is a significant security red flag.",
+            "ar": "تحذير أمني: لا تشغّل أبداً ملفات تنفيذية من /tmp دون تحليل دقيق. لأن /tmp قابل للكتابة من العالم، أي مستخدم أو عملية مخترقة يمكنها وضع ملفات تنفيذية خبيثة هناك. البرامج الشرعية لا يجب أبداً أن تُثبت أو تعمل من /tmp. إيجاد ملفات تنفيذية في /tmp هو علامة حمراء أمنية كبيرة."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 15,
+          "type": "list",
+          "title": {
+            "en": "File System Permissions and Security Implications",
+            "ar": "صلاحيات نظام الملفات والانعكاسات الأمنية"
+          },
+          "items": {
+            "en": [
+              "Every file has an owner (user) and group ownership",
+              "Permissions control who can read, write, or execute each file",
+              "Root user can override all permission restrictions",
+              "Incorrect permissions are a common security vulnerability",
+              "World-writable files (/tmp) can be exploited for privilege escalation",
+              "Security tools check for suspicious permission changes"
+            ],
+            "ar": [
+              "كل ملف له مالك (مستخدم) وملكية مجموعة",
+              "الصلاحيات تتحكم في من يمكنه القراءة أو الكتابة أو التنفيذ لكل ملف",
+              "مستخدم root يمكنه تجاوز كل قيود الصلاحيات",
+              "الصلاحيات الخاطئة هي ثغرة أمنية شائعة",
+              "الملفات القابلة للكتابة من العالم (/tmp) يمكن استغلالها لتصعيد الصلاحيات",
+              "أدوات الأمن تفحص تغييرات الصلاحيات المريبة"
+            ]
+          }
+        },
+        {
+          "id": 16,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Professional insight: When investigating security incidents, create a mental map of the file system. Ask yourself: Where would an attacker hide persistence mechanisms? (/etc for startup scripts, /var for cron jobs). Where would they stage attacks? (/tmp for temporary tools). Where would they steal data from? (/home for user documents). Understanding the hierarchy accelerates incident response.",
+            "ar": "رؤية احترافية: عند التحقيق في حوادث الأمن، أنشئ خريطة ذهنية لنظام الملفات. اسأل نفسك: أين سيخفي المهاجم آليات الثبات؟ (/etc لسكربتات بدء التشغيل، /var لمهام cron). أين سيجهز الهجمات؟ (/tmp للأدوات المؤقتة). من أين سيسرق البيانات؟ (/home لوثائق المستخدمين). فهم التسلسل الهرمي يسرّع الاستجابة للحوادث."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 1772466170226.033,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Linux%20Fundamentals%20Part%201/4-3-security%20threat%20map.webp"
+        }
+      ]
+    },
+    {
+      "id": "topic-5",
+      "title": {
+        "en": "Terminal Basics and Command Line Mastery",
+        "ar": "أساسيات الطرفية وإتقان سطر الأوامر"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "Why the Command Line is Essential for Security",
+            "ar": "لماذا سطر الأوامر ضروري للأمن"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "The terminal, also called command line or shell, is a text-based interface for controlling Linux. Instead of clicking icons, you type commands. While this seems old-fashioned, the terminal is actually far more powerful than graphical interfaces. Commands can be scripted, automated, and combined. Remote servers usually have no graphical interface, so terminal skills are mandatory. Every serious security professional must be fluent with the command line.",
+            "ar": "الطرفية (Terminal)، وتُسمى أيضاً سطر الأوامر أو Shell، هي واجهة نصية للتحكم في لينكس. بدلاً من النقر على الأيقونات، تكتب الأوامر. بينما يبدو هذا قديماً، الطرفية في الواقع أقوى بكثير من الواجهات الرسومية. يمكن برمجة الأوامر وأتمتتها ودمجها. الخوادم البعيدة عادةً ليس لديها واجهة رسومية، لذلك مهارات الطرفية إلزامية. كل محترف أمن جاد يجب أن يكون طليقاً في سطر الأوامر."
+          }
+        },
+        {
+          "id": 1772466215297.1973,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Linux%20Fundamentals%20Part%201/5-1-Command%20Line.webp"
+        },
+        {
+          "id": 4,
+          "type": "text",
+          "value": {
+            "en": "When you open a terminal, you see a prompt that typically shows your username, hostname, and current directory, followed by a dollar sign '$' for regular users or hash '#' for root. The prompt 'student@ubuntu-lab:~$' means: user 'student' on machine 'ubuntu-lab', currently in home directory '~', with regular user privileges '$'. This prompt provides instant context about your system state.",
+            "ar": "عندما تفتح طرفية، ترى موجه (Prompt) يُظهر عادةً اسم مستخدمك، واسم المضيف، والدليل الحالي، متبوعاً بعلامة الدولار '$' للمستخدمين العاديين أو الهاش '#' لـ root. الموجه 'student@ubuntu-lab:~$' يعني: المستخدم 'student' على الجهاز 'ubuntu-lab'، حالياً في الدليل الشخصي '~'، مع صلاحيات مستخدم عادي '$'. هذا الموجه يوفر سياقاً فورياً عن حالة نظامك."
+          }
+        },
+        {
+          "id": 5,
+          "type": "hr"
+        },
+        {
+          "id": 6,
+          "type": "title",
+          "value": {
+            "en": "Essential Navigation Commands: pwd, ls, cd",
+            "ar": "أوامر التنقل الأساسية: pwd و ls و cd"
+          }
+        },
+        {
+          "id": 7,
+          "type": "text",
+          "value": {
+            "en": "The 'pwd' command stands for 'print working directory'. It shows your current location in the file system. This is your compass—before executing important commands, always verify where you are with pwd. Running commands in the wrong directory is a common mistake that can cause data loss or security misconfigurations. Make pwd a habit before every critical operation.",
+            "ar": "أمر 'pwd' يرمز لـ 'print working directory' (اطبع دليل العمل). يُظهر موقعك الحالي في نظام الملفات. هذه هي بوصلتك—قبل تنفيذ الأوامر المهمة، تحقق دائماً من مكانك بـ pwd. تشغيل الأوامر في الدليل الخاطئ هو خطأ شائع يمكن أن يسبب فقدان بيانات أو تكوينات أمنية خاطئة. اجعل pwd عادة قبل كل عملية حرجة."
+          }
+        },
+        {
+          "id": 8,
+          "type": "terminal",
+          "label": {
+            "en": "Using pwd Command",
+            "ar": "استخدام أمر pwd"
+          },
+          "value": "student@ubuntu-lab:~$ pwd\n/home/student\nstudent@ubuntu-lab:~$ cd /etc\nstudent@ubuntu-lab:/etc$ pwd\n/etc\nstudent@ubuntu-lab:/etc$ cd /var/log\nstudent@ubuntu-lab:/var/log$ pwd\n/var/log"
+        },
+        {
+          "id": 9,
+          "type": "text",
+          "value": {
+            "en": "The 'ls' command lists the contents of a directory. Without arguments, it shows files and folders in your current directory. With a path argument like 'ls /etc', it shows contents of that specific directory. The ls command has many useful options: 'ls -l' shows detailed long format with permissions and sizes, 'ls -a' shows hidden files (names starting with dot), 'ls -lah' combines long format, hidden files, and human-readable sizes.",
+            "ar": "أمر 'ls' يسرد محتويات دليل. بدون معاملات، يُظهر الملفات والمجلدات في دليلك الحالي. مع معامل مسار مثل 'ls /etc'، يُظهر محتويات ذلك الدليل المحدد. أمر ls لديه خيارات مفيدة كثيرة: 'ls -l' يُظهر صيغة طويلة مفصلة مع الصلاحيات والأحجام، 'ls -a' يُظهر الملفات المخفية (الأسماء التي تبدأ بنقطة)، 'ls -lah' يجمع الصيغة الطويلة والملفات المخفية والأحجام المقروءة للإنسان."
+          }
+        },
+        {
+          "id": 10,
+          "type": "terminal",
+          "label": {
+            "en": "Using ls Command with Options",
+            "ar": "استخدام أمر ls مع الخيارات"
+          },
+          "value": "student@ubuntu-lab:~$ ls\nDesktop  Documents  Downloads  Pictures\nstudent@ubuntu-lab:~$ ls -l\ntotal 16\ndrwxr-xr-x 2 student student 4096 Mar 01 10:30 Desktop\ndrwxr-xr-x 2 student student 4096 Mar 01 10:30 Documents\ndrwxr-xr-x 2 student student 4096 Mar 01 11:15 Downloads\ndrwxr-xr-x 2 student student 4096 Mar 01 10:30 Pictures\nstudent@ubuntu-lab:~$ ls -a\n.  ..  .bashrc  .profile  Desktop  Documents  Downloads  Pictures\nstudent@ubuntu-lab:~$ ls -lah /var/log\ntotal 2.1M\ndrwxrwxr-x  8 root   syslog  4.0K Mar 01 23:00 .\ndrwxr-xr-x 14 root   root    4.0K Feb 28 09:15 ..\n-rw-r--r--  1 root   root     51K Mar 01 23:30 auth.log\n-rw-r-----  1 syslog adm     1.8M Mar 01 23:30 syslog"
+        },
+        {
+          "id": 1772466228613.4832,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Linux%20Fundamentals%20Part%201/5-2-Essential%20Navigation%20Commands.webp"
+        },
+        {
+          "id": 12,
+          "type": "text",
+          "value": {
+            "en": "Understanding 'ls -l' output is critical for security. The first column shows permissions (rwxr-xr-x), the third and fourth columns show owner and group, the fifth shows file size in bytes, and the last column shows the filename. Permissions are read as three groups: owner permissions (rwx = read, write, execute), group permissions (r-x = read, execute only), and others permissions (r-x = read, execute only). Security analysts examine permissions to detect misconfigured files or unauthorized changes.",
+            "ar": "فهم ناتج 'ls -l' حرج للأمن. العمود الأول يُظهر الصلاحيات (rwxr-xr-x)، والعمودان الثالث والرابع يُظهران المالك والمجموعة، والخامس يُظهر حجم الملف بالبايتات، والعمود الأخير يُظهر اسم الملف. الصلاحيات تُقرأ كثلاث مجموعات: صلاحيات المالك (rwx = قراءة، كتابة، تنفيذ)، صلاحيات المجموعة (r-x = قراءة، تنفيذ فقط)، وصلاحيات الآخرين (r-x = قراءة، تنفيذ فقط). محللو الأمن يفحصون الصلاحيات لاكتشاف ملفات مُكونة خطأ أو تغييرات غير مصرح بها."
+          }
+        },
+        {
+          "id": 13,
+          "type": "text",
+          "value": {
+            "en": "The 'cd' command stands for 'change directory' and moves you to a different location in the file system. You can use absolute paths starting from root like 'cd /var/log', or relative paths from your current location like 'cd Documents'. Special shortcuts include: 'cd ~' or just 'cd' alone returns to your home directory, 'cd ..' moves up one directory level, 'cd -' returns to your previous directory. Mastering cd makes navigation effortless.",
+            "ar": "أمر 'cd' يرمز لـ 'change directory' (تغيير الدليل) وينقلك إلى موقع مختلف في نظام الملفات. يمكنك استخدام مسارات مطلقة تبدأ من الجذر مثل 'cd /var/log'، أو مسارات نسبية من موقعك الحالي مثل 'cd Documents'. الاختصارات الخاصة تشمل: 'cd ~' أو 'cd' فقط يعيدك إلى دليلك الشخصي، 'cd ..' يتحرك للأعلى مستوى دليل واحد، 'cd -' يعيدك إلى دليلك السابق. إتقان cd يجعل التنقل سهلاً."
+          }
+        },
+        {
+          "id": 14,
+          "type": "terminal",
+          "label": {
+            "en": "Advanced cd Navigation",
+            "ar": "التنقل المتقدم بـ cd"
+          },
+          "value": "student@ubuntu-lab:~$ pwd\n/home/student\nstudent@ubuntu-lab:~$ cd /var/log\nstudent@ubuntu-lab:/var/log$ pwd\n/var/log\nstudent@ubuntu-lab:/var/log$ cd ..\nstudent@ubuntu-lab:/var$ pwd\n/var\nstudent@ubuntu-lab:/var$ cd ~/Documents\nstudent@ubuntu-lab:~/Documents$ pwd\n/home/student/Documents\nstudent@ubuntu-lab:~/Documents$ cd -\n/var\nstudent@ubuntu-lab:/var$"
+        },
+        {
+          "id": 15,
+          "type": "table",
+          "title": {
+            "en": "Essential Path Shortcuts and Symbols",
+            "ar": "اختصارات ورموز المسار الأساسية"
+          },
+          "headers": {
+            "en": [
+              "Symbol",
+              "Meaning",
+              "Example Usage",
+              "Result"
+            ],
+            "ar": [
+              "الرمز",
+              "المعنى",
+              "مثال الاستخدام",
+              "النتيجة"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "~",
+                "Home directory of current user",
+                "cd ~",
+                "Move to /home/student"
+              ],
+              "ar": [
+                "~",
+                "الدليل الشخصي للمستخدم الحالي",
+                "cd ~",
+                "انتقل إلى /home/student"
+              ]
+            },
+            {
+              "en": [
+                ".",
+                "Current directory",
+                "ls .",
+                "List current directory contents"
+              ],
+              "ar": [
+                ".",
+                "الدليل الحالي",
+                "ls .",
+                "اسرد محتويات الدليل الحالي"
+              ]
+            },
+            {
+              "en": [
+                "..",
+                "Parent directory (one level up)",
+                "cd ..",
+                "Move up one directory level"
+              ],
+              "ar": [
+                "..",
+                "الدليل الأب (مستوى واحد للأعلى)",
+                "cd ..",
+                "انتقل للأعلى مستوى دليل واحد"
+              ]
+            },
+            {
+              "en": [
+                "-",
+                "Previous directory",
+                "cd -",
+                "Return to last directory visited"
+              ],
+              "ar": [
+                "-",
+                "الدليل السابق",
+                "cd -",
+                "ارجع إلى آخر دليل تمت زيارته"
+              ]
+            },
+            {
+              "en": [
+                "/",
+                "Root directory",
+                "cd /",
+                "Move to root of file system"
+              ],
+              "ar": [
+                "/",
+                "دليل الجذر",
+                "cd /",
+                "انتقل إلى جذر نظام الملفات"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 16,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Time-saving tip: Use Tab key for auto-completion. Type 'cd Doc' then press Tab, and the terminal completes it to 'cd Documents/' automatically. If multiple matches exist, press Tab twice to see all options. This prevents typos and dramatically speeds up navigation. Professional Linux users rarely type full paths manually.",
+            "ar": "نصيحة توفير الوقت: استخدم مفتاح Tab للإكمال التلقائي. اكتب 'cd Doc' ثم اضغط Tab، والطرفية تكمله إلى 'cd Documents/' تلقائياً. إذا كان هناك تطابقات متعددة، اضغط Tab مرتين لرؤية كل الخيارات. هذا يمنع الأخطاء الإملائية ويسرّع التنقل بشكل كبير. مستخدمو لينكس المحترفون نادراً ما يكتبون المسارات الكاملة يدوياً."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 17,
+          "type": "list",
+          "title": {
+            "en": "Command Line Best Practices for Security Work",
+            "ar": "أفضل ممارسات سطر الأوامر لعمل الأمن"
+          },
+          "items": {
+            "en": [
+              "Always verify location with pwd before destructive commands",
+              "Use ls to confirm target files exist before operations",
+              "Practice commands in /tmp or home directory first",
+              "Never blindly copy-paste commands from internet without understanding",
+              "Use absolute paths for critical security scripts to avoid ambiguity",
+              "Keep command history for audit trails and learning from mistakes",
+              "Test with harmless options first, then add destructive flags"
+            ],
+            "ar": [
+              "تحقق دائماً من الموقع بـ pwd قبل الأوامر المدمرة",
+              "استخدم ls للتأكد من وجود الملفات المستهدفة قبل العمليات",
+              "تمرّن على الأوامر في /tmp أو الدليل الشخصي أولاً",
+              "لا تنسخ ولا تلصق أوامر من الإنترنت بشكل أعمى دون فهم",
+              "استخدم مسارات مطلقة للسكربتات الأمنية الحرجة لتجنب الغموض",
+              "احتفظ بسجل الأوامر لمسارات التدقيق والتعلم من الأخطاء",
+              "اختبر بخيارات غير ضارة أولاً، ثم أضف أعلام التدمير"
+            ]
+          }
+        },
+        {
+          "id": 18,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "Critical safety warning: Be extremely careful with commands as root user (shown by # prompt). Commands like 'rm -rf /' can destroy entire systems. Always use regular user account for learning and practice. Only use root privileges (via sudo command) when absolutely necessary and you fully understand the command's impact.",
+            "ar": "تحذير أمان حرج: كن حذراً للغاية مع الأوامر كمستخدم root (يُظهر بموجه #). أوامر مثل 'rm -rf /' يمكن أن تدمر أنظمة كاملة. استخدم دائماً حساب مستخدم عادي للتعلم والتمرين. استخدم صلاحيات root فقط (عبر أمر sudo) عند الضرورة القصوى وعندما تفهم تماماً تأثير الأمر."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 19,
+          "type": "text",
+          "value": {
+            "en": "Think of terminal navigation like walking through a building. The pwd command tells you which room you're currently in. The ls command shows you what furniture and items are in this room. The cd command lets you walk to a different room. Just as you check door signs before entering rooms in an unfamiliar building, always verify your location before executing commands in unfamiliar directories.",
+            "ar": "فكر في التنقل في الطرفية كالسير في مبنى. أمر pwd يخبرك في أي غرفة أنت حالياً. أمر ls يُظهر لك ما هو الأثاث والعناصر في هذه الغرفة. أمر cd يسمح لك بالسير إلى غرفة مختلفة. تماماً كما تتحقق من لافتات الأبواب قبل دخول الغرف في مبنى غير مألوف، تحقق دائماً من موقعك قبل تنفيذ الأوامر في أدلة غير مألوفة."
+          }
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "createdAt": "2026-03-02T15:45:00.822Z",
+    "totalTopics": 5,
+    "totalElements": 83
+  }
+}

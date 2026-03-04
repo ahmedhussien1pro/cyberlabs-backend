@@ -108,8 +108,16 @@
             "ar": "من هم المعرضون لثغرة حقن SQL؟"
           },
           "headers": {
-            "en": ["Application Type", "Vulnerability Level", "Common Risk"],
-            "ar": ["نوع التطبيق", "مستوى الضعف", "الخطر الشائع"]
+            "en": [
+              "Application Type",
+              "Vulnerability Level",
+              "Common Risk"
+            ],
+            "ar": [
+              "نوع التطبيق",
+              "مستوى الضعف",
+              "الخطر الشائع"
+            ]
           },
           "rows": [
             {
@@ -137,11 +145,23 @@
               ]
             },
             {
-              "en": ["REST APIs", "Medium", "JSON input fields"],
-              "ar": ["واجهات REST البرمجية", "متوسط", "حقول إدخال JSON"]
+              "en": [
+                "REST APIs",
+                "Medium",
+                "JSON input fields"
+              ],
+              "ar": [
+                "واجهات REST البرمجية",
+                "متوسط",
+                "حقول إدخال JSON"
+              ]
             },
             {
-              "en": ["E-commerce Sites", "High", "Product search and checkout"],
+              "en": [
+                "E-commerce Sites",
+                "High",
+                "Product search and checkout"
+              ],
               "ar": [
                 "مواقع التجارة الإلكترونية",
                 "عالي",
@@ -257,8 +277,16 @@
             "ar": "الاستعلام المقصود مقابل الاستعلام الضار"
           },
           "headers": {
-            "en": ["Query Type", "Input Example", "Result"],
-            "ar": ["نوع الاستعلام", "مثال الإدخال", "النتيجة"]
+            "en": [
+              "Query Type",
+              "Input Example",
+              "Result"
+            ],
+            "ar": [
+              "نوع الاستعلام",
+              "مثال الإدخال",
+              "النتيجة"
+            ]
           },
           "rows": [
             {
@@ -267,7 +295,11 @@
                 "username: john",
                 "Returns John's account only"
               ],
-              "ar": ["مقصود", "اسم المستخدم: john", "يرجع حساب John فقط"]
+              "ar": [
+                "مقصود",
+                "اسم المستخدم: john",
+                "يرجع حساب John فقط"
+              ]
             },
             {
               "en": [
@@ -282,8 +314,16 @@
               ]
             },
             {
-              "en": ["Intended", "search: laptop", "Shows laptop products"],
-              "ar": ["مقصود", "البحث: laptop", "يعرض منتجات اللابتوب"]
+              "en": [
+                "Intended",
+                "search: laptop",
+                "Shows laptop products"
+              ],
+              "ar": [
+                "مقصود",
+                "البحث: laptop",
+                "يعرض منتجات اللابتوب"
+              ]
             },
             {
               "en": [
@@ -678,8 +718,16 @@
             "ar": "أنماط تعليقات SQL المستخدمة في الهجمات"
           },
           "headers": {
-            "en": ["Comment Type", "Syntax", "Effect in Attack"],
-            "ar": ["نوع التعليق", "الصيغة", "التأثير في الهجوم"]
+            "en": [
+              "Comment Type",
+              "Syntax",
+              "Effect in Attack"
+            ],
+            "ar": [
+              "نوع التعليق",
+              "الصيغة",
+              "التأثير في الهجوم"
+            ]
           },
           "rows": [
             {
@@ -688,7 +736,11 @@
                 "--",
                 "Comments out everything after it on the same line"
               ],
-              "ar": ["شرطة مزدوجة", "--", "يعلق على كل شيء بعده في نفس السطر"]
+              "ar": [
+                "شرطة مزدوجة",
+                "--",
+                "يعلق على كل شيء بعده في نفس السطر"
+              ]
             },
             {
               "en": [
@@ -696,7 +748,11 @@
                 "#",
                 "Comments rest of line (MySQL specific)"
               ],
-              "ar": ["رمز الهاش", "#", "يعلق على بقية السطر (خاص بـ MySQL)"]
+              "ar": [
+                "رمز الهاش",
+                "#",
+                "يعلق على بقية السطر (خاص بـ MySQL)"
+              ]
             },
             {
               "en": [
@@ -861,7 +917,7 @@
             "en": "Testing Command Example",
             "ar": "مثال أمر الاختبار"
           },
-          "value": "# Testing login form for SQL injection\ncurl -X POST https://example.com/login \\\n  -d \"username=admin'--&password=anything\"\n\n# Observe response for errors or successful login\n# Different response = potential vulnerability "
+          "value": "# Testing login form for SQL injection\ncurl -X POST https://example.com/login \\\n  -d \"username=admin'--&password=anything\"\n\n# Observe response for errors or successful login\n# Different response = potential vulnerability"
         },
         {
           "id": 5,
@@ -891,8 +947,16 @@
             "ar": "أدوات اختبار حقن SQL الشائعة"
           },
           "headers": {
-            "en": ["Tool Name", "Type", "Best Use Case"],
-            "ar": ["اسم الأداة", "النوع", "أفضل حالة استخدام"]
+            "en": [
+              "Tool Name",
+              "Type",
+              "Best Use Case"
+            ],
+            "ar": [
+              "اسم الأداة",
+              "النوع",
+              "أفضل حالة استخدام"
+            ]
           },
           "rows": [
             {
@@ -925,7 +989,11 @@
                 "Security scanner",
                 "Free comprehensive web app scanning"
               ],
-              "ar": ["OWASP ZAP", "ماسح أمني", "مسح شامل مجاني لتطبيقات الويب"]
+              "ar": [
+                "OWASP ZAP",
+                "ماسح أمني",
+                "مسح شامل مجاني لتطبيقات الويب"
+              ]
             },
             {
               "en": [
@@ -1120,8 +1188,16 @@
             "ar": "أسطح هجوم حقن SQL الحديثة"
           },
           "headers": {
-            "en": ["Technology", "Vulnerability Point", "Defense Approach"],
-            "ar": ["التكنولوجيا", "نقطة الضعف", "نهج الدفاع"]
+            "en": [
+              "Technology",
+              "Vulnerability Point",
+              "Defense Approach"
+            ],
+            "ar": [
+              "التكنولوجيا",
+              "نقطة الضعف",
+              "نهج الدفاع"
+            ]
           },
           "rows": [
             {

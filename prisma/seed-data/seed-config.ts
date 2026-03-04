@@ -35,7 +35,6 @@ export type PathModuleType = 'COURSE' | 'LAB' | 'QUIZ' | 'PROJECT';
 export interface CourseMeta {
   /** اسم ملف الـ JSON بالكامل داخل course-data/ */
   jsonFile: string;
-  /** الـ slug الفريد في الـ DB */
   slug: string;
   color: CourseColor;
   estimatedHours: number;
@@ -114,8 +113,6 @@ export interface PathMeta {
 //  COURSES — أضف كورس جديد هنا
 // ═══════════════════════════════════════════════════════════════════
 export const COURSES_META: CourseMeta[] = [
-  // ── موجودة في الـ paths (slugs مصلحة) ──────────────────────────
-
   {
     jsonFile: 'Introduction to Cyber Security Fundamentals.json',
     slug: 'introduction-to-cybersecurity', // standalone مش في paths
@@ -132,8 +129,8 @@ export const COURSES_META: CourseMeta[] = [
     tags: ['beginner', 'fundamentals'],
   },
   {
-    jsonFile: 'Networking Basics Part 1 - V2.json',
-    slug: 'networking-basics-part-1', // standalone
+    jsonFile: 'Networking Basics Part 1.json',
+    slug: 'networking-basics-part-1',
     color: 'BLUE',
     estimatedHours: 3,
     access: 'FREE',
@@ -146,7 +143,7 @@ export const COURSES_META: CourseMeta[] = [
   },
   {
     jsonFile: 'Networking Basics Part 2.json',
-    slug: 'networking-basics-part-2', // standalone
+    slug: 'networking-basics-part-2',
     color: 'BLUE',
     estimatedHours: 4,
     access: 'FREE',
@@ -170,12 +167,9 @@ export const COURSES_META: CourseMeta[] = [
     ar_skills: ['HTTP', 'DNS', 'FTP', 'SMTP'],
     tags: ['protocols', 'network'],
   },
-
-  // ── introduction-cybersecurity path ────────────────────────────
-
   {
     jsonFile: 'Network Analysis & Monitoring.json',
-    slug: 'wireshark-packet-analysis-pro', // ← slug مصلح
+    slug: 'wireshark-packet-analysis-pro',
     color: 'CYAN',
     estimatedHours: 5,
     access: 'PRO',
@@ -188,7 +182,7 @@ export const COURSES_META: CourseMeta[] = [
   },
   {
     jsonFile: 'Network Security Tools.json',
-    slug: 'nmap-network-discovery-mastery', // ← slug مصلح
+    slug: 'nmap-network-discovery-mastery',
     color: 'ORANGE',
     estimatedHours: 3,
     access: 'PRO',
@@ -200,8 +194,8 @@ export const COURSES_META: CourseMeta[] = [
     tags: ['tools', 'nmap', 'scanning'],
   },
   {
-    jsonFile: 'sql-injection.json',
-    slug: 'owasp-sql-injection-sqli', // ← كان ناقص خالص
+    jsonFile: 'SQL Injection.json',
+    slug: 'owasp-sql-injection-sqli',
     color: 'ROSE',
     estimatedHours: 4,
     access: 'FREE',
@@ -213,8 +207,8 @@ export const COURSES_META: CourseMeta[] = [
     tags: ['owasp', 'sqli', 'web'],
   },
   {
-    jsonFile: 'OWASP-top-10-XSS&CSRF.json',
-    slug: 'owasp-xss-csrf', // ← slug مصلح
+    jsonFile: 'OWASP Top 10 - XSS & CSRF.json',
+    slug: 'owasp-xss-csrf',
     color: 'ROSE',
     estimatedHours: 3,
     access: 'FREE',
@@ -240,7 +234,7 @@ export const COURSES_META: CourseMeta[] = [
   },
   {
     jsonFile: 'Active Directory.json',
-    slug: 'active-directory-fundamentals', // ← slug مصلح
+    slug: 'active-directory-fundamentals',
     color: 'VIOLET',
     estimatedHours: 4,
     access: 'PRO',
@@ -252,8 +246,8 @@ export const COURSES_META: CourseMeta[] = [
     tags: ['active-directory', 'windows'],
   },
   {
-    jsonFile: 'active-directory-attacks&enumeration.json',
-    slug: 'ad-attacks-enumeration', // ← slug مصلح
+    jsonFile: 'Active Directory Attacks & Enumeration.json',
+    slug: 'ad-attacks-enumeration',
     color: 'ROSE',
     estimatedHours: 6,
     access: 'PRO',
@@ -266,11 +260,8 @@ export const COURSES_META: CourseMeta[] = [
     ar_skills: ['Kerberoasting', 'Pass-the-Hash', 'BloodHound'],
     tags: ['active-directory', 'pentest', 'advanced'],
   },
-
-  // ── كورسات موجودة لكن مش في paths بعد ─────────────────────────
-
   {
-    jsonFile: 'careers-in-cybersecurity-from-soc-to-cloud.json',
+    jsonFile: 'Careers in Cybersecurity From SOC to Cloud.json',
     slug: 'careers-in-cybersecurity-from-soc-to-cloud',
     color: 'EMERALD',
     estimatedHours: 3,
@@ -283,7 +274,7 @@ export const COURSES_META: CourseMeta[] = [
     tags: ['career', 'beginner'],
   },
   {
-    jsonFile: 'security-frameworks&compliance.json',
+    jsonFile: 'Security Frameworks & Compliance.json',
     slug: 'security-frameworks-and-compliance',
     color: 'BLUE',
     estimatedHours: 3,
@@ -296,7 +287,7 @@ export const COURSES_META: CourseMeta[] = [
     tags: ['frameworks', 'compliance', 'beginner'],
   },
   {
-    jsonFile: 'threats&risk-management.json',
+    jsonFile: 'Threats & Risk Management.json',
     slug: 'threats-and-risk-management',
     color: 'ORANGE',
     estimatedHours: 3,
@@ -308,17 +299,14 @@ export const COURSES_META: CourseMeta[] = [
     ar_skills: ['إدارة المخاطر', 'نمذجة التهديدات', 'تقييم المخاطر'],
     tags: ['threats', 'risk', 'beginner'],
   },
-
-  // ─── أضف كورس جديد هنا ──────────────────────────────────────────
-  // {
-  //   jsonFile: 'My New Course.json',
-  //   slug: 'my-new-course',
-  //   ...
-  // },
+  // Add These courses also:
+  // Linux Fundamentals Part 1.json
+  // Linux Fundamentals Part 2.json
+  // VPN & Secure Communications.json
 ];
 
 // ═══════════════════════════════════════════════════════════════════
-//  LABS — أضف لاب جديد هنا
+//  LABS
 // ═══════════════════════════════════════════════════════════════════
 export const LABS_META: LabMeta[] = [
   // ─── أضف لاب جديد هنا ────────────────────────────────────────
@@ -341,7 +329,7 @@ export const LABS_META: LabMeta[] = [
 ];
 
 // ═══════════════════════════════════════════════════════════════════
-//  LEARNING PATHS — أضف مسار جديد هنا
+//  LEARNING PATHS
 // ═══════════════════════════════════════════════════════════════════
 export const PATHS_META: PathMeta[] = [
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
