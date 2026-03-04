@@ -812,7 +812,8 @@ model Course {
 
   // Original relations (keep intact)
   modules             Module[]
-  labs                Lab[]
+  // labs                Lab[]
+  courseLabs          CourseLab[]
   registrations       CourseRegistration[]
   assessments         Assessment[]
   discussions         Discussion[]
@@ -1021,7 +1022,7 @@ model CourseRegistration {
 
 model Lab {
     id       String  @id @default(uuid())
-  course   Course? @relation(fields: [courseId], references: [id], onDelete: SetNull)
+  courseLabs CourseLab[]
   courseId String?
 
   title          String
@@ -1075,6 +1076,19 @@ model Lab {
   @@index([difficulty])
   @@index([isPublished])
   @@map("labs")
+}
+model CourseLab {
+  courseId String
+  labId    String
+  order    Int    @default(0)
+
+  course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  lab    Lab    @relation(fields: [labId], references: [id], onDelete: Cascade)
+
+  @@id([courseId, labId])
+  @@index([courseId])
+  @@index([labId])
+  @@map("course_labs")
 }
 
 model LabInstance {
@@ -1551,7 +1565,7 @@ model PathModule {
   status         PathModuleStatus @default(PUBLISHED)
   estimatedHours Int          @default(0)
   isLocked       Boolean      @default(false)
-  
+  totalTopics    Int          @default(0)
   // Link to existing resources (optional, used if type is COURSE or LAB)
   courseId       String?
   course         Course?      @relation(fields: [courseId], references: [id], onDelete: SetNull)

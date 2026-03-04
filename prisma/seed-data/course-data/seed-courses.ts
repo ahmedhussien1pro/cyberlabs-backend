@@ -1,71 +1,16 @@
 // prisma/seed-data/course-data/seed-courses.ts
 import { PrismaClient } from '@prisma/client';
-import { readFileSync, readdirSync } from 'fs';
+import { readFileSync, existsSync } from 'fs';
 import { join } from 'path';
+import { COURSES_META } from '../seed-config';
 
-// ── Enum mappings ─────────────────────────────────────────────────────
-const COLOR_MAP: Record<string, string> = {
-  emerald: 'EMERALD',
-  blue: 'BLUE',
-  violet: 'VIOLET',
-  orange: 'ORANGE',
-  rose: 'ROSE',
-  cyan: 'CYAN',
-};
-const DIFFICULTY_MAP: Record<string, string> = {
-  beginner: 'BEGINNER',
-  intermediate: 'INTERMEDIATE',
-  advanced: 'ADVANCED',
-  expert: 'EXPERT',
-};
-const ACCESS_MAP: Record<string, string> = {
-  free: 'FREE',
-  pro: 'PRO',
-  premium: 'PREMIUM',
-};
-const CONTENT_TYPE_MAP: Record<string, string> = {
-  practical: 'PRACTICAL',
-  theoretical: 'THEORETICAL',
-  mixed: 'MIXED',
-};
-const CATEGORY_MAP: Record<string, string> = {
-  web_security: 'WEB_SECURITY',
-  web: 'WEB_SECURITY',
-  penetration_testing: 'PENETRATION_TESTING',
-  pentest: 'PENETRATION_TESTING',
-  malware_analysis: 'MALWARE_ANALYSIS',
-  malware: 'MALWARE_ANALYSIS',
-  cloud_security: 'CLOUD_SECURITY',
-  cloud: 'CLOUD_SECURITY',
-  fundamentals: 'FUNDAMENTALS',
-  cryptography: 'CRYPTOGRAPHY',
-  network_security: 'NETWORK_SECURITY',
-  network: 'NETWORK_SECURITY',
-  tools_and_techniques: 'TOOLS_AND_TECHNIQUES',
-  tools: 'TOOLS_AND_TECHNIQUES',
-  career_and_industry: 'CAREER_AND_INDUSTRY',
-  career: 'CAREER_AND_INDUSTRY',
-};
-
-// ── Helpers ───────────────────────────────────────────────────────────
 function safeNumber(val: any, fallback = 0): number {
   const n = Number(val);
   return isNaN(n) ? fallback : n;
 }
 
-function toSlug(str: string): string {
-  return str
-    .toLowerCase()
-    .replace(/&/g, 'and')
-    .replace(/[^a-z0-9\s-]/g, '')
-    .trim()
-    .replace(/\s+/g, '-')
-    .replace(/-+/g, '-');
-}
-
-// ── Main seed function ────────────────────────────────────────────────
 export async function seedCourses(prisma: PrismaClient) {
-  console.log('\n📚 Seeding courses from JSON files...');
+  console.log('\n📚 Seeding courses...');
 
   const instructor =
     (await prisma.user.findFirst({
@@ -73,31 +18,32 @@ export async function seedCourses(prisma: PrismaClient) {
       select: { id: true },
     })) ?? (await prisma.user.findFirst({ select: { id: true } }));
 
-  if (!instructor) {
-    throw new Error('❌ No user found. Seed users first.');
-  }
+  if (!instructor) throw new Error('❌ No user found — seed users first.');
 
   const instructorId = instructor.id;
   const baseDir = join(process.cwd(), 'prisma/seed-data/course-data');
-  const jsonFiles = readdirSync(baseDir).filter((f) => f.endsWith('.json'));
-
-  console.log(`  📂 Found ${jsonFiles.length} course JSON files`);
   let seeded = 0;
 
-  for (const file of jsonFiles) {
+  for (const meta of COURSES_META) {
+    const filePath = join(baseDir, meta.jsonFile);
+
+    if (!existsSync(filePath)) {
+      console.warn(`  ⚠️  JSON not found: ${meta.jsonFile} — skipping`);
+      continue;
+    }
+
     let raw: any;
     try {
-      raw = JSON.parse(readFileSync(join(baseDir, file), 'utf-8'));
+      raw = JSON.parse(readFileSync(filePath, 'utf-8'));
     } catch {
-      console.warn(`  ⚠️  Could not parse ${file} — skipping`);
+      console.warn(`  ⚠️  Could not parse: ${meta.jsonFile} — skipping`);
       continue;
     }
 
     const ld = raw.landingData ?? raw;
 
     const titleEn: string =
-      (typeof ld.title === 'object' ? ld.title?.en : ld.title) ??
-      file.replace('.json', '');
+      (typeof ld.title === 'object' ? ld.title?.en : ld.title) ?? meta.slug;
     const titleAr: string | undefined =
       typeof ld.title === 'object' ? ld.title?.ar : ld.ar_title;
 
@@ -108,117 +54,111 @@ export async function seedCourses(prisma: PrismaClient) {
         ? ld.description?.ar
         : ld.ar_description;
 
-    const slug: string = ld.slug ?? toSlug(file.replace('.json', ''));
-
-    const color =
-      COLOR_MAP[(ld.color ?? '').toString().toLowerCase()] ?? 'BLUE';
-    const difficulty =
-      DIFFICULTY_MAP[(ld.difficulty ?? '').toString().toLowerCase()] ??
-      'BEGINNER';
-    const access =
-      ACCESS_MAP[(ld.access ?? '').toString().toLowerCase()] ?? 'FREE';
-    const contentType =
-      CONTENT_TYPE_MAP[
-        (ld.contentType ?? ld.content_type ?? '').toString().toLowerCase()
-      ] ?? 'MIXED';
-
-    const categoryRaw = (ld.category ?? '')
-      .toString()
-      .toLowerCase()
-      .replace(/[\s\-]/g, '_');
-    const category = CATEGORY_MAP[categoryRaw] ?? null;
-
-    const estimatedHours = safeNumber(
-      ld.estimatedHours ?? ld.estimated_hours,
-      0,
-    );
-    const duration = safeNumber(ld.duration) || estimatedHours * 60 || 0;
-    const thumbnail: string | undefined =
-      ld.thumbnail ?? ld.imageUrl ?? undefined;
-    const tags: string[] = Array.isArray(ld.tags) ? ld.tags : [];
-    const skills: string[] = Array.isArray(ld.skills) ? ld.skills : [];
-
     const topicsArr: any[] = raw.topics ?? [];
-    // ✅ field is totalTopics in schema (not totalLessons)
-    const totalTopics = topicsArr.reduce(
-      (acc: number, t: any) =>
-        acc + (Array.isArray(t.elements) ? t.elements.length : 0),
-      0,
-    );
 
-    // update: can use raw instructorId FK
-    const updateData = {
+    // ✅ عدد التوبيكس الفعلي (عدد الـ sections مش عدد العناصر)
+    const totalTopics = topicsArr.length;
+
+    // Topic titles للكارد
+    const topicsList: string[] =
+      meta.topics ??
+      topicsArr
+        .map(
+          (t: any) =>
+            (typeof t.title === 'object' ? t.title?.en : t.title) ?? '',
+        )
+        .filter(Boolean);
+
+    const ar_topicsList: string[] =
+      meta.ar_topics ??
+      topicsArr
+        .map((t: any) => (typeof t.title === 'object' ? t.title?.ar : '') ?? '')
+        .filter(Boolean);
+
+    const coursePayload = {
       title: titleEn,
       ar_title: titleAr,
       description: descEn,
       ar_description: descAr,
-      slug,
-      color: color as any,
-      difficulty: difficulty as any,
-      access: access as any,
-      contentType: contentType as any,
+      color: meta.color as any,
+      difficulty: meta.difficulty as any,
+      access: meta.access as any,
+      contentType: meta.contentType as any,
+      category: meta.category as any,
+      estimatedHours: meta.estimatedHours,
+      duration: meta.estimatedHours * 60,
       state: 'PUBLISHED' as any,
       isPublished: true,
-      ...(thumbnail ? { thumbnail } : {}),
-      tags,
-      skills,
-      estimatedHours,
-      duration,
+      isNew: meta.isNew ?? false,
+      isFeatured: meta.isFeatured ?? false,
+      thumbnail: meta.thumbnail ?? '',
+      tags: meta.tags ?? [],
+      skills: meta.skills ?? [],
+      ar_skills: meta.ar_skills ?? [],
+      topics: topicsList,
+      ar_topics: ar_topicsList,
+      // ✅ عدد الـ sections الفعلي
       totalTopics,
-      instructorId,
-      ...(category ? { category: category as any } : {}),
-    };
-
-    // create: must use relation connect (Prisma checked create)
-    const createData = {
-      title: titleEn,
-      ar_title: titleAr,
-      description: descEn,
-      ar_description: descAr,
-      slug,
-      color: color as any,
-      difficulty: difficulty as any,
-      access: access as any,
-      contentType: contentType as any,
-      state: 'PUBLISHED' as any,
-      isPublished: true,
-      ...(thumbnail ? { thumbnail } : {}),
-      tags,
-      skills,
-      estimatedHours,
-      duration,
-      totalTopics,
-      instructor: { connect: { id: instructorId } },
-      ...(category ? { category: category as any } : {}),
     };
 
     try {
       const course = await prisma.course.upsert({
-        where: { slug },
-        update: updateData,
-        create: createData,
+        where: { slug: meta.slug },
+        update: coursePayload,
+        create: {
+          ...coursePayload,
+          slug: meta.slug,
+          instructor: { connect: { id: instructorId } },
+        },
       });
-      console.log(`  ✅ ${slug}`);
-      seeded++;
 
       if (topicsArr.length > 0) {
         await seedCourseSections(prisma, course.id, topicsArr);
       }
+
+      if (meta.labSlugs && meta.labSlugs.length > 0) {
+        await linkCourseToLabs(prisma, course.id, meta.labSlugs);
+      }
+
+      console.log(`  ✅ ${meta.slug} (${totalTopics} topics)`);
+      seeded++;
     } catch (e: any) {
-      console.error(`  ❌ Failed to seed ${slug}:`, e.message);
+      console.error(`  ❌ ${meta.slug}:`, e.message);
     }
   }
 
-  console.log(`  🎉 ${seeded} courses seeded\n`);
+  console.log(`  🎉 ${seeded}/${COURSES_META.length} courses seeded\n`);
 }
 
-// ── Seed sections & lessons ───────────────────────────────────────────
+async function linkCourseToLabs(
+  prisma: PrismaClient,
+  courseId: string,
+  labSlugs: string[],
+) {
+  await (prisma as any).courseLab.deleteMany({ where: { courseId } });
+
+  for (let i = 0; i < labSlugs.length; i++) {
+    const lab = await prisma.lab.findUnique({
+      where: { slug: labSlugs[i] },
+      select: { id: true },
+    });
+    if (!lab) {
+      console.warn(`    ⚠️  Lab slug not found: "${labSlugs[i]}"`);
+      continue;
+    }
+    await (prisma as any).courseLab.upsert({
+      where: { courseId_labId: { courseId, labId: lab.id } },
+      update: { order: i + 1 },
+      create: { courseId, labId: lab.id, order: i + 1 },
+    });
+  }
+}
+
 async function seedCourseSections(
   prisma: PrismaClient,
   courseId: string,
   topics: any[],
 ) {
-  // ✅ FIX: Delete lessons first (FK dependency), then sections and modules
   await prisma.lesson.deleteMany({ where: { courseId } });
   await prisma.section.deleteMany({ where: { courseId } });
   await prisma.module.deleteMany({ where: { courseId } });
@@ -227,40 +167,37 @@ async function seedCourseSections(
     const topic = topics[sIdx];
     const order = sIdx + 1;
 
-    const sectionTitle =
+    const sTitle =
       typeof topic.title === 'object'
         ? (topic.title?.en ?? `Section ${order}`)
         : (topic.title ?? `Section ${order}`);
-    const sectionTitleAr =
+    const sTitleAr =
       typeof topic.title === 'object' ? topic.title?.ar : undefined;
-    const sectionDesc =
+    const sDesc =
       typeof topic.description === 'object'
         ? topic.description?.en
         : topic.description;
 
-    // Create Section (new LMS structure)
-    const section = await prisma.section.create({
-      data: {
-        courseId,
-        title: sectionTitle,
-        ar_title: sectionTitleAr,
-        order,
-        ...(sectionDesc ? { description: sectionDesc } : {}),
-      },
-    });
-
-    // ✅ FIX: Create a matching Module for this section
-    // Lesson.moduleId is a required FK in the schema — we must provide it.
-    // One Module per Section keeps @@unique([moduleId, order]) constraints safe.
-    const mod = await prisma.module.create({
-      data: {
-        courseId,
-        title: sectionTitle,
-        ar_title: sectionTitleAr,
-        order,
-        ...(sectionDesc ? { description: sectionDesc } : {}),
-      },
-    });
+    const [section, mod] = await Promise.all([
+      prisma.section.create({
+        data: {
+          courseId,
+          title: sTitle,
+          ar_title: sTitleAr,
+          order,
+          ...(sDesc ? { description: sDesc } : {}),
+        },
+      }),
+      prisma.module.create({
+        data: {
+          courseId,
+          title: sTitle,
+          ar_title: sTitleAr,
+          order,
+          ...(sDesc ? { description: sDesc } : {}),
+        },
+      }),
+    ]);
 
     const elements: any[] = topic.elements ?? topic.lessons ?? [];
 
@@ -268,12 +205,11 @@ async function seedCourseSections(
       const el = elements[eIdx];
       const lessonOrder = safeNumber(el.order, eIdx + 1);
 
-      const lessonTitle =
+      const lTitle =
         typeof el.title === 'object'
           ? (el.title?.en ?? `Lesson ${lessonOrder}`)
           : (el.title ?? `Lesson ${lessonOrder}`);
-      const lessonTitleAr =
-        typeof el.title === 'object' ? el.title?.ar : undefined;
+      const lTitleAr = typeof el.title === 'object' ? el.title?.ar : undefined;
 
       const typeRaw = (el.type ?? 'article').toString().toUpperCase();
       const lessonType: 'VIDEO' | 'ARTICLE' | 'QUIZ' =
@@ -283,14 +219,12 @@ async function seedCourseSections(
         data: {
           courseId,
           sectionId: section.id,
-          // ✅ FIX: moduleId is required in schema — use the mirrored module
           moduleId: mod.id,
-          title: lessonTitle,
-          ar_title: lessonTitleAr,
+          title: lTitle,
+          ar_title: lTitleAr,
           order: lessonOrder,
           type: lessonType,
           duration: safeNumber(el.duration, 0),
-          // ✅ FIX: content is required String (not String?) — default to ''
           content: el.content ?? '',
           ...(el.videoUrl || el.video_url
             ? { videoUrl: el.videoUrl ?? el.video_url }

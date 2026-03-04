@@ -1,57 +1,57 @@
 // prisma/seed.ts
 import { PrismaClient } from '@prisma/client';
-import { lab1Metadata } from '../src/modules/practice-labs/sql-injection/labs/lab1/lab1.metadata';
-import { seedLearningPaths } from './seed-data/paths';
-import { seedCourses } from './seed-data/course-data/seed-courses';
+
+// ── Seed functions ─────────────────────────────────────────────────
 import { seedSubscriptionPlans } from './seed-data/subscription-plans';
+import { seedLabs } from './seed-data/seed-labs';
+import { seedCourses } from './seed-data/course-data/seed-courses';
+import { seedPaths } from './seed-data/seed-paths';
+
+// ── Labs من الـ modules (موجودة حالياً) ─────────────────────────
+import { lab1Metadata } from '../src/modules/practice-labs/sql-injection/labs/lab1/lab1.metadata';
 
 const prisma = new PrismaClient();
-const ALL_LABS = [lab1Metadata];
 
-async function seedLabsMetaData() {
-  console.log('🌱 Seeding labs from metadata files...');
-  for (const meta of ALL_LABS) {
+// ──────────────────────────────────────────────────────────────────
+// Labs from module metadata files — هتضيف هنا أي lab جديد عنده metadata خاصة
+// ──────────────────────────────────────────────────────────────────
+const MODULE_LABS = [
+  lab1Metadata,
+  // lab2Metadata,  ← أضف هنا
+];
+
+async function seedModuleLabs() {
+  if (MODULE_LABS.length === 0) return;
+  console.log('\n🧪 Seeding module labs...');
+
+  for (const meta of MODULE_LABS) {
+    const shared = {
+      title: meta.title,
+      ar_title: meta.ar_title,
+      description: meta.description,
+      ar_description: meta.ar_description,
+      difficulty: meta.difficulty as any,
+      category: meta.category as any,
+      executionMode: meta.executionMode as any,
+      skills: meta.skills,
+      xpReward: meta.xpReward,
+      pointsReward: meta.pointsReward,
+      duration: meta.duration,
+      isPublished: meta.isPublished,
+      scenario: meta.scenario?.context,
+      flagAnswer: meta.flagAnswer,
+      initialState: meta.initialState,
+      imageUrl: meta.imageUrl,
+    };
+
     const lab = await prisma.lab.upsert({
       where: { slug: meta.slug },
-      update: {
-        title: meta.title,
-        ar_title: meta.ar_title,
-        description: meta.description,
-        ar_description: meta.ar_description,
-        difficulty: meta.difficulty as any,
-        category: meta.category as any,
-        skills: meta.skills,
-        xpReward: meta.xpReward,
-        pointsReward: meta.pointsReward,
-        duration: meta.duration,
-        executionMode: meta.executionMode as any,
-        isPublished: meta.isPublished,
-        scenario: meta.scenario?.context,
-        flagAnswer: meta.flagAnswer,
-        initialState: meta.initialState,
-        imageUrl: meta.imageUrl,
-      },
-      create: {
-        slug: meta.slug,
-        title: meta.title,
-        ar_title: meta.ar_title,
-        description: meta.description,
-        ar_description: meta.ar_description,
-        difficulty: meta.difficulty as any,
-        category: meta.category as any,
-        skills: meta.skills,
-        xpReward: meta.xpReward,
-        pointsReward: meta.pointsReward,
-        duration: meta.duration,
-        executionMode: meta.executionMode as any,
-        isPublished: meta.isPublished,
-        scenario: meta.scenario?.context,
-        flagAnswer: meta.flagAnswer,
-        initialState: meta.initialState,
-        imageUrl: meta.imageUrl,
-      },
+      update: shared,
+      create: { ...shared, slug: meta.slug },
     });
-    for (const hint of meta.hints) {
+
+    // Seed hints
+    for (const hint of meta.hints ?? []) {
       await prisma.labHint.upsert({
         where: { labId_order: { labId: lab.id, order: hint.order } },
         update: { content: hint.content, xpCost: hint.xpCost },
@@ -63,31 +63,41 @@ async function seedLabsMetaData() {
         },
       });
     }
-    console.log(`  ✅ ${meta.slug} seeded`);
+    console.log(`  ✅ module-lab: ${meta.slug}`);
   }
 }
 
+// ──────────────────────────────────────────────────────────────────
+// MAIN
+// ──────────────────────────────────────────────────────────────────
 async function main() {
+  console.log('🌱 Starting CyberLabs seed...\n');
+  console.log('═'.repeat(50));
+
   try {
-    // 1. Labs أول — لأن الـ paths ممكن ترتبط بـ labs
-    // await seedLabsMetaData();
-
-    // 2. Courses — قبل الـ paths عشان seedLearningPaths يربط courseId
-    // await seedCourses(prisma);
-
-    // 3. Paths — بعد الكورسات عشان يلاقي الـ courseId في الـ DB
-    await seedLearningPaths(prisma);
-
-    // 4. Subscription plans
+    // ① Subscription plans — لا تعتمد على أي شيء
     // await seedSubscriptionPlans(prisma);
 
-    console.log('🎉 Done!');
+    // ② Labs من seed-config.ts (LABS_META)
+    // await seedLabs(prisma);
+
+    // ③ Labs من ملفات الـ modules (lab1.metadata، إلخ)
+    await seedModuleLabs();
+
+    // ④ Courses — بعد اللابات عشان تربطها
+    await seedCourses(prisma);
+
+    // ⑤ Learning Paths — الأخيرة عشان تلاقي كورسات ولابات في الـ DB
+    await seedPaths(prisma);
+
+    console.log('\n' + '═'.repeat(50));
+    console.log('🎉 All seeds completed successfully!');
   } catch (error) {
-    console.error('Error during seeding:', error);
+    console.error('\n❌ Seed failed:', error);
     process.exit(1);
+  } finally {
+    await prisma.$disconnect();
   }
 }
 
-main()
-  .catch(console.error)
-  .finally(() => prisma.$disconnect());
+main().catch(console.error);
