@@ -1,4 +1,5 @@
-import { Controller, Post, Get, Body, Query, UseGuards } from '@nestjs/common';
+// src/modules/practice-labs/bl-vuln/labs/lab1/lab1.controller.ts
+import { Controller, Post, Body, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../../../../../common/guards';
 import { GetUser } from '../../../shared/decorators/get-user.decorator';
 import { Lab1Service } from './lab1.service';
@@ -9,49 +10,24 @@ export class Lab1Controller {
   constructor(private lab1Service: Lab1Service) {}
 
   @Post('start')
-  async startLab(@GetUser('id') userId: string, @Body('labId') labId: string) {
+  start(@GetUser('id') userId: string, @Body('labId') labId: string) {
     return this.lab1Service.initLab(userId, labId);
   }
 
-  @Get('balance')
-  async getBalance(
-    @GetUser('id') userId: string,
-    @Query('labId') labId: string,
-  ) {
-    return this.lab1Service.getBalance(userId, labId);
+  @Post('products')
+  getProducts(@GetUser('id') userId: string, @Body('labId') labId: string) {
+    return this.lab1Service.getProducts(userId, labId);
   }
 
-  @Post('purchase')
-  async purchase(
+  // ❌ الثغرة: price يأتي من client
+  @Post('checkout')
+  checkout(
     @GetUser('id') userId: string,
     @Body('labId') labId: string,
-    @Body('itemName') itemName: string,
-    @Body('price') price: number,
+    @Body('productId') productId: string,
     @Body('quantity') quantity: number,
-  ) {
-    return this.lab1Service.purchaseItem(
-      userId,
-      labId,
-      itemName,
-      price,
-      quantity,
-    );
-  }
-
-  @Post('refund')
-  async refund(
-    @GetUser('id') userId: string,
-    @Body('labId') labId: string,
-    @Body('itemName') itemName: string,
     @Body('price') price: number,
-    @Body('quantity') quantity: number,
   ) {
-    return this.lab1Service.refundItem(
-      userId,
-      labId,
-      itemName,
-      price,
-      quantity,
-    );
+    return this.lab1Service.checkout(userId, labId, productId, quantity, price);
   }
 }

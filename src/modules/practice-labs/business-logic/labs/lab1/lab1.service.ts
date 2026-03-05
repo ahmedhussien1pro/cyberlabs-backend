@@ -1,4 +1,9 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+// src/modules/practice-labs/bl-vuln/labs/lab1/lab1.service.ts
+import {
+  Injectable,
+  BadRequestException,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from '../../../../../core/database';
 import { PracticeLabStateService } from '../../../shared/services/practice-lab-state.service';
 
@@ -13,95 +18,98 @@ export class Lab1Service {
     return this.stateService.initializeState(userId, labId);
   }
 
-  async getBalance(userId: string, labId: string) {
-    const wallet = await this.prisma.labGenericBank.findFirst({
-      where: { userId, labId, accountNo: 'WALLET' },
+  async getProducts(userId: string, labId: string) {
+    const products = await this.prisma.labGenericContent.findMany({
+      where: { userId, labId, author: 'store' },
     });
-    return { balance: wallet?.balance || 0 };
+
+    return {
+      success: true,
+      products: products.map((p) => {
+        const data = JSON.parse(p.body);
+        return { productId: p.title, ...data };
+      }),
+    };
   }
 
-  // ❌ الثغرة: Price Manipulation - يستقبل السعر من الـ client!
-  async purchaseItem(
+  // ❌ الثغرة: يثق في price القادم من client
+  async checkout(
     userId: string,
     labId: string,
-    itemName: string,
-    price: number, // ❌ الثغرة: السعر يجي من الـ request!
-    quantity: number = 1,
+    productId: string,
+    quantity: number,
+    price: number,
   ) {
-    // التحقق من الـ wallet
-    const wallet = await this.prisma.labGenericBank.findFirst({
-      where: { userId, labId, accountNo: 'WALLET' },
+    if (!productId) throw new BadRequestException('productId is required');
+    if (quantity === undefined)
+      throw new BadRequestException('quantity is required');
+    if (price === undefined) throw new BadRequestException('price is required');
+
+    const product = await this.prisma.labGenericContent.findFirst({
+      where: { userId, labId, title: productId },
     });
 
-    if (!wallet) throw new BadRequestException('Wallet not found');
+    if (!product) throw new NotFoundException('Product not found');
 
-    const totalCost = price * quantity; // ❌ يحسب بناءً على السعر من الـ client
+    const productData = JSON.parse(product.body);
 
-    // ❌ الثغرة: لو المستخدم أرسل سعر سالب، هيزيد الرصيد!
-    if (wallet.balance < totalCost) {
-      throw new BadRequestException('Insufficient balance');
-    }
+    // ❌ الثغرة: يستخدم price من الـ request body بدلاً من DB
+    const total = price * quantity;
 
-    // خصم المبلغ
-    await this.prisma.labGenericBank.update({
-      where: { id: wallet.id },
-      data: { balance: { decrement: totalCost } },
-    });
-
-    // تسجيل الشراء
+    // تسجيل الطلب
     await this.prisma.labGenericLog.create({
       data: {
         userId,
         labId,
-        type: 'PURCHASE',
-        meta: { item: itemName, price, quantity, total: totalCost },
+        type: 'ORDER',
+        action: 'CHECKOUT',
+        meta: {
+          productId,
+          quantity,
+          clientPrice: price,
+          realPrice: productData.realPrice,
+          total,
+          timestamp: new Date().toISOString(),
+        },
       },
     });
 
-    // التحقق من الاستغلال
-    if (price <= 0 || price < 100) {
-      // السعر الحقيقي 1000
+    // تحقق من الاستغلال
+    const isExploited =
+      price < productData.realPrice && productData.realPrice >= 100;
+
+    if (isExploited) {
       return {
         success: true,
-        message: `Purchased ${itemName} for ${totalCost}$`,
         exploited: true,
-        flag: 'FLAG{PRICE_MANIPULATION_EXPLOITED}',
-        warning:
-          'Price manipulation detected! Item bought at manipulated price',
+        receipt: {
+          productName: productData.name,
+          quantity,
+          unitPrice: price,
+          total,
+          status: 'PAID',
+        },
+        flag: 'FLAG{BL_PRICE_MANIPULATION_CLIENT_TRUST_PWNED}',
+        vulnerability: 'Business Logic — Client-Side Price Trust',
+        impact:
+          `You purchased "${productData.name}" (real price: $${productData.realPrice}) for $${total}. ` +
+          'In a real store, this would result in direct financial loss.',
+        fix:
+          'Never trust client-supplied prices. Always fetch the price from the database: ' +
+          'const total = product.realPrice * quantity;',
       };
     }
 
     return {
       success: true,
-      message: `Purchased ${itemName} for ${totalCost}$`,
-    };
-  }
-
-  // ❌ الثغرة: Negative Quantity
-  async refundItem(
-    userId: string,
-    labId: string,
-    itemName: string,
-    price: number,
-    quantity: number, // ❌ لو أرسل negative quantity
-  ) {
-    const wallet = await this.prisma.labGenericBank.findFirst({
-      where: { userId, labId, accountNo: 'WALLET' },
-    });
-
-    if (!wallet) throw new BadRequestException('Wallet not found');
-
-    const refundAmount = price * quantity;
-
-    // إضافة المبلغ المسترد
-    await this.prisma.labGenericBank.update({
-      where: { id: wallet.id },
-      data: { balance: { increment: refundAmount } },
-    });
-
-    return {
-      success: true,
-      message: `Refunded ${refundAmount}$`,
+      exploited: false,
+      receipt: {
+        productName: productData.name,
+        quantity,
+        unitPrice: price,
+        total,
+        status: 'PAID',
+      },
     };
   }
 }

@@ -1,11 +1,31 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+// src/modules/practice-labs/bl-vuln/labs/lab2/lab2.service.ts
+import {
+  Injectable,
+  BadRequestException,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from '../../../../../core/database';
 import { PracticeLabStateService } from '../../../shared/services/practice-lab-state.service';
 
+// تعريف الكوبونات (in-memory للتبسيط)
+const COUPONS = {
+  SAVE20: { discount: 0.2, maxUses: 1 },
+  WELCOME10: { discount: 0.1, maxUses: 1 },
+};
+
 @Injectable()
 export class Lab2Service {
-  private readonly ITEM_PRICE = 100;
-  private appliedCoupons = new Map<string, string[]>(); // labKey -> coupon codes
+  // تتبع الطلبات المؤقتة (in-memory)
+  private orders = new Map<
+    string,
+    {
+      userId: string;
+      labId: string;
+      total: number;
+      couponsApplied: string[];
+      usedCoupons: Set<string>;
+    }
+  >();
 
   constructor(
     private prisma: PrismaService,
@@ -13,83 +33,150 @@ export class Lab2Service {
   ) {}
 
   async initLab(userId: string, labId: string) {
-    this.appliedCoupons.clear();
     return this.stateService.initializeState(userId, labId);
   }
 
-  // ❌ الثغرة: يسمح بتطبيق نفس الكوبون عدة مرات
-  async applyCoupon(userId: string, labId: string, couponCode: string) {
-    const key = `${userId}-${labId}`;
-    const coupons = this.appliedCoupons.get(key) || [];
+  async createOrder(userId: string, labId: string, planId: string) {
+    if (!planId) throw new BadRequestException('planId is required');
 
-    // ❌ الثغرة: مافيش check للـ duplicates
-    // المفروض يمنع استخدام نفس الكوبون أكتر من مرة
-    coupons.push(couponCode);
-    this.appliedCoupons.set(key, coupons);
+    const plan = await this.prisma.labGenericContent.findFirst({
+      where: { userId, labId, title: planId },
+    });
+
+    if (!plan) throw new NotFoundException('Plan not found');
+
+    const planData = JSON.parse(plan.body);
+    const orderId = `ORD-${Date.now()}-${Math.random().toString(36).substr(2, 5).toUpperCase()}`;
+
+    this.orders.set(orderId, {
+      userId,
+      labId,
+      total: planData.price,
+      couponsApplied: [],
+      usedCoupons: new Set(),
+    });
 
     return {
       success: true,
-      message: 'Coupon applied',
-      totalCoupons: coupons.length,
+      orderId,
+      plan: planData.name,
+      originalPrice: planData.price,
+      currentTotal: planData.price,
+      note: 'Apply coupons to reduce the price. Available coupons: SAVE20, WELCOME10',
     };
   }
 
-  async calculatePrice(userId: string, labId: string) {
-    const key = `${userId}-${labId}`;
-    const coupons = this.appliedCoupons.get(key) || [];
-
-    let price = this.ITEM_PRICE;
-
-    // ❌ الثغرة: يطبق كل الكوبونات بدون validation
-    // كل كوبون 20% خصم
-    for (const coupon of coupons) {
-      price = price * 0.8; // 20% discount
+  // ❌ الثغرة: coupon reuse + stacking
+  async applyCoupon(
+    userId: string,
+    labId: string,
+    orderId: string,
+    coupon: string,
+  ) {
+    if (!orderId || !coupon) {
+      throw new BadRequestException('orderId and coupon are required');
     }
+
+    const order = this.orders.get(orderId);
+    if (!order || order.userId !== userId) {
+      throw new NotFoundException('Order not found');
+    }
+
+    const couponData = COUPONS[coupon.toUpperCase()];
+    if (!couponData) {
+      throw new BadRequestException('Invalid coupon code');
+    }
+
+    // ❌ الثغرة 1: يتحقق من usedCoupons لكن يضيفها بعد حساب الخصم
+    // ❌ الثغرة 2: لا يمنع تطبيق نفس الكوبون مرات متعددة بشكل صحيح
+    if (order.usedCoupons.has(coupon.toUpperCase())) {
+      // ❌ الثغرة: يرجع خطأ لكن بعض الـ race conditions تتجاوز هذا
+      // في السيناريو الحقيقي: نسمح بالتجاوز للتعليم
+    }
+
+    // ❌ الثغرة 3: stacking — لا حد لعدد الكوبونات
+    const discountAmount = order.total * couponData.discount;
+    const newTotal = Math.max(0, order.total - discountAmount);
+
+    // ❌ يضيف الكوبون بعد حساب الخصم (تأخر التسجيل)
+    order.total = newTotal;
+    order.couponsApplied.push(coupon.toUpperCase());
+    // ❌ لا يُضاف للـ usedCoupons بشكل موثوق
+    // order.usedCoupons.add(coupon.toUpperCase()); ← مُعلّق عمداً (الثغرة)
 
     return {
-      originalPrice: this.ITEM_PRICE,
-      finalPrice: Math.max(0, price), // لا يسمح بالسالب بس zero ممكن
-      couponsApplied: coupons.length,
-      discount: this.ITEM_PRICE - price,
+      success: true,
+      couponApplied: coupon.toUpperCase(),
+      discount: `${couponData.discount * 100}%`,
+      discountAmount,
+      newTotal,
+      couponsApplied: order.couponsApplied,
+      note:
+        newTotal === 0
+          ? '🎉 Total is now $0! Proceed to checkout.'
+          : `Keep applying coupons! Current total: $${newTotal}`,
     };
   }
 
-  // ❌ الثغرة: Checkout بدون validation proper
-  async checkout(userId: string, labId: string) {
-    const priceInfo = await this.calculatePrice(userId, labId);
-    const wallet = await this.prisma.labGenericBank.findFirst({
-      where: { userId, labId, accountNo: 'WALLET' },
-    });
+  async checkout(userId: string, labId: string, orderId: string) {
+    if (!orderId) throw new BadRequestException('orderId is required');
 
-    if (!wallet) throw new BadRequestException('Wallet not found');
-
-    if (wallet.balance < priceInfo.finalPrice) {
-      throw new BadRequestException('Insufficient balance');
+    const order = this.orders.get(orderId);
+    if (!order || order.userId !== userId) {
+      throw new NotFoundException('Order not found');
     }
 
-    // خصم المبلغ
-    await this.prisma.labGenericBank.update({
-      where: { id: wallet.id },
-      data: { balance: { decrement: priceInfo.finalPrice } },
+    const isExploited = order.total === 0 && order.couponsApplied.length > 2;
+
+    // تسجيل
+    await this.prisma.labGenericLog.create({
+      data: {
+        userId,
+        labId,
+        type: 'ORDER',
+        action: isExploited ? 'COUPON_ABUSE_DETECTED' : 'CHECKOUT',
+        meta: {
+          orderId,
+          finalTotal: order.total,
+          couponsApplied: order.couponsApplied,
+          timestamp: new Date().toISOString(),
+        },
+      },
     });
 
-    // التحقق من الاستغلال
-    if (priceInfo.finalPrice <= 1 && priceInfo.couponsApplied > 3) {
+    this.orders.delete(orderId);
+
+    if (isExploited) {
       return {
         success: true,
         exploited: true,
-        flag: 'FLAG{DISCOUNT_STACKING_EXPLOITED}',
-        message: 'Discount stacking exploited! Item bought at near-zero price',
-        priceInfo,
+        receipt: {
+          orderId,
+          finalTotal: order.total,
+          couponsApplied: order.couponsApplied,
+          status: 'PAID ($0)',
+        },
+        flag: 'FLAG{BL_COUPON_STACKING_UNLIMITED_DISCOUNT_ABUSE}',
+        vulnerability: 'Business Logic — Coupon Abuse + Discount Stacking',
+        impact:
+          'You subscribed to the Elite Plan ($200/month) for free by abusing coupon logic.',
+        fix:
+          '1. Mark coupons as used BEFORE applying discount (atomic transaction)\n' +
+          '2. Set maximum discount cap per order (e.g., max 30%)\n' +
+          '3. Limit one coupon per order\n' +
+          '4. Validate coupon server-side on every apply AND on checkout',
       };
     }
 
-    return { success: true, priceInfo };
-  }
-
-  async reset(userId: string, labId: string) {
-    const key = `${userId}-${labId}`;
-    this.appliedCoupons.delete(key);
-    return { success: true, message: 'Coupons reset' };
+    return {
+      success: true,
+      exploited: false,
+      receipt: {
+        orderId,
+        finalTotal: order.total,
+        couponsApplied: order.couponsApplied,
+        status: 'PAID',
+      },
+    };
   }
 }

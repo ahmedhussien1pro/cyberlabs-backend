@@ -1,10 +1,32 @@
-import { Injectable, ForbiddenException } from '@nestjs/common';
+// src/modules/practice-labs/bl-vuln/labs/lab3/lab3.service.ts
+import {
+  Injectable,
+  BadRequestException,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from '../../../../../core/database';
 import { PracticeLabStateService } from '../../../shared/services/practice-lab-state.service';
 
+const WORKFLOW_STEPS = [
+  'submitted',
+  'email-verified',
+  'background-checked',
+  'final-offer',
+];
+
 @Injectable()
 export class Lab3Service {
-  private verificationSteps = new Map<string, Set<string>>(); // labKey -> completed steps
+  // تتبع الطلبات (in-memory)
+  private applications = new Map<
+    string,
+    {
+      userId: string;
+      labId: string;
+      jobTitle: string;
+      currentStep: string;
+      completedSteps: string[];
+    }
+  >();
 
   constructor(
     private prisma: PrismaService,
@@ -12,91 +34,122 @@ export class Lab3Service {
   ) {}
 
   async initLab(userId: string, labId: string) {
-    const key = `${userId}-${labId}`;
-    this.verificationSteps.set(key, new Set());
     return this.stateService.initializeState(userId, labId);
   }
 
-  async verifyStep(userId: string, labId: string, step: string) {
-    const key = `${userId}-${labId}`;
-    const steps = this.verificationSteps.get(key) || new Set();
-    steps.add(step);
-    this.verificationSteps.set(key, steps);
+  async applyForJob(
+    userId: string,
+    labId: string,
+    jobTitle: string,
+    resume: string,
+  ) {
+    if (!jobTitle) throw new BadRequestException('jobTitle is required');
 
-    return {
-      success: true,
-      message: `${step} completed`,
-      completedSteps: Array.from(steps),
-    };
-  }
+    const applicationId = `APP-${Date.now()}-${Math.random().toString(36).substr(2, 5).toUpperCase()}`;
 
-  async getStatus(userId: string, labId: string) {
-    const key = `${userId}-${labId}`;
-    const steps = this.verificationSteps.get(key) || new Set();
-
-    return {
-      completedSteps: Array.from(steps),
-      totalSteps: 3,
-      isFullyVerified: steps.size >= 3,
-    };
-  }
-
-  // ❌ الثغرة: Workflow Bypass - يتحقق بشكل ضعيف
-  async accessPremiumFeature(userId: string, labId: string) {
-    const key = `${userId}-${labId}`;
-    const steps = this.verificationSteps.get(key) || new Set();
-
-    // ❌ الثغرة: التحقق ضعيف - يكفي 2 steps بدل 3
-    // أو يمكن bypass بإرسال step names خاطئة
-    if (steps.size < 2) {
-      throw new ForbiddenException('Complete verification steps first');
-    }
-
-    // تسجيل الوصول
-    await this.prisma.labGenericLog.create({
-      data: {
-        userId,
-        labId,
-        type: 'PREMIUM_ACCESS',
-        meta: { steps: Array.from(steps) },
-      },
+    this.applications.set(applicationId, {
+      userId,
+      labId,
+      jobTitle,
+      currentStep: 'submitted',
+      completedSteps: ['submitted'],
     });
 
     return {
       success: true,
-      premiumData: 'FLAG{WORKFLOW_BYPASS_SUCCESS}',
-      message: 'Premium feature accessed',
-      completedSteps: Array.from(steps),
+      applicationId,
+      jobTitle,
+      currentStep: 'submitted',
+      workflow: WORKFLOW_STEPS,
+      nextStep: 'email-verified',
+      message: 'Application submitted! Next: complete email verification.',
     };
   }
 
-  // ❌ الثغرة: Direct Access - endpoint مكشوف بدون proper checks
-  async directPremiumAccess(userId: string, labId: string, secretKey?: string) {
-    // ❌ الثغرة: secret key مكشوف في الكود أو سهل التخمين
-    if (secretKey === 'bypass-workflow-2024') {
+  // ❌ الثغرة: لا يتحقق من تسلسل الخطوات
+  async advanceStep(
+    userId: string,
+    labId: string,
+    applicationId: string,
+    step: string,
+    data?: any,
+  ) {
+    const application = this.applications.get(applicationId);
+
+    if (!application || application.userId !== userId) {
+      throw new NotFoundException('Application not found');
+    }
+
+    if (!WORKFLOW_STEPS.includes(step)) {
+      throw new BadRequestException(
+        `Invalid step. Valid steps: ${WORKFLOW_STEPS.join(', ')}`,
+      );
+    }
+
+    // ❌ الثغرة: لا يتحقق من أن الخطوات السابقة مكتملة
+    const stepIndex = WORKFLOW_STEPS.indexOf(step);
+    const expectedIndex = WORKFLOW_STEPS.indexOf(application.currentStep) + 1;
+    const isSkipped = stepIndex > expectedIndex;
+
+    application.currentStep = step;
+    if (!application.completedSteps.includes(step)) {
+      application.completedSteps.push(step);
+    }
+
+    // تسجيل
+    await this.prisma.labGenericLog.create({
+      data: {
+        userId,
+        labId,
+        type: isSkipped ? 'EXPLOIT' : 'WORKFLOW',
+        action: `STEP_${step.toUpperCase().replace('-', '_')}`,
+        meta: {
+          applicationId,
+          step,
+          isSkipped,
+          skippedSteps: isSkipped
+            ? WORKFLOW_STEPS.slice(expectedIndex, stepIndex)
+            : [],
+        },
+      },
+    });
+
+    if (step === 'final-offer') {
       return {
         success: true,
-        exploited: true,
-        flag: 'FLAG{WORKFLOW_BYPASS_SUCCESS}',
-        message: 'Workflow completely bypassed using secret key!',
-        premiumData: 'Full access granted',
+        exploited: isSkipped,
+        applicationId,
+        jobTitle: application.jobTitle,
+        completedSteps: application.completedSteps,
+        skippedSteps: isSkipped ? WORKFLOW_STEPS.slice(1, stepIndex) : [],
+        offer: {
+          position: application.jobTitle,
+          salary: '$120,000/year',
+          startDate: '2026-04-01',
+          status: 'ACCEPTED',
+        },
+        ...(isSkipped && {
+          flag: 'FLAG{BL_WORKFLOW_BYPASS_SKIP_VERIFICATION_HIRED}',
+          vulnerability: 'Business Logic — Workflow Step Bypass',
+          impact:
+            'You bypassed email verification and background check to receive a job offer. In reality, this could allow unverified/malicious actors to gain employment.',
+          fix:
+            'Enforce sequential workflow server-side: ' +
+            'const prevStep = WORKFLOW[stepIndex - 1]; ' +
+            'if (!completedSteps.includes(prevStep)) throw new Error("Complete previous step first");',
+        }),
       };
     }
 
-    // Fallback to normal check
-    return this.accessPremiumFeature(userId, labId);
-  }
-
-  // ❌ الثغرة: يمكن تزوير الـ steps
-  async completeAllSteps(userId: string, labId: string, steps: string[]) {
-    const key = `${userId}-${labId}`;
-    // ❌ يقبل أي steps من الـ client بدون validation!
-    this.verificationSteps.set(key, new Set(steps));
-
     return {
       success: true,
-      message: 'All steps marked as completed',
-      completedSteps: steps,
+      applicationId,
+      currentStep: step,
+      completedSteps: application.completedSteps,
+      nextStep: WORKFLOW_STEPS[stepIndex + 1] || null,
+      message: isSkipped
+        ? `⚠️ You skipped steps! Current: ${step}. Try jumping to final-offer.`
+        : `Step "${step}" completed. Next: ${WORKFLOW_STEPS[stepIndex + 1]}`,
     };
   }
 }
