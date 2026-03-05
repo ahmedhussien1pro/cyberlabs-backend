@@ -1,3 +1,4 @@
+// src/modules/enrollments/dto/enrollment-query.dto.ts
 import { IsOptional, IsBoolean, IsInt, Min, Max, IsIn } from 'class-validator';
 import { Type, Transform } from 'class-transformer';
 
@@ -12,7 +13,7 @@ export class EnrollmentQueryDto {
   @Type(() => Number)
   @IsInt()
   @Min(1)
-  @Max(100)
+  @Max(500)
   limit?: number = 10;
 
   @IsOptional()
