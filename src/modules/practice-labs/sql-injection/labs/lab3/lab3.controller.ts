@@ -1,4 +1,3 @@
-// src/modules/practice-labs/sql-injection/labs/lab3/lab3.controller.ts
 import { Controller, Post, Body, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../../../../../common/guards';
 import { GetUser } from '../../../shared/decorators/get-user.decorator';

@@ -8,14 +8,12 @@ export interface LabActionResult {
   uiHint?: string;
 }
 
-/** Builds a consistent lab action response */
 export function buildLabResult(
   opts: { success: boolean } & Partial<Omit<LabActionResult, 'success'>>,
 ): LabActionResult {
   return { exploited: false, message: '', ...opts };
 }
 
-/** Returns true if any row contains a target string in any of the given columns */
 export function rowsContainValue(
   rows: any[],
   columns: string[],
@@ -26,7 +24,6 @@ export function rowsContainValue(
   );
 }
 
-/** Returns true if any row's column matches value exactly (case-insensitive) */
 export function rowsMatchColumn(
   rows: any[],
   column: string,

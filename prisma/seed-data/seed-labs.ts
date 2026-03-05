@@ -1,5 +1,5 @@
 // prisma/seed-data/seed-labs.ts
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Prisma } from '@prisma/client';
 import { LABS_META } from './seed-config';
 
 export async function seedLabs(prisma: PrismaClient) {
@@ -27,15 +27,21 @@ export async function seedLabs(prisma: PrismaClient) {
       flagAnswer: meta.flagAnswer,
       maxAttempts: meta.maxAttempts,
       timeLimit: meta.timeLimit,
-      ...(meta.engineConfig ? { engineConfig: meta.engineConfig } : {}),
-      ...(meta.steps ? { steps: meta.steps } : {}),
+      ...(meta.engineConfig
+        ? { engineConfig: meta.engineConfig as Prisma.InputJsonValue }
+        : {}),
+      ...(meta.steps ? { steps: meta.steps as Prisma.InputJsonValue } : {}),
     };
 
     try {
       await prisma.lab.upsert({
         where: { slug: meta.slug },
         update: shared,
-        create: { ...shared, slug: meta.slug, initialState: {} },
+        create: {
+          ...shared,
+          slug: meta.slug,
+          initialState: {} as Prisma.InputJsonValue,
+        },
       });
       console.log(`  ✅ lab: ${meta.slug}`);
     } catch (e: any) {

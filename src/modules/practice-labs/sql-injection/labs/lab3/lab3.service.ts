@@ -13,15 +13,13 @@ export class Lab3Service {
     return this.stateService.initializeState(userId, labId);
   }
 
-  // ❌ الثغرة: Blind Boolean SQLi in the promo code validator
   async validateCoupon(userId: string, labId: string, coupon: string) {
-    // ❌ الثغرة: raw string interpolation — no parameterization
     const query = `
       SELECT id FROM "LabGenericContent"
-      WHERE "userId" = '${userId}'
-      AND   "labId"  = '${labId}'
-      AND   title    = 'valid_coupon'
-      AND   body     = '${coupon}'
+      WHERE  "userId" = '${userId}'
+      AND    "labId"  = '${labId}'
+      AND    title    = 'valid_coupon'
+      AND    body     = '${coupon}'
     `;
 
     let isValid = false;
@@ -29,11 +27,9 @@ export class Lab3Service {
       const rows = (await this.prisma.$queryRawUnsafe(query)) as any[];
       isValid = rows.length > 0;
     } catch {
-      // SQL errors are silently swallowed — only boolean behavior leaks information
       isValid = false;
     }
 
-    // Pure binary response — no data, no error details, only true/false
     return {
       valid: isValid,
       message: isValid

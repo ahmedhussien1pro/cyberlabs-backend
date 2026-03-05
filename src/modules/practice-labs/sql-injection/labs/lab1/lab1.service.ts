@@ -22,18 +22,16 @@ export class Lab1Service {
     try {
       const query = `
         SELECT * FROM "LabGenericUser"
-        WHERE "userId"   = '${userId}'
-        AND   "labId"    = '${labId}'
-        AND   "username" = '${username}'
-        AND   "password" = '${password}'
+        WHERE  "userId"   = '${userId}'
+        AND    "labId"    = '${labId}'
+        AND    "username" = '${username}'
+        AND    "password" = '${password}'
       `;
 
       const users = await this.prisma.$queryRawUnsafe(query);
       const user = (users as any[])[0];
 
-      if (!user) {
-        throw new UnauthorizedException('Invalid credentials');
-      }
+      if (!user) throw new UnauthorizedException('Invalid credentials');
 
       if (user.role?.toLowerCase() === 'admin') {
         return {

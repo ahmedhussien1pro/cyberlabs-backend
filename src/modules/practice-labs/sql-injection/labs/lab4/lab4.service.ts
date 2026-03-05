@@ -7,7 +7,7 @@ import {
 } from '../../../shared/utils/sqli-lab.utils';
 
 @Injectable()
-export class Lab2Service {
+export class Lab4Service {
   constructor(
     private prisma: PrismaService,
     private stateService: PracticeLabStateService,
@@ -17,13 +17,31 @@ export class Lab2Service {
     return this.stateService.initializeState(userId, labId);
   }
 
-  async searchUsers(userId: string, labId: string, searchTerm: string) {
+  async setDisplayName(userId: string, labId: string, displayName: string) {
+    await this.prisma.labGenericUser.updateMany({
+      where: { userId, labId, username: 'applicant' },
+      data: { email: displayName },
+    });
+    return {
+      success: true,
+      message: 'Display name updated.',
+      stored: displayName,
+    };
+  }
+
+  async generateReport(userId: string, labId: string) {
+    const profile = await this.prisma.labGenericUser.findFirst({
+      where: { userId, labId, username: 'applicant' },
+    });
+
+    const storedDisplayName = profile?.email ?? 'applicant';
+
     const query = `
       SELECT username, email, role
       FROM   "LabGenericUser"
       WHERE  "userId" = '${userId}'
       AND    "labId"  = '${labId}'
-      AND    username ILIKE '%${searchTerm}%'
+      AND    username ILIKE '%${storedDisplayName}%'
     `;
 
     let results: any[] = [];
@@ -44,18 +62,19 @@ export class Lab2Service {
         success: true,
         exploited: true,
         data: results,
-        flag: 'FLAG{SQLI_UNION_DATA_EXTRACTED}',
-        evidence: 'Admin password exposed via UNION injection',
-        message: '🎯 UNION injection successful — admin credentials extracted!',
-        uiHint:
-          'The admin password IS the flag. Submit it to complete the lab.',
+        flag: 'FLAG{SECOND_ORDER_SQLI_FIRED}',
+        evidence:
+          'Admin password leaked via second-order injection in report generator',
+        message:
+          '🎯 Second-order injection fired! The stored payload executed inside the report query.',
+        uiHint: 'The admin password IS the flag. Submit it.',
       });
     }
 
     return buildLabResult({
       success: true,
       data: results,
-      message: `Found ${results.length} user(s)`,
+      message: `Application report generated for "${storedDisplayName}"`,
     });
   }
 }

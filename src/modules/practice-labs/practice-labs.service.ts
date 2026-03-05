@@ -1,3 +1,4 @@
+// src/modules/practice-labs/practice-labs.service.ts
 import {
   Injectable,
   NotFoundException,
@@ -144,8 +145,13 @@ export class PracticeLabsService {
           select: { id: true, order: true, xpCost: true },
           orderBy: { order: 'asc' },
         },
-        course: {
-          select: { id: true, title: true, ar_title: true },
+        // ✅ Lab لا يملك course مباشرة (courseId موجود لكن بدون @relation في schema)
+        // نجيب الـ course عبر junction table courseLabs
+        courseLabs: {
+          take: 1,
+          include: {
+            course: { select: { id: true, title: true, ar_title: true } },
+          },
         },
         ...(userId && {
           usersProgress: {
@@ -179,7 +185,11 @@ export class PracticeLabsService {
 
     if (!lab) throw new NotFoundException('Lab not found');
 
-    return { success: true, lab };
+    // ✅ نحول courseLabs[0]?.course → course للحفاظ على شكل الـ API
+    const { courseLabs, ...labRest } = lab;
+    const course = courseLabs[0]?.course ?? null;
+
+    return { success: true, lab: { ...labRest, course } };
   }
 
   // ─────────────────────────────────────────────
@@ -309,8 +319,6 @@ export class PracticeLabsService {
 
   // ─────────────────────────────────────────────
   // POST /practice-labs/:labId/submit
-  //
-  // ✅ Points & Badges logic:
   // ─────────────────────────────────────────────
   async submitFlag(labId: string, userId: string, flagAnswer: string) {
     const lab = await this.prisma.lab.findUnique({

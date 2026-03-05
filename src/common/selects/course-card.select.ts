@@ -1,3 +1,4 @@
+// src/common/selects/course-card.select.ts
 import { Prisma } from '@prisma/client';
 
 export function courseCardBaseSelect() {
@@ -38,9 +39,11 @@ export function courseCardBaseSelect() {
       select: { id: true, order: true },
       orderBy: { order: Prisma.SortOrder.asc },
     },
+    // ✅ كان: labs: { where: { isPublished: true } }
+    // الـ schema لا يملك Course.labs مباشرة — العلاقة هي Course.courseLabs (junction)
     _count: {
       select: {
-        labs: { where: { isPublished: true } },
+        courseLabs: true,
       },
     },
   } as const;
@@ -75,7 +78,7 @@ export const courseDetailInclude = (userId?: string | null) =>
     },
     _count: {
       select: {
-        labs: { where: { isPublished: true } },
+        courseLabs: true,
       },
     },
     enrollments: {
