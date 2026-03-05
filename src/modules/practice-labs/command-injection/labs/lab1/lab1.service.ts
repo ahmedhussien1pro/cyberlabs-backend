@@ -1,18 +1,26 @@
-import {
-  Injectable,
-  NotFoundException,
-  BadRequestException,
-} from '@nestjs/common';
+// src/modules/practice-labs/command-injection/labs/lab1/lab1.service.ts
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../../../../../core/database';
 import { PracticeLabStateService } from '../../../shared/services/practice-lab-state.service';
-import { exec } from 'child_process';
-import { promisify } from 'util';
-
-const execAsync = promisify(exec);
 
 @Injectable()
 export class Lab1Service {
-  private readonly FLAG = 'FLAG{CMD_1NJ3CT10N_B4S1C_P1NG}';
+  // محاكاة نتائج الأوامر
+  private readonly commandOutputs: Record<string, string> = {
+    whoami: 'www-data',
+    id: 'uid=33(www-data) gid=33(www-data) groups=33(www-data)',
+    hostname: 'netops-server-prod-01',
+    uname: 'Linux netops-server-prod-01 5.15.0-1034-aws',
+    pwd: '/var/www/netops',
+    'ls /':
+      'bin\nboot\netc\nhome\nlib\nopt\nproc\nroot\nrun\nsrv\ntmp\nusr\nvar',
+    'ls /etc': 'flag.txt\nhosts\npasswd\nshadow\nnetworks\nresolv.conf',
+    'cat /etc/flag.txt': 'FLAG{CMDI_BASIC_PING_SHELL_OPERATOR_INJECTION}',
+    'cat /etc/passwd':
+      'root:x:0:0:root:/root:/bin/bash\nwww-data:x:33:33:www-data:/var/www:/usr/sbin/nologin',
+    ifconfig: 'eth0: inet 172.31.45.12  netmask 255.255.255.0',
+    env: 'PATH=/usr/local/sbin:/usr/local/bin\nHOME=/var/www\nDB_PASS=prod_db_s3cr3t!\nAPI_KEY=sk_prod_netops_xyz',
+  };
 
   constructor(
     private prisma: PrismaService,
@@ -23,158 +31,98 @@ export class Lab1Service {
     return this.stateService.initializeState(userId, labId);
   }
 
-  async getState(userId: string, labId: string) {
-    const instance = await this.prisma.labInstance.findUnique({
-      where: {
-        userId_labId: { userId, labId },
+  async getInfo(userId: string, labId: string) {
+    return {
+      success: true,
+      tool: 'NetOps Network Diagnostic Tool v2.1',
+      features: ['ping', 'traceroute', 'nslookup'],
+      usage: 'POST /network/ping with { "host": "hostname_or_ip" }',
+      note: 'Enter a hostname or IP address to ping.',
+    };
+  }
+
+  // ❌ الثغرة: يحاكي shell command injection
+  async ping(userId: string, labId: string, host: string) {
+    if (!host) throw new BadRequestException('host is required');
+
+    // محاكاة تنفيذ: ping -c 1 <host>
+    const pingOutput = this.simulatePing(host);
+    const injectedOutput = this.simulateInjection(host);
+
+    const isInjected = this.detectInjection(host);
+
+    await this.prisma.labGenericLog.create({
+      data: {
+        userId,
+        labId,
+        type: 'CMDI',
+        action: 'PING',
+        meta: {
+          host,
+          isInjected,
+          injectedCommands: this.extractInjectedCommands(host),
+        },
       },
     });
 
-    if (!instance) {
-      throw new NotFoundException(
-        'Lab instance not found. Please start the lab first.',
-      );
+    if (isInjected && injectedOutput) {
+      const hasFlag = injectedOutput.includes('FLAG{');
+
+      return {
+        success: true,
+        exploited: hasFlag,
+        command: `ping -c 1 ${host}`,
+        output: pingOutput + '\n' + injectedOutput,
+        ...(hasFlag && {
+          flag: 'FLAG{CMDI_BASIC_PING_SHELL_OPERATOR_INJECTION}',
+          vulnerability:
+            'OS Command Injection — Unsanitized Input in Shell Command',
+          impact:
+            'Full server command execution. Attacker can read files, environment variables, pivot to internal network.',
+          fix: [
+            'Never pass user input directly to shell commands',
+            'Use language-native libraries: use net.ping() instead of exec("ping...")',
+            'If shell is necessary, whitelist valid inputs (IP regex only)',
+            'Use execFile() with argument array instead of exec() with string',
+          ],
+        }),
+        injectedCommands: this.extractInjectedCommands(host),
+      };
     }
 
     return {
       success: true,
-      state: instance.state,
-      isActive: instance.isActive,
-      startedAt: instance.startedAt,
+      exploited: false,
+      command: `ping -c 1 ${host}`,
+      output: pingOutput,
     };
   }
 
-  async executePing(userId: string, labId: string, ip: string) {
-    if (!ip) {
-      throw new BadRequestException('IP address is required');
-    }
+  private simulatePing(host: string): string {
+    const cleanHost = host.split(/[;&|`$]/, 1)[0].trim();
+    return `PING ${cleanHost} (${cleanHost}): 56 data bytes\n64 bytes from ${cleanHost}: icmp_seq=0 ttl=64 time=0.045 ms\n--- ${cleanHost} ping statistics ---\n1 packets transmitted, 1 received, 0% packet loss`;
+  }
 
-    const instance = await this.prisma.labInstance.findUnique({
-      where: {
-        userId_labId: { userId, labId },
-      },
-    });
+  private simulateInjection(host: string): string {
+    const injected = this.extractInjectedCommands(host);
+    return injected
+      .map(
+        (cmd) =>
+          this.commandOutputs[cmd.trim()] ||
+          `sh: ${cmd.trim()}: simulated output`,
+      )
+      .join('\n');
+  }
 
-    if (!instance) {
-      throw new NotFoundException(
-        'Lab instance not found. Please start the lab first.',
-      );
-    }
+  private detectInjection(host: string): boolean {
+    return /[;&|`$]/.test(host);
+  }
 
-    const progress = await this.prisma.userLabProgress.findUnique({
-      where: {
-        userId_labId: { userId, labId },
-      },
-    });
-
-    // ✅ Fix: Check if progress exists
-    if (!progress) {
-      throw new NotFoundException(
-        'Lab progress not found. Please start the lab first.',
-      );
-    }
-
-    try {
-      const command = `ping -c 4 ${ip}`;
-
-      const startTime = Date.now();
-      const { stdout, stderr } = await execAsync(command, {
-        timeout: 10000,
-        maxBuffer: 1024 * 1024,
-        shell: '/bin/bash',
-      });
-      const executionTime = Date.now() - startTime;
-
-      const output = stdout || stderr;
-      const flagPattern = new RegExp(this.FLAG);
-      const flagFound = flagPattern.test(output);
-
-      await this.prisma.userLabProgress.update({
-        where: { id: progress.id },
-        data: {
-          attempts: { increment: 1 },
-          lastAccess: new Date(),
-        },
-      });
-
-      if (flagFound) {
-        await this.prisma.userLabProgress.update({
-          where: { id: progress.id },
-          data: {
-            flagSubmitted: true,
-            completedAt: new Date(),
-            progress: 100,
-          },
-        });
-
-        await this.prisma.labSubmission.create({
-          data: {
-            userId,
-            labId,
-            flagAnswer: this.FLAG,
-            isCorrect: true,
-            attemptNumber: progress.attempts + 1,
-            timeTaken: Math.floor(executionTime / 1000),
-            code: ip,
-          },
-        });
-
-        return {
-          success: true,
-          output,
-          exploited: true,
-          flag: this.FLAG,
-          message: '🎉 Command injection successful! Flag captured!',
-          executionTime: `${executionTime}ms`,
-          hint: 'You successfully exploited OS command injection vulnerability!',
-        };
-      }
-
-      return {
-        success: true,
-        output,
-        exploited: false,
-        executionTime: `${executionTime}ms`,
-        message: 'Ping executed. Keep trying to inject commands!',
-      };
-    } catch (error) {
-      await this.prisma.userLabProgress.update({
-        where: { id: progress.id },
-        data: {
-          attempts: { increment: 1 },
-          lastAccess: new Date(),
-        },
-      });
-
-      const errorOutput = error.stdout || error.stderr || error.message;
-      const flagPattern = new RegExp(this.FLAG);
-      const flagFound = flagPattern.test(errorOutput);
-
-      if (flagFound) {
-        await this.prisma.userLabProgress.update({
-          where: { id: progress.id },
-          data: {
-            flagSubmitted: true,
-            completedAt: new Date(),
-            progress: 100,
-          },
-        });
-
-        return {
-          success: true,
-          output: errorOutput,
-          exploited: true,
-          flag: this.FLAG,
-          message: '🎉 Command injection successful via error output!',
-        };
-      }
-
-      return {
-        success: false,
-        output: errorOutput,
-        exploited: false,
-        message: 'Command execution failed. Check your syntax.',
-      };
-    }
+  private extractInjectedCommands(host: string): string[] {
+    const parts = host.split(/[;&|`]/);
+    return parts
+      .slice(1)
+      .map((c) => c.trim())
+      .filter(Boolean);
   }
 }

@@ -28,6 +28,7 @@ const LAB_CATEGORIES: string[] = [
   'idor',
   'csrf',
   'broken-auth',
+  'command-injection',
 ];
 async function seedModuleLabs() {
   if (MODULE_LABS.length === 0) return;
