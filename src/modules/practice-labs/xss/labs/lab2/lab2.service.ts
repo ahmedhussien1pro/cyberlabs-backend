@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../../../../../core/database';
 import { PracticeLabStateService } from '../../../shared/services/practice-lab-state.service';
 
@@ -10,52 +10,143 @@ export class Lab2Service {
   ) {}
 
   async initLab(userId: string, labId: string) {
-    return this.stateService.initializeState(userId, labId);
+    await this.stateService.initializeState(userId, labId);
+
+    // نزرع reviews شرعية مبدئية
+    await this.prisma.labGenericLog.createMany({
+      data: [
+        {
+          userId,
+          labId,
+          type: 'REVIEW',
+          action: 'SUBMIT',
+          meta: {
+            productId: 'techmart-dock-07',
+            author: 'verified_buyer_99',
+            content: 'Excellent build quality! Works perfectly with my MacBook Pro.',
+            rating: 5,
+            status: 'pending',
+          },
+        },
+        {
+          userId,
+          labId,
+          type: 'REVIEW',
+          action: 'SUBMIT',
+          meta: {
+            productId: 'techmart-dock-07',
+            author: 'alice_buyer',
+            content: 'Fast shipping. The product matches the description.',
+            rating: 4,
+            status: 'pending',
+          },
+        },
+      ],
+    });
+
+    return { status: 'success', message: 'Lab environment initialized' };
   }
 
-  // ❌ الثغرة: Stored XSS - تخزين user input بدون sanitization
-  async addComment(
+  // ✅ التخزين يبدو آمنًا — لكن content مخزّن raw بدون sanitization
+  async submitReview(
     userId: string,
     labId: string,
-    postId: string,
-    comment: string,
+    content: string,
+    rating: number,
   ) {
-    const newContent = await this.prisma.labGenericContent.create({
+    if (!content) throw new BadRequestException('Review content is required');
+
+    await this.prisma.labGenericLog.create({
       data: {
         userId,
         labId,
-        title: 'Comment',
-        body: comment, // ❌ الثغرة: تخزين مباشر بدون تنظيف
-        author: 'user',
-        isPublic: true,
+        type: 'REVIEW',
+        action: 'SUBMIT',
+        meta: {
+          productId: 'techmart-dock-07',
+          author: 'current_user',
+          content, // ❌ مخزّن raw بدون تعقيم
+          rating: rating ?? 1,
+          status: 'pending',
+        },
       },
     });
 
-    // التحقق من XSS
-    if (
-      comment.toLowerCase().includes('<script') ||
-      comment.toLowerCase().includes('onerror') ||
-      comment.toLowerCase().includes('javascript:')
-    ) {
+    return {
+      success: true,
+      message:
+        'Review submitted successfully. Pending admin moderation. ' +
+        'Click "Simulate Admin Moderation" to see the impact.',
+    };
+  }
+
+  async getReviews(userId: string, labId: string) {
+    const reviews = await this.prisma.labGenericLog.findMany({
+      where: { userId, labId, type: 'REVIEW' },
+      orderBy: { createdAt: 'desc' },
+    });
+
+    return {
+      success: true,
+      // ❌ content يُرجَع raw — الـ frontend يعرضه بـ dangerouslySetInnerHTML
+      reviews: reviews.map((r) => ({
+        id: r.id,
+        ...(r.meta as any),
+        createdAt: r.createdAt,
+      })),
+    };
+  }
+
+  // ❌ الثغرة: Admin يعرض review.content بـ innerHTML في لوحة التحكم
+  async adminModerate(userId: string, labId: string) {
+    const reviews = await this.prisma.labGenericLog.findMany({
+      where: { userId, labId, type: 'REVIEW' },
+    });
+
+    const maliciousReview = reviews.find((r) => {
+      const meta = r.meta as any;
+      return meta?.content && this.isXSSPayload(meta.content);
+    });
+
+    if (maliciousReview) {
+      const meta = maliciousReview.meta as any;
       return {
         success: true,
-        comment: newContent,
         exploited: true,
-        flag: 'FLAG{STORED_XSS_PERSISTENT_ATTACK}',
-        message:
-          'Malicious payload stored! Will execute for all users viewing this page.',
+        adminAction: 'Admin opened the Review Moderation Dashboard',
+        maliciousContent: meta.content,
+        simulation:
+          'The stored payload executed inside the admin browser context. ' +
+          'The admin session cookie has been captured.',
+        adminSessionToken: 'FLAG{XSS_STORED_ADMIN_SESSION_HIJACKED_772}',
+        flag: 'FLAG{XSS_STORED_ADMIN_SESSION_HIJACKED_772}',
+        fix:
+          'Sanitize all user-generated content before inserting into innerHTML. ' +
+          'Use DOMPurify or a server-side sanitizer like sanitize-html.',
+        reviews: reviews.map((r) => ({ id: r.id, ...(r.meta as any) })),
       };
     }
 
-    return { success: true, comment: newContent };
+    return {
+      success: true,
+      exploited: false,
+      adminAction: 'Admin opened Moderation Dashboard — no XSS payload detected.',
+      hint: 'Submit a review containing an XSS payload first, then trigger admin moderation.',
+      reviews: reviews.map((r) => ({ id: r.id, ...(r.meta as any) })),
+    };
   }
 
-  // عرض التعليقات (بدون encoding!)
-  async getComments(userId: string, labId: string) {
-    const comments = await this.prisma.labGenericContent.findMany({
-      where: { userId, labId, title: 'Comment' },
-    });
-
-    return { comments };
+  private isXSSPayload(input: string): boolean {
+    const patterns = [
+      /<script[\s>]/i,
+      /<\/script>/i,
+      /on\w+\s*=/i,
+      /javascript:/i,
+      /<img[^>]*>/i,
+      /<svg[\s>]/i,
+      /<iframe[\s>]/i,
+      /<details[\s>]/i,
+    ];
+    return patterns.some((p) => p.test(input));
   }
 }
