@@ -1,12 +1,5 @@
-import {
-  Controller,
-  Post,
-  Get,
-  Patch,
-  Body,
-  Param,
-  UseGuards,
-} from '@nestjs/common';
+// src/modules/practice-labs/idor/labs/lab3/lab3.controller.ts
+import { Controller, Post, Body, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../../../../../common/guards';
 import { GetUser } from '../../../shared/decorators/get-user.decorator';
 import { Lab3Service } from './lab3.service';
@@ -17,26 +10,48 @@ export class Lab3Controller {
   constructor(private lab3Service: Lab3Service) {}
 
   @Post('start')
-  async startLab(@GetUser('id') userId: string, @Body('labId') labId: string) {
+  start(@GetUser('id') userId: string, @Body('labId') labId: string) {
     return this.lab3Service.initLab(userId, labId);
   }
 
-  @Get('profile/:username')
-  async getProfile(
-    @GetUser('id') userId: string,
-    @Body('labId') labId: string,
-    @Param('username') username: string,
-  ) {
-    return this.lab3Service.getProfile(userId, labId, username);
+  // يصدر reset token للمستخدم الحالي
+  @Post('auth/request-reset')
+  requestReset(@GetUser('id') userId: string, @Body('labId') labId: string) {
+    return this.lab3Service.requestReset(userId, labId);
   }
 
-  @Patch('profile/:username')
-  async updateProfile(
+  // للحصول على الـ token (مساعدة تعليمية)
+  @Post('auth/get-token')
+  getToken(@GetUser('id') userId: string, @Body('labId') labId: string) {
+    return this.lab3Service.getToken(userId, labId);
+  }
+
+  // ❌ الثغرة: يقبل userId من request body
+  @Post('auth/reset-password')
+  resetPassword(
     @GetUser('id') userId: string,
     @Body('labId') labId: string,
-    @Param('username') username: string,
-    @Body('bio') bio: string,
+    @Body('token') token: string,
+    @Body('targetUserId') targetUserId: string,
+    @Body('newPassword') newPassword: string,
   ) {
-    return this.lab3Service.updateProfile(userId, labId, username, bio);
+    return this.lab3Service.resetPassword(
+      userId,
+      labId,
+      token,
+      targetUserId,
+      newPassword,
+    );
+  }
+
+  // تسجيل الدخول بعد إعادة التعيين
+  @Post('auth/login')
+  login(
+    @GetUser('id') userId: string,
+    @Body('labId') labId: string,
+    @Body('username') username: string,
+    @Body('password') password: string,
+  ) {
+    return this.lab3Service.login(userId, labId, username, password);
   }
 }

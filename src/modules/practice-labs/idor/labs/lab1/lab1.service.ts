@@ -1,3 +1,4 @@
+// src/modules/practice-labs/idor/labs/lab1/lab1.service.ts
 import {
   Injectable,
   BadRequestException,
@@ -5,105 +6,84 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from '../../../../../core/database';
 import { PracticeLabStateService } from '../../../shared/services/practice-lab-state.service';
-import { LabValidationService } from '../../../shared/services/lab-validation.service';
-import { Lab1Config } from './lab1.config';
 
 @Injectable()
 export class Lab1Service {
   constructor(
     private prisma: PrismaService,
     private stateService: PracticeLabStateService,
-    private validationService: LabValidationService,
   ) {}
 
   async initLab(userId: string, labId: string) {
     return this.stateService.initializeState(userId, labId);
   }
 
-  // جلب جميع الحسابات
-  async getAllAccounts(userId: string, labId: string) {
-    return this.prisma.labGenericBank.findMany({
-      where: { userId, labId },
-      select: {
-        id: true,
-        accountNo: true, // ✅ الاسم الصحيح
-        balance: true,
-      },
+  async getMyOrders(userId: string, labId: string) {
+    // يعرض فقط ORD-1001 للمستخدم الحالي
+    const myOrder = await this.prisma.labGenericContent.findFirst({
+      where: { userId, labId, title: 'ORD-1001' },
     });
+
+    return {
+      success: true,
+      orders: myOrder
+        ? [{ orderId: myOrder.title, ...JSON.parse(myOrder.body) }]
+        : [],
+      note: 'This is your only order. Use /orders/track to get full tracking details.',
+    };
   }
 
-  // قراءة تفاصيل حساب معين (IDOR!)
-  async getAccountDetails(userId: string, labId: string, accountNo: string) {
-    const account = await this.prisma.labGenericBank.findFirst({
-      where: { userId, labId, accountNo }, // ✅ الاسم الصحيح
+  // ❌ الثغرة: يجلب أي order بدون التحقق من ownership
+  async trackOrder(userId: string, labId: string, orderId: string) {
+    if (!orderId) throw new BadRequestException('orderId is required');
+
+    const order = await this.prisma.labGenericContent.findFirst({
+      where: { userId, labId, title: orderId },
     });
 
-    if (!account) throw new NotFoundException('Account not found');
-    return account;
-  }
-
-  // تحويل الأموال (IDOR!)
-  async transferMoney(
-    userId: string,
-    labId: string,
-    fromAccount: string,
-    toAccount: string,
-    amount: number,
-  ) {
-    const source = await this.prisma.labGenericBank.findFirst({
-      where: { userId, labId, accountNo: fromAccount }, // ✅ الاسم الصحيح
-    });
-
-    const destination = await this.prisma.labGenericBank.findFirst({
-      where: { userId, labId, accountNo: toAccount }, // ✅ الاسم الصحيح
-    });
-
-    if (!source || !destination) {
-      throw new BadRequestException('Invalid accounts');
-    }
-
-    if (source.balance < amount) {
-      throw new BadRequestException('Insufficient balance');
-    }
-
-    // تنفيذ التحويل
-    await this.prisma.$transaction([
-      this.prisma.labGenericBank.update({
-        where: { id: source.id },
-        data: { balance: { decrement: amount } },
-      }),
-      this.prisma.labGenericBank.update({
-        where: { id: destination.id },
-        data: { balance: { increment: amount } },
-      }),
-      // تسجيل العملية (بدون metadata لأنه مش موجود في Schema)
-      this.prisma.labGenericLog.create({
-        data: {
-          userId,
-          labId,
-          type: 'PAYMENT',
-          // ✅ نحذف metadata لو مش موجود في Schema
-        },
-      }),
-    ]);
-
-    // التحقق من الهدف - نفترض إن attacker account هو اللي balance بتاعه زاد
-    const allAccounts = await this.prisma.labGenericBank.findMany({
-      where: { userId, labId },
-      orderBy: { balance: 'desc' },
-    });
-
-    const highestBalance = allAccounts[0]?.balance || 0;
-
-    if (highestBalance >= 1000) {
+    if (!order) {
       return {
-        success: true,
-        message: 'Transfer completed',
-        flag: 'FLAG{IDOR_BANKING_EXPLOITED_2026}',
-        exploited: true,
+        success: false,
+        error: 'Order not found',
+        hint: 'Try other order IDs. Format: ORD-XXXX',
       };
     }
 
-    return { success: true, message: 'Transfer completed', exploited: false };
+    let orderData: any = {};
+    try {
+      orderData = JSON.parse(order.body);
+    } catch {
+      orderData = { raw: order.body };
+    }
+
+    const isOwn = orderId === 'ORD-1001';
+    const isVIP = order.author === 'vip_shipment';
+
+    if (isVIP) {
+      return {
+        success: true,
+        exploited: true,
+        orderId,
+        shipment: orderData,
+        flag:
+          orderData.flag ||
+          'FLAG{IDOR_ORDER_TRACKING_SEQUENTIAL_ID_ENUMERATION}',
+        vulnerability:
+          'IDOR — Insecure Direct Object Reference (Sequential ID)',
+        impact:
+          'You accessed a TOP SECRET government shipment. In reality, this could expose classified cargo, recipient identities, and logistics of sensitive operations.',
+        fix: 'Add ownership check: WHERE id = orderId AND userId = authenticatedUserId',
+      };
+    }
+
+    return {
+      success: true,
+      exploited: !isOwn,
+      orderId,
+      shipment: orderData,
+      note: isOwn
+        ? 'This is your own order.'
+        : `⚠️ This order belongs to "${orderData.owner}", not you! Keep enumerating to find the VIP shipment.`,
+    };
   }
 }

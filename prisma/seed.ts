@@ -6,7 +6,7 @@ import { seedSubscriptionPlans } from './seed-data/subscription-plans';
 import { seedLabs } from './seed-data/seed-labs';
 import { seedCourses } from './seed-data/course-data/seed-courses';
 import { seedPaths } from './seed-data/seed-paths';
-
+import { seedCategoryLabs } from './seed-data/seed-category-labs';
 // ── Labs من الـ modules (موجودة حالياً) ─────────────────────────
 import { lab1Metadata } from '../src/modules/practice-labs/sql-injection/labs/lab1/lab1.metadata';
 
@@ -19,7 +19,14 @@ const MODULE_LABS = [
   lab1Metadata,
   // lab2Metadata,  ← أضف هنا
 ];
-
+const LAB_CATEGORIES: string[] = [
+  'sql-injection',
+  'ac-vuln',
+  'business-logic',
+  'jwt',
+  'xss',
+  'idor',
+];
 async function seedModuleLabs() {
   if (MODULE_LABS.length === 0) return;
   console.log('\n🧪 Seeding module labs...');
@@ -82,13 +89,16 @@ async function main() {
     // await seedLabs(prisma);
 
     // ③ Labs من ملفات الـ modules (lab1.metadata، إلخ)
-    await seedModuleLabs();
+    // await seedModuleLabs();
 
     // ④ Courses — بعد اللابات عشان تربطها
-    await seedCourses(prisma);
+    // await seedCourses(prisma);
 
     // ⑤ Learning Paths — الأخيرة عشان تلاقي كورسات ولابات في الـ DB
-    await seedPaths(prisma);
+    // await seedPaths(prisma);
+    for (const category of LAB_CATEGORIES) {
+      await seedCategoryLabs(prisma, category);
+    }
 
     console.log('\n' + '═'.repeat(50));
     console.log('🎉 All seeds completed successfully!');
