@@ -1,4 +1,5 @@
-import { Controller, Post, Get, Body, Query, UseGuards } from '@nestjs/common';
+// src/modules/practice-labs/broken-auth/labs/lab2/lab2.controller.ts
+import { Controller, Post, Body, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../../../../../common/guards';
 import { GetUser } from '../../../shared/decorators/get-user.decorator';
 import { Lab2Service } from './lab2.service';
@@ -9,53 +10,47 @@ export class Lab2Controller {
   constructor(private lab2Service: Lab2Service) {}
 
   @Post('start')
-  async startLab(@GetUser('id') userId: string, @Body('labId') labId: string) {
+  start(@GetUser('id') userId: string, @Body('labId') labId: string) {
     return this.lab2Service.initLab(userId, labId);
   }
 
-  @Post('login')
-  async login(
+  @Post('auth/login')
+  login(
     @GetUser('id') userId: string,
     @Body('labId') labId: string,
-    @Body('username') username: string,
+    @Body('email') email: string,
     @Body('password') password: string,
-    @Body('sessionId') sessionId?: string,
   ) {
-    return this.lab2Service.login(userId, labId, username, password, sessionId);
+    return this.lab2Service.login(userId, labId, email, password);
   }
 
-  @Get('session')
-  async getSession(
-    @GetUser('id') userId: string,
-    @Query('labId') labId: string,
-    @Query('sessionId') sessionId: string,
-  ) {
-    return this.lab2Service.getSession(userId, labId, sessionId);
-  }
-
-  @Get('protected-data')
-  async accessProtectedData(
-    @GetUser('id') userId: string,
-    @Query('labId') labId: string,
-    @Query('sessionId') sessionId: string,
-  ) {
-    return this.lab2Service.accessProtectedData(userId, labId, sessionId);
-  }
-
-  @Get('sessions')
-  async listSessions(
-    @GetUser('id') userId: string,
-    @Query('labId') labId: string,
-  ) {
-    return this.lab2Service.listSessions(userId, labId);
-  }
-
-  @Post('logout')
-  async logout(
+  // يعيد الـ remember-me token الخاص بك
+  @Post('auth/get-remember-token')
+  getRememberToken(
     @GetUser('id') userId: string,
     @Body('labId') labId: string,
-    @Body('sessionId') sessionId: string,
   ) {
-    return this.lab2Service.logout(userId, labId, sessionId);
+    return this.lab2Service.getRememberToken(userId, labId);
+  }
+
+  // يساعد في فهم الخوارزمية
+  @Post('auth/forge-token')
+  forgeToken(
+    @GetUser('id') userId: string,
+    @Body('labId') labId: string,
+    @Body('email') email: string,
+    @Body('role') role: string,
+  ) {
+    return this.lab2Service.forgeToken(userId, labId, email, role);
+  }
+
+  // ❌ الثغرة: يقبل remember-me token بدون DB validation
+  @Post('auth/remember-login')
+  rememberLogin(
+    @GetUser('id') userId: string,
+    @Body('labId') labId: string,
+    @Body('rememberToken') rememberToken: string,
+  ) {
+    return this.lab2Service.rememberLogin(userId, labId, rememberToken);
   }
 }

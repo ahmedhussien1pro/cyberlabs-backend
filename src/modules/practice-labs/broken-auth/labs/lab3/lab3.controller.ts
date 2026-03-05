@@ -1,4 +1,5 @@
-import { Controller, Post, Get, Body, Query, UseGuards } from '@nestjs/common';
+// src/modules/practice-labs/broken-auth/labs/lab3/lab3.controller.ts
+import { Controller, Post, Body, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../../../../../common/guards';
 import { GetUser } from '../../../shared/decorators/get-user.decorator';
 import { Lab3Service } from './lab3.service';
@@ -9,49 +10,47 @@ export class Lab3Controller {
   constructor(private lab3Service: Lab3Service) {}
 
   @Post('start')
-  async startLab(@GetUser('id') userId: string, @Body('labId') labId: string) {
+  start(@GetUser('id') userId: string, @Body('labId') labId: string) {
     return this.lab3Service.initLab(userId, labId);
   }
 
-  @Post('login')
-  async login(
+  // يولّد reset link بـ token في الـ URL
+  @Post('auth/request-reset')
+  requestReset(
     @GetUser('id') userId: string,
     @Body('labId') labId: string,
-    @Body('username') username: string,
-    @Body('password') password: string,
+    @Body('email') email: string,
   ) {
-    return this.lab3Service.login(userId, labId, username, password);
+    return this.lab3Service.requestReset(userId, labId, email);
   }
 
-  @Post('verify-token')
-  async verifyToken(
+  // محاكاة زيارة صفحة الـ reset — يتسرب الـ token للـ analytics
+  @Post('auth/simulate-page-visit')
+  simulatePageVisit(
+    @GetUser('id') userId: string,
+    @Body('labId') labId: string,
+    @Body('resetUrl') resetUrl: string,
+  ) {
+    return this.lab3Service.simulatePageVisit(userId, labId, resetUrl);
+  }
+
+  // Analytics server logs (يحتوي على الـ Referer المسرّب)
+  @Post('analytics/logs')
+  getAnalyticsLogs(
+    @GetUser('id') userId: string,
+    @Body('labId') labId: string,
+  ) {
+    return this.lab3Service.getAnalyticsLogs(userId, labId);
+  }
+
+  // ❌ يقبل الـ token من URL بدون أي context check
+  @Post('auth/do-reset')
+  doReset(
     @GetUser('id') userId: string,
     @Body('labId') labId: string,
     @Body('token') token: string,
+    @Body('newPassword') newPassword: string,
   ) {
-    return this.lab3Service.verifyToken(userId, labId, token);
-  }
-
-  @Post('admin-panel')
-  async accessAdminPanel(
-    @GetUser('id') userId: string,
-    @Body('labId') labId: string,
-    @Body('token') token: string,
-  ) {
-    return this.lab3Service.accessAdminPanel(userId, labId, token);
-  }
-
-  @Post('verify-unsafe')
-  async verifyTokenUnsafe(
-    @GetUser('id') userId: string,
-    @Body('labId') labId: string,
-    @Body('token') token: string,
-  ) {
-    return this.lab3Service.verifyTokenUnsafe(userId, labId, token);
-  }
-
-  @Get('hint')
-  async getHint(@GetUser('id') userId: string, @Query('labId') labId: string) {
-    return this.lab3Service.getHint(userId, labId);
+    return this.lab3Service.doReset(userId, labId, token, newPassword);
   }
 }
