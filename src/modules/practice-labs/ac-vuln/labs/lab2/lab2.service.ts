@@ -1,8 +1,5 @@
-import {
-  Injectable,
-  NotFoundException,
-  ForbiddenException,
-} from '@nestjs/common';
+// src/modules/practice-labs/ac-vuln/labs/lab2/lab2.service.ts
+import { Injectable, ForbiddenException } from '@nestjs/common';
 import { PrismaService } from '../../../../../core/database';
 import { PracticeLabStateService } from '../../../shared/services/practice-lab-state.service';
 
@@ -17,72 +14,85 @@ export class Lab2Service {
     return this.stateService.initializeState(userId, labId);
   }
 
-  async login(
-    userId: string,
-    labId: string,
-    username: string,
-    password: string,
-  ) {
-    const user = await this.prisma.labGenericUser.findFirst({
-      where: { userId, labId, username, password },
-    });
+  // ❌ الثغرة: يقرأ userRole من HTTP header بدلاً من JWT token
+  async getAdminUsers(userId: string, labId: string, userRole?: string) {
+    const effectiveRole = userRole || 'customer';
 
-    if (!user) throw new NotFoundException('Invalid credentials');
-
-    return { success: true, username: user.username, role: user.role };
-  }
-
-  // ❌ الثغرة: Vertical Privilege Escalation - يقبل role من الـ request!
-  async updateProfile(
-    userId: string,
-    labId: string,
-    username: string,
-    newEmail?: string,
-    newRole?: string, // ❌ الثغرة: يسمح بتحديث الـ role!
-  ) {
-    const user = await this.prisma.labGenericUser.findFirst({
-      where: { userId, labId, username },
-    });
-
-    if (!user) throw new NotFoundException('User not found');
-
-    const updateData: any = {};
-    if (newEmail) updateData.email = newEmail;
-    if (newRole) updateData.role = newRole; // ❌ خطر: تحديث مباشر للـ role
-
-    const updated = await this.prisma.labGenericUser.update({
-      where: { id: user.id },
-      data: updateData,
-    });
-
-    return { success: true, user: updated };
-  }
-
-  // Admin panel - يتحقق من الـ role بس بدون session proper
-  async accessAdminPanel(userId: string, labId: string, username: string) {
-    const user = await this.prisma.labGenericUser.findFirst({
-      where: { userId, labId, username },
-    });
-
-    if (!user) throw new NotFoundException('User not found');
-
-    // التحقق من الصلاحية
-    if (user.role !== 'ADMIN') {
-      throw new ForbiddenException('Admin access required');
+    // ❌ الثغرة: الاعتماد على client-supplied header بدلاً من التحقق من الـ JWT
+    if (effectiveRole !== 'admin') {
+      throw new ForbiddenException({
+        error: 'Access denied',
+        message: 'Admin role required to access this endpoint',
+        yourRole: effectiveRole,
+        hint: 'How does the server know your role? Check the request headers.',
+      });
     }
 
-    // التحقق من الاستغلال
-    if (username === 'user') {
-      // لو المستخدم العادي وصل هنا
+    // إذا وصل هنا، معناها effectiveRole === 'admin'
+    const allUsers = await this.prisma.labGenericUser.findMany({
+      where: { userId, labId },
+      select: {
+        id: true,
+        username: true,
+        role: true,
+        email: true,
+      },
+    });
+
+    const allOrders = await this.prisma.labGenericContent.findMany({
+      where: { userId, labId },
+    });
+
+    // تحقق من أن المستخدم حقق الثغرة (وصل للـ admin panel باستخدام header مزيّف)
+    const isExploited = userRole === 'admin';
+
+    if (isExploited) {
       return {
         success: true,
-        flag: 'FLAG{VERTICAL_PRIVILEGE_ESCALATION}',
         exploited: true,
-        message: 'Vertical privilege escalation successful!',
-        adminData: 'Sensitive admin information',
+        users: allUsers,
+        orders: allOrders.map((o) => ({
+          orderId: o.title,
+          details: o.body,
+          customer: o.author,
+        })),
+        adminSecret:
+          'Admin dashboard unlocked via X-User-Role header injection',
+        flag: 'FLAG{VERTICAL_PRIVESC_ROLE_HEADER_BYPASS_X42}',
+        vulnerability: 'Vertical Privilege Escalation via Header Injection',
+        impact:
+          'You gained admin access by manipulating the X-User-Role header. ' +
+          'This allowed you to view all user accounts and orders.',
+        fix:
+          'Never trust client-supplied role information. ' +
+          'Always derive the user role from the authenticated JWT token payload: ' +
+          'const userRole = req.user.role (from verified JWT).',
       };
     }
 
-    return { success: true, adminData: 'Sensitive admin information' };
+    return {
+      success: true,
+      exploited: false,
+      users: allUsers,
+      orders: allOrders.map((o) => ({ orderId: o.title, customer: o.author })),
+    };
+  }
+
+  async getMyOrders(userId: string, labId: string) {
+    const orders = await this.prisma.labGenericContent.findMany({
+      where: {
+        userId,
+        labId,
+        author: 'customer_john', // الفرضية: المستخدم الحالي هو customer_john
+      },
+    });
+
+    return {
+      success: true,
+      orders: orders.map((o) => ({
+        orderId: o.title,
+        details: o.body,
+      })),
+    };
   }
 }

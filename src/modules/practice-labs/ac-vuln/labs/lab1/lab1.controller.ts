@@ -1,4 +1,5 @@
-import { Controller, Post, Get, Body, Query, UseGuards } from '@nestjs/common';
+// src/modules/practice-labs/ac-vuln/labs/lab1/lab1.controller.ts
+import { Controller, Post, Body, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../../../../../common/guards';
 import { GetUser } from '../../../shared/decorators/get-user.decorator';
 import { Lab1Service } from './lab1.service';
@@ -13,22 +14,13 @@ export class Lab1Controller {
     return this.lab1Service.initLab(userId, labId);
   }
 
-  @Post('login')
-  async login(
+  // ❌ الثغرة: patientId يأتي من المستخدم بدون التحقق من ownership
+  @Post('records')
+  async getRecord(
     @GetUser('id') userId: string,
     @Body('labId') labId: string,
-    @Body('username') username: string,
-    @Body('password') password: string,
+    @Body('patientId') patientId: string,
   ) {
-    return this.lab1Service.login(userId, labId, username, password);
-  }
-
-  @Get('profile')
-  async getProfile(
-    @GetUser('id') userId: string,
-    @Query('labId') labId: string,
-    @Query('username') username: string,
-  ) {
-    return this.lab1Service.getProfile(userId, labId, username);
+    return this.lab1Service.getRecord(userId, labId, patientId);
   }
 }
