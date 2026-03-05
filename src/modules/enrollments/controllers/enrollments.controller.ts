@@ -1,3 +1,4 @@
+// src/modules/enrollments/controllers/enrollments.controller.ts
 import {
   Controller,
   Get,
@@ -26,9 +27,7 @@ export class EnrollmentsController {
    */
 
   /**
-   * Get my enrollments
    * GET /api/enrollments
-   * ⭐ This MUST come first (static route)
    */
   @Get()
   @HttpCode(HttpStatus.OK)
@@ -46,14 +45,10 @@ export class EnrollmentsController {
 
     console.log('🔍 Controller - Result:', result);
 
-    return {
-      success: true,
-      ...result,
-    };
+    return { success: true, ...result };
   }
 
   /**
-   * Enroll in a course
    * POST /api/enrollments
    */
   @Post()
@@ -74,9 +69,8 @@ export class EnrollmentsController {
   }
 
   /**
-   * Check if enrolled in course
    * GET /api/enrollments/:courseId/check
-   * ⭐ This comes BEFORE :courseId alone
+   * ⭐ Static sub-route قبل :courseId
    */
   @Get(':courseId/check')
   @HttpCode(HttpStatus.OK)
@@ -88,16 +82,12 @@ export class EnrollmentsController {
       userId,
       courseId,
     );
-    return {
-      success: true,
-      data: { isEnrolled },
-    };
+    return { success: true, data: { isEnrolled } };
   }
 
   /**
-   * Recalculate enrollment progress
    * POST /api/enrollments/:courseId/recalculate
-   * ⭐ Specific route comes before generic :courseId
+   * ⭐ Static sub-route قبل :courseId
    */
   @Post(':courseId/recalculate')
   @HttpCode(HttpStatus.OK)
@@ -117,9 +107,8 @@ export class EnrollmentsController {
   }
 
   /**
-   * Update enrollment progress
    * PUT /api/enrollments/:courseId/progress
-   * ⭐ Specific route comes before generic :courseId
+   * ⭐ Static sub-route قبل :courseId
    */
   @Put(':courseId/progress')
   @HttpCode(HttpStatus.OK)
@@ -141,9 +130,26 @@ export class EnrollmentsController {
   }
 
   /**
-   * Get enrollment details
+   * ✅ DELETE /api/enrollments/:courseId/reset
+   * يمسح كل lessonCompletion ويعيد progress = 0
+   * ⭐ يجب قبل DELETE /:courseId وإلا NestJS هيمسك courseId = "reset"
+   */
+  @Delete(':courseId/reset')
+  @HttpCode(HttpStatus.OK)
+  async resetProgress(
+    @CurrentUser('id') userId: string,
+    @Param('courseId') courseId: string,
+  ) {
+    await this.enrollmentsService.resetProgress(userId, courseId);
+    return {
+      success: true,
+      message: 'Course progress reset successfully',
+    };
+  }
+
+  /**
    * GET /api/enrollments/:courseId
-   * ⭐ This comes AFTER all specific routes
+   * ⭐ بعد كل الـ static sub-routes
    */
   @Get(':courseId')
   @HttpCode(HttpStatus.OK)
@@ -155,16 +161,12 @@ export class EnrollmentsController {
       userId,
       courseId,
     );
-    return {
-      success: true,
-      data: enrollment,
-    };
+    return { success: true, data: enrollment };
   }
 
   /**
-   * Unenroll from course
    * DELETE /api/enrollments/:courseId
-   * ⭐ Generic route comes LAST
+   * ⭐ آخر route — بعد /reset
    */
   @Delete(':courseId')
   @HttpCode(HttpStatus.OK)
