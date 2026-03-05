@@ -64,8 +64,12 @@ export class Lab5Service {
     events: string[],
   ) {
     if (!name) throw new BadRequestException('Webhook name is required');
+<<<<<<< HEAD
     if (name.length > 200)
       throw new BadRequestException('Webhook name too long');
+=======
+    if (name.length > 200) throw new BadRequestException('Webhook name too long');
+>>>>>>> c3d8b088be6ccafbb89db88f836a509781103f04
 
     const resolvedEndpoint = endpoint || 'https://example.com/hook';
 
@@ -74,9 +78,15 @@ export class Lab5Service {
       data: {
         userId,
         labId,
+<<<<<<< HEAD
         title: name, // ❌ name مخزّن raw بدون sanitization
         body: 'webhook',
         author: 'active', // status
+=======
+        title: name,               // ❌ name مخزّن raw بدون sanitization
+        body: 'webhook',
+        author: 'active',          // status
+>>>>>>> c3d8b088be6ccafbb89db88f836a509781103f04
         fileUrl: resolvedEndpoint, // endpoint URL
       },
     });
@@ -89,7 +99,11 @@ export class Lab5Service {
         type: 'ACTIVITY',
         action: 'WEBHOOK_CREATED',
         meta: {
+<<<<<<< HEAD
           webhookName: name, // ❌ name يُخزَّن raw في الـ log
+=======
+          webhookName: name,       // ❌ name يُخزَّن raw في الـ log
+>>>>>>> c3d8b088be6ccafbb89db88f836a509781103f04
           createdBy: 'current_user',
           endpoint: resolvedEndpoint,
           events: events || ['push'],
@@ -114,7 +128,11 @@ export class Lab5Service {
       success: true,
       webhooks: webhooks.map((w) => ({
         id: w.id,
+<<<<<<< HEAD
         name: w.title, // ❌ title يحتوي على الـ payload — يُعرض بـ innerHTML
+=======
+        name: w.title,    // ❌ title يحتوي على الـ payload — يُعرض بـ innerHTML
+>>>>>>> c3d8b088be6ccafbb89db88f836a509781103f04
         status: w.author,
         endpoint: w.fileUrl,
         isPublic: w.isPublic,
@@ -142,6 +160,7 @@ export class Lab5Service {
         success: true,
         exploited: true,
         adminAction: 'Super Admin opened the Activity Log Dashboard',
+<<<<<<< HEAD
         triggerContext:
           'Activity Log → webhookName column → innerHTML rendering',
         injectedPayload: meta.webhookName,
@@ -149,6 +168,12 @@ export class Lab5Service {
           'Payload stored via POST /webhook (integration creation)',
         executionContext:
           'Payload executed via POST /admin/activity-log (admin dashboard)',
+=======
+        triggerContext: 'Activity Log → webhookName column → innerHTML rendering',
+        injectedPayload: meta.webhookName,
+        storageContext: 'Payload stored via POST /webhook (integration creation)',
+        executionContext: 'Payload executed via POST /admin/activity-log (admin dashboard)',
+>>>>>>> c3d8b088be6ccafbb89db88f836a509781103f04
         why:
           'Second-Order XSS: storage and execution happen in DIFFERENT contexts. ' +
           'The webhook creation endpoint looked safe. The vulnerability lived in ' +

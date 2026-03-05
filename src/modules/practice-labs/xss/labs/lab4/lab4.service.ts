@@ -1,8 +1,12 @@
+<<<<<<< HEAD
 import {
   Injectable,
   BadRequestException,
   NotFoundException,
 } from '@nestjs/common';
+=======
+import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
+>>>>>>> c3d8b088be6ccafbb89db88f836a509781103f04
 import { PrismaService } from '../../../../../core/database';
 import { PracticeLabStateService } from '../../../shared/services/practice-lab-state.service';
 
@@ -34,9 +38,13 @@ export class Lab4Service {
     });
 
     if (!profile) {
+<<<<<<< HEAD
       throw new NotFoundException(
         'Profile not found. Please start the lab first.',
       );
+=======
+      throw new NotFoundException('Profile not found. Please start the lab first.');
+>>>>>>> c3d8b088be6ccafbb89db88f836a509781103f04
     }
 
     // ❌ body يُخزَّن raw بدون HTML sanitization
@@ -62,9 +70,13 @@ export class Lab4Service {
     });
 
     if (!profile) {
+<<<<<<< HEAD
       throw new NotFoundException(
         'Profile not found. Please start the lab first.',
       );
+=======
+      throw new NotFoundException('Profile not found. Please start the lab first.');
+>>>>>>> c3d8b088be6ccafbb89db88f836a509781103f04
     }
 
     // نحوّل fileUrl (JSON string) إلى object لعرض بيانات الملف الشخصي
@@ -103,8 +115,12 @@ export class Lab4Service {
         success: true,
         exploited: true,
         adminAction: 'Admin opened the Profile Review Panel',
+<<<<<<< HEAD
         renderingChain:
           'bio → marked.parse(bio) → innerHTML (without DOMPurify)',
+=======
+        renderingChain: 'bio → marked.parse(bio) → innerHTML (without DOMPurify)',
+>>>>>>> c3d8b088be6ccafbb89db88f836a509781103f04
         injectedPayload: bio,
         simulation:
           'The Markdown parser rendered your inline HTML as-is. ' +
