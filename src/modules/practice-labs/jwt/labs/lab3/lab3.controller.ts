@@ -1,4 +1,12 @@
-import { Controller, Post, Body, UseGuards } from '@nestjs/common';
+// src/modules/practice-labs/jwt/labs/lab3/lab3.controller.ts
+import {
+  Controller,
+  Post,
+  Get,
+  Body,
+  Headers,
+  UseGuards,
+} from '@nestjs/common';
 import { JwtAuthGuard } from '../../../../../common/guards';
 import { GetUser } from '../../../shared/decorators/get-user.decorator';
 import { Lab3Service } from './lab3.service';
@@ -13,22 +21,35 @@ export class Lab3Controller {
     return this.lab3Service.initLab(userId, labId);
   }
 
-  @Post('login')
+  // يصدر RS256 JWT token
+  @Post('auth/login')
   async login(
     @GetUser('id') userId: string,
     @Body('labId') labId: string,
     @Body('username') username: string,
-    @Body('password') password: string,
   ) {
-    return this.lab3Service.login(userId, labId, username, password);
+    return this.lab3Service.login(userId, labId, username);
   }
 
-  @Post('verify')
-  async verify(
+  // يعرض الـ public key (JWKS format)
+  @Get('.well-known/jwks.json')
+  async getJWKS() {
+    return this.lab3Service.getJWKS();
+  }
+
+  // يعرض الـ public key بصيغة PEM
+  @Get('public-key.pem')
+  async getPublicKeyPEM() {
+    return this.lab3Service.getPublicKeyPEM();
+  }
+
+  // ❌ الثغرة: يقبل HS256 ويستخدم public key كـ HMAC secret
+  @Post('admin/transactions')
+  async getAdminTransactions(
     @GetUser('id') userId: string,
     @Body('labId') labId: string,
-    @Body('token') token: string,
+    @Headers('authorization') authHeader?: string,
   ) {
-    return this.lab3Service.verifyToken(userId, labId, token);
+    return this.lab3Service.getAdminTransactions(userId, labId, authHeader);
   }
 }
