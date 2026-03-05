@@ -1,4 +1,5 @@
-import { Controller, Post, Get, Body, Query, UseGuards } from '@nestjs/common';
+// src/modules/practice-labs/xss/labs/lab1/lab1.controller.ts
+import { Controller, Post, Body, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../../../../../common/guards';
 import { GetUser } from '../../../shared/decorators/get-user.decorator';
 import { Lab1Service } from './lab1.service';
@@ -13,11 +14,12 @@ export class Lab1Controller {
     return this.lab1Service.initLab(userId, labId);
   }
 
-  @Get('search')
+  // ❌ نقطة الثغرة: query يُعكس مباشرة في الـ response بدون encoding
+  @Post('search')
   async search(
     @GetUser('id') userId: string,
-    @Query('labId') labId: string,
-    @Query('q') query: string,
+    @Body('labId') labId: string,
+    @Body('query') query: string,
   ) {
     return this.lab1Service.search(userId, labId, query);
   }
