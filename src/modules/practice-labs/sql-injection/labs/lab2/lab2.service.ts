@@ -1,6 +1,10 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../../../../core/database';
 import { PracticeLabStateService } from '../../../shared/services/practice-lab-state.service';
+import {
+  buildLabResult,
+  rowsContainValue,
+} from '../../../shared/utils/sqli-lab.utils';
 
 @Injectable()
 export class Lab2Service {
@@ -13,37 +17,48 @@ export class Lab2Service {
     return this.stateService.initializeState(userId, labId);
   }
 
-  // ❌ الثغرة: UNION-based SQL Injection
-  async searchUser(userId: string, labId: string, searchTerm: string) {
+  // ❌ الثغرة: UNION-based SQLi in the user directory search
+  async searchUsers(userId: string, labId: string, searchTerm: string) {
+    // ❌ الثغرة: raw string interpolation — no sanitization
+    const query = `
+      SELECT username, email, role
+      FROM   "LabGenericUser"
+      WHERE  "userId" = '${userId}'
+      AND    "labId"  = '${labId}'
+      AND    username ILIKE '%${searchTerm}%'
+    `;
+
+    let results: any[] = [];
     try {
-      // ❌ الثغرة: بناء Query بدون Sanitization
-      const query = `
-        SELECT "username", "email", "role" FROM "LabGenericUser" 
-        WHERE "userId" = '${userId}' 
-        AND "labId" = '${labId}' 
-        AND "username" LIKE '%${searchTerm}%'
-      `;
-
-      const results = await this.prisma.$queryRawUnsafe(query);
-
-      // التحقق: لو النتيجة فيها password (من UNION attack)
-      const hasPassword = (results as any[]).some((r) => r.password);
-      const hasFlag = (results as any[]).some(
-        (r) => r.password?.includes('FLAG') || r.email?.includes('FLAG'),
-      );
-
-      if (hasFlag) {
-        return {
-          success: true,
-          data: results,
-          exploited: true,
-          message: 'SQL Injection successful! Admin password extracted',
-        };
-      }
-
-      return { success: true, data: results };
-    } catch (error) {
-      throw new NotFoundException('Search failed');
+      results = (await this.prisma.$queryRawUnsafe(query)) as any[];
+    } catch {
+      // Real apps swallow DB errors — student probes via behavior, not error text
+      results = [];
     }
+
+    // Detection: flag value leaked into any result column via UNION
+    const isExploited = rowsContainValue(
+      results,
+      ['email', 'username', 'role'],
+      'FLAG{',
+    );
+
+    if (isExploited) {
+      return buildLabResult({
+        success: true,
+        exploited: true,
+        data: results,
+        flag: 'FLAG{SQLI_UNION_DATA_EXTRACTED}',
+        evidence: 'Admin password exposed via UNION injection',
+        message: '🎯 UNION injection successful — admin credentials extracted!',
+        uiHint: 'You found the admin password. Submit it as the flag.',
+      });
+    }
+
+    return buildLabResult({
+      success: true,
+      data: results,
+      message: `Found ${results.length} user(s)`,
+    });
   }
 }

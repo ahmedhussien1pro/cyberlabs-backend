@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Body, Query, UseGuards } from '@nestjs/common';
+import { Controller, Post, Body, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../../../../../common/guards';
 import { GetUser } from '../../../shared/decorators/get-user.decorator';
 import { Lab2Service } from './lab2.service';
@@ -13,12 +13,12 @@ export class Lab2Controller {
     return this.lab2Service.initLab(userId, labId);
   }
 
-  @Get('search')
-  async search(
+  @Post('search')
+  async searchUsers(
     @GetUser('id') userId: string,
-    @Query('labId') labId: string,
-    @Query('q') searchTerm: string,
+    @Body('labId') labId: string,
+    @Body('searchTerm') searchTerm: string,
   ) {
-    return this.lab2Service.searchUser(userId, labId, searchTerm);
+    return this.lab2Service.searchUsers(userId, labId, searchTerm ?? '');
   }
 }

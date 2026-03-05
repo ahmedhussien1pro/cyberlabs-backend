@@ -1,4 +1,5 @@
-import { Controller, Post, Get, Body, Query, UseGuards } from '@nestjs/common';
+// src/modules/practice-labs/sql-injection/labs/lab3/lab3.controller.ts
+import { Controller, Post, Body, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../../../../../common/guards';
 import { GetUser } from '../../../shared/decorators/get-user.decorator';
 import { Lab3Service } from './lab3.service';
@@ -13,12 +14,12 @@ export class Lab3Controller {
     return this.lab3Service.initLab(userId, labId);
   }
 
-  @Get('check-user')
-  async checkUser(
+  @Post('validate-coupon')
+  async validateCoupon(
     @GetUser('id') userId: string,
-    @Query('labId') labId: string,
-    @Query('username') username: string,
+    @Body('labId') labId: string,
+    @Body('coupon') coupon: string,
   ) {
-    return this.lab3Service.checkUser(userId, labId, username);
+    return this.lab3Service.validateCoupon(userId, labId, coupon ?? '');
   }
 }

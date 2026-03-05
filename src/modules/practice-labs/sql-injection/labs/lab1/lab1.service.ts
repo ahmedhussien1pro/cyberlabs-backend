@@ -13,7 +13,6 @@ export class Lab1Service {
     return this.stateService.initializeState(userId, labId);
   }
 
-  // ❌ الثغرة: SQL Injection في الـ Login
   async login(
     userId: string,
     labId: string,
@@ -21,13 +20,12 @@ export class Lab1Service {
     password: string,
   ) {
     try {
-      // ❌ الثغرة: بناء Query بدون Parameterization!
       const query = `
-        SELECT * FROM "LabGenericUser" 
-        WHERE "userId" = '${userId}' 
-        AND "labId" = '${labId}' 
-        AND "username" = '${username}' 
-        AND "password" = '${password}'
+        SELECT * FROM "LabGenericUser"
+        WHERE "userId"   = '${userId}'
+        AND   "labId"    = '${labId}'
+        AND   "username" = '${username}'
+        AND   "password" = '${password}'
       `;
 
       const users = await this.prisma.$queryRawUnsafe(query);
@@ -37,8 +35,7 @@ export class Lab1Service {
         throw new UnauthorizedException('Invalid credentials');
       }
 
-      // التحقق من تحقيق الهدف
-      if (user.role === 'ADMIN') {
+      if (user.role?.toLowerCase() === 'admin') {
         return {
           success: true,
           username: user.username,

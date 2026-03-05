@@ -169,7 +169,7 @@ export const COURSES_META: CourseMeta[] = [
   },
   {
     jsonFile: 'Network Analysis & Monitoring.json',
-    slug: 'wireshark-packet-analysis-pro',
+    slug: 'wireshark-packet-analysis',
     color: 'CYAN',
     estimatedHours: 5,
     access: 'PRO',
@@ -195,7 +195,7 @@ export const COURSES_META: CourseMeta[] = [
   },
   {
     jsonFile: 'SQL Injection.json',
-    slug: 'owasp-sql-injection-sqli',
+    slug: 'owasp-sql-injection',
     color: 'ROSE',
     estimatedHours: 4,
     access: 'FREE',
@@ -221,7 +221,7 @@ export const COURSES_META: CourseMeta[] = [
   },
   {
     jsonFile: 'OWASP Top 10 - Authentication & Authorization.json',
-    slug: 'owasp-authentication-authorization', // ← slug مصلح
+    slug: 'owasp-authentication-authorization',
     color: 'ORANGE',
     estimatedHours: 4,
     access: 'FREE',
@@ -376,103 +376,10 @@ export const PATHS_META: PathMeta[] = [
       'OSINT',
     ],
     modules: [
-      {
-        type: 'COURSE',
-        slug: 'introduction-to-cybersecurity',
-        order: 1,
-        estimatedHours: 2,
-      },
-      {
-        type: 'COURSE',
-        slug: 'networking-basics-part-1',
-        order: 2,
-        estimatedHours: 3,
-      },
-      {
-        type: 'COURSE',
-        slug: 'network-protocols',
-        order: 3,
-        estimatedHours: 5,
-      },
-      {
-        type: 'COURSE',
-        slug: 'bash-scripting-for-security',
-        order: 4,
-        estimatedHours: 3,
-      },
-      {
-        type: 'COURSE',
-        slug: 'linux-security-hardening',
-        order: 5,
-        estimatedHours: 3,
-      },
-      {
-        type: 'COURSE',
-        slug: 'windows-fundamentals',
-        order: 6,
-        estimatedHours: 3,
-      },
-      { type: 'COURSE', slug: 'windows-security', order: 7, estimatedHours: 3 },
-      {
-        type: 'COURSE',
-        slug: 'how-the-web-works',
-        order: 8,
-        estimatedHours: 2,
-      },
-      {
-        type: 'COURSE',
-        slug: 'web-application-architecture',
-        order: 9,
-        estimatedHours: 3,
-      },
-      {
-        type: 'COURSE',
-        slug: 'authentication-deep-dive',
-        order: 10,
-        estimatedHours: 3,
-      },
-      {
-        type: 'LAB',
-        slug: 'cookies-sessions-lab',
-        order: 11,
-        estimatedHours: 2,
-      },
-      {
-        type: 'COURSE',
-        slug: 'web-security-basics',
-        order: 12,
-        estimatedHours: 3,
-      },
-      {
-        type: 'COURSE',
-        slug: 'cryptography-fundamentals',
-        order: 13,
-        estimatedHours: 3,
-      },
-      {
-        type: 'COURSE',
-        slug: 'regular-expressions-for-security',
-        order: 14,
-        estimatedHours: 2,
-      },
-      {
-        type: 'COURSE',
-        slug: 'python-for-security-basics',
-        order: 15,
-        estimatedHours: 4,
-      },
-      {
-        type: 'COURSE',
-        slug: 'building-your-security-lab',
-        order: 16,
-        estimatedHours: 2,
-      },
-      {
-        type: 'COURSE',
-        slug: 'threat-intelligence-osint',
-        order: 17,
-        estimatedHours: 3,
-      },
+      // owasp-sql-injection ✅
+      // owasp-xss-csrf ✅
+      // owasp-authentication-authorization ✅
+      // active-directory-fundamentals ✅
     ],
   },
 
@@ -527,141 +434,23 @@ export const PATHS_META: PathMeta[] = [
       'تحليل السجلات وـ SIEM',
     ],
     modules: [
-      {
-        type: 'COURSE',
-        slug: 'nmap-network-discovery-mastery',
-        order: 1,
-        estimatedHours: 2,
-      },
-      {
-        type: 'COURSE',
-        slug: 'wireshark-packet-analysis-pro',
-        order: 2,
-        estimatedHours: 4,
-      },
-      {
-        type: 'COURSE',
-        slug: 'network-attacks-exploitation',
-        order: 3,
-        estimatedHours: 5,
-      },
-      {
-        type: 'COURSE',
-        slug: 'network-defense-hardening',
-        order: 4,
-        estimatedHours: 4,
-      },
-      {
-        type: 'COURSE',
-        slug: 'vpn-exploitation-security',
-        order: 5,
-        estimatedHours: 3,
-      },
-      {
-        type: 'COURSE',
-        slug: 'burp-suite-web-hacking-essentials',
-        order: 6,
-        estimatedHours: 5,
-      },
-      {
-        type: 'COURSE',
-        slug: 'owasp-sql-injection-sqli',
-        order: 7,
-        estimatedHours: 4,
-      },
-      { type: 'COURSE', slug: 'owasp-xss-csrf', order: 8, estimatedHours: 3 },
-      {
-        type: 'COURSE',
-        slug: 'owasp-authentication-authorization',
-        order: 9,
-        estimatedHours: 4,
-      },
-      {
-        type: 'COURSE',
-        slug: 'api-security-testing',
-        order: 10,
-        estimatedHours: 4,
-      },
-      {
-        type: 'COURSE',
-        slug: 'windows-security-advanced',
-        order: 11,
-        estimatedHours: 4,
-      },
-      {
-        type: 'COURSE',
-        slug: 'active-directory-fundamentals',
-        order: 12,
-        estimatedHours: 4,
-      },
-      {
-        type: 'COURSE',
-        slug: 'ad-attacks-enumeration',
-        order: 13,
-        estimatedHours: 6,
-      },
-      {
-        type: 'COURSE',
-        slug: 'metasploit-exploitation-basics',
-        order: 14,
-        estimatedHours: 5,
-      },
-      {
-        type: 'COURSE',
-        slug: 'linux-privilege-escalation',
-        order: 15,
-        estimatedHours: 5,
-      },
-      {
-        type: 'COURSE',
-        slug: 'windows-privilege-escalation',
-        order: 16,
-        estimatedHours: 5,
-      },
-      {
-        type: 'COURSE',
-        slug: 'password-cracking-techniques',
-        order: 17,
-        estimatedHours: 4,
-      },
-      {
-        type: 'COURSE',
-        slug: 'wireless-security-attacks',
-        order: 18,
-        estimatedHours: 4,
-      },
-      {
-        type: 'COURSE',
-        slug: 'cryptography-attacks',
-        order: 19,
-        estimatedHours: 4,
-      },
-      {
-        type: 'COURSE',
-        slug: 'log-analysis-siem-basics',
-        order: 20,
-        estimatedHours: 4,
-      },
-      {
-        type: 'COURSE',
-        slug: 'malware-analysis-introduction',
-        order: 21,
-        estimatedHours: 5,
-      },
-      {
-        type: 'COURSE',
-        slug: 'digital-forensics-basics',
-        order: 22,
-        estimatedHours: 5,
-      },
-      {
-        type: 'COURSE',
-        slug: 'incident-response-methodology',
-        order: 23,
-        estimatedHours: 4,
-      },
+      // vpn-secure-communications ✅ VPN & Secure Communications.json
+      // linux-fundamentals-part-1 ✅ Linux Fundamentals Part 1.json
+      // linux-fundamentals-part-2 ✅ Linux Fundamentals Part 2.json
+      // threats-and-risk-management
+      // security-frameworks-and-compliance
+      // careers-in-cybersecurity-from-soc-to-cloud
+      // ad-attacks-enumeration
+      // ctive-directory-fundamentals
+      // owasp-authentication-authorization
+      // owasp-xss-csrf
+      // owasp-sql-injection21`
+      // nmap-network-discovery-mastery
+      // wireshark-packet-analysis
+      // network-protocols
+      // networking-basics-part-2
+      // networking-basics-part-1
+      // introduction-to-cybersecurity
     ],
   },
-
-  // ─── أضف مسار جديد هنا ──────────────────────────────────────────
 ];

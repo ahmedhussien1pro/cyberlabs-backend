@@ -13,42 +13,32 @@ export class Lab3Service {
     return this.stateService.initializeState(userId, labId);
   }
 
-  async checkUser(userId: string, labId: string, username: string) {
-    try {
-      const query = `
-      SELECT COUNT(*) as count FROM "LabGenericUser" 
-      WHERE "userId" = '${userId}' 
-      AND "labId" = '${labId}' 
-      AND "username" = '${username}'
+  // ❌ الثغرة: Blind Boolean SQLi in the promo code validator
+  async validateCoupon(userId: string, labId: string, coupon: string) {
+    // ❌ الثغرة: raw string interpolation — no parameterization
+    const query = `
+      SELECT id FROM "LabGenericContent"
+      WHERE "userId" = '${userId}'
+      AND   "labId"  = '${labId}'
+      AND   title    = 'valid_coupon'
+      AND   body     = '${coupon}'
     `;
-      const result = await this.prisma.$queryRawUnsafe(query);
-      const count = Number((result as any[])[0]?.count ?? 0);
 
-      await this.prisma.labGenericLog.create({
-        data: { userId, labId, type: 'AUTH_ATTEMPT', action: username },
-      });
-
-      const attempts = await this.prisma.labGenericLog.count({
-        where: { userId, labId, type: 'AUTH_ATTEMPT' },
-      });
-
-      const hasSqlPattern =
-        username.includes("'") ||
-        username.toLowerCase().includes(' or ') ||
-        username.toLowerCase().includes(' and ');
-
-      if (attempts >= 5 && hasSqlPattern) {
-        return {
-          exists: count > 0,
-          flag: 'FLAG{BLIND_SQLI_BOOLEAN_BASED}',
-          exploited: true,
-          message: 'Blind SQL Injection successful!',
-        };
-      }
-
-      return { exists: count > 0 };
-    } catch (error) {
-      return { exists: false, error: 'Query failed' };
+    let isValid = false;
+    try {
+      const rows = (await this.prisma.$queryRawUnsafe(query)) as any[];
+      isValid = rows.length > 0;
+    } catch {
+      // SQL errors are silently swallowed — only boolean behavior leaks information
+      isValid = false;
     }
+
+    // Pure binary response — no data, no error details, only true/false
+    return {
+      valid: isValid,
+      message: isValid
+        ? '✅ Coupon applied! You get 20% off your order.'
+        : '❌ Invalid coupon code.',
+    };
   }
 }
