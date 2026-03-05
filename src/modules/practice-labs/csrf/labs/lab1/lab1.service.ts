@@ -1,180 +1,122 @@
-import {
-  Injectable,
-  BadRequestException,
-  UnauthorizedException,
-} from '@nestjs/common';
+// src/modules/practice-labs/csrf/labs/lab1/lab1.service.ts
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../../../../../core/database';
 import { PracticeLabStateService } from '../../../shared/services/practice-lab-state.service';
 
 @Injectable()
 export class Lab1Service {
-  private sessions = new Map<string, string>(); // sessionId -> username
-
   constructor(
     private prisma: PrismaService,
     private stateService: PracticeLabStateService,
   ) {}
 
   async initLab(userId: string, labId: string) {
-    this.sessions.clear();
     return this.stateService.initializeState(userId, labId);
   }
 
-  async login(
-    userId: string,
-    labId: string,
-    username: string,
-    password: string,
-  ) {
-    const user = await this.prisma.labGenericUser.findFirst({
-      where: { userId, labId, username, password },
+  async getAccountInfo(userId: string, labId: string) {
+    const victim = await this.prisma.labGenericUser.findFirst({
+      where: { userId, labId, username: 'victim_alice' },
     });
 
-    if (!user) {
-      throw new UnauthorizedException('Invalid credentials');
-    }
-
-    const sessionId = `sess_${Date.now()}_${Math.random()}`;
-    this.sessions.set(sessionId, username);
-
-    return { success: true, sessionId, user };
+    return {
+      success: true,
+      account: {
+        username: victim?.username,
+        email: victim?.email || 'alice@connecthub.io',
+        role: victim?.role,
+      },
+      note: 'The victim is logged in. Their session cookie is automatically sent with every request to this domain.',
+    };
   }
 
-  // ❌ الثغرة: No CSRF protection على state-changing operation
-  async transferMoney(
+  // ❌ الثغرة: بدون CSRF token + بدون Origin validation
+  async changeEmail(
     userId: string,
     labId: string,
-    sessionId: string,
-    toAccount: string,
-    amount: number,
+    newEmail: string,
+    origin?: string,
+    referer?: string,
   ) {
-    const username = this.sessions.get(sessionId);
-    if (!username) {
-      throw new UnauthorizedException('Invalid session');
-    }
+    if (!newEmail) throw new BadRequestException('newEmail is required');
 
-    // جلب حساب المستخدم
-    const fromAccount = await this.prisma.labGenericBank.findFirst({
-      where: { userId, labId, accountNo: 'ACC-VICTIM' },
+    // ❌ الثغرة: لا يتحقق من Origin أو Referer
+    // if (origin && !origin.includes('connecthub.io')) throw ForbiddenException ← مفقود!
+
+    const victim = await this.prisma.labGenericUser.findFirst({
+      where: { userId, labId, username: 'victim_alice' },
     });
 
-    if (!fromAccount) {
-      throw new BadRequestException('Account not found');
-    }
+    if (!victim)
+      throw new BadRequestException('Victim account not initialized');
 
-    if (fromAccount.balance < amount) {
-      throw new BadRequestException('Insufficient balance');
-    }
+    const oldEmail = victim.email;
 
-    // تنفيذ التحويل بدون CSRF token!
-    await this.prisma.labGenericBank.update({
-      where: { id: fromAccount.id },
-      data: { balance: { decrement: amount } },
+    await this.prisma.labGenericUser.update({
+      where: { id: victim.id },
+      data: { email: newEmail },
     });
 
-    // تسجيل العملية
     await this.prisma.labGenericLog.create({
       data: {
         userId,
         labId,
-        type: 'TRANSFER',
-        meta: { from: 'ACC-VICTIM', to: toAccount, amount },
+        type: 'CSRF',
+        action: 'EMAIL_CHANGE',
+        meta: {
+          oldEmail,
+          newEmail,
+          origin: origin || 'unknown',
+          referer: referer || 'none',
+        },
       },
     });
 
-    // التحقق من الاستغلال
-    const transfers = await this.prisma.labGenericLog.count({
-      where: { userId, labId, type: 'TRANSFER' },
-    });
+    const isExploited =
+      newEmail !== 'alice@connecthub.io' &&
+      (!origin || !origin.includes('connecthub'));
 
-    if (transfers >= 1) {
+    if (isExploited) {
       return {
         success: true,
-        message: `Transferred ${amount}$ to ${toAccount}`,
         exploited: true,
-        flag: 'FLAG{CSRF_ATTACK_SUCCESS}',
-        warning: 'CSRF vulnerability! Transfer executed without CSRF token',
+        message: 'Email changed successfully',
+        oldEmail,
+        newEmail,
+        flag: 'FLAG{CSRF_BASIC_EMAIL_HIJACK_NO_TOKEN_SOCIAL}',
+        vulnerability: 'CSRF — No Token, No Origin Validation',
+        impact:
+          "The victim's email was changed to " +
+          newEmail +
+          '. ' +
+          'The attacker can now trigger a password reset to take full control of the account.',
+        fix: [
+          'Implement CSRF tokens: generate a unique token per session, validate on every state-changing request',
+          'Validate Origin/Referer headers: reject requests from untrusted origins',
+          'Use SameSite=Strict cookie attribute to prevent cross-site cookie sending',
+        ],
       };
     }
 
     return {
       success: true,
-      message: `Transferred ${amount}$ to ${toAccount}`,
-    };
-  }
-
-  // ❌ الثغرة: State-changing operation بدون CSRF protection
-  async updateEmail(
-    userId: string,
-    labId: string,
-    sessionId: string,
-    newEmail: string,
-  ) {
-    const username = this.sessions.get(sessionId);
-    if (!username) {
-      throw new UnauthorizedException('Invalid session');
-    }
-
-    const user = await this.prisma.labGenericUser.findFirst({
-      where: { userId, labId, username },
-    });
-
-    if (!user) {
-      throw new BadRequestException('User not found');
-    }
-
-    // تحديث الإيميل بدون CSRF protection!
-    await this.prisma.labGenericUser.update({
-      where: { id: user.id },
-      data: { email: newEmail },
-    });
-
-    return {
-      success: true,
-      message: 'Email updated successfully',
+      exploited: false,
+      message: 'Email changed',
       newEmail,
     };
   }
 
-  async getBalance(userId: string, labId: string, sessionId: string) {
-    const username = this.sessions.get(sessionId);
-    if (!username) {
-      throw new UnauthorizedException('Invalid session');
-    }
+  async simulateVictim(userId: string, labId: string, attackerEmail: string) {
+    if (!attackerEmail)
+      throw new BadRequestException('attackerEmail is required');
 
-    const account = await this.prisma.labGenericBank.findFirst({
-      where: { userId, labId },
-    });
-
-    return { balance: account?.balance || 0 };
-  }
-
-  // Generate malicious HTML page للاختبار
-  async generateAttackPage(userId: string, labId: string, targetUrl: string) {
-    const html = `
-<!DOCTYPE html>
-<html>
-<head>
-    <title>You Won a Prize!</title>
-</head>
-<body>
-    <h1>Congratulations! Click to claim your prize</h1>
-    <form id="csrf-form" action="${targetUrl}" method="POST" style="display:none;">
-        <input name="toAccount" value="ATTACKER-ACC" />
-        <input name="amount" value="500" />
-        <input name="sessionId" value="VICTIM_SESSION_HERE" />
-    </form>
-    <button onclick="document.getElementById('csrf-form').submit()">Claim Prize</button>
-    <script>
-        // Auto-submit after 2 seconds
-        setTimeout(() => {
-            document.getElementById('csrf-form').submit();
-        }, 2000);
-    </script>
-</body>
-</html>
-    `;
-
-    return { html, message: 'CSRF attack page generated' };
+    // محاكاة الضحية تزور الصفحة الخبيثة
+    return this.changeEmail(
+      userId,
+      labId,
+      attackerEmail,
+      'https://evil-attacker.com',
+      undefined,
+    );
   }
 }

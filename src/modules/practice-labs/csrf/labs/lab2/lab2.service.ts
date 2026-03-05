@@ -1,177 +1,147 @@
+// src/modules/practice-labs/csrf/labs/lab2/lab2.service.ts
 import {
   Injectable,
-  UnauthorizedException,
   BadRequestException,
+  NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from '../../../../../core/database';
 import { PracticeLabStateService } from '../../../shared/services/practice-lab-state.service';
 
 @Injectable()
 export class Lab2Service {
-  private sessions = new Map<string, any>(); // sessionId -> { username, csrfToken }
-
   constructor(
     private prisma: PrismaService,
     private stateService: PracticeLabStateService,
   ) {}
 
   async initLab(userId: string, labId: string) {
-    this.sessions.clear();
     return this.stateService.initializeState(userId, labId);
   }
 
-  async login(
-    userId: string,
-    labId: string,
-    username: string,
-    password: string,
-  ) {
-    const user = await this.prisma.labGenericUser.findFirst({
-      where: { userId, labId, username, password },
+  async getBalance(userId: string, labId: string) {
+    const wallets = await this.prisma.labGenericBank.findMany({
+      where: { userId, labId },
     });
 
-    if (!user) {
-      throw new UnauthorizedException('Invalid credentials');
-    }
-
-    const sessionId = `sess_${Date.now()}`;
-    // ❌ الثغرة: Weak CSRF token - يمكن التنبؤ به
-    const csrfToken = `csrf_${Date.now()}`;
-
-    this.sessions.set(sessionId, { username, csrfToken });
-
-    return { success: true, sessionId, csrfToken, user };
+    return {
+      success: true,
+      wallets: wallets.map((w) => ({
+        accountNo: w.accountNo,
+        balance: w.balance,
+        owner: w.ownerName,
+      })),
+    };
   }
 
-  // ❌ الثغرة: Weak CSRF validation
-  async changePassword(
+  // ❌ الثغرة: يقبل form-encoded + بدون CSRF token + بدون Origin check
+  async transfer(
     userId: string,
     labId: string,
-    sessionId: string,
-    newPassword: string,
-    csrfToken?: string,
+    toAccount: string,
+    amount: number,
+    contentType?: string,
+    origin?: string,
   ) {
-    const session = this.sessions.get(sessionId);
-    if (!session) {
-      throw new UnauthorizedException('Invalid session');
+    if (!toAccount || !amount) {
+      throw new BadRequestException('toAccount and amount are required');
     }
+    if (amount <= 0) throw new BadRequestException('Amount must be positive');
 
-    // ❌ الثغرة 1: يتحقق من وجود token بس مش من قيمته!
-    if (!csrfToken) {
-      throw new BadRequestException('CSRF token required');
-    }
-
-    // ❌ الثغرة 2: Weak validation - يقبل أي token يبدأ بـ "csrf_"
-    if (!csrfToken.startsWith('csrf_')) {
-      throw new BadRequestException('Invalid CSRF token format');
-    }
-
-    // ❌ الثغرة 3: مابيقارنش مع الـ token الأصلي!
-    // المفروض: if (csrfToken !== session.csrfToken)
-
-    const user = await this.prisma.labGenericUser.findFirst({
-      where: { userId, labId, username: session.username },
+    const senderWallet = await this.prisma.labGenericBank.findFirst({
+      where: { userId, labId, accountNo: 'VICTIM-ACC' },
     });
 
-    if (!user) {
-      throw new BadRequestException('User not found');
-    }
+    if (!senderWallet) throw new NotFoundException('Victim wallet not found');
 
-    await this.prisma.labGenericUser.update({
-      where: { id: user.id },
-      data: { password: newPassword },
+    const receiverWallet = await this.prisma.labGenericBank.findFirst({
+      where: { userId, labId, accountNo: toAccount },
     });
 
-    // التحقق من الاستغلال
-    if (csrfToken !== session.csrfToken) {
-      return {
-        success: true,
-        message: 'Password changed',
-        exploited: true,
-        flag: 'FLAG{CSRF_TOKEN_BYPASSED}',
-        warning: 'CSRF bypass! Invalid token accepted',
-      };
+    if (!receiverWallet)
+      throw new NotFoundException('Receiver wallet not found');
+
+    if (senderWallet.balance < amount) {
+      throw new BadRequestException('Insufficient funds');
     }
 
-    return { success: true, message: 'Password changed' };
-  }
-
-  // ❌ الثغرة: يقبل CSRF token في GET parameter
-  async deleteAccount(
-    userId: string,
-    labId: string,
-    sessionId: string,
-    csrfToken?: string,
-  ) {
-    const session = this.sessions.get(sessionId);
-    if (!session) {
-      throw new UnauthorizedException('Invalid session');
-    }
-
-    // ❌ الثغرة: Optional CSRF token!
-    if (csrfToken && csrfToken === session.csrfToken) {
-      // Token صحيح
-    } else if (!csrfToken) {
-      // ❌ يسمح بالعملية بدون token!
-    } else {
-      throw new BadRequestException('Invalid CSRF token');
-    }
-
-    const user = await this.prisma.labGenericUser.findFirst({
-      where: { userId, labId, username: session.username },
+    await this.prisma.labGenericBank.update({
+      where: { id: senderWallet.id },
+      data: { balance: senderWallet.balance - amount },
     });
 
-    if (user) {
-      // حذف المستخدم (في الحقيقة نعلمه كـ deleted)
-      await this.prisma.labGenericLog.create({
-        data: {
-          userId,
-          labId,
-          type: 'ACCOUNT_DELETED',
-          meta: { username: session.username },
-        },
-      });
-    }
-
-    return { success: true, message: 'Account deleted' };
-  }
-
-  // ❌ الثغرة: Token reuse - نفس الـ token يشتغل أكتر من مرة
-  async sensitiveAction(
-    userId: string,
-    labId: string,
-    sessionId: string,
-    csrfToken: string,
-    action: string,
-  ) {
-    const session = this.sessions.get(sessionId);
-    if (!session) {
-      throw new UnauthorizedException('Invalid session');
-    }
-
-    // ❌ الثغرة: Token مابيتغيرش بعد كل استخدام
-    // المفروض: one-time use token
-    if (csrfToken !== session.csrfToken) {
-      throw new BadRequestException('Invalid CSRF token');
-    }
+    await this.prisma.labGenericBank.update({
+      where: { id: receiverWallet.id },
+      data: { balance: receiverWallet.balance + amount },
+    });
 
     await this.prisma.labGenericLog.create({
       data: {
         userId,
         labId,
-        type: 'SENSITIVE_ACTION',
-        meta: { action, username: session.username },
+        type: 'CSRF',
+        action: 'FUND_TRANSFER',
+        meta: {
+          from: 'VICTIM-ACC',
+          to: toAccount,
+          amount,
+          contentType: contentType || 'unknown',
+          origin: origin || 'none',
+        },
       },
     });
 
-    return { success: true, message: `Action ${action} completed` };
+    // ❌ الثغرة: يقبل form-encoded كـ JSON
+    const isFormEncoded = contentType?.includes('x-www-form-urlencoded');
+    const isCrossOrigin = !origin || !origin.includes('payswift');
+    const isExploited =
+      toAccount === 'ATTACKER-ACC' && (isFormEncoded || isCrossOrigin);
+
+    const updatedReceiver = await this.prisma.labGenericBank.findFirst({
+      where: { userId, labId, accountNo: toAccount },
+    });
+
+    if (isExploited) {
+      return {
+        success: true,
+        exploited: true,
+        transfer: { from: 'VICTIM-ACC', to: toAccount, amount },
+        attackerNewBalance: updatedReceiver?.balance,
+        flag: 'FLAG{CSRF_JSON_API_CONTENT_TYPE_BYPASS_FUND_TRANSFER}',
+        vulnerability: 'CSRF — JSON API Content-Type Bypass',
+        impact: `$${amount} transferred from victim's account silently. The developer assumed "JSON-only API = CSRF-safe" — this is WRONG.`,
+        fix: [
+          'Implement CSRF tokens even on JSON APIs',
+          'Strictly enforce Content-Type: application/json — reject form-encoded',
+          'Validate Origin header: reject if not in whitelist',
+          'Use SameSite=Strict on session cookies',
+        ],
+      };
+    }
+
+    return {
+      success: true,
+      transfer: {
+        from: 'VICTIM-ACC',
+        to: toAccount,
+        amount,
+        status: 'SUCCESS',
+      },
+    };
   }
 
-  async getSession(userId: string, labId: string, sessionId: string) {
-    const session = this.sessions.get(sessionId);
-    if (!session) {
-      throw new UnauthorizedException('Invalid session');
-    }
-    return { session };
+  async simulateVictim(
+    userId: string,
+    labId: string,
+    toAccount: string,
+    amount: number,
+  ) {
+    return this.transfer(
+      userId,
+      labId,
+      toAccount,
+      amount,
+      'application/x-www-form-urlencoded', // ❌ form-encoded
+      'https://evil-site.com', // ❌ cross-origin
+    );
   }
 }

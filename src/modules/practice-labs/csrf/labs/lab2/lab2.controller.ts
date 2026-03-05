@@ -1,12 +1,5 @@
-import {
-  Controller,
-  Post,
-  Get,
-  Delete,
-  Body,
-  Query,
-  UseGuards,
-} from '@nestjs/common';
+// src/modules/practice-labs/csrf/labs/lab2/lab2.controller.ts
+import { Controller, Post, Body, Headers, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../../../../../common/guards';
 import { GetUser } from '../../../shared/decorators/get-user.decorator';
 import { Lab2Service } from './lab2.service';
@@ -17,70 +10,42 @@ export class Lab2Controller {
   constructor(private lab2Service: Lab2Service) {}
 
   @Post('start')
-  async startLab(@GetUser('id') userId: string, @Body('labId') labId: string) {
+  start(@GetUser('id') userId: string, @Body('labId') labId: string) {
     return this.lab2Service.initLab(userId, labId);
   }
 
-  @Post('login')
-  async login(
-    @GetUser('id') userId: string,
-    @Body('labId') labId: string,
-    @Body('username') username: string,
-    @Body('password') password: string,
-  ) {
-    return this.lab2Service.login(userId, labId, username, password);
+  @Post('wallet/balance')
+  getBalance(@GetUser('id') userId: string, @Body('labId') labId: string) {
+    return this.lab2Service.getBalance(userId, labId);
   }
 
-  @Post('change-password')
-  async changePassword(
+  // ❌ الثغرة: يقبل form-encoded كبديل لـ JSON + بدون CSRF token
+  @Post('transfer')
+  transfer(
     @GetUser('id') userId: string,
     @Body('labId') labId: string,
-    @Body('sessionId') sessionId: string,
-    @Body('newPassword') newPassword: string,
-    @Body('csrfToken') csrfToken?: string,
+    @Body('toAccount') toAccount: string,
+    @Body('amount') amount: number,
+    @Headers('content-type') contentType?: string,
+    @Headers('origin') origin?: string,
   ) {
-    return this.lab2Service.changePassword(
+    return this.lab2Service.transfer(
       userId,
       labId,
-      sessionId,
-      newPassword,
-      csrfToken,
+      toAccount,
+      amount,
+      contentType,
+      origin,
     );
   }
 
-  @Delete('account')
-  async deleteAccount(
-    @GetUser('id') userId: string,
-    @Query('labId') labId: string,
-    @Query('sessionId') sessionId: string,
-    @Query('csrfToken') csrfToken?: string,
-  ) {
-    return this.lab2Service.deleteAccount(userId, labId, sessionId, csrfToken);
-  }
-
-  @Post('sensitive-action')
-  async sensitiveAction(
+  @Post('csrf/simulate-victim')
+  simulateVictim(
     @GetUser('id') userId: string,
     @Body('labId') labId: string,
-    @Body('sessionId') sessionId: string,
-    @Body('csrfToken') csrfToken: string,
-    @Body('action') action: string,
+    @Body('toAccount') toAccount: string,
+    @Body('amount') amount: number,
   ) {
-    return this.lab2Service.sensitiveAction(
-      userId,
-      labId,
-      sessionId,
-      csrfToken,
-      action,
-    );
-  }
-
-  @Get('session')
-  async getSession(
-    @GetUser('id') userId: string,
-    @Query('labId') labId: string,
-    @Query('sessionId') sessionId: string,
-  ) {
-    return this.lab2Service.getSession(userId, labId, sessionId);
+    return this.lab2Service.simulateVictim(userId, labId, toAccount, amount);
   }
 }

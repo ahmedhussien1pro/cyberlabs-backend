@@ -26,6 +26,7 @@ const LAB_CATEGORIES: string[] = [
   'jwt',
   'xss',
   'idor',
+  'csrf',
 ];
 async function seedModuleLabs() {
   if (MODULE_LABS.length === 0) return;

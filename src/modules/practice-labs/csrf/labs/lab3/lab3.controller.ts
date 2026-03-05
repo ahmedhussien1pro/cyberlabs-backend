@@ -1,10 +1,11 @@
+// src/modules/practice-labs/csrf/labs/lab3/lab3.controller.ts
 import {
   Controller,
   Post,
   Get,
-  Delete,
   Body,
   Query,
+  Headers,
   UseGuards,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../../../../../common/guards';
@@ -17,76 +18,50 @@ export class Lab3Controller {
   constructor(private lab3Service: Lab3Service) {}
 
   @Post('start')
-  async startLab(@GetUser('id') userId: string, @Body('labId') labId: string) {
+  start(@GetUser('id') userId: string, @Body('labId') labId: string) {
     return this.lab3Service.initLab(userId, labId);
   }
 
-  @Post('login')
-  async login(
+  @Post('grades/view')
+  viewGrades(@GetUser('id') userId: string, @Body('labId') labId: string) {
+    return this.lab3Service.viewGrades(userId, labId);
+  }
+
+  // ❌ الثغرة: GET request يغير state + SameSite=Lax bypass
+  @Post('grades/update')
+  updateGrade(
     @GetUser('id') userId: string,
     @Body('labId') labId: string,
-    @Body('username') username: string,
-    @Body('password') password: string,
+    @Body('studentId') studentId: string,
+    @Body('courseId') courseId: string,
+    @Body('grade') grade: string,
+    @Headers('origin') origin?: string,
   ) {
-    return this.lab3Service.login(userId, labId, username, password);
-  }
-
-  // ❌ الثغرة: GET request لـ state-changing operation
-  @Get('promote')
-  async promoteToAdmin(
-    @GetUser('id') userId: string,
-    @Query('labId') labId: string,
-    @Query('sessionId') sessionId: string,
-    @Query('targetUsername') targetUsername: string,
-  ) {
-    return this.lab3Service.promoteToAdmin(
+    return this.lab3Service.updateGrade(
       userId,
       labId,
-      sessionId,
-      targetUsername,
+      studentId,
+      courseId,
+      grade,
+      origin,
     );
   }
 
-  @Get('delete-user')
-  async deleteUser(
+  // محاكاة top-level GET navigation (SameSite=Lax bypass)
+  @Post('csrf/simulate-victim-navigation')
+  simulateNavigation(
     @GetUser('id') userId: string,
-    @Query('labId') labId: string,
-    @Query('sessionId') sessionId: string,
-    @Query('targetUsername') targetUsername: string,
+    @Body('labId') labId: string,
+    @Body('studentId') studentId: string,
+    @Body('courseId') courseId: string,
+    @Body('grade') grade: string,
   ) {
-    return this.lab3Service.deleteUser(
+    return this.lab3Service.simulateNavigation(
       userId,
       labId,
-      sessionId,
-      targetUsername,
+      studentId,
+      courseId,
+      grade,
     );
-  }
-
-  @Get('transfer')
-  async transfer(
-    @GetUser('id') userId: string,
-    @Query('labId') labId: string,
-    @Query('sessionId') sessionId: string,
-    @Query('amount') amount: number,
-  ) {
-    return this.lab3Service.transferViaGet(userId, labId, sessionId, amount);
-  }
-
-  @Get('generate-attacks')
-  async generateAttacks(
-    @GetUser('id') userId: string,
-    @Query('labId') labId: string,
-    @Query('baseUrl') baseUrl: string,
-  ) {
-    return this.lab3Service.generateAttackUrls(userId, labId, baseUrl);
-  }
-
-  @Get('user')
-  async getUser(
-    @GetUser('id') userId: string,
-    @Query('labId') labId: string,
-    @Query('username') username: string,
-  ) {
-    return this.lab3Service.getUser(userId, labId, username);
   }
 }
