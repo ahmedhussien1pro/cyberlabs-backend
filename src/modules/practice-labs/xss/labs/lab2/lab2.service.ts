@@ -23,12 +23,8 @@ export class Lab2Service {
           meta: {
             productId: 'techmart-dock-07',
             author: 'verified_buyer_99',
-<<<<<<< HEAD
             content:
               'Excellent build quality! Works perfectly with my MacBook Pro.',
-=======
-            content: 'Excellent build quality! Works perfectly with my MacBook Pro.',
->>>>>>> c3d8b088be6ccafbb89db88f836a509781103f04
             rating: 5,
             status: 'pending',
           },
@@ -135,12 +131,8 @@ export class Lab2Service {
     return {
       success: true,
       exploited: false,
-<<<<<<< HEAD
       adminAction:
         'Admin opened Moderation Dashboard — no XSS payload detected.',
-=======
-      adminAction: 'Admin opened Moderation Dashboard — no XSS payload detected.',
->>>>>>> c3d8b088be6ccafbb89db88f836a509781103f04
       hint: 'Submit a review containing an XSS payload first, then trigger admin moderation.',
       reviews: reviews.map((r) => ({ id: r.id, ...(r.meta as any) })),
     };
