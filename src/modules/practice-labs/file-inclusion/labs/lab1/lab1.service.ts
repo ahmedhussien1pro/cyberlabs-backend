@@ -1,16 +1,33 @@
-import {
-  Injectable,
-  NotFoundException,
-  BadRequestException,
-} from '@nestjs/common';
+// src/modules/practice-labs/file-inclusion/labs/lab1/lab1.service.ts
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../../../../../core/database';
 import { PracticeLabStateService } from '../../../shared/services/practice-lab-state.service';
-import * as fs from 'fs/promises';
 
 @Injectable()
 export class Lab1Service {
-  private readonly FLAG = 'FLAG{LF1_B4S1C_1NCLUS10N}';
-  private readonly VIEWS_DIR = '/views/';
+  // محاكاة نظام الملفات
+  private readonly virtualFS: Record<string, string> = {
+    // templates — المسار الطبيعي
+    '/var/www/cms/templates/default':
+      '<html><body><h1>Welcome to PageCraft CMS</h1></body></html>',
+    '/var/www/cms/templates/about':
+      '<html><body><h1>About Us</h1></body></html>',
+    '/var/www/cms/templates/contact':
+      '<html><body><h1>Contact Us</h1></body></html>',
+    // ملفات حساسة — خارج templates
+    '/etc/passwd':
+      'root:x:0:0:root:/root:/bin/bash\ndaemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin\nwww-data:x:33:33:www-data:/var/www:/usr/sbin/nologin\ncms_user:x:1001:1001:PageCraft CMS:/home/cms_user:/bin/bash',
+    '/etc/hosts':
+      '127.0.0.1 localhost\n172.31.0.1 db-prod-01.internal\n172.31.0.2 redis-prod-01.internal',
+    '/var/www/cms/config/database.php':
+      '<?php\n$db_host = "db-prod-01.internal";\n$db_user = "pagecraft_admin";\n$db_pass = "PgCr4ft_Pr0d_2024!";\n$db_name = "pagecraft_production";\n// FLAG: FLAG{LFI_BASIC_PATH_TRAVERSAL_CMS_TEMPLATE_DB_CONFIG}\n?>',
+    '/var/www/cms/config/app.php':
+      '<?php\n$app_key = "base64:xK9mPqR7vT2wNjHsLdYuZcBgFnEiOaXe";\n$debug = false;\n$env = "production";\n?>',
+    '/proc/self/environ':
+      'APACHE_RUN_USER=www-data\nAPACHE_RUN_GROUP=www-data\nDB_PASS=PgCr4ft_Pr0d_2024!\nAPP_KEY=xK9mPqR7vT2wNjHsLdYuZcBgFnEiOaXe',
+  };
+
+  private readonly BASE_PATH = '/var/www/cms/templates/';
 
   constructor(
     private prisma: PrismaService,
@@ -21,218 +38,93 @@ export class Lab1Service {
     return this.stateService.initializeState(userId, labId);
   }
 
-  async getState(userId: string, labId: string) {
-    const instance = await this.prisma.labInstance.findUnique({
-      where: {
-        userId_labId: { userId, labId },
+  async listTemplates(userId: string, labId: string) {
+    return {
+      success: true,
+      templates: ['default', 'about', 'contact', 'blog', 'portfolio'],
+      usage: 'POST /page/load with { "template": "default" }',
+      note: 'Load any CMS page template by name.',
+    };
+  }
+
+  // ❌ الثغرة: path traversal بدون sanitization
+  async loadPage(userId: string, labId: string, template: string) {
+    if (!template) throw new BadRequestException('template is required');
+
+    // ❌ الثغرة: concatenation مباشرة بدون path resolution
+    const resolvedPath = this.resolvePath(this.BASE_PATH, template);
+    const isTraversal = this.detectTraversal(template);
+
+    const fileContent = this.virtualFS[resolvedPath];
+    const hasFlag = fileContent?.includes('FLAG{') || false;
+
+    await this.prisma.labGenericLog.create({
+      data: {
+        userId,
+        labId,
+        type: 'LFI',
+        action: 'TEMPLATE_LOAD',
+        meta: { template, resolvedPath, isTraversal, hasFlag },
       },
     });
 
-    if (!instance) {
-      throw new NotFoundException(
-        'Lab instance not found. Please start the lab first.',
-      );
+    if (!fileContent) {
+      return {
+        success: false,
+        error: 'File not found',
+        requestedPath: resolvedPath,
+        hint: isTraversal
+          ? `Traversal detected! Resolved to: ${resolvedPath} — try more or fewer "../" levels`
+          : 'Template not found. Try "default", "about", or use path traversal.',
+      };
     }
 
     return {
       success: true,
-      state: instance.state,
-      isActive: instance.isActive,
-      startedAt: instance.startedAt,
-      availablePages: ['home', 'about', 'contact'],
-      hint: 'Try including system files like /etc/passwd or config files',
+      exploited: hasFlag,
+      template,
+      resolvedPath,
+      content: fileContent,
+      isTraversal,
+      ...(hasFlag && {
+        flag: 'FLAG{LFI_BASIC_PATH_TRAVERSAL_CMS_TEMPLATE_DB_CONFIG}',
+        vulnerability:
+          'Local File Inclusion — Path Traversal (Directory Traversal)',
+        impact:
+          'Attacker read DB credentials, app secrets, and system user accounts.',
+        fix: [
+          'Resolve and validate path: use path.resolve() then verify it starts with BASE_PATH',
+          'Whitelist allowed template names — reject anything not in the list',
+          'Never use user input directly in file path construction',
+          'Use basename() to strip directory components from user input',
+        ],
+      }),
+      ...(isTraversal &&
+        !hasFlag && {
+          hint: `Good traversal attempt! Resolved to: ${resolvedPath}\nTry: "../../config/database.php" for the DB config with the flag.`,
+        }),
     };
   }
 
-  /**
-   * ⚠️ VULNERABLE: Local File Inclusion via page parameter
-   */
-  async includePage(userId: string, labId: string, page: string) {
-    if (!page) {
-      throw new BadRequestException('Page parameter is required');
-    }
-
-    const instance = await this.prisma.labInstance.findUnique({
-      where: {
-        userId_labId: { userId, labId },
-      },
-    });
-
-    if (!instance) {
-      throw new NotFoundException(
-        'Lab instance not found. Please start the lab first.',
-      );
-    }
-
-    const progress = await this.prisma.userLabProgress.findUnique({
-      where: {
-        userId_labId: { userId, labId },
-      },
-    });
-
-    if (!progress) {
-      throw new NotFoundException(
-        'Lab progress not found. Please start the lab first.',
-      );
-    }
-
-    try {
-      // ⚠️ VULNERABILITY: Direct file inclusion without validation
-      let content = '';
-      let includedFile = '';
-
-      // Simulate file inclusion
-      if (page === 'home' || page === 'about' || page === 'contact') {
-        content = `<h1>${page.toUpperCase()} Page</h1><p>Welcome to ${page}!</p>`;
-        includedFile = `${this.VIEWS_DIR}${page}.php`;
-      } else if (page.includes('/etc/passwd')) {
-        content =
-          'root:x:0:0:root:/root:/bin/bash\nwww-data:x:33:33:www-data:/var/www:/usr/sbin/nologin\nuser:x:1000:1000::/home/user:/bin/bash';
-        includedFile = '/etc/passwd';
-      } else if (page.includes('config')) {
-        content = `<?php\n$db_host = "localhost";\n$db_user = "admin";\n$db_password = "super_secret_123";\n$flag = "${this.FLAG}";\n?>`;
-        includedFile = '/var/www/html/config.php';
-      } else if (page.includes('/proc/self/environ')) {
-        content =
-          'USER=www-data\nPATH=/usr/bin\nSCRIPT_NAME=/index.php\nHTTP_USER_AGENT=Mozilla/5.0';
-        includedFile = '/proc/self/environ';
-      } else {
-        content = `<p>Page not found: ${page}</p>`;
-        includedFile = page;
+  // ❌ الثغرة: محاكاة path join بدون normalization
+  private resolvePath(base: string, input: string): string {
+    const parts = (base + input).split('/').filter(Boolean);
+    const resolved: string[] = [];
+    for (const part of parts) {
+      if (part === '..') {
+        resolved.pop();
+      } else if (part !== '.') {
+        resolved.push(part);
       }
-
-      // Track attempt
-      await this.prisma.userLabProgress.update({
-        where: { id: progress.id },
-        data: {
-          attempts: { increment: 1 },
-          lastAccess: new Date(),
-        },
-      });
-
-      // Check if flag was found
-      const flagPattern = new RegExp(this.FLAG);
-      const flagFound = flagPattern.test(content);
-
-      // Check if LFI was used
-      const usedLFI =
-        page.includes('/') ||
-        page.includes('..') ||
-        !['home', 'about', 'contact'].includes(page);
-
-      if (flagFound && usedLFI) {
-        await this.prisma.userLabProgress.update({
-          where: { id: progress.id },
-          data: {
-            flagSubmitted: true,
-            completedAt: new Date(),
-            progress: 100,
-          },
-        });
-
-        await this.prisma.labSubmission.create({
-          data: {
-            userId,
-            labId,
-            flagAnswer: this.FLAG,
-            isCorrect: true,
-            attemptNumber: progress.attempts + 1,
-            timeTaken: 0,
-            code: page,
-          },
-        });
-
-        return {
-          success: true,
-          content,
-          exploited: true,
-          flag: this.FLAG,
-          message: '🎉 LFI successful! Config file included!',
-          includedFile,
-          hint: 'You successfully exploited Local File Inclusion!',
-        };
-      }
-
-      return {
-        success: true,
-        content,
-        exploited: false,
-        usedLFI,
-        includedFile,
-        message: usedLFI
-          ? 'File included via LFI. Keep looking for sensitive data!'
-          : 'Page loaded successfully',
-        hint: 'Try: /etc/passwd, ../../../var/www/html/config.php, or /proc/self/environ',
-      };
-    } catch (error) {
-      await this.prisma.userLabProgress.update({
-        where: { id: progress.id },
-        data: {
-          attempts: { increment: 1 },
-          lastAccess: new Date(),
-        },
-      });
-
-      return {
-        success: false,
-        error: error.message,
-        message: 'File inclusion failed',
-        hint: 'Check your path syntax',
-      };
     }
+    return '/' + resolved.join('/');
   }
 
-  /**
-   * ⚠️ VULNERABLE: Template inclusion
-   */
-  async includeTemplate(userId: string, labId: string, file: string) {
-    if (!file) {
-      throw new BadRequestException('File parameter is required');
-    }
-
-    const progress = await this.prisma.userLabProgress.findUnique({
-      where: {
-        userId_labId: { userId, labId },
-      },
-    });
-
-    if (!progress) {
-      throw new NotFoundException(
-        'Lab progress not found. Please start the lab first.',
-      );
-    }
-
-    try {
-      // ⚠️ VULNERABILITY: Template inclusion without validation
-      let content = '';
-
-      if (file.includes('config') || file.includes('flag')) {
-        content = this.FLAG;
-      } else if (file.includes('passwd')) {
-        content = 'root:x:0:0:root:/root:/bin/bash';
-      } else {
-        content = 'Template content';
-      }
-
-      await this.prisma.userLabProgress.update({
-        where: { id: progress.id },
-        data: {
-          attempts: { increment: 1 },
-          lastAccess: new Date(),
-        },
-      });
-
-      return {
-        success: true,
-        content,
-        message: 'Template loaded',
-      };
-    } catch (error) {
-      return {
-        success: false,
-        error: error.message,
-        message: 'Template not found',
-      };
-    }
+  private detectTraversal(input: string): boolean {
+    return (
+      input.includes('../') ||
+      input.includes('..\\') ||
+      input.includes('%2e%2e')
+    );
   }
 }

@@ -1,12 +1,5 @@
-import {
-  Controller,
-  Post,
-  Body,
-  UseGuards,
-  Get,
-  Query,
-  Headers,
-} from '@nestjs/common';
+// src/modules/practice-labs/file-inclusion/labs/lab3/lab3.controller.ts
+import { Controller, Post, Body, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../../../../../common/guards';
 import { GetUser } from '../../../shared/decorators/get-user.decorator';
 import { Lab3Service } from './lab3.service';
@@ -17,27 +10,35 @@ export class Lab3Controller {
   constructor(private lab3Service: Lab3Service) {}
 
   @Post('start')
-  async startLab(@GetUser('id') userId: string, @Body('labId') labId: string) {
+  start(@GetUser('id') userId: string, @Body('labId') labId: string) {
     return this.lab3Service.initLab(userId, labId);
   }
 
-  @Get('view')
-  async viewPage(
+  // Step 1: تسميم السجل عبر User-Agent
+  @Post('log/poison')
+  poisonLog(
     @GetUser('id') userId: string,
-    @Query('labId') labId: string,
-    @Query('file') file: string,
-    @Headers('user-agent') userAgent: string,
+    @Body('labId') labId: string,
+    @Body('userAgent') userAgent: string,
+    @Body('path') path: string,
   ) {
-    return this.lab3Service.viewPageWithLogging(userId, labId, file, userAgent);
+    return this.lab3Service.poisonLog(userId, labId, userAgent, path);
   }
 
-  @Get('logs')
-  async viewLogs(@GetUser('id') userId: string, @Query('labId') labId: string) {
-    return this.lab3Service.getAccessLogs(userId, labId);
+  // عرض السجل الحالي
+  @Post('log/view-raw')
+  viewRawLog(@GetUser('id') userId: string, @Body('labId') labId: string) {
+    return this.lab3Service.viewRawLog(userId, labId);
   }
 
-  @Post('state')
-  async getState(@GetUser('id') userId: string, @Body('labId') labId: string) {
-    return this.lab3Service.getState(userId, labId);
+  // Step 2: ❌ الثغرة — LFI يضمّن السجل المسموم
+  @Post('page/view')
+  viewPage(
+    @GetUser('id') userId: string,
+    @Body('labId') labId: string,
+    @Body('page') page: string,
+    @Body('cmd') cmd: string,
+  ) {
+    return this.lab3Service.viewPage(userId, labId, page, cmd);
   }
 }
