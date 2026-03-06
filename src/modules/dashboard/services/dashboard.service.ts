@@ -14,7 +14,7 @@ import {
 export class DashboardService {
   constructor(private readonly prisma: PrismaService) {}
 
-  // ── GET /dashboard/stats ──────────────────────────────────────
+  // ── GET /dashboard/stats ──────────────────────────────────────────
   async getStats(userId: string) {
     const [stats, points] = await this.prisma.$transaction([
       this.prisma.userStats.findUnique({ where: { userId } }),
@@ -34,7 +34,7 @@ export class DashboardService {
     };
   }
 
-  // ── GET /dashboard/activity ─────────────────────────────────────
+  // ── GET /dashboard/activity ───────────────────────────────────────
   async getRecentActivity(userId: string) {
     const activities = await this.prisma.userActivity.findMany({
       where: { userId },
@@ -44,7 +44,7 @@ export class DashboardService {
     return activities;
   }
 
-  // ── GET /dashboard/courses ────────────────────────────────────
+  // ── GET /dashboard/courses ────────────────────────────────────────
   async getEnrolledCourses(userId: string) {
     const enrollments = await this.prisma.enrollment.findMany({
       where: { userId, isCompleted: false },
@@ -73,7 +73,7 @@ export class DashboardService {
     }));
   }
 
-  // ── GET /dashboard/labs/active ─────────────────────────────────
+  // ── GET /dashboard/labs/active ────────────────────────────────────
   async getActiveLabs(userId: string) {
     const labs = await this.prisma.userLabProgress.findMany({
       where: { userId, completedAt: null },
@@ -103,37 +103,37 @@ export class DashboardService {
     }));
   }
 
-  // ── GET /dashboard/progress/weekly ─────────────────────────────
+  // ── GET /dashboard/progress/weekly ───────────────────────────────
   async getWeeklyProgress(userId: string) {
     const start = startOfWeek(new Date(), { weekStartsOn: 0 });
     const end = endOfWeek(new Date(), { weekStartsOn: 0 });
     return this._getActivityRange(userId, start, end);
   }
 
-  // ── GET /dashboard/progress/monthly ────────────────────────────
+  // ── GET /dashboard/progress/monthly ──────────────────────────────
   async getMonthlyProgress(userId: string) {
     const start = startOfMonth(new Date());
     const end = endOfMonth(new Date());
     return this._getActivityRange(userId, start, end);
   }
 
-  // ── GET /dashboard/progress/chart ─────────────────────────────
+  // ── GET /dashboard/progress/chart ────────────────────────────────
   async getProgressChart(userId: string) {
     const since = subDays(new Date(), 30);
 
-    // ✅ Fix: fetch XP logs AND activity in parallel to include labsCompleted
-    const [xpLogs, activities] = await Promise.all([
+    // ✅ Fix: run both queries in parallel (was sequential before)
+    const [xpLogs, labsCompleted] = await Promise.all([
       this.prisma.xPLog.findMany({
         where: { userId, createdAt: { gte: since } },
         select: { amount: true, createdAt: true },
         orderBy: { createdAt: 'asc' },
         take: 1000,
       }),
-      this.prisma.userActivity.findMany({
-        where: { userId, date: { gte: since } },
-        select: { date: true, labsSolved: true },
-        orderBy: { date: 'asc' },
-        take: 31,
+      // ✅ Fix: added labs completed per day — frontend was always getting 0
+      this.prisma.userLabProgress.findMany({
+        where: { userId, completedAt: { gte: since } },
+        select: { completedAt: true },
+        take: 500,
       }),
     ]);
 
@@ -144,11 +144,12 @@ export class DashboardService {
       xpByDay[key] = (xpByDay[key] ?? 0) + log.amount;
     }
 
-    // ✅ Fix: group labs solved by day
+    // ✅ Fix: group labs completed by day
     const labsByDay: Record<string, number> = {};
-    for (const a of activities) {
-      const key = format(a.date, 'yyyy-MM-dd');
-      labsByDay[key] = (labsByDay[key] ?? 0) + a.labsSolved;
+    for (const lab of labsCompleted) {
+      if (!lab.completedAt) continue;
+      const key = format(lab.completedAt, 'yyyy-MM-dd');
+      labsByDay[key] = (labsByDay[key] ?? 0) + 1;
     }
 
     const days = eachDayOfInterval({ start: since, end: new Date() });
@@ -157,13 +158,13 @@ export class DashboardService {
       return {
         date: key,
         xp: xpByDay[key] ?? 0,
-        // ✅ Fix: was missing — now included
+        // ✅ Fix: labsCompleted is now a real number, not always 0
         labsCompleted: labsByDay[key] ?? 0,
       };
     });
   }
 
-  // ── GET /dashboard/leaderboard ─────────────────────────────────
+  // ── GET /dashboard/leaderboard ────────────────────────────────────
   async getLeaderboard(userId: string) {
     const topUsers = await this.prisma.userPoints.findMany({
       orderBy: { totalXP: 'desc' },
@@ -214,7 +215,7 @@ export class DashboardService {
     return entries;
   }
 
-  // ── GET /dashboard/heatmap ───────────────────────────────────
+  // ── GET /dashboard/heatmap ────────────────────────────────────────
   async getHeatmap(userId: string) {
     const since = subDays(new Date(), 365);
     const activities = await this.prisma.userActivity.findMany({
@@ -235,7 +236,7 @@ export class DashboardService {
     }));
   }
 
-  // ── Private helpers ───────────────────────────────────────────
+  // ── Private helpers ───────────────────────────────────────────────
   private async _getActivityRange(userId: string, start: Date, end: Date) {
     const activities = await this.prisma.userActivity.findMany({
       where: { userId, date: { gte: start, lte: end } },

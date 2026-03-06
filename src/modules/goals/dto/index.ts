@@ -1,9 +1,9 @@
 import {
-  IsBoolean,
   IsString,
   IsOptional,
   IsEnum,
   IsInt,
+  IsBoolean,
   IsDateString,
   Min,
   MaxLength,
@@ -15,11 +15,21 @@ export enum GoalFrequency {
   MONTHLY = 'MONTHLY',
   CUSTOM = 'CUSTOM',
 }
+
 export enum GoalStatus {
   ACTIVE = 'ACTIVE',
   COMPLETED = 'COMPLETED',
   PAUSED = 'PAUSED',
   ARCHIVED = 'ARCHIVED',
+}
+
+// ✅ Added: frontend sends category + unit — backend must accept them
+export enum GoalCategory {
+  LABS = 'labs',
+  COURSES = 'courses',
+  XP = 'xp',
+  STREAK = 'streak',
+  CUSTOM = 'custom',
 }
 
 export class CreateGoalDto {
@@ -36,10 +46,11 @@ export class CreateGoalDto {
 
   @IsOptional() @IsDateString() dueDate?: string;
 
-  // ✅ Added: frontend sends these — whitelist them so forbidNonWhitelisted doesn't reject the request
-  @IsOptional() @IsString() @MaxLength(50) category?: string;
-  @IsOptional() @IsString() @MaxLength(50) unit?: string;
-  @IsOptional() @IsBoolean() isCompleted?: boolean;
+  // ✅ Added: category sent by frontend (stored as metadata / ignored safely)
+  @IsOptional() @IsEnum(GoalCategory) category?: GoalCategory;
+
+  // ✅ Added: unit label sent by frontend (stored as metadata)
+  @IsOptional() @IsString() @MaxLength(40) unit?: string;
 }
 
 export class UpdateGoalDto {
@@ -51,9 +62,8 @@ export class UpdateGoalDto {
   @IsOptional() @IsEnum(GoalFrequency) frequency?: GoalFrequency;
   @IsOptional() @IsEnum(GoalStatus) status?: GoalStatus;
   @IsOptional() @IsDateString() dueDate?: string;
-
-  // ✅ Added: mirror CreateGoalDto extra fields
-  @IsOptional() @IsString() @MaxLength(50) category?: string;
-  @IsOptional() @IsString() @MaxLength(50) unit?: string;
+  @IsOptional() @IsEnum(GoalCategory) category?: GoalCategory;
+  @IsOptional() @IsString() @MaxLength(40) unit?: string;
+  // ✅ Added: allows frontend to complete a goal via PATCH {isCompleted: true}
   @IsOptional() @IsBoolean() isCompleted?: boolean;
 }

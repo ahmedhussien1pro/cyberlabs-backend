@@ -134,10 +134,13 @@ export class UsersService {
             completedAt: true,
             careerPath: {
               select: {
+                id: true,
                 name: true,
                 ar_name: true,
                 description: true,
+                ar_description: true,
                 iconUrl: true,
+                slug: true,
               },
             },
           },
@@ -414,6 +417,8 @@ export class UsersService {
 
   /**
    * Get user points — with auto level-correction
+   * ✅ Fix: level is now auto-corrected every time this endpoint is hit
+   *         handles existing users whose XP grew but level was never bumped
    */
   async getUserPoints(userId: string) {
     const user = await this.prisma.user.findUnique({
@@ -430,7 +435,7 @@ export class UsersService {
       });
     }
 
-    // ✅ Fix: auto-correct stale level (handles existing users whose level was never bumped)
+    // ✅ Auto-correct stale level — runs silently in background
     const correctLevel = calcLevel(points.totalXP);
     if (correctLevel !== points.level) {
       points = await this.prisma.userPoints.update({
@@ -440,14 +445,22 @@ export class UsersService {
     }
 
     const xpForNextLevel = points.level * 1000;
-    const pointsToNextLevel = xpForNextLevel - points.totalXP;
+    const xpIntoCurrentLevel = points.totalXP - (points.level - 1) * 1000;
+    const xpNeededForLevel = 1000; // each level = 1000 XP
 
     return {
       totalPoints: points.totalPoints,
       totalXP: points.totalXP,
       level: points.level,
-      pointsToNextLevel: Math.max(0, pointsToNextLevel),
+      // ✅ Fix: progress within current level (0-100%) — was calculating against total before
+      xpIntoCurrentLevel,
+      xpNeededForLevel,
       xpForNextLevel,
+      levelProgress: Math.min(
+        Math.round((xpIntoCurrentLevel / xpNeededForLevel) * 100),
+        100,
+      ),
+      pointsToNextLevel: Math.max(0, xpForNextLevel - points.totalXP),
     };
   }
 
