@@ -1,100 +1,49 @@
-import { Controller, Post, Get, Body, Query, UseGuards } from '@nestjs/common';
+// src/modules/practice-labs/file-upload/labs/lab3/lab3.controller.ts
+import { Controller, Post, Body, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../../../../../common/guards';
 import { GetUser } from '../../../shared/decorators/get-user.decorator';
-import { Lab3Service } from './lab3.service';
+import { FileUploadLab3Service } from './lab3.service';
 
 @Controller('practice-labs/file-upload/lab3')
 @UseGuards(JwtAuthGuard)
 export class Lab3Controller {
-  constructor(private lab3Service: Lab3Service) {}
+  constructor(private lab3Service: FileUploadLab3Service) {}
 
   @Post('start')
-  async startLab(@GetUser('id') userId: string, @Body('labId') labId: string) {
+  start(@GetUser('id') userId: string, @Body('labId') labId: string) {
     return this.lab3Service.initLab(userId, labId);
   }
 
-  @Post('upload-path')
-  async uploadPath(
+  @Post('scan/info')
+  getInfo(@GetUser('id') userId: string, @Body('labId') labId: string) {
+    return this.lab3Service.getInfo(userId, labId);
+  }
+
+  // ❌ الثغرة: يفحص magic bytes فقط
+  @Post('scan/upload')
+  uploadScan(
     @GetUser('id') userId: string,
     @Body('labId') labId: string,
-    @Body('fileName') fileName: string,
-    @Body('filePath') filePath: string,
-    @Body('fileContent') fileContent: string,
+    @Body('filename') filename: string,
+    @Body('magicBytes') magicBytes: string,
+    @Body('phpPayload') phpPayload: string,
   ) {
-    return this.lab3Service.uploadToPath(
+    return this.lab3Service.uploadScan(
       userId,
       labId,
-      fileName,
-      filePath,
-      fileContent,
+      filename,
+      magicBytes,
+      phpPayload,
     );
   }
 
-  @Post('upload-absolute')
-  async uploadAbsolute(
+  @Post('scan/execute')
+  executeScan(
     @GetUser('id') userId: string,
     @Body('labId') labId: string,
-    @Body('fullPath') fullPath: string,
-    @Body('fileContent') fileContent: string,
+    @Body('filename') filename: string,
+    @Body('cmd') cmd: string,
   ) {
-    return this.lab3Service.uploadAbsolutePath(
-      userId,
-      labId,
-      fullPath,
-      fileContent,
-    );
-  }
-
-  @Post('upload-separators')
-  async uploadSeparators(
-    @GetUser('id') userId: string,
-    @Body('labId') labId: string,
-    @Body('fileName') fileName: string,
-    @Body('fileContent') fileContent: string,
-  ) {
-    return this.lab3Service.uploadWithSeparators(
-      userId,
-      labId,
-      fileName,
-      fileContent,
-    );
-  }
-
-  @Post('upload-zip')
-  async uploadZip(
-    @GetUser('id') userId: string,
-    @Body('labId') labId: string,
-    @Body('zipFileName') zipFileName: string,
-    @Body('zipContents') zipContents: Array<{ name: string; content: string }>,
-  ) {
-    return this.lab3Service.uploadZip(userId, labId, zipFileName, zipContents);
-  }
-
-  @Post('overwrite')
-  async overwrite(
-    @GetUser('id') userId: string,
-    @Body('labId') labId: string,
-    @Body('targetFile') targetFile: string,
-    @Body('newContent') newContent: string,
-  ) {
-    return this.lab3Service.uploadOverwrite(
-      userId,
-      labId,
-      targetFile,
-      newContent,
-    );
-  }
-
-  @Get('files')
-  async listFiles(
-    @GetUser('id') userId: string,
-    @Query('labId') labId: string,
-  ) {
-    return this.lab3Service.listFiles(userId, labId);
-  }
-
-  @Get('hints')
-  async getHints(@GetUser('id') userId: string, @Query('labId') labId: string) {
-    return this.lab3Service.getHints(userId, labId);
+    return this.lab3Service.executeWebshell(userId, labId, filename, cmd);
   }
 }
