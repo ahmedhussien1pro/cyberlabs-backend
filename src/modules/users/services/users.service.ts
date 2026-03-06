@@ -165,9 +165,6 @@ export class UsersService {
             },
           },
         },
-        // ✅ Fix: removed 'slug' from CareerPath select — it doesn't exist in the schema
-        //   CareerPath model only has: id, name, ar_name, description, ar_description, iconUrl
-        //   Paths with slugs are LearningPath (served via GET /paths/me)
         careerPaths: {
           select: {
             id: true,
@@ -182,7 +179,6 @@ export class UsersService {
                 description: true,
                 ar_description: true,
                 iconUrl: true,
-                // slug: true  ← removed: CareerPath has no slug field
               },
             },
           },
@@ -253,7 +249,7 @@ export class UsersService {
    *
    * ✅ Fix: currentStreak and totalHours were always 0 because UserStats
    *         is never written to. Now both are calculated live:
-   *         - totalHours  → SUM(UserActivity.activeMinutes) / 60
+   *         - totalHours  → SUM(UserActivity.activeMinutes) / 60  (1 decimal)
    *         - currentStreak → consecutive active days ending today/yesterday
    *         All queries run in a single $transaction for efficiency.
    */
@@ -294,9 +290,9 @@ export class UsersService {
 
     if (!user) throw new NotFoundException('User not found');
 
-    // Convert accumulated minutes → rounded-down hours
     const totalMinutes = activityAgg._sum.activeMinutes ?? 0;
-    const totalHours = Math.floor(totalMinutes / 60);
+    // ✅ Fix: use 1-decimal rounding so 30 min → 0.5h instead of 0h
+    const totalHours = Math.round((totalMinutes / 60) * 10) / 10;
 
     // Streak from consecutive days
     const currentStreak = calcStreak(activityDates.map((a) => a.date));
