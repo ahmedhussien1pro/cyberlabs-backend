@@ -7,6 +7,7 @@ import { seedLabs } from './seed-data/seed-labs';
 import { seedCourses } from './seed-data/course-data/seed-courses';
 import { seedPaths } from './seed-data/seed-paths';
 import { seedCategoryLabs } from './seed-data/seed-category-labs';
+import { seedBadges } from './seed-data/seed-badges';
 
 import { lab1Metadata } from '../src/modules/practice-labs/sql-injection/labs/lab1/lab1.metadata';
 
@@ -103,6 +104,9 @@ async function main() {
     for (const category of LAB_CATEGORIES) {
       await seedCategoryLabs(prisma, category);
     }
+
+    // ✅ Always seed badges (idempotent — skips existing)
+    await seedBadges(prisma);
 
     console.log('\n' + '═'.repeat(50));
     console.log('🎉 All seeds completed successfully!');

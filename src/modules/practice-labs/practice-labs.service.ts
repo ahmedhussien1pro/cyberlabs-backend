@@ -7,6 +7,7 @@ import {
 import { PrismaService } from '../../core/database';
 import { ConfigService } from '@nestjs/config';
 import * as crypto from 'crypto';
+import { BadgesService } from '../badges/badges.service';
 
 /** XP formula: Level N requires N×1000 cumulative XP */
 function calcLevel(totalXP: number): number {
@@ -18,6 +19,7 @@ export class PracticeLabsService {
   constructor(
     private prisma: PrismaService,
     private configService: ConfigService,
+    private badgesService: BadgesService, // ➕ injected for auto-award
   ) {}
 
   // ─────────────────────────────────────────────
@@ -355,6 +357,16 @@ export class PracticeLabsService {
 
       await this.awardXP(userId, lab.xpReward, 'LAB', `Completed lab: ${lab.title}`);
       await this.awardPoints(userId, lab.pointsReward, `Completed lab: ${lab.title}`);
+
+      // ➕ Auto-award milestone badges based on total completed labs
+      try {
+        const completedCount = await this.prisma.userLabProgress.count({
+          where: { userId, completedAt: { not: null } },
+        });
+        await this.badgesService.checkLabMilestoneBadges(userId, completedCount);
+      } catch {
+        // Non-blocking: badge award failure should never fail the submission
+      }
     }
 
     return {

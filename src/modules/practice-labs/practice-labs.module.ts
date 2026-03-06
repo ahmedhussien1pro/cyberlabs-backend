@@ -15,10 +15,12 @@ import { XssModule } from './xss/xss.module';
 import { SstiModule } from './ssti/ssti.module';
 import { RaceConditionModule } from './race-condition/race-condition.module';
 import { CsrfModule } from './csrf/csrf.module';
+import { BadgesModule } from '../badges/badges.module';
 
 @Module({
   imports: [
-    DatabaseModule, // Import Prisma
+    DatabaseModule,
+    BadgesModule, // ➕ for auto-awarding badges on lab completion
     CsrfModule,
     CommandInjectionModule,
     AcVulnModule,
