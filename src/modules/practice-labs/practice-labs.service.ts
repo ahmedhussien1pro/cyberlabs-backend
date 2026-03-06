@@ -8,6 +8,11 @@ import { PrismaService } from '../../core/database';
 import { ConfigService } from '@nestjs/config';
 import * as crypto from 'crypto';
 
+/** XP formula: Level N requires N×1000 cumulative XP */
+function calcLevel(totalXP: number): number {
+  return Math.floor(totalXP / 1000) + 1;
+}
+
 @Injectable()
 export class PracticeLabsService {
   constructor(
@@ -145,8 +150,6 @@ export class PracticeLabsService {
           select: { id: true, order: true, xpCost: true },
           orderBy: { order: 'asc' },
         },
-        // ✅ Lab لا يملك course مباشرة (courseId موجود لكن بدون @relation في schema)
-        // نجيب الـ course عبر junction table courseLabs
         courseLabs: {
           take: 1,
           include: {
@@ -185,7 +188,6 @@ export class PracticeLabsService {
 
     if (!lab) throw new NotFoundException('Lab not found');
 
-    // ✅ نحول courseLabs[0]?.course → course للحفاظ على شكل الـ API
     const { courseLabs, ...labRest } = lab;
     const course = courseLabs[0]?.course ?? null;
 
@@ -203,24 +205,16 @@ export class PracticeLabsService {
     if (!lab) throw new NotFoundException('Lab not found');
 
     await this.prisma.labLaunchToken.updateMany({
-      where: {
-        userId,
-        labId,
-        usedAt: null,
-      },
-      data: {
-        expiresAt: new Date(0),
-      },
+      where: { userId, labId, usedAt: null },
+      data: { expiresAt: new Date(0) },
     });
 
-    // 2. Upsert LabInstance
     const instance = await this.prisma.labInstance.upsert({
       where: { userId_labId: { userId, labId } },
       update: { isActive: true, startedAt: new Date() },
       create: { userId, labId, isActive: true },
     });
 
-    // 3. Upsert UserLabProgress
     await this.prisma.userLabProgress.upsert({
       where: { userId_labId: { userId, labId } },
       update: { lastAccess: new Date() },
@@ -233,18 +227,11 @@ export class PracticeLabsService {
       },
     });
 
-    // 4. New Token after 10M
     const tokenStr = crypto.randomBytes(32).toString('hex');
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
 
     await this.prisma.labLaunchToken.create({
-      data: {
-        token: tokenStr,
-        userId,
-        labId,
-        instanceId: instance.id,
-        expiresAt,
-      },
+      data: { token: tokenStr, userId, labId, instanceId: instance.id, expiresAt },
     });
 
     const labsSubdomain =
@@ -264,12 +251,7 @@ export class PracticeLabsService {
   // ─────────────────────────────────────────────
   async consumeToken(token: string, userId: string) {
     const launchToken = await this.prisma.labLaunchToken.findFirst({
-      where: {
-        token,
-        usedAt: null,
-        expiresAt: { gt: new Date() },
-        userId,
-      },
+      where: { token, usedAt: null, expiresAt: { gt: new Date() }, userId },
       include: {
         lab: {
           select: {
@@ -303,7 +285,6 @@ export class PracticeLabsService {
       throw new BadRequestException('Token invalid, expired, or already used');
     }
 
-    // Atomic burn
     await this.prisma.labLaunchToken.update({
       where: { id: launchToken.id },
       data: { usedAt: new Date() },
@@ -345,10 +326,7 @@ export class PracticeLabsService {
     } else {
       progress = await this.prisma.userLabProgress.update({
         where: { id: progress.id },
-        data: {
-          attempts: { increment: 1 },
-          lastAccess: new Date(),
-        },
+        data: { attempts: { increment: 1 }, lastAccess: new Date() },
       });
     }
 
@@ -372,24 +350,11 @@ export class PracticeLabsService {
     if (isFirstSolve) {
       await this.prisma.userLabProgress.update({
         where: { id: progress.id },
-        data: {
-          flagSubmitted: true,
-          completedAt: new Date(),
-          progress: 100,
-        },
+        data: { flagSubmitted: true, completedAt: new Date(), progress: 100 },
       });
 
-      await this.awardXP(
-        userId,
-        lab.xpReward,
-        'LAB',
-        `Completed lab: ${lab.title}`,
-      );
-      await this.awardPoints(
-        userId,
-        lab.pointsReward,
-        `Completed lab: ${lab.title}`,
-      );
+      await this.awardXP(userId, lab.xpReward, 'LAB', `Completed lab: ${lab.title}`);
+      await this.awardPoints(userId, lab.pointsReward, `Completed lab: ${lab.title}`);
     }
 
     return {
@@ -516,6 +481,10 @@ export class PracticeLabsService {
     return names[category] ?? category;
   }
 
+  /**
+   * ✅ Fix: use interactive transaction so we can read the updated XP
+   *       and auto-bump level if needed (was array transaction before)
+   */
   private async awardXP(
     userId: string,
     amount: number,
@@ -523,16 +492,27 @@ export class PracticeLabsService {
     reason: string,
   ) {
     if (amount <= 0) return;
-    await this.prisma.$transaction([
-      this.prisma.userPoints.upsert({
+
+    await this.prisma.$transaction(async (tx) => {
+      const updated = await tx.userPoints.upsert({
         where: { userId },
         update: { totalXP: { increment: amount } },
-        create: { userId, totalXP: amount },
-      }),
-      this.prisma.xPLog.create({
+        create: { userId, totalXP: amount, level: 1 },
+      });
+
+      // ✅ Fix: auto level-up — Level N = N*1000 cumulative XP
+      const newLevel = calcLevel(updated.totalXP);
+      if (newLevel !== updated.level) {
+        await tx.userPoints.update({
+          where: { userId },
+          data: { level: newLevel },
+        });
+      }
+
+      await tx.xPLog.create({
         data: { userId, source, amount, reason },
-      }),
-    ]);
+      });
+    });
   }
 
   private async awardPoints(userId: string, amount: number, reason: string) {

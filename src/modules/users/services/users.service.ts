@@ -18,6 +18,11 @@ import { R2Service } from '../../../core/storage';
 import { ConfigService } from '@nestjs/config';
 import { plainToClass } from 'class-transformer';
 
+/** XP formula: Level N requires N×1000 cumulative XP — mirrors practice-labs.service */
+function calcLevel(totalXP: number): number {
+  return Math.floor(totalXP / 1000) + 1;
+}
+
 @Injectable()
 export class UsersService {
   constructor(
@@ -220,7 +225,6 @@ export class UsersService {
       throw new NotFoundException('User not found');
     }
 
-    // Count enrollments
     const enrolledCourses = await this.prisma.enrollment.count({
       where: { userId },
     });
@@ -239,19 +243,16 @@ export class UsersService {
       avatarUrl: user.avatarUrl || undefined,
       role: user.role,
 
-      // Points & XP
       totalPoints: user.points?.totalPoints || 0,
       totalXP: user.points?.totalXP || 0,
       level: user.points?.level || 1,
 
-      // Learning stats
       enrolledCourses,
       completedCourses,
       completedLabs,
       badgesCount: user.badges.length,
       certificationsCount: user.certifications.length,
 
-      // Activity stats
       totalHours: user.stats?.totalHours || 0,
       activeDays: user.stats?.activeDays || 0,
       currentStreak: user.stats?.currentStreak || 0,
@@ -265,7 +266,7 @@ export class UsersService {
   }
 
   /**
-   * Get all users (with pagination and filters) - Admin only
+   * Get all users (admin only)
    */
   async getAllUsers(query: UserQueryDto) {
     const {
@@ -277,8 +278,6 @@ export class UsersService {
     } = query;
 
     const skip = (page - 1) * limit;
-
-    // Build where clause
     const where: any = {};
 
     if (search) {
@@ -288,7 +287,6 @@ export class UsersService {
       ];
     }
 
-    // Get users
     const users = await this.prisma.user.findMany({
       where,
       skip,
@@ -305,11 +303,7 @@ export class UsersService {
         isActive: true,
         createdAt: true,
         points: {
-          select: {
-            totalPoints: true,
-            totalXP: true,
-            level: true,
-          },
+          select: { totalPoints: true, totalXP: true, level: true },
         },
       },
     });
@@ -363,10 +357,7 @@ export class UsersService {
    */
   async getUserCompletedLabs(userId: string) {
     const labProgress = await this.prisma.userLabProgress.findMany({
-      where: {
-        userId,
-        completedAt: { not: null },
-      },
+      where: { userId, completedAt: { not: null } },
       include: {
         lab: {
           select: {
@@ -391,6 +382,7 @@ export class UsersService {
       completedAt: progress.completedAt,
     }));
   }
+
   /**
    * Change user password
    */
@@ -405,63 +397,48 @@ export class UsersService {
       select: { id: true, password: true },
     });
 
-    if (!user) {
-      throw new NotFoundException('User not found');
-    }
+    if (!user) throw new NotFoundException('User not found');
 
-    // Verify current password
     const bcrypt = require('bcrypt');
-    const isPasswordValid = await bcrypt.compare(
-      currentPassword,
-      user.password,
-    );
-
+    const isPasswordValid = await bcrypt.compare(currentPassword, user.password);
     if (!isPasswordValid) {
       throw new BadRequestException('Current password is incorrect');
     }
 
-    // Hash new password
     const hashedPassword = await bcrypt.hash(newPassword, 10);
-
-    // Update password
     await this.prisma.user.update({
       where: { id: userId },
-      data: {
-        password: hashedPassword,
-        updatedAt: new Date(),
-      },
+      data: { password: hashedPassword, updatedAt: new Date() },
     });
   }
 
   /**
-   * Get user points
+   * Get user points — with auto level-correction
    */
   async getUserPoints(userId: string) {
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
-      include: {
-        points: true,
-      },
+      include: { points: true },
     });
 
-    if (!user) {
-      throw new NotFoundException('User not found');
-    }
+    if (!user) throw new NotFoundException('User not found');
 
-    // Get or create user points
     let points = user.points;
     if (!points) {
       points = await this.prisma.userPoints.create({
-        data: {
-          userId,
-          totalPoints: 0,
-          totalXP: 0,
-          level: 1,
-        },
+        data: { userId, totalPoints: 0, totalXP: 0, level: 1 },
       });
     }
 
-    // Calculate XP for next level
+    // ✅ Fix: auto-correct stale level (handles existing users whose level was never bumped)
+    const correctLevel = calcLevel(points.totalXP);
+    if (correctLevel !== points.level) {
+      points = await this.prisma.userPoints.update({
+        where: { userId },
+        data: { level: correctLevel },
+      });
+    }
+
     const xpForNextLevel = points.level * 1000;
     const pointsToNextLevel = xpForNextLevel - points.totalXP;
 
@@ -479,10 +456,7 @@ export class UsersService {
     since.setFullYear(since.getFullYear() - 1);
 
     const activities = await this.prisma.userActivity.findMany({
-      where: {
-        userId,
-        date: { gte: since },
-      },
+      where: { userId, date: { gte: since } },
       select: {
         date: true,
         activeMinutes: true,
@@ -499,6 +473,7 @@ export class UsersService {
       labsSolved: a.labsSolved,
     }));
   }
+
   async requestAvatarUpload(userId: string, contentType: string) {
     return this.r2.getPresignedUploadUrl(userId, contentType);
   }
@@ -509,12 +484,9 @@ export class UsersService {
       select: { avatarUrl: true },
     });
 
-    // Delete old avatar from R2
     if (user?.avatarUrl) {
       const oldKey = this.r2.extractKey(user.avatarUrl);
-      if (oldKey) {
-        await this.r2.deleteObject(oldKey).catch(() => null); // ignore errors
-      }
+      if (oldKey) await this.r2.deleteObject(oldKey).catch(() => null);
     }
 
     const publicUrl = this.config.get<string>('R2_PUBLIC_URL');
@@ -527,7 +499,8 @@ export class UsersService {
 
     return avatarUrl;
   }
-  // ── Sessions ──────────────────────────────────────────────────────
+
+  // ── Sessions ───────────────────────────────────────────────
   async getUserSessions(userId: string) {
     return this.prisma.refreshToken.findMany({
       where: { userId, revokedAt: null, expiresAt: { gt: new Date() } },
@@ -554,7 +527,7 @@ export class UsersService {
     });
   }
 
-  // ── Notification Preferences ──────────────────────────────────────
+  // ── Notification Preferences ────────────────────────────────
   async getNotificationPreferences(userId: string) {
     return this.prisma.notificationSettings.upsert({
       where: { userId },
@@ -574,10 +547,10 @@ export class UsersService {
     });
   }
 
-  // ── Username lookup ───────────────────────────────────────────────
+  // ── Username lookup ──────────────────────────────────────────
   async getUserByUsername(username: string) {
     const user = await this.prisma.user.findUnique({
-      where: { name: username }, // `name` is @unique in schema
+      where: { name: username },
       select: {
         id: true,
         name: true,
@@ -586,19 +559,14 @@ export class UsersService {
         ar_bio: true,
         role: true,
         createdAt: true,
-        _count: {
-          select: {
-            badges: true,
-            achievements: true,
-          },
-        },
+        _count: { select: { badges: true, achievements: true } },
       },
     });
     if (!user) throw new NotFoundException('User not found');
     return user;
   }
 
-  // ── Soft delete ───────────────────────────────────────────────────
+  // ── Soft delete ──────────────────────────────────────────────
   async softDeleteAccount(userId: string, reason?: string) {
     await this.prisma.user.update({
       where: { id: userId },
@@ -606,7 +574,6 @@ export class UsersService {
         isActive: false,
         deletedAt: new Date(),
         deletionReason: reason ?? null,
-        // Revoke all sessions
         refreshTokens: {
           updateMany: {
             where: { revokedAt: null },
@@ -617,7 +584,7 @@ export class UsersService {
     });
   }
 
-  // ── GDPR Export ───────────────────────────────────────────────────
+  // ── GDPR Export ────────────────────────────────────────────
   async exportUserData(userId: string) {
     const [user, points, stats, achievements, badges, goals] =
       await this.prisma.$transaction([
