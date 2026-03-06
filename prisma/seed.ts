@@ -29,6 +29,8 @@ const LAB_CATEGORIES: string[] = [
   'csrf',
   'broken-auth',
   'command-injection',
+  'file-inclusion',
+  'file-upload',
 ];
 async function seedModuleLabs() {
   if (MODULE_LABS.length === 0) return;

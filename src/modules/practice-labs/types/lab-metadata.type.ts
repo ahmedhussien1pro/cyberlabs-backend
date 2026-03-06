@@ -1,9 +1,27 @@
 // src/modules/practice-labs/types/lab-metadata.type.ts
 
-export interface LabScenario {
+export interface BilingualText {
+  en: string;
+  ar: string;
+}
+
+export interface BilingualSteps {
+  en: string[];
+  ar: string[];
+}
+
+export interface LabSolution {
   context: string;
-  vulnerableCode?: string;
+  vulnerableCode: string;
   exploitation: string;
+  steps: BilingualSteps;
+  fix: string[];
+}
+
+export interface LabPostSolve {
+  explanation: BilingualText;
+  impact: BilingualText;
+  fix: string[];
 }
 
 export interface LabHintSeed {
@@ -13,7 +31,7 @@ export interface LabHintSeed {
 }
 
 export interface LabMetadata {
-  // ─── Bilingual Card Fields ───────────────────────────────────
+  // ─── Bilingual Card Fields ────────────────────────────────────
   slug: string;
   title: string;
   ar_title: string;
@@ -37,12 +55,23 @@ export interface LabMetadata {
   executionMode: 'FRONTEND' | 'SHARED_BACKEND' | 'DOCKER';
   isPublished: boolean;
   imageUrl?: string;
-  // ─── Lab Platform Fields (EN only) ──────────────────────────
+
+  // ─── Lab Platform Fields ────────────────────────────
   goal: string;
-  scenario?: LabScenario;
+  ar_goal: string;
+  briefing: BilingualText;
+  stepsOverview: BilingualSteps;
+
+  // ─── Admin Only ────────────────────────────────────────────────
+  solution: LabSolution;
+
+  // ─── بعد الحل ──────────────────────────────────────────────────
+  postSolve: LabPostSolve;
+
+  // ─── Hints — داخل اللاب بتكلف XP ──────────────────────────────
   hints: LabHintSeed[];
 
-  // ─── Seed Data ───────────────────────────────────────────────
+  // ─── Seed Data ─────────────────────────────────────────────────
   flagAnswer: string;
   initialState: Record<string, any>;
 }

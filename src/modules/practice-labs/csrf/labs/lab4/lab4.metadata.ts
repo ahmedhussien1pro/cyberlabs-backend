@@ -23,55 +23,146 @@ export const csrfLab4Metadata: LabMetadata = {
   duration: 60,
   executionMode: 'SHARED_BACKEND',
   isPublished: true,
-  goal: 'The CI/CD API sets CORS: Access-Control-Allow-Origin: *.pipelinehub.io with credentials. Use a "subdomain" origin to make credentialed CORS requests and trigger a production deployment of build #BACKDOOR-BUILD to retrieve the flag.',
-  scenario: {
-    context:
-      'PipelineHub CI/CD platform has CORS configured as: Access-Control-Allow-Origin: *.pipelinehub.io with credentials:true. An attacker controls docs.pipelinehub.io (a docs subdomain with XSS). CORS trusts all subdomains → attacker can make credentialed API requests from docs.pipelinehub.io. The /deploy endpoint has no CSRF token. Combined: attacker triggers production deployment.',
-    vulnerableCode: `// CORS config (vulnerable):
-app.use(cors({
-  origin: (origin, cb) => {
-    // ❌ Wildcard subdomain — trusts ALL subdomains including attacker-controlled ones
-    if (origin?.endsWith('.pipelinehub.io')) cb(null, true);
-    else cb(null, false);
-  },
-  credentials: true, // ❌ Allows cookies with CORS
-}));
 
-// Deploy endpoint (no CSRF protection):
-app.post('/deploy', isAuthenticated, async (req, res) => {
-  const { buildId, environment } = req.body;
-  // ❌ No CSRF token check
-  await pipeline.deploy(buildId, environment);
-});`,
-    exploitation:
-      '1. Simulate being on docs.pipelinehub.io (trusted subdomain). 2. Make a credentialed CORS request to /deploy with buildId: BACKDOOR-BUILD, environment: production. 3. The CORS policy allows it, cookies are sent, deployment triggers.',
+  // ─── للمتدرب ────────────────────────────────────────────────────
+  goal: 'The CI/CD API sets CORS: Access-Control-Allow-Origin: *.pipelinehub.io with credentials. Use a "subdomain" origin to make credentialed CORS requests and trigger a production deployment of build #BACKDOOR-BUILD to retrieve the flag.',
+  ar_goal:
+    'تضع CI/CD API إعداد CORS: Access-Control-Allow-Origin: *.pipelinehub.io مع credentials. استخدم أصل "نطاق فرعي" لإجراء طلبات CORS مع بيانات الاعتماد وتشغيل نشر إنتاجي للبناء رقم BACKDOOR-BUILD لاسترداد العلم.',
+
+  briefing: {
+    en: `PipelineHub — CI/CD automation platform. Build, test, deploy. Production deployments at the click of a button.
+The API is accessed from the main app: app.pipelinehub.io.
+Also from the docs: docs.pipelinehub.io.
+And the status page: status.pipelinehub.io.
+CORS is configured for all subdomains: *.pipelinehub.io.
+With credentials: true.
+The engineer thought: "Only our subdomains. That's safe."
+But docs.pipelinehub.io allows user-generated content.
+XSS in the docs site → controlled origin.
+Or: you just simulate being docs.pipelinehub.io.
+The /deploy endpoint has no CSRF token.
+No Origin restriction beyond the wildcard.
+BACKDOOR-BUILD is ready.
+It contains reverse_shell.js.
+You just need to deploy it to production.`,
+    ar: `PipelineHub — منصة أتمتة CI/CD. بناء، اختبار، نشر. نشر الإنتاج بنقرة زر.
+يُصَل إلى الـ API من التطبيق الرئيسي: app.pipelinehub.io.
+أيضاً من المستندات: docs.pipelinehub.io.
+وصفحة الحالة: status.pipelinehub.io.
+CORS مُهيَّأ لجميع النطاقات الفرعية: *.pipelinehub.io.
+مع credentials: true.
+اعتقد المهندس: "فقط نطاقاتنا الفرعية. هذا آمن."
+لكن docs.pipelinehub.io يسمح بمحتوى من إنشاء المستخدمين.
+XSS في موقع المستندات → أصل متحكَّم فيه.
+أو: تحاكي فقط أنك docs.pipelinehub.io.
+لا يملك endpoint /deploy أي CSRF token.
+لا قيود Origin تتجاوز الـ wildcard.
+BACKDOOR-BUILD جاهز.
+يحتوي على reverse_shell.js.
+تحتاج فقط نشره في الإنتاج.`,
   },
+
+  stepsOverview: {
+    en: [
+      'Inspect the CORS headers on PipelineHub API — confirm: Access-Control-Allow-Origin: *.pipelinehub.io + Access-Control-Allow-Credentials: true',
+      'Identify the vulnerability: wildcard subdomain CORS trusts ANY subdomain, including attacker-controlled ones',
+      'Confirm /deploy has no CSRF token protection',
+      'Use /csrf/simulate-subdomain-request to simulate a credentialed cross-origin request from docs.pipelinehub.io',
+      'POST /deploy { "buildId": "BACKDOOR-BUILD", "environment": "production" } — with trusted subdomain origin',
+      'GET /deployments/history — confirm BACKDOOR-BUILD deployed to production → flag returned',
+    ],
+    ar: [
+      'افحص هيدرات CORS على PipelineHub API — أكّد: Access-Control-Allow-Origin: *.pipelinehub.io + Access-Control-Allow-Credentials: true',
+      'حدد الثغرة: CORS النطاق الفرعي wildcard يثق بأي نطاق فرعي، بما فيها النطاقات التي يتحكم فيها المهاجم',
+      'أكّد أن /deploy لا يملك حماية CSRF token',
+      'استخدم /csrf/simulate-subdomain-request لمحاكاة طلب CORS مع بيانات الاعتماد من docs.pipelinehub.io',
+      'POST /deploy { "buildId": "BACKDOOR-BUILD"، "environment": "production" } — مع أصل النطاق الفرعي الموثوق',
+      'GET /deployments/history — أكّد نشر BACKDOOR-BUILD في الإنتاج → يُعاد العلم',
+    ],
+  },
+
+  // ─── للأدمن فقط ─────────────────────────────────────────────────
+  solution: {
+    context:
+      'PipelineHub CORS policy: Access-Control-Allow-Origin: *.pipelinehub.io + credentials: true. The wildcard matches any subdomain including docs.pipelinehub.io which has XSS or is attacker-controlled. Since the /deploy endpoint has no CSRF token, the attacker can make authenticated cross-origin API requests from the trusted subdomain. Combined: trigger production deployment of the backdoored build.',
+    vulnerableCode:
+      '// CORS config (vulnerable):\n' +
+      'app.use(cors({\n' +
+      '  origin: (origin, cb) => {\n' +
+      '    // ❌ Wildcard subdomain — trusts ALL subdomains including attacker-controlled ones\n' +
+      "    if (origin?.endsWith('.pipelinehub.io')) cb(null, true);\n" +
+      '    else cb(null, false);\n' +
+      '  },\n' +
+      '  credentials: true, // ❌ Allows cookies with CORS\n' +
+      '}));\n\n' +
+      '// Deploy endpoint (no CSRF protection):\n' +
+      "app.post('/deploy', isAuthenticated, async (req, res) => {\n" +
+      '  const { buildId, environment } = req.body;\n' +
+      '  // ❌ No CSRF token check\n' +
+      '  await pipeline.deploy(buildId, environment);\n' +
+      '});',
+    exploitation:
+      'POST /csrf/simulate-subdomain-request { "origin": "https://docs.pipelinehub.io", "targetPath": "/deploy", "body": { "buildId": "BACKDOOR-BUILD", "environment": "production" } } → CORS passes → cookies sent → deployment triggered',
+    steps: {
+      en: [
+        'GET /api/cors-info → confirm: Access-Control-Allow-Origin accepts *.pipelinehub.io + credentials: true',
+        'POST /deploy { "buildId": "BUILD-001", "environment": "staging" } from docs.pipelinehub.io origin — 200 OK → CORS bypass confirmed',
+        'POST /csrf/simulate-subdomain-request { "origin": "https://docs.pipelinehub.io", "targetPath": "/deploy", "body": { "buildId": "BACKDOOR-BUILD", "environment": "production" } }',
+        'GET /deployments/history → BACKDOOR-BUILD: deployed to production → flag: FLAG{CSRF_CORS_WILDCARD_SUBDOMAIN_CICD_DEPLOY_BACKDOOR}',
+      ],
+      ar: [
+        'GET /api/cors-info → أكّد: Access-Control-Allow-Origin يقبل *.pipelinehub.io + credentials: true',
+        'POST /deploy { "buildId": "BUILD-001"، "environment": "staging" } من أصل docs.pipelinehub.io — 200 OK → تم تأكيد تجاوز CORS',
+        'POST /csrf/simulate-subdomain-request { "origin": "https://docs.pipelinehub.io"، "targetPath": "/deploy"، "body": { "buildId": "BACKDOOR-BUILD"، "environment": "production" } }',
+        'GET /deployments/history → BACKDOOR-BUILD: مُنشَر في الإنتاج → العلم: FLAG{CSRF_CORS_WILDCARD_SUBDOMAIN_CICD_DEPLOY_BACKDOOR}',
+      ],
+    },
+    fix: [
+      'Explicit origin allowlist: instead of *.pipelinehub.io, enumerate exactly: ["https://app.pipelinehub.io", "https://status.pipelinehub.io"] — never wildcard subdomains',
+      'CSRF tokens on all deployment triggers: CI/CD actions must require token validation regardless of CORS',
+      'Separate auth for deployment: production deploys require a separate short-lived deployment token — not just a session cookie',
+      'No user content on trusted subdomains: docs subdomains with user content must never be in the CORS allowlist',
+    ],
+  },
+
+  postSolve: {
+    explanation: {
+      en: 'This lab demonstrates a two-layer attack: CORS misconfiguration + CSRF = credentialed cross-origin API access. The CORS wildcard subdomain policy creates an implicit trust chain: any subdomain compromise (via XSS, subdomain takeover, or user-generated content) becomes a full API compromise. CORS with credentials is especially dangerous because it means the browser sends session cookies — turning a read-vulnerability into a write-vulnerability.',
+      ar: 'يُظهر هذا المختبر هجوماً ذا طبقتين: إعداد CORS خاطئ + CSRF = وصول API عبر الأصول مع بيانات الاعتماد. سياسة CORS النطاق الفرعي wildcard تخلق سلسلة ثقة ضمنية: أي اختراق نطاق فرعي (عبر XSS أو استيلاء على النطاق الفرعي أو محتوى المستخدم) يصبح اختراقاً كاملاً للـ API. CORS مع credentials خطير بشكل خاص لأنه يعني إرسال المتصفح لكوكيز الجلسة — تحويل ثغرة القراءة إلى ثغرة كتابة.',
+    },
+    impact: {
+      en: 'Supply chain attack: a backdoored build deployed to production means every user of the application is now running attacker-controlled code. In real-world scenarios, this vector has been used to compromise thousands of downstream users through a single CI/CD pipeline manipulation (see: SolarWinds, XZ Utils patterns).',
+      ar: 'هجوم سلسلة التوريد: بناء مزروع بـ backdoor مُنشَر في الإنتاج يعني أن كل مستخدم للتطبيق يُشغّل الآن كوداً يتحكم فيه المهاجم. في السيناريوهات الواقعية، تم استخدام هذا النوع من الهجمات لاختراق آلاف المستخدمين النهائيين من خلال تلاعب واحد في خط CI/CD (انظر: أنماط SolarWinds وXZ Utils).',
+    },
+    fix: [
+      'CORS origin allowlist: explicit list of allowed origins, never wildcard subdomains',
+      'Credentials isolation: separate the auth mechanism for API calls vs. session cookies — use Authorization: Bearer tokens for API (not cookies)',
+      'Build signing: cryptographically sign all builds — deploys require valid signature verification',
+      'Deployment approval gates: production deploys require manual approval + MFA, not just an API call',
+    ],
+  },
+
   hints: [
     {
       order: 1,
       xpCost: 25,
       content:
-        'Check the CORS headers on the API. Notice: Access-Control-Allow-Origin: *.pipelinehub.io. What subdomains does the attacker control?',
+        'Check the CORS response headers on the PipelineHub API. Look for Access-Control-Allow-Origin and Access-Control-Allow-Credentials. Which subdomains does the attacker have control over?',
     },
     {
       order: 2,
       xpCost: 45,
       content:
-        'The deploy endpoint has no CSRF token. If you could make a credentialed request from a trusted subdomain, it would work. Use /csrf/simulate-subdomain-request.',
+        'The CORS wildcard trusts ALL subdomains of pipelinehub.io — including docs.pipelinehub.io which has user-generated content (XSS possible). The /deploy endpoint has no CSRF token. Use /csrf/simulate-subdomain-request.',
     },
     {
       order: 3,
       xpCost: 70,
       content:
-        'POST /csrf/simulate-subdomain-request with { "origin": "https://docs.pipelinehub.io", "buildId": "BACKDOOR-BUILD", "environment": "production" }',
-    },
-    {
-      order: 4,
-      xpCost: 100,
-      content:
-        'The subdomain origin is trusted by CORS. Cookies are included (credentials: true). The deploy triggers. Check /deployments/history for the flag.',
+        'POST /csrf/simulate-subdomain-request with: { "origin": "https://docs.pipelinehub.io", "targetPath": "/deploy", "body": { "buildId": "BACKDOOR-BUILD", "environment": "production" } }. Then check /deployments/history.',
     },
   ],
+
   flagAnswer: 'FLAG{CSRF_CORS_WILDCARD_SUBDOMAIN_CICD_DEPLOY_BACKDOOR}',
   initialState: {
     contents: [
