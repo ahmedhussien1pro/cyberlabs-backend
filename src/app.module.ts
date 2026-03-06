@@ -28,6 +28,8 @@ import { ProfileModule } from './modules/profile/profile.module';
 import { CoursesModule } from './modules/courses/courses.module';
 import { PricingModule } from './modules/pricing/pricing.module';
 import { PathsModule } from './modules/paths/paths.module';
+import { BadgesModule } from './modules/badges/badges.module';
+import { CertificatesModule } from './modules/certificates/certificates.module';
 
 // Guards
 import { JwtAuthGuard } from './common/guards';
@@ -56,6 +58,7 @@ import { MailModule } from './core/mail';
     SecurityModule,
     MailModule,
     StorageModule,
+
     // Feature Modules
     AuthModule,
     UsersModule,
@@ -70,6 +73,10 @@ import { MailModule } from './core/mail';
     CoursesModule,
     PricingModule,
     PathsModule,
+
+    // Gamification
+    BadgesModule,
+    CertificatesModule,
   ],
   controllers: [AppController],
   providers: [
