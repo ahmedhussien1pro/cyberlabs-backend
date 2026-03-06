@@ -1,17 +1,23 @@
 // prisma/seed-data/seed-category-labs.ts
 import * as fs from 'fs';
 import * as path from 'path';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Prisma } from '@prisma/client';
 import type { LabMetadata } from '../../src/modules/practice-labs/types/lab-metadata.type';
 
-// ──────────────────────────────────────────────────────────────────────────────
-// upsertLab — نفس المنطق الموجود في seed.ts مركّز في مكان واحد
+// Prisma بيرفض typed interfaces في JSON fields
+// الحل: نحوّل أي object لـ plain JSON
+function toJson(val: unknown): Prisma.InputJsonValue | undefined {
+  if (val === undefined || val === null) return undefined;
+  return JSON.parse(JSON.stringify(val)) as Prisma.InputJsonValue;
+}
+
 // ──────────────────────────────────────────────────────────────────────────────
 async function upsertLab(
   prisma: PrismaClient,
   meta: LabMetadata,
 ): Promise<void> {
   const shared = {
+    // ─── Card Fields ──────────────────────────────────────────────
     title: meta.title,
     ar_title: meta.ar_title,
     description: meta.description,
@@ -24,10 +30,21 @@ async function upsertLab(
     pointsReward: meta.pointsReward,
     duration: meta.duration,
     isPublished: meta.isPublished,
-    scenario: meta.scenario?.context,
-    flagAnswer: meta.flagAnswer,
-    initialState: meta.initialState,
     imageUrl: meta.imageUrl ?? null,
+
+    // ─── Lab Platform Fields ───────────────────────────────────────
+    goal: meta.goal,
+    ar_goal: meta.ar_goal,
+
+    // typed interfaces → plain JSON لـ Prisma
+    briefing: toJson(meta.briefing),
+    stepsOverview: toJson(meta.stepsOverview),
+    solution: toJson(meta.solution),
+    postSolve: toJson(meta.postSolve),
+
+    // ─── Engine / Seed Fields ──────────────────────────────────────
+    flagAnswer: meta.flagAnswer,
+    initialState: toJson(meta.initialState) ?? {},
   };
 
   const lab = await prisma.lab.upsert({
@@ -36,6 +53,7 @@ async function upsertLab(
     create: { ...shared, slug: meta.slug },
   });
 
+  // ─── Hints ──────────────────────────────────────────────────────
   for (const hint of meta.hints ?? []) {
     await prisma.labHint.upsert({
       where: { labId_order: { labId: lab.id, order: hint.order } },
@@ -51,33 +69,22 @@ async function upsertLab(
 }
 
 // ──────────────────────────────────────────────────────────────────────────────
-// resolveMetadata
-// يجرب: labNMetadata  →  default  →  أول export في الملف
-// ──────────────────────────────────────────────────────────────────────────────
 function resolveMetadata(
   mod: Record<string, any>,
-  labDirName: string, // e.g. "lab1"
+  labDirName: string,
 ): LabMetadata | null {
-  const namedExport = mod[`${labDirName}Metadata`]; // lab1Metadata
+  const namedExport = mod[`${labDirName}Metadata`];
   const candidate = namedExport ?? mod['default'] ?? Object.values(mod)[0];
-
-  if (!candidate || typeof candidate !== 'object' || !candidate.slug) {
+  if (!candidate || typeof candidate !== 'object' || !candidate.slug)
     return null;
-  }
   return candidate as LabMetadata;
 }
 
-// ──────────────────────────────────────────────────────────────────────────────
-// seedCategoryLabs — الدالة الرئيسية
-//
-// categorySlug: اسم فولدر الثغرة كما هو في src/modules/practice-labs/
-//               مثال: 'sql-injection'
 // ──────────────────────────────────────────────────────────────────────────────
 export async function seedCategoryLabs(
   prisma: PrismaClient,
   categorySlug: string,
 ): Promise<void> {
-  // المسار المطلق لفولدر اللابات
   const labsDir = path.resolve(
     __dirname,
     '../../src/modules/practice-labs',
@@ -85,18 +92,16 @@ export async function seedCategoryLabs(
     'labs',
   );
 
-  // تحقق من وجود الفولدر
   if (!fs.existsSync(labsDir)) {
     console.warn(`  ⚠️  Directory not found — skipping: ${labsDir}`);
     return;
   }
 
-  // جمع كل فولدرات labN بالترتيب الرقمي
   const labDirs = fs
     .readdirSync(labsDir, { withFileTypes: true })
-    .filter((entry) => entry.isDirectory() && /^lab\d+$/i.test(entry.name))
+    .filter((e) => e.isDirectory() && /^lab\d+$/i.test(e.name))
     .sort((a, b) => {
-      const n = (name: string) => parseInt(name.replace(/\D/g, ''), 10);
+      const n = (s: string) => parseInt(s.replace(/\D/g, ''), 10);
       return n(a.name) - n(b.name);
     });
 
@@ -109,13 +114,12 @@ export async function seedCategoryLabs(
     `\n🧪 [${categorySlug}] — found ${labDirs.length} lab(s): ${labDirs.map((d) => d.name).join(', ')}`,
   );
 
-  let seeded = 0;
-  let skipped = 0;
+  let seeded = 0,
+    skipped = 0;
 
   for (const dir of labDirs) {
     const metaPath = path.join(labsDir, dir.name, `${dir.name}.metadata.ts`);
 
-    // تحقق من وجود ملف الـ metadata
     if (!fs.existsSync(metaPath)) {
       console.warn(`  ⚠️  Missing metadata — skipping: ${dir.name}/`);
       skipped++;
@@ -124,8 +128,6 @@ export async function seedCategoryLabs(
 
     let mod: Record<string, any>;
     try {
-      // require() مع ts-node --transpile-only يدعم TypeScript مباشرة
-      // tsconfig-paths/register يحل الـ path aliases تلقائياً
       // eslint-disable-next-line @typescript-eslint/no-require-imports
       mod = require(metaPath);
     } catch (err) {
@@ -135,7 +137,6 @@ export async function seedCategoryLabs(
     }
 
     const meta = resolveMetadata(mod, dir.name);
-
     if (!meta) {
       console.warn(
         `  ⚠️  Invalid or missing export in ${dir.name}.metadata.ts — skipping`,

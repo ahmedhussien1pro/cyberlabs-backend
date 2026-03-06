@@ -1,24 +1,22 @@
 // prisma/seed.ts
 import { PrismaClient } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 
-// ── Seed functions ─────────────────────────────────────────────────
 import { seedSubscriptionPlans } from './seed-data/subscription-plans';
 import { seedLabs } from './seed-data/seed-labs';
 import { seedCourses } from './seed-data/course-data/seed-courses';
 import { seedPaths } from './seed-data/seed-paths';
 import { seedCategoryLabs } from './seed-data/seed-category-labs';
-// ── Labs من الـ modules (موجودة حالياً) ─────────────────────────
+
 import { lab1Metadata } from '../src/modules/practice-labs/sql-injection/labs/lab1/lab1.metadata';
 
 const prisma = new PrismaClient();
 
-// ──────────────────────────────────────────────────────────────────
-// Labs from module metadata files — هتضيف هنا أي lab جديد عنده metadata خاصة
-// ──────────────────────────────────────────────────────────────────
 const MODULE_LABS = [
   lab1Metadata,
-  // lab2Metadata,  ← أضف هنا
+  // lab2Metadata,
 ];
+
 const LAB_CATEGORIES: string[] = [
   'sql-injection',
   'ac-vuln',
@@ -32,6 +30,12 @@ const LAB_CATEGORIES: string[] = [
   'file-inclusion',
   'file-upload',
 ];
+
+function toJson(val: unknown): Prisma.InputJsonValue | undefined {
+  if (val === undefined || val === null) return undefined;
+  return JSON.parse(JSON.stringify(val)) as Prisma.InputJsonValue;
+}
+
 async function seedModuleLabs() {
   if (MODULE_LABS.length === 0) return;
   console.log('\n🧪 Seeding module labs...');
@@ -50,10 +54,15 @@ async function seedModuleLabs() {
       pointsReward: meta.pointsReward,
       duration: meta.duration,
       isPublished: meta.isPublished,
-      scenario: meta.scenario?.context,
+      imageUrl: meta.imageUrl ?? null,
+      goal: meta.goal,
+      ar_goal: meta.ar_goal,
+      briefing: toJson(meta.briefing),
+      stepsOverview: toJson(meta.stepsOverview),
+      solution: toJson(meta.solution),
+      postSolve: toJson(meta.postSolve),
       flagAnswer: meta.flagAnswer,
-      initialState: meta.initialState,
-      imageUrl: meta.imageUrl,
+      initialState: toJson(meta.initialState) ?? {},
     };
 
     const lab = await prisma.lab.upsert({
@@ -62,7 +71,6 @@ async function seedModuleLabs() {
       create: { ...shared, slug: meta.slug },
     });
 
-    // Seed hints
     for (const hint of meta.hints ?? []) {
       await prisma.labHint.upsert({
         where: { labId_order: { labId: lab.id, order: hint.order } },
@@ -75,32 +83,23 @@ async function seedModuleLabs() {
         },
       });
     }
+
     console.log(`  ✅ module-lab: ${meta.slug}`);
   }
 }
 
-// ──────────────────────────────────────────────────────────────────
-// MAIN
-// ──────────────────────────────────────────────────────────────────
+// ──────────────────────────────────────────────────────────────────────────────
 async function main() {
   console.log('🌱 Starting CyberLabs seed...\n');
   console.log('═'.repeat(50));
 
   try {
-    // ① Subscription plans — لا تعتمد على أي شيء
     // await seedSubscriptionPlans(prisma);
-
-    // ② Labs من seed-config.ts (LABS_META)
     // await seedLabs(prisma);
-
-    // ③ Labs من ملفات الـ modules (lab1.metadata، إلخ)
     // await seedModuleLabs();
-
-    // ④ Courses — بعد اللابات عشان تربطها
     // await seedCourses(prisma);
-
-    // ⑤ Learning Paths — الأخيرة عشان تلاقي كورسات ولابات في الـ DB
     // await seedPaths(prisma);
+
     for (const category of LAB_CATEGORIES) {
       await seedCategoryLabs(prisma, category);
     }

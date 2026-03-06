@@ -1021,44 +1021,46 @@ model CourseRegistration {
 // ============================================================================
 
 model Lab {
-    id       String  @id @default(uuid())
+  id         String     @id @default(uuid())
   courseLabs CourseLab[]
-  courseId String?
+  courseId   String?
 
   title          String
   ar_title       String?
   description    String?
   ar_description String?
-  difficulty     Difficulty @default(BEGINNER)
-  
+  difficulty     Difficulty       @default(BEGINNER)
+
   // -- NEW FIELDS FOR LAB ENGINE V2 --
-  category       CATEGORY   @default(WEB_SECURITY)
-  executionMode  LabExecutionMode @default(SHARED_BACKEND)
-  scenario       String?    @db.Text
-  ar_scenario    String?    @db.Text
-  engineConfig   Json?     
-  skills         String[]   
+  category      CATEGORY         @default(WEB_SECURITY)
+  executionMode LabExecutionMode @default(SHARED_BACKEND)
+  scenario      String?          @db.Text
+  ar_scenario   String?          @db.Text
+  engineConfig  Json?
+  skills        String[]
+
   // ─── NEW FIELDS ─────────────────────────────────────────────
-  ar_goal       String?  
-  briefing      Json?  
-  stepsOverview Json?     
-  solution      Json?    
-  postSolve     Json?     
+  goal          String?          @db.Text  // ← ✅ الحقل المضاف
+  ar_goal       String?
+  briefing      Json?
+  stepsOverview Json?
+  solution      Json?
+  postSolve     Json?
   // ────────────────────────────────────────────────────────────
-  // ----------------------------------
-  slug           String @unique
-  imageUrl       String?
-  duration       Int?
-  labUrl         String? 
-  flagAnswer     String?
-  maxAttempts    Int?
-  timeLimit      Int?
-  xpReward       Int        @default(0)
-  pointsReward   Int        @default(0)
-  pointsPerHint  Int        @default(10)
-  pointsPerFail  Int        @default(5)
-  initialState   Json       @default("{}")
-  isolationMode  String     @default("database")
+
+  slug          String  @unique
+  imageUrl      String?
+  duration      Int?
+  labUrl        String?
+  flagAnswer    String?
+  maxAttempts   Int?
+  timeLimit     Int?
+  xpReward      Int     @default(0)
+  pointsReward  Int     @default(0)
+  pointsPerHint Int     @default(10)
+  pointsPerFail Int     @default(5)
+  initialState  Json    @default("{}")
+  isolationMode String  @default("database")
 
   steps Json?
 
@@ -1084,6 +1086,8 @@ model Lab {
   @@index([isPublished])
   @@map("labs")
 }
+
+
 model CourseLab {
   courseId String
   labId    String
