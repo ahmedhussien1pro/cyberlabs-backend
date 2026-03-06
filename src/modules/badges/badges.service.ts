@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { PrismaService } from '../../../core/database';
+import { PrismaService } from '../../core/database';
 
 @Injectable()
 export class BadgesService {
