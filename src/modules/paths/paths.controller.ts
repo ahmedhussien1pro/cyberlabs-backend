@@ -51,6 +51,18 @@ export class PathFiltersDto {
 export class PathsController {
   constructor(private readonly pathsService: PathsService) {}
 
+  // ✅ IMPORTANT: /me MUST be declared before /:slug
+  //    otherwise NestJS will match 'me' as a slug param
+  @Get('me')
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(HttpStatus.OK)
+  async getMyPaths(@CurrentUser() user: any) {
+    return {
+      success: true,
+      data: await this.pathsService.getMyPaths(user.id),
+    };
+  }
+
   @Get()
   @HttpCode(HttpStatus.OK)
   async list(
@@ -68,7 +80,6 @@ export class PathsController {
     return this.pathsService.getBySlug(slug, userId);
   }
 
-  // ✅ FIXED: Changed from @Get to @Post
   @Post(':slug/enroll')
   @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.OK)

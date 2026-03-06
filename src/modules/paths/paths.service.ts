@@ -84,6 +84,53 @@ export class PathsService {
     };
   }
 
+  // ── GET /paths/me — user's enrolled paths ─────────────────────────────
+  async getMyPaths(userId: string) {
+    const enrollments = await this.prisma.pathEnrollment.findMany({
+      where: { userId },
+      orderBy: { enrolledAt: 'desc' },
+      include: {
+        learningPath: {
+          select: {
+            id: true,
+            title: true,
+            ar_title: true,
+            slug: true,
+            description: true,
+            ar_description: true,
+            iconUrl: true,
+            difficulty: true,
+            estimatedHours: true,
+            _count: { select: { modules: true } },
+          },
+        },
+      },
+    });
+
+    // Map to a shape the frontend PathsCard can consume directly
+    return enrollments.map((e) => ({
+      id: e.id,
+      progress: e.progress,
+      isCompleted: e.isCompleted,
+      enrolledAt: e.enrolledAt,
+      completedAt: e.completedAt ?? null,
+      startedAt: e.enrolledAt,          // frontend reads startedAt
+      // Nested under `careerPath` — mirrors the UserCareerPath type
+      careerPath: {
+        id: e.learningPath.id,
+        slug: e.learningPath.slug,
+        name: e.learningPath.title,
+        ar_name: e.learningPath.ar_title ?? null,
+        description: e.learningPath.description ?? null,
+        ar_description: e.learningPath.ar_description ?? null,
+        iconUrl: e.learningPath.iconUrl ?? null,
+        difficulty: e.learningPath.difficulty,
+        estimatedHours: e.learningPath.estimatedHours ?? null,
+        modulesCount: e.learningPath._count.modules,
+      },
+    }));
+  }
+
   // ── Get Path by slug ─────────────────────────────────────────────────
   async getBySlug(slug: string, userId: string | null) {
     const path = await this.prisma.learningPath.findUnique({
@@ -92,11 +139,9 @@ export class PathsService {
         modules: {
           orderBy: { order: 'asc' },
           include: {
-            // ✅ الآن course يرجع كل الحقول المطلوبة للـ CourseCard
             course: {
               select: {
                 ...courseCardSelect(userId),
-                // sections بـ id فقط للـ navigation (مش محتاجين lessons هنا)
                 sections: {
                   select: { id: true, order: true },
                   orderBy: { order: 'asc' },
@@ -139,7 +184,6 @@ export class PathsService {
     const isEnrolled = userId ? (path as any).enrollments?.length > 0 : false;
     const progress = isEnrolled ? (path as any).enrollments[0].progress : 0;
 
-    // ✅ كل module.course يمر عبر toCourseCard → CourseCardDto موحّد
     const formattedModules = path.modules.map((module) => {
       const rawCourse = (module as any).course;
       const rawLab = (module as any).lab;
@@ -148,7 +192,6 @@ export class PathsService {
       let isCompleted = false;
 
       if (rawCourse) {
-        // userProgress يجي من toCourseCard عبر enrollments
         const courseCard = toCourseCard(rawCourse);
         const up = courseCard.userProgress;
         if (up) {
@@ -157,7 +200,7 @@ export class PathsService {
         }
         return {
           ...module,
-          course: courseCard, // ✅ CourseCardDto كامل
+          course: courseCard,
           lab: null,
           userProgress: { progress: moduleProgress, isCompleted },
         };
