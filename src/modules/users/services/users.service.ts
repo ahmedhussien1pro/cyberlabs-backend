@@ -126,6 +126,9 @@ export class UsersService {
             },
           },
         },
+        // ✅ Fix: removed 'slug' from CareerPath select — it doesn't exist in the schema
+        //   CareerPath model only has: id, name, ar_name, description, ar_description, iconUrl
+        //   Paths with slugs are LearningPath (served via GET /paths/me)
         careerPaths: {
           select: {
             id: true,
@@ -140,7 +143,7 @@ export class UsersService {
                 description: true,
                 ar_description: true,
                 iconUrl: true,
-                slug: true,
+                // slug: true  ← removed: CareerPath has no slug field
               },
             },
           },
@@ -446,13 +449,12 @@ export class UsersService {
 
     const xpForNextLevel = points.level * 1000;
     const xpIntoCurrentLevel = points.totalXP - (points.level - 1) * 1000;
-    const xpNeededForLevel = 1000; // each level = 1000 XP
+    const xpNeededForLevel = 1000;
 
     return {
       totalPoints: points.totalPoints,
       totalXP: points.totalXP,
       level: points.level,
-      // ✅ Fix: progress within current level (0-100%) — was calculating against total before
       xpIntoCurrentLevel,
       xpNeededForLevel,
       xpForNextLevel,
@@ -513,7 +515,7 @@ export class UsersService {
     return avatarUrl;
   }
 
-  // ── Sessions ───────────────────────────────────────────────
+  // ── Sessions ──────────────────────────────────────────────
   async getUserSessions(userId: string) {
     return this.prisma.refreshToken.findMany({
       where: { userId, revokedAt: null, expiresAt: { gt: new Date() } },
@@ -540,7 +542,7 @@ export class UsersService {
     });
   }
 
-  // ── Notification Preferences ────────────────────────────────
+  // ── Notification Preferences ──────────────────────────────────────────
   async getNotificationPreferences(userId: string) {
     return this.prisma.notificationSettings.upsert({
       where: { userId },
@@ -560,7 +562,7 @@ export class UsersService {
     });
   }
 
-  // ── Username lookup ──────────────────────────────────────────
+  // ── Username lookup ───────────────────────────────────────────────
   async getUserByUsername(username: string) {
     const user = await this.prisma.user.findUnique({
       where: { name: username },
@@ -579,7 +581,7 @@ export class UsersService {
     return user;
   }
 
-  // ── Soft delete ──────────────────────────────────────────────
+  // ── Soft delete ────────────────────────────────────────────────
   async softDeleteAccount(userId: string, reason?: string) {
     await this.prisma.user.update({
       where: { id: userId },
@@ -597,7 +599,7 @@ export class UsersService {
     });
   }
 
-  // ── GDPR Export ────────────────────────────────────────────
+  // ── GDPR Export ──────────────────────────────────────────────
   async exportUserData(userId: string) {
     const [user, points, stats, achievements, badges, goals] =
       await this.prisma.$transaction([

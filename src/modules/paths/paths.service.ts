@@ -2,7 +2,6 @@
 import {
   Injectable,
   NotFoundException,
-  ConflictException,
 } from '@nestjs/common';
 import { PrismaService } from '../../core/database';
 import { Prisma } from '@prisma/client';
@@ -90,7 +89,8 @@ export class PathsService {
       where: { userId },
       orderBy: { enrolledAt: 'desc' },
       include: {
-        learningPath: {
+        // ✅ Fix: correct relation name in Prisma schema is 'path', not 'learningPath'
+        path: {
           select: {
             id: true,
             title: true,
@@ -98,7 +98,7 @@ export class PathsService {
             slug: true,
             description: true,
             ar_description: true,
-            iconUrl: true,
+            iconName: true,
             difficulty: true,
             estimatedHours: true,
             _count: { select: { modules: true } },
@@ -115,18 +115,19 @@ export class PathsService {
       enrolledAt: e.enrolledAt,
       completedAt: e.completedAt ?? null,
       startedAt: e.enrolledAt,          // frontend reads startedAt
-      // Nested under `careerPath` — mirrors the UserCareerPath type
+      // Nested under `careerPath` — mirrors UserCareerPath frontend type
       careerPath: {
-        id: e.learningPath.id,
-        slug: e.learningPath.slug,
-        name: e.learningPath.title,
-        ar_name: e.learningPath.ar_title ?? null,
-        description: e.learningPath.description ?? null,
-        ar_description: e.learningPath.ar_description ?? null,
-        iconUrl: e.learningPath.iconUrl ?? null,
-        difficulty: e.learningPath.difficulty,
-        estimatedHours: e.learningPath.estimatedHours ?? null,
-        modulesCount: e.learningPath._count.modules,
+        id: e.path.id,
+        slug: e.path.slug,
+        name: e.path.title,
+        ar_name: e.path.ar_title ?? null,
+        description: e.path.description ?? null,
+        ar_description: e.path.ar_description ?? null,
+        iconUrl: null,  // LearningPath uses iconName (lucide icon) not iconUrl
+        iconName: e.path.iconName,
+        difficulty: e.path.difficulty,
+        estimatedHours: e.path.estimatedHours ?? null,
+        modulesCount: e.path._count.modules,
       },
     }));
   }
