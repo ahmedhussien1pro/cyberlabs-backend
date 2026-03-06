@@ -249,13 +249,9 @@ export class UsersService {
   /**
    * Get user statistics
    *
-   * ✅ Fix: totalHours was always 0 because UserActivity.activeMinutes is never written to.
-   *         Now calculated from actual UserLabProgress completion times:
-   *         totalMinutes = SUM(completedAt - startedAt) per lab (capped at 5h each)
-   *         totalHours   = round(totalMinutes / 60, 1 decimal)
-   *
-   *         currentStreak still reads from UserActivity.date (will work once
-   *         activity tracking is implemented; returns 0 safely until then).
+   * ✅ Fix: totalHours calculated from UserLabProgress completion times.
+   *         startedAt is non-nullable DateTime in schema — no null filter needed.
+   *         Only completedAt is nullable (null = lab not yet finished).
    */
   async getUserStats(userId: string): Promise<UserStatsSerializer> {
     const [
@@ -280,15 +276,16 @@ export class UsersService {
         where: { userId, completedAt: { not: null } },
       }),
       // ✅ Fix: derive hours from actual lab time-on-task
+      // startedAt is non-nullable DateTime — safe to use directly
+      // completedAt is DateTime? — filter for completed labs only
       this.prisma.userLabProgress.findMany({
         where: {
           userId,
           completedAt: { not: null },
-          startedAt: { not: null },
         },
         select: { startedAt: true, completedAt: true },
       }),
-      // streak: reads UserActivity dates (safe fallback = 0 if table is empty)
+      // streak: reads UserActivity dates (returns 0 safely if table is empty)
       this.prisma.userActivity.findMany({
         where: { userId },
         select: { date: true },
@@ -298,15 +295,16 @@ export class UsersService {
 
     if (!user) throw new NotFoundException('User not found');
 
-    // Sum actual lab durations; cap each lab at 300 min (5 h) to filter bad data
+    // Sum actual lab durations; cap each lab at 300 min (5 h) to filter bad data.
+    // startedAt is always a Date (non-nullable), completedAt guarded by the where filter.
     const totalMinutes = labTimes.reduce((sum, lab) => {
-      if (!lab.startedAt || !lab.completedAt) return sum;
+      if (!lab.completedAt) return sum;
       const diff =
         (lab.completedAt.getTime() - lab.startedAt.getTime()) / 60_000;
       return sum + Math.max(0, Math.min(diff, 300));
     }, 0);
 
-    // 1 decimal precision: 30 min → 0.5 h, 45 min → 0.8 h
+    // 1-decimal precision: 30 min → 0.5 h, 45 min → 0.8 h
     const totalHours = Math.round((totalMinutes / 60) * 10) / 10;
 
     const currentStreak = calcStreak(activityDates.map((a) => a.date));
