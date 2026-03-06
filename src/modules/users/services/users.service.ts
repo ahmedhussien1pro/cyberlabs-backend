@@ -23,6 +23,45 @@ function calcLevel(totalXP: number): number {
   return Math.floor(totalXP / 1000) + 1;
 }
 
+/**
+ * Calculate current streak from an array of activity Date objects.
+ * A streak is consecutive days of activity ending today or yesterday.
+ * Dates are expected in any order — function sorts them internally.
+ */
+function calcStreak(dates: Date[]): number {
+  if (dates.length === 0) return 0;
+
+  // Deduplicate & normalize to YYYY-MM-DD, sort DESC
+  const uniqueDates = [
+    ...new Set(dates.map((d) => d.toISOString().slice(0, 10))),
+  ].sort().reverse();
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const todayStr = today.toISOString().slice(0, 10);
+
+  const yesterday = new Date(today);
+  yesterday.setDate(yesterday.getDate() - 1);
+  const yesterdayStr = yesterday.toISOString().slice(0, 10);
+
+  // Streak must touch today or yesterday to be "current"
+  if (uniqueDates[0] !== todayStr && uniqueDates[0] !== yesterdayStr) return 0;
+
+  let streak = 0;
+  const cursor = new Date(uniqueDates[0]);
+
+  for (const dateStr of uniqueDates) {
+    if (dateStr === cursor.toISOString().slice(0, 10)) {
+      streak++;
+      cursor.setDate(cursor.getDate() - 1);
+    } else {
+      break;
+    }
+  }
+
+  return streak;
+}
+
 @Injectable()
 export class UsersService {
   constructor(
@@ -211,37 +250,56 @@ export class UsersService {
 
   /**
    * Get user statistics
+   *
+   * ✅ Fix: currentStreak and totalHours were always 0 because UserStats
+   *         is never written to. Now both are calculated live:
+   *         - totalHours  → SUM(UserActivity.activeMinutes) / 60
+   *         - currentStreak → consecutive active days ending today/yesterday
+   *         All queries run in a single $transaction for efficiency.
    */
   async getUserStats(userId: string): Promise<UserStatsSerializer> {
-    const user = await this.prisma.user.findUnique({
-      where: { id: userId },
-      include: {
-        points: true,
-        stats: true,
-        badges: {
-          select: { id: true },
+    const [
+      user,
+      enrolledCourses,
+      completedCourses,
+      completedLabs,
+      activityAgg,
+      activityDates,
+    ] = await this.prisma.$transaction([
+      this.prisma.user.findUnique({
+        where: { id: userId },
+        include: {
+          points: true,
+          badges: { select: { id: true } },
+          certifications: { select: { id: true } },
         },
-        certifications: {
-          select: { id: true },
-        },
-      },
-    });
+      }),
+      this.prisma.enrollment.count({ where: { userId } }),
+      this.prisma.enrollment.count({ where: { userId, isCompleted: true } }),
+      this.prisma.userLabProgress.count({
+        where: { userId, completedAt: { not: null } },
+      }),
+      // ✅ Live totalHours — aggregate sum of all active minutes
+      this.prisma.userActivity.aggregate({
+        where: { userId },
+        _sum: { activeMinutes: true },
+      }),
+      // ✅ Live currentStreak — all activity dates for streak calculation
+      this.prisma.userActivity.findMany({
+        where: { userId },
+        select: { date: true },
+        orderBy: { date: 'desc' },
+      }),
+    ]);
 
-    if (!user) {
-      throw new NotFoundException('User not found');
-    }
+    if (!user) throw new NotFoundException('User not found');
 
-    const enrolledCourses = await this.prisma.enrollment.count({
-      where: { userId },
-    });
+    // Convert accumulated minutes → rounded-down hours
+    const totalMinutes = activityAgg._sum.activeMinutes ?? 0;
+    const totalHours = Math.floor(totalMinutes / 60);
 
-    const completedCourses = await this.prisma.enrollment.count({
-      where: { userId, isCompleted: true },
-    });
-
-    const completedLabs = await this.prisma.userLabProgress.count({
-      where: { userId, completedAt: { not: null } },
-    });
+    // Streak from consecutive days
+    const currentStreak = calcStreak(activityDates.map((a) => a.date));
 
     const stats: UserStatsSerializer = {
       id: user.id,
@@ -259,11 +317,11 @@ export class UsersService {
       badgesCount: user.badges.length,
       certificationsCount: user.certifications.length,
 
-      totalHours: user.stats?.totalHours || 0,
-      activeDays: user.stats?.activeDays || 0,
-      currentStreak: user.stats?.currentStreak || 0,
-      longestStreak: user.stats?.longestStreak || 0,
-      lastActivityDate: user.stats?.lastActivityDate || undefined,
+      totalHours,
+      activeDays: activityDates.length,
+      currentStreak,
+      longestStreak: 0,
+      lastActivityDate: activityDates[0]?.date ?? undefined,
     };
 
     return plainToClass(UserStatsSerializer, stats, {
