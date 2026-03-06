@@ -1036,13 +1036,20 @@ model Lab {
   executionMode  LabExecutionMode @default(SHARED_BACKEND)
   scenario       String?    @db.Text
   ar_scenario    String?    @db.Text
-  engineConfig   Json?      // Stores targetUrl, specific DB type, Docker compose path, etc.
-  skills         String[]   // e.g., ["SQLi", "Reconnaissance"]
+  engineConfig   Json?     
+  skills         String[]   
+  // ─── NEW FIELDS ─────────────────────────────────────────────
+  ar_goal       String?  
+  briefing      Json?  
+  stepsOverview Json?     
+  solution      Json?    
+  postSolve     Json?     
+  // ────────────────────────────────────────────────────────────
   // ----------------------------------
   slug           String @unique
   imageUrl       String?
   duration       Int?
-  labUrl         String? // Keep for legacy, but engineConfig.targetUrl is better for V2
+  labUrl         String? 
   flagAnswer     String?
   maxAttempts    Int?
   timeLimit      Int?
