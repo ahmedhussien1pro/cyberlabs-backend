@@ -34,7 +34,9 @@ function calcStreak(dates: Date[]): number {
   // Deduplicate & normalize to YYYY-MM-DD, sort DESC
   const uniqueDates = [
     ...new Set(dates.map((d) => d.toISOString().slice(0, 10))),
-  ].sort().reverse();
+  ]
+    .sort()
+    .reverse();
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -247,11 +249,13 @@ export class UsersService {
   /**
    * Get user statistics
    *
-   * ✅ Fix: currentStreak and totalHours were always 0 because UserStats
-   *         is never written to. Now both are calculated live:
-   *         - totalHours  → SUM(UserActivity.activeMinutes) / 60  (1 decimal)
-   *         - currentStreak → consecutive active days ending today/yesterday
-   *         All queries run in a single $transaction for efficiency.
+   * ✅ Fix: totalHours was always 0 because UserActivity.activeMinutes is never written to.
+   *         Now calculated from actual UserLabProgress completion times:
+   *         totalMinutes = SUM(completedAt - startedAt) per lab (capped at 5h each)
+   *         totalHours   = round(totalMinutes / 60, 1 decimal)
+   *
+   *         currentStreak still reads from UserActivity.date (will work once
+   *         activity tracking is implemented; returns 0 safely until then).
    */
   async getUserStats(userId: string): Promise<UserStatsSerializer> {
     const [
@@ -259,7 +263,7 @@ export class UsersService {
       enrolledCourses,
       completedCourses,
       completedLabs,
-      activityAgg,
+      labTimes,
       activityDates,
     ] = await this.prisma.$transaction([
       this.prisma.user.findUnique({
@@ -275,12 +279,16 @@ export class UsersService {
       this.prisma.userLabProgress.count({
         where: { userId, completedAt: { not: null } },
       }),
-      // ✅ Live totalHours — aggregate sum of all active minutes
-      this.prisma.userActivity.aggregate({
-        where: { userId },
-        _sum: { activeMinutes: true },
+      // ✅ Fix: derive hours from actual lab time-on-task
+      this.prisma.userLabProgress.findMany({
+        where: {
+          userId,
+          completedAt: { not: null },
+          startedAt: { not: null },
+        },
+        select: { startedAt: true, completedAt: true },
       }),
-      // ✅ Live currentStreak — all activity dates for streak calculation
+      // streak: reads UserActivity dates (safe fallback = 0 if table is empty)
       this.prisma.userActivity.findMany({
         where: { userId },
         select: { date: true },
@@ -290,11 +298,17 @@ export class UsersService {
 
     if (!user) throw new NotFoundException('User not found');
 
-    const totalMinutes = activityAgg._sum.activeMinutes ?? 0;
-    // ✅ Fix: use 1-decimal rounding so 30 min → 0.5h instead of 0h
+    // Sum actual lab durations; cap each lab at 300 min (5 h) to filter bad data
+    const totalMinutes = labTimes.reduce((sum, lab) => {
+      if (!lab.startedAt || !lab.completedAt) return sum;
+      const diff =
+        (lab.completedAt.getTime() - lab.startedAt.getTime()) / 60_000;
+      return sum + Math.max(0, Math.min(diff, 300));
+    }, 0);
+
+    // 1 decimal precision: 30 min → 0.5 h, 45 min → 0.8 h
     const totalHours = Math.round((totalMinutes / 60) * 10) / 10;
 
-    // Streak from consecutive days
     const currentStreak = calcStreak(activityDates.map((a) => a.date));
 
     const stats: UserStatsSerializer = {
@@ -460,7 +474,10 @@ export class UsersService {
     if (!user) throw new NotFoundException('User not found');
 
     const bcrypt = require('bcrypt');
-    const isPasswordValid = await bcrypt.compare(currentPassword, user.password);
+    const isPasswordValid = await bcrypt.compare(
+      currentPassword,
+      user.password,
+    );
     if (!isPasswordValid) {
       throw new BadRequestException('Current password is incorrect');
     }
@@ -474,8 +491,6 @@ export class UsersService {
 
   /**
    * Get user points — with auto level-correction
-   * ✅ Fix: level is now auto-corrected every time this endpoint is hit
-   *         handles existing users whose XP grew but level was never bumped
    */
   async getUserPoints(userId: string) {
     const user = await this.prisma.user.findUnique({
@@ -492,7 +507,6 @@ export class UsersService {
       });
     }
 
-    // ✅ Auto-correct stale level — runs silently in background
     const correctLevel = calcLevel(points.totalXP);
     if (correctLevel !== points.level) {
       points = await this.prisma.userPoints.update({
