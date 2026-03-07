@@ -5,6 +5,7 @@ import {
   ForbiddenException,
 } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
+import { Prisma } from '@prisma/client';
 import { PrismaService } from '../../../core/database';
 import {
   UpdateProfileDto,
@@ -205,23 +206,31 @@ export class UsersService {
       if (nameExists) throw new BadRequestException('Username already taken');
     }
 
-    const { socialLinks, ...profileData } = updateData;
+    // Destructure socialLinks and preferences separately to handle their types
+    const { socialLinks, preferences, ...profileFields } = updateData;
 
     // Handle birthday: null = clear | string = set | undefined = no change
     let birthdayValue: Date | null | undefined;
-    if (profileData.birthday === null) {
+    if (profileFields.birthday === null) {
       birthdayValue = null;
-    } else if (profileData.birthday) {
-      birthdayValue = new Date(profileData.birthday);
+    } else if (profileFields.birthday) {
+      birthdayValue = new Date(profileFields.birthday);
     } else {
       birthdayValue = undefined;
     }
+
+    // Remove birthday string from spread — we pass the converted Date below
+    const { birthday: _bday, ...restFields } = profileFields;
 
     const [updatedUser] = await this.prisma.$transaction([
       this.prisma.user.update({
         where: { id: userId },
         data: {
-          ...profileData,
+          ...restFields,
+          // Fix TS2322: Prisma requires InputJsonValue, not Record<string,unknown>
+          ...(preferences !== undefined && {
+            preferences: preferences as Prisma.InputJsonValue,
+          }),
           birthday: birthdayValue,
           updatedAt: new Date(),
         },
