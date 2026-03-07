@@ -8,6 +8,8 @@ import { PrismaService } from '../../core/database';
 import { ConfigService } from '@nestjs/config';
 import * as crypto from 'crypto';
 import { BadgesService } from '../badges/badges.service';
+import { NotificationsService } from '../notifications/services/notifications.service';
+import { NotificationEvents } from '../notifications/notifications.events';
 
 /** XP formula: Level N requires N×1000 cumulative XP */
 function calcLevel(totalXP: number): number {
@@ -19,7 +21,8 @@ export class PracticeLabsService {
   constructor(
     private prisma: PrismaService,
     private configService: ConfigService,
-    private badgesService: BadgesService, // ➕ injected for auto-award
+    private badgesService: BadgesService,
+    private readonly notifications: NotificationsService,
   ) {}
 
   // ─────────────────────────────────────────────
@@ -233,7 +236,13 @@ export class PracticeLabsService {
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
 
     await this.prisma.labLaunchToken.create({
-      data: { token: tokenStr, userId, labId, instanceId: instance.id, expiresAt },
+      data: {
+        token: tokenStr,
+        userId,
+        labId,
+        instanceId: instance.id,
+        expiresAt,
+      },
     });
 
     const labsSubdomain =
@@ -355,15 +364,36 @@ export class PracticeLabsService {
         data: { flagSubmitted: true, completedAt: new Date(), progress: 100 },
       });
 
-      await this.awardXP(userId, lab.xpReward, 'LAB', `Completed lab: ${lab.title}`);
-      await this.awardPoints(userId, lab.pointsReward, `Completed lab: ${lab.title}`);
+      await this.awardXP(
+        userId,
+        lab.xpReward,
+        'LAB',
+        `Completed lab: ${lab.title}`,
+      );
+      await this.awardPoints(
+        userId,
+        lab.pointsReward,
+        `Completed lab: ${lab.title}`,
+      );
 
-      // ➕ Auto-award milestone badges based on total completed labs
+      this.notifications
+        .notify(
+          userId,
+          NotificationEvents.labCompleted(
+            lab.title,
+            lab.xpReward,
+            lab.pointsReward,
+          ),
+        )
+        .catch(() => {});
       try {
         const completedCount = await this.prisma.userLabProgress.count({
           where: { userId, completedAt: { not: null } },
         });
-        await this.badgesService.checkLabMilestoneBadges(userId, completedCount);
+        await this.badgesService.checkLabMilestoneBadges(
+          userId,
+          completedCount,
+        );
       } catch {
         // Non-blocking: badge award failure should never fail the submission
       }

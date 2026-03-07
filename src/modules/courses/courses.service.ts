@@ -12,6 +12,8 @@ import {
 import { toCourseCard } from '../../common/transformers/course-card.transformer';
 import { BadgesService } from '../badges/badges.service';
 import { CertificatesService } from '../certificates/certificates.service';
+import { NotificationsService } from '../notifications/services/notifications.service';
+import { NotificationEvents } from '../notifications/notifications.events';
 
 @Injectable()
 export class CoursesService {
@@ -19,6 +21,7 @@ export class CoursesService {
     private readonly prisma: PrismaService,
     private readonly badgesService: BadgesService,
     private readonly certificatesService: CertificatesService,
+    private readonly notifications: NotificationsService,
   ) {}
 
   // ── Curriculum — reads from JSON seed files ─────────────────────────
@@ -272,7 +275,12 @@ export class CoursesService {
         update: {},
         create: { userId },
       });
-
+      this.notifications
+        .notify(
+          userId,
+          NotificationEvents.courseEnrolled(course.title, course.slug),
+        )
+        .catch(() => {});
       return {
         success: true,
         alreadyEnrolled: false,

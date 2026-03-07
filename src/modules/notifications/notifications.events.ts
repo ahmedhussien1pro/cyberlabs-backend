@@ -11,86 +11,82 @@ export type NotificationPayload = {
 };
 
 export const NotificationEvents = {
-  // ─── Auth ─────────────────────────────────────────────────────────
-  login: (ip?: string): NotificationPayload => ({
+  // ─── Auth ──────────────────────────────────────────────────────────
+  login: (name?: string, ip?: string): NotificationPayload => ({
     type: 'AUTH_LOGIN',
-    title: 'New Login Detected',
-    ar_title: 'تم تسجيل دخول جديد',
-    body: ip ? `Login from IP: ${ip}` : 'You logged in successfully.',
-    ar_body: ip ? `تسجيل دخول من: ${ip}` : 'تم تسجيل دخولك بنجاح.',
+    title: name ? `Welcome back, ${name}! 👋` : 'New Login Detected',
+    ar_title: name ? `أهلاً بعودتك، ${name}! 👋` : 'تم تسجيل دخول جديد',
+    body: ip
+      ? `Heads up! We detected a login from IP: ${ip}. If this wasn't you, secure your account immediately.`
+      : `You logged in successfully. Stay safe out there, hacker! 🔐`,
+    ar_body: ip
+      ? `تنبيه! اكتشفنا تسجيل دخول من IP: ${ip}. إذا لم تكن أنت، قم بتغيير كلمة المرور فوراً.`
+      : `تم تسجيل دخولك بنجاح. ابقَ بأمان يا هاكر! 🔐`,
+    actionUrl: ip ? '/settings/security' : '/dashboard',
+    priority: ip ? NotificationPriority.URGENT : NotificationPriority.LOW,
+  }),
+
+  suspiciousLogin: (ip: string): NotificationPayload => ({
+    type: 'AUTH_SUSPICIOUS_LOGIN',
+    title: '🚨 Suspicious Login Detected!',
+    ar_title: '🚨 تسجيل دخول مشبوه!',
+    body: `We detected an unexpected login from IP: ${ip}. If this wasn't you, change your password immediately and enable 2FA.`,
+    ar_body: `اكتشفنا تسجيل دخول غير متوقع من IP: ${ip}. إذا لم تكن أنت، غيّر كلمة مرورك فوراً وفعّل التحقق بخطوتين.`,
     actionUrl: '/settings/security',
-    priority: NotificationPriority.MEDIUM,
+    priority: NotificationPriority.URGENT,
   }),
 
   register: (name: string): NotificationPayload => ({
     type: 'AUTH_REGISTER',
-    title: `Welcome to CyberLabs, ${name}!`,
-    ar_title: `أهلاً بك في CyberLabs، ${name}!`,
-    body: 'Your account has been created. Start your cybersecurity journey!',
-    ar_body: 'تم إنشاء حسابك. ابدأ رحلتك في الأمن السيبراني!',
+    title: `🎉 Welcome to CyberLabs, ${name}!`,
+    ar_title: `🎉 أهلاً وسهلاً في CyberLabs، ${name}!`,
+    body: 'Your account is ready. Dive into labs, earn badges, and become a cybersecurity pro!',
+    ar_body:
+      'حسابك جاهز! ادخل عالم الـ Labs، اكسب الشارات، وكن محترفاً في الأمن السيبراني!',
     actionUrl: '/dashboard',
     priority: NotificationPriority.HIGH,
   }),
 
   passwordChanged: (): NotificationPayload => ({
     type: 'AUTH_PASSWORD_CHANGED',
-    title: 'Password Changed',
-    ar_title: 'تم تغيير كلمة المرور',
-    body: 'Your password was updated successfully. If this was not you, contact support.',
-    ar_body: 'تم تحديث كلمة المرور بنجاح. إذا لم تكن أنت، تواصل مع الدعم.',
+    title: '🔒 Password Changed Successfully',
+    ar_title: '🔒 تم تغيير كلمة المرور',
+    body: 'Your password was updated. If you did not make this change, contact support immediately.',
+    ar_body:
+      'تم تحديث كلمة مرورك. إذا لم تكن أنت من فعل ذلك، تواصل مع الدعم فوراً.',
     actionUrl: '/settings/security',
     priority: NotificationPriority.HIGH,
   }),
 
   passwordResetRequested: (): NotificationPayload => ({
     type: 'AUTH_PASSWORD_RESET',
-    title: 'Password Reset Requested',
-    ar_title: 'طلب إعادة تعيين كلمة المرور',
-    body: 'A password reset link has been sent to your email.',
-    ar_body: 'تم إرسال رابط إعادة التعيين إلى بريدك الإلكتروني.',
+    title: '📧 Password Reset Link Sent',
+    ar_title: '📧 تم إرسال رابط إعادة تعيين كلمة المرور',
+    body: 'Check your inbox — a password reset link has been sent to your email.',
+    ar_body:
+      'تحقق من بريدك — تم إرسال رابط إعادة التعيين إلى بريدك الإلكتروني.',
     actionUrl: '/settings/security',
     priority: NotificationPriority.URGENT,
   }),
 
-  twoFactorEnabled: (): NotificationPayload => ({
-    type: 'AUTH_2FA_ENABLED',
-    title: 'Two-Factor Authentication Enabled',
-    ar_title: 'تم تفعيل التحقق بخطوتين',
-    body: 'Your account is now more secure with 2FA.',
-    ar_body: 'أصبح حسابك أكثر أمانًا مع التحقق بخطوتين.',
-    actionUrl: '/settings/security',
-    priority: NotificationPriority.MEDIUM,
-  }),
-
   emailVerified: (): NotificationPayload => ({
     type: 'AUTH_EMAIL_VERIFIED',
-    title: 'Email Verified',
-    ar_title: 'تم التحقق من البريد الإلكتروني',
-    body: 'Your email address has been verified successfully.',
-    ar_body: 'تم التحقق من بريدك الإلكتروني بنجاح.',
+    title: '✅ Email Verified!',
+    ar_title: '✅ تم التحقق من البريد الإلكتروني!',
+    body: 'Your email is now verified. Full platform access is unlocked.',
+    ar_body: 'تم التحقق من بريدك الإلكتروني. الوصول الكامل للمنصة مفتوح الآن.',
     actionUrl: '/dashboard',
     priority: NotificationPriority.MEDIUM,
   }),
 
-  // ─── Profile ──────────────────────────────────────────────────────
-  profileUpdated: (): NotificationPayload => ({
-    type: 'PROFILE_UPDATED',
-    title: 'Profile Updated',
-    ar_title: 'تم تحديث الملف الشخصي',
-    body: 'Your profile information has been updated.',
-    ar_body: 'تم تحديث معلومات ملفك الشخصي.',
-    actionUrl: '/profile',
-    priority: NotificationPriority.LOW,
-  }),
-
-  avatarChanged: (): NotificationPayload => ({
-    type: 'PROFILE_AVATAR_CHANGED',
-    title: 'Avatar Updated',
-    ar_title: 'تم تحديث الصورة الشخصية',
-    body: 'Your profile picture has been changed successfully.',
-    ar_body: 'تم تغيير صورتك الشخصية بنجاح.',
-    actionUrl: '/profile',
-    priority: NotificationPriority.LOW,
+  twoFactorEnabled: (): NotificationPayload => ({
+    type: 'AUTH_2FA_ENABLED',
+    title: '🛡️ Two-Factor Authentication Enabled',
+    ar_title: '🛡️ تم تفعيل التحقق بخطوتين',
+    body: 'Great move! Your account is now protected by 2FA.',
+    ar_body: 'قرار ممتاز! حسابك محمي الآن بالتحقق بخطوتين.',
+    actionUrl: '/settings/security',
+    priority: NotificationPriority.MEDIUM,
   }),
 
   // ─── Courses ──────────────────────────────────────────────────────
@@ -99,10 +95,10 @@ export const NotificationEvents = {
     courseSlug: string,
   ): NotificationPayload => ({
     type: 'COURSE_ENROLLED',
-    title: `Enrolled in "${courseTitle}"`,
-    ar_title: `تم التسجيل في "${courseTitle}"`,
-    body: 'Good luck on your learning journey!',
-    ar_body: 'حظًا موفقًا في رحلة تعلمك!',
+    title: `📚 You're enrolled in "${courseTitle}"`,
+    ar_title: `📚 تم تسجيلك في كورس "${courseTitle}"`,
+    body: `Your learning journey starts now! Consistency is the key to mastery.`,
+    ar_body: `رحلتك التعليمية بدأت الآن! الاستمرارية هي مفتاح الإتقان.`,
     actionUrl: `/courses/${courseSlug}`,
     priority: NotificationPriority.MEDIUM,
   }),
@@ -112,58 +108,51 @@ export const NotificationEvents = {
     courseSlug: string,
   ): NotificationPayload => ({
     type: 'COURSE_COMPLETED',
-    title: `🎉 Course Completed: "${courseTitle}"`,
-    ar_title: `🎉 أتممت الكورس: "${courseTitle}"`,
-    body: 'Congratulations! Your certificate is ready.',
-    ar_body: 'مبروك! شهادتك جاهزة.',
+    title: `🏆 Course Completed: "${courseTitle}"`,
+    ar_title: `🏆 أتممت كورس: "${courseTitle}"`,
+    body: `Outstanding achievement! You've completed the entire course. Your certificate is ready to download.`,
+    ar_body: `إنجاز رائع! لقد أكملت الكورس بالكامل. شهادتك جاهزة للتحميل الآن.`,
     actionUrl: `/courses/${courseSlug}/certificate`,
     priority: NotificationPriority.HIGH,
   }),
 
-  // ─── Learning Paths ───────────────────────────────────────────────
-  pathEnrolled: (pathTitle: string, pathSlug: string): NotificationPayload => ({
-    type: 'PATH_ENROLLED',
-    title: `Enrolled in "${pathTitle}" path`,
-    ar_title: `تم التسجيل في مسار "${pathTitle}"`,
-    body: 'Your learning path has started. Stay consistent!',
-    ar_body: 'بدأ مسارك التعليمي. استمر بانتظام!',
-    actionUrl: `/paths/${pathSlug}`,
-    priority: NotificationPriority.MEDIUM,
-  }),
-
-  pathCompleted: (
-    pathTitle: string,
-    pathSlug: string,
-  ): NotificationPayload => ({
-    type: 'PATH_COMPLETED',
-    title: `🏆 Path Completed: "${pathTitle}"`,
-    ar_title: `🏆 أتممت المسار: "${pathTitle}"`,
-    body: 'You completed an entire learning path. Outstanding!',
-    ar_body: 'أكملت مسارًا تعليميًا كاملاً. رائع!',
-    actionUrl: `/paths/${pathSlug}`,
-    priority: NotificationPriority.HIGH,
-  }),
-
   // ─── Labs ─────────────────────────────────────────────────────────
-  labCompleted: (labTitle: string, xp: number): NotificationPayload => ({
+  labCompleted: (
+    labTitle: string,
+    xp: number,
+    points: number,
+  ): NotificationPayload => ({
     type: 'LAB_COMPLETED',
-    title: `✅ Lab Solved: "${labTitle}"`,
-    ar_title: `✅ تم حل التحدي: "${labTitle}"`,
-    body: `You earned ${xp} XP!`,
-    ar_body: `حصلت على ${xp} نقطة خبرة!`,
-    actionUrl: '/dashboard',
+    title: `🎯 Challenge Solved: "${labTitle}"`,
+    ar_title: `🎯 حللت التحدي: "${labTitle}"`,
+    body: `Excellent work! You cracked it and earned +${xp} XP and +${points} points. Keep hacking!`,
+    ar_body: `عمل ممتاز! كسرت التحدي وحصلت على +${xp} XP و +${points} نقطة. استمر في الاختراق!`,
+    actionUrl: '/practice-labs',
     priority: NotificationPriority.HIGH,
   }),
 
   // ─── Gamification ─────────────────────────────────────────────────
-  badgeEarned: (badgeTitle: string): NotificationPayload => ({
+  badgeEarned: (
+    badgeTitle: string,
+    arBadgeTitle: string,
+  ): NotificationPayload => ({
     type: 'BADGE_EARNED',
-    title: `🏅 Badge Earned: "${badgeTitle}"`,
-    ar_title: `🏅 حصلت على شارة: "${badgeTitle}"`,
-    body: 'Keep up the great work!',
-    ar_body: 'واصل عملك الرائع!',
+    title: `🏅 New Badge Unlocked: "${badgeTitle}"`,
+    ar_title: `🏅 شارة جديدة: "${arBadgeTitle}"`,
+    body: `You earned the "${badgeTitle}" badge. Your skills are showing! Check your profile.`,
+    ar_body: `حصلت على شارة "${arBadgeTitle}". مهاراتك تتطور! تحقق من ملفك الشخصي.`,
     actionUrl: '/profile#badges',
-    priority: NotificationPriority.MEDIUM,
+    priority: NotificationPriority.HIGH,
+  }),
+
+  xpLevelUp: (newLevel: number): NotificationPayload => ({
+    type: 'XP_LEVEL_UP',
+    title: `⭐ Level Up! You're now Level ${newLevel}`,
+    ar_title: `⭐ ترقية مستوى! أنت الآن في المستوى ${newLevel}`,
+    body: `You've reached Level ${newLevel}! New challenges and content await you.`,
+    ar_body: `وصلت إلى المستوى ${newLevel}! تحديات ومحتوى جديد ينتظرك.`,
+    actionUrl: '/dashboard',
+    priority: NotificationPriority.HIGH,
   }),
 
   pointsEarned: (amount: number, reason: string): NotificationPayload => ({
@@ -178,31 +167,22 @@ export const NotificationEvents = {
 
   leaderboardRankUp: (newRank: number): NotificationPayload => ({
     type: 'LEADERBOARD_RANK_UP',
-    title: `📈 New Rank: #${newRank} on Leaderboard`,
-    ar_title: `📈 ترتيب جديد: #${newRank} في المتصدرين`,
-    body: 'You climbed the leaderboard! Keep it up.',
-    ar_body: 'صعدت في قائمة المتصدرين! استمر.',
+    title: `📈 New Rank: #${newRank}`,
+    ar_title: `📈 ترتيب جديد: #${newRank}`,
+    body: 'You climbed the leaderboard! Keep pushing.',
+    ar_body: 'صعدت في قائمة المتصدرين! واصل المجهود.',
     actionUrl: '/leaderboard',
     priority: NotificationPriority.MEDIUM,
   }),
 
-  xpLevelUp: (newLevel: number): NotificationPayload => ({
-    type: 'XP_LEVEL_UP',
-    title: `⭐ Level Up! You are now Level ${newLevel}`,
-    ar_title: `⭐ ترقية! أنت الآن في المستوى ${newLevel}`,
-    body: 'You reached a new level. New challenges await!',
-    ar_body: 'وصلت إلى مستوى جديد. تحديات جديدة تنتظرك!',
-    actionUrl: '/dashboard',
-    priority: NotificationPriority.HIGH,
-  }),
-
-  // ─── Subscription ─────────────────────────────────────────────────
+  // ─── Subscription ──────────────────────────────────────────────────
   subscriptionActivated: (planName: string): NotificationPayload => ({
     type: 'SUBSCRIPTION_ACTIVATED',
     title: `🎖️ Subscription Activated: ${planName}`,
     ar_title: `🎖️ تم تفعيل الاشتراك: ${planName}`,
-    body: 'Enjoy full access to all premium content.',
-    ar_body: 'استمتع بالوصول الكامل لجميع المحتوى المميز.',
+    body: 'You now have full access to all premium labs and courses. Time to hack!',
+    ar_body:
+      'أصبح لديك وصول كامل لجميع الـ Labs والكورسات المميزة. حان وقت الاختراق!',
     actionUrl: '/dashboard',
     priority: NotificationPriority.HIGH,
   }),
@@ -211,8 +191,8 @@ export const NotificationEvents = {
     type: 'SUBSCRIPTION_EXPIRING',
     title: `⚠️ Subscription Expiring in ${daysLeft} Days`,
     ar_title: `⚠️ اشتراكك ينتهي خلال ${daysLeft} أيام`,
-    body: 'Renew now to keep your access.',
-    ar_body: 'جدد الآن للحفاظ على وصولك.',
+    body: 'Renew now to keep your momentum going.',
+    ar_body: 'جدد الآن للحفاظ على تقدمك.',
     actionUrl: '/pricing',
     priority: NotificationPriority.URGENT,
   }),
@@ -221,20 +201,43 @@ export const NotificationEvents = {
     type: 'SUBSCRIPTION_CANCELLED',
     title: 'Subscription Cancelled',
     ar_title: 'تم إلغاء الاشتراك',
-    body: 'Your subscription has been cancelled. You can resubscribe anytime.',
-    ar_body: 'تم إلغاء اشتراكك. يمكنك إعادة الاشتراك في أي وقت.',
+    body: 'Your subscription has ended. You can resubscribe anytime.',
+    ar_body: 'انتهى اشتراكك. يمكنك إعادة الاشتراك في أي وقت.',
     actionUrl: '/pricing',
     priority: NotificationPriority.HIGH,
   }),
 
-  // ─── System ───────────────────────────────────────────────────────
-  welcomeBack: (): NotificationPayload => ({
+  welcomeBack: (name?: string): NotificationPayload => ({
     type: 'SYSTEM_WELCOME_BACK',
-    title: '👋 Welcome back!',
-    ar_title: '👋 أهلاً بعودتك!',
-    body: 'You have been inactive. Pick up where you left off.',
-    ar_body: 'لم تكن نشطًا مؤخرًا. استأنف من حيث توقفت.',
+    title: name ? `👋 Welcome back, ${name}!` : '👋 Welcome back!',
+    ar_title: name ? `👋 أهلاً بعودتك، ${name}!` : '👋 أهلاً بعودتك!',
+    body: 'You have been away for a while. Pick up where you left off!',
+    ar_body: 'لم تكن نشطاً مؤخراً. استأنف من حيث توقفت!',
     actionUrl: '/dashboard',
     priority: NotificationPriority.LOW,
+  }),
+
+  // ─── Learning Paths ────────────────────────────────────────────────
+  pathEnrolled: (pathTitle: string, pathSlug: string): NotificationPayload => ({
+    type: 'PATH_ENROLLED',
+    title: `🗺️ Learning Path Started: "${pathTitle}"`,
+    ar_title: `🗺️ بدأت مسار: "${pathTitle}"`,
+    body: 'Your learning path is set. Stay consistent and you will reach the end!',
+    ar_body: 'مسارك التعليمي محدد. استمر بانتظام وستصل للنهاية!',
+    actionUrl: `/paths/${pathSlug}`,
+    priority: NotificationPriority.MEDIUM,
+  }),
+
+  pathCompleted: (
+    pathTitle: string,
+    pathSlug: string,
+  ): NotificationPayload => ({
+    type: 'PATH_COMPLETED',
+    title: `🏆 Learning Path Completed: "${pathTitle}"`,
+    ar_title: `🏆 أتممت المسار: "${pathTitle}"`,
+    body: 'You completed an entire learning path! That is elite-level dedication.',
+    ar_body: 'أكملت مساراً تعليمياً كاملاً! هذا مستوى النخبة.',
+    actionUrl: `/paths/${pathSlug}`,
+    priority: NotificationPriority.HIGH,
   }),
 };

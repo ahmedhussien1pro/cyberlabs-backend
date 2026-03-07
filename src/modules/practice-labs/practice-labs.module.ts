@@ -16,11 +16,12 @@ import { SstiModule } from './ssti/ssti.module';
 import { RaceConditionModule } from './race-condition/race-condition.module';
 import { CsrfModule } from './csrf/csrf.module';
 import { BadgesModule } from '../badges/badges.module';
-
+import { NotificationsModule } from '../notifications/notifications.module';
 @Module({
   imports: [
     DatabaseModule,
-    BadgesModule, // ➕ for auto-awarding badges on lab completion
+    BadgesModule,
+    NotificationsModule,
     CsrfModule,
     CommandInjectionModule,
     AcVulnModule,

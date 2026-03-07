@@ -1,5 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../core/database';
+import { NotificationsService } from '../notifications/services/notifications.service';
+import { NotificationEvents } from '../notifications/notifications.events';
 
 /** XP formula mirrors practice-labs.service */
 function calcLevel(totalXP: number): number {
@@ -8,7 +10,10 @@ function calcLevel(totalXP: number): number {
 
 @Injectable()
 export class BadgesService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private readonly notifications: NotificationsService,
+  ) {}
 
   // ── Public read methods ──────────────────────────────────────────────
 
@@ -132,6 +137,12 @@ export class BadgesService {
         create: { userId, totalPoints: badge.pointsReward },
       });
     }
+    this.notifications
+      .notify(
+        userId,
+        NotificationEvents.badgeEarned(badge.title, badge.ar_title || ''),
+      )
+      .catch(() => {});
 
     return { badge, awarded: true };
   }
