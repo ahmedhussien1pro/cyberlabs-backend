@@ -531,8 +531,12 @@ export class UsersService {
 
   /**
    * Confirm avatar upload after direct R2 PUT.
+   *
    * Security: validates key belongs to the requesting user.
-   * Key format must be: users/{userId}/avatar/{uuid}.{ext}
+   * Key format: users/{userId}/avatar/{uuid}.{ext}
+   *
+   * Uses r2.getPublicUrl() — single source of truth for URL construction,
+   * prevents trailing-slash issues from R2_PUBLIC_URL env var.
    */
   async confirmAvatarUpload(userId: string, key: string): Promise<string> {
     const expectedPrefix = `users/${userId}/avatar/`;
@@ -540,6 +544,7 @@ export class UsersService {
       throw new BadRequestException('Invalid upload key');
     }
 
+    // Delete the old avatar from R2 (if any)
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
       select: { avatarUrl: true },
@@ -550,8 +555,8 @@ export class UsersService {
       if (oldKey) await this.r2.deleteObject(oldKey).catch(() => null);
     }
 
-    const publicUrl = this.config.get<string>('R2_PUBLIC_URL');
-    const avatarUrl = `${publicUrl}/${key}`;
+    // Use r2.getPublicUrl for consistent, normalized URL construction
+    const avatarUrl = this.r2.getPublicUrl(key);
 
     await this.prisma.user.update({
       where: { id: userId },

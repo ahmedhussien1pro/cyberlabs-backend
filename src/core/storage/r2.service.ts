@@ -16,7 +16,15 @@ export class R2Service {
 
   constructor(private config: ConfigService) {
     this.bucket = this.config.get<string>('R2_BUCKET_NAME')!;
-    this.publicUrl = this.config.get<string>('R2_PUBLIC_URL')!;
+
+    /**
+     * Strip any trailing slash from R2_PUBLIC_URL.
+     * Without this, a value like "https://pub-xxx.r2.dev/" would produce
+     * double-slash URLs: "https://pub-xxx.r2.dev//users/..."
+     */
+    this.publicUrl = (
+      this.config.get<string>('R2_PUBLIC_URL') ?? ''
+    ).replace(/\/+$/, '');
 
     this.client = new S3Client({
       region: 'auto',
@@ -29,9 +37,22 @@ export class R2Service {
   }
 
   /**
-   * Generate presigned URL for avatar upload.
+   * Build a public URL for a given R2 object key.
+   * Single source of truth — use this everywhere instead of
+   * manually concatenating config.get('R2_PUBLIC_URL') + key.
+   */
+  getPublicUrl(key: string): string {
+    return `${this.publicUrl}/${key}`;
+  }
+
+  /**
+   * Generate a presigned URL for a browser-initiated avatar upload.
    * Key format: users/{userId}/avatar/{uuid}.{ext}
    * Expires in 5 minutes.
+   *
+   * NOTE: The R2 bucket MUST have CORS configured to allow
+   * PUT requests from the frontend origin:
+   * https://developers.cloudflare.com/r2/buckets/cors/
    */
   async getPresignedUploadUrl(
     userId: string,
@@ -53,7 +74,7 @@ export class R2Service {
     return {
       uploadUrl,
       key,
-      publicUrl: `${this.publicUrl}/${key}`,
+      publicUrl: this.getPublicUrl(key),
     };
   }
 
