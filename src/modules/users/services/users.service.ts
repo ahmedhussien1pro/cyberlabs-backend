@@ -4,6 +4,7 @@ import {
   BadRequestException,
   ForbiddenException,
 } from '@nestjs/common';
+import * as bcrypt from 'bcrypt';
 import { PrismaService } from '../../../core/database';
 import {
   UpdateProfileDto,
@@ -26,12 +27,10 @@ function calcLevel(totalXP: number): number {
 /**
  * Calculate current streak from an array of activity Date objects.
  * A streak is consecutive days of activity ending today or yesterday.
- * Dates are expected in any order — function sorts them internally.
  */
 function calcStreak(dates: Date[]): number {
   if (dates.length === 0) return 0;
 
-  // Deduplicate & normalize to YYYY-MM-DD, sort DESC
   const uniqueDates = [
     ...new Set(dates.map((d) => d.toISOString().slice(0, 10))),
   ]
@@ -46,7 +45,6 @@ function calcStreak(dates: Date[]): number {
   yesterday.setDate(yesterday.getDate() - 1);
   const yesterdayStr = yesterday.toISOString().slice(0, 10);
 
-  // Streak must touch today or yesterday to be "current"
   if (uniqueDates[0] !== todayStr && uniqueDates[0] !== yesterdayStr) return 0;
 
   let streak = 0;
@@ -72,9 +70,6 @@ export class UsersService {
     private config: ConfigService,
   ) {}
 
-  /**
-   * Get user profile by ID
-   */
   async getUserProfile(userId: string) {
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
@@ -88,6 +83,7 @@ export class UsersService {
         address: true,
         birthday: true,
         phoneNumber: true,
+        preferences: true,
         role: true,
         internalRole: true,
         isVerified: true,
@@ -195,9 +191,6 @@ export class UsersService {
     return user;
   }
 
-  /**
-   * Update user profile
-   */
   async updateProfile(userId: string, updateData: UpdateProfileDto) {
     const existingUser = await this.prisma.user.findUnique({
       where: { id: userId },
@@ -214,14 +207,22 @@ export class UsersService {
 
     const { socialLinks, ...profileData } = updateData;
 
+    // Handle birthday: null = clear | string = set | undefined = no change
+    let birthdayValue: Date | null | undefined;
+    if (profileData.birthday === null) {
+      birthdayValue = null;
+    } else if (profileData.birthday) {
+      birthdayValue = new Date(profileData.birthday);
+    } else {
+      birthdayValue = undefined;
+    }
+
     const [updatedUser] = await this.prisma.$transaction([
       this.prisma.user.update({
         where: { id: userId },
         data: {
           ...profileData,
-          birthday: profileData.birthday
-            ? new Date(profileData.birthday)
-            : undefined,
+          birthday: birthdayValue,
           updatedAt: new Date(),
         },
       }),
@@ -246,13 +247,6 @@ export class UsersService {
     return this.getUserProfile(updatedUser.id);
   }
 
-  /**
-   * Get user statistics
-   *
-   * ✅ Fix: totalHours calculated from UserLabProgress completion times.
-   *         startedAt is non-nullable DateTime in schema — no null filter needed.
-   *         Only completedAt is nullable (null = lab not yet finished).
-   */
   async getUserStats(userId: string): Promise<UserStatsSerializer> {
     const [
       user,
@@ -275,17 +269,10 @@ export class UsersService {
       this.prisma.userLabProgress.count({
         where: { userId, completedAt: { not: null } },
       }),
-      // ✅ Fix: derive hours from actual lab time-on-task
-      // startedAt is non-nullable DateTime — safe to use directly
-      // completedAt is DateTime? — filter for completed labs only
       this.prisma.userLabProgress.findMany({
-        where: {
-          userId,
-          completedAt: { not: null },
-        },
+        where: { userId, completedAt: { not: null } },
         select: { startedAt: true, completedAt: true },
       }),
-      // streak: reads UserActivity dates (returns 0 safely if table is empty)
       this.prisma.userActivity.findMany({
         where: { userId },
         select: { date: true },
@@ -295,8 +282,6 @@ export class UsersService {
 
     if (!user) throw new NotFoundException('User not found');
 
-    // Sum actual lab durations; cap each lab at 300 min (5 h) to filter bad data.
-    // startedAt is always a Date (non-nullable), completedAt guarded by the where filter.
     const totalMinutes = labTimes.reduce((sum, lab) => {
       if (!lab.completedAt) return sum;
       const diff =
@@ -304,9 +289,7 @@ export class UsersService {
       return sum + Math.max(0, Math.min(diff, 300));
     }, 0);
 
-    // 1-decimal precision: 30 min → 0.5 h, 45 min → 0.8 h
     const totalHours = Math.round((totalMinutes / 60) * 10) / 10;
-
     const currentStreak = calcStreak(activityDates.map((a) => a.date));
 
     const stats: UserStatsSerializer = {
@@ -314,17 +297,14 @@ export class UsersService {
       name: user.name,
       avatarUrl: user.avatarUrl || undefined,
       role: user.role,
-
       totalPoints: user.points?.totalPoints || 0,
       totalXP: user.points?.totalXP || 0,
       level: user.points?.level || 1,
-
       enrolledCourses,
       completedCourses,
       completedLabs,
       badgesCount: user.badges.length,
       certificationsCount: user.certifications.length,
-
       totalHours,
       activeDays: activityDates.length,
       currentStreak,
@@ -337,9 +317,6 @@ export class UsersService {
     });
   }
 
-  /**
-   * Get all users (admin only)
-   */
   async getAllUsers(query: UserQueryDto) {
     const {
       page = 1,
@@ -393,9 +370,6 @@ export class UsersService {
     };
   }
 
-  /**
-   * Get user's enrolled courses
-   */
   async getUserEnrolledCourses(userId: string) {
     const enrollments = await this.prisma.enrollment.findMany({
       where: { userId },
@@ -424,9 +398,6 @@ export class UsersService {
     }));
   }
 
-  /**
-   * Get user's completed labs
-   */
   async getUserCompletedLabs(userId: string) {
     const labProgress = await this.prisma.userLabProgress.findMany({
       where: { userId, completedAt: { not: null } },
@@ -455,9 +426,6 @@ export class UsersService {
     }));
   }
 
-  /**
-   * Change user password
-   */
   async changePassword(
     userId: string,
     changePasswordDto: ChangePasswordDto,
@@ -471,11 +439,7 @@ export class UsersService {
 
     if (!user) throw new NotFoundException('User not found');
 
-    const bcrypt = require('bcrypt');
-    const isPasswordValid = await bcrypt.compare(
-      currentPassword,
-      user.password,
-    );
+    const isPasswordValid = await bcrypt.compare(currentPassword, user.password);
     if (!isPasswordValid) {
       throw new BadRequestException('Current password is incorrect');
     }
@@ -487,9 +451,6 @@ export class UsersService {
     });
   }
 
-  /**
-   * Get user points — with auto level-correction
-   */
   async getUserPoints(userId: string) {
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
@@ -559,7 +520,17 @@ export class UsersService {
     return this.r2.getPresignedUploadUrl(userId, contentType);
   }
 
+  /**
+   * Confirm avatar upload after direct R2 PUT.
+   * Security: validates key belongs to the requesting user.
+   * Key format must be: users/{userId}/avatar/{uuid}.{ext}
+   */
   async confirmAvatarUpload(userId: string, key: string): Promise<string> {
+    const expectedPrefix = `users/${userId}/avatar/`;
+    if (!key.startsWith(expectedPrefix)) {
+      throw new BadRequestException('Invalid upload key');
+    }
+
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
       select: { avatarUrl: true },
@@ -581,7 +552,6 @@ export class UsersService {
     return avatarUrl;
   }
 
-  // ── Sessions ──────────────────────────────────────────────
   async getUserSessions(userId: string) {
     return this.prisma.refreshToken.findMany({
       where: { userId, revokedAt: null, expiresAt: { gt: new Date() } },
@@ -608,7 +578,6 @@ export class UsersService {
     });
   }
 
-  // ── Notification Preferences ──────────────────────────────────────────
   async getNotificationPreferences(userId: string) {
     return this.prisma.notificationSettings.upsert({
       where: { userId },
@@ -628,7 +597,6 @@ export class UsersService {
     });
   }
 
-  // ── Username lookup ───────────────────────────────────────────────
   async getUserByUsername(username: string) {
     const user = await this.prisma.user.findUnique({
       where: { name: username },
@@ -647,7 +615,6 @@ export class UsersService {
     return user;
   }
 
-  // ── Soft delete ────────────────────────────────────────────────
   async softDeleteAccount(userId: string, reason?: string) {
     await this.prisma.user.update({
       where: { id: userId },
@@ -665,7 +632,6 @@ export class UsersService {
     });
   }
 
-  // ── GDPR Export ──────────────────────────────────────────────
   async exportUserData(userId: string) {
     const [user, points, stats, achievements, badges, goals] =
       await this.prisma.$transaction([

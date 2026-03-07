@@ -29,15 +29,16 @@ export class R2Service {
   }
 
   /**
-   * Generate presigned URL
-   * Expires in 5 minutes
+   * Generate presigned URL for avatar upload.
+   * Key format: users/{userId}/avatar/{uuid}.{ext}
+   * Expires in 5 minutes.
    */
   async getPresignedUploadUrl(
     userId: string,
     contentType: string,
   ): Promise<{ uploadUrl: string; key: string; publicUrl: string }> {
     const ext = contentType.split('/')[1] ?? 'jpg';
-    const key = `avatars/${userId}/${randomUUID()}.${ext}`;
+    const key = `users/${userId}/avatar/${randomUUID()}.${ext}`;
 
     const command = new PutObjectCommand({
       Bucket: this.bucket,
@@ -57,7 +58,7 @@ export class R2Service {
   }
 
   /**
-   * Delete old avatar from R2
+   * Delete an object from R2 by key.
    */
   async deleteObject(key: string): Promise<void> {
     await this.client.send(
@@ -66,7 +67,7 @@ export class R2Service {
   }
 
   /**
-   * Extract R2 key from public URL
+   * Extract R2 key from a public URL.
    */
   extractKey(publicUrl: string): string | null {
     try {
