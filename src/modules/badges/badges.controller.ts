@@ -1,4 +1,12 @@
-import { Controller, Get, UseGuards, Request } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  UseGuards,
+  Request,
+  HttpCode,
+  HttpStatus,
+} from '@nestjs/common';
 import { BadgesService } from './badges.service';
 import { JwtAuthGuard } from '../../common/guards';
 
@@ -9,7 +17,6 @@ export class BadgesController {
   /**
    * GET /badges
    * All badges catalog — no auth required.
-   * Used for the public badges explorer page.
    */
   @Get()
   async getAllBadges() {
@@ -20,7 +27,6 @@ export class BadgesController {
   /**
    * GET /badges/me
    * Full catalog with earned/locked status for the authenticated user.
-   * Used by the dashboard BadgesCard (all tabs: all / earned / locked).
    */
   @UseGuards(JwtAuthGuard)
   @Get('me')
@@ -32,12 +38,28 @@ export class BadgesController {
   /**
    * GET /badges/my
    * Only badges the authenticated user has earned.
-   * Used by the Profile badges section.
    */
   @UseGuards(JwtAuthGuard)
   @Get('my')
   async getMyBadges(@Request() req: any) {
     const data = await this.badgesService.getUserBadges(req.user.id);
     return { success: true, data };
+  }
+
+  /**
+   * POST /badges/backfill-my-badges
+   * Retroactively awards all earned badges + issues missing certificates.
+   * Safe to call multiple times — all operations are idempotent.
+   */
+  @UseGuards(JwtAuthGuard)
+  @Post('backfill-my-badges')
+  @HttpCode(HttpStatus.OK)
+  async backfillMyBadges(@Request() req: any) {
+    const awarded = await this.badgesService.backfillUserBadges(req.user.id);
+    return {
+      success: true,
+      message: `Backfill complete. Awarded ${awarded.length} new badge(s).`,
+      awarded,
+    };
   }
 }

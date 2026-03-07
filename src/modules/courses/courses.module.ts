@@ -1,15 +1,13 @@
-// src/modules/courses/courses.module.ts
 import { Module } from '@nestjs/common';
-import { CoursesController } from './courses.controller';
 import { CoursesService } from './courses.service';
-import { PrismaService } from '../../core/database';
-import { ProgressModule } from '../progress/progress.module';
-import { NotificationsModule } from '../notifications/notifications.module';
+import { CoursesController } from './courses.controller';
+import { BadgesModule } from '../badges/badges.module';
+import { CertificatesModule } from '../certificates/certificates.module';
 
 @Module({
-  imports: [ProgressModule, NotificationsModule],
+  imports: [BadgesModule, CertificatesModule],
   controllers: [CoursesController],
-  providers: [CoursesService, PrismaService],
+  providers: [CoursesService],
   exports: [CoursesService],
 })
 export class CoursesModule {}

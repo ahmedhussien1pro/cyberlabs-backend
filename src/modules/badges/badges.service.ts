@@ -135,7 +135,7 @@ export class BadgesService {
 
   /**
    * Auto-check and award milestone badges after a course is completed.
-   * Call from EnrollmentsService / CoursesService after course completion.
+   * Call from CoursesService after course completion.
    */
   async checkCourseMilestoneBadges(
     userId: string,
@@ -154,6 +154,62 @@ export class BadgesService {
         if (result?.awarded) awarded.push(code);
       }
     }
+    return awarded;
+  }
+
+  /**
+   * Retroactively awards all earned badges + issues missing certificates.
+   * Called via POST /badges/backfill-my-badges
+   * Safe to call multiple times — all operations are idempotent.
+   */
+  async backfillUserBadges(userId: string): Promise<string[]> {
+    const awarded: string[] = [];
+
+    // 1. Course milestone badges
+    const completedCourses = await this.prisma.enrollment.count({
+      where: { userId, isCompleted: true },
+    });
+    const courseBadges = await this.checkCourseMilestoneBadges(
+      userId,
+      completedCourses,
+    );
+    awarded.push(...courseBadges);
+
+    // 2. Lab milestone badges
+    const completedLabs = await this.prisma.userLabProgress.count({
+      where: { userId, flagSubmitted: true },
+    });
+    const labBadges = await this.checkLabMilestoneBadges(userId, completedLabs);
+    awarded.push(...labBadges);
+
+    // 3. Issue missing certificates for all completed courses
+    const completedEnrollments = await this.prisma.enrollment.findMany({
+      where: { userId, isCompleted: true },
+      select: { courseId: true },
+    });
+
+    for (const { courseId } of completedEnrollments) {
+      const existing = await this.prisma.issuedCertificate.findUnique({
+        where: { userId_courseId: { userId, courseId } },
+      });
+      if (!existing) {
+        const date = new Date();
+        const datePart = `${date.getFullYear()}${String(date.getMonth() + 1).padStart(2, '0')}${String(date.getDate()).padStart(2, '0')}`;
+        const random = Math.random().toString(36).slice(2, 8).toUpperCase();
+        await this.prisma.issuedCertificate
+          .create({
+            data: {
+              userId,
+              courseId,
+              certificateUrl: '',
+              verificationId: `CL-${datePart}-${random}`,
+              status: 'ACTIVE',
+            },
+          })
+          .catch(() => null);
+      }
+    }
+
     return awarded;
   }
 }

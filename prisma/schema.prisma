@@ -36,8 +36,8 @@ enum Role {
     ADMIN
   USER
   CONTENT_CREATOR
-  STUDENT // إضافة STUDENT للـ Auth Module
-  INSTRUCTOR // إضافة INSTRUCTOR للـ Courses
+  STUDENT
+  INSTRUCTOR
 }
 
 enum InternalRole {
@@ -80,7 +80,7 @@ enum XPSource {
 enum STATE {
     PUBLISHED
   COMING_SOON
-  DRAFT // إضافة DRAFT للكورسات غير المنشورة
+  DRAFT
 }
 
 enum LeaderboardPeriod {
@@ -223,12 +223,10 @@ model User {
   phoneNumber String?
   isVerified  Boolean   @default(false) @map("is_verified")
 
-  // Security fields
   lastPasswordChange DateTime?
   deletedAt          DateTime?
   deletionReason     String?
 
-  // Auth fields (من الـ Auth Module)
   refreshToken        String?
   isEmailVerified     Boolean   @default(false)
   failedLoginAttempts Int       @default(0)
@@ -241,7 +239,6 @@ model User {
   lastLoginAt         DateTime?
   stripeCustomerId String?
 
-  // LMS Relations
   enrollments         Enrollment[]
   reviews             Review[]
   lessonCompletions   LessonCompletion[]
@@ -249,24 +246,19 @@ model User {
   labInstances        LabInstance[]
   courseFavorites     CourseFavorite[]
   pathEnrollments     PathEnrollment[]
-  // Course instructor relation
   coursesAsInstructor Course[]           @relation("CourseInstructor")
 
-  // File management
   files File[]
   image Image?
 
-  // Roles
   role         Role          @default(USER)
   internalRole InternalRole? @default(STUDENT)
 
-  // Profile details
   socialLinks    SocialLink[]
   education      Education[]
   skills         UserSkill[]
   certifications Certification[]
 
-  // Gamification
   achievements          UserAchievement[]
   badges                UserBadge[]
   careerPaths           UserCareerPath[]
@@ -277,7 +269,6 @@ model User {
   leaderboardEntries    LeaderboardEntry[]
   userRewards           UserReward[]
   goals                 Goal[]
-  // Learning progress
   labProgress           UserLabProgress[]
   courseRegistrations   CourseRegistration[]
   assessmentSubmissions AssessmentSubmission[]
@@ -288,12 +279,10 @@ model User {
   labGenericContents    LabGenericContent[]
   labGenericLogs        LabGenericLog[]
   labLaunchTokens       LabLaunchToken[]
-  // Activity & stats
   dayActivity           UserActivity[]
 
   stats UserStats?
 
-  // Security & logs
   security             UserSecurity?
   securityLogs         SecurityLog[]
   ValidationNumber     ValidationNumber[]
@@ -303,14 +292,11 @@ model User {
   twoFactorBackupCodes TwoFactorBackupCode[]
   oauthAccounts        OAuthAccount[]
 
-  // Subscriptions
   subscriptions Subscription[]
 
-  // Notifications
   notifications        Notification[]
   notificationSettings NotificationSettings?
 
-  // Community
   discussions   Discussion[]
   comments      Comment[]
   labReviews    LabReview[]
@@ -510,16 +496,24 @@ model Notification {
 }
 
 model NotificationSettings {
-    id                 String  @id @default(uuid())
-  user               User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId             String  @unique
-  emailNotifications Boolean @default(true)
-  pushNotifications  Boolean @default(true)
-  courseUpdates      Boolean @default(true)
-  labUpdates         Boolean @default(true)
-  achievementAlerts  Boolean @default(true)
-  weeklyDigest       Boolean @default(true)
-  marketingEmails    Boolean @default(false)
+  id                  String  @id @default(uuid())
+  user                User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId              String  @unique
+
+  emailNotifications  Boolean @default(true)
+  pushNotifications   Boolean @default(false)
+  courseUpdates       Boolean @default(true)
+
+  // Renamed Prisma fields — @map keeps existing DB columns, no data loss
+  labCompleted        Boolean @default(true)  @map("labUpdates")
+  achievementUnlocked Boolean @default(true)  @map("achievementAlerts")
+  weeklyReport        Boolean @default(false) @map("weeklyDigest")
+  promotions          Boolean @default(false) @map("marketingEmails")
+
+  // New columns — requires: npx prisma migrate dev --name expand_notification_settings
+  monthlyDigest       Boolean @default(false)
+  securityAlerts      Boolean @default(true)
+  newCoursesAvailable Boolean @default(false)
 
   @@map("notification_settings")
 }
@@ -787,7 +781,6 @@ model Course {
   color              CourseColor       @default(BLUE)
   state              STATE             @default(PUBLISHED)
 
-  // LMS specific fields
   instructorId    String
   price           Float     @default(0)
   enrollmentCount Int       @default(0)
@@ -801,7 +794,6 @@ model Course {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  // Relations
   instructor  User             @relation("CourseInstructor", fields: [instructorId], references: [id])
   enrollments Enrollment[]
   sections    Section[]
@@ -810,9 +802,7 @@ model Course {
   favorites   CourseFavorite[]
   pathModules  PathModule[]
 
-  // Original relations (keep intact)
   modules             Module[]
-  // labs                Lab[]
   courseLabs          CourseLab[]
   registrations       CourseRegistration[]
   assessments         Assessment[]
@@ -829,7 +819,7 @@ model Course {
 }
 
 // ============================================================================
-// LMS Models (للـ Learning Platform)
+// LMS Models
 // ============================================================================
 
 model Enrollment {
@@ -891,12 +881,10 @@ model Lesson {
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
 
-  // Relations for LMS
   section     Section            @relation(fields: [sectionId], references: [id], onDelete: Cascade)
   course      Course             @relation(fields: [courseId], references: [id], onDelete: Cascade)
   completions LessonCompletion[]
 
-  // Original relations (keep intact)
   moduleId String
   module   Module           @relation(fields: [moduleId], references: [id], onDelete: Cascade)
   progress LessonProgress[]
@@ -963,7 +951,7 @@ model ReviewHelpful {
 }
 
 // ============================================================================
-// ORIGINAL MODELS (Keep as is)
+// ORIGINAL MODELS
 // ============================================================================
 
 model Module {
@@ -1031,7 +1019,6 @@ model Lab {
   ar_description String?
   difficulty     Difficulty       @default(BEGINNER)
 
-  // -- NEW FIELDS FOR LAB ENGINE V2 --
   category      CATEGORY         @default(WEB_SECURITY)
   executionMode LabExecutionMode @default(SHARED_BACKEND)
   scenario      String?          @db.Text
@@ -1039,14 +1026,12 @@ model Lab {
   engineConfig  Json?
   skills        String[]
 
-  // ─── NEW FIELDS ─────────────────────────────────────────────
-  goal          String?          @db.Text  // ← ✅ الحقل المضاف
+  goal          String?          @db.Text
   ar_goal       String?
   briefing      Json?
   stepsOverview Json?
   solution      Json?
   postSolve     Json?
-  // ────────────────────────────────────────────────────────────
 
   slug          String  @unique
   imageUrl      String?
@@ -1107,18 +1092,14 @@ model LabInstance {
   userId String
   labId  String
 
-  // Lab-specific state (stored as JSON)
   state Json @default("{}")
 
-  // Example for IDOR lab:
   balance Int @default(5000)
 
-  // Metadata
   isActive  Boolean   @default(true)
   startedAt DateTime  @default(now())
-  expiresAt DateTime? // Optional: auto-cleanup old instances
+  expiresAt DateTime?
   
-  // Launch token reference
   launchTokens LabLaunchToken[]
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -1130,7 +1111,6 @@ model LabInstance {
   @@map("LabInstance")
 }
 
-// Opaque launch code for lab redirects
 model LabLaunchToken {
     id         String   @id @default(uuid())
   token      String   @unique
@@ -1455,7 +1435,7 @@ model CourseReview {
 
 model SubscriptionPlan {
   id             String               @id @default(uuid())
-  name           String               // ✅ بدون @unique
+  name           String
   ar_name        String?
   description    String?
   ar_description String?
@@ -1483,7 +1463,6 @@ model Subscription {
   plan   SubscriptionPlan @relation(fields: [planId], references: [id], onDelete: Cascade)
   planId String
 
-  // Stripe & Payment Fields
   stripeCustomerId     String?
   stripeSubscriptionId String?            @unique
   stripePriceId        String?
@@ -1492,7 +1471,7 @@ model Subscription {
   currentPeriodEnd     DateTime?
   cancelAtPeriodEnd    Boolean            @default(false)
   trialEnd             DateTime?
-  paymobOrderId        String? // Placeholder for Paymob integration later
+  paymobOrderId        String?
 
   startDate DateTime  @default(now())
   endDate   DateTime?
@@ -1505,7 +1484,7 @@ model Subscription {
 }
 
 // ============================================================================
-// FAVORITES & LEARNING PATHS (NEW V2)
+// FAVORITES & LEARNING PATHS
 // ============================================================================
 
 model CourseFavorite {
@@ -1577,7 +1556,6 @@ model PathModule {
   estimatedHours Int          @default(0)
   isLocked       Boolean      @default(false)
   totalTopics    Int          @default(0)
-  // Link to existing resources (optional, used if type is COURSE or LAB)
   courseId       String?
   course         Course?      @relation(fields: [courseId], references: [id], onDelete: SetNull)
   labId          String?
@@ -1692,18 +1670,15 @@ model LabSubmission {
   labId  String
   lab    Lab    @relation(fields: [labId], references: [id], onDelete: Cascade)
 
-  // Submission data
   code       String? @db.Text
   flagAnswer String?
   isCorrect  Boolean @default(false)
 
-  // Points calculation
-  timeTaken     Int // seconds
+  timeTaken     Int
   attemptNumber Int @default(1)
   pointsEarned  Int @default(0)
   xpEarned      Int @default(0)
 
-  // Metadata
   submittedAt DateTime @default(now())
   ipAddress   String?
 
@@ -1713,9 +1688,9 @@ model LabSubmission {
 }
 
 // ============================================================================
-// LAB-SPECIFIC MODELS (Keep as is for vulnerable labs)
+// LAB-SPECIFIC MODELS
 // ============================================================================
-// Login, JWT, SQLi, Broken Auth
+
 model LabGenericUser {
     id       String  @id @default(cuid())
   userId   String
@@ -1733,7 +1708,6 @@ model LabGenericUser {
   @@unique([userId, labId, username])
 }
 
-// Money, IDOR, Race Condition, CSRF
 model LabGenericBank {
     id        String  @id @default(cuid())
   userId    String
@@ -1748,7 +1722,6 @@ model LabGenericBank {
   @@unique([userId, labId, accountNo])
 }
 
-// Posts, Comments, Files (XSS, SSTI, Path Traversal)
 model LabGenericContent {
     id       String  @id @default(cuid())
   userId   String
@@ -1765,12 +1738,11 @@ model LabGenericContent {
   @@index([userId, labId])
 }
 
-// (Payments, Logs, Coupons)
 model LabGenericLog {
     id        String   @id @default(cuid())
   userId    String
   labId     String
-  type      String // "PAYMENT" | "COUPON" | "LOGIN_LOG" | "FILE_UPLOAD"
+  type      String
   value     Float?
   action    String?
   meta      Json?

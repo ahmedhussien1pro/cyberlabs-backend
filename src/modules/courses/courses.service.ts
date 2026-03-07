@@ -10,10 +10,16 @@ import {
   courseDetailInclude,
 } from '../../common/selects/course-card.select';
 import { toCourseCard } from '../../common/transformers/course-card.transformer';
+import { BadgesService } from '../badges/badges.service';
+import { CertificatesService } from '../certificates/certificates.service';
 
 @Injectable()
 export class CoursesService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly badgesService: BadgesService,
+    private readonly certificatesService: CertificatesService,
+  ) {}
 
   // ── Curriculum — reads from JSON seed files ─────────────────────────
   async getCurriculum(courseSlug: string) {
@@ -26,7 +32,7 @@ export class CoursesService {
 
     const baseDir = join(process.cwd(), 'prisma/seed-data/course-data');
     const normalize = (s: string) =>
-      s.toLowerCase().replace(/[-_\s&.,!()'"+]/g, '');
+      s.toLowerCase().replace(/[-_\s&.,!()'"\+]/g, '');
 
     const slugNorm = normalize(courseSlug);
     const titleNorm = normalize(course.title);
@@ -291,7 +297,8 @@ export class CoursesService {
     if (!section)
       throw new NotFoundException('Section not found in this course');
 
-    return this.prisma.$transaction(async (tx) => {
+    // ── Core DB transaction ───────────────────────────────────────────
+    const result = await this.prisma.$transaction(async (tx) => {
       await Promise.all(
         section.lessons.map((lesson) =>
           tx.lessonCompletion.upsert({
@@ -343,12 +350,44 @@ export class CoursesService {
       }
 
       return {
-        success: true,
         progress,
         isCompleted: wasAlreadyCompleted || isNowCompleted,
-        completedSectionId: sectionId,
+        newlyCompleted: isNowCompleted && !wasAlreadyCompleted,
       };
     });
+
+    // ── Side effects: Certificate + Badges (non-blocking, post-transaction) ──
+    if (result.newlyCompleted) {
+      // 1. Issue certificate
+      this.certificatesService
+        .issueCertificate(userId, courseId)
+        .catch((err) =>
+          console.warn(
+            `[Cert] issueCertificate failed userId=${userId}:`,
+            err?.message,
+          ),
+        );
+
+      // 2. Award course milestone badges
+      this.prisma.enrollment
+        .count({ where: { userId, isCompleted: true } })
+        .then((count) =>
+          this.badgesService.checkCourseMilestoneBadges(userId, count),
+        )
+        .catch((err) =>
+          console.warn(
+            `[Badge] checkCourseMilestone failed userId=${userId}:`,
+            err?.message,
+          ),
+        );
+    }
+
+    return {
+      success: true,
+      progress: result.progress,
+      isCompleted: result.isCompleted,
+      completedSectionId: sectionId,
+    };
   }
 
   // ── My progress ──────────────────────────────────────────────────────
