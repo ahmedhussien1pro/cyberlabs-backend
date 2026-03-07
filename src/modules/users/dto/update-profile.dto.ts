@@ -40,12 +40,18 @@ export class UpdateProfileDto {
   @MaxLength(100)
   name?: string;
 
+  /**
+   * Strip empty strings so @IsOptional() correctly skips validation.
+   * class-validator @IsOptional only ignores null/undefined — not ''.
+   */
   @IsOptional()
+  @Transform(({ value }) => (value === '' ? undefined : value))
   @IsString()
   @MaxLength(500)
   bio?: string;
 
   @IsOptional()
+  @Transform(({ value }) => (value === '' ? undefined : value))
   @IsString()
   @MaxLength(500)
   ar_bio?: string;
@@ -54,16 +60,24 @@ export class UpdateProfileDto {
   // Avatar is updated only via POST /users/me/avatar/confirm
 
   @IsOptional()
+  @Transform(({ value }) => (value === '' ? undefined : value))
   @IsString()
   @MaxLength(255)
   address?: string;
 
   /**
    * Send ISO date string (e.g. "1999-05-20") to set,
-   * or explicit null to clear the birthday field.
+   * explicit null to clear, or omit/send '' to leave unchanged.
+   *
+   * Fix: '' → undefined so @IsOptional correctly skips @IsDateString.
+   * Sending '' from an empty <input type="date"> previously caused 400.
    */
   @IsOptional()
-  @Transform(({ value }) => (value === null ? null : value))
+  @Transform(({ value }) => {
+    if (value === null) return null;           // explicit clear
+    if (!value || value === '') return undefined; // empty input → skip
+    return value;                              // valid date string
+  })
   @IsDateString(
     {},
     { message: 'birthday must be a valid ISO date string (YYYY-MM-DD)' },
@@ -71,6 +85,7 @@ export class UpdateProfileDto {
   birthday?: string | null;
 
   @IsOptional()
+  @Transform(({ value }) => (value === '' ? undefined : value))
   @IsString()
   @MaxLength(20)
   phoneNumber?: string;
@@ -83,7 +98,6 @@ export class UpdateProfileDto {
 
   /**
    * Free-form user preferences JSON (theme, language, UI settings, etc.).
-   * Stored as Json? in the database — structure is flexible.
    */
   @IsOptional()
   @IsObject()
