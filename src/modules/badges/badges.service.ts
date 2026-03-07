@@ -1,18 +1,25 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../core/database';
 
+/** XP formula mirrors practice-labs.service */
+function calcLevel(totalXP: number): number {
+  return Math.floor(totalXP / 1000) + 1;
+}
+
 @Injectable()
 export class BadgesService {
   constructor(private prisma: PrismaService) {}
 
-  /** All badges in the catalog (public) */
+  // ── Public read methods ──────────────────────────────────────────────
+
+  /** All badges in the catalog (no auth required) */
   async getAllBadges() {
     return this.prisma.badge.findMany({
       orderBy: [{ type: 'asc' }, { xpReward: 'desc' }],
     });
   }
 
-  /** Badges earned by the authenticated user */
+  /** Only badges the authenticated user has earned */
   async getUserBadges(userId: string) {
     return this.prisma.userBadge.findMany({
       where: { userId },
@@ -22,8 +29,8 @@ export class BadgesService {
   }
 
   /**
-   * Full catalog + earned status for the current user.
-   * Returns each badge with { earned: boolean, awardedAt?: Date }
+   * Full catalog with earned/locked status per badge.
+   * Returns: badge + { earned: boolean, awardedAt: Date | null }
    */
   async getBadgesWithStatus(userId: string) {
     const [allBadges, userBadges] = await Promise.all([
@@ -47,69 +54,93 @@ export class BadgesService {
     }));
   }
 
-  /** Award a badge to a user — safe to call multiple times */
+  // ── Core award logic ─────────────────────────────────────────────────
+
+  /**
+   * Award a badge to a user — idempotent (safe to call multiple times).
+   *
+   * ⚠️  Does NOT wrap itself in a $transaction — callers must not call
+   *     this method from inside an interactive transaction (Prisma does
+   *     not support nested interactive transactions).
+   */
   async awardBadge(
     userId: string,
     badgeCode: string,
     context?: string,
     awardedBy?: string,
-  ) {
+  ): Promise<{ badge: any; awarded: boolean; message?: string }> {
+    // 1. Resolve badge
     const badge = await this.prisma.badge.findUnique({
       where: { code: badgeCode },
     });
-    if (!badge) throw new NotFoundException(`Badge "${badgeCode}" not found`);
+    if (!badge) {
+      throw new NotFoundException(`Badge "${badgeCode}" not found in DB`);
+    }
 
-    // Check if already earned with same context
+    // 2. Idempotency check (context-aware)
     const existing = await this.prisma.userBadge.findFirst({
-      where: { userId, badgeId: badge.id, context: context ?? null },
+      where: {
+        userId,
+        badgeId: badge.id,
+        context: context !== undefined ? context : null,
+      },
     });
-    if (existing) return { badge, awarded: false, message: 'Already earned' };
+    if (existing) {
+      return { badge, awarded: false, message: 'Already earned' };
+    }
 
-    await this.prisma.$transaction(async (tx) => {
-      await tx.userBadge.create({
-        data: {
-          userId,
-          badgeId: badge.id,
-          context: context ?? null,
-          awardedBy: awardedBy ?? null,
-        },
-      });
+    // 3. Create badge record
+    await this.prisma.userBadge.create({
+      data: {
+        userId,
+        badgeId: badge.id,
+        context: context ?? null,
+        awardedBy: awardedBy ?? null,
+      },
+    });
 
-      if (badge.xpReward > 0 || badge.pointsReward > 0) {
-        if (badge.xpReward > 0) {
-          await tx.xPLog.create({
-            data: {
-              userId,
-              source: 'MANUAL',
-              amount: badge.xpReward,
-              reason: `Badge earned: ${badge.title}`,
-              context: `badge:${badge.code}`,
-            },
+    // 4. Award XP + Points (mirrors practice-labs awardXP pattern)
+    if (badge.xpReward > 0) {
+      await this.prisma.$transaction(async (tx) => {
+        const updated = await tx.userPoints.upsert({
+          where: { userId },
+          update: { totalXP: { increment: badge.xpReward } },
+          create: { userId, totalXP: badge.xpReward, level: 1 },
+        });
+        const newLevel = calcLevel(updated.totalXP);
+        if (newLevel !== updated.level) {
+          await tx.userPoints.update({
+            where: { userId },
+            data: { level: newLevel },
           });
         }
-
-        await tx.userPoints.upsert({
-          where: { userId },
-          create: {
+        await tx.xPLog.create({
+          data: {
             userId,
-            totalXP: badge.xpReward,
-            totalPoints: badge.pointsReward,
-            level: 1,
-          },
-          update: {
-            totalXP: { increment: badge.xpReward },
-            totalPoints: { increment: badge.pointsReward },
+            source: 'MANUAL',
+            amount: badge.xpReward,
+            reason: `Badge earned: ${badge.title}`,
           },
         });
-      }
-    });
+      });
+    }
+
+    if (badge.pointsReward > 0) {
+      await this.prisma.userPoints.upsert({
+        where: { userId },
+        update: { totalPoints: { increment: badge.pointsReward } },
+        create: { userId, totalPoints: badge.pointsReward },
+      });
+    }
 
     return { badge, awarded: true };
   }
 
+  // ── Milestone checkers ───────────────────────────────────────────────
+
   /**
-   * Auto-check and award milestone badges after a lab is completed.
-   * Call from PracticeLabsService after successful flag submission.
+   * Call after a lab is solved to auto-award milestone badges.
+   * Already called by practice-labs.service.ts inside a try/catch.
    */
   async checkLabMilestoneBadges(
     userId: string,
@@ -134,8 +165,8 @@ export class BadgesService {
   }
 
   /**
-   * Auto-check and award milestone badges after a course is completed.
-   * Call from CoursesService after course completion.
+   * Call after a course is completed to auto-award milestone badges.
+   * Called non-blocking from courses.service.ts markComplete().
    */
   async checkCourseMilestoneBadges(
     userId: string,
@@ -157,10 +188,11 @@ export class BadgesService {
     return awarded;
   }
 
+  // ── Backfill ─────────────────────────────────────────────────────────
+
   /**
    * Retroactively awards all earned badges + issues missing certificates.
-   * Called via POST /badges/backfill-my-badges
-   * Safe to call multiple times — all operations are idempotent.
+   * POST /badges/backfill-my-badges — idempotent, safe to call many times.
    */
   async backfillUserBadges(userId: string): Promise<string[]> {
     const awarded: string[] = [];
@@ -177,12 +209,12 @@ export class BadgesService {
 
     // 2. Lab milestone badges
     const completedLabs = await this.prisma.userLabProgress.count({
-      where: { userId, flagSubmitted: true },
+      where: { userId, completedAt: { not: null } },
     });
     const labBadges = await this.checkLabMilestoneBadges(userId, completedLabs);
     awarded.push(...labBadges);
 
-    // 3. Issue missing certificates for all completed courses
+    // 3. Issue missing certificates for completed courses (idempotent)
     const completedEnrollments = await this.prisma.enrollment.findMany({
       where: { userId, isCompleted: true },
       select: { courseId: true },
