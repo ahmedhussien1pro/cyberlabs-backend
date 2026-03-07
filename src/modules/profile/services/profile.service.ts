@@ -6,16 +6,18 @@ import { subDays, format } from 'date-fns';
 export class ProfileService {
   constructor(private readonly prisma: PrismaService) {}
 
+  /** GET /profile/achievements */
   async getAchievements(userId: string) {
     return this.prisma.userAchievement.findMany({
       where: { userId },
-      take: 100, // Hard limit to prevent data dumping
+      take: 100,
       include: {
         achievement: {
           select: {
             title: true,
             ar_title: true,
             description: true,
+            ar_description: true,
             iconUrl: true,
             category: true,
             xpReward: true,
@@ -26,10 +28,28 @@ export class ProfileService {
     });
   }
 
+  /** GET /profile/skills */
+  async getSkills(userId: string) {
+    return this.prisma.userSkill.findMany({
+      where: { userId },
+      include: {
+        skill: {
+          select: {
+            name: true,
+            ar_name: true,
+            category: true,
+          },
+        },
+      },
+      orderBy: { updatedAt: 'desc' },
+    });
+  }
+
+  /** GET /profile/certificates */
   async getCertificates(userId: string) {
     return this.prisma.issuedCertificate.findMany({
       where: { userId, status: 'ACTIVE' },
-      take: 100, // Hard limit
+      take: 100,
       include: {
         course: {
           select: { title: true, ar_title: true, thumbnail: true },
@@ -39,11 +59,12 @@ export class ProfileService {
     });
   }
 
+  /** GET /profile/activity */
   async getActivity(userId: string) {
     const since = subDays(new Date(), 30);
     const activities = await this.prisma.userActivity.findMany({
       where: { userId, date: { gte: since } },
-      take: 60, // Security limit (max 60 days if logic changes)
+      take: 60,
       orderBy: { date: 'desc' },
     });
     return activities.map((a) => ({
