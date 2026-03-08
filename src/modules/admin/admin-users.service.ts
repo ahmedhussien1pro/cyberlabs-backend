@@ -93,13 +93,19 @@ export class AdminUsersService {
     const [total, byRole, newThisMonth, suspended] =
       await this.prisma.$transaction([
         this.prisma.user.count(),
+
+        // Fix: Prisma v6 groupBy requires explicit orderBy
+        // Fix: _count: { _all: true } avoids ambiguous union type
         this.prisma.user.groupBy({
           by: ['role'],
-          _count: { id: true },
+          orderBy: { role: 'asc' },
+          _count: { _all: true },
         }),
+
         this.prisma.user.count({
           where: { createdAt: { gte: firstDayOfMonth } },
         }),
+
         this.prisma.userSecurity.count({
           where: { isSuspended: true },
         }),
@@ -110,14 +116,17 @@ export class AdminUsersService {
       newThisMonth,
       suspended,
       byRole: byRole.reduce(
-        (acc, entry) => ({ ...acc, [entry.role]: entry._count.id }),
+        (acc, entry) => ({
+          ...acc,
+          [entry.role]: entry._count?._all ?? 0,
+        }),
         {} as Record<string, number>,
       ),
     };
   }
 
   // ─────────────────────────────────────────────────────────────────
-  // GET /admin/users/:id  — full user detail (no passwords exposed)
+  // GET /admin/users/:id  — full user detail (passwords never exposed)
   // ─────────────────────────────────────────────────────────────────
   async findOne(id: string) {
     const user = await this.prisma.user.findUnique({
@@ -274,7 +283,7 @@ export class AdminUsersService {
   // PATCH /admin/users/:id/unsuspend  — lift suspension
   // ─────────────────────────────────────────────────────────────────
   async unsuspend(adminId: string, targetId: string) {
-    // adminId param kept for future audit log injection
+    // adminId kept for future audit log injection
     void adminId;
 
     const target = await this.prisma.user.findUnique({
