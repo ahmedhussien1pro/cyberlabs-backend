@@ -157,12 +157,31 @@ export class AdminCoursesService {
   // ───────────────────────────────────────────────────────────────────
   // GET /admin/courses/:id  — full detail, no isPublished check
   // ───────────────────────────────────────────────────────────────────
+  // GET /admin/courses/:id  — full detail
   async findOne(id: string) {
     const course = await this.prisma.course.findUnique({
       where: { id },
       include: {
         instructor: {
           select: { id: true, name: true, email: true, avatarUrl: true },
+        },
+        // ✅ الإضافة المطلوبة
+        sections: {
+          orderBy: { order: 'asc' },
+          include: {
+            lessons: {
+              orderBy: { order: 'asc' },
+              select: {
+                id: true,
+                title: true,
+                ar_title: true,
+                type: true,
+                duration: true,
+                order: true,
+                isPublished: true,
+              },
+            },
+          },
         },
         _count: {
           select: {
