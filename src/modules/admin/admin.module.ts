@@ -4,27 +4,34 @@ import { AdminController } from './admin.controller';
 import { AdminService } from './admin.service';
 import { AdminUsersController } from './admin-users.controller';
 import { AdminUsersService } from './admin-users.service';
+import { AdminCoursesController } from './admin-courses.controller';
+import { AdminCoursesService } from './admin-courses.service';
 
 /**
  * AdminModule
  *
  * Central module for all platform administration features.
- * Each admin feature area is a dedicated controller + service pair.
+ * Each feature area is a dedicated controller + service pair sharing DatabaseModule.
  *
- * Current controllers:
- *   AdminController      → GET /admin/health
- *   AdminUsersController → GET/PATCH /admin/users/*
+ * Controllers:
+ *   AdminController        → GET  /admin/health
+ *   AdminUsersController   → GET/PATCH /admin/users/*
+ *   AdminCoursesController → GET/POST/PATCH/DELETE /admin/courses/*
  *
- * Future controllers to be added here:
- *   AdminCoursesController, AdminLabsController,
- *   AdminAnalyticsController, AdminSettingsController, ...
- *
- * Route namespace: /admin
- * Access: ADMIN role only (AdminGuard on every controller)
+ * Future:
+ *   AdminLabsController, AdminAnalyticsController, AdminSettingsController ...
  */
 @Module({
   imports: [DatabaseModule],
-  controllers: [AdminController, AdminUsersController],
-  providers: [AdminService, AdminUsersService],
+  controllers: [
+    AdminController,
+    AdminUsersController,
+    AdminCoursesController,
+  ],
+  providers: [
+    AdminService,
+    AdminUsersService,
+    AdminCoursesService,
+  ],
 })
 export class AdminModule {}

@@ -1,3 +1,6 @@
 export { AdminUserQueryDto } from './admin-user-query.dto';
 export { UpdateUserRoleDto } from './update-user-role.dto';
 export { SuspendUserDto } from './suspend-user.dto';
+export { AdminCourseQueryDto } from './admin-course-query.dto';
+export { CreateCourseDto } from './create-course.dto';
+export { UpdateCourseDto } from './update-course.dto';
