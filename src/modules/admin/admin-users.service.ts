@@ -14,9 +14,9 @@ import { SuspendUserDto } from './dto/suspend-user.dto';
 export class AdminUsersService {
   constructor(private readonly prisma: PrismaService) {}
 
-  // ─────────────────────────────────────────────────────────────────
+  // ─────────────────────────────────────────────────────────────────────────
   // GET /admin/users  — paginated, filterable user list
-  // ─────────────────────────────────────────────────────────────────
+  // ─────────────────────────────────────────────────────────────────────────
   async findAll(query: AdminUserQueryDto) {
     const { page = 1, limit = 20, search, role, isActive } = query;
     const skip = (page - 1) * limit;
@@ -83,51 +83,54 @@ export class AdminUsersService {
     };
   }
 
-  // ─────────────────────────────────────────────────────────────────
+  // ─────────────────────────────────────────────────────────────────────────
   // GET /admin/users/stats  — platform-wide user statistics
-  // ─────────────────────────────────────────────────────────────────
+  //
+  // Uses individual count() calls instead of groupBy() to avoid the
+  // Prisma _count union type issue (true | { field?: number }) in TS strict mode.
+  // Each count() is a direct number — no type ambiguity.
+  // ─────────────────────────────────────────────────────────────────────────
   async getStats() {
     const now = new Date();
     const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
 
-    const [total, byRole, newThisMonth, suspended] =
-      await this.prisma.$transaction([
-        this.prisma.user.count(),
-
-        // Fix: Prisma v6 groupBy requires explicit orderBy
-        // Fix: _count: { _all: true } avoids ambiguous union type
-        this.prisma.user.groupBy({
-          by: ['role'],
-          orderBy: { role: 'asc' },
-          _count: { _all: true },
-        }),
-
-        this.prisma.user.count({
-          where: { createdAt: { gte: firstDayOfMonth } },
-        }),
-
-        this.prisma.userSecurity.count({
-          where: { isSuspended: true },
-        }),
-      ]);
+    const [
+      total,
+      newThisMonth,
+      suspended,
+      roleAdmin,
+      roleUser,
+      roleStudent,
+      roleInstructor,
+      roleContentCreator,
+    ] = await this.prisma.$transaction([
+      this.prisma.user.count(),
+      this.prisma.user.count({ where: { createdAt: { gte: firstDayOfMonth } } }),
+      this.prisma.userSecurity.count({ where: { isSuspended: true } }),
+      this.prisma.user.count({ where: { role: Role.ADMIN } }),
+      this.prisma.user.count({ where: { role: Role.USER } }),
+      this.prisma.user.count({ where: { role: Role.STUDENT } }),
+      this.prisma.user.count({ where: { role: Role.INSTRUCTOR } }),
+      this.prisma.user.count({ where: { role: Role.CONTENT_CREATOR } }),
+    ]);
 
     return {
       total,
       newThisMonth,
       suspended,
-      byRole: byRole.reduce(
-        (acc, entry) => ({
-          ...acc,
-          [entry.role]: entry._count?._all ?? 0,
-        }),
-        {} as Record<string, number>,
-      ),
+      byRole: {
+        [Role.ADMIN]: roleAdmin,
+        [Role.USER]: roleUser,
+        [Role.STUDENT]: roleStudent,
+        [Role.INSTRUCTOR]: roleInstructor,
+        [Role.CONTENT_CREATOR]: roleContentCreator,
+      },
     };
   }
 
-  // ─────────────────────────────────────────────────────────────────
+  // ─────────────────────────────────────────────────────────────────────────
   // GET /admin/users/:id  — full user detail (passwords never exposed)
-  // ─────────────────────────────────────────────────────────────────
+  // ─────────────────────────────────────────────────────────────────────────
   async findOne(id: string) {
     const user = await this.prisma.user.findUnique({
       where: { id },
@@ -188,9 +191,9 @@ export class AdminUsersService {
     return user;
   }
 
-  // ─────────────────────────────────────────────────────────────────
+  // ─────────────────────────────────────────────────────────────────────────
   // PATCH /admin/users/:id/role  — change a user's role
-  // ─────────────────────────────────────────────────────────────────
+  // ─────────────────────────────────────────────────────────────────────────
   async updateRole(
     adminId: string,
     targetId: string,
@@ -209,7 +212,6 @@ export class AdminUsersService {
       throw new NotFoundException(`User with id "${targetId}" not found`);
     }
 
-    // Prevent demoting the last admin
     if (target.role === Role.ADMIN && dto.role !== Role.ADMIN) {
       const adminCount = await this.prisma.user.count({
         where: { role: Role.ADMIN },
@@ -226,9 +228,9 @@ export class AdminUsersService {
     });
   }
 
-  // ─────────────────────────────────────────────────────────────────
+  // ─────────────────────────────────────────────────────────────────────────
   // PATCH /admin/users/:id/suspend  — suspend + revoke sessions
-  // ─────────────────────────────────────────────────────────────────
+  // ─────────────────────────────────────────────────────────────────────────
   async suspend(
     adminId: string,
     targetId: string,
@@ -251,7 +253,6 @@ export class AdminUsersService {
       throw new ForbiddenException('Cannot suspend another administrator');
     }
 
-    // Upsert UserSecurity record with suspended state
     await this.prisma.userSecurity.upsert({
       where: { userId: targetId },
       create: {
@@ -267,7 +268,6 @@ export class AdminUsersService {
       },
     });
 
-    // Revoke all active refresh tokens to force logout immediately
     await this.prisma.refreshToken.updateMany({
       where: { userId: targetId, revokedAt: null },
       data: { revokedAt: new Date() },
@@ -279,12 +279,11 @@ export class AdminUsersService {
     };
   }
 
-  // ─────────────────────────────────────────────────────────────────
+  // ─────────────────────────────────────────────────────────────────────────
   // PATCH /admin/users/:id/unsuspend  — lift suspension
-  // ─────────────────────────────────────────────────────────────────
+  // ─────────────────────────────────────────────────────────────────────────
   async unsuspend(adminId: string, targetId: string) {
-    // adminId kept for future audit log injection
-    void adminId;
+    void adminId; // reserved for future audit log
 
     const target = await this.prisma.user.findUnique({
       where: { id: targetId },
