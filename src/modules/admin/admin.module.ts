@@ -10,6 +10,8 @@ import { AdminLabsController } from './admin-labs.controller';
 import { AdminLabsService } from './admin-labs.service';
 import { AdminAnalyticsController } from './admin-analytics.controller';
 import { AdminAnalyticsService } from './admin-analytics.service';
+import { AdminPathsController } from './admin-paths.controller';
+import { AdminPathsService } from './admin-paths.service';
 
 /**
  * AdminModule
@@ -22,6 +24,7 @@ import { AdminAnalyticsService } from './admin-analytics.service';
  *   AdminUsersController      → GET/PATCH /admin/users/*
  *   AdminCoursesController    → GET/POST/PATCH/DELETE /admin/courses/*
  *   AdminLabsController       → GET/POST/PATCH/DELETE /admin/labs/*
+ *   AdminPathsController      → GET/POST/PATCH/DELETE /admin/paths/*
  *   AdminAnalyticsController  → GET /admin/analytics/*
  */
 @Module({
@@ -31,6 +34,7 @@ import { AdminAnalyticsService } from './admin-analytics.service';
     AdminUsersController,
     AdminCoursesController,
     AdminLabsController,
+    AdminPathsController,
     AdminAnalyticsController,
   ],
   providers: [
@@ -38,6 +42,7 @@ import { AdminAnalyticsService } from './admin-analytics.service';
     AdminUsersService,
     AdminCoursesService,
     AdminLabsService,
+    AdminPathsService,
     AdminAnalyticsService,
   ],
 })
