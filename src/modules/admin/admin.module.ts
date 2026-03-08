@@ -6,6 +6,8 @@ import { AdminUsersController } from './admin-users.controller';
 import { AdminUsersService } from './admin-users.service';
 import { AdminCoursesController } from './admin-courses.controller';
 import { AdminCoursesService } from './admin-courses.service';
+import { AdminLabsController } from './admin-labs.controller';
+import { AdminLabsService } from './admin-labs.service';
 
 /**
  * AdminModule
@@ -17,9 +19,10 @@ import { AdminCoursesService } from './admin-courses.service';
  *   AdminController        → GET  /admin/health
  *   AdminUsersController   → GET/PATCH /admin/users/*
  *   AdminCoursesController → GET/POST/PATCH/DELETE /admin/courses/*
+ *   AdminLabsController    → GET/POST/PATCH/DELETE /admin/labs/*
  *
  * Future:
- *   AdminLabsController, AdminAnalyticsController, AdminSettingsController ...
+ *   AdminAnalyticsController, AdminSettingsController ...
  */
 @Module({
   imports: [DatabaseModule],
@@ -27,11 +30,13 @@ import { AdminCoursesService } from './admin-courses.service';
     AdminController,
     AdminUsersController,
     AdminCoursesController,
+    AdminLabsController,
   ],
   providers: [
     AdminService,
     AdminUsersService,
     AdminCoursesService,
+    AdminLabsService,
   ],
 })
 export class AdminModule {}

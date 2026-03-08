@@ -4,3 +4,6 @@ export { SuspendUserDto } from './suspend-user.dto';
 export { AdminCourseQueryDto } from './admin-course-query.dto';
 export { CreateCourseDto } from './create-course.dto';
 export { UpdateCourseDto } from './update-course.dto';
+export { AdminLabQueryDto } from './admin-lab-query.dto';
+export { CreateLabDto } from './create-lab.dto';
+export { UpdateLabDto } from './update-lab.dto';
