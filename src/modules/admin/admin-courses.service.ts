@@ -9,7 +9,7 @@ import { PrismaService } from '../../core/database';
 import { AdminCourseQueryDto } from './dto/admin-course-query.dto';
 import { CreateCourseDto } from './dto/create-course.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
-
+import { ImportCourseDto } from './dto/import-course.dto';
 /** Shared Prisma select for admin course list rows */
 const COURSE_LIST_SELECT = {
   id: true,
@@ -37,6 +37,29 @@ const COURSE_LIST_SELECT = {
     select: { enrollments: true, sections: true, lessons: true },
   },
 } as const;
+interface CourseJsonElement {
+  title: { en: string; ar?: string };
+  type?: string; // article | video | quiz
+  order?: number;
+  duration?: number;
+  content?: string;
+  videoUrl?: string;
+}
+
+interface CourseJsonTopic {
+  title: { en: string; ar?: string };
+  description?: { en?: string; ar?: string };
+  elements?: CourseJsonElement[];
+}
+
+interface CourseJsonData {
+  landingData: {
+    title: { en: string; ar?: string };
+    description?: { en?: string; ar?: string };
+    longDescription?: { en?: string; ar?: string };
+  };
+  topics: CourseJsonTopic[];
+}
 
 @Injectable()
 export class AdminCoursesService {
@@ -138,7 +161,9 @@ export class AdminCoursesService {
     const course = await this.prisma.course.findUnique({
       where: { id },
       include: {
-        instructor: { select: { id: true, name: true, email: true, avatarUrl: true } },
+        instructor: {
+          select: { id: true, name: true, email: true, avatarUrl: true },
+        },
         _count: {
           select: {
             enrollments: true,
@@ -150,7 +175,8 @@ export class AdminCoursesService {
       },
     });
 
-    if (!course) throw new NotFoundException(`Course with id "${id}" not found`);
+    if (!course)
+      throw new NotFoundException(`Course with id "${id}" not found`);
     return course;
   }
 
@@ -173,7 +199,9 @@ export class AdminCoursesService {
       select: { id: true, name: true },
     });
     if (!instructor) {
-      throw new NotFoundException(`Instructor with id "${dto.instructorId}" not found`);
+      throw new NotFoundException(
+        `Instructor with id "${dto.instructorId}" not found`,
+      );
     }
 
     const {
@@ -292,7 +320,14 @@ export class AdminCoursesService {
         state: STATE.PUBLISHED,
         publishedAt: new Date(),
       },
-      select: { id: true, slug: true, title: true, isPublished: true, state: true, publishedAt: true },
+      select: {
+        id: true,
+        slug: true,
+        title: true,
+        isPublished: true,
+        state: true,
+        publishedAt: true,
+      },
     });
   }
 
@@ -310,7 +345,13 @@ export class AdminCoursesService {
     return this.prisma.course.update({
       where: { id },
       data: { isPublished: false, state: STATE.DRAFT },
-      select: { id: true, slug: true, title: true, isPublished: true, state: true },
+      select: {
+        id: true,
+        slug: true,
+        title: true,
+        isPublished: true,
+        state: true,
+      },
     });
   }
 
@@ -343,7 +384,152 @@ export class AdminCoursesService {
       where: { id },
       select: { id: true, title: true, isPublished: true },
     });
-    if (!course) throw new NotFoundException(`Course with id "${id}" not found`);
+    if (!course)
+      throw new NotFoundException(`Course with id "${id}" not found`);
     return course;
+  }
+  // ───────────────────────────────────────────────────────────────────
+  // POST /admin/courses/import-json
+  // Parses JSON buffer → creates Course + Sections + Lessons atomically
+  // ───────────────────────────────────────────────────────────────────
+  async importJson(buffer: Buffer, dto: ImportCourseDto) {
+    // 1. Parse JSON
+    let courseJson: CourseJsonData;
+    try {
+      courseJson = JSON.parse(buffer.toString('utf-8')) as CourseJsonData;
+    } catch {
+      throw new BadRequestException('Uploaded file is not valid JSON');
+    }
+
+    // 2. Validate structure
+    if (!courseJson.landingData?.title?.en) {
+      throw new BadRequestException('JSON must contain landingData.title.en');
+    }
+    if (!Array.isArray(courseJson.topics) || courseJson.topics.length === 0) {
+      throw new BadRequestException('JSON must contain at least one topic');
+    }
+
+    // 3. Check slug uniqueness
+    const existing = await this.prisma.course.findUnique({
+      where: { slug: dto.slug },
+      select: { id: true },
+    });
+    if (existing) {
+      throw new ConflictException(`Slug "${dto.slug}" is already in use`);
+    }
+
+    // 4. Verify instructor
+    const instructor = await this.prisma.user.findUnique({
+      where: { id: dto.instructorId },
+      select: { id: true },
+    });
+    if (!instructor) {
+      throw new NotFoundException(
+        `Instructor with id "${dto.instructorId}" not found`,
+      );
+    }
+
+    // 5. Resolve lab IDs from slugs (many-to-many)
+    let linkedLabIds: string[] = [];
+    if (dto.labSlugs?.length) {
+      const labs = await this.prisma.practiceLab.findMany({
+        where: { slug: { in: dto.labSlugs } },
+        select: { id: true, slug: true },
+      });
+      const foundSlugs = labs.map((l) => l.slug);
+      const missingSlugs = dto.labSlugs.filter((s) => !foundSlugs.includes(s));
+      if (missingSlugs.length) {
+        throw new NotFoundException(
+          `Labs not found for slugs: ${missingSlugs.join(', ')}`,
+        );
+      }
+      linkedLabIds = labs.map((l) => l.id);
+    }
+
+    const { landingData, topics } = courseJson;
+
+    // 6. Atomic transaction: Course + Sections + Lessons
+    const course = await this.prisma.$transaction(async (tx) => {
+      const created = await tx.course.create({
+        data: {
+          slug: dto.slug,
+          title: landingData.title.en,
+          ar_title: landingData.title.ar,
+          description: landingData.description?.en,
+          ar_description: landingData.description?.ar,
+          longDescription: landingData.longDescription?.en,
+          ar_longDescription: landingData.longDescription?.ar,
+          instructorId: dto.instructorId,
+          color: dto.color,
+          difficulty: dto.difficulty,
+          access: dto.access,
+          category: dto.category,
+          contentType: dto.contentType,
+          estimatedHours: dto.estimatedHours,
+          thumbnail: dto.thumbnail,
+          tags: dto.tags ?? [],
+          skills: dto.skills ?? [],
+          isNew: dto.isNew ?? false,
+          isFeatured: dto.isFeatured ?? false,
+          isPublished: false,
+          state: STATE.DRAFT,
+          ...(linkedLabIds.length && {
+            labs: { connect: linkedLabIds.map((id) => ({ id })) },
+          }),
+        },
+      });
+
+      // Create Sections (topics)
+      for (let sIdx = 0; sIdx < topics.length; sIdx++) {
+        const topic = topics[sIdx];
+        const section = await tx.section.create({
+          data: {
+            courseId: created.id,
+            title: topic.title.en,
+            ar_title: topic.title.ar,
+            description: topic.description?.en,
+            ar_description: topic.description?.ar,
+            order: sIdx + 1,
+          },
+        });
+
+        // Create Lessons (elements)
+        const elements = topic.elements ?? [];
+        for (let eIdx = 0; eIdx < elements.length; eIdx++) {
+          const el = elements[eIdx];
+          await tx.lesson.create({
+            data: {
+              courseId: created.id,
+              sectionId: section.id,
+              title: el.title.en,
+              ar_title: el.title.ar,
+              content: el.content,
+              videoUrl: el.videoUrl,
+              type: (el.type?.toUpperCase() ?? 'ARTICLE') as any,
+              order: el.order ?? eIdx + 1,
+              duration: el.duration,
+              isPublished: true,
+            },
+          });
+        }
+      }
+
+      return created;
+    });
+
+    // 7. Publish immediately if requested
+    if (dto.publishImmediately) {
+      await this.prisma.course.update({
+        where: { id: course.id },
+        data: {
+          isPublished: true,
+          state: STATE.PUBLISHED,
+          publishedAt: new Date(),
+        },
+      });
+    }
+
+    // 8. Return full course detail
+    return this.findOne(course.id);
   }
 }

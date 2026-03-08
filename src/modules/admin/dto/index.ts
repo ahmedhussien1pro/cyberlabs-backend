@@ -7,3 +7,4 @@ export { UpdateCourseDto } from './update-course.dto';
 export { AdminLabQueryDto } from './admin-lab-query.dto';
 export { CreateLabDto } from './create-lab.dto';
 export { UpdateLabDto } from './update-lab.dto';
+export { ImportCourseDto } from './import-course.dto';
