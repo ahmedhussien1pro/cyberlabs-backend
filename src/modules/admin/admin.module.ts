@@ -8,6 +8,8 @@ import { AdminCoursesController } from './admin-courses.controller';
 import { AdminCoursesService } from './admin-courses.service';
 import { AdminLabsController } from './admin-labs.controller';
 import { AdminLabsService } from './admin-labs.service';
+import { AdminAnalyticsController } from './admin-analytics.controller';
+import { AdminAnalyticsService } from './admin-analytics.service';
 
 /**
  * AdminModule
@@ -16,13 +18,11 @@ import { AdminLabsService } from './admin-labs.service';
  * Each feature area is a dedicated controller + service pair sharing DatabaseModule.
  *
  * Controllers:
- *   AdminController        → GET  /admin/health
- *   AdminUsersController   → GET/PATCH /admin/users/*
- *   AdminCoursesController → GET/POST/PATCH/DELETE /admin/courses/*
- *   AdminLabsController    → GET/POST/PATCH/DELETE /admin/labs/*
- *
- * Future:
- *   AdminAnalyticsController, AdminSettingsController ...
+ *   AdminController           → GET  /admin/health
+ *   AdminUsersController      → GET/PATCH /admin/users/*
+ *   AdminCoursesController    → GET/POST/PATCH/DELETE /admin/courses/*
+ *   AdminLabsController       → GET/POST/PATCH/DELETE /admin/labs/*
+ *   AdminAnalyticsController  → GET /admin/analytics/*
  */
 @Module({
   imports: [DatabaseModule],
@@ -31,12 +31,14 @@ import { AdminLabsService } from './admin-labs.service';
     AdminUsersController,
     AdminCoursesController,
     AdminLabsController,
+    AdminAnalyticsController,
   ],
   providers: [
     AdminService,
     AdminUsersService,
     AdminCoursesService,
     AdminLabsService,
+    AdminAnalyticsService,
   ],
 })
 export class AdminModule {}
