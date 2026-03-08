@@ -429,10 +429,10 @@ export class AdminCoursesService {
       );
     }
 
-    // 5. Resolve lab IDs from slugs (many-to-many)
+    // 5. FIX #2: model is `lab` not `practiceLab`
     let linkedLabIds: string[] = [];
     if (dto.labSlugs?.length) {
-      const labs = await this.prisma.practiceLab.findMany({
+      const labs = await this.prisma.lab.findMany({
         where: { slug: { in: dto.labSlugs } },
         select: { id: true, slug: true },
       });
@@ -448,7 +448,7 @@ export class AdminCoursesService {
 
     const { landingData, topics } = courseJson;
 
-    // 6. Atomic transaction: Course + Sections + Lessons
+    // 6. Atomic transaction: Course + Modules + Sections + Lessons
     const course = await this.prisma.$transaction(async (tx) => {
       const created = await tx.course.create({
         data: {
@@ -473,37 +473,56 @@ export class AdminCoursesService {
           isFeatured: dto.isFeatured ?? false,
           isPublished: false,
           state: STATE.DRAFT,
+          // FIX #6: use courseLabs junction (no direct `labs` relation on Course)
           ...(linkedLabIds.length && {
-            labs: { connect: linkedLabIds.map((id) => ({ id })) },
+            courseLabs: {
+              create: linkedLabIds.map((labId, idx) => ({
+                labId,
+                order: idx,
+              })),
+            },
           }),
         },
       });
 
-      // Create Sections (topics)
       for (let sIdx = 0; sIdx < topics.length; sIdx++) {
         const topic = topics[sIdx];
+
+        // FIX #3: Section has no ar_description — removed
         const section = await tx.section.create({
           data: {
             courseId: created.id,
             title: topic.title.en,
             ar_title: topic.title.ar,
-            description: topic.description?.en,
-            ar_description: topic.description?.ar,
+            description: topic.description?.en, // only EN description exists in Section
             order: sIdx + 1,
           },
         });
 
-        // Create Lessons (elements)
+        // FIX #5: Lesson requires moduleId — create a Module per topic
+        const module = await tx.module.create({
+          data: {
+            courseId: created.id,
+            title: topic.title.en,
+            ar_title: topic.title.ar,
+            description: topic.description?.en,
+            ar_description: topic.description?.ar, // Module DOES have ar_description
+            order: sIdx + 1,
+          },
+        });
+
         const elements = topic.elements ?? [];
         for (let eIdx = 0; eIdx < elements.length; eIdx++) {
           const el = elements[eIdx];
+
           await tx.lesson.create({
             data: {
               courseId: created.id,
               sectionId: section.id,
+              moduleId: module.id, // FIX #5: provide required moduleId
               title: el.title.en,
               ar_title: el.title.ar,
-              content: el.content,
+              content: el.content ?? '', // FIX #4: content is required String
               videoUrl: el.videoUrl,
               type: (el.type?.toUpperCase() ?? 'ARTICLE') as any,
               order: el.order ?? eIdx + 1,
@@ -529,7 +548,6 @@ export class AdminCoursesService {
       });
     }
 
-    // 8. Return full course detail
     return this.findOne(course.id);
   }
 }
