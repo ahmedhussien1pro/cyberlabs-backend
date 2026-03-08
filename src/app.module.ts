@@ -31,6 +31,9 @@ import { PathsModule } from './modules/paths/paths.module';
 import { BadgesModule } from './modules/badges/badges.module';
 import { CertificatesModule } from './modules/certificates/certificates.module';
 
+// Admin Module
+import { AdminModule } from './modules/admin';
+
 // Guards
 import { JwtAuthGuard } from './common/guards';
 
@@ -77,6 +80,9 @@ import { MailModule } from './core/mail';
     // Gamification
     BadgesModule,
     CertificatesModule,
+
+    // Admin
+    AdminModule,
   ],
   controllers: [AppController],
   providers: [
