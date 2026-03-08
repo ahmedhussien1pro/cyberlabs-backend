@@ -45,9 +45,9 @@ const LAB_LIST_SELECT = {
 export class AdminLabsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  // ──────────────────────────────────────────────────────────────────
+  // ────────────────────────────────────────────────────────────────────────
   // GET /admin/labs  — ALL labs, no isPublished filter
-  // ──────────────────────────────────────────────────────────────────
+  // ────────────────────────────────────────────────────────────────────────
   async findAll(query: AdminLabQueryDto) {
     const {
       page = 1,
@@ -91,10 +91,10 @@ export class AdminLabsService {
     };
   }
 
-  // ──────────────────────────────────────────────────────────────────
+  // ────────────────────────────────────────────────────────────────────────
   // GET /admin/labs/stats
   // Individual count() calls per difficulty — avoids Prisma groupBy type issue
-  // ──────────────────────────────────────────────────────────────────
+  // ────────────────────────────────────────────────────────────────────────
   async getStats() {
     const [
       total,
@@ -130,13 +130,13 @@ export class AdminLabsService {
     };
   }
 
-  // ──────────────────────────────────────────────────────────────────
+  // ────────────────────────────────────────────────────────────────────────
   // GET /admin/labs/:id  — full detail INCLUDING flagAnswer + solution
   //
   // SECURITY: This endpoint is protected by AdminGuard.
   // flagAnswer and solution are INTENTIONALLY included here for admin editing.
   // They are NEVER returned by the user-facing practice-labs endpoints.
-  // ──────────────────────────────────────────────────────────────────
+  // ────────────────────────────────────────────────────────────────────────
   async findOne(id: string) {
     const lab = await this.prisma.lab.findUnique({
       where: { id },
@@ -170,9 +170,9 @@ export class AdminLabsService {
     return lab;
   }
 
-  // ──────────────────────────────────────────────────────────────────
+  // ────────────────────────────────────────────────────────────────────────
   // POST /admin/labs  — create new lab
-  // ──────────────────────────────────────────────────────────────────
+  // ────────────────────────────────────────────────────────────────────────
   async create(dto: CreateLabDto) {
     const existing = await this.prisma.lab.findUnique({
       where: { slug: dto.slug },
@@ -244,23 +244,24 @@ export class AdminLabsService {
         courseId,
         isolationMode: isolationMode ?? 'database',
         skills: skills ?? [],
-        engineConfig: engineConfig ?? undefined,
-        briefing: briefing ?? undefined,
-        stepsOverview: stepsOverview ?? undefined,
-        steps: steps ?? undefined,
-        postSolve: postSolve ?? undefined,
-        initialState: initialState ?? {},
+        // Cast JSON fields to 'any' to satisfy Prisma InputJsonValue union type
+        engineConfig: (engineConfig ?? undefined) as any,
+        briefing: (briefing ?? undefined) as any,
+        stepsOverview: (stepsOverview ?? undefined) as any,
+        steps: (steps ?? undefined) as any,
+        postSolve: (postSolve ?? undefined) as any,
+        initialState: (initialState ?? {}) as any,
         flagAnswer,
-        solution: solution ?? undefined,
+        solution: (solution ?? undefined) as any,
         isPublished: isPublished ?? false,
       },
       select: LAB_LIST_SELECT,
     });
   }
 
-  // ──────────────────────────────────────────────────────────────────
+  // ────────────────────────────────────────────────────────────────────────
   // PATCH /admin/labs/:id  — update lab fields
-  // ──────────────────────────────────────────────────────────────────
+  // ────────────────────────────────────────────────────────────────────────
   async update(id: string, dto: UpdateLabDto) {
     await this.assertExists(id);
 
@@ -281,9 +282,9 @@ export class AdminLabsService {
     });
   }
 
-  // ──────────────────────────────────────────────────────────────────
+  // ────────────────────────────────────────────────────────────────────────
   // PATCH /admin/labs/:id/publish
-  // ──────────────────────────────────────────────────────────────────
+  // ────────────────────────────────────────────────────────────────────────
   async publish(id: string) {
     const lab = await this.assertExists(id);
 
@@ -298,9 +299,9 @@ export class AdminLabsService {
     });
   }
 
-  // ──────────────────────────────────────────────────────────────────
+  // ────────────────────────────────────────────────────────────────────────
   // PATCH /admin/labs/:id/unpublish
-  // ──────────────────────────────────────────────────────────────────
+  // ────────────────────────────────────────────────────────────────────────
   async unpublish(id: string) {
     const lab = await this.assertExists(id);
 
@@ -315,10 +316,10 @@ export class AdminLabsService {
     });
   }
 
-  // ──────────────────────────────────────────────────────────────────
+  // ────────────────────────────────────────────────────────────────────────
   // DELETE /admin/labs/:id
   // Blocks deletion if active progress records exist (users who started the lab)
-  // ──────────────────────────────────────────────────────────────────
+  // ────────────────────────────────────────────────────────────────────────
   async remove(id: string) {
     await this.assertExists(id);
 
@@ -336,9 +337,9 @@ export class AdminLabsService {
     return { success: true, message: 'Lab deleted successfully' };
   }
 
-  // ──────────────────────────────────────────────────────────────────
+  // ────────────────────────────────────────────────────────────────────────
   // Private helpers
-  // ──────────────────────────────────────────────────────────────────
+  // ────────────────────────────────────────────────────────────────────────
   private async assertExists(id: string) {
     const lab = await this.prisma.lab.findUnique({
       where: { id },
