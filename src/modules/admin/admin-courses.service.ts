@@ -40,6 +40,17 @@ const COURSE_LIST_SELECT = {
   },
 } as const;
 
+/** Shared Prisma select for Lab rows inside CourseLab responses */
+const LAB_SELECT = {
+  id: true,
+  title: true,
+  slug: true,
+  difficulty: true,
+  category: true,
+  imageUrl: true,   // Lab model uses imageUrl, NOT thumbnail
+  isPublished: true,
+} as const;
+
 interface CourseJsonElement {
   title: { en: string; ar?: string };
   type?: string;
@@ -571,17 +582,7 @@ export class AdminCoursesService {
       where: { courseId },
       orderBy: { order: 'asc' },
       include: {
-        lab: {
-          select: {
-            id: true,
-            title: true,
-            slug: true,
-            difficulty: true,
-            category: true,
-            thumbnail: true,
-            isPublished: true,
-          },
-        },
+        lab: { select: LAB_SELECT },
       },
     });
   }
@@ -611,17 +612,7 @@ export class AdminCoursesService {
     return this.prisma.courseLab.create({
       data: { courseId, labId, order },
       include: {
-        lab: {
-          select: {
-            id: true,
-            title: true,
-            slug: true,
-            difficulty: true,
-            category: true,
-            thumbnail: true,
-            isPublished: true,
-          },
-        },
+        lab: { select: LAB_SELECT },
       },
     });
   }
