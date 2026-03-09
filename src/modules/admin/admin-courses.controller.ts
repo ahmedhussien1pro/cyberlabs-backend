@@ -41,6 +41,55 @@ export class AdminCoursesController {
     return this.adminCoursesService.findAll(query);
   }
 
+  // ─── CourseLab Management ────────────────────────────────────────────────
+  // IMPORTANT: These sub-routes must come BEFORE :id to avoid NestJS treating
+  // "reorder" or "labs" as a course ID.
+
+  /** GET /admin/courses/:id/labs */
+  @Get(':id/labs')
+  getCourseLabs(@Param('id') id: string) {
+    return this.adminCoursesService.getCourseLabs(id);
+  }
+
+  /**
+   * PATCH /admin/courses/:id/labs/reorder
+   * Must be BEFORE :id/labs/:labId so NestJS doesn't treat "reorder" as labId.
+   * Body: { labIds: string[] }
+   */
+  @Patch(':id/labs/reorder')
+  @HttpCode(HttpStatus.OK)
+  reorderLabs(
+    @Param('id') courseId: string,
+    @Body() body: { labIds: string[] },
+  ) {
+    if (!Array.isArray(body?.labIds)) {
+      throw new BadRequestException('labIds must be an array');
+    }
+    return this.adminCoursesService.reorderLabs(courseId, body.labIds);
+  }
+
+  /** POST /admin/courses/:id/labs/:labId — attach lab to course */
+  @Post(':id/labs/:labId')
+  @HttpCode(HttpStatus.CREATED)
+  attachLab(
+    @Param('id') courseId: string,
+    @Param('labId') labId: string,
+  ) {
+    return this.adminCoursesService.attachLab(courseId, labId);
+  }
+
+  /** DELETE /admin/courses/:id/labs/:labId — detach lab from course */
+  @Delete(':id/labs/:labId')
+  @HttpCode(HttpStatus.OK)
+  detachLab(
+    @Param('id') courseId: string,
+    @Param('labId') labId: string,
+  ) {
+    return this.adminCoursesService.detachLab(courseId, labId);
+  }
+
+  // ─── Course CRUD ─────────────────────────────────────────────────────────
+
   /** GET /admin/courses/:id */
   @Get(':id')
   findOne(@Param('id') id: string) {
@@ -54,6 +103,7 @@ export class AdminCoursesController {
     return this.adminCoursesService.create(dto);
   }
 
+  /** POST /admin/courses/import-json */
   @Post('import-json')
   @HttpCode(HttpStatus.CREATED)
   @UseInterceptors(
@@ -68,7 +118,7 @@ export class AdminCoursesController {
         }
         cb(null, true);
       },
-      limits: { fileSize: 10 * 1024 * 1024 }, // 10 MB max
+      limits: { fileSize: 10 * 1024 * 1024 },
     }),
   )
   async importJson(
