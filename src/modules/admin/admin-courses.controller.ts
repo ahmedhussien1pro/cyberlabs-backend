@@ -4,6 +4,7 @@ import {
   Get,
   Post,
   Patch,
+  Put,
   Delete,
   Param,
   Body,
@@ -23,6 +24,7 @@ import { AdminCourseQueryDto } from './dto/admin-course-query.dto';
 import { CreateCourseDto } from './dto/create-course.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
 import { ImportCourseDto } from './dto/import-course.dto';
+import { UpdateCurriculumDto } from './dto/update-curriculum.dto';
 
 @UseGuards(AdminGuard)
 @Controller('admin/courses')
@@ -40,55 +42,6 @@ export class AdminCoursesController {
   findAll(@Query() query: AdminCourseQueryDto) {
     return this.adminCoursesService.findAll(query);
   }
-
-  // ─── CourseLab Management ────────────────────────────────────────────────
-  // IMPORTANT: These sub-routes must come BEFORE :id to avoid NestJS treating
-  // "reorder" or "labs" as a course ID.
-
-  /** GET /admin/courses/:id/labs */
-  @Get(':id/labs')
-  getCourseLabs(@Param('id') id: string) {
-    return this.adminCoursesService.getCourseLabs(id);
-  }
-
-  /**
-   * PATCH /admin/courses/:id/labs/reorder
-   * Must be BEFORE :id/labs/:labId so NestJS doesn't treat "reorder" as labId.
-   * Body: { labIds: string[] }
-   */
-  @Patch(':id/labs/reorder')
-  @HttpCode(HttpStatus.OK)
-  reorderLabs(
-    @Param('id') courseId: string,
-    @Body() body: { labIds: string[] },
-  ) {
-    if (!Array.isArray(body?.labIds)) {
-      throw new BadRequestException('labIds must be an array');
-    }
-    return this.adminCoursesService.reorderLabs(courseId, body.labIds);
-  }
-
-  /** POST /admin/courses/:id/labs/:labId — attach lab to course */
-  @Post(':id/labs/:labId')
-  @HttpCode(HttpStatus.CREATED)
-  attachLab(
-    @Param('id') courseId: string,
-    @Param('labId') labId: string,
-  ) {
-    return this.adminCoursesService.attachLab(courseId, labId);
-  }
-
-  /** DELETE /admin/courses/:id/labs/:labId — detach lab from course */
-  @Delete(':id/labs/:labId')
-  @HttpCode(HttpStatus.OK)
-  detachLab(
-    @Param('id') courseId: string,
-    @Param('labId') labId: string,
-  ) {
-    return this.adminCoursesService.detachLab(courseId, labId);
-  }
-
-  // ─── Course CRUD ─────────────────────────────────────────────────────────
 
   /** GET /admin/courses/:id */
   @Get(':id')
@@ -146,6 +99,20 @@ export class AdminCoursesController {
   @Patch(':id')
   update(@Param('id') id: string, @Body() dto: UpdateCourseDto) {
     return this.adminCoursesService.update(id, dto);
+  }
+
+  /**
+   * PUT /admin/courses/:id/curriculum
+   * Atomically replaces all sections / modules / lessons for a course.
+   * Safe: validates body with UpdateCurriculumDto before touching the DB.
+   */
+  @Put(':id/curriculum')
+  @HttpCode(HttpStatus.OK)
+  updateCurriculum(
+    @Param('id') id: string,
+    @Body() dto: UpdateCurriculumDto,
+  ) {
+    return this.adminCoursesService.updateCurriculum(id, dto);
   }
 
   /** PATCH /admin/courses/:id/publish */
