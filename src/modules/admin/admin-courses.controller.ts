@@ -104,7 +104,6 @@ export class AdminCoursesController {
   /**
    * PUT /admin/courses/:id/curriculum
    * Atomically replaces all sections / modules / lessons for a course.
-   * Safe: validates body with UpdateCurriculumDto before touching the DB.
    */
   @Put(':id/curriculum')
   @HttpCode(HttpStatus.OK)
@@ -134,5 +133,45 @@ export class AdminCoursesController {
   @HttpCode(HttpStatus.OK)
   remove(@Param('id') id: string) {
     return this.adminCoursesService.remove(id);
+  }
+
+  // ══════════════════════════════════════════════════════════
+  // Course ↔ Lab relationship endpoints
+  // ══════════════════════════════════════════════════════════
+
+  /** GET /admin/courses/:id/labs */
+  @Get(':id/labs')
+  getCourseLabs(@Param('id') id: string) {
+    return this.adminCoursesService.getCourseLabs(id);
+  }
+
+  /** PATCH /admin/courses/:id/labs/reorder  — must be BEFORE :id/labs/:labId */
+  @Patch(':id/labs/reorder')
+  @HttpCode(HttpStatus.OK)
+  reorderLabs(
+    @Param('id') id: string,
+    @Body() body: { order: string[] },
+  ) {
+    return this.adminCoursesService.reorderLabs(id, body.order);
+  }
+
+  /** POST /admin/courses/:id/labs/:labId */
+  @Post(':id/labs/:labId')
+  @HttpCode(HttpStatus.CREATED)
+  attachLab(
+    @Param('id') id: string,
+    @Param('labId') labId: string,
+  ) {
+    return this.adminCoursesService.attachLab(id, labId);
+  }
+
+  /** DELETE /admin/courses/:id/labs/:labId */
+  @Delete(':id/labs/:labId')
+  @HttpCode(HttpStatus.OK)
+  detachLab(
+    @Param('id') id: string,
+    @Param('labId') labId: string,
+  ) {
+    return this.adminCoursesService.detachLab(id, labId);
   }
 }

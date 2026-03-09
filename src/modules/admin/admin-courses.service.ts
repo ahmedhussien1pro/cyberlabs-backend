@@ -283,19 +283,15 @@ export class AdminCoursesService {
 
   // ───────────────────────────────────────────────────────────────────
   // PUT /admin/courses/:id/curriculum
-  // Atomically replaces ALL sections + modules + lessons for a course.
-  // Pattern mirrors importJson so the DB structure stays consistent.
   // ───────────────────────────────────────────────────────────────────
   async updateCurriculum(id: string, dto: UpdateCurriculumDto) {
     await this.assertExists(id);
 
     await this.prisma.$transaction(async (tx) => {
-      // 1. Delete in dependency order (lessons ref both section + module)
       await tx.lesson.deleteMany({ where: { courseId: id } });
       await tx.section.deleteMany({ where: { courseId: id } });
       await tx.module.deleteMany({ where: { courseId: id } });
 
-      // 2. Recreate — mirrors importJson logic exactly
       for (let sIdx = 0; sIdx < dto.topics.length; sIdx++) {
         const topic = dto.topics[sIdx];
 
@@ -562,6 +558,103 @@ export class AdminCoursesService {
     }
 
     return this.findOne(course.id);
+  }
+
+  // ══════════════════════════════════════════════════════════
+  // CourseLab management
+  // ══════════════════════════════════════════════════════════
+
+  /** GET /admin/courses/:id/labs */
+  async getCourseLabs(courseId: string) {
+    await this.assertExists(courseId);
+    return this.prisma.courseLab.findMany({
+      where: { courseId },
+      orderBy: { order: 'asc' },
+      include: {
+        lab: {
+          select: {
+            id: true,
+            title: true,
+            slug: true,
+            difficulty: true,
+            category: true,
+            thumbnail: true,
+            isPublished: true,
+          },
+        },
+      },
+    });
+  }
+
+  /** POST /admin/courses/:id/labs/:labId */
+  async attachLab(courseId: string, labId: string) {
+    await this.assertExists(courseId);
+
+    const lab = await this.prisma.lab.findUnique({
+      where: { id: labId },
+      select: { id: true },
+    });
+    if (!lab) throw new NotFoundException(`Lab "${labId}" not found`);
+
+    const existing = await this.prisma.courseLab.findUnique({
+      where: { courseId_labId: { courseId, labId } },
+    });
+    if (existing) throw new ConflictException('Lab already linked to this course');
+
+    const lastEntry = await this.prisma.courseLab.findFirst({
+      where: { courseId },
+      orderBy: { order: 'desc' },
+      select: { order: true },
+    });
+    const order = lastEntry ? lastEntry.order + 1 : 0;
+
+    return this.prisma.courseLab.create({
+      data: { courseId, labId, order },
+      include: {
+        lab: {
+          select: {
+            id: true,
+            title: true,
+            slug: true,
+            difficulty: true,
+            category: true,
+            thumbnail: true,
+            isPublished: true,
+          },
+        },
+      },
+    });
+  }
+
+  /** DELETE /admin/courses/:id/labs/:labId */
+  async detachLab(courseId: string, labId: string) {
+    await this.assertExists(courseId);
+
+    const link = await this.prisma.courseLab.findUnique({
+      where: { courseId_labId: { courseId, labId } },
+    });
+    if (!link) throw new NotFoundException('Lab is not linked to this course');
+
+    await this.prisma.courseLab.delete({
+      where: { courseId_labId: { courseId, labId } },
+    });
+    return { success: true, message: 'Lab detached successfully' };
+  }
+
+  /** PATCH /admin/courses/:id/labs/reorder */
+  async reorderLabs(courseId: string, orderedLabIds: string[]) {
+    await this.assertExists(courseId);
+
+    await this.prisma.$transaction(
+      orderedLabIds.map((labId, idx) =>
+        this.prisma.courseLab.update({
+          where: { courseId_labId: { courseId, labId } },
+          data: { order: idx },
+        }),
+      ),
+    );
+
+    return this.getCourseLabs(courseId);
   }
 
   // ───────────────────────────────────────────────────────────────────
