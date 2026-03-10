@@ -82,7 +82,7 @@ export class AdminPathsController {
     return this.adminPathsService.remove(id);
   }
 
-  // ── Lab relations ──────────────────────────────────────────────────────────
+  // ── Lab relations ───────────────────────────────────────────────────────
 
   /** GET /admin/paths/:id/labs */
   @Get(':id/labs')
@@ -110,5 +110,40 @@ export class AdminPathsController {
     @Param('labId') labId: string,
   ) {
     return this.adminPathsService.detachLab(pathId, labId);
+  }
+
+  // ── Course relations ─────────────────────────────────────────────────
+
+  /** POST /admin/paths/:id/courses/:courseId */
+  @Post(':id/courses/:courseId')
+  @HttpCode(HttpStatus.OK)
+  attachCourse(
+    @Param('id') pathId: string,
+    @Param('courseId') courseId: string,
+    @Body() dto: any,
+  ) {
+    return this.adminPathsService.attachCourse(pathId, courseId, dto);
+  }
+
+  /** DELETE /admin/paths/:id/courses/:courseId */
+  @Delete(':id/courses/:courseId')
+  @HttpCode(HttpStatus.OK)
+  detachCourse(
+    @Param('id') pathId: string,
+    @Param('courseId') courseId: string,
+  ) {
+    return this.adminPathsService.detachCourse(pathId, courseId);
+  }
+
+  // ── Reorder ─────────────────────────────────────────────────────────────
+
+  /** PATCH /admin/paths/:id/modules/reorder */
+  @Patch(':id/modules/reorder')
+  @HttpCode(HttpStatus.OK)
+  reorderModules(
+    @Param('id') pathId: string,
+    @Body() dto: { orders: { id: string; order: number }[] },
+  ) {
+    return this.adminPathsService.reorderModules(pathId, dto.orders);
   }
 }

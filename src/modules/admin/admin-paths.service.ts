@@ -277,14 +277,47 @@ export class AdminPathsService {
     return { data: { success: true } };
   }
 
-  // ─── Reorder modules (sequential to avoid unique constraint conflicts) ──────
+  // ─── Course relations ───────────────────────────────────────────────────────
+  async attachCourse(pathId: string, courseId: string, dto: any) {
+    await this.findOne(pathId);
+
+    const existing = await this.prisma.pathModule.findFirst({
+      where: { pathId, courseId },
+    });
+    if (existing)
+      throw new BadRequestException('Course already attached to this path');
+
+    const count = await this.prisma.pathModule.count({ where: { pathId } });
+    const mod = await this.prisma.pathModule.create({
+      data: {
+        pathId,
+        courseId,
+        labId: null,
+        order: dto?.order ?? count,
+        title: dto?.title ?? '',
+      },
+      include: { course: true },
+    });
+    return { data: mod };
+  }
+
+  async detachCourse(pathId: string, courseId: string) {
+    const mod = await this.prisma.pathModule.findFirst({
+      where: { pathId, courseId },
+    });
+    if (!mod) throw new NotFoundException('Course not found in this path');
+    await this.prisma.pathModule.delete({ where: { id: mod.id } });
+    return { data: { success: true } };
+  }
+
+  // ─── Reorder modules (two-phase to avoid unique constraint conflicts) ──────
   async reorderModules(
     pathId: string,
     orders: { id: string; order: number }[],
   ) {
     await this.findOne(pathId);
 
-    // Step 1: shift all orders to high temp values to avoid unique constraint conflicts
+    // Phase 1: shift all to high temp values
     await this.prisma.$transaction(
       orders.map(({ id }, i) =>
         this.prisma.pathModule.update({
@@ -294,7 +327,7 @@ export class AdminPathsService {
       ),
     );
 
-    // Step 2: apply the real order values
+    // Phase 2: apply real order values
     await this.prisma.$transaction(
       orders.map(({ id, order }) =>
         this.prisma.pathModule.update({ where: { id }, data: { order } }),
