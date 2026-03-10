@@ -30,6 +30,7 @@ import { PricingModule } from './modules/pricing/pricing.module';
 import { PathsModule } from './modules/paths/paths.module';
 import { BadgesModule } from './modules/badges/badges.module';
 import { CertificatesModule } from './modules/certificates/certificates.module';
+import { TrackingModule } from './modules/tracking/tracking.module';
 
 // Admin Module
 import { AdminModule } from './modules/admin';
@@ -80,6 +81,9 @@ import { MailModule } from './core/mail';
     // Gamification
     BadgesModule,
     CertificatesModule,
+
+    // Tracking & Referral
+    TrackingModule,
 
     // Admin
     AdminModule,

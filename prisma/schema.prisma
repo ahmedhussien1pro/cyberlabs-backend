@@ -205,6 +205,17 @@ enum LabExecutionMode {
   DOCKER
 }
 
+enum TrackingEventType {
+  ENTRY
+  CLICK
+  VIEW
+  REGISTER
+  ENROLL
+  START_COURSE
+  COMPLETE_LESSON
+  COMPLETE_LAB
+}
+
 // ============================================================================
 // CORE USER MODEL
 // ============================================================================
@@ -238,6 +249,12 @@ model User {
   isActive            Boolean   @default(true)
   lastLoginAt         DateTime?
   stripeCustomerId String?
+
+  // ── Referral fields ──
+  referralCode   String?  @unique
+  referredById   String?
+  referredBy     User?    @relation("Referrals", fields: [referredById], references: [id], onDelete: SetNull)
+  referrals      User[]   @relation("Referrals")
 
   enrollments         Enrollment[]
   reviews             Review[]
@@ -304,10 +321,15 @@ model User {
 
   broadcastsSent BroadcastNotification[]
 
+  // Tracking
+  tracking       UserTracking?
+  trackingEvents TrackingEvent[]
+
   @@index([email])
   @@index([createdAt])
   @@index([role])
   @@index([isVerified])
+  @@index([referralCode])
   @@map("users")
 }
 
@@ -518,7 +540,7 @@ model NotificationSettings {
   @@map("notification_settings")
 }
 
-// ── Broadcast Notifications (admin-only) ─────────────────────────────────────
+// ── Broadcast Notifications (admin-only) ───────────────────────────────────────────────────
 model BroadcastNotification {
   id             String   @id @default(uuid())
   title          String
@@ -532,6 +554,67 @@ model BroadcastNotification {
   @@index([sentAt])
   @@index([sentById])
   @@map("broadcast_notifications")
+}
+
+// ============================================================================
+// TRACKING & REFERRAL SYSTEM
+// ============================================================================
+
+model UserTracking {
+  id           String   @id @default(uuid())
+  userId       String   @unique
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Acquisition data
+  source       String?  // utm_source: twitter, discord, email, direct, ads
+  medium       String?  // utm_medium: social, cpc, organic
+  campaign     String?  // utm_campaign
+  content      String?  // utm_content
+  term         String?  // utm_term
+
+  // Referral
+  referralCode String?  // code used at signup
+
+  // Journey
+  landingPage  String?
+  visitedPages String[] @default([])
+  firstSeenAt  DateTime @default(now())
+  lastSeenAt   DateTime @default(now())
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([source])
+  @@index([campaign])
+  @@index([referralCode])
+  @@map("user_tracking")
+}
+
+model TrackingEvent {
+  id         String             @id @default(uuid())
+  sessionId  String             // anonymous session ID from frontend
+  userId     String?
+  user       User?              @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  eventType  TrackingEventType
+  page       String?
+  element    String?            // button/link clicked
+  referralCode String?
+  source     String?
+  campaign   String?
+  meta       Json?              // additional data
+
+  ip         String?
+  userAgent  String?
+  createdAt  DateTime           @default(now())
+
+  @@index([sessionId])
+  @@index([userId])
+  @@index([eventType])
+  @@index([source])
+  @@index([campaign])
+  @@index([createdAt])
+  @@map("tracking_events")
 }
 
 // ============================================================================
