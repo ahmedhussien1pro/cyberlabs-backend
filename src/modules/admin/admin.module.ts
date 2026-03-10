@@ -16,6 +16,8 @@ import { AdminNotificationsController } from './admin-notifications.controller';
 import { AdminNotificationsService } from './admin-notifications.service';
 import { AdminBadgesController } from './admin-badges.controller';
 import { AdminBadgesService } from './admin-badges.service';
+import { AdminReferralsController } from './admin-referrals.controller';
+import { AdminReferralsService } from './admin-referrals.service';
 import { NotificationsGateway } from '../notifications/gateways/notifications.gateway';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
@@ -32,15 +34,16 @@ import { JwtModule } from '@nestjs/jwt';
  *   AdminAnalyticsController       → GET /admin/analytics/*
  *   AdminNotificationsController   → POST/GET /admin/notifications/*
  *   AdminBadgesController          → GET/POST/PATCH/DELETE /admin/badges/*
+ *   AdminReferralsController       → GET/POST/DELETE /admin/referrals/*
  */
 @Module({
   imports: [
     DatabaseModule,
     ConfigModule,
     JwtModule.registerAsync({
-      imports: [ConfigModule],
+      imports:    [ConfigModule],
       useFactory: (cfg: ConfigService) => ({ secret: cfg.get('JWT_SECRET') }),
-      inject: [ConfigService],
+      inject:     [ConfigService],
     }),
   ],
   controllers: [
@@ -52,6 +55,7 @@ import { JwtModule } from '@nestjs/jwt';
     AdminAnalyticsController,
     AdminNotificationsController,
     AdminBadgesController,
+    AdminReferralsController,
   ],
   providers: [
     AdminService,
@@ -62,6 +66,7 @@ import { JwtModule } from '@nestjs/jwt';
     AdminAnalyticsService,
     AdminNotificationsService,
     AdminBadgesService,
+    AdminReferralsService,
     NotificationsGateway,
   ],
 })

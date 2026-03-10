@@ -15,60 +15,48 @@ import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { AdminUserQueryDto } from './dto/admin-user-query.dto';
 import { UpdateUserRoleDto } from './dto/update-user-role.dto';
 import { SuspendUserDto } from './dto/suspend-user.dto';
+import { UserActivityQueryDto } from './dto/user-activity-query.dto';
 
 /**
  * AdminUsersController
- *
- * Handles all admin-level user management operations.
  * Route namespace: /admin/users
- * Protection: AdminGuard (ADMIN role only, JWT already verified globally)
+ * Protection: AdminGuard (ADMIN role only)
  *
- * Endpoint order matters:
- *   /admin/users/stats  must come BEFORE  /admin/users/:id
- *   to prevent NestJS from treating "stats" as an :id param.
+ * Endpoint order matters — static segments before :id
  */
 @UseGuards(AdminGuard)
 @Controller('admin/users')
 export class AdminUsersController {
   constructor(private readonly adminUsersService: AdminUsersService) {}
 
-  /**
-   * GET /admin/users/stats
-   * Returns platform-wide user statistics:
-   * total users, new this month, suspended count, breakdown by role.
-   */
+  /** GET /admin/users/stats */
   @Get('stats')
   getStats() {
     return this.adminUsersService.getStats();
   }
 
-  /**
-   * GET /admin/users
-   * Paginated user list with optional filters:
-   * ?search=  ?role=  ?isActive=  ?page=  ?limit=
-   */
+  /** GET /admin/users */
   @Get()
   findAll(@Query() query: AdminUserQueryDto) {
     return this.adminUsersService.findAll(query);
   }
 
-  /**
-   * GET /admin/users/:id
-   * Full user detail — includes security status, subscription, counts.
-   * Passwords and secrets are never included.
-   */
+  /** GET /admin/users/:id */
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.adminUsersService.findOne(id);
   }
 
-  /**
-   * PATCH /admin/users/:id/role
-   * Change a user's role.
-   * Business rules:
-   *   - Admin cannot change their own role
-   *   - Cannot demote the last remaining admin
-   */
+  /** GET /admin/users/:id/activity */
+  @Get(':id/activity')
+  getActivity(
+    @Param('id') id: string,
+    @Query() query: UserActivityQueryDto,
+  ) {
+    return this.adminUsersService.getActivity(id, query);
+  }
+
+  /** PATCH /admin/users/:id/role */
   @Patch(':id/role')
   updateRole(
     @CurrentUser() admin: any,
@@ -78,14 +66,7 @@ export class AdminUsersController {
     return this.adminUsersService.updateRole(admin.id, targetId, dto);
   }
 
-  /**
-   * PATCH /admin/users/:id/suspend
-   * Suspend a user: sets UserSecurity.isSuspended = true
-   * and immediately revokes all active refresh tokens (force logout).
-   * Business rules:
-   *   - Admin cannot suspend themselves
-   *   - Admin cannot suspend another admin
-   */
+  /** PATCH /admin/users/:id/suspend */
   @Patch(':id/suspend')
   @HttpCode(HttpStatus.OK)
   suspend(
@@ -96,11 +77,7 @@ export class AdminUsersController {
     return this.adminUsersService.suspend(admin.id, targetId, dto);
   }
 
-  /**
-   * PATCH /admin/users/:id/unsuspend
-   * Lift a suspension: sets UserSecurity.isSuspended = false
-   * and clears suspensionReason + suspendedAt.
-   */
+  /** PATCH /admin/users/:id/unsuspend */
   @Patch(':id/unsuspend')
   @HttpCode(HttpStatus.OK)
   unsuspend(
