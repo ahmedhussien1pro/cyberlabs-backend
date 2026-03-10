@@ -47,6 +47,13 @@ export class AdminPathsController {
     return this.adminPathsService.create(dto);
   }
 
+  /** POST /admin/paths/:id/duplicate */
+  @Post(':id/duplicate')
+  @HttpCode(HttpStatus.CREATED)
+  duplicate(@Param('id') id: string) {
+    return this.adminPathsService.duplicate(id);
+  }
+
   /** PATCH /admin/paths/:id */
   @Patch(':id')
   @HttpCode(HttpStatus.OK)

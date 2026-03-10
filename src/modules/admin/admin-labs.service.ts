@@ -1,80 +1,87 @@
+// src/modules/admin/admin-labs.service.ts
 import {
   Injectable,
   NotFoundException,
   BadRequestException,
-  ConflictException,
 } from '@nestjs/common';
-import { Difficulty } from '@prisma/client';
-import { PrismaService } from '../../core/database';
+import { PrismaService } from '../../core/prisma/prisma.service';
 import { AdminLabQueryDto } from './dto/admin-lab-query.dto';
 import { CreateLabDto } from './dto/create-lab.dto';
 import { UpdateLabDto } from './dto/update-lab.dto';
 
-/**
- * Admin list select — deliberately excludes flagAnswer and solution.
- * These sensitive fields are only returned in the admin detail endpoint.
- */
+function generateSlug(base: string): string {
+  return base
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '')
+    .substring(0, 80);
+}
+
 const LAB_LIST_SELECT = {
   id: true,
-  slug: true,
   title: true,
-  ar_title: true,
-  description: true,
-  imageUrl: true,
-  difficulty: true,
+  slug: true,
   category: true,
+  difficulty: true,
   executionMode: true,
   isPublished: true,
-  duration: true,
-  xpReward: true,
-  pointsReward: true,
-  skills: true,
-  courseId: true,
+  thumbnail: true,
+  estimatedTime: true,
   createdAt: true,
   updatedAt: true,
   _count: {
     select: {
       submissions: true,
       usersProgress: true,
-      hints: true,
     },
   },
-} as const;
+};
 
 @Injectable()
 export class AdminLabsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  // ────────────────────────────────────────────────────────────────────────
-  // GET /admin/labs  — ALL labs, no isPublished filter
-  // ────────────────────────────────────────────────────────────────────────
+  // ─── Stats ─────────────────────────────────────────────────────────────────
+  async getStats() {
+    const [total, published, totalCompletions, totalSubmissions] = await Promise.all([
+      this.prisma.lab.count(),
+      this.prisma.lab.count({ where: { isPublished: true } }),
+      this.prisma.labProgress.count({ where: { status: 'COMPLETED' } }).catch(() => 0),
+      this.prisma.labSubmission.count().catch(() => 0),
+    ]);
+    return {
+      data: {
+        total,
+        published,
+        unpublished: total - published,
+        totalCompletions,
+        totalSubmissions,
+      },
+    };
+  }
+
+  // ─── List ──────────────────────────────────────────────────────────────────
   async findAll(query: AdminLabQueryDto) {
-    const {
-      page = 1,
-      limit = 20,
-      search,
-      difficulty,
-      category,
-      executionMode,
-      isPublished,
-    } = query;
+    const page = Math.max(1, query.page ?? 1);
+    const limit = Math.min(100, Math.max(1, query.limit ?? 20));
     const skip = (page - 1) * limit;
 
-    const where: Record<string, unknown> = {};
-
-    if (search) {
+    const where: any = {};
+    if (query.search) {
       where.OR = [
-        { title: { contains: search, mode: 'insensitive' } },
-        { ar_title: { contains: search, mode: 'insensitive' } },
-        { slug: { contains: search, mode: 'insensitive' } },
+        { title: { contains: query.search, mode: 'insensitive' } },
+        { slug: { contains: query.search, mode: 'insensitive' } },
       ];
     }
-    if (difficulty) where.difficulty = difficulty;
-    if (category) where.category = category;
-    if (executionMode) where.executionMode = executionMode;
-    if (isPublished !== undefined) where.isPublished = isPublished;
+    if (query.difficulty) where.difficulty = query.difficulty;
+    if (query.category) where.category = query.category;
+    if (query.executionMode) where.executionMode = query.executionMode;
+    if (query.isPublished !== undefined) {
+      where.isPublished =
+        query.isPublished === true || (query.isPublished as any) === 'true';
+    }
 
-    const [labs, total] = await this.prisma.$transaction([
+    const [data, total] = await Promise.all([
       this.prisma.lab.findMany({
         where,
         skip,
@@ -86,266 +93,109 @@ export class AdminLabsService {
     ]);
 
     return {
-      data: labs,
+      data,
       meta: { total, page, limit, totalPages: Math.ceil(total / limit) },
     };
   }
 
-  // ────────────────────────────────────────────────────────────────────────
-  // GET /admin/labs/stats
-  // Individual count() calls per difficulty — avoids Prisma groupBy type issue
-  // ────────────────────────────────────────────────────────────────────────
-  async getStats() {
-    const [
-      total,
-      published,
-      unpublished,
-      totalCompletions,
-      totalSubmissions,
-      beginner,
-      intermediate,
-      advanced,
-    ] = await this.prisma.$transaction([
-      this.prisma.lab.count(),
-      this.prisma.lab.count({ where: { isPublished: true } }),
-      this.prisma.lab.count({ where: { isPublished: false } }),
-      this.prisma.userLabProgress.count({ where: { completedAt: { not: null } } }),
-      this.prisma.labSubmission.count(),
-      this.prisma.lab.count({ where: { difficulty: Difficulty.BEGINNER } }),
-      this.prisma.lab.count({ where: { difficulty: Difficulty.INTERMEDIATE } }),
-      this.prisma.lab.count({ where: { difficulty: Difficulty.ADVANCED } }),
-    ]);
-
-    return {
-      total,
-      published,
-      unpublished,
-      totalCompletions,
-      totalSubmissions,
-      byDifficulty: {
-        [Difficulty.BEGINNER]: beginner,
-        [Difficulty.INTERMEDIATE]: intermediate,
-        [Difficulty.ADVANCED]: advanced,
-      },
-    };
-  }
-
-  // ────────────────────────────────────────────────────────────────────────
-  // GET /admin/labs/:id  — full detail INCLUDING flagAnswer + solution
-  //
-  // SECURITY: This endpoint is protected by AdminGuard.
-  // flagAnswer and solution are INTENTIONALLY included here for admin editing.
-  // They are NEVER returned by the user-facing practice-labs endpoints.
-  // ────────────────────────────────────────────────────────────────────────
+  // ─── Single ────────────────────────────────────────────────────────────────
   async findOne(id: string) {
     const lab = await this.prisma.lab.findUnique({
       where: { id },
-      include: {
-        hints: {
-          orderBy: { order: 'asc' },
-          select: {
-            id: true,
-            order: true,
-            content: true,
-            ar_content: true,
-            xpCost: true,
-          },
-        },
-        courseLabs: {
-          select: {
-            course: { select: { id: true, title: true, slug: true } },
-          },
-        },
-        _count: {
-          select: {
-            submissions: true,
-            usersProgress: true,
-            instances: true,
-          },
-        },
-      },
+      include: { _count: { select: { submissions: true, usersProgress: true } } },
     });
-
-    if (!lab) throw new NotFoundException(`Lab with id "${id}" not found`);
-    return lab;
+    if (!lab) throw new NotFoundException(`Lab ${id} not found`);
+    return { data: lab };
   }
 
-  // ────────────────────────────────────────────────────────────────────────
-  // POST /admin/labs  — create new lab
-  // ────────────────────────────────────────────────────────────────────────
+  // ─── Create ────────────────────────────────────────────────────────────────
   async create(dto: CreateLabDto) {
-    const existing = await this.prisma.lab.findUnique({
-      where: { slug: dto.slug },
-      select: { id: true },
+    const slug = (dto as any).slug ?? generateSlug(dto.title);
+    const existing = await this.prisma.lab.findUnique({ where: { slug } });
+    if (existing) throw new BadRequestException(`Slug "${slug}" already exists`);
+    const lab = await this.prisma.lab.create({
+      data: { ...dto, slug, isPublished: (dto as any).isPublished ?? false } as any,
     });
-    if (existing) {
-      throw new ConflictException(`Slug "${dto.slug}" is already in use`);
-    }
-
-    const {
-      title,
-      slug,
-      ar_title,
-      description,
-      ar_description,
-      scenario,
-      ar_scenario,
-      goal,
-      ar_goal,
-      difficulty,
-      category,
-      executionMode,
-      xpReward,
-      pointsReward,
-      pointsPerHint,
-      pointsPerFail,
-      duration,
-      maxAttempts,
-      timeLimit,
-      imageUrl,
-      labUrl,
-      courseId,
-      isolationMode,
-      skills,
-      engineConfig,
-      briefing,
-      stepsOverview,
-      steps,
-      postSolve,
-      initialState,
-      flagAnswer,
-      solution,
-      isPublished,
-    } = dto;
-
-    return this.prisma.lab.create({
-      data: {
-        title,
-        slug,
-        ar_title,
-        description,
-        ar_description,
-        scenario,
-        ar_scenario,
-        goal,
-        ar_goal,
-        difficulty,
-        category,
-        executionMode,
-        xpReward,
-        pointsReward,
-        pointsPerHint,
-        pointsPerFail,
-        duration,
-        maxAttempts,
-        timeLimit,
-        imageUrl,
-        labUrl,
-        courseId,
-        isolationMode: isolationMode ?? 'database',
-        skills: skills ?? [],
-        // Cast JSON fields to 'any' to satisfy Prisma InputJsonValue union type
-        engineConfig: (engineConfig ?? undefined) as any,
-        briefing: (briefing ?? undefined) as any,
-        stepsOverview: (stepsOverview ?? undefined) as any,
-        steps: (steps ?? undefined) as any,
-        postSolve: (postSolve ?? undefined) as any,
-        initialState: (initialState ?? {}) as any,
-        flagAnswer,
-        solution: (solution ?? undefined) as any,
-        isPublished: isPublished ?? false,
-      },
-      select: LAB_LIST_SELECT,
-    });
+    return { data: lab };
   }
 
-  // ────────────────────────────────────────────────────────────────────────
-  // PATCH /admin/labs/:id  — update lab fields
-  // ────────────────────────────────────────────────────────────────────────
+  // ─── Update ────────────────────────────────────────────────────────────────
   async update(id: string, dto: UpdateLabDto) {
-    await this.assertExists(id);
-
-    if (dto.slug) {
-      const conflict = await this.prisma.lab.findFirst({
-        where: { slug: dto.slug, NOT: { id } },
-        select: { id: true },
-      });
-      if (conflict) {
-        throw new ConflictException(`Slug "${dto.slug}" is already in use`);
-      }
-    }
-
-    return this.prisma.lab.update({
+    await this.findOne(id);
+    const updated = await this.prisma.lab.update({
       where: { id },
       data: dto as any,
       select: LAB_LIST_SELECT,
     });
+    return { data: updated };
   }
 
-  // ────────────────────────────────────────────────────────────────────────
-  // PATCH /admin/labs/:id/publish
-  // ────────────────────────────────────────────────────────────────────────
+  // ─── Publish / Unpublish ───────────────────────────────────────────────────
   async publish(id: string) {
-    const lab = await this.assertExists(id);
-
-    if (lab.isPublished) {
-      throw new BadRequestException('Lab is already published');
-    }
-
-    return this.prisma.lab.update({
+    await this.findOne(id);
+    const updated = await this.prisma.lab.update({
       where: { id },
       data: { isPublished: true },
-      select: { id: true, slug: true, title: true, isPublished: true },
+      select: LAB_LIST_SELECT,
     });
+    return { data: updated };
   }
 
-  // ────────────────────────────────────────────────────────────────────────
-  // PATCH /admin/labs/:id/unpublish
-  // ────────────────────────────────────────────────────────────────────────
   async unpublish(id: string) {
-    const lab = await this.assertExists(id);
-
-    if (!lab.isPublished) {
-      throw new BadRequestException('Lab is already unpublished');
-    }
-
-    return this.prisma.lab.update({
+    await this.findOne(id);
+    const updated = await this.prisma.lab.update({
       where: { id },
       data: { isPublished: false },
-      select: { id: true, slug: true, title: true, isPublished: true },
+      select: LAB_LIST_SELECT,
     });
+    return { data: updated };
   }
 
-  // ────────────────────────────────────────────────────────────────────────
-  // DELETE /admin/labs/:id
-  // Blocks deletion if active progress records exist (users who started the lab)
-  // ────────────────────────────────────────────────────────────────────────
+  // ─── Delete ────────────────────────────────────────────────────────────────
   async remove(id: string) {
-    await this.assertExists(id);
-
-    const progressCount = await this.prisma.userLabProgress.count({
-      where: { labId: id },
-    });
-
+    const { data: lab } = await this.findOne(id);
+    const progressCount = await this.prisma.labProgress
+      .count({ where: { labId: id } })
+      .catch(() => 0);
     if (progressCount > 0) {
       throw new BadRequestException(
-        `Cannot delete lab with ${progressCount} user progress record(s). Unpublish it instead.`,
+        `Cannot delete lab with ${progressCount} active user progress records. Unpublish it first.`,
       );
     }
-
     await this.prisma.lab.delete({ where: { id } });
-    return { success: true, message: 'Lab deleted successfully' };
+    return { data: { success: true, message: `Lab "${lab.title}" deleted successfully` } };
   }
 
-  // ────────────────────────────────────────────────────────────────────────
-  // Private helpers
-  // ────────────────────────────────────────────────────────────────────────
-  private async assertExists(id: string) {
-    const lab = await this.prisma.lab.findUnique({
-      where: { id },
-      select: { id: true, title: true, isPublished: true },
+  // ─── DUPLICATE ─────────────────────────────────────────────────────────────
+  async duplicate(id: string) {
+    const { data: original } = await this.findOne(id);
+
+    const baseSlug = `${original.slug}-copy`;
+    let candidateSlug = baseSlug;
+    let attempt = 0;
+    while (await this.prisma.lab.findUnique({ where: { slug: candidateSlug } })) {
+      attempt++;
+      candidateSlug = `${baseSlug}-${attempt}`;
+    }
+
+    const {
+      id: _id,
+      createdAt: _c,
+      updatedAt: _u,
+      _count: _cnt,
+      ...rest
+    } = original as any;
+
+    const copy = await this.prisma.lab.create({
+      data: {
+        ...rest,
+        title: `${original.title} (Copy)`,
+        slug: candidateSlug,
+        isPublished: false,
+      },
+      select: LAB_LIST_SELECT,
     });
-    if (!lab) throw new NotFoundException(`Lab with id "${id}" not found`);
-    return lab;
+
+    return { data: copy };
   }
 }

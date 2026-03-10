@@ -56,6 +56,13 @@ export class AdminCoursesController {
     return this.adminCoursesService.create(dto);
   }
 
+  /** POST /admin/courses/:id/duplicate */
+  @Post(':id/duplicate')
+  @HttpCode(HttpStatus.CREATED)
+  duplicate(@Param('id') id: string) {
+    return this.adminCoursesService.duplicate(id);
+  }
+
   /** POST /admin/courses/import-json */
   @Post('import-json')
   @HttpCode(HttpStatus.CREATED)

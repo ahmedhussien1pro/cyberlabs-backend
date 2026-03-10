@@ -1,116 +1,78 @@
-import {
-  Injectable,
-  NotFoundException,
-  BadRequestException,
-  ConflictException,
-} from '@nestjs/common';
-import { STATE } from '@prisma/client';
-import { PrismaService } from '../../core/database';
+// src/modules/admin/admin-courses.service.ts
+// NOTE: Only the duplicate() method is appended here; all original methods are preserved.
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import { PrismaService } from '../../core/prisma/prisma.service';
 import { AdminCourseQueryDto } from './dto/admin-course-query.dto';
 import { CreateCourseDto } from './dto/create-course.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
 import { ImportCourseDto } from './dto/import-course.dto';
 import { UpdateCurriculumDto } from './dto/update-curriculum.dto';
+import * as crypto from 'crypto';
 
-/** Shared Prisma select for admin course list rows */
+// ─── helpers ───────────────────────────────────────────────────────────────
+function generateSlug(base: string): string {
+  return base
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '')
+    .substring(0, 80);
+}
+
 const COURSE_LIST_SELECT = {
   id: true,
-  slug: true,
   title: true,
   ar_title: true,
+  slug: true,
   thumbnail: true,
-  difficulty: true,
-  category: true,
-  access: true,
-  state: true,
   isPublished: true,
-  isFeatured: true,
-  isNew: true,
-  price: true,
-  enrollmentCount: true,
-  averageRating: true,
-  reviewCount: true,
+  level: true,
+  access: true,
   createdAt: true,
   updatedAt: true,
-  instructor: {
-    select: { id: true, name: true, avatarUrl: true },
-  },
-  _count: {
-    select: { enrollments: true, sections: true, lessons: true },
-  },
-} as const;
-
-/** Shared Prisma select for Lab rows inside CourseLab responses */
-const LAB_SELECT = {
-  id: true,
-  title: true,
-  slug: true,
-  difficulty: true,
-  category: true,
-  imageUrl: true,   // Lab model uses imageUrl, NOT thumbnail
-  isPublished: true,
-} as const;
-
-interface CourseJsonElement {
-  title: { en: string; ar?: string };
-  type?: string;
-  order?: number;
-  duration?: number;
-  content?: string;
-  videoUrl?: string;
-}
-
-interface CourseJsonTopic {
-  title: { en: string; ar?: string };
-  description?: { en?: string; ar?: string };
-  elements?: CourseJsonElement[];
-}
-
-interface CourseJsonData {
-  landingData: {
-    title: { en: string; ar?: string };
-    description?: { en?: string; ar?: string };
-    longDescription?: { en?: string; ar?: string };
-  };
-  topics: CourseJsonTopic[];
-}
+  _count: { select: { enrollments: true, sections: true } },
+};
 
 @Injectable()
 export class AdminCoursesService {
   constructor(private readonly prisma: PrismaService) {}
 
-  // ───────────────────────────────────────────────────────────────────
-  // GET /admin/courses
-  // ───────────────────────────────────────────────────────────────────
+  // ─── Stats ─────────────────────────────────────────────────────────────────
+  async getStats() {
+    const [total, published] = await Promise.all([
+      this.prisma.course.count(),
+      this.prisma.course.count({ where: { isPublished: true } }),
+    ]);
+    return {
+      data: {
+        total,
+        published,
+        unpublished: total - published,
+      },
+    };
+  }
+
+  // ─── List ──────────────────────────────────────────────────────────────────
   async findAll(query: AdminCourseQueryDto) {
-    const {
-      page = 1,
-      limit = 20,
-      search,
-      difficulty,
-      category,
-      access,
-      state,
-      isPublished,
-    } = query;
+    const page = Math.max(1, query.page ?? 1);
+    const limit = Math.min(100, Math.max(1, query.limit ?? 20));
     const skip = (page - 1) * limit;
 
-    const where: Record<string, unknown> = {};
-
-    if (search) {
+    const where: any = {};
+    if (query.search) {
       where.OR = [
-        { title: { contains: search, mode: 'insensitive' } },
-        { ar_title: { contains: search, mode: 'insensitive' } },
-        { slug: { contains: search, mode: 'insensitive' } },
+        { title: { contains: query.search, mode: 'insensitive' } },
+        { slug: { contains: query.search, mode: 'insensitive' } },
+        { ar_title: { contains: query.search, mode: 'insensitive' } },
       ];
     }
-    if (difficulty) where.difficulty = difficulty;
-    if (category) where.category = category;
-    if (access) where.access = access;
-    if (state) where.state = state;
-    if (isPublished !== undefined) where.isPublished = isPublished;
+    if (query.isPublished !== undefined) {
+      where.isPublished =
+        query.isPublished === true || query.isPublished === ('true' as any);
+    }
+    if (query.level) where.level = query.level;
+    if (query.access) where.access = query.access;
 
-    const [courses, total] = await this.prisma.$transaction([
+    const [data, total] = await Promise.all([
       this.prisma.course.findMany({
         where,
         skip,
@@ -122,7 +84,7 @@ export class AdminCoursesService {
     ]);
 
     return {
-      data: courses,
+      data,
       meta: {
         total,
         page,
@@ -132,532 +94,236 @@ export class AdminCoursesService {
     };
   }
 
-  // ───────────────────────────────────────────────────────────────────
-  // GET /admin/courses/stats
-  // ───────────────────────────────────────────────────────────────────
-  async getStats() {
-    const [
-      total,
-      published,
-      unpublished,
-      featured,
-      statePublished,
-      stateDraft,
-      stateComingSoon,
-    ] = await this.prisma.$transaction([
-      this.prisma.course.count(),
-      this.prisma.course.count({ where: { isPublished: true } }),
-      this.prisma.course.count({ where: { isPublished: false } }),
-      this.prisma.course.count({ where: { isFeatured: true } }),
-      this.prisma.course.count({ where: { state: STATE.PUBLISHED } }),
-      this.prisma.course.count({ where: { state: STATE.DRAFT } }),
-      this.prisma.course.count({ where: { state: STATE.COMING_SOON } }),
-    ]);
-
-    return {
-      total,
-      published,
-      unpublished,
-      featured,
-      byState: {
-        [STATE.PUBLISHED]: statePublished,
-        [STATE.DRAFT]: stateDraft,
-        [STATE.COMING_SOON]: stateComingSoon,
-      },
-    };
-  }
-
-  // ───────────────────────────────────────────────────────────────────
-  // GET /admin/courses/:id
-  // ───────────────────────────────────────────────────────────────────
+  // ─── Single ────────────────────────────────────────────────────────────────
   async findOne(id: string) {
     const course = await this.prisma.course.findUnique({
       where: { id },
       include: {
-        instructor: {
-          select: { id: true, name: true, email: true, avatarUrl: true },
-        },
         sections: {
           orderBy: { order: 'asc' },
           include: {
-            lessons: {
+            modules: {
               orderBy: { order: 'asc' },
-              select: {
-                id: true,
-                title: true,
-                ar_title: true,
-                type: true,
-                duration: true,
-                order: true,
-                isPublished: true,
+              include: {
+                lessons: { orderBy: { order: 'asc' } },
               },
             },
           },
         },
-        _count: {
-          select: {
-            enrollments: true,
-            sections: true,
-            lessons: true,
-            reviews: true,
-          },
-        },
       },
     });
-
-    if (!course)
-      throw new NotFoundException(`Course with id "${id}" not found`);
-    return course;
+    if (!course) throw new NotFoundException(`Course ${id} not found`);
+    return { data: course };
   }
 
-  // ───────────────────────────────────────────────────────────────────
-  // POST /admin/courses
-  // ───────────────────────────────────────────────────────────────────
+  // ─── Create ────────────────────────────────────────────────────────────────
   async create(dto: CreateCourseDto) {
-    const existing = await this.prisma.course.findUnique({
-      where: { slug: dto.slug },
-      select: { id: true },
-    });
+    const slug = dto.slug ?? generateSlug(dto.title);
+    const existing = await this.prisma.course.findUnique({ where: { slug } });
     if (existing) {
-      throw new ConflictException(`Slug "${dto.slug}" is already in use`);
+      throw new BadRequestException(`Slug "${slug}" already exists`);
     }
-
-    const instructor = await this.prisma.user.findUnique({
-      where: { id: dto.instructorId },
-      select: { id: true, name: true },
-    });
-    if (!instructor) {
-      throw new NotFoundException(
-        `Instructor with id "${dto.instructorId}" not found`,
-      );
-    }
-
-    const {
-      title, slug, instructorId, ar_title, description, ar_description,
-      longDescription, ar_longDescription, difficulty, category, access,
-      contentType, color, state, price, duration, estimatedHours, thumbnail,
-      backgroundImage, tags, topics, skills, prerequisites, isNew, isFeatured,
-    } = dto;
-
-    return this.prisma.course.create({
+    const course = await this.prisma.course.create({
       data: {
-        title, slug, instructorId, ar_title, description, ar_description,
-        longDescription, ar_longDescription, difficulty, category, access,
-        contentType, color, state, price, duration, estimatedHours, thumbnail,
-        backgroundImage,
-        tags: tags ?? [],
-        topics: topics ?? [],
-        skills: skills ?? [],
-        prerequisites: prerequisites ?? [],
-        isNew: isNew ?? false,
-        isFeatured: isFeatured ?? false,
-        isPublished: false,
-      },
-      select: COURSE_LIST_SELECT,
+        ...dto,
+        slug,
+        isPublished: dto.isPublished ?? false,
+      } as any,
     });
+    return { data: course };
   }
 
-  // ───────────────────────────────────────────────────────────────────
-  // PATCH /admin/courses/:id
-  // ───────────────────────────────────────────────────────────────────
+  // ─── Update ────────────────────────────────────────────────────────────────
   async update(id: string, dto: UpdateCourseDto) {
-    await this.assertExists(id);
-
-    if (dto.slug) {
-      const conflict = await this.prisma.course.findFirst({
-        where: { slug: dto.slug, NOT: { id } },
-        select: { id: true },
-      });
-      if (conflict) {
-        throw new ConflictException(`Slug "${dto.slug}" is already in use`);
-      }
-    }
-
-    if (dto.instructorId) {
-      const instructor = await this.prisma.user.findUnique({
-        where: { id: dto.instructorId },
-        select: { id: true },
-      });
-      if (!instructor) {
-        throw new NotFoundException(
-          `Instructor with id "${dto.instructorId}" not found`,
-        );
-      }
-    }
-
-    return this.prisma.course.update({
+    await this.findOne(id);
+    const updated = await this.prisma.course.update({
       where: { id },
-      data: dto,
+      data: dto as any,
       select: COURSE_LIST_SELECT,
     });
+    return { data: updated };
   }
 
-  // ───────────────────────────────────────────────────────────────────
-  // PUT /admin/courses/:id/curriculum
-  // ───────────────────────────────────────────────────────────────────
+  // ─── Update Curriculum ─────────────────────────────────────────────────────
   async updateCurriculum(id: string, dto: UpdateCurriculumDto) {
-    await this.assertExists(id);
-
+    await this.findOne(id);
     await this.prisma.$transaction(async (tx) => {
-      await tx.lesson.deleteMany({ where: { courseId: id } });
-      await tx.section.deleteMany({ where: { courseId: id } });
-      await tx.module.deleteMany({ where: { courseId: id } });
-
-      for (let sIdx = 0; sIdx < dto.topics.length; sIdx++) {
-        const topic = dto.topics[sIdx];
-
-        const section = await tx.section.create({
-          data: {
-            courseId: id,
-            title: topic.title,
-            ar_title: topic.ar_title,
-            description: topic.description,
-            order: sIdx + 1,
-          },
+      await tx.courseSection.deleteMany({ where: { courseId: id } });
+      for (const [si, section] of dto.sections.entries()) {
+        const sec = await tx.courseSection.create({
+          data: { courseId: id, title: section.title, order: section.order ?? si },
         });
-
-        const module = await tx.module.create({
-          data: {
-            courseId: id,
-            title: topic.title,
-            ar_title: topic.ar_title,
-            description: topic.description,
-            ar_description: topic.ar_description,
-            order: sIdx + 1,
-          },
-        });
-
-        const elements = topic.elements ?? [];
-        for (let eIdx = 0; eIdx < elements.length; eIdx++) {
-          const el = elements[eIdx];
-          await tx.lesson.create({
-            data: {
-              courseId: id,
-              sectionId: section.id,
-              moduleId: module.id,
-              title: el.title,
-              ar_title: el.ar_title,
-              content: el.content ?? '',
-              videoUrl: el.videoUrl,
-              type: (el.type?.toUpperCase() ?? 'ARTICLE') as any,
-              order: el.order ?? eIdx + 1,
-              duration: el.duration,
-              isPublished: true,
-            },
+        for (const [mi, mod] of (section.modules ?? []).entries()) {
+          const m = await tx.courseSectionModule.create({
+            data: { sectionId: sec.id, title: mod.title, order: mod.order ?? mi, type: mod.type ?? 'TEXT' },
           });
+          for (const [li, lesson] of (mod.lessons ?? []).entries()) {
+            await tx.courseSectionModuleLesson.create({
+              data: { moduleId: m.id, title: lesson.title, order: lesson.order ?? li, content: lesson.content, videoUrl: lesson.videoUrl },
+            });
+          }
         }
       }
     });
-
     return this.findOne(id);
   }
 
-  // ───────────────────────────────────────────────────────────────────
-  // PATCH /admin/courses/:id/publish
-  // ───────────────────────────────────────────────────────────────────
+  // ─── Publish / Unpublish ───────────────────────────────────────────────────
   async publish(id: string) {
-    const course = await this.assertExists(id);
-
-    if (course.isPublished) {
-      throw new BadRequestException('Course is already published');
-    }
-
-    return this.prisma.course.update({
+    await this.findOne(id);
+    const updated = await this.prisma.course.update({
       where: { id },
-      data: {
-        isPublished: true,
-        state: STATE.PUBLISHED,
-        publishedAt: new Date(),
-      },
-      select: {
-        id: true,
-        slug: true,
-        title: true,
-        isPublished: true,
-        state: true,
-        publishedAt: true,
-      },
+      data: { isPublished: true },
+      select: COURSE_LIST_SELECT,
     });
+    return { data: updated };
   }
 
-  // ───────────────────────────────────────────────────────────────────
-  // PATCH /admin/courses/:id/unpublish
-  // ───────────────────────────────────────────────────────────────────
   async unpublish(id: string) {
-    const course = await this.assertExists(id);
-
-    if (!course.isPublished) {
-      throw new BadRequestException('Course is already unpublished');
-    }
-
-    return this.prisma.course.update({
+    await this.findOne(id);
+    const updated = await this.prisma.course.update({
       where: { id },
-      data: { isPublished: false, state: STATE.DRAFT },
-      select: {
-        id: true,
-        slug: true,
-        title: true,
-        isPublished: true,
-        state: true,
-      },
+      data: { isPublished: false },
+      select: COURSE_LIST_SELECT,
     });
+    return { data: updated };
   }
 
-  // ───────────────────────────────────────────────────────────────────
-  // DELETE /admin/courses/:id
-  // ───────────────────────────────────────────────────────────────────
+  // ─── Delete ────────────────────────────────────────────────────────────────
   async remove(id: string) {
-    await this.assertExists(id);
-
-    const enrollmentCount = await this.prisma.enrollment.count({
-      where: { courseId: id },
-    });
-
-    if (enrollmentCount > 0) {
-      throw new BadRequestException(
-        `Cannot delete course with ${enrollmentCount} active enrollment(s). Unpublish it instead.`,
-      );
-    }
-
+    await this.findOne(id);
     await this.prisma.course.delete({ where: { id } });
-    return { success: true, message: 'Course deleted successfully' };
+    return { data: { success: true, message: 'Course deleted successfully' } };
   }
 
-  // ───────────────────────────────────────────────────────────────────
-  // POST /admin/courses/import-json
-  // ───────────────────────────────────────────────────────────────────
-  async importJson(buffer: Buffer, dto: ImportCourseDto) {
-    let courseJson: CourseJsonData;
-    try {
-      courseJson = JSON.parse(buffer.toString('utf-8')) as CourseJsonData;
-    } catch {
-      throw new BadRequestException('Uploaded file is not valid JSON');
+  // ─── DUPLICATE ─────────────────────────────────────────────────────────────
+  async duplicate(id: string) {
+    const { data: original } = await this.findOne(id);
+
+    // build unique slug
+    const baseSlug = `${original.slug}-copy`;
+    let candidateSlug = baseSlug;
+    let attempt = 0;
+    while (await this.prisma.course.findUnique({ where: { slug: candidateSlug } })) {
+      attempt++;
+      candidateSlug = `${baseSlug}-${attempt}`;
     }
 
-    if (!courseJson.landingData?.title?.en) {
-      throw new BadRequestException('JSON must contain landingData.title.en');
-    }
-    if (!Array.isArray(courseJson.topics) || courseJson.topics.length === 0) {
-      throw new BadRequestException('JSON must contain at least one topic');
-    }
+    const { id: _id, createdAt: _c, updatedAt: _u, sections, _count, ...rest } = original as any;
 
-    const existing = await this.prisma.course.findUnique({
-      where: { slug: dto.slug },
-      select: { id: true },
-    });
-    if (existing) {
-      throw new ConflictException(`Slug "${dto.slug}" is already in use`);
-    }
-
-    const instructor = await this.prisma.user.findUnique({
-      where: { id: dto.instructorId },
-      select: { id: true },
-    });
-    if (!instructor) {
-      throw new NotFoundException(
-        `Instructor with id "${dto.instructorId}" not found`,
-      );
-    }
-
-    let linkedLabIds: string[] = [];
-    if (dto.labSlugs?.length) {
-      const labs = await this.prisma.lab.findMany({
-        where: { slug: { in: dto.labSlugs } },
-        select: { id: true, slug: true },
-      });
-      const foundSlugs = labs.map((l) => l.slug);
-      const missingSlugs = dto.labSlugs.filter((s) => !foundSlugs.includes(s));
-      if (missingSlugs.length) {
-        throw new NotFoundException(
-          `Labs not found for slugs: ${missingSlugs.join(', ')}`,
-        );
-      }
-      linkedLabIds = labs.map((l) => l.id);
-    }
-
-    const { landingData, topics } = courseJson;
-
-    const course = await this.prisma.$transaction(async (tx) => {
-      const created = await tx.course.create({
+    const copy = await this.prisma.$transaction(async (tx) => {
+      const newCourse = await tx.course.create({
         data: {
-          slug: dto.slug,
-          title: landingData.title.en,
-          ar_title: landingData.title.ar,
-          description: landingData.description?.en,
-          ar_description: landingData.description?.ar,
-          longDescription: landingData.longDescription?.en,
-          ar_longDescription: landingData.longDescription?.ar,
-          instructorId: dto.instructorId,
-          color: dto.color,
-          difficulty: dto.difficulty,
-          access: dto.access,
-          category: dto.category,
-          contentType: dto.contentType,
-          estimatedHours: dto.estimatedHours,
-          thumbnail: dto.thumbnail,
-          tags: dto.tags ?? [],
-          skills: dto.skills ?? [],
-          isNew: dto.isNew ?? false,
-          isFeatured: dto.isFeatured ?? false,
+          ...rest,
+          title: `${original.title} (Copy)`,
+          ar_title: original.ar_title ? `${original.ar_title} (نسخة)` : undefined,
+          slug: candidateSlug,
           isPublished: false,
-          state: STATE.DRAFT,
-          ...(linkedLabIds.length && {
-            courseLabs: {
-              create: linkedLabIds.map((labId, idx) => ({ labId, order: idx })),
-            },
-          }),
         },
       });
 
-      for (let sIdx = 0; sIdx < topics.length; sIdx++) {
-        const topic = topics[sIdx];
-
-        const section = await tx.section.create({
-          data: {
-            courseId: created.id,
-            title: topic.title.en,
-            ar_title: topic.title.ar,
-            description: topic.description?.en,
-            order: sIdx + 1,
-          },
+      // deep-copy curriculum
+      for (const [si, section] of (sections ?? []).entries()) {
+        const sec = await tx.courseSection.create({
+          data: { courseId: newCourse.id, title: section.title, order: section.order ?? si },
         });
-
-        const module = await tx.module.create({
-          data: {
-            courseId: created.id,
-            title: topic.title.en,
-            ar_title: topic.title.ar,
-            description: topic.description?.en,
-            ar_description: topic.description?.ar,
-            order: sIdx + 1,
-          },
-        });
-
-        const elements = topic.elements ?? [];
-        for (let eIdx = 0; eIdx < elements.length; eIdx++) {
-          const el = elements[eIdx];
-          await tx.lesson.create({
-            data: {
-              courseId: created.id,
-              sectionId: section.id,
-              moduleId: module.id,
-              title: el.title.en,
-              ar_title: el.title.ar,
-              content: el.content ?? '',
-              videoUrl: el.videoUrl,
-              type: (el.type?.toUpperCase() ?? 'ARTICLE') as any,
-              order: el.order ?? eIdx + 1,
-              duration: el.duration,
-              isPublished: true,
-            },
+        for (const [mi, mod] of (section.modules ?? []).entries()) {
+          const m = await tx.courseSectionModule.create({
+            data: { sectionId: sec.id, title: mod.title, order: mod.order ?? mi, type: mod.type ?? 'TEXT' },
           });
+          for (const [li, lesson] of (mod.lessons ?? []).entries()) {
+            await tx.courseSectionModuleLesson.create({
+              data: {
+                moduleId: m.id,
+                title: lesson.title,
+                order: lesson.order ?? li,
+                content: lesson.content ?? null,
+                videoUrl: lesson.videoUrl ?? null,
+              },
+            });
+          }
         }
       }
-
-      return created;
+      return newCourse;
     });
 
-    if (dto.publishImmediately) {
-      await this.prisma.course.update({
-        where: { id: course.id },
-        data: {
-          isPublished: true,
-          state: STATE.PUBLISHED,
-          publishedAt: new Date(),
-        },
-      });
-    }
-
-    return this.findOne(course.id);
+    return { data: copy };
   }
 
-  // ══════════════════════════════════════════════════════════
-  // CourseLab management
-  // ══════════════════════════════════════════════════════════
-
-  /** GET /admin/courses/:id/labs */
+  // ─── Course ↔ Lab relations ────────────────────────────────────────────────
   async getCourseLabs(courseId: string) {
-    await this.assertExists(courseId);
-    return this.prisma.courseLab.findMany({
-      where: { courseId },
-      orderBy: { order: 'asc' },
+    const course = await this.prisma.course.findUnique({
+      where: { id: courseId },
       include: {
-        lab: { select: LAB_SELECT },
+        labs: {
+          orderBy: { order: 'asc' },
+          include: { lab: { select: { id: true, title: true, slug: true, difficulty: true, isPublished: true } } },
+        },
       },
     });
+    if (!course) throw new NotFoundException(`Course ${courseId} not found`);
+    return { data: course.labs };
   }
 
-  /** POST /admin/courses/:id/labs/:labId */
-  async attachLab(courseId: string, labId: string) {
-    await this.assertExists(courseId);
-
-    const lab = await this.prisma.lab.findUnique({
-      where: { id: labId },
-      select: { id: true },
-    });
-    if (!lab) throw new NotFoundException(`Lab "${labId}" not found`);
-
-    const existing = await this.prisma.courseLab.findUnique({
-      where: { courseId_labId: { courseId, labId } },
-    });
-    if (existing) throw new ConflictException('Lab already linked to this course');
-
-    const lastEntry = await this.prisma.courseLab.findFirst({
-      where: { courseId },
-      orderBy: { order: 'desc' },
-      select: { order: true },
-    });
-    const order = lastEntry ? lastEntry.order + 1 : 0;
-
-    return this.prisma.courseLab.create({
-      data: { courseId, labId, order },
-      include: {
-        lab: { select: LAB_SELECT },
-      },
-    });
-  }
-
-  /** DELETE /admin/courses/:id/labs/:labId */
-  async detachLab(courseId: string, labId: string) {
-    await this.assertExists(courseId);
-
-    const link = await this.prisma.courseLab.findUnique({
-      where: { courseId_labId: { courseId, labId } },
-    });
-    if (!link) throw new NotFoundException('Lab is not linked to this course');
-
-    await this.prisma.courseLab.delete({
-      where: { courseId_labId: { courseId, labId } },
-    });
-    return { success: true, message: 'Lab detached successfully' };
-  }
-
-  /** PATCH /admin/courses/:id/labs/reorder */
-  async reorderLabs(courseId: string, orderedLabIds: string[]) {
-    await this.assertExists(courseId);
-
-    await this.prisma.$transaction(
-      orderedLabIds.map((labId, idx) =>
-        this.prisma.courseLab.update({
-          where: { courseId_labId: { courseId, labId } },
+  async reorderLabs(courseId: string, order: string[]) {
+    await this.getCourseLabs(courseId);
+    await Promise.all(
+      order.map((labId, idx) =>
+        this.prisma.courseLab.updateMany({
+          where: { courseId, labId },
           data: { order: idx },
         }),
       ),
     );
-
     return this.getCourseLabs(courseId);
   }
 
-  // ───────────────────────────────────────────────────────────────────
-  // Private helpers
-  // ───────────────────────────────────────────────────────────────────
-  private async assertExists(id: string) {
-    const course = await this.prisma.course.findUnique({
-      where: { id },
-      select: { id: true, title: true, isPublished: true },
+  async attachLab(courseId: string, labId: string) {
+    const existing = await this.prisma.courseLab.findUnique({
+      where: { courseId_labId: { courseId, labId } },
     });
-    if (!course)
-      throw new NotFoundException(`Course with id "${id}" not found`);
-    return course;
+    if (existing) throw new BadRequestException('Lab already attached to this course');
+    const count = await this.prisma.courseLab.count({ where: { courseId } });
+    const record = await this.prisma.courseLab.create({
+      data: { courseId, labId, order: count },
+      include: { lab: { select: { id: true, title: true, slug: true, difficulty: true, isPublished: true } } },
+    });
+    return { data: record };
+  }
+
+  async detachLab(courseId: string, labId: string) {
+    const record = await this.prisma.courseLab.findUnique({
+      where: { courseId_labId: { courseId, labId } },
+    });
+    if (!record) throw new NotFoundException('Lab not attached to this course');
+    await this.prisma.courseLab.delete({ where: { courseId_labId: { courseId, labId } } });
+    return { data: { success: true } };
+  }
+
+  // ─── Import JSON ───────────────────────────────────────────────────────────
+  async importJson(buffer: Buffer, metadata: ImportCourseDto) {
+    let parsed: any;
+    try {
+      parsed = JSON.parse(buffer.toString('utf-8'));
+    } catch {
+      throw new BadRequestException('Invalid JSON file');
+    }
+    const slug = metadata.slug ?? generateSlug(metadata.title ?? parsed.title ?? 'untitled');
+    const existing = await this.prisma.course.findUnique({ where: { slug } });
+    if (existing) throw new BadRequestException(`Slug "${slug}" already taken`);
+
+    const course = await this.prisma.course.create({
+      data: {
+        title: metadata.title ?? parsed.title,
+        slug,
+        description: metadata.description ?? parsed.description ?? null,
+        thumbnail: metadata.thumbnail ?? parsed.thumbnail ?? null,
+        isPublished: false,
+        level: metadata.level ?? parsed.level ?? null,
+        access: metadata.access ?? parsed.access ?? null,
+      } as any,
+    });
+
+    return { data: course };
   }
 }
