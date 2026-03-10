@@ -3,7 +3,11 @@ import { PrismaService } from '../../core/database/prisma.service';
 import { TrackEntryDto } from './dto/track-entry.dto';
 import { TrackActionDto } from './dto/track-action.dto';
 import { Prisma } from '@prisma/client';
-import { nanoid } from 'nanoid';
+import * as crypto from 'crypto';
+
+function randomId(bytes = 8): string {
+  return crypto.randomBytes(bytes).toString('base64url').substring(0, bytes * 1.5 | 0).toUpperCase();
+}
 
 @Injectable()
 export class TrackingService {
@@ -16,7 +20,7 @@ export class TrackingService {
     let code: string;
     let exists = true;
     do {
-      code = nanoid(8).toUpperCase();
+      code = randomId(6);
       const found = await this.prisma.user.findUnique({ where: { referralCode: code } });
       exists = !!found;
     } while (exists);
@@ -26,7 +30,7 @@ export class TrackingService {
 
   // Record entry event (public — from landing page)
   async trackEntry(dto: TrackEntryDto, userId?: string, ip?: string, userAgent?: string) {
-    const sessionId = dto.sessionId ?? nanoid(16);
+    const sessionId = dto.sessionId ?? randomId(12);
 
     // Create tracking event
     await this.prisma.trackingEvent.create({
