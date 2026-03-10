@@ -325,6 +325,9 @@ model User {
   tracking       UserTracking?
   trackingEvents TrackingEvent[]
 
+  // Admin-created referral links targeted at this user
+  targetedReferralLinks ReferralLink[]
+
   @@index([email])
   @@index([createdAt])
   @@index([role])
@@ -540,7 +543,7 @@ model NotificationSettings {
   @@map("notification_settings")
 }
 
-// ── Broadcast Notifications (admin-only) ───────────────────────────────────────────────────
+// ── Broadcast Notifications (admin-only) ────────────────────────────────────────────────
 model BroadcastNotification {
   id             String   @id @default(uuid())
   title          String
@@ -615,6 +618,54 @@ model TrackingEvent {
   @@index([campaign])
   @@index([createdAt])
   @@map("tracking_events")
+}
+
+// ============================================================================
+// ADMIN REFERRAL LINKS  (managed from admin panel)
+// ============================================================================
+
+/// A trackable referral / affiliate link created by admins.
+/// Each link tracks clicks and registrations coming through it.
+model ReferralLink {
+  id             String   @id @default(uuid())
+  label          String                        // human-readable name, e.g. "Facebook Jan campaign"
+  slug           String   @unique              // URL slug, e.g. "fb-jan-2026"
+  source         String                        // platform: facebook | twitter | whatsapp | ...
+  url            String                        // full trackable URL
+
+  // Optional: assign to a specific user/influencer
+  targetUserId   String?
+  targetUser     User?    @relation(fields: [targetUserId], references: [id], onDelete: SetNull)
+  targetUserName String?                       // cached name for display
+
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  clicks         ReferralClick[]
+
+  @@index([source])
+  @@index([targetUserId])
+  @@index([createdAt])
+  @@map("referral_links")
+}
+
+/// Each time a visitor clicks a referral link this row is created.
+/// If they subsequently register, convertedAt is set.
+model ReferralClick {
+  id           String       @id @default(uuid())
+  linkId       String
+  link         ReferralLink @relation(fields: [linkId], references: [id], onDelete: Cascade)
+
+  ip           String?
+  userAgent    String?
+  convertedAt  DateTime?    // set when the visitor completes registration
+  registeredUserId String?  // FK to users.id once converted
+
+  createdAt    DateTime     @default(now())
+
+  @@index([linkId])
+  @@index([createdAt])
+  @@map("referral_clicks")
 }
 
 // ============================================================================
@@ -932,6 +983,8 @@ model Enrollment {
   lastAccessedAt DateTime?
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
+
+  status         String?   @default("active")
 
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
@@ -1257,6 +1310,8 @@ model UserLabProgress {
   startedAt     DateTime  @default(now())
   completedAt   DateTime?
   lastAccess    DateTime?
+
+  status        String?   @default("in_progress")
 
   @@unique([userId, labId])
   @@index([userId])
