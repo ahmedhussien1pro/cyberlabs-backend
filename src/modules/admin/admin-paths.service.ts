@@ -19,9 +19,14 @@ const PATH_LIST_SELECT = {
   title: true,
   ar_title: true,
   slug: true,
-  thumbnail: true,
   isPublished: true,
   description: true,
+  difficulty: true,
+  totalCourses: true,
+  totalLabs: true,
+  estimatedHours: true,
+  isFeatured: true,
+  isNew: true,
   createdAt: true,
   updatedAt: true,
   _count: { select: { modules: true, enrollments: true } },
@@ -272,16 +277,30 @@ export class AdminPathsService {
     return { data: { success: true } };
   }
 
+  // ─── Reorder modules (sequential to avoid unique constraint conflicts) ──────
   async reorderModules(
     pathId: string,
     orders: { id: string; order: number }[],
   ) {
     await this.findOne(pathId);
-    await Promise.all(
+
+    // Step 1: shift all orders to high temp values to avoid unique constraint conflicts
+    await this.prisma.$transaction(
+      orders.map(({ id }, i) =>
+        this.prisma.pathModule.update({
+          where: { id },
+          data: { order: 10000 + i },
+        }),
+      ),
+    );
+
+    // Step 2: apply the real order values
+    await this.prisma.$transaction(
       orders.map(({ id, order }) =>
         this.prisma.pathModule.update({ where: { id }, data: { order } }),
       ),
     );
+
     return this.findOne(pathId);
   }
 }
