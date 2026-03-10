@@ -12,23 +12,34 @@ import { AdminAnalyticsController } from './admin-analytics.controller';
 import { AdminAnalyticsService } from './admin-analytics.service';
 import { AdminPathsController } from './admin-paths.controller';
 import { AdminPathsService } from './admin-paths.service';
+import { AdminNotificationsController } from './admin-notifications.controller';
+import { AdminNotificationsService } from './admin-notifications.service';
+import { NotificationsGateway } from '../notifications/gateways/notifications.gateway';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { JwtModule } from '@nestjs/jwt';
 
 /**
  * AdminModule
  *
- * Central module for all platform administration features.
- * Each feature area is a dedicated controller + service pair sharing DatabaseModule.
- *
  * Controllers:
- *   AdminController           → GET  /admin/health
- *   AdminUsersController      → GET/PATCH /admin/users/*
- *   AdminCoursesController    → GET/POST/PATCH/DELETE /admin/courses/*
- *   AdminLabsController       → GET/POST/PATCH/DELETE /admin/labs/*
- *   AdminPathsController      → GET/POST/PATCH/DELETE /admin/paths/*
- *   AdminAnalyticsController  → GET /admin/analytics/*
+ *   AdminController                → GET  /admin/health
+ *   AdminUsersController           → GET/PATCH /admin/users/*
+ *   AdminCoursesController         → GET/POST/PATCH/DELETE /admin/courses/*
+ *   AdminLabsController            → GET/POST/PATCH/DELETE /admin/labs/*
+ *   AdminPathsController           → GET/POST/PATCH/DELETE /admin/paths/*
+ *   AdminAnalyticsController       → GET /admin/analytics/*
+ *   AdminNotificationsController   → POST/GET /admin/notifications/*
  */
 @Module({
-  imports: [DatabaseModule],
+  imports: [
+    DatabaseModule,
+    ConfigModule,
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: (cfg: ConfigService) => ({ secret: cfg.get('JWT_SECRET') }),
+      inject: [ConfigService],
+    }),
+  ],
   controllers: [
     AdminController,
     AdminUsersController,
@@ -36,6 +47,7 @@ import { AdminPathsService } from './admin-paths.service';
     AdminLabsController,
     AdminPathsController,
     AdminAnalyticsController,
+    AdminNotificationsController,
   ],
   providers: [
     AdminService,
@@ -44,6 +56,8 @@ import { AdminPathsService } from './admin-paths.service';
     AdminLabsService,
     AdminPathsService,
     AdminAnalyticsService,
+    AdminNotificationsService,
+    NotificationsGateway,
   ],
 })
 export class AdminModule {}

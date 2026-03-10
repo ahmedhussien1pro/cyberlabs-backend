@@ -44,7 +44,6 @@ export class AdminPathsService {
         take: limit,
         orderBy: { createdAt: 'desc' },
         include: {
-          // ✅ relation name from schema is `modules` not `courses`
           _count: { select: { modules: true, enrollments: true } },
         },
       }),
@@ -62,7 +61,6 @@ export class AdminPathsService {
     const path = await this.prisma.learningPath.findUnique({
       where: { id },
       include: {
-        // ✅ `modules` is the correct relation name in LearningPath
         modules: {
           include: {
             course: {
@@ -103,7 +101,6 @@ export class AdminPathsService {
         ...data,
         isPublished: false,
         ...(modulesData?.length && {
-          // ✅ PathModule requires `title` field — not just courseId
           modules: {
             create: (modulesData as any[]).map((m, index) => ({
               title:          m.title          ?? 'Module',
@@ -127,12 +124,11 @@ export class AdminPathsService {
 
   // ─── Update ───────────────────────────────────────────────────────────────
   async update(id: string, dto: any) {
-    await this.findOne(id); // 404 guard
+    await this.findOne(id);
 
     const { modules: modulesData, ...data } = dto;
 
     if (modulesData) {
-      // ✅ use prisma.pathModule (camelCase of model name `PathModule`)
       await this.prisma.pathModule.deleteMany({ where: { pathId: id } });
       await this.prisma.pathModule.createMany({
         data: (modulesData as any[]).map((m, index) => ({
@@ -179,8 +175,82 @@ export class AdminPathsService {
 
   // ─── Delete ───────────────────────────────────────────────────────────────
   async remove(id: string) {
-    await this.findOne(id); // 404 guard
+    await this.findOne(id);
     await this.prisma.learningPath.delete({ where: { id } });
     return { success: true, message: `Learning path "${id}" deleted` };
+  }
+
+  // ─── Lab Relations ────────────────────────────────────────────────────────
+
+  async getLabs(pathId: string) {
+    await this.findOne(pathId);
+    const modules = await this.prisma.pathModule.findMany({
+      where: { pathId, type: PathModuleType.LAB, labId: { not: null } },
+      include: {
+        lab: {
+          select: {
+            id: true,
+            title: true,
+            slug: true,
+            imageUrl: true,
+            difficulty: true,
+            isPublished: true,
+          },
+        },
+      },
+      orderBy: { order: 'asc' },
+    });
+    return { data: modules };
+  }
+
+  async attachLab(pathId: string, labId: string, dto: any) {
+    await this.findOne(pathId);
+
+    const lab = await this.prisma.lab.findUnique({ where: { id: labId } });
+    if (!lab) throw new NotFoundException(`Lab "${labId}" not found`);
+
+    const exists = await this.prisma.pathModule.findFirst({
+      where: { pathId, labId, type: PathModuleType.LAB },
+    });
+    if (exists) throw new BadRequestException('Lab is already attached to this path');
+
+    const lastModule = await this.prisma.pathModule.findFirst({
+      where: { pathId },
+      orderBy: { order: 'desc' },
+    });
+    const nextOrder = (lastModule?.order ?? -1) + 1;
+
+    const module = await this.prisma.pathModule.create({
+      data: {
+        pathId,
+        labId,
+        title:          dto.title          ?? lab.title,
+        ar_title:       dto.ar_title       ?? null,
+        description:    dto.description    ?? null,
+        ar_description: dto.ar_description ?? null,
+        order:          dto.order          ?? nextOrder,
+        type:           PathModuleType.LAB,
+        status:         PathModuleStatus.PUBLISHED,
+        estimatedHours: dto.estimatedHours ?? 0,
+        isLocked:       dto.isLocked       ?? false,
+        totalTopics:    0,
+        courseId:       null,
+      },
+    });
+
+    return { success: true, module };
+  }
+
+  async detachLab(pathId: string, labId: string) {
+    await this.findOne(pathId);
+
+    const result = await this.prisma.pathModule.deleteMany({
+      where: { pathId, labId, type: PathModuleType.LAB },
+    });
+
+    if (result.count === 0)
+      throw new NotFoundException('Lab is not attached to this path');
+
+    return { success: true, removed: result.count };
   }
 }
