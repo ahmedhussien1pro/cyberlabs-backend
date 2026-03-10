@@ -1,6 +1,10 @@
 // src/modules/admin/admin-paths.service.ts
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
-import { PrismaService } from '../../core/prisma/prisma.service';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
+import { PrismaService } from '../../core/database';
 
 function generateSlug(base: string): string {
   return base
@@ -65,7 +69,10 @@ export class AdminPathsService {
       this.prisma.learningPath.count({ where }),
     ]);
 
-    return { data, meta: { total, page, limit, totalPages: Math.ceil(total / limit) } };
+    return {
+      data,
+      meta: { total, page, limit, totalPages: Math.ceil(total / limit) },
+    };
   }
 
   // ─── Single ────────────────────────────────────────────────────────────────
@@ -87,8 +94,11 @@ export class AdminPathsService {
   // ─── Create ────────────────────────────────────────────────────────────────
   async create(dto: any) {
     const slug = dto.slug ?? generateSlug(dto.title ?? 'untitled-path');
-    const existing = await this.prisma.learningPath.findFirst({ where: { slug } });
-    if (existing) throw new BadRequestException(`Slug "${slug}" already exists`);
+    const existing = await this.prisma.learningPath.findFirst({
+      where: { slug },
+    });
+    if (existing)
+      throw new BadRequestException(`Slug "${slug}" already exists`);
 
     const { modules, ...pathData } = dto;
     const path = await this.prisma.learningPath.create({
@@ -98,7 +108,13 @@ export class AdminPathsService {
     if (modules?.length) {
       for (const [i, mod] of modules.entries()) {
         await this.prisma.pathModule.create({
-          data: { pathId: path.id, labId: mod.labId ?? null, courseId: mod.courseId ?? null, order: mod.order ?? i, title: mod.title ?? null },
+          data: {
+            pathId: path.id,
+            labId: mod.labId ?? null,
+            courseId: mod.courseId ?? null,
+            order: mod.order ?? i,
+            title: mod.title ?? null,
+          },
         });
       }
     }
@@ -143,7 +159,9 @@ export class AdminPathsService {
   async remove(id: string) {
     await this.findOne(id);
     await this.prisma.learningPath.delete({ where: { id } });
-    return { data: { success: true, message: 'Learning path deleted successfully' } };
+    return {
+      data: { success: true, message: 'Learning path deleted successfully' },
+    };
   }
 
   // ─── DUPLICATE ─────────────────────────────────────────────────────────────
@@ -155,19 +173,32 @@ export class AdminPathsService {
       : generateSlug(`${original.title}-copy`);
     let candidateSlug = baseSlug;
     let attempt = 0;
-    while (await this.prisma.learningPath.findFirst({ where: { slug: candidateSlug } })) {
+    while (
+      await this.prisma.learningPath.findFirst({
+        where: { slug: candidateSlug },
+      })
+    ) {
       attempt++;
       candidateSlug = `${baseSlug}-${attempt}`;
     }
 
-    const { id: _id, createdAt: _c, updatedAt: _u, modules, _count, ...rest } = original as any;
+    const {
+      id: _id,
+      createdAt: _c,
+      updatedAt: _u,
+      modules,
+      _count,
+      ...rest
+    } = original as any;
 
     const copy = await this.prisma.$transaction(async (tx) => {
       const newPath = await tx.learningPath.create({
         data: {
           ...rest,
           title: `${original.title} (Copy)`,
-          ar_title: original.ar_title ? `${original.ar_title} (نسخة)` : undefined,
+          ar_title: original.ar_title
+            ? `${original.ar_title} (نسخة)`
+            : undefined,
           slug: candidateSlug,
           isPublished: false,
         },
@@ -199,7 +230,17 @@ export class AdminPathsService {
       include: {
         modules: {
           orderBy: { order: 'asc' },
-          include: { lab: { select: { id: true, title: true, slug: true, difficulty: true, isPublished: true } } },
+          include: {
+            lab: {
+              select: {
+                id: true,
+                title: true,
+                slug: true,
+                difficulty: true,
+                isPublished: true,
+              },
+            },
+          },
         },
       },
     });
@@ -211,20 +252,31 @@ export class AdminPathsService {
     const { data: path } = await this.findOne(pathId);
     const count = await this.prisma.pathModule.count({ where: { pathId } });
     const mod = await this.prisma.pathModule.create({
-      data: { pathId, labId, order: dto?.order ?? count, title: dto?.title ?? null, courseId: null },
+      data: {
+        pathId,
+        labId,
+        order: dto?.order ?? count,
+        title: dto?.title ?? null,
+        courseId: null,
+      },
       include: { lab: true },
     });
     return { data: mod };
   }
 
   async detachLab(pathId: string, labId: string) {
-    const mod = await this.prisma.pathModule.findFirst({ where: { pathId, labId } });
+    const mod = await this.prisma.pathModule.findFirst({
+      where: { pathId, labId },
+    });
     if (!mod) throw new NotFoundException('Lab not found in this path');
     await this.prisma.pathModule.delete({ where: { id: mod.id } });
     return { data: { success: true } };
   }
 
-  async reorderModules(pathId: string, orders: { id: string; order: number }[]) {
+  async reorderModules(
+    pathId: string,
+    orders: { id: string; order: number }[],
+  ) {
     await this.findOne(pathId);
     await Promise.all(
       orders.map(({ id, order }) =>
