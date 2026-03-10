@@ -1,6 +1,10 @@
 // src/modules/admin/admin-courses.service.ts
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
-import { PrismaService } from '../../core/prisma/prisma.service';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
+import { PrismaService } from '../../core/database';
 import { AdminCourseQueryDto } from './dto/admin-course-query.dto';
 import { CreateCourseDto } from './dto/create-course.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
@@ -162,7 +166,9 @@ export class AdminCoursesService {
           },
         });
 
-        for (const [_li, lesson] of ((section.lessons ?? section.modules ?? []) as any[]).entries()) {
+        for (const [_li, lesson] of (
+          (section.lessons ?? section.modules ?? []) as any[]
+        ).entries()) {
           await (tx as any).lesson.create({
             data: {
               sectionId: sec.id,
@@ -217,19 +223,30 @@ export class AdminCoursesService {
     const baseSlug = `${original.slug}-copy`;
     let candidateSlug = baseSlug;
     let attempt = 0;
-    while (await this.prisma.course.findUnique({ where: { slug: candidateSlug } })) {
+    while (
+      await this.prisma.course.findUnique({ where: { slug: candidateSlug } })
+    ) {
       attempt++;
       candidateSlug = `${baseSlug}-${attempt}`;
     }
 
-    const { id: _id, createdAt: _c, updatedAt: _u, sections, _count, ...rest } = original as any;
+    const {
+      id: _id,
+      createdAt: _c,
+      updatedAt: _u,
+      sections,
+      _count,
+      ...rest
+    } = original as any;
 
     const copy = await this.prisma.$transaction(async (tx) => {
       const newCourse = await (tx as any).course.create({
         data: {
           ...rest,
           title: `${original.title} (Copy)`,
-          ar_title: original.ar_title ? `${original.ar_title} (نسخة)` : undefined,
+          ar_title: original.ar_title
+            ? `${original.ar_title} (نسخة)`
+            : undefined,
           slug: candidateSlug,
           isPublished: false,
         },
@@ -243,8 +260,15 @@ export class AdminCoursesService {
             order: section.order ?? si,
           },
         });
-        const defaultModuleId = await ensureDefaultModule(tx as any, newCourse.id, sec.id, si);
-        for (const [li, lesson] of ((section.lessons ?? []) as any[]).entries()) {
+        const defaultModuleId = await ensureDefaultModule(
+          tx as any,
+          newCourse.id,
+          sec.id,
+          si,
+        );
+        for (const [li, lesson] of (
+          (section.lessons ?? []) as any[]
+        ).entries()) {
           await (tx as any).lesson.create({
             data: {
               sectionId: sec.id,
@@ -307,7 +331,8 @@ export class AdminCoursesService {
     const existing = await this.prisma.courseLab.findUnique({
       where: { courseId_labId: { courseId, labId } },
     });
-    if (existing) throw new BadRequestException('Lab already attached to this course');
+    if (existing)
+      throw new BadRequestException('Lab already attached to this course');
     const count = await this.prisma.courseLab.count({ where: { courseId } });
     const record = await this.prisma.courseLab.create({
       data: { courseId, labId, order: count },
@@ -346,7 +371,8 @@ export class AdminCoursesService {
       throw new BadRequestException('Invalid JSON file');
     }
     const meta = metadata as any;
-    const slug = meta.slug ?? generateSlug(meta.title ?? parsed.title ?? 'untitled');
+    const slug =
+      meta.slug ?? generateSlug(meta.title ?? parsed.title ?? 'untitled');
     const existing = await this.prisma.course.findUnique({ where: { slug } });
     if (existing) throw new BadRequestException(`Slug "${slug}" already taken`);
 
@@ -357,7 +383,12 @@ export class AdminCoursesService {
         description: meta.description ?? parsed.description ?? null,
         thumbnail: meta.thumbnail ?? parsed.thumbnail ?? null,
         isPublished: false,
-        difficulty: meta.difficulty ?? meta.level ?? parsed.difficulty ?? parsed.level ?? null,
+        difficulty:
+          meta.difficulty ??
+          meta.level ??
+          parsed.difficulty ??
+          parsed.level ??
+          null,
         access: meta.access ?? parsed.access ?? null,
         instructorId: meta.instructorId ?? parsed.instructorId,
       } as any,

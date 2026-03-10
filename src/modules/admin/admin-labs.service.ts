@@ -4,7 +4,7 @@ import {
   NotFoundException,
   BadRequestException,
 } from '@nestjs/common';
-import { PrismaService } from '../../core/prisma/prisma.service';
+import { PrismaService } from '../../core/database';
 import { AdminLabQueryDto } from './dto/admin-lab-query.dto';
 import { CreateLabDto } from './dto/create-lab.dto';
 import { UpdateLabDto } from './dto/update-lab.dto';
@@ -43,13 +43,16 @@ export class AdminLabsService {
 
   // ─── Stats ─────────────────────────────────────────────────────────────────
   async getStats() {
-    const [total, published, totalCompletions, totalSubmissions] = await Promise.all([
-      this.prisma.lab.count(),
-      this.prisma.lab.count({ where: { isPublished: true } }),
-      // Correct Prisma model name: userLabProgress (not labProgress)
-      this.prisma.userLabProgress.count({ where: { completedAt: { not: null } } }).catch(() => 0),
-      this.prisma.labSubmission.count().catch(() => 0),
-    ]);
+    const [total, published, totalCompletions, totalSubmissions] =
+      await Promise.all([
+        this.prisma.lab.count(),
+        this.prisma.lab.count({ where: { isPublished: true } }),
+        // Correct Prisma model name: userLabProgress (not labProgress)
+        this.prisma.userLabProgress
+          .count({ where: { completedAt: { not: null } } })
+          .catch(() => 0),
+        this.prisma.labSubmission.count().catch(() => 0),
+      ]);
     return {
       data: {
         total,
@@ -103,7 +106,9 @@ export class AdminLabsService {
   async findOne(id: string) {
     const lab = await this.prisma.lab.findUnique({
       where: { id },
-      include: { _count: { select: { submissions: true, usersProgress: true } } },
+      include: {
+        _count: { select: { submissions: true, usersProgress: true } },
+      },
     });
     if (!lab) throw new NotFoundException(`Lab ${id} not found`);
     return { data: lab };
@@ -113,9 +118,14 @@ export class AdminLabsService {
   async create(dto: CreateLabDto) {
     const slug = (dto as any).slug ?? generateSlug(dto.title);
     const existing = await this.prisma.lab.findUnique({ where: { slug } });
-    if (existing) throw new BadRequestException(`Slug "${slug}" already exists`);
+    if (existing)
+      throw new BadRequestException(`Slug "${slug}" already exists`);
     const lab = await this.prisma.lab.create({
-      data: { ...dto, slug, isPublished: (dto as any).isPublished ?? false } as any,
+      data: {
+        ...dto,
+        slug,
+        isPublished: (dto as any).isPublished ?? false,
+      } as any,
     });
     return { data: lab };
   }
@@ -165,7 +175,12 @@ export class AdminLabsService {
       );
     }
     await this.prisma.lab.delete({ where: { id } });
-    return { data: { success: true, message: `Lab "${lab.title}" deleted successfully` } };
+    return {
+      data: {
+        success: true,
+        message: `Lab "${lab.title}" deleted successfully`,
+      },
+    };
   }
 
   // ─── DUPLICATE ─────────────────────────────────────────────────────────────
@@ -175,7 +190,9 @@ export class AdminLabsService {
     const baseSlug = `${original.slug}-copy`;
     let candidateSlug = baseSlug;
     let attempt = 0;
-    while (await this.prisma.lab.findUnique({ where: { slug: candidateSlug } })) {
+    while (
+      await this.prisma.lab.findUnique({ where: { slug: candidateSlug } })
+    ) {
       attempt++;
       candidateSlug = `${baseSlug}-${attempt}`;
     }
