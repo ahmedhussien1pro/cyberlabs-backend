@@ -25,8 +25,8 @@ const LAB_LIST_SELECT = {
   difficulty: true,
   executionMode: true,
   isPublished: true,
-  thumbnail: true,
-  estimatedTime: true,
+  thumbnail: false,
+  estimatedTime: false,
   createdAt: true,
   updatedAt: true,
   _count: {
@@ -46,7 +46,8 @@ export class AdminLabsService {
     const [total, published, totalCompletions, totalSubmissions] = await Promise.all([
       this.prisma.lab.count(),
       this.prisma.lab.count({ where: { isPublished: true } }),
-      this.prisma.labProgress.count({ where: { status: 'COMPLETED' } }).catch(() => 0),
+      // Correct Prisma model name: userLabProgress (not labProgress)
+      this.prisma.userLabProgress.count({ where: { completedAt: { not: null } } }).catch(() => 0),
       this.prisma.labSubmission.count().catch(() => 0),
     ]);
     return {
@@ -87,7 +88,7 @@ export class AdminLabsService {
         skip,
         take: limit,
         orderBy: { createdAt: 'desc' },
-        select: LAB_LIST_SELECT,
+        select: LAB_LIST_SELECT as any,
       }),
       this.prisma.lab.count({ where }),
     ]);
@@ -125,7 +126,7 @@ export class AdminLabsService {
     const updated = await this.prisma.lab.update({
       where: { id },
       data: dto as any,
-      select: LAB_LIST_SELECT,
+      select: LAB_LIST_SELECT as any,
     });
     return { data: updated };
   }
@@ -136,7 +137,7 @@ export class AdminLabsService {
     const updated = await this.prisma.lab.update({
       where: { id },
       data: { isPublished: true },
-      select: LAB_LIST_SELECT,
+      select: LAB_LIST_SELECT as any,
     });
     return { data: updated };
   }
@@ -146,7 +147,7 @@ export class AdminLabsService {
     const updated = await this.prisma.lab.update({
       where: { id },
       data: { isPublished: false },
-      select: LAB_LIST_SELECT,
+      select: LAB_LIST_SELECT as any,
     });
     return { data: updated };
   }
@@ -154,7 +155,8 @@ export class AdminLabsService {
   // ─── Delete ────────────────────────────────────────────────────────────────
   async remove(id: string) {
     const { data: lab } = await this.findOne(id);
-    const progressCount = await this.prisma.labProgress
+    // Correct Prisma model name: userLabProgress (not labProgress)
+    const progressCount = await this.prisma.userLabProgress
       .count({ where: { labId: id } })
       .catch(() => 0);
     if (progressCount > 0) {
@@ -193,7 +195,7 @@ export class AdminLabsService {
         slug: candidateSlug,
         isPublished: false,
       },
-      select: LAB_LIST_SELECT,
+      select: LAB_LIST_SELECT as any,
     });
 
     return { data: copy };
