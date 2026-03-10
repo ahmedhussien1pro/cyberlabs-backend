@@ -302,6 +302,8 @@ model User {
   labReviews    LabReview[]
   courseReviews CourseReview[]
 
+  broadcastsSent BroadcastNotification[]
+
   @@index([email])
   @@index([createdAt])
   @@index([role])
@@ -504,18 +506,32 @@ model NotificationSettings {
   pushNotifications   Boolean @default(false)
   courseUpdates       Boolean @default(true)
 
-  // Renamed Prisma fields — @map keeps existing DB columns, no data loss
   labCompleted        Boolean @default(true)  @map("labUpdates")
   achievementUnlocked Boolean @default(true)  @map("achievementAlerts")
   weeklyReport        Boolean @default(false) @map("weeklyDigest")
   promotions          Boolean @default(false) @map("marketingEmails")
 
-  // New columns — requires: npx prisma migrate dev --name expand_notification_settings
   monthlyDigest       Boolean @default(false)
   securityAlerts      Boolean @default(true)
   newCoursesAvailable Boolean @default(false)
 
   @@map("notification_settings")
+}
+
+// ── Broadcast Notifications (admin-only) ─────────────────────────────────────
+model BroadcastNotification {
+  id             String   @id @default(uuid())
+  title          String
+  message        String   @db.Text
+  type           String   @default("INFO")
+  recipientCount Int      @default(0)
+  sentAt         DateTime @default(now())
+  sentById       String?
+  sentBy         User?    @relation(fields: [sentById], references: [id], onDelete: SetNull)
+
+  @@index([sentAt])
+  @@index([sentById])
+  @@map("broadcast_notifications")
 }
 
 // ============================================================================
