@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../core/database/prisma.service';
 import { TrackEntryDto } from './dto/track-entry.dto';
 import { TrackActionDto } from './dto/track-action.dto';
+import { Prisma } from '@prisma/client';
 import { nanoid } from 'nanoid';
 
 @Injectable()
@@ -87,7 +88,8 @@ export class TrackingService {
         referralCode: dto.referralCode ?? null,
         source:       dto.source   ?? null,
         campaign:     dto.campaign ?? null,
-        meta:         dto.meta     ?? null,
+        // Prisma requires Prisma.JsonNull for nullable JSON fields instead of plain null
+        meta:         dto.meta ?? Prisma.JsonNull,
         ip,
         userAgent,
       },

@@ -9,6 +9,7 @@ import { TrackActionDto } from './dto/track-action.dto';
 import { Public } from '../../common/decorators/public.decorator';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { RolesGuard } from '../../common/guards/roles.guard';
+import { UserRole } from '../../common/enums/common.enums';
 
 @Controller('tracking')
 export class TrackingController {
@@ -42,7 +43,7 @@ export class TrackingController {
 
   // Admin: full funnel & conversion stats
   @UseGuards(RolesGuard)
-  @Roles('ADMIN')
+  @Roles(UserRole.ADMIN)
   @Get('admin/stats')
   async getAdminStats() {
     return this.trackingService.getAdminStats();
@@ -50,7 +51,7 @@ export class TrackingController {
 
   // Admin: referral leaderboard
   @UseGuards(RolesGuard)
-  @Roles('ADMIN')
+  @Roles(UserRole.ADMIN)
   @Get('admin/leaderboard')
   async getReferralLeaderboard(@Query('limit') limit?: string) {
     return this.trackingService.getReferralLeaderboard(limit ? parseInt(limit) : 50);
