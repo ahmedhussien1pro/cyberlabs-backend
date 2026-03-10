@@ -14,6 +14,8 @@ import { AdminPathsController } from './admin-paths.controller';
 import { AdminPathsService } from './admin-paths.service';
 import { AdminNotificationsController } from './admin-notifications.controller';
 import { AdminNotificationsService } from './admin-notifications.service';
+import { AdminBadgesController } from './admin-badges.controller';
+import { AdminBadgesService } from './admin-badges.service';
 import { NotificationsGateway } from '../notifications/gateways/notifications.gateway';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
@@ -29,6 +31,7 @@ import { JwtModule } from '@nestjs/jwt';
  *   AdminPathsController           → GET/POST/PATCH/DELETE /admin/paths/*
  *   AdminAnalyticsController       → GET /admin/analytics/*
  *   AdminNotificationsController   → POST/GET /admin/notifications/*
+ *   AdminBadgesController          → GET/POST/PATCH/DELETE /admin/badges/*
  */
 @Module({
   imports: [
@@ -48,6 +51,7 @@ import { JwtModule } from '@nestjs/jwt';
     AdminPathsController,
     AdminAnalyticsController,
     AdminNotificationsController,
+    AdminBadgesController,
   ],
   providers: [
     AdminService,
@@ -57,6 +61,7 @@ import { JwtModule } from '@nestjs/jwt';
     AdminPathsService,
     AdminAnalyticsService,
     AdminNotificationsService,
+    AdminBadgesService,
     NotificationsGateway,
   ],
 })

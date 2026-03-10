@@ -113,7 +113,7 @@ export class AdminPathsService {
             labId: mod.labId ?? null,
             courseId: mod.courseId ?? null,
             order: mod.order ?? i,
-            title: mod.title ?? null,
+            title: mod.title ?? '',
           },
         });
       }
@@ -164,7 +164,7 @@ export class AdminPathsService {
     };
   }
 
-  // ─── DUPLICATE ─────────────────────────────────────────────────────────────
+  // ─── Duplicate ─────────────────────────────────────────────────────────────
   async duplicate(id: string) {
     const { data: original } = await this.findOne(id);
 
@@ -204,7 +204,6 @@ export class AdminPathsService {
         },
       });
 
-      // deep-copy modules
       for (const [i, mod] of (modules ?? []).entries()) {
         await tx.pathModule.create({
           data: {
@@ -212,7 +211,7 @@ export class AdminPathsService {
             labId: mod.labId ?? null,
             courseId: mod.courseId ?? null,
             order: mod.order ?? i,
-            title: mod.title ?? null,
+            title: mod.title ?? '',
           },
         });
       }
@@ -249,14 +248,14 @@ export class AdminPathsService {
   }
 
   async attachLab(pathId: string, labId: string, dto: any) {
-    const { data: path } = await this.findOne(pathId);
+    await this.findOne(pathId);
     const count = await this.prisma.pathModule.count({ where: { pathId } });
     const mod = await this.prisma.pathModule.create({
       data: {
         pathId,
         labId,
         order: dto?.order ?? count,
-        title: dto?.title ?? null,
+        title: dto?.title ?? '',
         courseId: null,
       },
       include: { lab: true },

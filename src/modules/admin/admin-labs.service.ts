@@ -25,8 +25,6 @@ const LAB_LIST_SELECT = {
   difficulty: true,
   executionMode: true,
   isPublished: true,
-  thumbnail: false,
-  estimatedTime: false,
   createdAt: true,
   updatedAt: true,
   _count: {
@@ -47,7 +45,6 @@ export class AdminLabsService {
       await Promise.all([
         this.prisma.lab.count(),
         this.prisma.lab.count({ where: { isPublished: true } }),
-        // Correct Prisma model name: userLabProgress (not labProgress)
         this.prisma.userLabProgress
           .count({ where: { completedAt: { not: null } } })
           .catch(() => 0),
@@ -165,7 +162,6 @@ export class AdminLabsService {
   // ─── Delete ────────────────────────────────────────────────────────────────
   async remove(id: string) {
     const { data: lab } = await this.findOne(id);
-    // Correct Prisma model name: userLabProgress (not labProgress)
     const progressCount = await this.prisma.userLabProgress
       .count({ where: { labId: id } })
       .catch(() => 0);
@@ -183,7 +179,7 @@ export class AdminLabsService {
     };
   }
 
-  // ─── DUPLICATE ─────────────────────────────────────────────────────────────
+  // ─── Duplicate ─────────────────────────────────────────────────────────────
   async duplicate(id: string) {
     const { data: original } = await this.findOne(id);
 
