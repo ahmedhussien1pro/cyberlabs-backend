@@ -27,8 +27,8 @@ export class AdminUsersService {
         { email: { contains: search, mode: 'insensitive' } },
       ];
     }
-    if (role)                    where.role     = role;
-    if (isActive !== undefined)  where.isActive = isActive;
+    if (role)                   where.role     = role;
+    if (isActive !== undefined) where.isActive = isActive;
 
     const [users, total] = await this.prisma.$transaction([
       this.prisma.user.findMany({
@@ -126,20 +126,19 @@ export class AdminUsersService {
     });
     if (!user) throw new NotFoundException(`User with id "${id}" not found`);
 
-    const [enrollments, labProgress, badges, notifications] = await this.prisma.$transaction([
+    // Use Promise.all (not $transaction) because the array may contain plain Promise.resolve([])
+    const [enrollments, labProgress, badges, notifications] = await Promise.all([
       (!type || type === 'enrollment')
         ? this.prisma.enrollment.findMany({
             where: { userId: id },
             select: {
-              id: true, createdAt: true,
-              // 'status' does not exist on Enrollment model — using isCompleted instead
-              isCompleted: true,
+              id: true, createdAt: true, isCompleted: true,
               course: { select: { id: true, title: true, thumbnail: true } },
             },
             orderBy: { createdAt: 'desc' },
             take: limit * 3,
           })
-        : Promise.resolve([]),
+        : Promise.resolve([] as any[]),
 
       (!type || type === 'lab')
         ? this.prisma.userLabProgress.findMany({
@@ -151,7 +150,7 @@ export class AdminUsersService {
             orderBy: { lastAccess: 'desc' },
             take: limit * 3,
           })
-        : Promise.resolve([]),
+        : Promise.resolve([] as any[]),
 
       (!type || type === 'badge')
         ? this.prisma.userBadge.findMany({
@@ -163,7 +162,7 @@ export class AdminUsersService {
             orderBy: { awardedAt: 'desc' },
             take: limit * 3,
           })
-        : Promise.resolve([]),
+        : Promise.resolve([] as any[]),
 
       (!type || type === 'notification')
         ? this.prisma.notification.findMany({
@@ -172,7 +171,7 @@ export class AdminUsersService {
             orderBy: { createdAt: 'desc' },
             take: limit * 3,
           })
-        : Promise.resolve([]),
+        : Promise.resolve([] as any[]),
     ]);
 
     // Normalize into a unified timeline
