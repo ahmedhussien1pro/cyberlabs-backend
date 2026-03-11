@@ -27,8 +27,8 @@ export class AdminUsersService {
         { email: { contains: search, mode: 'insensitive' } },
       ];
     }
-    if (role)              where.role     = role;
-    if (isActive !== undefined) where.isActive = isActive;
+    if (role)                    where.role     = role;
+    if (isActive !== undefined)  where.isActive = isActive;
 
     const [users, total] = await this.prisma.$transaction([
       this.prisma.user.findMany({
@@ -51,7 +51,7 @@ export class AdminUsersService {
 
   // ── GET /admin/users/stats ────────────────────────────────────────────────
   async getStats() {
-    const now            = new Date();
+    const now             = new Date();
     const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
 
     const [
@@ -71,10 +71,10 @@ export class AdminUsersService {
     return {
       total, newThisMonth, suspended,
       byRole: {
-        [Role.ADMIN]: roleAdmin,
-        [Role.USER]: roleUser,
-        [Role.STUDENT]: roleStudent,
-        [Role.INSTRUCTOR]: roleInstructor,
+        [Role.ADMIN]:           roleAdmin,
+        [Role.USER]:            roleUser,
+        [Role.STUDENT]:         roleStudent,
+        [Role.INSTRUCTOR]:      roleInstructor,
         [Role.CONTENT_CREATOR]: roleContentCreator,
       },
     };
@@ -126,14 +126,15 @@ export class AdminUsersService {
     });
     if (!user) throw new NotFoundException(`User with id "${id}" not found`);
 
-    // Collect activity from multiple sources and unify into a timeline
     const [enrollments, labProgress, badges, notifications] = await this.prisma.$transaction([
       (!type || type === 'enrollment')
         ? this.prisma.enrollment.findMany({
             where: { userId: id },
             select: {
-              id: true, createdAt: true, status: true,
-              course: { select: { id: true, title: true, thumbnailUrl: true } },
+              id: true, createdAt: true,
+              // 'status' does not exist on Enrollment model — using isCompleted instead
+              isCompleted: true,
+              course: { select: { id: true, title: true, thumbnail: true } },
             },
             orderBy: { createdAt: 'desc' },
             take: limit * 3,
@@ -141,13 +142,13 @@ export class AdminUsersService {
         : Promise.resolve([]),
 
       (!type || type === 'lab')
-        ? this.prisma.labProgress.findMany({
+        ? this.prisma.userLabProgress.findMany({
             where: { userId: id },
             select: {
-              id: true, updatedAt: true, status: true,
+              id: true, lastAccess: true, flagSubmitted: true, completedAt: true,
               lab: { select: { id: true, title: true } },
             },
-            orderBy: { updatedAt: 'desc' },
+            orderBy: { lastAccess: 'desc' },
             take: limit * 3,
           })
         : Promise.resolve([]),
@@ -157,7 +158,7 @@ export class AdminUsersService {
             where: { userId: id },
             select: {
               id: true, awardedAt: true,
-              badge: { select: { id: true, name: true, icon: true } },
+              badge: { select: { id: true, title: true, iconUrl: true } },
             },
             orderBy: { awardedAt: 'desc' },
             take: limit * 3,
@@ -174,25 +175,32 @@ export class AdminUsersService {
         : Promise.resolve([]),
     ]);
 
-    // Normalize into unified activity items
+    // Normalize into a unified timeline
     const items: any[] = [
       ...enrollments.map((e: any) => ({
         id: e.id, type: 'enrollment',
         date: e.createdAt,
         title: `Enrolled in "${e.course?.title ?? 'course'}"`,
-        meta: { courseId: e.course?.id, status: e.status, thumbnail: e.course?.thumbnailUrl },
+        meta: {
+          courseId:  e.course?.id,
+          status:    e.isCompleted ? 'completed' : 'active',
+          thumbnail: e.course?.thumbnail,
+        },
       })),
       ...labProgress.map((l: any) => ({
         id: l.id, type: 'lab',
-        date: l.updatedAt,
+        date: l.lastAccess ?? l.completedAt,
         title: `Lab activity: "${l.lab?.title ?? 'lab'}"`,
-        meta: { labId: l.lab?.id, status: l.status },
+        meta: {
+          labId:  l.lab?.id,
+          status: l.completedAt ? 'completed' : l.flagSubmitted ? 'flag_submitted' : 'in_progress',
+        },
       })),
       ...badges.map((b: any) => ({
         id: b.id, type: 'badge',
         date: b.awardedAt,
-        title: `Earned badge: "${b.badge?.name ?? 'badge'}"`,
-        meta: { badgeId: b.badge?.id, icon: b.badge?.icon },
+        title: `Earned badge: "${b.badge?.title ?? 'badge'}"`,
+        meta: { badgeId: b.badge?.id, icon: b.badge?.iconUrl },
       })),
       ...notifications.map((n: any) => ({
         id: n.id, type: 'notification',
@@ -202,7 +210,6 @@ export class AdminUsersService {
       })),
     ];
 
-    // Sort by date desc, paginate
     items.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
     const paginated = items.slice(skip, skip + limit);
 
@@ -228,7 +235,7 @@ export class AdminUsersService {
 
     return this.prisma.user.update({
       where: { id: targetId },
-      data: { role: dto.role },
+      data:  { role: dto.role },
       select: { id: true, name: true, email: true, role: true },
     });
   }
