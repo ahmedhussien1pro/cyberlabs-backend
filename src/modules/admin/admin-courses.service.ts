@@ -121,7 +121,6 @@ function normalizeCourse(raw: any): any {
     enrollmentCount,
     totalTopics,
     labSlugs,
-    // ensure arrays are always arrays
     tags:             Array.isArray(rest.tags)             ? rest.tags             : [],
     skills:           Array.isArray(rest.skills)           ? rest.skills           : [],
     ar_skills:        Array.isArray(rest.ar_skills)        ? rest.ar_skills        : [],
@@ -129,7 +128,6 @@ function normalizeCourse(raw: any): any {
     ar_topics:        Array.isArray(rest.ar_topics)        ? rest.ar_topics        : [],
     prerequisites:    Array.isArray(rest.prerequisites)    ? rest.prerequisites    : [],
     ar_prerequisites: Array.isArray(rest.ar_prerequisites) ? rest.ar_prerequisites : [],
-    // derive state from isPublished when state field not present
     state: rest.state ?? (rest.isPublished ? 'PUBLISHED' : 'DRAFT'),
   };
 }
@@ -196,7 +194,6 @@ export class AdminCoursesService {
 
   // ─── Single — accepts UUID id OR slug ─────────────────────────────────────
   async findOne(idOrSlug: string) {
-    // Try by primary key first (UUID format check)
     const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(idOrSlug);
 
     let raw: any = null;
@@ -208,7 +205,6 @@ export class AdminCoursesService {
       });
     }
 
-    // Fallback: search by slug (covers non-UUID ids and actual slugs)
     if (!raw) {
       raw = await (this.prisma.course as any).findUnique({
         where: { slug: idOrSlug },
@@ -221,6 +217,42 @@ export class AdminCoursesService {
     }
 
     return { data: normalizeCourse(raw) };
+  }
+
+  // ─── Get Curriculum (topics JSON field) ────────────────────────────────────
+  /**
+   * The curriculum editor stores rich-content topics as a JSON array
+   * in Course.topics (Json[] in the Prisma schema).
+   * This endpoint returns that array together with computed metadata.
+   */
+  async getCurriculum(idOrSlug: string) {
+    const { data: course } = await this.findOne(idOrSlug);
+    const topics = Array.isArray(course.topics) ? course.topics : [];
+    return {
+      data: {
+        topics,
+        totalTopics: topics.length,
+        courseId: course.id,
+        courseSlug: course.slug,
+        courseTitle: course.title,
+        landingData: null,
+      },
+    };
+  }
+
+  // ─── Save Curriculum (topics JSON field) ───────────────────────────────────
+  async saveCurriculum(idOrSlug: string, topics: object[]) {
+    const { data: existing } = await this.findOne(idOrSlug);
+    const updated = await (this.prisma.course as any).update({
+      where: { id: existing.id },
+      data: { topics },
+    });
+    return {
+      data: {
+        topics: Array.isArray(updated.topics) ? updated.topics : [],
+        totalTopics: Array.isArray(updated.topics) ? updated.topics.length : 0,
+      },
+    };
   }
 
   // ─── Create ────────────────────────────────────────────────────────────────
@@ -251,7 +283,7 @@ export class AdminCoursesService {
     return { data: normalizeCourse(updated) };
   }
 
-  // ─── Curriculum ────────────────────────────────────────────────────────────
+  // ─── Update Curriculum (sections model — legacy) ───────────────────────────
   async updateCurriculum(idOrSlug: string, dto: UpdateCurriculumDto) {
     const { data: existing } = await this.findOne(idOrSlug);
     const id = existing.id;
@@ -325,7 +357,11 @@ export class AdminCoursesService {
       candidateSlug = `${baseSlug}-${attempt}`;
     }
 
-    const { id: _id, createdAt: _c, updatedAt: _u, sections, labSlugs: _l, enrollmentCount: _e, totalTopics: _t, ...rest } = original as any;
+    const {
+      id: _id, createdAt: _c, updatedAt: _u,
+      sections, labSlugs: _l, enrollmentCount: _e, totalTopics: _t,
+      ...rest
+    } = original as any;
 
     const copy = await this.prisma.$transaction(async (tx) => {
       const newCourse = await (tx as any).course.create({
@@ -445,9 +481,18 @@ export class AdminCoursesService {
 }
 
 // ─── Helper ────────────────────────────────────────────────────────────────
-async function ensureDefaultModule(tx: any, courseId: string, sectionId: string, order: number): Promise<string> {
-  const existing = await tx.module.findFirst({ where: { courseId, id: { contains: sectionId } } });
+async function ensureDefaultModule(
+  tx: any,
+  courseId: string,
+  sectionId: string,
+  order: number,
+): Promise<string> {
+  const existing = await tx.module.findFirst({
+    where: { courseId, id: { contains: sectionId } },
+  });
   if (existing) return existing.id;
-  const mod = await tx.module.create({ data: { courseId, title: 'Default Module', order } });
+  const mod = await tx.module.create({
+    data: { courseId, title: 'Default Module', order },
+  });
   return mod.id;
 }
