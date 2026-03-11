@@ -43,10 +43,22 @@ export class AdminCoursesController {
     return this.adminCoursesService.findAll(query);
   }
 
-  /** GET /admin/courses/:id */
+  /** GET /admin/courses/:id — accepts UUID id OR slug */
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.adminCoursesService.findOne(id);
+  }
+
+  /** GET /admin/courses/:id/curriculum */
+  @Get(':id/curriculum')
+  getCurriculum(@Param('id') id: string) {
+    return this.adminCoursesService.getCurriculum(id);
+  }
+
+  /** GET /admin/courses/:id/labs */
+  @Get(':id/labs')
+  getCourseLabs(@Param('id') id: string) {
+    return this.adminCoursesService.getCourseLabs(id);
   }
 
   /** POST /admin/courses */
@@ -71,10 +83,7 @@ export class AdminCoursesController {
       storage: memoryStorage(),
       fileFilter: (_req, file, cb) => {
         if (!file.originalname.endsWith('.json')) {
-          return cb(
-            new BadRequestException('Only .json files are allowed'),
-            false,
-          );
+          return cb(new BadRequestException('Only .json files are allowed'), false);
         }
         cb(null, true);
       },
@@ -85,20 +94,14 @@ export class AdminCoursesController {
     @UploadedFile() file: Express.Multer.File,
     @Body('metadata') metadataRaw: string,
   ) {
-    if (!file) {
-      throw new BadRequestException('JSON course file is required');
-    }
-    if (!metadataRaw) {
-      throw new BadRequestException('metadata field is required');
-    }
-
+    if (!file) throw new BadRequestException('JSON course file is required');
+    if (!metadataRaw) throw new BadRequestException('metadata field is required');
     let metadata: ImportCourseDto;
     try {
       metadata = JSON.parse(metadataRaw) as ImportCourseDto;
     } catch {
       throw new BadRequestException('metadata must be a valid JSON string');
     }
-
     return this.adminCoursesService.importJson(file.buffer, metadata);
   }
 
@@ -108,16 +111,10 @@ export class AdminCoursesController {
     return this.adminCoursesService.update(id, dto);
   }
 
-  /**
-   * PUT /admin/courses/:id/curriculum
-   * Atomically replaces all sections / modules / lessons for a course.
-   */
+  /** PUT /admin/courses/:id/curriculum */
   @Put(':id/curriculum')
   @HttpCode(HttpStatus.OK)
-  updateCurriculum(
-    @Param('id') id: string,
-    @Body() dto: UpdateCurriculumDto,
-  ) {
+  updateCurriculum(@Param('id') id: string, @Body() dto: UpdateCurriculumDto) {
     return this.adminCoursesService.updateCurriculum(id, dto);
   }
 
@@ -142,43 +139,24 @@ export class AdminCoursesController {
     return this.adminCoursesService.remove(id);
   }
 
-  // ══════════════════════════════════════════════════════════
-  // Course ↔ Lab relationship endpoints
-  // ══════════════════════════════════════════════════════════
-
-  /** GET /admin/courses/:id/labs */
-  @Get(':id/labs')
-  getCourseLabs(@Param('id') id: string) {
-    return this.adminCoursesService.getCourseLabs(id);
-  }
-
-  /** PATCH /admin/courses/:id/labs/reorder  — must be BEFORE :id/labs/:labId */
+  /** PATCH /admin/courses/:id/labs/reorder — must be BEFORE :id/labs/:labId */
   @Patch(':id/labs/reorder')
   @HttpCode(HttpStatus.OK)
-  reorderLabs(
-    @Param('id') id: string,
-    @Body() body: { order: string[] },
-  ) {
+  reorderLabs(@Param('id') id: string, @Body() body: { order: string[] }) {
     return this.adminCoursesService.reorderLabs(id, body.order);
   }
 
   /** POST /admin/courses/:id/labs/:labId */
   @Post(':id/labs/:labId')
   @HttpCode(HttpStatus.CREATED)
-  attachLab(
-    @Param('id') id: string,
-    @Param('labId') labId: string,
-  ) {
+  attachLab(@Param('id') id: string, @Param('labId') labId: string) {
     return this.adminCoursesService.attachLab(id, labId);
   }
 
   /** DELETE /admin/courses/:id/labs/:labId */
   @Delete(':id/labs/:labId')
   @HttpCode(HttpStatus.OK)
-  detachLab(
-    @Param('id') id: string,
-    @Param('labId') labId: string,
-  ) {
+  detachLab(@Param('id') id: string, @Param('labId') labId: string) {
     return this.adminCoursesService.detachLab(id, labId);
   }
 }
