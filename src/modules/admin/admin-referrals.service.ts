@@ -28,20 +28,26 @@ export class AdminReferralsService {
       },
     });
 
-    const totalLinks         = links.length;
-    const totalClicks        = links.reduce((s, l) => s + (l._count?.clicks ?? 0), 0);
+    const totalLinks = links.length;
+    const totalClicks = links.reduce((s, l) => s + (l._count?.clicks ?? 0), 0);
     const totalRegistrations = links.reduce(
-      (s, l) => s + l.clicks.filter((c: any) => c.convertedAt != null).length, 0,
+      (s, l) => s + l.clicks.filter((c: any) => c.convertedAt != null).length,
+      0,
     );
 
     // Group by source
-    const sourceMap = new Map<string, { clicks: number; registrations: number }>();
+    const sourceMap = new Map<
+      string,
+      { clicks: number; registrations: number }
+    >();
     for (const l of links) {
-      const src  = l.source;
+      const src = l.source;
       const prev = sourceMap.get(src) ?? { clicks: 0, registrations: 0 };
       sourceMap.set(src, {
-        clicks:        prev.clicks + (l._count?.clicks ?? 0),
-        registrations: prev.registrations + l.clicks.filter((c: any) => c.convertedAt != null).length,
+        clicks: prev.clicks + (l._count?.clicks ?? 0),
+        registrations:
+          prev.registrations +
+          l.clicks.filter((c: any) => c.convertedAt != null).length,
       });
     }
 
@@ -49,7 +55,10 @@ export class AdminReferralsService {
       totalLinks,
       totalClicks,
       totalRegistrations,
-      bySource: Array.from(sourceMap.entries()).map(([source, data]) => ({ source, ...data })),
+      bySource: Array.from(sourceMap.entries()).map(([source, data]) => ({
+        source,
+        ...data,
+      })),
     };
   }
 
@@ -59,15 +68,15 @@ export class AdminReferralsService {
 
     const link = await this.prisma.referralLink.create({
       data: {
-        label:          dto.label,
-        slug:           dto.slug,
-        source:         dto.source,
-        targetUserId:   dto.targetUserId ?? null,
+        label: dto.label,
+        slug: dto.slug,
+        source: dto.source,
+        targetUserId: dto.targetUserId ?? null,
         targetUserName: dto.targetUserName ?? null,
-        url:            `${baseUrl}/ref/${dto.slug}`,
+        url: `${baseUrl}/ref/${dto.slug}`,
       },
       include: {
-        _count:     { select: { clicks: true } },
+        _count: { select: { clicks: true } },
         targetUser: { select: { id: true, name: true } },
       },
     });
@@ -77,24 +86,28 @@ export class AdminReferralsService {
 
   // ── DELETE /admin/referrals/:id ───────────────────────────────────────────
   async remove(id: string) {
-    const existing = await this.prisma.referralLink.findUnique({ where: { id } });
-    if (!existing) throw new NotFoundException(`Referral link "${id}" not found`);
+    const existing = await this.prisma.referralLink.findUnique({
+      where: { id },
+    });
+    if (!existing)
+      throw new NotFoundException(`Referral link "${id}" not found`);
     await this.prisma.referralLink.delete({ where: { id } });
   }
 
   // ── private ───────────────────────────────────────────────────────────────
   private formatLink(l: any) {
     return {
-      id:             l.id,
-      label:          l.label,
-      slug:           l.slug,
-      source:         l.source,
-      targetUserId:   l.targetUserId,
+      id: l.id,
+      label: l.label,
+      slug: l.slug,
+      source: l.source,
+      targetUserId: l.targetUserId,
       targetUserName: l.targetUserName ?? l.targetUser?.name,
-      clicks:         l._count?.clicks ?? 0,
-      registrations:  l.clicks?.filter((c: any) => c.convertedAt != null).length ?? 0,
-      url:            l.url,
-      createdAt:      l.createdAt,
+      clicks: l._count?.clicks ?? 0,
+      registrations:
+        l.clicks?.filter((c: any) => c.convertedAt != null).length ?? 0,
+      url: l.url,
+      createdAt: l.createdAt,
     };
   }
 }
