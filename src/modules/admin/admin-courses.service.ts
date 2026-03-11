@@ -20,7 +20,6 @@ function generateSlug(base: string): string {
     .substring(0, 80);
 }
 
-/** Full select — returned for single-course endpoints */
 const COURSE_FULL_SELECT = {
   id: true,
   slug: true,
@@ -56,18 +55,12 @@ const COURSE_FULL_SELECT = {
   _count: { select: { enrollments: true } },
   courseLabs: {
     orderBy: { order: 'asc' as const },
-    select: {
-      lab: {
-        select: { id: true, slug: true, title: true },
-      },
-    },
+    select: { lab: { select: { id: true, slug: true, title: true } } },
   },
   sections: {
     orderBy: { order: 'asc' as const },
     select: {
-      id: true,
-      title: true,
-      order: true,
+      id: true, title: true, order: true,
       lessons: {
         orderBy: { order: 'asc' as const },
         select: { id: true, title: true, order: true },
@@ -76,7 +69,6 @@ const COURSE_FULL_SELECT = {
   },
 };
 
-/** Minimal select — used for list endpoints */
 const COURSE_LIST_SELECT = {
   id: true,
   title: true,
@@ -98,26 +90,30 @@ const COURSE_LIST_SELECT = {
   createdAt: true,
   updatedAt: true,
   _count: { select: { enrollments: true, sections: true } },
-  courseLabs: {
-    select: { lab: { select: { slug: true } } },
-  },
+  courseLabs: { select: { lab: { select: { slug: true } } } },
 };
 
-/** Normalise a raw course record into the shape the admin frontend expects */
 function normalizeCourse(raw: any): any {
-  const labSlugs: string[] = (raw.courseLabs ?? []).map(
-    (cl: any) => cl.lab?.slug ?? '',
-  ).filter(Boolean);
+  const labSlugs: string[] = (raw.courseLabs ?? [])
+    .map((cl: any) => cl.lab?.slug ?? '')
+    .filter(Boolean);
 
-  const enrollmentCount =
-    raw._count?.enrollments ?? raw.enrollmentCount ?? 0;
+  const enrollmentCount = raw._count?.enrollments ?? raw.enrollmentCount ?? 0;
   const totalTopics =
     raw._count?.sections ?? raw.totalTopics ?? (raw.sections?.length ?? 0);
 
   const { _count, courseLabs, ...rest } = raw;
 
+  // Derive state: if isPublished=true always show PUBLISHED regardless of stored state
+  const state = rest.isPublished
+    ? 'PUBLISHED'
+    : rest.state && rest.state !== 'PUBLISHED'
+      ? rest.state
+      : 'DRAFT';
+
   return {
     ...rest,
+    state,
     enrollmentCount,
     totalTopics,
     labSlugs,
@@ -128,7 +124,6 @@ function normalizeCourse(raw: any): any {
     ar_topics:        Array.isArray(rest.ar_topics)        ? rest.ar_topics        : [],
     prerequisites:    Array.isArray(rest.prerequisites)    ? rest.prerequisites    : [],
     ar_prerequisites: Array.isArray(rest.ar_prerequisites) ? rest.ar_prerequisites : [],
-    state: rest.state ?? (rest.isPublished ? 'PUBLISHED' : 'DRAFT'),
   };
 }
 
@@ -156,9 +151,9 @@ export class AdminCoursesService {
 
   // ─── List ──────────────────────────────────────────────────────────────────
   async findAll(query: AdminCourseQueryDto) {
-    const page = Math.max(1, query.page ?? 1);
+    const page  = Math.max(1, query.page  ?? 1);
     const limit = Math.min(100, Math.max(1, query.limit ?? 20));
-    const skip = (page - 1) * limit;
+    const skip  = (page - 1) * limit;
 
     const where: any = {};
     if (query.search) {
@@ -177,9 +172,7 @@ export class AdminCoursesService {
 
     const [rows, total] = await Promise.all([
       this.prisma.course.findMany({
-        where,
-        skip,
-        take: limit,
+        where, skip, take: limit,
         orderBy: { createdAt: 'desc' },
         select: COURSE_LIST_SELECT,
       }),
@@ -192,9 +185,10 @@ export class AdminCoursesService {
     };
   }
 
-  // ─── Single — accepts UUID id OR slug ─────────────────────────────────────
+  // ─── Single (id or slug) ───────────────────────────────────────────────────
   async findOne(idOrSlug: string) {
-    const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(idOrSlug);
+    const isUuid =
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(idOrSlug);
 
     let raw: any = null;
 
@@ -212,19 +206,12 @@ export class AdminCoursesService {
       });
     }
 
-    if (!raw) {
-      throw new NotFoundException(`Course "${idOrSlug}" not found`);
-    }
+    if (!raw) throw new NotFoundException(`Course "${idOrSlug}" not found`);
 
     return { data: normalizeCourse(raw) };
   }
 
-  // ─── Get Curriculum (topics JSON field) ────────────────────────────────────
-  /**
-   * The curriculum editor stores rich-content topics as a JSON array
-   * in Course.topics (Json[] in the Prisma schema).
-   * This endpoint returns that array together with computed metadata.
-   */
+  // ─── Get Curriculum ────────────────────────────────────────────────────────
   async getCurriculum(idOrSlug: string) {
     const { data: course } = await this.findOne(idOrSlug);
     const topics = Array.isArray(course.topics) ? course.topics : [];
@@ -232,15 +219,15 @@ export class AdminCoursesService {
       data: {
         topics,
         totalTopics: topics.length,
-        courseId: course.id,
-        courseSlug: course.slug,
+        courseId:    course.id,
+        courseSlug:  course.slug,
         courseTitle: course.title,
         landingData: null,
       },
     };
   }
 
-  // ─── Save Curriculum (topics JSON field) ───────────────────────────────────
+  // ─── Save Curriculum ───────────────────────────────────────────────────────
   async saveCurriculum(idOrSlug: string, topics: object[]) {
     const { data: existing } = await this.findOne(idOrSlug);
     const updated = await (this.prisma.course as any).update({
@@ -249,7 +236,7 @@ export class AdminCoursesService {
     });
     return {
       data: {
-        topics: Array.isArray(updated.topics) ? updated.topics : [],
+        topics:      Array.isArray(updated.topics) ? updated.topics : [],
         totalTopics: Array.isArray(updated.topics) ? updated.topics.length : 0,
       },
     };
@@ -259,15 +246,9 @@ export class AdminCoursesService {
   async create(dto: CreateCourseDto) {
     const slug = (dto as any).slug ?? generateSlug(dto.title);
     const existing = await this.prisma.course.findUnique({ where: { slug } });
-    if (existing) {
-      throw new BadRequestException(`Slug "${slug}" already exists`);
-    }
+    if (existing) throw new BadRequestException(`Slug "${slug}" already exists`);
     const course = await this.prisma.course.create({
-      data: {
-        ...dto,
-        slug,
-        isPublished: (dto as any).isPublished ?? false,
-      } as any,
+      data: { ...dto, slug, isPublished: (dto as any).isPublished ?? false } as any,
     });
     return { data: normalizeCourse(course) };
   }
@@ -287,27 +268,24 @@ export class AdminCoursesService {
   async updateCurriculum(idOrSlug: string, dto: UpdateCurriculumDto) {
     const { data: existing } = await this.findOne(idOrSlug);
     const id = existing.id;
-    const dtoAny = dto as any;
-    const sections: any[] = dtoAny.sections ?? [];
+    const sections: any[] = (dto as any).sections ?? [];
 
     await this.prisma.$transaction(async (tx) => {
       await (tx as any).section.deleteMany({ where: { courseId: id } });
-
       for (const [si, section] of sections.entries()) {
         const sec = await (tx as any).section.create({
           data: { courseId: id, title: section.title, order: section.order ?? si },
         });
-
         for (const [li, lesson] of ((section.lessons ?? section.modules ?? []) as any[]).entries()) {
           await (tx as any).lesson.create({
             data: {
               sectionId: sec.id,
-              courseId: id,
-              title: lesson.title,
-              order: lesson.order ?? li,
-              content: lesson.content ?? '',
-              videoUrl: lesson.videoUrl ?? null,
-              moduleId: await ensureDefaultModule(tx as any, id, sec.id, si),
+              courseId:  id,
+              title:     lesson.title,
+              order:     lesson.order ?? li,
+              content:   lesson.content ?? '',
+              videoUrl:  lesson.videoUrl ?? null,
+              moduleId:  await ensureDefaultModule(tx as any, id, sec.id, si),
             },
           });
         }
@@ -317,22 +295,25 @@ export class AdminCoursesService {
     return this.findOne(id);
   }
 
-  // ─── Publish / Unpublish ───────────────────────────────────────────────────
+  // ─── Publish ───────────────────────────────────────────────────────────────
   async publish(idOrSlug: string) {
     const { data: existing } = await this.findOne(idOrSlug);
     const updated = await (this.prisma.course as any).update({
       where: { id: existing.id },
-      data: { isPublished: true },
+      // Update both isPublished AND state so both fields are consistent
+      data: { isPublished: true, state: 'PUBLISHED' },
       select: COURSE_FULL_SELECT,
     });
     return { data: normalizeCourse(updated) };
   }
 
+  // ─── Unpublish ─────────────────────────────────────────────────────────────
   async unpublish(idOrSlug: string) {
     const { data: existing } = await this.findOne(idOrSlug);
     const updated = await (this.prisma.course as any).update({
       where: { id: existing.id },
-      data: { isPublished: false },
+      // Revert to DRAFT when unpublishing
+      data: { isPublished: false, state: 'DRAFT' },
       select: COURSE_FULL_SELECT,
     });
     return { data: normalizeCourse(updated) };
@@ -367,28 +348,28 @@ export class AdminCoursesService {
       const newCourse = await (tx as any).course.create({
         data: {
           ...rest,
-          title: `${original.title} (Copy)`,
-          ar_title: original.ar_title ? `${original.ar_title} (نسخة)` : undefined,
-          slug: candidateSlug,
+          title:       `${original.title} (Copy)`,
+          ar_title:    original.ar_title ? `${original.ar_title} (نسخة)` : undefined,
+          slug:        candidateSlug,
           isPublished: false,
+          state:       'DRAFT',
         },
       });
-
       for (const [si, section] of ((sections ?? []) as any[]).entries()) {
         const sec = await (tx as any).section.create({
           data: { courseId: newCourse.id, title: section.title, order: section.order ?? si },
         });
-        const defaultModuleId = await ensureDefaultModule(tx as any, newCourse.id, sec.id, si);
+        const mid = await ensureDefaultModule(tx as any, newCourse.id, sec.id, si);
         for (const [li, lesson] of ((section.lessons ?? []) as any[]).entries()) {
           await (tx as any).lesson.create({
             data: {
               sectionId: sec.id,
-              courseId: newCourse.id,
-              moduleId: defaultModuleId,
-              title: lesson.title,
-              order: lesson.order ?? li,
-              content: lesson.content ?? '',
-              videoUrl: lesson.videoUrl ?? null,
+              courseId:  newCourse.id,
+              moduleId:  mid,
+              title:     lesson.title,
+              order:     lesson.order ?? li,
+              content:   lesson.content ?? '',
+              videoUrl:  lesson.videoUrl ?? null,
             },
           });
         }
@@ -465,13 +446,14 @@ export class AdminCoursesService {
 
     const course = await this.prisma.course.create({
       data: {
-        title: meta.title ?? parsed.title,
+        title:       meta.title       ?? parsed.title,
         slug,
         description: meta.description ?? parsed.description ?? null,
-        thumbnail: meta.thumbnail ?? parsed.thumbnail ?? null,
+        thumbnail:   meta.thumbnail   ?? parsed.thumbnail   ?? null,
         isPublished: false,
-        difficulty: meta.difficulty ?? meta.level ?? parsed.difficulty ?? parsed.level ?? null,
-        access: meta.access ?? parsed.access ?? null,
+        state:       'DRAFT',
+        difficulty:  meta.difficulty  ?? meta.level ?? parsed.difficulty ?? parsed.level ?? null,
+        access:      meta.access      ?? parsed.access ?? null,
         instructorId: meta.instructorId ?? parsed.instructorId,
       } as any,
     });
