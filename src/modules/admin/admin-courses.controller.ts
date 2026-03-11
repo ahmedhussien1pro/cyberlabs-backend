@@ -31,6 +31,8 @@ import { UpdateCurriculumDto } from './dto/update-curriculum.dto';
 export class AdminCoursesController {
   constructor(private readonly adminCoursesService: AdminCoursesService) {}
 
+  // ─ Static routes first (avoid :id param conflicts) ────────────────────────
+
   /** GET /admin/courses/stats */
   @Get('stats')
   getStats() {
@@ -43,36 +45,11 @@ export class AdminCoursesController {
     return this.adminCoursesService.findAll(query);
   }
 
-  /** GET /admin/courses/:id — accepts UUID id OR slug */
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.adminCoursesService.findOne(id);
-  }
-
-  /** GET /admin/courses/:id/curriculum */
-  @Get(':id/curriculum')
-  getCurriculum(@Param('id') id: string) {
-    return this.adminCoursesService.getCurriculum(id);
-  }
-
-  /** GET /admin/courses/:id/labs */
-  @Get(':id/labs')
-  getCourseLabs(@Param('id') id: string) {
-    return this.adminCoursesService.getCourseLabs(id);
-  }
-
   /** POST /admin/courses */
   @Post()
   @HttpCode(HttpStatus.CREATED)
   create(@Body() dto: CreateCourseDto) {
     return this.adminCoursesService.create(dto);
-  }
-
-  /** POST /admin/courses/:id/duplicate */
-  @Post(':id/duplicate')
-  @HttpCode(HttpStatus.CREATED)
-  duplicate(@Param('id') id: string) {
-    return this.adminCoursesService.duplicate(id);
   }
 
   /** POST /admin/courses/import-json */
@@ -105,17 +82,45 @@ export class AdminCoursesController {
     return this.adminCoursesService.importJson(file.buffer, metadata);
   }
 
+  // ─ Dynamic :id routes ──────────────────────────────────────────────────────
+
+  /** GET /admin/courses/:id — accepts UUID id OR slug */
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.adminCoursesService.findOne(id);
+  }
+
+  /** GET /admin/courses/:id/curriculum — returns topics JSON field */
+  @Get(':id/curriculum')
+  getCurriculum(@Param('id') id: string) {
+    return this.adminCoursesService.getCurriculum(id);
+  }
+
+  /** GET /admin/courses/:id/labs */
+  @Get(':id/labs')
+  getCourseLabs(@Param('id') id: string) {
+    return this.adminCoursesService.getCourseLabs(id);
+  }
+
   /** PATCH /admin/courses/:id */
   @Patch(':id')
   update(@Param('id') id: string, @Body() dto: UpdateCourseDto) {
     return this.adminCoursesService.update(id, dto);
   }
 
-  /** PUT /admin/courses/:id/curriculum */
+  /** PUT /admin/courses/:id/curriculum — save topics JSON (used by curriculum editor) */
   @Put(':id/curriculum')
   @HttpCode(HttpStatus.OK)
-  updateCurriculum(@Param('id') id: string, @Body() dto: UpdateCurriculumDto) {
-    return this.adminCoursesService.updateCurriculum(id, dto);
+  saveCurriculum(
+    @Param('id') id: string,
+    @Body() body: { topics?: object[]; sections?: any[] },
+  ) {
+    // Support both shapes: { topics: [...] } from curriculum editor
+    //                  and { sections: [...] } from legacy UpdateCurriculumDto
+    if (Array.isArray(body.topics)) {
+      return this.adminCoursesService.saveCurriculum(id, body.topics);
+    }
+    return this.adminCoursesService.updateCurriculum(id, body as UpdateCurriculumDto);
   }
 
   /** PATCH /admin/courses/:id/publish */
@@ -130,6 +135,13 @@ export class AdminCoursesController {
   @HttpCode(HttpStatus.OK)
   unpublish(@Param('id') id: string) {
     return this.adminCoursesService.unpublish(id);
+  }
+
+  /** POST /admin/courses/:id/duplicate */
+  @Post(':id/duplicate')
+  @HttpCode(HttpStatus.CREATED)
+  duplicate(@Param('id') id: string) {
+    return this.adminCoursesService.duplicate(id);
   }
 
   /** DELETE /admin/courses/:id */
