@@ -19,6 +19,7 @@ export interface CourseCardDto {
   contentType: string;
   isNew: boolean;
   isFeatured: boolean;
+  isPublished: boolean;
   totalTopics: number;
   estimatedHours: number;
   enrollmentCount: number;
@@ -48,7 +49,8 @@ export function toCourseCard(raw: any): CourseCardDto {
   return {
     ...rest,
     image: rest.thumbnail ?? null,
-    labsCount: _count?.labs ?? 0,
+    // ✅ FIXED: was _count?.labs (wrong field) — courseLabs is the junction table
+    labsCount: _count?.courseLabs ?? 0,
     userProgress: enrollment
       ? { progress: enrollment.progress, isCompleted: enrollment.isCompleted }
       : null,
