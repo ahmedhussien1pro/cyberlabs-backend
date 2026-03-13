@@ -1,40 +1,30 @@
-import { IsOptional, IsString, IsInt, Min, Max, IsEnum, IsBoolean } from 'class-validator';
-import { Transform, Type } from 'class-transformer';
-import { Difficulty, CATEGORY, CourseAccess, STATE } from '@prisma/client';
+import { IsOptional, IsInt, Min, IsString, IsEnum, IsBoolean } from 'class-validator';
+import { Type, Transform } from 'class-transformer';
 
 export class AdminCourseQueryDto {
   @IsOptional()
   @Type(() => Number)
   @IsInt()
   @Min(1)
-  page?: number = 1;
+  page?: number;
 
   @IsOptional()
   @Type(() => Number)
   @IsInt()
   @Min(1)
-  @Max(100)
-  limit?: number = 20;
+  limit?: number;
 
   @IsOptional()
   @IsString()
   search?: string;
 
   @IsOptional()
-  @IsEnum(Difficulty)
-  difficulty?: Difficulty;
+  @IsString()
+  difficulty?: string;
 
   @IsOptional()
-  @IsEnum(CATEGORY)
-  category?: CATEGORY;
-
-  @IsOptional()
-  @IsEnum(CourseAccess)
-  access?: CourseAccess;
-
-  @IsOptional()
-  @IsEnum(STATE)
-  state?: STATE;
+  @IsString()
+  access?: string;
 
   @IsOptional()
   @Transform(({ value }) => {
@@ -44,4 +34,9 @@ export class AdminCourseQueryDto {
   })
   @IsBoolean()
   isPublished?: boolean;
+
+  /** Filter by state: PUBLISHED | DRAFT | COMING_SOON */
+  @IsOptional()
+  @IsEnum(['PUBLISHED', 'DRAFT', 'COMING_SOON', 'all'])
+  state?: 'PUBLISHED' | 'DRAFT' | 'COMING_SOON' | 'all';
 }

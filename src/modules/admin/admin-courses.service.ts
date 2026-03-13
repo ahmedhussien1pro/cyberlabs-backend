@@ -104,12 +104,8 @@ function normalizeCourse(raw: any): any {
 
   const { _count, courseLabs, ...rest } = raw;
 
-  // Derive state: if isPublished=true always show PUBLISHED regardless of stored state
-  const state = rest.isPublished
-    ? 'PUBLISHED'
-    : rest.state && rest.state !== 'PUBLISHED'
-      ? rest.state
-      : 'DRAFT';
+  // Use state as stored in DB — update() keeps isPublished in sync so we can trust it
+  const state: string = rest.state ?? 'DRAFT';
 
   return {
     ...rest,
@@ -127,24 +123,32 @@ function normalizeCourse(raw: any): any {
   };
 }
 
+/** Derive isPublished from state to keep both fields in sync */
+function isPublishedFromState(state: string): boolean {
+  return state === 'PUBLISHED';
+}
+
 @Injectable()
 export class AdminCoursesService {
   constructor(private readonly prisma: PrismaService) {}
 
   // ─── Stats ─────────────────────────────────────────────────────────────────
   async getStats() {
-    const [total, published] = await Promise.all([
+    const [total, published, comingSoon, featured] = await Promise.all([
       this.prisma.course.count(),
-      this.prisma.course.count({ where: { isPublished: true } }),
+      this.prisma.course.count({ where: { state: 'PUBLISHED' } }),
+      this.prisma.course.count({ where: { state: 'COMING_SOON' } }),
+      this.prisma.course.count({ where: { isFeatured: true } }),
     ]);
+    const draft = total - published - comingSoon;
     return {
       data: {
         total,
         published,
+        draft: Math.max(0, draft),
+        comingSoon,
+        featured,
         unpublished: total - published,
-        draft: total - published,
-        comingSoon: 0,
-        featured: 0,
       },
     };
   }
@@ -166,6 +170,10 @@ export class AdminCoursesService {
     if (query.isPublished !== undefined) {
       where.isPublished =
         query.isPublished === true || query.isPublished === ('true' as any);
+    }
+    // Filter by state if provided (supports PUBLISHED, DRAFT, COMING_SOON)
+    if ((query as any).state && (query as any).state !== 'all') {
+      where.state = (query as any).state;
     }
     if (query.difficulty) where.difficulty = query.difficulty;
     if (query.access)     where.access     = query.access;
@@ -256,9 +264,16 @@ export class AdminCoursesService {
   // ─── Update ────────────────────────────────────────────────────────────────
   async update(idOrSlug: string, dto: UpdateCourseDto) {
     const { data: existing } = await this.findOne(idOrSlug);
+
+    // If state is being changed, keep isPublished in sync automatically
+    const updateData: any = { ...dto };
+    if (updateData.state !== undefined) {
+      updateData.isPublished = isPublishedFromState(updateData.state);
+    }
+
     const updated = await (this.prisma.course as any).update({
       where: { id: existing.id },
-      data: dto as any,
+      data: updateData,
       select: COURSE_FULL_SELECT,
     });
     return { data: normalizeCourse(updated) };
@@ -300,7 +315,6 @@ export class AdminCoursesService {
     const { data: existing } = await this.findOne(idOrSlug);
     const updated = await (this.prisma.course as any).update({
       where: { id: existing.id },
-      // Update both isPublished AND state so both fields are consistent
       data: { isPublished: true, state: 'PUBLISHED' },
       select: COURSE_FULL_SELECT,
     });
@@ -312,7 +326,6 @@ export class AdminCoursesService {
     const { data: existing } = await this.findOne(idOrSlug);
     const updated = await (this.prisma.course as any).update({
       where: { id: existing.id },
-      // Revert to DRAFT when unpublishing
       data: { isPublished: false, state: 'DRAFT' },
       select: COURSE_FULL_SELECT,
     });
@@ -446,14 +459,14 @@ export class AdminCoursesService {
 
     const course = await this.prisma.course.create({
       data: {
-        title:       meta.title       ?? parsed.title,
+        title:        meta.title        ?? parsed.title,
         slug,
-        description: meta.description ?? parsed.description ?? null,
-        thumbnail:   meta.thumbnail   ?? parsed.thumbnail   ?? null,
-        isPublished: false,
-        state:       'DRAFT',
-        difficulty:  meta.difficulty  ?? meta.level ?? parsed.difficulty ?? parsed.level ?? null,
-        access:      meta.access      ?? parsed.access ?? null,
+        description:  meta.description  ?? parsed.description  ?? null,
+        thumbnail:    meta.thumbnail    ?? parsed.thumbnail    ?? null,
+        isPublished:  false,
+        state:        'DRAFT',
+        difficulty:   meta.difficulty   ?? meta.level ?? parsed.difficulty ?? parsed.level ?? null,
+        access:       meta.access       ?? parsed.access ?? null,
         instructorId: meta.instructorId ?? parsed.instructorId,
       } as any,
     });
