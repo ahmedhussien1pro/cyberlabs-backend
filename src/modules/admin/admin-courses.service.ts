@@ -10,6 +10,8 @@ import { CreateCourseDto } from './dto/create-course.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
 import { ImportCourseDto } from './dto/import-course.dto';
 import { UpdateCurriculumDto } from './dto/update-curriculum.dto';
+import { readFileSync, existsSync, readdirSync, writeFileSync } from 'fs';
+import { join } from 'path';
 
 // ─── helpers ───────────────────────────────────────────────────────────────────
 function generateSlug(base: string): string {
@@ -28,6 +30,68 @@ function isPublishedFromState(state: string): boolean {
 function safeNumber(val: any, fallback = 0): number {
   const n = Number(val);
   return isNaN(n) ? fallback : n;
+}
+
+// ─── JSON curriculum helpers (same logic as courses.service getCurriculum) ─────
+const COURSE_DATA_DIR = join(
+  process.cwd(),
+  'prisma/seed-data/course-data',
+);
+
+function normalizeName(s: string) {
+  return s.toLowerCase().replace(/[-_\s&.,!()'"\+]/g, '');
+}
+
+/**
+ * Try to find the JSON file for a course by slug or title.
+ * Returns parsed JSON or null.
+ */
+function readCourseJson(slug: string, title: string): any | null {
+  const exact = [
+    join(COURSE_DATA_DIR, `${slug}.json`),
+    join(COURSE_DATA_DIR, `${title}.json`),
+  ];
+  for (const p of exact) {
+    if (existsSync(p)) {
+      try { return JSON.parse(readFileSync(p, 'utf-8')); } catch { /* skip */ }
+    }
+  }
+
+  // fuzzy match
+  let files: string[];
+  try {
+    files = readdirSync(COURSE_DATA_DIR).filter(
+      (f) => f.endsWith('.json') && !f.endsWith('.ts'),
+    );
+  } catch { return null; }
+
+  const slugNorm  = normalizeName(slug);
+  const titleNorm = normalizeName(title);
+
+  for (const file of files) {
+    const fileNorm = normalizeName(file.replace('.json', ''));
+    if (
+      fileNorm === slugNorm  ||
+      fileNorm === titleNorm ||
+      fileNorm.includes(slugNorm)  ||
+      slugNorm.includes(fileNorm)  ||
+      fileNorm.includes(titleNorm) ||
+      titleNorm.includes(fileNorm)
+    ) {
+      try { return JSON.parse(readFileSync(join(COURSE_DATA_DIR, file), 'utf-8')); }
+      catch { return null; }
+    }
+  }
+  return null;
+}
+
+/**
+ * Write (or overwrite) the JSON file for a course.
+ * File name = course title (same convention used by the platform).
+ */
+function writeCourseJson(title: string, data: any): void {
+  const filePath = join(COURSE_DATA_DIR, `${title}.json`);
+  writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf-8');
 }
 
 const COURSE_FULL_SELECT = {
@@ -224,17 +288,38 @@ export class AdminCoursesService {
   }
 
   // ─── Get Curriculum ──────────────────────────────────────────────────────
+  /**
+   * Returns curriculum in the SAME shape as the platform's GET /courses/:slug/curriculum
+   * Shape: { data: { topics: CurriculumTopic[], totalTopics, landingData } }
+   *
+   * Strategy:
+   * 1. Try to read from JSON file on disk (authoritative source, full rich content)
+   * 2. If not found → build from DB sections/lessons (fallback, limited content)
+   */
   async getCurriculum(idOrSlug: string) {
-    // Return sections+lessons (the real LMS data) alongside the topics string[]
-    const isUuid =
-      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(idOrSlug);
+    const { data: course } = await this.findOne(idOrSlug);
 
-    const where = isUuid ? { id: idOrSlug } : { slug: idOrSlug };
+    // 1️⃣ Try JSON file first (same as platform)
+    const json = readCourseJson(course.slug, course.title);
+    if (json) {
+      const topics = json.topics ?? [];
+      return {
+        data: {
+          topics,
+          totalTopics: topics.length,
+          landingData: json.landingData ?? null,
+          courseId:    course.id,
+          courseSlug:  course.slug,
+          courseTitle: course.title,
+          source: 'json' as const,
+        },
+      };
+    }
 
-    const course = await (this.prisma.course as any).findUnique({
-      where,
+    // 2️⃣ Fallback: build from DB — return same shape so editor can handle it
+    const dbCourse = await (this.prisma.course as any).findUnique({
+      where: { id: course.id },
       select: {
-        id: true, slug: true, title: true, topics: true,
         sections: {
           orderBy: { order: 'asc' as const },
           select: {
@@ -244,7 +329,7 @@ export class AdminCoursesService {
               select: {
                 id: true, title: true, ar_title: true,
                 order: true, type: true, duration: true,
-                videoUrl: true, isPreview: true,
+                videoUrl: true, isPreview: true, content: true,
               },
             },
           },
@@ -252,21 +337,18 @@ export class AdminCoursesService {
       },
     });
 
-    if (!course) throw new NotFoundException(`Course "${idOrSlug}" not found`);
-
-    // Build topics array matching the frontend editor shape:
-    // { id, title, elements: [...lessons] }
-    const topics = (course.sections ?? []).map((sec: any) => ({
-      id:       sec.id,
-      title:    sec.title,
+    const topics = ((dbCourse?.sections ?? []) as any[]).map((sec: any) => ({
+      id:    sec.id,
+      title: { en: sec.title ?? '', ar: sec.ar_title ?? '' },
       elements: (sec.lessons ?? []).map((l: any) => ({
-        id:       l.id,
-        title:    l.title,
-        type:     l.type?.toLowerCase() ?? 'article',
-        duration: l.duration ?? 0,
-        videoUrl: l.videoUrl ?? null,
+        id:        l.id,
+        title:     { en: l.title ?? '', ar: l.ar_title ?? '' },
+        type:      l.type?.toLowerCase() ?? 'article',
+        duration:  l.duration ?? 0,
+        videoUrl:  l.videoUrl ?? null,
         isPreview: l.isPreview ?? false,
-        order:    l.order,
+        order:     l.order,
+        content:   l.content ?? '',
       })),
     }));
 
@@ -274,33 +356,51 @@ export class AdminCoursesService {
       data: {
         topics,
         totalTopics: topics.length,
+        landingData: null,
         courseId:    course.id,
         courseSlug:  course.slug,
         courseTitle: course.title,
+        source: 'db' as const,
       },
     };
   }
 
   // ─── Save Curriculum ─────────────────────────────────────────────────────
-  // Mirrors what seed-courses.ts does:
-  // 1. Save topic titles as String[] in Course.topics (for cards/display)
-  // 2. Rebuild Section + Module + Lesson rows from topics[].elements
+  /**
+   * Accepts same shape as CurriculumTopic[]:
+   *   topics: [{ id, title: {en, ar}, elements: [...] }]
+   *
+   * Actions:
+   * 1. Rebuild Section + Module + Lesson in DB
+   * 2. Write JSON file to disk so platform getCurriculum can read it
+   * 3. Update Course.topics (display strings) + totalTopics
+   */
   async saveCurriculum(idOrSlug: string, rawTopics: object[]) {
     const { data: existing } = await this.findOne(idOrSlug);
-    const courseId = existing.id;
+    const courseId    = existing.id;
+    const courseTitle = existing.title;
+    const courseSlug  = existing.slug;
 
-    // 1️⃣ Extract titles for Course.topics String[]
+    // 1️⃣ Extract display titles for Course.topics String[]
     const topicTitles: string[] = (rawTopics as any[])
       .map((t) => (typeof t.title === 'object' ? t.title?.en : t.title) ?? '')
       .filter(Boolean);
 
-    // 2️⃣ Update Course.topics + totalTopics
+    const arTopicTitles: string[] = (rawTopics as any[])
+      .map((t) => (typeof t.title === 'object' ? t.title?.ar : '') ?? '')
+      .filter(Boolean);
+
+    // 2️⃣ Update Course metadata
     await (this.prisma.course as any).update({
       where: { id: courseId },
-      data: { topics: topicTitles, totalTopics: topicTitles.length },
+      data: {
+        topics:      topicTitles,
+        ar_topics:   arTopicTitles,
+        totalTopics: topicTitles.length,
+      },
     });
 
-    // 3️⃣ Rebuild Sections + Modules + Lessons (same logic as seedCourseSections)
+    // 3️⃣ Rebuild Sections + Modules + Lessons
     await this.prisma.lesson.deleteMany({ where: { courseId } });
     await this.prisma.section.deleteMany({ where: { courseId } });
     await (this.prisma as any).module.deleteMany({ where: { courseId } });
@@ -358,9 +458,22 @@ export class AdminCoursesService {
       }
     }
 
+    // 4️⃣ Write JSON file — same format as seed JSON files so platform can read it
+    const existingJson = readCourseJson(courseSlug, courseTitle);
+    const updatedJson = {
+      landingData: existingJson?.landingData ?? null,
+      topics: rawTopics,
+    };
+    try {
+      writeCourseJson(courseTitle, updatedJson);
+    } catch (e: any) {
+      console.warn(`[AdminCourses] Could not write JSON file for "${courseTitle}":`, e?.message);
+    }
+
     return {
       data: {
         topics:      topicTitles,
+        ar_topics:   arTopicTitles,
         totalTopics: topicTitles.length,
       },
     };
@@ -580,9 +693,11 @@ export class AdminCoursesService {
     if (existing) throw new BadRequestException(`Slug "${slug}" already taken`);
 
     const state = meta.state ?? 'DRAFT';
+    const title = meta.title ?? parsed.title ?? slug;
+
     const course = await this.prisma.course.create({
       data: {
-        title:        meta.title        ?? parsed.title,
+        title,
         slug,
         description:  meta.description  ?? parsed.description  ?? null,
         thumbnail:    meta.thumbnail    ?? parsed.thumbnail    ?? null,
@@ -593,6 +708,22 @@ export class AdminCoursesService {
         instructorId: meta.instructorId ?? parsed.instructorId,
       } as any,
     });
+
+    // If the JSON file has topics, save curriculum from it too
+    if (parsed.topics && Array.isArray(parsed.topics) && parsed.topics.length > 0) {
+      try {
+        await this.saveCurriculum(course.id, parsed.topics);
+      } catch (e: any) {
+        console.warn(`[ImportJSON] saveCurriculum failed:`, e?.message);
+      }
+    } else {
+      // Write the JSON file as-is so platform can read it
+      try {
+        writeCourseJson(title, parsed);
+      } catch (e: any) {
+        console.warn(`[ImportJSON] writeCourseJson failed:`, e?.message);
+      }
+    }
 
     return { data: normalizeCourse(course) };
   }
