@@ -11,13 +11,31 @@ import { UpdateCourseDto } from './dto/update-course.dto';
 import { ImportCourseDto } from './dto/import-course.dto';
 import { UpdateCurriculumDto } from './dto/update-curriculum.dto';
 
-// ─── helpers ───────────────────────────────────────────────────────────────
+// ─── helpers ───────────────────────────────────────────────────────────────────
 function generateSlug(base: string): string {
   return base
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-|-$/g, '')
     .substring(0, 80);
+}
+
+/** Derive isPublished from state to keep both fields in sync */
+function isPublishedFromState(state: string): boolean {
+  return state === 'PUBLISHED';
+}
+
+/**
+ * Strip any keys injected by the frontend editor (landingData, imageMap, _importMode, etc.)
+ * from individual topic objects before persisting to the DB.
+ * Only { id, title, elements } are stored per topic.
+ */
+function cleanTopics(raw: object[]): object[] {
+  return raw.map((t: any) => ({
+    id:       t.id,
+    title:    t.title,
+    elements: Array.isArray(t.elements) ? t.elements : [],
+  }));
 }
 
 const COURSE_FULL_SELECT = {
@@ -104,12 +122,13 @@ function normalizeCourse(raw: any): any {
 
   const { _count, courseLabs, ...rest } = raw;
 
-  // Use state as stored in DB — update() keeps isPublished in sync so we can trust it
   const state: string = rest.state ?? 'DRAFT';
 
   return {
     ...rest,
     state,
+    // Always expose isPublished so the frontend and public API stay in sync
+    isPublished: isPublishedFromState(state),
     enrollmentCount,
     totalTopics,
     labSlugs,
@@ -123,16 +142,11 @@ function normalizeCourse(raw: any): any {
   };
 }
 
-/** Derive isPublished from state to keep both fields in sync */
-function isPublishedFromState(state: string): boolean {
-  return state === 'PUBLISHED';
-}
-
 @Injectable()
 export class AdminCoursesService {
   constructor(private readonly prisma: PrismaService) {}
 
-  // ─── Stats ─────────────────────────────────────────────────────────────────
+  // ─── Stats ─────────────────────────────────────────────────────────────
   async getStats() {
     const [total, published, comingSoon, featured] = await Promise.all([
       this.prisma.course.count(),
@@ -153,7 +167,7 @@ export class AdminCoursesService {
     };
   }
 
-  // ─── List ──────────────────────────────────────────────────────────────────
+  // ─── List ────────────────────────────────────────────────────────────────
   async findAll(query: AdminCourseQueryDto) {
     const page  = Math.max(1, query.page  ?? 1);
     const limit = Math.min(100, Math.max(1, query.limit ?? 20));
@@ -171,7 +185,6 @@ export class AdminCoursesService {
       where.isPublished =
         query.isPublished === true || query.isPublished === ('true' as any);
     }
-    // Filter by state if provided (supports PUBLISHED, DRAFT, COMING_SOON)
     if ((query as any).state && (query as any).state !== 'all') {
       where.state = (query as any).state;
     }
@@ -219,7 +232,7 @@ export class AdminCoursesService {
     return { data: normalizeCourse(raw) };
   }
 
-  // ─── Get Curriculum ────────────────────────────────────────────────────────
+  // ─── Get Curriculum ──────────────────────────────────────────────────────
   async getCurriculum(idOrSlug: string) {
     const { data: course } = await this.findOne(idOrSlug);
     const topics = Array.isArray(course.topics) ? course.topics : [];
@@ -230,14 +243,16 @@ export class AdminCoursesService {
         courseId:    course.id,
         courseSlug:  course.slug,
         courseTitle: course.title,
-        landingData: null,
+        landingData: (course as any).landingData ?? null,
       },
     };
   }
 
-  // ─── Save Curriculum ───────────────────────────────────────────────────────
-  async saveCurriculum(idOrSlug: string, topics: object[]) {
+  // ─── Save Curriculum ─────────────────────────────────────────────────────
+  async saveCurriculum(idOrSlug: string, rawTopics: object[]) {
     const { data: existing } = await this.findOne(idOrSlug);
+    // Strip any frontend-only keys before persisting
+    const topics = cleanTopics(rawTopics);
     const updated = await (this.prisma.course as any).update({
       where: { id: existing.id },
       data: { topics },
@@ -250,25 +265,34 @@ export class AdminCoursesService {
     };
   }
 
-  // ─── Create ────────────────────────────────────────────────────────────────
+  // ─── Create ───────────────────────────────────────────────────────────────
   async create(dto: CreateCourseDto) {
     const slug = (dto as any).slug ?? generateSlug(dto.title);
     const existing = await this.prisma.course.findUnique({ where: { slug } });
     if (existing) throw new BadRequestException(`Slug "${slug}" already exists`);
+
+    const state = (dto as any).state ?? 'DRAFT';
+    // ✅ Always derive isPublished from state so both fields are always in sync
+    const isPublished = isPublishedFromState(state);
+
     const course = await this.prisma.course.create({
-      data: { ...dto, slug, isPublished: (dto as any).isPublished ?? false } as any,
+      data: { ...dto, slug, state, isPublished } as any,
     });
     return { data: normalizeCourse(course) };
   }
 
-  // ─── Update ────────────────────────────────────────────────────────────────
+  // ─── Update ───────────────────────────────────────────────────────────────
   async update(idOrSlug: string, dto: UpdateCourseDto) {
     const { data: existing } = await this.findOne(idOrSlug);
 
-    // If state is being changed, keep isPublished in sync automatically
     const updateData: any = { ...dto };
+    // ✅ If state is being changed, always keep isPublished in sync
     if (updateData.state !== undefined) {
       updateData.isPublished = isPublishedFromState(updateData.state);
+    }
+    // ✅ If isPublished is being explicitly set without a state, derive state
+    if (updateData.isPublished !== undefined && updateData.state === undefined) {
+      updateData.state = updateData.isPublished ? 'PUBLISHED' : 'DRAFT';
     }
 
     const updated = await (this.prisma.course as any).update({
@@ -279,7 +303,7 @@ export class AdminCoursesService {
     return { data: normalizeCourse(updated) };
   }
 
-  // ─── Update Curriculum (sections model — legacy) ───────────────────────────
+  // ─── Update Curriculum (sections model — legacy) ─────────────────────────
   async updateCurriculum(idOrSlug: string, dto: UpdateCurriculumDto) {
     const { data: existing } = await this.findOne(idOrSlug);
     const id = existing.id;
@@ -310,7 +334,7 @@ export class AdminCoursesService {
     return this.findOne(id);
   }
 
-  // ─── Publish ───────────────────────────────────────────────────────────────
+  // ─── Publish ─────────────────────────────────────────────────────────────
   async publish(idOrSlug: string) {
     const { data: existing } = await this.findOne(idOrSlug);
     const updated = await (this.prisma.course as any).update({
@@ -321,7 +345,7 @@ export class AdminCoursesService {
     return { data: normalizeCourse(updated) };
   }
 
-  // ─── Unpublish ─────────────────────────────────────────────────────────────
+  // ─── Unpublish ────────────────────────────────────────────────────────────
   async unpublish(idOrSlug: string) {
     const { data: existing } = await this.findOne(idOrSlug);
     const updated = await (this.prisma.course as any).update({
@@ -332,14 +356,14 @@ export class AdminCoursesService {
     return { data: normalizeCourse(updated) };
   }
 
-  // ─── Delete ────────────────────────────────────────────────────────────────
+  // ─── Delete ───────────────────────────────────────────────────────────────
   async remove(idOrSlug: string) {
     const { data: existing } = await this.findOne(idOrSlug);
     await this.prisma.course.delete({ where: { id: existing.id } });
     return { data: { success: true, message: 'Course deleted successfully' } };
   }
 
-  // ─── Duplicate ─────────────────────────────────────────────────────────────
+  // ─── Duplicate ────────────────────────────────────────────────────────────
   async duplicate(idOrSlug: string) {
     const { data: original } = await this.findOne(idOrSlug);
 
@@ -457,14 +481,15 @@ export class AdminCoursesService {
     const existing = await this.prisma.course.findUnique({ where: { slug } });
     if (existing) throw new BadRequestException(`Slug "${slug}" already taken`);
 
+    const state = meta.state ?? 'DRAFT';
     const course = await this.prisma.course.create({
       data: {
         title:        meta.title        ?? parsed.title,
         slug,
         description:  meta.description  ?? parsed.description  ?? null,
         thumbnail:    meta.thumbnail    ?? parsed.thumbnail    ?? null,
-        isPublished:  false,
-        state:        'DRAFT',
+        state,
+        isPublished:  isPublishedFromState(state),
         difficulty:   meta.difficulty   ?? meta.level ?? parsed.difficulty ?? parsed.level ?? null,
         access:       meta.access       ?? parsed.access ?? null,
         instructorId: meta.instructorId ?? parsed.instructorId,
@@ -475,7 +500,7 @@ export class AdminCoursesService {
   }
 }
 
-// ─── Helper ────────────────────────────────────────────────────────────────
+// ─── Helper ───────────────────────────────────────────────────────────────────
 async function ensureDefaultModule(
   tx: any,
   courseId: string,
