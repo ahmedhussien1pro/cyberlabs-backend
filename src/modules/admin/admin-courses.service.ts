@@ -25,17 +25,9 @@ function isPublishedFromState(state: string): boolean {
   return state === 'PUBLISHED';
 }
 
-/**
- * Strip any keys injected by the frontend editor (landingData, imageMap, _importMode, etc.)
- * from individual topic objects before persisting to the DB.
- * Only { id, title, elements } are stored per topic.
- */
-function cleanTopics(raw: object[]): object[] {
-  return raw.map((t: any) => ({
-    id:       t.id,
-    title:    t.title,
-    elements: Array.isArray(t.elements) ? t.elements : [],
-  }));
+function safeNumber(val: any, fallback = 0): number {
+  const n = Number(val);
+  return isNaN(n) ? fallback : n;
 }
 
 const COURSE_FULL_SELECT = {
@@ -127,7 +119,6 @@ function normalizeCourse(raw: any): any {
   return {
     ...rest,
     state,
-    // Always expose isPublished so the frontend and public API stay in sync
     isPublished: isPublishedFromState(state),
     enrollmentCount,
     totalTopics,
@@ -234,8 +225,51 @@ export class AdminCoursesService {
 
   // ─── Get Curriculum ──────────────────────────────────────────────────────
   async getCurriculum(idOrSlug: string) {
-    const { data: course } = await this.findOne(idOrSlug);
-    const topics = Array.isArray(course.topics) ? course.topics : [];
+    // Return sections+lessons (the real LMS data) alongside the topics string[]
+    const isUuid =
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(idOrSlug);
+
+    const where = isUuid ? { id: idOrSlug } : { slug: idOrSlug };
+
+    const course = await (this.prisma.course as any).findUnique({
+      where,
+      select: {
+        id: true, slug: true, title: true, topics: true,
+        sections: {
+          orderBy: { order: 'asc' as const },
+          select: {
+            id: true, title: true, ar_title: true, order: true,
+            lessons: {
+              orderBy: { order: 'asc' as const },
+              select: {
+                id: true, title: true, ar_title: true,
+                order: true, type: true, duration: true,
+                videoUrl: true, isPreview: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (!course) throw new NotFoundException(`Course "${idOrSlug}" not found`);
+
+    // Build topics array matching the frontend editor shape:
+    // { id, title, elements: [...lessons] }
+    const topics = (course.sections ?? []).map((sec: any) => ({
+      id:       sec.id,
+      title:    sec.title,
+      elements: (sec.lessons ?? []).map((l: any) => ({
+        id:       l.id,
+        title:    l.title,
+        type:     l.type?.toLowerCase() ?? 'article',
+        duration: l.duration ?? 0,
+        videoUrl: l.videoUrl ?? null,
+        isPreview: l.isPreview ?? false,
+        order:    l.order,
+      })),
+    }));
+
     return {
       data: {
         topics,
@@ -243,24 +277,91 @@ export class AdminCoursesService {
         courseId:    course.id,
         courseSlug:  course.slug,
         courseTitle: course.title,
-        landingData: (course as any).landingData ?? null,
       },
     };
   }
 
   // ─── Save Curriculum ─────────────────────────────────────────────────────
+  // Mirrors what seed-courses.ts does:
+  // 1. Save topic titles as String[] in Course.topics (for cards/display)
+  // 2. Rebuild Section + Module + Lesson rows from topics[].elements
   async saveCurriculum(idOrSlug: string, rawTopics: object[]) {
     const { data: existing } = await this.findOne(idOrSlug);
-    // Strip any frontend-only keys before persisting
-    const topics = cleanTopics(rawTopics);
-    const updated = await (this.prisma.course as any).update({
-      where: { id: existing.id },
-      data: { topics },
+    const courseId = existing.id;
+
+    // 1️⃣ Extract titles for Course.topics String[]
+    const topicTitles: string[] = (rawTopics as any[])
+      .map((t) => (typeof t.title === 'object' ? t.title?.en : t.title) ?? '')
+      .filter(Boolean);
+
+    // 2️⃣ Update Course.topics + totalTopics
+    await (this.prisma.course as any).update({
+      where: { id: courseId },
+      data: { topics: topicTitles, totalTopics: topicTitles.length },
     });
+
+    // 3️⃣ Rebuild Sections + Modules + Lessons (same logic as seedCourseSections)
+    await this.prisma.lesson.deleteMany({ where: { courseId } });
+    await this.prisma.section.deleteMany({ where: { courseId } });
+    await (this.prisma as any).module.deleteMany({ where: { courseId } });
+
+    for (let sIdx = 0; sIdx < (rawTopics as any[]).length; sIdx++) {
+      const topic = (rawTopics as any[])[sIdx];
+      const order = sIdx + 1;
+
+      const sTitle =
+        typeof topic.title === 'object'
+          ? (topic.title?.en ?? `Section ${order}`)
+          : (topic.title ?? `Section ${order}`);
+      const sTitleAr =
+        typeof topic.title === 'object' ? topic.title?.ar : undefined;
+
+      const [section, mod] = await Promise.all([
+        this.prisma.section.create({
+          data: { courseId, title: sTitle, ...(sTitleAr ? { ar_title: sTitleAr } : {}), order },
+        }),
+        (this.prisma as any).module.create({
+          data: { courseId, title: sTitle, ...(sTitleAr ? { ar_title: sTitleAr } : {}), order },
+        }),
+      ]);
+
+      const elements: any[] = topic.elements ?? [];
+
+      for (let eIdx = 0; eIdx < elements.length; eIdx++) {
+        const el = elements[eIdx];
+        const lessonOrder = safeNumber(el.order, eIdx + 1);
+        const lTitle =
+          typeof el.title === 'object'
+            ? (el.title?.en ?? `Lesson ${lessonOrder}`)
+            : (el.title ?? `Lesson ${lessonOrder}`);
+        const lTitleAr = typeof el.title === 'object' ? el.title?.ar : undefined;
+        const typeRaw = (el.type ?? 'article').toString().toUpperCase();
+        const lessonType: 'VIDEO' | 'ARTICLE' | 'QUIZ' =
+          typeRaw === 'VIDEO' ? 'VIDEO' : typeRaw === 'QUIZ' ? 'QUIZ' : 'ARTICLE';
+
+        await this.prisma.lesson.create({
+          data: {
+            courseId,
+            sectionId: section.id,
+            moduleId:  mod.id,
+            title:     lTitle,
+            ...(lTitleAr ? { ar_title: lTitleAr } : {}),
+            order:     lessonOrder,
+            type:      lessonType,
+            duration:  safeNumber(el.duration, 0),
+            content:   el.content ?? '',
+            ...(el.videoUrl || el.video_url
+              ? { videoUrl: el.videoUrl ?? el.video_url }
+              : {}),
+          },
+        });
+      }
+    }
+
     return {
       data: {
-        topics:      Array.isArray(updated.topics) ? updated.topics : [],
-        totalTopics: Array.isArray(updated.topics) ? updated.topics.length : 0,
+        topics:      topicTitles,
+        totalTopics: topicTitles.length,
       },
     };
   }
@@ -272,7 +373,6 @@ export class AdminCoursesService {
     if (existing) throw new BadRequestException(`Slug "${slug}" already exists`);
 
     const state = (dto as any).state ?? 'DRAFT';
-    // ✅ Always derive isPublished from state so both fields are always in sync
     const isPublished = isPublishedFromState(state);
 
     const course = await this.prisma.course.create({
@@ -286,11 +386,9 @@ export class AdminCoursesService {
     const { data: existing } = await this.findOne(idOrSlug);
 
     const updateData: any = { ...dto };
-    // ✅ If state is being changed, always keep isPublished in sync
     if (updateData.state !== undefined) {
       updateData.isPublished = isPublishedFromState(updateData.state);
     }
-    // ✅ If isPublished is being explicitly set without a state, derive state
     if (updateData.isPublished !== undefined && updateData.state === undefined) {
       updateData.state = updateData.isPublished ? 'PUBLISHED' : 'DRAFT';
     }
