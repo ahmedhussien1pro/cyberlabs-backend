@@ -18,9 +18,11 @@ import { AdminBadgesController } from './admin-badges.controller';
 import { AdminBadgesService } from './admin-badges.service';
 import { AdminReferralsController } from './admin-referrals.controller';
 import { AdminReferralsService } from './admin-referrals.service';
+import { AdminUploadController } from './admin-upload.controller';
 import { NotificationsGateway } from '../notifications/gateways/notifications.gateway';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
+import { StorageModule } from '../../core/storage';
 
 /**
  * AdminModule
@@ -35,10 +37,12 @@ import { JwtModule } from '@nestjs/jwt';
  *   AdminNotificationsController   → POST/GET /admin/notifications/*
  *   AdminBadgesController          → GET/POST/PATCH/DELETE /admin/badges/*
  *   AdminReferralsController       → GET/POST/DELETE /admin/referrals/*
+ *   AdminUploadController          → POST /admin/upload/image
  */
 @Module({
   imports: [
     DatabaseModule,
+    StorageModule,
     ConfigModule,
     JwtModule.registerAsync({
       imports:    [ConfigModule],
@@ -56,6 +60,7 @@ import { JwtModule } from '@nestjs/jwt';
     AdminNotificationsController,
     AdminBadgesController,
     AdminReferralsController,
+    AdminUploadController,
   ],
   providers: [
     AdminService,
