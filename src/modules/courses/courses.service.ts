@@ -543,6 +543,8 @@ export class CoursesService {
   }
 
   // ── Course Labs ─────────────────────────────────────────────
+  // FIX: query the CourseLab junction table (set by admin Link Lab)
+  // instead of lab.courseId which is never populated by the admin panel.
   async getCourseLabs(slug: string) {
     const course = await this.prisma.course.findUnique({
       where: { slug },
@@ -551,21 +553,30 @@ export class CoursesService {
     if (!course || !course.isPublished)
       throw new NotFoundException('Course not found');
 
-    const labs = await this.prisma.lab.findMany({
-      where: { courseId: course.id, isPublished: true },
-      select: {
-        id: true,
-        slug: true,
-        title: true,
-        ar_title: true,
-        difficulty: true,
-        duration: true,
-        xpReward: true,
-        category: true,
-        imageUrl: true,
+    const courseLabRecords = await (this.prisma as any).courseLab.findMany({
+      where: { courseId: course.id },
+      orderBy: { order: 'asc' },
+      include: {
+        lab: {
+          select: {
+            id: true,
+            slug: true,
+            title: true,
+            ar_title: true,
+            difficulty: true,
+            duration: true,
+            xpReward: true,
+            category: true,
+            imageUrl: true,
+            isPublished: true,
+          },
+        },
       },
-      orderBy: { createdAt: 'asc' },
     });
+
+    const labs = courseLabRecords
+      .map((cl: any) => cl.lab)
+      .filter((lab: any) => lab?.isPublished);
 
     return { courseId: course.id, labs };
   }
