@@ -36,6 +36,32 @@ const PATH_LIST_SELECT = {
 export class AdminPathsService {
   constructor(private readonly prisma: PrismaService) {}
 
+  // ─── Sync path stats after any module change ───────────────────────────────
+  private async syncPathStats(pathId: string) {
+    // Fetch all modules with their linked course estimatedHours
+    const modules = await this.prisma.pathModule.findMany({
+      where: { pathId },
+      include: {
+        course: { select: { estimatedHours: true } },
+        lab: { select: { duration: true } },
+      },
+    });
+
+    const totalCourses = modules.filter((m) => m.courseId !== null).length;
+    const totalLabs = modules.filter((m) => m.labId !== null).length;
+
+    const estimatedHours = modules.reduce((sum, m) => {
+      if (m.course?.estimatedHours) return sum + m.course.estimatedHours;
+      if (m.lab?.duration) return sum + Math.round(m.lab.duration / 60); // minutes → hours
+      return sum;
+    }, 0);
+
+    await this.prisma.learningPath.update({
+      where: { id: pathId },
+      data: { totalCourses, totalLabs, estimatedHours },
+    });
+  }
+
   // ─── Stats ─────────────────────────────────────────────────────────────────
   async getStats() {
     const [total, published] = await Promise.all([
@@ -122,6 +148,7 @@ export class AdminPathsService {
           },
         });
       }
+      await this.syncPathStats(path.id);
     }
 
     return this.findOne(path.id);
@@ -224,6 +251,9 @@ export class AdminPathsService {
       return newPath;
     });
 
+    // sync stats for duplicated path
+    await this.syncPathStats(copy.id);
+
     return { data: copy };
   }
 
@@ -265,6 +295,8 @@ export class AdminPathsService {
       },
       include: { lab: true },
     });
+    // ✅ sync stats
+    await this.syncPathStats(pathId);
     return { data: mod };
   }
 
@@ -274,6 +306,8 @@ export class AdminPathsService {
     });
     if (!mod) throw new NotFoundException('Lab not found in this path');
     await this.prisma.pathModule.delete({ where: { id: mod.id } });
+    // ✅ sync stats
+    await this.syncPathStats(pathId);
     return { data: { success: true } };
   }
 
@@ -298,6 +332,8 @@ export class AdminPathsService {
       },
       include: { course: true },
     });
+    // ✅ sync stats
+    await this.syncPathStats(pathId);
     return { data: mod };
   }
 
@@ -307,6 +343,8 @@ export class AdminPathsService {
     });
     if (!mod) throw new NotFoundException('Course not found in this path');
     await this.prisma.pathModule.delete({ where: { id: mod.id } });
+    // ✅ sync stats
+    await this.syncPathStats(pathId);
     return { data: { success: true } };
   }
 
