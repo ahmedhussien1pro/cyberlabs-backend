@@ -21,7 +21,7 @@ import {
 } from '@prisma/client';
 
 export class CreateCourseDto {
-  // ─ Required fields ────────────────────────────────────────────────
+  // ─ Required fields ──────────────────────────────────────────────────────
 
   @IsNotEmpty()
   @IsString()
@@ -39,7 +39,7 @@ export class CreateCourseDto {
   @IsString()
   instructorId: string;
 
-  // ─ Localised content ─────────────────────────────────────────
+  // ─ Localised content ──────────────────────────────────────────────────
 
   @IsOptional()
   @IsString()
@@ -62,7 +62,7 @@ export class CreateCourseDto {
   @IsString()
   ar_longDescription?: string;
 
-  // ─ Taxonomy ──────────────────────────────────────────────────
+  // ─ Taxonomy ─────────────────────────────────────────────────────────────
 
   @IsOptional()
   @IsEnum(Difficulty)
@@ -88,7 +88,7 @@ export class CreateCourseDto {
   @IsEnum(STATE)
   state?: STATE;
 
-  // ─ Numeric fields ────────────────────────────────────────────
+  // ─ Numeric fields ──────────────────────────────────────────────────────
 
   @IsOptional()
   @Type(() => Number)
@@ -105,10 +105,10 @@ export class CreateCourseDto {
   @IsOptional()
   @Type(() => Number)
   @IsNumber()
-  @Min(1)
+  @Min(0)
   estimatedHours?: number;
 
-  // ─ Media ───────────────────────────────────────────────────
+  // ─ Media ─────────────────────────────────────────────────────────────
 
   @IsOptional()
   @IsString()
@@ -116,9 +116,19 @@ export class CreateCourseDto {
 
   @IsOptional()
   @IsString()
+  image?: string;
+
+  @IsOptional()
+  @IsString()
   backgroundImage?: string;
 
-  // ─ Arrays ───────────────────────────────────────────────────
+  // ─ Links ──────────────────────────────────────────────────────────────
+
+  @IsOptional()
+  @IsString()
+  labsLink?: string;
+
+  // ─ Arrays (EN) ────────────────────────────────────────────────────────────
 
   @IsOptional()
   @IsArray()
@@ -140,7 +150,24 @@ export class CreateCourseDto {
   @IsString({ each: true })
   prerequisites?: string[];
 
-  // ─ Flags ────────────────────────────────────────────────────
+  // ─ Arrays (AR) ────────────────────────────────────────────────────────────
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  ar_skills?: string[];
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  ar_topics?: string[];
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  ar_prerequisites?: string[];
+
+  // ─ Flags ──────────────────────────────────────────────────────────────
 
   @IsOptional()
   @IsBoolean()
