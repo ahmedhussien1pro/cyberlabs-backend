@@ -87,11 +87,51 @@ function readCourseJson(slug: string, title: string): any | null {
 
 /**
  * Write (or overwrite) the JSON file for a course.
- * File name = course title (same convention used by the platform).
+ * Writes BOTH slug.json and title.json so readCourseJson always finds it.
  */
-function writeCourseJson(title: string, data: any): void {
-  const filePath = join(COURSE_DATA_DIR, `${title}.json`);
-  writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf-8');
+function writeCourseJson(slug: string, title: string, data: any): void {
+  const content = JSON.stringify(data, null, 2);
+  // Write by slug (primary — readCourseJson checks slug first)
+  try {
+    writeFileSync(join(COURSE_DATA_DIR, `${slug}.json`), content, 'utf-8');
+  } catch (e: any) {
+    console.warn(`[writeCourseJson] Could not write slug file:`, e?.message);
+  }
+  // Write by title as fallback (legacy lookups)
+  if (title !== slug) {
+    try {
+      writeFileSync(join(COURSE_DATA_DIR, `${title}.json`), content, 'utf-8');
+    } catch { /* non-critical */ }
+  }
+}
+
+/**
+ * FIX: Parse full elements array from a lesson's content field.
+ * saveCurriculum stores the entire elements JSON in content.
+ * If content is not a JSON array, return a single legacy element.
+ */
+function parseElementsFromLesson(lesson: any): any[] {
+  if (!lesson.content) return [];
+  try {
+    const parsed = JSON.parse(lesson.content);
+    if (Array.isArray(parsed)) return parsed;
+  } catch { /* not JSON — legacy plain-text content */ }
+  // Legacy fallback: reconstruct a minimal element from lesson fields
+  const typeRaw = (lesson.type ?? 'ARTICLE').toString().toUpperCase();
+  if (typeRaw === 'VIDEO') {
+    return [{
+      id:       lesson.id,
+      type:     'video',
+      url:      lesson.videoUrl ?? '',
+      title:    { en: lesson.title ?? '', ar: lesson.ar_title ?? '' },
+      duration: lesson.duration ?? 0,
+      isPreview: lesson.isPreview ?? false,
+    }];
+  }
+  if (lesson.content) {
+    return [{ id: lesson.id, type: 'text', value: { en: lesson.content, ar: '' } }];
+  }
+  return [];
 }
 
 const COURSE_FULL_SELECT = {
@@ -301,6 +341,7 @@ export class AdminCoursesService {
   async getCurriculum(idOrSlug: string) {
     const { data: course } = await this.findOne(idOrSlug);
 
+    // JSON file takes priority (single source of truth after save)
     const json = readCourseJson(course.slug, course.title);
     if (json) {
       const topics = json.topics ?? [];
@@ -317,6 +358,7 @@ export class AdminCoursesService {
       };
     }
 
+    // FIX: DB fallback — restore full elements from content JSON
     const dbCourse = await (this.prisma.course as any).findUnique({
       where: { id: course.id },
       select: {
@@ -329,7 +371,9 @@ export class AdminCoursesService {
               select: {
                 id: true, title: true, ar_title: true,
                 order: true, type: true, duration: true,
-                videoUrl: true, isPreview: true, content: true,
+                videoUrl: true, isPreview: true,
+                // FIX: content stores the full elements JSON array
+                content: true,
               },
             },
           },
@@ -340,16 +384,24 @@ export class AdminCoursesService {
     const topics = ((dbCourse?.sections ?? []) as any[]).map((sec: any) => ({
       id:    sec.id,
       title: { en: sec.title ?? '', ar: sec.ar_title ?? '' },
-      elements: (sec.lessons ?? []).map((l: any) => ({
-        id:        l.id,
-        title:     { en: l.title ?? '', ar: l.ar_title ?? '' },
-        type:      l.type?.toLowerCase() ?? 'article',
-        duration:  l.duration ?? 0,
-        videoUrl:  l.videoUrl ?? null,
-        isPreview: l.isPreview ?? false,
-        order:     l.order,
-        content:   l.content ?? '',
-      })),
+      // FIX: each lesson's content field holds the full elements array for that topic
+      // The first lesson per section stores ALL elements for that topic (sentinel lesson)
+      // For backwards compat we also try per-lesson element reconstruction
+      elements: (() => {
+        const lessons: any[] = sec.lessons ?? [];
+        if (lessons.length === 0) return [];
+        // Try to decode the sentinel lesson (first lesson, index 0)
+        // saveCurriculum stores __elements__ JSON in the first lesson's content
+        const sentinel = lessons[0];
+        if (sentinel?.content) {
+          try {
+            const parsed = JSON.parse(sentinel.content);
+            if (Array.isArray(parsed)) return parsed;
+          } catch { /* not JSON */ }
+        }
+        // Fallback: reconstruct from individual lessons
+        return lessons.flatMap((l: any) => parseElementsFromLesson(l));
+      })(),
     }));
 
     return {
@@ -415,17 +467,41 @@ export class AdminCoursesService {
 
       const elements: any[] = topic.elements ?? [];
 
+      // FIX: Store full elements array as JSON in the sentinel lesson's content.
+      // This preserves ALL rich element data (text, image, table, terminal, note…)
+      // so getCurriculum DB fallback can restore them exactly.
+      const sentinelTitle =
+        typeof topic.title === 'object'
+          ? (topic.title?.en ?? `Section ${order}`)
+          : (topic.title ?? `Section ${order}`);
+
+      await this.prisma.lesson.create({
+        data: {
+          courseId,
+          sectionId:  section.id,
+          moduleId:   mod.id,
+          title:      sentinelTitle,
+          ...(sTitleAr ? { ar_title: sTitleAr } : {}),
+          order:      0,
+          type:       'ARTICLE',
+          duration:   0,
+          // FIX: serialize full elements array here
+          content:    JSON.stringify(elements),
+        },
+      });
+
+      // Also create individual lesson rows for VIDEO elements
+      // so progress tracking / platform lesson list still works
       for (let eIdx = 0; eIdx < elements.length; eIdx++) {
         const el = elements[eIdx];
+        if ((el.type ?? '').toString().toUpperCase() !== 'VIDEO') continue;
+
         const lessonOrder = safeNumber(el.order, eIdx + 1);
         const lTitle =
           typeof el.title === 'object'
             ? (el.title?.en ?? `Lesson ${lessonOrder}`)
             : (el.title ?? `Lesson ${lessonOrder}`);
         const lTitleAr = typeof el.title === 'object' ? el.title?.ar : undefined;
-        const typeRaw = (el.type ?? 'article').toString().toUpperCase();
-        const lessonType: 'VIDEO' | 'ARTICLE' | 'QUIZ' =
-          typeRaw === 'VIDEO' ? 'VIDEO' : typeRaw === 'QUIZ' ? 'QUIZ' : 'ARTICLE';
 
         await this.prisma.lesson.create({
           data: {
@@ -435,27 +511,22 @@ export class AdminCoursesService {
             title:     lTitle,
             ...(lTitleAr ? { ar_title: lTitleAr } : {}),
             order:     lessonOrder,
-            type:      lessonType,
+            type:      'VIDEO',
             duration:  safeNumber(el.duration, 0),
-            content:   el.content ?? '',
-            ...(el.videoUrl || el.video_url
-              ? { videoUrl: el.videoUrl ?? el.video_url }
-              : {}),
+            content:   '',
+            videoUrl:  el.videoUrl ?? el.url ?? el.video_url ?? null,
           },
         });
       }
     }
 
+    // FIX: write JSON file by BOTH slug and title so readCourseJson always finds it
     const existingJson = readCourseJson(courseSlug, courseTitle);
     const updatedJson = {
       landingData: existingJson?.landingData ?? null,
       topics: rawTopics,
     };
-    try {
-      writeCourseJson(courseTitle, updatedJson);
-    } catch (e: any) {
-      console.warn(`[AdminCourses] Could not write JSON file for "${courseTitle}":`, e?.message);
-    }
+    writeCourseJson(courseSlug, courseTitle, updatedJson);
 
     return {
       data: {
@@ -701,10 +772,14 @@ export class AdminCoursesService {
         await this.saveCurriculum(course.id, parsed.topics);
       } catch (e: any) {
         console.warn(`[ImportJSON] saveCurriculum failed:`, e?.message);
+        // FIX: even if saveCurriculum fails, persist the raw JSON so getCurriculum
+        // can still serve it from the JSON file fallback
+        try { writeCourseJson(slug, title, parsed); } catch { /* ignore */ }
       }
     } else {
+      // No topics array — write the full JSON as-is
       try {
-        writeCourseJson(title, parsed);
+        writeCourseJson(slug, title, parsed);
       } catch (e: any) {
         console.warn(`[ImportJSON] writeCourseJson failed:`, e?.message);
       }
