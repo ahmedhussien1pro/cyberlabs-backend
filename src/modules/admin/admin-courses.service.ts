@@ -143,6 +143,7 @@ const COURSE_FULL_SELECT = {
   },
 };
 
+// ─── List select now includes all fields needed by the admin card ─────────────
 const COURSE_LIST_SELECT = {
   id: true,
   title: true,
@@ -155,12 +156,21 @@ const COURSE_LIST_SELECT = {
   state: true,
   difficulty: true,
   category: true,
+  contentType: true,
   isPublished: true,
   isFeatured: true,
   isNew: true,
   estimatedHours: true,
   tags: true,
   skills: true,
+  ar_skills: true,
+  topics: true,
+  ar_topics: true,
+  prerequisites: true,
+  ar_prerequisites: true,
+  // description fields — needed by admin card
+  description: true,
+  ar_description: true,
   createdAt: true,
   updatedAt: true,
   _count: { select: { enrollments: true, sections: true } },
@@ -288,18 +298,9 @@ export class AdminCoursesService {
   }
 
   // ─── Get Curriculum ──────────────────────────────────────────────────────
-  /**
-   * Returns curriculum in the SAME shape as the platform's GET /courses/:slug/curriculum
-   * Shape: { data: { topics: CurriculumTopic[], totalTopics, landingData } }
-   *
-   * Strategy:
-   * 1. Try to read from JSON file on disk (authoritative source, full rich content)
-   * 2. If not found → build from DB sections/lessons (fallback, limited content)
-   */
   async getCurriculum(idOrSlug: string) {
     const { data: course } = await this.findOne(idOrSlug);
 
-    // 1️⃣ Try JSON file first (same as platform)
     const json = readCourseJson(course.slug, course.title);
     if (json) {
       const topics = json.topics ?? [];
@@ -316,7 +317,6 @@ export class AdminCoursesService {
       };
     }
 
-    // 2️⃣ Fallback: build from DB — return same shape so editor can handle it
     const dbCourse = await (this.prisma.course as any).findUnique({
       where: { id: course.id },
       select: {
@@ -366,22 +366,12 @@ export class AdminCoursesService {
   }
 
   // ─── Save Curriculum ─────────────────────────────────────────────────────
-  /**
-   * Accepts same shape as CurriculumTopic[]:
-   *   topics: [{ id, title: {en, ar}, elements: [...] }]
-   *
-   * Actions:
-   * 1. Rebuild Section + Module + Lesson in DB
-   * 2. Write JSON file to disk so platform getCurriculum can read it
-   * 3. Update Course.topics (display strings) + totalTopics
-   */
   async saveCurriculum(idOrSlug: string, rawTopics: object[]) {
     const { data: existing } = await this.findOne(idOrSlug);
     const courseId    = existing.id;
     const courseTitle = existing.title;
     const courseSlug  = existing.slug;
 
-    // 1️⃣ Extract display titles for Course.topics String[]
     const topicTitles: string[] = (rawTopics as any[])
       .map((t) => (typeof t.title === 'object' ? t.title?.en : t.title) ?? '')
       .filter(Boolean);
@@ -390,7 +380,6 @@ export class AdminCoursesService {
       .map((t) => (typeof t.title === 'object' ? t.title?.ar : '') ?? '')
       .filter(Boolean);
 
-    // 2️⃣ Update Course metadata
     await (this.prisma.course as any).update({
       where: { id: courseId },
       data: {
@@ -400,7 +389,6 @@ export class AdminCoursesService {
       },
     });
 
-    // 3️⃣ Rebuild Sections + Modules + Lessons
     await this.prisma.lesson.deleteMany({ where: { courseId } });
     await this.prisma.section.deleteMany({ where: { courseId } });
     await (this.prisma as any).module.deleteMany({ where: { courseId } });
@@ -458,7 +446,6 @@ export class AdminCoursesService {
       }
     }
 
-    // 4️⃣ Write JSON file — same format as seed JSON files so platform can read it
     const existingJson = readCourseJson(courseSlug, courseTitle);
     const updatedJson = {
       landingData: existingJson?.landingData ?? null,
@@ -636,7 +623,7 @@ export class AdminCoursesService {
         courseLabs: {
           orderBy: { order: 'asc' },
           include: {
-            lab: { select: { id: true, title: true, slug: true, difficulty: true, isPublished: true } },
+            lab: { select: { id: true, slug: true, title: true, difficulty: true, isPublished: true } },
           },
         },
       },
@@ -709,7 +696,6 @@ export class AdminCoursesService {
       } as any,
     });
 
-    // If the JSON file has topics, save curriculum from it too
     if (parsed.topics && Array.isArray(parsed.topics) && parsed.topics.length > 0) {
       try {
         await this.saveCurriculum(course.id, parsed.topics);
@@ -717,7 +703,6 @@ export class AdminCoursesService {
         console.warn(`[ImportJSON] saveCurriculum failed:`, e?.message);
       }
     } else {
-      // Write the JSON file as-is so platform can read it
       try {
         writeCourseJson(title, parsed);
       } catch (e: any) {
