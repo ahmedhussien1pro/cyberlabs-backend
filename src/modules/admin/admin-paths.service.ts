@@ -36,9 +36,8 @@ const PATH_LIST_SELECT = {
 export class AdminPathsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  // ─── Sync path stats after any module change ───────────────────────────────
-  private async syncPathStats(pathId: string) {
-    // Fetch all modules with their linked course estimatedHours
+  // ─── Sync stats for ONE path ────────────────────────────────────────────
+  async syncPathStats(pathId: string) {
     const modules = await this.prisma.pathModule.findMany({
       where: { pathId },
       include: {
@@ -52,7 +51,8 @@ export class AdminPathsService {
 
     const estimatedHours = modules.reduce((sum, m) => {
       if (m.course?.estimatedHours) return sum + m.course.estimatedHours;
-      if (m.lab?.duration) return sum + Math.round(m.lab.duration / 60); // minutes → hours
+      // lab.duration is in minutes → convert to hours (round up)
+      if (m.lab?.duration) return sum + Math.ceil(m.lab.duration / 60);
       return sum;
     }, 0);
 
@@ -60,6 +60,37 @@ export class AdminPathsService {
       where: { id: pathId },
       data: { totalCourses, totalLabs, estimatedHours },
     });
+  }
+
+  // ─── Sync stats for ALL paths (repair endpoint) ───────────────────────
+  async syncAllPathsStats() {
+    const paths = await this.prisma.learningPath.findMany({
+      select: { id: true, title: true },
+    });
+
+    const results: { id: string; title: string; status: string }[] = [];
+
+    for (const path of paths) {
+      try {
+        await this.syncPathStats(path.id);
+        results.push({ id: path.id, title: path.title, status: 'synced' });
+      } catch (err: any) {
+        results.push({
+          id: path.id,
+          title: path.title,
+          status: `error: ${err?.message ?? 'unknown'}`,
+        });
+      }
+    }
+
+    return {
+      data: {
+        total: paths.length,
+        synced: results.filter((r) => r.status === 'synced').length,
+        failed: results.filter((r) => r.status !== 'synced').length,
+        results,
+      },
+    };
   }
 
   // ─── Stats ─────────────────────────────────────────────────────────────────
@@ -71,7 +102,7 @@ export class AdminPathsService {
     return { data: { total, published, unpublished: total - published } };
   }
 
-  // ─── List ──────────────────────────────────────────────────────────────────
+  // ─── List ─────────────────────────────────────────────────────────────────
   async findAll(query: any) {
     const page = Math.max(1, query.page ?? 1);
     const limit = Math.min(100, Math.max(1, query.limit ?? 20));
@@ -251,9 +282,7 @@ export class AdminPathsService {
       return newPath;
     });
 
-    // sync stats for duplicated path
     await this.syncPathStats(copy.id);
-
     return { data: copy };
   }
 
@@ -295,7 +324,6 @@ export class AdminPathsService {
       },
       include: { lab: true },
     });
-    // ✅ sync stats
     await this.syncPathStats(pathId);
     return { data: mod };
   }
@@ -306,7 +334,6 @@ export class AdminPathsService {
     });
     if (!mod) throw new NotFoundException('Lab not found in this path');
     await this.prisma.pathModule.delete({ where: { id: mod.id } });
-    // ✅ sync stats
     await this.syncPathStats(pathId);
     return { data: { success: true } };
   }
@@ -332,7 +359,6 @@ export class AdminPathsService {
       },
       include: { course: true },
     });
-    // ✅ sync stats
     await this.syncPathStats(pathId);
     return { data: mod };
   }
@@ -343,19 +369,17 @@ export class AdminPathsService {
     });
     if (!mod) throw new NotFoundException('Course not found in this path');
     await this.prisma.pathModule.delete({ where: { id: mod.id } });
-    // ✅ sync stats
     await this.syncPathStats(pathId);
     return { data: { success: true } };
   }
 
-  // ─── Reorder modules (two-phase to avoid unique constraint conflicts) ──────
+  // ─── Reorder ───────────────────────────────────────────────────────────────
   async reorderModules(
     pathId: string,
     orders: { id: string; order: number }[],
   ) {
     await this.findOne(pathId);
 
-    // Phase 1: shift all to high temp values
     await this.prisma.$transaction(
       orders.map(({ id }, i) =>
         this.prisma.pathModule.update({
@@ -365,7 +389,6 @@ export class AdminPathsService {
       ),
     );
 
-    // Phase 2: apply real order values
     await this.prisma.$transaction(
       orders.map(({ id, order }) =>
         this.prisma.pathModule.update({ where: { id }, data: { order } }),

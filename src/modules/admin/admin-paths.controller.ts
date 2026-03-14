@@ -26,6 +26,16 @@ export class AdminPathsController {
     return this.adminPathsService.getStats();
   }
 
+  /** POST /admin/paths/sync-all-stats
+   *  One-time repair: recalculates totalCourses, totalLabs, estimatedHours
+   *  for every path in the DB based on actual attached modules.
+   */
+  @Post('sync-all-stats')
+  @HttpCode(HttpStatus.OK)
+  syncAllStats() {
+    return this.adminPathsService.syncAllPathsStats();
+  }
+
   /** GET /admin/paths */
   @Get()
   @HttpCode(HttpStatus.OK)
@@ -82,7 +92,7 @@ export class AdminPathsController {
     return this.adminPathsService.remove(id);
   }
 
-  // ── Lab relations ───────────────────────────────────────────────────────
+  // ── Lab relations ─────────────────────────────────────────────────────────
 
   /** GET /admin/paths/:id/labs */
   @Get(':id/labs')
@@ -112,7 +122,7 @@ export class AdminPathsController {
     return this.adminPathsService.detachLab(pathId, labId);
   }
 
-  // ── Course relations ─────────────────────────────────────────────────
+  // ── Course relations ───────────────────────────────────────────────────────
 
   /** POST /admin/paths/:id/courses/:courseId */
   @Post(':id/courses/:courseId')
@@ -135,7 +145,7 @@ export class AdminPathsController {
     return this.adminPathsService.detachCourse(pathId, courseId);
   }
 
-  // ── Reorder ─────────────────────────────────────────────────────────────
+  // ── Reorder ────────────────────────────────────────────────────────────────
 
   /** PATCH /admin/paths/:id/modules/reorder */
   @Patch(':id/modules/reorder')
