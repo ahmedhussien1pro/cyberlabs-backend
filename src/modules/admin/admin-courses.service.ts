@@ -259,15 +259,27 @@ export class AdminCoursesService {
       this.prisma.course.count({ where: { state: 'COMING_SOON' } }),
       this.prisma.course.count({ where: { isFeatured: true } }),
     ]);
-    const draft = total - published - comingSoon;
+    const draft = Math.max(0, total - published - comingSoon);
+
+    // Build byState breakdown dynamically from all distinct state values
+    const stateGroups = await this.prisma.course.groupBy({
+      by: ['state'],
+      _count: { _all: true },
+    });
+    const byState: Record<string, number> = {};
+    for (const row of stateGroups) {
+      byState[row.state] = row._count._all;
+    }
+
     return {
       data: {
         total,
         published,
-        draft: Math.max(0, draft),
+        draft,
         comingSoon,
         featured,
         unpublished: total - published,
+        byState,
       },
     };
   }
