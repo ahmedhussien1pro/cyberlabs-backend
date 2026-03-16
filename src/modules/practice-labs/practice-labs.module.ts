@@ -20,6 +20,15 @@ import { RaceConditionModule } from './race-condition/race-condition.module';
 import { CsrfModule } from './csrf/csrf.module';
 import { BadgesModule } from '../badges/badges.module';
 import { NotificationsModule } from '../notifications/notifications.module';
+// ── New lab modules ────────────────────────────────────────────────
+import { CryptographyModule } from './cryptography/cryptography.module';
+import { ObfuscationModule } from './obfuscation/obfuscation.module';
+import { CookiesLabModule } from './cookies-lab/cookies-lab.module';
+import { LinuxModule } from './linux/linux.module';
+import { BashScriptingModule } from './bash-scripting/bash-scripting.module';
+import { WiresharkModule } from './wireshark/wireshark.module';
+import { JwtLabModule } from './jwt/jwt.module';
+import { CaptchaBypassModule } from './captcha-bypass/captcha-bypass.module';
 
 @Module({
   imports: [
@@ -39,6 +48,15 @@ import { NotificationsModule } from '../notifications/notifications.module';
     BlVulnModule,
     BrokenAuthModule,
     ApiHackingModule,
+    // ── New ──────────────────────────────────────────────────────────
+    CryptographyModule,
+    ObfuscationModule,
+    CookiesLabModule,
+    LinuxModule,
+    BashScriptingModule,
+    WiresharkModule,
+    JwtLabModule,
+    CaptchaBypassModule,
   ],
   controllers: [PracticeLabsController],
   providers: [
