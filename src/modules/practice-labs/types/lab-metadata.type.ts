@@ -28,8 +28,57 @@ export interface LabHintSeed {
   order: number;
   xpCost: number;
   content: string;
+  ar_content?: string;
 }
 
+// ─── New: MissionBrief (used by MissionBriefDialog) ─────────────────────────
+export type LabClassification =
+  | 'UNCLASSIFIED'
+  | 'CONFIDENTIAL'
+  | 'SECRET'
+  | 'TOP_SECRET';
+
+export interface LabMissionBrief {
+  codename?: string;
+  classification?: LabClassification;
+  objective: string;
+  ar_objective?: string;
+  background?: string;
+  ar_background?: string;
+  successCriteria?: string[];
+  ar_successCriteria?: string[];
+  warningNote?: string;
+}
+
+// ─── New: LabInfo (used by LabInfoDialog) ────────────────────────────────────
+export interface LabInfoReference {
+  label: string;
+  url: string;
+}
+
+export interface LabInfoData {
+  vulnType: string;
+  ar_vulnType?: string;
+  cweId?: string;
+  cvssScore?: number;
+  description: string;
+  ar_description?: string;
+  whatYouLearn?: string[];
+  ar_whatYouLearn?: string[];
+  techStack?: string[];
+  references?: LabInfoReference[];
+}
+
+// ─── Environment type — maps to a React environment component ────────────────
+export type LabEnvironmentType =
+  | 'LOGIN_FORM'
+  | 'ECOMMERCE'
+  | 'BLOG_CMS'
+  | 'PORTAL_AUTH'
+  | 'BANKING_DASHBOARD'
+  | 'GENERIC';
+
+// ─── Main LabMetadata ────────────────────────────────────────────────────────
 export interface LabMetadata {
   // ─── Bilingual Card Fields ────────────────────────────────────
   slug: string;
@@ -37,7 +86,7 @@ export interface LabMetadata {
   ar_title: string;
   description: string;
   ar_description: string;
-  difficulty: 'BEGINNER' | 'INTERMEDIATE' | 'ADVANCED';
+  difficulty: 'BEGINNER' | 'INTERMEDIATE' | 'ADVANCED' | 'EXPERT';
   category:
     | 'WEB_SECURITY'
     | 'PENETRATION_TESTING'
@@ -56,22 +105,32 @@ export interface LabMetadata {
   isPublished: boolean;
   imageUrl?: string;
 
-  // ─── Lab Platform Fields ────────────────────────────
+  // ─── Grouping & inventory ─────────────────────────────────────
+  /** Maps to a canonical vulnerability concept (for dedup/grouping) */
+  canonicalConceptId?: string;
+  /** Which React environment component to render */
+  environmentType?: LabEnvironmentType;
+
+  // ─── Lab Platform Fields ────────────────────────────────────────
   goal: string;
   ar_goal: string;
   briefing: BilingualText;
   stepsOverview: BilingualSteps;
 
-  // ─── Admin Only ────────────────────────────────────────────────
+  // ─── Dialog content (optional — used by new dialog components) ──
+  missionBrief?: LabMissionBrief;
+  labInfo?: LabInfoData;
+
+  // ─── Admin Only ─────────────────────────────────────────────────
   solution: LabSolution;
 
-  // ─── بعد الحل ──────────────────────────────────────────────────
+  // ─── Post Solve ─────────────────────────────────────────────────
   postSolve: LabPostSolve;
 
-  // ─── Hints — داخل اللاب بتكلف XP ──────────────────────────────
+  // ─── Hints ──────────────────────────────────────────────────────
   hints: LabHintSeed[];
 
-  // ─── Seed Data ─────────────────────────────────────────────────
+  // ─── Seed Data ──────────────────────────────────────────────────
   flagAnswer: string;
   initialState: Record<string, any>;
 }
