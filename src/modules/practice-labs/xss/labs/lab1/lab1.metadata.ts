@@ -17,11 +17,43 @@ export const xssLab1Metadata: LabMetadata = {
   duration: 20,
   executionMode: 'SHARED_BACKEND',
   isPublished: true,
+  canonicalConceptId: 'xss-reflected',
+  environmentType: 'GENERIC',
 
-  // ─── للمتدرب ────────────────────────────────────────────────────
+  missionBrief: {
+    codename: 'ASSET MIRROR',
+    classification: 'CONFIDENTIAL',
+    objective: 'The AssetTrack IT portal reflects unsanitized search input directly into HTML. Inject a script payload to simulate session cookie theft from the IT admin.',
+    ar_objective: 'بوابة AssetTrack تعكس مدخل البحث مباشرة في HTML بدون تعقيم. احقن payload سكريبت لمحاكاة سرقة كوكي الجلسة من مسؤول IT.',
+    background: 'Internal enterprise tools are high-value XSS targets — users are authenticated and privileged.',
+    successCriteria: [
+      'Confirm HTML reflection in the search response',
+      'Confirm HTML injection renders (bold test)',
+      'Inject event-based XSS payload',
+      'Trigger JavaScript execution and capture the flag',
+    ],
+  },
+
+  labInfo: {
+    vulnType: 'Reflected XSS',
+    ar_vulnType: 'XSS انعكاسي',
+    cweId: 'CWE-79',
+    cvssScore: 6.1,
+    description: 'Reflected XSS occurs when user input is immediately echoed back in the HTTP response without encoding. The script runs in the victim\'s browser context with access to cookies and DOM.',
+    ar_description: 'يحدث XSS الانعكاسي عندما يُعاد مدخل المستخدم فوراً في استجابة HTTP دون ترميز. يعمل السكريبت في سياق متصفح الضحية مع الوصول للكوكيز والـ DOM.',
+    whatYouLearn: [
+      'How reflected XSS works in search/query parameters',
+      'How to confirm HTML injection before escalating to XSS',
+      'How event-based payloads fire without user interaction',
+    ],
+    techStack: ['Node.js', 'HTML', 'Browser DOM'],
+    references: [
+      { label: 'PortSwigger: Reflected XSS', url: 'https://portswigger.net/web-security/cross-site-scripting/reflected' },
+    ],
+  },
+
   goal: "Inject a script payload into the asset search field to simulate stealing a session cookie from the IT admin's browser.",
-  ar_goal:
-    'احقن payload سكريبت في حقل البحث عن الأصول لمحاكاة سرقة كوكي الجلسة من متصفح مسؤول IT.',
+  ar_goal: 'احقن payload سكريبت في حقل البحث عن الأصول لمحاكاة سرقة كوكي الجلسة من متصفح مسؤول IT.',
 
   briefing: {
     en: `AssetTrack — an internal IT Asset Management portal for a Fortune 500 company.
@@ -59,7 +91,6 @@ You are looking at a Reflected XSS.`,
     ],
   },
 
-  // ─── للأدمن فقط ─────────────────────────────────────────────────
   solution: {
     context:
       "AssetTrack backend embeds the raw search query directly into the HTML response without any HTML encoding. The response template is: `<h2>Asset '${query}' not found in inventory</h2>`. Any HTML in the query is interpreted by the browser as markup.",
@@ -93,12 +124,12 @@ You are looking at a Reflected XSS.`,
 
   postSolve: {
     explanation: {
-      en: 'Reflected XSS occurs when user-supplied input is immediately echoed back in the server\'s HTML response without encoding. The browser receives a page containing the attacker\'s script, which executes in the context of the vulnerable site — with full access to cookies, localStorage, and the DOM. The attack is "reflected" because the payload travels from the request to the response in a single round-trip.',
-      ar: 'يحدث الـ XSS الانعكاسي عندما يُعاد مدخل المستخدم فوراً في استجابة HTML للخادم دون ترميز. يتلقى المتصفح صفحة تحتوي على سكريبت المهاجم، والذي ينفذ في سياق الموقع الضعيف — مع وصول كامل للكوكيز وlocalStorage والـ DOM. يُسمى الهجوم "انعكاسياً" لأن الـ payload ينتقل من الطلب إلى الاستجابة في رحلة ذهاب وإياب واحدة.',
+      en: 'Reflected XSS occurs when user-supplied input is immediately echoed back in the server\'s HTML response without encoding. The browser receives a page containing the attacker\'s script, which executes in the context of the vulnerable site — with full access to cookies, localStorage, and the DOM.',
+      ar: 'يحدث الـ XSS الانعكاسي عندما يُعاد مدخل المستخدم فوراً في استجابة HTML للخادم دون ترميز. يتلقى المتصفح صفحة تحتوي على سكريبت المهاجم، والذي ينفذ في سياق الموقع الضعيف — مع وصول كامل للكوكيز وlocalStorage والـ DOM.',
     },
     impact: {
-      en: 'Session hijacking via cookie theft. Phishing via DOM manipulation. Keylogging. Credential harvesting. Malware distribution via drive-by download. In enterprise internal tools (like IT management portals), this is particularly dangerous as victims are authenticated privileged users.',
-      ar: 'اختطاف الجلسة عبر سرقة الكوكيز. التصيد الاحتيالي عبر التلاعب بالـ DOM. تسجيل المفاتيح. جمع بيانات الاعتماد. توزيع البرامج الضارة عبر drive-by download. في أدوات المؤسسات الداخلية (مثل بوابات إدارة IT)، يكون هذا خطيراً بشكل خاص لأن الضحايا هم مستخدمون مصادَق عليهم ذوو صلاحيات.',
+      en: 'Session hijacking via cookie theft. Phishing via DOM manipulation. Keylogging. Credential harvesting. In enterprise internal tools, this is particularly dangerous as victims are authenticated privileged users.',
+      ar: 'اختطاف الجلسة عبر سرقة الكوكيز. التصيد الاحتيالي عبر التلاعب بالـ DOM. تسجيل المفاتيح. جمع بيانات الاعتماد. في أدوات المؤسسات الداخلية، يكون هذا خطيراً بشكل خاص لأن الضحايا مستخدمون مصادَق عليهم ذوو صلاحيات.',
     },
     fix: [
       'Output encoding is the primary defense: encode < > " \' & before inserting in HTML',
@@ -112,45 +143,29 @@ You are looking at a Reflected XSS.`,
     {
       order: 1,
       xpCost: 10,
-      content:
-        'When you search for something that doesn\'t exist, the page says "Asset [your input] not found." Your input is literally in the HTML. What happens if your input contains HTML tags?',
+      content: 'When you search for something that doesn\'t exist, the page says "Asset [your input] not found." Your input is literally in the HTML. What happens if your input contains HTML tags?',
+      ar_content: 'عندما تبحث عن شيء غير موجود، تقول الصفحة "الأصل [مدخلك] غير موجود." مدخلك موجود حرفياً في HTML. ماذا يحدث لو احتوى مدخلك على وسوم HTML؟',
     },
     {
       order: 2,
       xpCost: 20,
-      content:
-        'Try searching for <b>test</b> — if the text appears bold in the response, HTML injection is confirmed. Now think about event-based XSS that fires without user interaction.',
+      content: 'Try searching for <b>test</b> — if the text appears bold in the response, HTML injection is confirmed. Now think about event-based XSS that fires without user interaction.',
+      ar_content: 'جرّب البحث عن <b>test</b> — إن ظهر النص بخط عريض في الاستجابة، تم تأكيد حقن HTML. الآن فكّر في XSS مبني على حدث يُطلَق دون تفاعل من المستخدم.',
     },
     {
       order: 3,
       xpCost: 30,
-      content:
-        'Use an image tag with an error event: <img src=x onerror=alert(1)>. The image fails to load immediately, triggering the onerror handler.',
+      content: 'Use an image tag with an error event: <img src=x onerror=alert(1)>. The image fails to load immediately, triggering the onerror handler.',
+      ar_content: 'استخدم وسم صورة مع حدث خطأ: <img src=x onerror=alert(1)>. تفشل الصورة في التحميل فوراً، مما يُطلق معالج onerror.',
     },
   ],
 
   flagAnswer: 'FLAG{XSS_REFLECT_ASSET_MGR_101}',
   initialState: {
     contents: [
-      {
-        title: 'Dell XPS 15 Laptop',
-        body: 'hardware',
-        meta: { assetId: 'HW-001', assignedTo: 'john.doe', status: 'active' },
-      },
-      {
-        title: 'Windows Server 2022 License',
-        body: 'software',
-        meta: { assetId: 'SW-042', seats: 10, status: 'active' },
-      },
-      {
-        title: 'Cisco Switch 24-Port',
-        body: 'network',
-        meta: {
-          assetId: 'NW-007',
-          location: 'Server Room B',
-          status: 'maintenance',
-        },
-      },
+      { title: 'Dell XPS 15 Laptop', body: 'hardware', meta: { assetId: 'HW-001', assignedTo: 'john.doe', status: 'active' } },
+      { title: 'Windows Server 2022 License', body: 'software', meta: { assetId: 'SW-042', seats: 10, status: 'active' } },
+      { title: 'Cisco Switch 24-Port', body: 'network', meta: { assetId: 'NW-007', location: 'Server Room B', status: 'maintenance' } },
     ],
   },
 };

@@ -2,164 +2,143 @@
 import type { LabMetadata } from '../../../types/lab-metadata.type';
 
 export const xssLab3Metadata: LabMetadata = {
-  slug: 'xss-dom-notification-hijack',
-  title: 'XSS: DOM-Based Notification Hijack',
-  ar_title: 'XSS عبر DOM: اختطاف نظام الإشعارات',
+  slug: 'xss-dom-profile-bio',
+  title: 'XSS: DOM-Based Profile Bio Injection',
+  ar_title: 'XSS مبني على DOM: حقن السيرة الذاتية',
   description:
-    'Exploit a DOM-based XSS vulnerability in a project management SPA where the notification banner reads its message directly from the URL parameter using innerHTML.',
+    'Exploit a DOM-based XSS vulnerability where the page reads from location.hash and writes it unsafely to the DOM using innerHTML.',
   ar_description:
-    'استغل ثغرة XSS في الـ DOM داخل SPA إدارة مشاريع، حيث يقرأ شريط الإشعارات رسالته مباشرة من بارامتر الـ URL باستخدام innerHTML.',
+    'استغل ثغرة XSS مبنية على DOM حيث تقرأ الصفحة من location.hash وتكتبه بشكل غير آمن في DOM باستخدام innerHTML.',
   difficulty: 'INTERMEDIATE',
   category: 'WEB_SECURITY',
-  skills: [
-    'DOM-Based XSS',
-    'Client-Side Sinks',
-    'innerHTML Exploitation',
-    'URL Parameter Injection',
-  ],
-  xpReward: 200,
-  pointsReward: 100,
-  duration: 40,
+  skills: ['DOM-Based XSS', 'Source/Sink Analysis', 'location.hash', 'innerHTML'],
+  xpReward: 180,
+  pointsReward: 90,
+  duration: 30,
   executionMode: 'SHARED_BACKEND',
   isPublished: true,
+  canonicalConceptId: 'xss-dom',
+  environmentType: 'BLOG_CMS',
 
-  // ─── للمتدرب ────────────────────────────────────────────────────
-  goal: 'Craft a malicious URL containing an XSS payload in the ?msg= parameter. Submit this URL to the verification endpoint to prove DOM-based execution would occur in a real browser.',
-  ar_goal:
-    'صمّم URL خبيثاً يحتوي على XSS payload في بارامتر ?msg=. أرسل هذا الـ URL إلى نقطة التحقق لإثبات أن التنفيذ المبني على DOM سيحدث في متصفح حقيقي.',
+  missionBrief: {
+    codename: 'HASH SINK',
+    classification: 'CONFIDENTIAL',
+    objective: 'A user profile page reads the bio parameter from location.hash and writes it to the DOM via innerHTML. Craft a hash-based URL that executes JavaScript when opened.',
+    ar_objective: 'صفحة ملف المستخدم تقرأ معامل السيرة الذاتية من location.hash وتكتبه في DOM عبر innerHTML. صمّم URL قائم على الـ hash يُنفّذ JavaScript عند فتحه.',
+    background: 'DOM-based XSS never reaches the server — the payload lives entirely in the URL fragment and executes client-side.',
+    successCriteria: [
+      'Identify the source (location.hash) and sink (innerHTML)',
+      'Inject HTML via the hash parameter',
+      'Escalate to JavaScript execution',
+      'Craft a shareable malicious URL',
+    ],
+  },
+
+  labInfo: {
+    vulnType: 'DOM-Based XSS',
+    ar_vulnType: 'XSS مبني على DOM',
+    cweId: 'CWE-79',
+    cvssScore: 6.9,
+    description: 'DOM XSS occurs entirely client-side. The server never sees the payload — it lives in the URL fragment (#). The browser reads it and writes it unsafely to the DOM.',
+    ar_description: 'يحدث DOM XSS بالكامل على جانب العميل. الخادم لا يرى الـ payload أبداً — يعيش في جزء URL (#). المتصفح يقرأه ويكتبه بشكل غير آمن في DOM.',
+    whatYouLearn: [
+      'What are sources and sinks in DOM XSS',
+      'Why location.hash is a dangerous source',
+      'How innerHTML is a dangerous sink',
+      'How to find DOM XSS with browser DevTools',
+    ],
+    techStack: ['JavaScript', 'Browser DOM', 'location.hash'],
+    references: [
+      { label: 'PortSwigger: DOM-based XSS', url: 'https://portswigger.net/web-security/cross-site-scripting/dom-based' },
+    ],
+  },
+
+  goal: 'Craft a URL with a malicious hash fragment that executes JavaScript when the profile page loads.',
+  ar_goal: 'صمّم URL مع جزء hash خبيث يُنفّذ JavaScript عند تحميل صفحة الملف الشخصي.',
 
   briefing: {
-    en: `SprintBoard — a project management SaaS used by agile development teams.
-When a teammate assigns you to a task, you get a notification link:
-https://sprintboard.app/dashboard?msg=You+have+been+assigned+Sprint+%2314
-The dashboard JavaScript reads the ?msg= URL parameter.
-It displays it as a notification banner.
-Using innerHTML.
-The server never processes this parameter.
-It never sees it. It never validates it.
-The browser reads it directly from window.location.search.
-And writes it directly into the DOM.
-No encoding. No sanitization. No server-side filter to bypass.
-Just the browser, the URL, and a vulnerable innerHTML call.`,
-    ar: `SprintBoard — SaaS إدارة مشاريع تستخدمه فرق التطوير الرشيق.
-عندما يُعيّنك زميل لمهمة، تتلقى رابط إشعار:
-https://sprintboard.app/dashboard?msg=You+have+been+assigned+Sprint+%2314
-يقرأ JavaScript لوحة التحكم بارامتر ?msg= من الـ URL.
-يعرضه كشريط إشعار.
-باستخدام innerHTML.
-الخادم لا يعالج هذا البارامتر أبداً.
-لا يراه. لا يتحقق منه.
-يقرأه المتصفح مباشرة من window.location.search.
-ويكتبه مباشرة في الـ DOM.
-لا ترميز. لا تعقيم. لا فلتر على جانب الخادم لتجاوزه.
-فقط المتصفح، الـ URL، واستدعاء innerHTML ضعيف.`,
+    en: `DevConnect — a developer portfolio platform.
+You can share your profile with a custom bio: /profile#bio=Hello+World
+The page reads location.hash and writes it to a div: bioDiv.innerHTML = decodeURIComponent(bioParam)
+The server never sees the hash fragment.
+But the browser does. And innerHTML does too.`,
+    ar: `DevConnect — منصة محافظ المطورين.
+يمكنك مشاركة ملفك الشخصي مع سيرة ذاتية مخصصة: /profile#bio=Hello+World
+تقرأ الصفحة location.hash وتكتبه في div: bioDiv.innerHTML = decodeURIComponent(bioParam)
+الخادم لا يرى جزء الـ hash.
+لكن المتصفح يراه. وinnerHTML كذلك.`,
   },
 
   stepsOverview: {
     en: [
-      'Navigate to the dashboard with a test ?msg= value — observe it rendered in the notification banner',
-      'Test HTML injection: ?msg=<b>Hello</b> — if bold renders, innerHTML is confirmed',
-      "Understand why <script> tags don't work via innerHTML injection",
-      'Use an event-based payload that fires without user interaction',
-      'Submit the crafted URL to /verify to confirm execution',
+      'Visit /profile#bio=Hello — confirm the text renders in the bio div',
+      'Test HTML: /profile#bio=<b>test</b> — if bold, innerHTML is confirmed',
+      'Escalate: /profile#bio=<img src=x onerror=alert(1)>',
+      'Craft the final URL and submit the flag',
     ],
     ar: [
-      'انتقل إلى لوحة التحكم بقيمة ?msg= تجريبية — لاحظ عرضها في شريط الإشعارات',
-      'اختبر حقن HTML: ?msg=<b>Hello</b> — إن عُرض بخط عريض، تم تأكيد innerHTML',
-      'افهم لماذا وسوم <script> لا تعمل عبر حقن innerHTML',
-      'استخدم payload مبني على حدث يُطلَق بدون تفاعل المستخدم',
-      'أرسل الـ URL المصمَّم إلى /verify لتأكيد التنفيذ',
+      'زر /profile#bio=Hello — أكّد ظهور النص في div السيرة الذاتية',
+      'اختبر HTML: /profile#bio=<b>test</b> — إن كان بخط عريض، يُؤكَّد innerHTML',
+      'تصاعد: /profile#bio=<img src=x onerror=alert(1)>',
+      'صمّم الـ URL النهائي وأرسل العلم',
     ],
   },
 
-  // ─── للأدمن فقط ─────────────────────────────────────────────────
   solution: {
-    context:
-      'SprintBoard dashboard reads the ?msg= URL parameter in client-side JavaScript and writes it to the DOM using innerHTML — a classic DOM sink. The server never processes this parameter, so server-side input validation is completely irrelevant. The payload only needs to bypass client-side context.',
-    vulnerableCode:
-      '// Frontend JavaScript (client-side sink):\n' +
-      'const params = new URLSearchParams(window.location.search);\n' +
-      "const msg = params.get('msg');\n" +
-      '// ❌ DOM Sink: innerHTML without sanitization\n' +
-      "document.getElementById('notification-banner').innerHTML = msg;",
-    exploitation:
-      'Craft URL: /dashboard?msg=<img src=x onerror=alert(document.cookie)>. The msg parameter is read by JS and written to innerHTML. The img tag fails to load, onerror fires with document.cookie.',
+    context: 'Profile page JS: const bioParam = location.hash.split("bio=")[1]; bioDiv.innerHTML = decodeURIComponent(bioParam);',
+    vulnerableCode: 'const bioParam = location.hash.split("bio=")[1];\nbioDiv.innerHTML = decodeURIComponent(bioParam);',
+    exploitation: '/profile#bio=<img src=x onerror=alert(document.cookie)>',
     steps: {
       en: [
-        '/dashboard?msg=<b>Hello</b> → notification shows "Hello" in bold → innerHTML confirmed',
-        '/dashboard?msg=<script>alert(1)</script> → nothing happens → script tags blocked by innerHTML (correct)',
-        '/dashboard?msg=<img src=x onerror=alert(1)> → image fails → onerror fires → alert(1) executes',
-        'POST /verify { "url": "/dashboard?msg=<img src=x onerror=alert(document.cookie)>" } → flag returned',
+        '/profile#bio=Hello → text appears in bio section',
+        '/profile#bio=<b>Hello</b> → bold text → innerHTML confirmed',
+        '/profile#bio=<img src=x onerror=alert(1)> → alert fires',
+        'Submit the malicious URL to trigger flag',
       ],
       ar: [
-        '/dashboard?msg=<b>Hello</b> → تُظهر الإشعار "Hello" بخط عريض → تم تأكيد innerHTML',
-        '/dashboard?msg=<script>alert(1)</script> → لا شيء يحدث → وسوم script محظورة بواسطة innerHTML (صحيح)',
-        '/dashboard?msg=<img src=x onerror=alert(1)> → فشل الصورة → يُطلَق onerror → ينفذ alert(1)',
-        'POST /verify { "url": "/dashboard?msg=<img src=x onerror=alert(document.cookie)>" } → يُعاد العلم',
+        '/profile#bio=Hello → النص يظهر في قسم السيرة الذاتية',
+        '/profile#bio=<b>Hello</b> → نص عريض → تأكيد innerHTML',
+        '/profile#bio=<img src=x onerror=alert(1)> → alert يُطلَق',
+        'أرسل الـ URL الخبيث لتفعيل العلم',
       ],
     },
     fix: [
-      'Replace innerHTML with textContent for plain text rendering: element.textContent = msg',
-      'If HTML rendering is needed: sanitize first: element.innerHTML = DOMPurify.sanitize(msg)',
-      'Never read from location.search/hash and write to innerHTML directly',
-      "CSP: script-src 'self' nonce-{nonce} — blocks inline event handlers even if injected",
+      'Use textContent instead of innerHTML: bioDiv.textContent = bioParam',
+      'Sanitize with DOMPurify before innerHTML assignment',
+      'Avoid reading from location.hash for dynamic content',
     ],
   },
 
   postSolve: {
     explanation: {
-      en: 'DOM-Based XSS is fundamentally different from Reflected and Stored XSS — the server is never involved. The attack flows entirely within the browser: a JavaScript source (location.search) writes to a dangerous sink (innerHTML) without sanitization. This means server-side WAFs and input validation are completely bypassed. The payload never hits the server.',
-      ar: 'الـ DOM-Based XSS مختلف جذرياً عن Reflected وStored XSS — الخادم غير متورط أبداً. يتدفق الهجوم بالكامل داخل المتصفح: مصدر JavaScript (location.search) يكتب إلى sink خطير (innerHTML) بدون تعقيم. هذا يعني أن WAFs جانب الخادم والتحقق من المدخلات مُتجاوَز تماماً. الـ payload لا يصل إلى الخادم أبداً.',
+      en: 'DOM XSS never touches the server. The entire attack lives in the URL fragment. Server-side defenses (WAF, input validation) cannot stop it — only client-side output encoding at the sink can.',
+      ar: 'DOM XSS لا يلمس الخادم أبداً. الهجوم بأكمله يعيش في جزء URL. دفاعات جانب الخادم (WAF، التحقق من المدخلات) لا يمكنها إيقافه — فقط ترميز المخرجات على جانب العميل عند الـ sink يمكنه ذلك.',
     },
     impact: {
-      en: "Since the malicious URL can be sent via phishing (email, messages, social engineering), the attacker can target specific victims. The URL appears to belong to the legitimate domain, making it highly convincing. Any user who clicks the crafted link has their browser execute the attacker's code.",
-      ar: 'نظراً لأنه يمكن إرسال الـ URL الخبيث عبر التصيد الاحتيالي (بريد إلكتروني، رسائل، هندسة اجتماعية)، يمكن للمهاجم استهداف ضحايا بعينهم. يبدو الـ URL كأنه ينتمي للنطاق الشرعي، مما يجعله مقنعاً للغاية. أي مستخدم ينقر على الرابط المصمَّم ينفذ كود المهاجم في متصفحه.',
+      en: 'Shareable malicious URLs — attacker sends a link, victim opens it, script executes. No server compromise needed.',
+      ar: 'URLs خبيثة قابلة للمشاركة — يرسل المهاجم رابطاً، تفتحه الضحية، ينفذ السكريبت. لا حاجة لاختراق الخادم.',
     },
-    fix: [
-      'Audit all client-side code for the source→sink pattern: location.search/hash → innerHTML/outerHTML/eval',
-      'Use textContent over innerHTML for non-HTML content: always',
-      'DOMPurify for rich content: import and call DOMPurify.sanitize() before innerHTML',
-      'Trusted Types API (modern browsers): enforce safe DOM operations at browser level',
-    ],
+    fix: ['textContent over innerHTML', 'DOMPurify at every innerHTML sink', 'CSP to block inline scripts'],
   },
 
   hints: [
     {
-      order: 1,
-      xpCost: 15,
-      content:
-        'This is DOM-Based XSS — the server never processes ?msg=. Navigate to /dashboard?msg=<b>Hello</b> and see if the notification area renders bold text. If yes, innerHTML is confirmed.',
+      order: 1, xpCost: 10,
+      content: 'Open DevTools → Console. Type: location.hash — you can see the hash value. Now check the page source for where bioDiv.innerHTML is assigned.',
+      ar_content: 'افتح DevTools → Console. اكتب: location.hash — يمكنك رؤية قيمة الـ hash. الآن تحقق من مصدر الصفحة لمعرفة أين يُعيَّن bioDiv.innerHTML.',
     },
     {
-      order: 2,
-      xpCost: 25,
-      content:
-        '<script> tags injected via innerHTML do NOT execute (browser security). Use event-handler-based payloads instead, like <img src=x onerror=alert(1)> which fires automatically when the image fails.',
+      order: 2, xpCost: 20,
+      content: 'Test with /profile#bio=<b>test</b> — if "test" renders bold, innerHTML is the sink and it\'s not sanitized.',
+      ar_content: 'اختبر بـ /profile#bio=<b>test</b> — إن ظهر "test" بخط عريض، innerHTML هو الـ sink وغير مُعقَّم.',
     },
     {
-      order: 3,
-      xpCost: 40,
-      content:
-        'Full payload URL: /dashboard?msg=<img src=x onerror="alert(document.cookie)">. URL-encode the payload and POST it to /verify to get the flag.',
+      order: 3, xpCost: 30,
+      content: 'Try: /profile#bio=<img src=x onerror=alert(1)>  — the image src fails immediately, triggering onerror.',
+      ar_content: 'جرّب: /profile#bio=<img src=x onerror=alert(1)> — يفشل مصدر الصورة فوراً، مما يُطلق onerror.',
     },
   ],
 
-  flagAnswer: 'FLAG{XSS_DOM_SINK_INNERHTML_EXPLOIT_344}',
-  initialState: {
-    users: [
-      { username: 'dev_sarah', password: 'sarah_dev_2024!', role: 'USER' },
-    ],
-    contents: [
-      {
-        title: 'Sprint #14',
-        body: 'active',
-        meta: { tasks: 12, completed: 8, dueDate: '2026-03-15' },
-      },
-      {
-        title: 'Sprint #15 Planning',
-        body: 'upcoming',
-        meta: { tasks: 0, completed: 0, dueDate: '2026-03-29' },
-      },
-    ],
-  },
+  flagAnswer: 'FLAG{XSS_DOM_HASH_BIO_INJECT_443}',
+  initialState: {},
 };
