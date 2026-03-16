@@ -205,6 +205,37 @@ enum LabExecutionMode {
   DOCKER
 }
 
+// ─── NEW: Lab environment type discriminator ───────────────────────────────
+// Values: default | browser-sim | api-console | banking-dashboard |
+//         blog-cms | portal-auth | ecommerce | social-sim | terminal
+enum LabEnvironmentType {
+  DEFAULT
+  BROWSER_SIM
+  API_CONSOLE
+  BANKING_DASHBOARD
+  BLOG_CMS
+  PORTAL_AUTH
+  ECOMMERCE
+  SOCIAL_SIM
+  TERMINAL
+}
+
+// ─── NEW: Hint penalty policy ──────────────────────────────────────────────
+// PERCENTAGE: deduct % of lab reward at submission time (new default)
+// FIXED_XP:   legacy — deduct fixed XP immediately on unlock
+enum HintPenaltyMode {
+  PERCENTAGE
+  FIXED_XP
+}
+
+// ─── NEW: Flag generation policy ──────────────────────────────────────────
+enum FlagPolicyType {
+  PER_USER_PER_ATTEMPT   // unique flag per user per attempt (most secure)
+  PER_USER_PER_LAB       // one flag per user per lab (current behaviour)
+  PER_SESSION            // rotates each launch
+  STATIC                 // same flag for everyone (legacy)
+}
+
 enum TrackingEventType {
   ENTRY
   CLICK
@@ -327,6 +358,10 @@ model User {
 
   // Admin-created referral links targeted at this user
   targetedReferralLinks ReferralLink[]
+
+  // NEW: lab audit relations
+  labHintUsages  LabHintUsage[]
+  labFlagRecords LabFlagRecord[]
 
   @@index([email])
   @@index([createdAt])
@@ -1201,6 +1236,39 @@ model Lab {
 
   steps Json?
 
+  // ─── NEW: Environment & Concept metadata ────────────────────────────────
+  // Determines which React environment component renders this lab.
+  // Default = existing behaviour (no change for old labs).
+  environmentType  LabEnvironmentType @default(DEFAULT)
+
+  // Canonical concept ID — groups variants under one concept.
+  // e.g. "CONCEPT-001" links xss-reflected, xss-stored, xss-dom together.
+  canonicalConceptId String?
+
+  // Optional: marks this lab as a variant of another lab.
+  variantOfLabId     String?
+
+  // Target actor role inside the lab scenario.
+  // e.g. "guest" | "user" | "moderator" | "admin"
+  targetRole         String?
+
+  // Hint penalty mode for this lab.
+  // PERCENTAGE = new standard; FIXED_XP = legacy fallback.
+  hintPenaltyMode    HintPenaltyMode @default(PERCENTAGE)
+
+  // Flag policy for this lab.
+  flagPolicyType     FlagPolicyType  @default(PER_USER_PER_LAB)
+
+  // JSON blob for environment-specific seeded assets:
+  // e.g. { products: [...], accounts: [...], posts: [...] }
+  immersiveAssets    Json?
+
+  // Structured dialog content (maps to MissionBriefDialog, LabInfoDialog, ScenarioDialog)
+  missionBrief       Json?
+  labInfo            Json?
+  scenarioAdmin      Json?   // admin-only full scenario + solution walkthrough
+  // ─────────────────────────────────────────────────────────────────────────
+
   isPublished Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -1218,9 +1286,15 @@ model Lab {
   genericContents LabGenericContent[]
   genericLogs     LabGenericLog[]
 
+  // NEW audit relations
+  hintUsages      LabHintUsage[]
+  flagRecords     LabFlagRecord[]
+
   @@index([courseId])
   @@index([difficulty])
   @@index([isPublished])
+  @@index([canonicalConceptId])
+  @@index([environmentType])
   @@map("labs")
 }
 
@@ -1291,6 +1365,13 @@ model LabHint {
   order      Int
   xpCost     Int     @default(0)
 
+  // NEW: percentage penalty at submission time (0–100)
+  // Used when lab.hintPenaltyMode = PERCENTAGE
+  // hint1=10, hint2=30, hint3=60, solution=90
+  penaltyPercent Int @default(0)
+
+  hintUsages LabHintUsage[]
+
   @@unique([labId, order])
   @@index([labId])
   @@map("lab_hints")
@@ -1318,6 +1399,53 @@ model UserLabProgress {
   @@index([labId])
   @@index([completedAt])
   @@map("user_lab_progress")
+}
+
+// ─── NEW: Lab Hint Audit Log ───────────────────────────────────────────────
+// Records every hint unlock per user per lab.
+// Enforces single-use per hint (@@unique) — no double XP deduction.
+model LabHintUsage {
+  id         String   @id @default(cuid())
+  userId     String
+  labId      String
+  hintId     String
+  hintOrder  Int      // 1, 2, 3 or 4 (solution)
+  xpCost     Int      // XP deducted at unlock
+  usedAt     DateTime @default(now())
+
+  user  User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lab   Lab     @relation(fields: [labId], references: [id], onDelete: Cascade)
+  hint  LabHint @relation(fields: [hintId], references: [id], onDelete: Cascade)
+
+  // Prevent the same hint being unlocked twice by the same user
+  @@unique([userId, labId, hintOrder])
+  @@index([userId, labId])
+  @@index([labId])
+  @@map("lab_hint_usages")
+}
+
+// ─── NEW: Lab Flag Record ──────────────────────────────────────────────────
+// Server-side flag registry.
+// Flags are stored as SHA-256 hashes — never plaintext.
+// used=true after first correct submission; reuse is rejected.
+model LabFlagRecord {
+  id          String    @id @default(cuid())
+  userId      String
+  labId       String
+  attemptId   String    // ties to a specific launch/attempt
+  flagHash    String    // SHA-256(flag) — no plaintext storage
+  used        Boolean   @default(false)
+  usedAt      DateTime?
+  expiresAt   DateTime
+  createdAt   DateTime  @default(now())
+
+  user  User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lab   Lab  @relation(fields: [labId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, labId, attemptId])
+  @@index([flagHash])
+  @@index([userId, labId])
+  @@map("lab_flag_records")
 }
 
 // ============================================================================
