@@ -3,14 +3,10 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PrismaService } from '../../../../../core/database';
 import { PracticeLabStateService } from '../../../shared/services/practice-lab-state.service';
 
-// ─── Lab Steps ──────────────────────────────────────────────────────────────────────
-//
-// STEP 1 ─ PROBE   : single quote → DB error
-// STEP 2 ─ CONFIRM : OR injection بدون 1=1 أو true بعد
-// STEP 3 ─ EXPLOIT : ' OR '1'='1 → admin login → flag
-//
-// كل خطوة تتحقق من الـ resolvedLabId الفعلي
-
+// ─── Step Events (stored in LabGenericLog.type) ─────────────────────────────────────
+// STEP_1_PROBE   : single quote  → DB error
+// STEP_2_CONFIRM : partial OR injection → no result but detected
+// STEP_3_EXPLOIT : admin login via SQLi → flag revealed
 const LAB_SLUG = 'sqli-auth-bypass';
 
 @Injectable()
@@ -22,20 +18,20 @@ export class Lab1Service {
 
   // ─── Start Lab ──────────────────────────────────────────────────────────────────
   async initLab(userId: string, labIdOrSlug: string) {
-    // initializeState يعمل resolve داخلياً (id أو slug)
-    // ويرجع resolvedLabId = الـ real UUID من الـ DB
-    const result = await this.stateService.initializeState(userId, labIdOrSlug);
-    return result; // { status, message, labId (resolved), dynamicFlag }
+    return this.stateService.initializeState(userId, labIdOrSlug);
   }
 
   // ─── Get Step Progress ─────────────────────────────────────────────────────────
   async getProgress(userId: string, labIdOrSlug: string) {
     const labId = await this.stateService.resolveLabId(labIdOrSlug);
+
+    // استخدم `type` field (schema: LabGenericLog.type)
     const logs = await this.prisma.labGenericLog.findMany({
       where: { userId, labId },
-      select: { event: true },
+      select: { type: true },
     });
-    const completedSteps = logs.map((l) => l.event);
+
+    const completedSteps = logs.map((l) => l.type);
     return {
       completedSteps,
       currentStep: this.resolveCurrentStep(completedSteps),
@@ -43,7 +39,7 @@ export class Lab1Service {
     };
   }
 
-  // ─── Login (vulnerable endpoint) ───────────────────────────────────────────────
+  // ─── Login (intentionally vulnerable SQL endpoint) ─────────────────────────────
   async login(
     userId: string,
     labIdOrSlug: string,
@@ -98,7 +94,7 @@ export class Lab1Service {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    // تحقق من STEP 1 + 2 قبل STEP 3
+    // تحقق من إتمام STEP1 + STEP2 قبل منح الـ flag
     const progress = await this.getProgress(userId, labId);
     const hasStep1 = progress.completedSteps.includes('STEP_1_PROBE');
     const hasStep2 = progress.completedSteps.includes('STEP_2_CONFIRM');
@@ -144,13 +140,15 @@ export class Lab1Service {
   }
 
   // ─── Private Helpers ─────────────────────────────────────────────────────────────
-  private async recordStep(userId: string, labId: string, event: string) {
+
+  // يسجل الـ step في `type` field تجنباً للتكرار
+  private async recordStep(userId: string, labId: string, stepType: string) {
     const exists = await this.prisma.labGenericLog.findFirst({
-      where: { userId, labId, event },
+      where: { userId, labId, type: stepType },
     });
     if (!exists) {
       await this.prisma.labGenericLog.create({
-        data: { userId, labId, event },
+        data: { userId, labId, type: stepType },
       });
     }
   }
