@@ -1,36 +1,19 @@
-import { Controller, Post, Body, UseGuards } from '@nestjs/common';
-import { JwtAuthGuard } from '../../../../../common/guards';
-import { GetUser } from '../../../shared/decorators/get-user.decorator';
+import { Controller, Get, Query, Req, UseGuards } from '@nestjs/common';
 import { Lab4Service } from './lab4.service';
+import { JwtAuthGuard } from '../../../../../core/auth/guards/jwt-auth.guard';
 
-@Controller('practice-labs/sql-injection/lab4')
+@Controller('practice-labs/sqli-error-based')
 @UseGuards(JwtAuthGuard)
 export class Lab4Controller {
-  constructor(private lab4Service: Lab4Service) {}
+  constructor(private readonly lab4: Lab4Service) {}
 
-  @Post('start')
-  async startLab(@GetUser('id') userId: string, @Body('labId') labId: string) {
-    return this.lab4Service.initLab(userId, labId);
+  @Get('init')
+  init(@Req() req: any) {
+    return this.lab4.initLab(req.user.id, 'sqli-error-based');
   }
 
-  @Post('set-name')
-  async setDisplayName(
-    @GetUser('id') userId: string,
-    @Body('labId') labId: string,
-    @Body('displayName') displayName: string,
-  ) {
-    return this.lab4Service.setDisplayName(
-      userId,
-      labId,
-      displayName ?? 'applicant',
-    );
-  }
-
-  @Post('generate-report')
-  async generateReport(
-    @GetUser('id') userId: string,
-    @Body('labId') labId: string,
-  ) {
-    return this.lab4Service.generateReport(userId, labId);
+  @Get('user')
+  lookupUser(@Req() req: any, @Query('id') id: string) {
+    return this.lab4.lookupUser(req.user.id, 'sqli-error-based', id ?? '1');
   }
 }

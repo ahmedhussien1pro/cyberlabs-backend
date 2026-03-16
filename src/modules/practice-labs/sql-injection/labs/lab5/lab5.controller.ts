@@ -1,24 +1,19 @@
-import { Controller, Post, Body, Headers, UseGuards } from '@nestjs/common';
-import { JwtAuthGuard } from '../../../../../common/guards';
-import { GetUser } from '../../../shared/decorators/get-user.decorator';
+import { Controller, Get, Query, Req, UseGuards } from '@nestjs/common';
 import { Lab5Service } from './lab5.service';
+import { JwtAuthGuard } from '../../../../../core/auth/guards/jwt-auth.guard';
 
-@Controller('practice-labs/sql-injection/lab5')
+@Controller('practice-labs/sqli-time-based')
 @UseGuards(JwtAuthGuard)
 export class Lab5Controller {
-  constructor(private lab5Service: Lab5Service) {}
+  constructor(private readonly lab5: Lab5Service) {}
 
-  @Post('start')
-  async startLab(@GetUser('id') userId: string, @Body('labId') labId: string) {
-    return this.lab5Service.initLab(userId, labId);
+  @Get('init')
+  init(@Req() req: any) {
+    return this.lab5.initLab(req.user.id, 'sqli-time-based');
   }
 
-  @Post('log-visit')
-  async logVisit(
-    @GetUser('id') userId: string,
-    @Body('labId') labId: string,
-    @Headers('x-forwarded-for') forwardedFor: string,
-  ) {
-    return this.lab5Service.logVisit(userId, labId, forwardedFor);
+  @Get('account')
+  lookupAccount(@Req() req: any, @Query('id') id: string) {
+    return this.lab5.lookupAccount(req.user.id, 'sqli-time-based', id ?? '1');
   }
 }

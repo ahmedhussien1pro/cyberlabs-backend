@@ -1,10 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../../../../core/database';
 import { PracticeLabStateService } from '../../../shared/services/practice-lab-state.service';
-import {
-  buildLabResult,
-  rowsContainValue,
-} from '../../../shared/utils/sqli-lab.utils';
+
+const LAB_SLUG = 'sqli-union-extract';
 
 @Injectable()
 export class Lab2Service {
@@ -13,49 +11,101 @@ export class Lab2Service {
     private stateService: PracticeLabStateService,
   ) {}
 
-  async initLab(userId: string, labId: string) {
-    return this.stateService.initializeState(userId, labId);
+  async initLab(userId: string, labIdOrSlug: string) {
+    return this.stateService.initializeState(userId, labIdOrSlug);
   }
 
-  async searchUsers(userId: string, labId: string, searchTerm: string) {
-    const query = `
-      SELECT username, email, role
-      FROM   "LabGenericUser"
-      WHERE  "userId" = '${userId}'
-      AND    "labId"  = '${labId}'
-      AND    username ILIKE '%${searchTerm}%'
-    `;
+  async search(userId: string, labIdOrSlug: string, query: string) {
+    const labId = await this.stateService.resolveLabId(labIdOrSlug);
+    const lq = query.toLowerCase();
 
-    let results: any[] = [];
-    try {
-      results = (await this.prisma.$queryRawUnsafe(query)) as any[];
-    } catch {
-      results = [];
-    }
-
-    const isExploited = rowsContainValue(
-      results,
-      ['email', 'username', 'role'],
-      'FLAG{',
-    );
-
-    if (isExploited) {
-      return buildLabResult({
+    // Detect ORDER BY enumeration → STEP_1_COLUMN_COUNT
+    if (/order\s+by\s+\d/i.test(query)) {
+      await this.recordStep(userId, labId, 'STEP_1_COLUMN_COUNT');
+      const match = query.match(/order\s+by\s+(\d+)/i);
+      const num = match ? parseInt(match[1]) : 0;
+      if (num > 3) {
+        return {
+          success: false,
+          error: 'ORDER BY position out of range — 1 column too many',
+          stepCompleted: 'STEP_1_COLUMN_COUNT',
+          feedback: 'Error at ORDER BY 4 means the query has exactly 3 columns!',
+          ar_feedback: 'الخطأ عند ORDER BY 4 يعني الاستعلام يحتوي على 3 أعمدة تحديداً!',
+        };
+      }
+      return {
         success: true,
-        exploited: true,
-        data: results,
-        flag: 'FLAG{SQLI_UNION_DATA_EXTRACTED}',
-        evidence: 'Admin password exposed via UNION injection',
-        message: '🎯 UNION injection successful — admin credentials extracted!',
-        uiHint:
-          'The admin password IS the flag. Submit it to complete the lab.',
-      });
+        results: [],
+        stepCompleted: 'STEP_1_COLUMN_COUNT',
+        feedback: `ORDER BY ${num} works — keep going up until it breaks.`,
+        ar_feedback: `ORDER BY ${num} يعمل — استمر في الزيادة حتى يحدث خطأ.`,
+      };
     }
 
-    return buildLabResult({
-      success: true,
-      data: results,
-      message: `Found ${results.length} user(s)`,
+    // Detect UNION + string test → STEP_2_STRING_COLUMN
+    if (/union\s+select/i.test(query) && /null|'test'/i.test(query) && !/secrets/i.test(query)) {
+      await this.recordStep(userId, labId, 'STEP_2_STRING_COLUMN');
+      const hasStringInCol2 = /'test'.*null\s*--|null.*'test'.*null/i.test(query.replace(/\s+/g, ' '));
+      return {
+        success: true,
+        results: hasStringInCol2 ? [{ id: null, name: 'test', price: null }] : [],
+        stepCompleted: 'STEP_2_STRING_COLUMN',
+        feedback: hasStringInCol2
+          ? "String appeared in column 2! That's your extraction column."
+          : 'Try replacing each NULL one at a time with a string value.',
+        ar_feedback: hasStringInCol2
+          ? 'ظهر النص في العمود 2! هذا هو عمود الاستخراج.'
+          : 'جرّب استبدال كل NULL واحداً بواحد بقيمة نصية.',
+      };
+    }
+
+    // Detect UNION SELECT from secrets → STEP_3_EXTRACT
+    if (/union\s+select/i.test(query) && /secrets/i.test(query)) {
+      await this.recordStep(userId, labId, 'STEP_3_EXTRACT');
+      const flag = this.stateService.generateDynamicFlag(
+        `FLAG{${LAB_SLUG.toUpperCase().replace(/-/g, '_')}`,
+        userId,
+        labId,
+      );
+      return {
+        success: true,
+        results: [{ id: null, name: flag, price: null }],
+        stepCompleted: 'STEP_3_EXTRACT',
+        exploited: true,
+        flag,
+        message: 'UNION injection successful! Secret data extracted.',
+        ar_message: 'حقن UNION ناجح! تم استخراج البيانات السرية.',
+      };
+    }
+
+    // Syntax error (unmatched quote)
+    if ((query.match(/'/g) || []).length % 2 !== 0 && !/--/.test(query)) {
+      return {
+        success: false,
+        error: 'syntax error at or near "\'"',
+        feedback: 'SQL syntax broken — you\'re injecting! Add -- to comment out the rest.',
+        ar_feedback: 'قواعد SQL مكسورة — أنت تحقن! أضف -- لتعليق الباقي.',
+      };
+    }
+
+    // Normal search simulation
+    const products = [
+      { id: 1, name: 'Laptop Pro', price: 999 },
+      { id: 2, name: 'Wireless Mouse', price: 29 },
+      { id: 3, name: 'Mechanical Keyboard', price: 89 },
+    ];
+    const results = products.filter((p) =>
+      p.name.toLowerCase().includes(lq.replace(/[^a-z0-9 ]/g, '')),
+    );
+    return { success: true, results };
+  }
+
+  private async recordStep(userId: string, labId: string, stepType: string) {
+    const exists = await this.prisma.labGenericLog.findFirst({
+      where: { userId, labId, type: stepType },
     });
+    if (!exists) {
+      await this.prisma.labGenericLog.create({ data: { userId, labId, type: stepType } });
+    }
   }
 }

