@@ -3,6 +3,8 @@ import type { LabMetadata } from '../../../types/lab-metadata.type';
 
 export const idorLab1Metadata: LabMetadata = {
   slug: 'idor-order-tracking-delivery',
+  canonicalConceptId: 'idor-sequential-id-enumeration',
+  environmentType: 'LOGISTICS',
   title: 'IDOR: Order Tracking — Shipment Details Leak',
   ar_title: 'IDOR: تتبع الطلبات — تسريب تفاصيل الشحنة',
   description:
@@ -22,6 +24,45 @@ export const idorLab1Metadata: LabMetadata = {
   duration: 25,
   executionMode: 'SHARED_BACKEND',
   isPublished: true,
+
+  missionBrief: {
+    codename: 'OPERATION GHOST CARGO',
+    classification: 'CONFIDENTIAL',
+    objective: {
+      en: 'Infiltrate TrackShip logistics platform. Enumerate sequential order IDs to locate a classified government shipment and extract its contents.',
+      ar: 'تسلل إلى منصة TrackShip اللوجستية. عدّد معرفات الطلبات التسلسلية لتحديد شحنة حكومية سرية واستخراج محتوياتها.',
+    },
+    successCriteria: {
+      en: 'Retrieve the flag embedded in the classified VIP shipment cargo field.',
+      ar: 'استرجع العلم المضمَّن في حقل شحنة VIP السرية.',
+    },
+  },
+
+  labInfo: {
+    vulnType: 'IDOR (Insecure Direct Object Reference)',
+    cweId: 'CWE-639',
+    cvssScore: 7.5,
+    whatYouLearn: {
+      en: [
+        'How IDOR arises from missing object-level authorization checks',
+        'Why sequential integer IDs are dangerous and easy to enumerate',
+        'How to identify IDOR in REST API endpoints',
+        'Mitigation: ownership checks + UUID-based identifiers',
+      ],
+      ar: [
+        'كيف ينشأ IDOR من غياب فحوصات التفويض على مستوى الكائن',
+        'لماذا المعرفات الصحيحة التسلسلية خطيرة وسهلة التعداد',
+        'كيفية تحديد IDOR في نقاط نهاية REST API',
+        'التخفيف: فحوصات الملكية + المعرفات المبنية على UUID',
+      ],
+    },
+    techStack: ['REST API', 'Node.js', 'Sequential IDs'],
+    references: [
+      'https://owasp.org/www-chapter-ghana/assets/slides/IDOR.pdf',
+      'https://cheatsheetseries.owasp.org/cheatsheets/Insecure_Direct_Object_Reference_Prevention_Cheat_Sheet.html',
+      'https://cwe.mitre.org/data/definitions/639.html',
+    ],
+  },
 
   // ─── للمتدرب ────────────────────────────────────────────────────
   goal: 'Your order is ORD-1001. Enumerate order IDs to find the VIP classified shipment (ORD-10XX) and access its confidential delivery details to retrieve the flag.',
@@ -131,18 +172,21 @@ ORD-1003. ORD-1004. ORD-1005...
     {
       order: 1,
       xpCost: 10,
+      ar_content: 'معرف طلبك هو ORD-1001. ماذا يحدث لو طلبت ORD-1002؟ هل يتحقق الخادم إن كان الطلب ملكك؟ جرّب وراقب الاستجابة.',
       content:
         "Your order ID is ORD-1001. What happens if you request ORD-1002? Does the server check if it's your order? Try it and observe the response.",
     },
     {
       order: 2,
       xpCost: 20,
+      ar_content: 'معرفات الطلبات تسلسلية. جرّب ORD-1001 إلى ORD-1010 واحداً تلو الآخر. ابحث عن طلب بمالك غير معتاد أو حالة سرية/مقيَّدة.',
       content:
         'Order IDs are sequential. Try ORD-1001 through ORD-1010 one by one. Look for an order with an unusual owner or a classified/restricted status.',
     },
     {
       order: 3,
       xpCost: 35,
+      ar_content: 'الشحنة السرية VIP موجودة بين ORD-1005 وORD-1010. لها classification: "TOP SECRET" وowner: "gov_agency_001".',
       content:
         'The VIP classified shipment is somewhere between ORD-1005 and ORD-1010. It has classification: "TOP SECRET" and owner: "gov_agency_001".',
     },

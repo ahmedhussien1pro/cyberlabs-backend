@@ -3,6 +3,8 @@ import type { LabMetadata } from '../../../types/lab-metadata.type';
 
 export const idorLab2Metadata: LabMetadata = {
   slug: 'idor-api-key-management-devhub',
+  canonicalConceptId: 'idor-sequential-id-enumeration',
+  environmentType: 'DEVELOPER_PLATFORM',
   title: 'IDOR: API Key Management — Steal Admin API Key',
   ar_title: 'IDOR: إدارة مفاتيح API — سرقة مفتاح API المسؤول',
   description:
@@ -17,6 +19,45 @@ export const idorLab2Metadata: LabMetadata = {
   duration: 40,
   executionMode: 'SHARED_BACKEND',
   isPublished: true,
+
+  missionBrief: {
+    codename: 'OPERATION MASTER KEY',
+    classification: 'SECRET',
+    objective: {
+      en: 'Infiltrate DevHub developer platform. Enumerate API key IDs to locate and extract the platform admin master key granting superuser access.',
+      ar: 'تسلل إلى منصة المطورين DevHub. عدّد معرفات مفاتيح API لتحديد واستخراج المفتاح الرئيسي للمسؤول الذي يمنح وصول superuser.',
+    },
+    successCriteria: {
+      en: 'Retrieve the flag embedded in the admin master API key permissions array.',
+      ar: 'استرجع العلم المضمَّن في مصفوفة صلاحيات مفتاح API الرئيسي للمسؤول.',
+    },
+  },
+
+  labInfo: {
+    vulnType: 'IDOR (Insecure Direct Object Reference) — Credential Exposure',
+    cweId: 'CWE-639',
+    cvssScore: 8.1,
+    whatYouLearn: {
+      en: [
+        'How IDOR in API key endpoints leads to full credential theft',
+        'Why returning full secrets (keys, tokens) in GET responses is dangerous',
+        'Enumeration amplification: finding admin resources via sequential IDs',
+        'Mitigation: ownership checks + secret masking + UUID key IDs',
+      ],
+      ar: [
+        'كيف يؤدي IDOR في نقاط نهاية مفاتيح API إلى سرقة بيانات اعتماد كاملة',
+        'لماذا إعادة الأسرار الكاملة (المفاتيح، الرموز) في استجابات GET خطير',
+        'تضخيم التعداد: إيجاد موارد المسؤول عبر المعرفات التسلسلية',
+        'التخفيف: فحوصات الملكية + إخفاء الأسرار + معرفات المفاتيح UUID',
+      ],
+    },
+    techStack: ['REST API', 'Node.js', 'API Key Management', 'Sequential IDs'],
+    references: [
+      'https://owasp.org/API-Security/editions/2023/en/0xa1-broken-object-level-authorization/',
+      'https://cheatsheetseries.owasp.org/cheatsheets/Insecure_Direct_Object_Reference_Prevention_Cheat_Sheet.html',
+      'https://cwe.mitre.org/data/definitions/639.html',
+    ],
+  },
 
   // ─── للمتدرب ────────────────────────────────────────────────────
   goal: "Your API key ID is KEY-201. Enumerate other key IDs to find the admin's master API key (KEY-2XX) and retrieve the flag embedded in its permissions.",
@@ -127,18 +168,21 @@ platform:superuser. admin:full_access.
     {
       order: 1,
       xpCost: 15,
+      ar_content: 'مفتاح API الخاص بك هو KEY-201. الاستجابة تتضمن سر مفتاحك وصلاحياتك. ماذا لو طلبت KEY-202؟ هل يتحقق الخادم من المالك؟',
       content:
         'Your API key is KEY-201. The response includes your key secret and permissions. What if you request KEY-202? Does the server check who owns it?',
     },
     {
       order: 2,
       xpCost: 30,
+      ar_content: 'عدّد من KEY-201 إلى KEY-210. ابحث عن مفتاح بـ tier: "MASTER" أو صلاحيات تتضمن "admin:full_access".',
       content:
         'Enumerate KEY-201 through KEY-210. Look for a key with tier: "MASTER" or permissions including "admin:full_access".',
     },
     {
       order: 3,
       xpCost: 50,
+      ar_content: 'المفتاح الرئيسي للأدمن موجود بين KEY-205 وKEY-210. له حقل warning: "This key grants full platform control." والعلم مضمَّن في مصفوفة الصلاحيات.',
       content:
         'The admin master key is somewhere between KEY-205 and KEY-210. It has a warning field: "This key grants full platform control." The flag is embedded in the permissions array.',
     },
