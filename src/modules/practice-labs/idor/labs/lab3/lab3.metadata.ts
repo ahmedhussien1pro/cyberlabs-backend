@@ -3,6 +3,8 @@ import type { LabMetadata } from '../../../types/lab-metadata.type';
 
 export const idorLab3Metadata: LabMetadata = {
   slug: 'idor-password-reset-flow',
+  canonicalConceptId: 'idor-account-takeover',
+  environmentType: 'PORTAL_AUTH',
   title: 'IDOR: Password Reset — Account Takeover via userId Manipulation',
   ar_title:
     'IDOR: إعادة تعيين كلمة المرور — الاستيلاء على الحساب عبر التلاعب بـ userId',
@@ -12,19 +14,52 @@ export const idorLab3Metadata: LabMetadata = {
     'استغل ثغرة IDOR في تدفق إعادة تعيين كلمة المرور حيث يقبل endpoint إعادة التعيين معامل userId مباشرة، مما يتيح لك إعادة تعيين كلمة مرور أي حساب بما فيه حساب المسؤول والاستيلاء عليه بالكامل.',
   difficulty: 'INTERMEDIATE',
   category: 'WEB_SECURITY',
-  skills: [
-    'IDOR',
-    'Account Takeover',
-    'Password Reset Abuse',
-    'Authentication Bypass',
-  ],
+  skills: ['IDOR', 'Account Takeover', 'Password Reset Abuse', 'Authentication Bypass'],
   xpReward: 250,
   pointsReward: 125,
   duration: 45,
   executionMode: 'SHARED_BACKEND',
   isPublished: true,
 
-  // ─── للمتدرب ────────────────────────────────────────────────────
+  missionBrief: {
+    codename: 'OPERATION GHOST LOGIN',
+    classification: 'SECRET',
+    objective: {
+      en: 'Abuse the CloudBase SaaS password reset flow to take over the admin account by manipulating the targetUserId parameter while using your own valid reset token.',
+      ar: 'استغل تدفق إعادة تعيين كلمة المرور في CloudBase SaaS للاستيلاء على حساب الأدمن عبر التلاعب بمعامل targetUserId بينما تستخدم رمز إعادة تعيين صالح خاص بك.',
+    },
+    successCriteria: {
+      en: 'Login as admin_cloudbase with your injected password and retrieve the flag from the admin profile.',
+      ar: 'سجّل الدخول كـ admin_cloudbase بكلمة مرورك المحقونة واسترجع العلم من ملف تعريف الأدمن.',
+    },
+  },
+
+  labInfo: {
+    vulnType: 'IDOR — Account Takeover via Password Reset',
+    cweId: 'CWE-640',
+    cvssScore: 9.1,
+    whatYouLearn: {
+      en: [
+        'How password reset flows can be exploited via IDOR if userId is client-supplied',
+        'Why reset tokens must bind userId server-side, never from request body',
+        'Account takeover without brute force or phishing',
+        'Mitigation: token-bound userId + one-time invalidation',
+      ],
+      ar: [
+        'كيف يمكن استغلال تدفقات إعادة تعيين كلمة المرور عبر IDOR إذا كان userId مقدَّماً من العميل',
+        'لماذا يجب ربط رموز إعادة التعيين بـ userId من جانب الخادم، وليس من جسم الطلب',
+        'الاستيلاء على الحساب بدون قوة غاشمة أو تصيد',
+        'التخفيف: userId مرتبط بالرمز + إلغاء لمرة واحدة',
+      ],
+    },
+    techStack: ['REST API', 'Node.js', 'JWT', 'Password Reset Flow'],
+    references: [
+      'https://owasp.org/www-community/attacks/Forgot_Password_Cheat_Sheet',
+      'https://cheatsheetseries.owasp.org/cheatsheets/Forgot_Password_Cheat_Sheet.html',
+      'https://cwe.mitre.org/data/definitions/640.html',
+    ],
+  },
+
   goal: "Trigger a password reset for your own account, intercept the reset token, then manipulate the userId parameter in the /reset-password endpoint to reset the admin account's password instead.",
   ar_goal:
     'افعّل إعادة تعيين كلمة مرور لحسابك الخاص، التقط رمز إعادة التعيين، ثم تلاعب بمعامل userId في /reset-password لإعادة تعيين كلمة مرور حساب الأدمن بدلاً من ذلك.',
@@ -47,7 +82,7 @@ Not who the token was issued for.
 Whoever you told it.`,
     ar: `CloudBase SaaS — منصة سحابية متعددة المستأجرين. آلاف الشركات. آلاف المستخدمين.
 أنت user_john. حساب قياسي. لا صلاحيات أدمن.
-تنقر على "نسيت كلمة المرور."
+تنقر على “نسيت كلمة المرور.”
 بريد إعادة تعيين. رمز. ممارسة قياسية.
 تتلقى الرمز.
 نموذج إعادة التعيين له حقلان: كلمة المرور الجديدة. التأكيد.
@@ -79,7 +114,6 @@ Whoever you told it.`,
     ],
   },
 
-  // ─── للأدمن فقط ─────────────────────────────────────────────────
   solution: {
     context:
       "CloudBase /reset-password endpoint validates the reset token format and expiry, but uses the targetUserId from the REQUEST BODY (not from the stored token record) to determine which account to reset. An attacker with any valid reset token can reset any other account's password by substituting the targetUserId.",
@@ -96,7 +130,7 @@ Whoever you told it.`,
       '  res.json({ success: true });\n' +
       '});',
     exploitation:
-      '1. POST /auth/forgot-password { "username": "user_john" } → get reset token from /auth/get-token\n' +
+      '1. POST /auth/forgot-password { "username": "user_john" } → get reset token\n' +
       '2. POST /auth/reset-password { "token": "<token>", "targetUserId": "admin_cloudbase", "newPassword": "hacked123" }\n' +
       '3. POST /auth/login { "username": "admin_cloudbase", "password": "hacked123" } → admin JWT → flag in profile',
     steps: {
@@ -119,23 +153,23 @@ Whoever you told it.`,
       'Never accept userId from the request body in password reset — use only the userId embedded in the token record stored in the database',
       'Correct pattern: const { userId } = await db.resetTokens.findOne({ token }) — trust the token, not the request',
       'One-time tokens: invalidate the token immediately after use',
-      'Rate limit: maximum 3 reset attempts per email per hour — prevents token brute force',
+      'Rate limit: maximum 3 reset attempts per email per hour',
     ],
   },
 
   postSolve: {
     explanation: {
-      en: 'This is a variant of IDOR in sensitive account workflows. The token proves identity ("I own a valid reset token") but the user ID determines the target ("whose password gets reset"). Separating these two concerns and trusting the client-supplied userId is a critical design error. The fix is conceptually simple: bind the user ID to the token at issuance and ignore any user-supplied userId.',
-      ar: 'هذا نوع من IDOR في تدفقات الحسابات الحساسة. الرمز يثبت الهوية ("أمتلك رمز إعادة تعيين صالح") لكن معرف المستخدم يحدد الهدف ("كلمة مرور من تُعاد"). فصل هاتين المسألتين والوثوق بـ userId المُقدَّم من العميل هو خطأ تصميمي حرج. الحل بسيط مفاهيمياً: اربط معرف المستخدم بالرمز عند إصداره وتجاهل أي userId مُقدَّم من المستخدم.',
+      en: 'This is a variant of IDOR in sensitive account workflows. The token proves identity but the user ID determines the target. Separating these two concerns and trusting the client-supplied userId is a critical design error.',
+      ar: 'هذا نوع من IDOR في تدفقات الحسابات الحساسة. الرمز يثبت الهوية لكن معرف المستخدم يحدد الهدف. فصل هاتين المسألتين والوثوق بـ userId المُقدَّم من العميل هو خطأ تصميمي حرج.',
     },
     impact: {
-      en: 'Complete account takeover for any user on the platform — including admin, super-admin, and any specific high-value target. No brute force, no phishing, no social engineering. One valid reset token (for any account) is enough to compromise any other account on the platform.',
-      ar: 'استيلاء كامل على الحساب لأي مستخدم على المنصة — بما في ذلك الأدمن والسوبر أدمن وأي هدف عالي القيمة. لا قوة غاشمة، لا تصيد، لا هندسة اجتماعية. رمز إعادة تعيين صالح واحد (لأي حساب) يكفي لاختراق أي حساب آخر على المنصة.',
+      en: 'Complete account takeover for any user on the platform including admin. One valid reset token for any account is enough to compromise any other account.',
+      ar: 'استيلاء كامل على الحساب لأي مستخدم بما فيه الأدمن. رمز إعادة تعيين صالح واحد لأي حساب يكفي لاختراق أي حساب آخر.',
     },
     fix: [
-      'Token-bound userId: store { token, userId, expiry } — the userId is only read FROM the database record, never from the request',
+      'Token-bound userId: store { token, userId, expiry } — the userId is only read FROM the database record',
       'Invalidate immediately: delete the token record after successful password reset',
-      'Notify original owner: send "your password was reset" email to the token\'s legitimate owner as a security alert',
+      'Notify original owner: send security alert email to the token legitimate owner',
       'Audit: log every password reset attempt with token, requested userId, and source IP',
     ],
   },
@@ -144,38 +178,28 @@ Whoever you told it.`,
     {
       order: 1,
       xpCost: 15,
-      content:
-        'Request a password reset for user_john. You receive a reset token. Inspect the reset request body — there is a "targetUserId" field alongside the token.',
+      ar_content: 'اطلب إعادة تعيين كلمة مرور لـ user_john. تحصل على رمز إعادة تعيين. افحص جسم طلب إعادة التعيين — يوجد حقل "targetUserId" إلى جانب الرمز.',
+      content: 'Request a password reset for user_john. You receive a reset token. Inspect the reset request body — there is a "targetUserId" field alongside the token.',
     },
     {
       order: 2,
       xpCost: 30,
-      content:
-        'Your token is valid for user_john. What if you keep the same valid token but change targetUserId to "admin_cloudbase"? Does the server check whose token it really is?',
+      ar_content: 'رمزك صالح لـ user_john. ماذا لو احتفظت بنفس الرمز الصالح لكن غيّرت targetUserId إلى "admin_cloudbase"؟ هل يتحقق الخادم من صاحب الرمز فعلاً؟',
+      content: 'Your token is valid for user_john. What if you keep the same valid token but change targetUserId to "admin_cloudbase"? Does the server check whose token it really is?',
     },
     {
       order: 3,
       xpCost: 55,
-      content:
-        'POST /auth/reset-password with { "token": "<your_token>", "targetUserId": "admin_cloudbase", "newPassword": "hacked123" } — then login with those credentials to get the flag.',
+      ar_content: 'POST /auth/reset-password مع { "token": "<your_token>"، "targetUserId": "admin_cloudbase"، "newPassword": "hacked123" } — ثم سجّل الدخول بتلك البيانات للحصول على العلم.',
+      content: 'POST /auth/reset-password with { "token": "<your_token>", "targetUserId": "admin_cloudbase", "newPassword": "hacked123" } — then login with those credentials to get the flag.',
     },
   ],
 
   flagAnswer: 'FLAG{IDOR_PASSWORD_RESET_ACCOUNT_TAKEOVER_ADMIN}',
   initialState: {
     users: [
-      {
-        username: 'user_john',
-        password: 'john123',
-        role: 'user',
-        email: 'john@cloudbase.io',
-      },
-      {
-        username: 'admin_cloudbase',
-        password: 'ADM1N_CL0UD_S3CR3T!',
-        role: 'admin',
-        email: 'admin@cloudbase.io',
-      },
+      { username: 'user_john', password: 'john123', role: 'user', email: 'john@cloudbase.io' },
+      { username: 'admin_cloudbase', password: 'ADM1N_CL0UD_S3CR3T!', role: 'admin', email: 'admin@cloudbase.io' },
     ],
   },
 };
