@@ -1,3 +1,4 @@
+// src/modules/practice-labs/shared/services/practice-lab-state.service.ts
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../../../core/database';
 import * as crypto from 'crypto';
@@ -7,8 +8,6 @@ export class PracticeLabStateService {
   constructor(private prisma: PrismaService) {}
 
   // ─── Dynamic Flag ────────────────────────────────────────────────────────────
-  // كل مستخدم يحصل على flag فريد مبني على userId + labId + secret
-  // مستحيل تعطيه لحد تاني لأن الباك يتحقق منه بنفس المعادلة
   generateDynamicFlag(prefix: string, userId: string, labId: string): string {
     const secret = process.env.FLAG_HMAC_SECRET ?? 'cyberlabs_flag_secret_2026';
     const token = crypto
@@ -30,67 +29,89 @@ export class PracticeLabStateService {
     return this.generateDynamicFlag(prefix, userId, labId) === submitted.trim();
   }
 
+  // ─── Resolve Lab (by id OR slug) ─────────────────────────────────────────────
+  // يدعم labId كـ UUID أو كـ slug مباشرة
+  // هذا يحل مشكلة "Lab configuration not found" لو الـ lab موجود بالـ slug
+  private async resolveLab(labId: string) {
+    // 1. جرب بالـ id أولاً
+    let lab = await this.prisma.lab.findUnique({
+      where: { id: labId },
+      select: { id: true, initialState: true, slug: true },
+    });
+
+    // 2. fallback: ابحث بالـ slug لو الـ id مش UUID أو مش موجود
+    if (!lab) {
+      lab = await this.prisma.lab.findUnique({
+        where: { slug: labId },
+        select: { id: true, initialState: true, slug: true },
+      });
+    }
+
+    return lab;
+  }
+
   // ─── Initialize Lab State ────────────────────────────────────────────────────
   async initializeState(userId: string, labId: string) {
-    const lab = await this.prisma.lab.findUnique({
-      where: { id: labId },
-      select: { initialState: true, slug: true },
-    });
+    const lab = await this.resolveLab(labId);
 
     if (!lab) throw new NotFoundException('Lab configuration not found');
 
+    // استخدم الـ real DB id دائماً بعد الـ resolve
+    const resolvedLabId = lab.id;
     const config = lab.initialState as any;
 
     // 1. تنظيف أي بيانات قديمة للمستخدم في هذا اللاب (Isolation)
     await this.prisma.$transaction([
-      this.prisma.labGenericUser.deleteMany({ where: { userId, labId } }),
-      this.prisma.labGenericBank.deleteMany({ where: { userId, labId } }),
-      this.prisma.labGenericContent.deleteMany({ where: { userId, labId } }),
-      this.prisma.labGenericLog.deleteMany({ where: { userId, labId } }),
+      this.prisma.labGenericUser.deleteMany({ where: { userId, labId: resolvedLabId } }),
+      this.prisma.labGenericBank.deleteMany({ where: { userId, labId: resolvedLabId } }),
+      this.prisma.labGenericContent.deleteMany({ where: { userId, labId: resolvedLabId } }),
+      this.prisma.labGenericLog.deleteMany({ where: { userId, labId: resolvedLabId } }),
     ]);
 
-    // 2. استبدال أي placeholder بالـ dynamic flag الفعلي قبل الـ seed
-    // مثال: "FLAG{SQLI_AUTH_BYPASS_SUCCESS}" → "FLAG{SQLI_AUTH_BYPASS_XXXXXXXXXXXX}"
+    // 2. توليد dynamic flag
     const dynamicFlag = this.generateDynamicFlag(
       this.resolveFlagPrefix(lab.slug),
       userId,
-      labId,
+      resolvedLabId,
     );
     const resolvedConfig = this.replaceFlagPlaceholder(config, dynamicFlag);
 
-    // 3. إنشاء البيانات الجديدة بناءً على الـ Config
-    if (resolvedConfig.users) {
+    // 3. إنشاء البيانات الجديدة
+    if (resolvedConfig?.users?.length) {
       await this.prisma.labGenericUser.createMany({
-        data: resolvedConfig.users.map((u: any) => ({ ...u, userId, labId })),
+        data: resolvedConfig.users.map((u: any) => ({ ...u, userId, labId: resolvedLabId })),
       });
     }
 
-    if (resolvedConfig.banks) {
+    if (resolvedConfig?.banks?.length) {
       await this.prisma.labGenericBank.createMany({
-        data: resolvedConfig.banks.map((b: any) => ({ ...b, userId, labId })),
+        data: resolvedConfig.banks.map((b: any) => ({ ...b, userId, labId: resolvedLabId })),
       });
     }
 
-    if (resolvedConfig.contents) {
+    if (resolvedConfig?.contents?.length) {
       await this.prisma.labGenericContent.createMany({
-        data: resolvedConfig.contents.map((c: any) => ({
-          ...c,
-          userId,
-          labId,
-        })),
+        data: resolvedConfig.contents.map((c: any) => ({ ...c, userId, labId: resolvedLabId })),
       });
     }
 
     return {
       status: 'success',
       message: 'Lab environment initialized',
-      dynamicFlag, // ← يُرجع فقط لـ verify عند submit، مش يُعرض للمستخدم
+      labId: resolvedLabId,   // ← الفرونت يستخدم هذا في كل طلبات بعد كده
+      dynamicFlag,
     };
   }
 
-  // ─── Helpers ─────────────────────────────────────────────────────────────────
+  // ─── Get Resolved Lab ID ─────────────────────────────────────────────────────
+  // helper للـ services التانية تعمل resolve من غير ما تعمل init
+  async resolveLabId(labIdOrSlug: string): Promise<string> {
+    const lab = await this.resolveLab(labIdOrSlug);
+    if (!lab) throw new NotFoundException('Lab configuration not found');
+    return lab.id;
+  }
 
-  // استبدال قيمة الـ FLAG في أي مكان داخل الـ config (recursive)
+  // ─── Helpers ─────────────────────────────────────────────────────────────────
   private replaceFlagPlaceholder(obj: any, dynamicFlag: string): any {
     if (typeof obj === 'string') {
       return obj.startsWith('FLAG{') ? dynamicFlag : obj;
@@ -109,8 +130,6 @@ export class PracticeLabStateService {
     return obj;
   }
 
-  // استخراج الـ prefix من الـ slug
-  // مثال: 'sqli-auth-bypass' → 'FLAG{SQLI_AUTH_BYPASS'
   private resolveFlagPrefix(slug: string): string {
     const base = slug.toUpperCase().replace(/-/g, '_');
     return `FLAG{${base}`;
