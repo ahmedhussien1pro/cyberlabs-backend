@@ -14,25 +14,45 @@ export const lab1Metadata: LabMetadata = {
   pointsReward: 50,
   duration: 15,
   isPublished: true,
-  imageUrl: null,
   goal: 'Decode the ROT13-encrypted string and retrieve the hidden flag.',
   ar_goal: 'فك تشفير النص المشفر بـ ROT13 واسترجاع الفلاج المخفي.',
   flagAnswer: 'FLAG{FLAG_CRYPTO_CAESAR_CRACKED}',
   briefing: {
-    story: 'You intercepted an encrypted message. The encryption looks like a simple letter substitution.',
-    objective: 'Decode the ciphertext to reveal the flag.',
+    en: 'You intercepted an encrypted message. The encryption looks like a simple letter substitution.',
+    ar: 'اعترضت رسالة مشفرة. يبدو التشفير كاستبدال بسيط للحروف.',
   },
-  stepsOverview: [
-    { step: 1, title: 'Get the challenge', description: 'Fetch the encrypted string from /challenge' },
-    { step: 2, title: 'Identify the cipher', description: 'Recognize ROT13 / Caesar cipher pattern' },
-    { step: 3, title: 'Decode and submit', description: 'Apply reverse shift and submit FLAG{...}' },
-  ],
+  stepsOverview: {
+    en: [
+      'Fetch the encrypted string from /challenge',
+      'Recognize ROT13 / Caesar cipher pattern',
+      'Apply reverse shift and submit FLAG{...}',
+    ],
+    ar: [
+      'احضر النص المشفر من /challenge',
+      'تعرف على نمط ROT13 / شفرة قيصر',
+      'طبّق الإزاحة العكسية وأرسل FLAG{...}',
+    ],
+  },
   solution: {
-    summary: 'ROT13 shifts each letter by 13. Apply the same shift again to decode.',
-    steps: ['Note the ciphertext', 'Apply ROT13 (shift -13 or +13)', 'Submit the result as FLAG{...}'],
+    context: 'ROT13 shifts each letter by 13. Apply the same shift again to decode.',
+    vulnerableCode: 'N/A — Cryptography challenge',
+    exploitation: 'Apply ROT13 to the ciphertext. Each letter shifts by 13 positions.',
+    steps: {
+      en: ['Note the ciphertext', 'Apply ROT13 (shift -13 or +13)', 'Submit the result as FLAG{...}'],
+      ar: ['لاحظ النص المشفر', 'طبّق ROT13 (إزاحة -13 أو +13)', 'أرسل النتيجة كـ FLAG{...}'],
+    },
+    fix: ['N/A — CTF challenge'],
   },
   postSolve: {
-    lesson: 'Caesar cipher is monoalphabetic and easily broken by frequency analysis or brute-force (26 possibilities).',
+    explanation: {
+      en: 'Caesar cipher is monoalphabetic and easily broken by frequency analysis or brute-force (26 possibilities).',
+      ar: 'شفرة قيصر أحادية الأبجدية وتُكسر بسهولة بالتحليل التكراري أو القوة الغاشمة (26 احتمالاً).',
+    },
+    impact: {
+      en: 'Simple substitution ciphers provide no real security in modern contexts.',
+      ar: 'شفرات الاستبدال البسيطة لا توفر أماناً حقيقياً في السياقات الحديثة.',
+    },
+    fix: ['Use AES-256 or RSA-2048+ for real encryption needs.'],
   },
   initialState: {},
   hints: [
