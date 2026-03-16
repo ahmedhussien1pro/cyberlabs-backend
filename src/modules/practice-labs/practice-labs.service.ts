@@ -265,6 +265,7 @@ export class PracticeLabsService {
   async consumeToken(token: string, userId: string) {
     const launchToken = await this.prisma.labLaunchToken.findFirst({
       where: { token, usedAt: null, expiresAt: { gt: new Date() }, userId },
+      // استخدم include مش select عشان الـ relation `lab` تتحمل
       include: {
         lab: {
           select: {
@@ -276,14 +277,13 @@ export class PracticeLabsService {
             ar_description: true,
             scenario: true,
             ar_scenario: true,
-            // ─ Lab Platform UI fields
             goal: true,
             ar_goal: true,
             briefing: true,
-            ar_briefing: true,
+            // ar_briefing ليس field في الـ schema — تم حذفه
             stepsOverview: true,
-            ar_stepsOverview: true,
-            // ─ Execution config
+            solution: true,
+            postSolve: true,
             executionMode: true,
             engineConfig: true,
             initialState: true,
@@ -330,7 +330,6 @@ export class PracticeLabsService {
 
     if (!lab) throw new NotFoundException('Lab not found');
 
-    // ─ Dynamic flag verification — compare against HMAC-generated flag
     const expectedFlag = this.stateService.generateDynamicFlag(
       `FLAG{${lab.slug.toUpperCase().replace(/-/g, '_')}`,
       userId,
@@ -402,14 +401,12 @@ export class PracticeLabsService {
           ),
         )
         .catch(() => {});
+
       try {
         const completedCount = await this.prisma.userLabProgress.count({
           where: { userId, completedAt: { not: null } },
         });
-        await this.badgesService.checkLabMilestoneBadges(
-          userId,
-          completedCount,
-        );
+        await this.badgesService.checkLabMilestoneBadges(userId, completedCount);
       } catch {
         // Non-blocking
       }
@@ -476,7 +473,6 @@ export class PracticeLabsService {
       },
     });
 
-    // ─ بعد فتح الهينت الأخيرة (order 3)، نضيف الحل التفصيلي للأدمن فقط
     const isLastHint = hint.order >= 3;
 
     return {
