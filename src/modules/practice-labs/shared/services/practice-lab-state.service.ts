@@ -1,17 +1,40 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../../../core/database';
+import * as crypto from 'crypto';
 
 @Injectable()
 export class PracticeLabStateService {
   constructor(private prisma: PrismaService) {}
 
-  /**
-   * تهيئة بيانات اللاب للمستخدم بناءً على الـ initialState المخزن في جدول الـ Lab
-   */
+  // ─── Dynamic Flag ────────────────────────────────────────────────────────────
+  // كل مستخدم يحصل على flag فريد مبني على userId + labId + secret
+  // مستحيل تعطيه لحد تاني لأن الباك يتحقق منه بنفس المعادلة
+  generateDynamicFlag(prefix: string, userId: string, labId: string): string {
+    const secret = process.env.FLAG_HMAC_SECRET ?? 'cyberlabs_flag_secret_2026';
+    const token = crypto
+      .createHmac('sha256', secret)
+      .update(`${userId}:${labId}`)
+      .digest('hex')
+      .slice(0, 12)
+      .toUpperCase();
+    return `${prefix}_${token}`;
+  }
+
+  // ─── Verify Dynamic Flag ─────────────────────────────────────────────────────
+  verifyDynamicFlag(
+    prefix: string,
+    userId: string,
+    labId: string,
+    submitted: string,
+  ): boolean {
+    return this.generateDynamicFlag(prefix, userId, labId) === submitted.trim();
+  }
+
+  // ─── Initialize Lab State ────────────────────────────────────────────────────
   async initializeState(userId: string, labId: string) {
     const lab = await this.prisma.lab.findUnique({
       where: { id: labId },
-      select: { initialState: true },
+      select: { initialState: true, slug: true },
     });
 
     if (!lab) throw new NotFoundException('Lab configuration not found');
@@ -26,25 +49,70 @@ export class PracticeLabStateService {
       this.prisma.labGenericLog.deleteMany({ where: { userId, labId } }),
     ]);
 
-    // 2. إنشاء البيانات الجديدة بناءً على الـ Config
-    if (config.users) {
+    // 2. استبدال أي placeholder بالـ dynamic flag الفعلي قبل الـ seed
+    // مثال: "FLAG{SQLI_AUTH_BYPASS_SUCCESS}" → "FLAG{SQLI_AUTH_BYPASS_XXXXXXXXXXXX}"
+    const dynamicFlag = this.generateDynamicFlag(
+      this.resolveFlagPrefix(lab.slug),
+      userId,
+      labId,
+    );
+    const resolvedConfig = this.replaceFlagPlaceholder(config, dynamicFlag);
+
+    // 3. إنشاء البيانات الجديدة بناءً على الـ Config
+    if (resolvedConfig.users) {
       await this.prisma.labGenericUser.createMany({
-        data: config.users.map((u) => ({ ...u, userId, labId })),
+        data: resolvedConfig.users.map((u: any) => ({ ...u, userId, labId })),
       });
     }
 
-    if (config.banks) {
+    if (resolvedConfig.banks) {
       await this.prisma.labGenericBank.createMany({
-        data: config.banks.map((b) => ({ ...b, userId, labId })),
+        data: resolvedConfig.banks.map((b: any) => ({ ...b, userId, labId })),
       });
     }
 
-    if (config.contents) {
+    if (resolvedConfig.contents) {
       await this.prisma.labGenericContent.createMany({
-        data: config.contents.map((c) => ({ ...c, userId, labId })),
+        data: resolvedConfig.contents.map((c: any) => ({
+          ...c,
+          userId,
+          labId,
+        })),
       });
     }
 
-    return { status: 'success', message: 'Lab environment initialized' };
+    return {
+      status: 'success',
+      message: 'Lab environment initialized',
+      dynamicFlag, // ← يُرجع فقط لـ verify عند submit، مش يُعرض للمستخدم
+    };
+  }
+
+  // ─── Helpers ─────────────────────────────────────────────────────────────────
+
+  // استبدال قيمة الـ FLAG في أي مكان داخل الـ config (recursive)
+  private replaceFlagPlaceholder(obj: any, dynamicFlag: string): any {
+    if (typeof obj === 'string') {
+      return obj.startsWith('FLAG{') ? dynamicFlag : obj;
+    }
+    if (Array.isArray(obj)) {
+      return obj.map((item) => this.replaceFlagPlaceholder(item, dynamicFlag));
+    }
+    if (obj && typeof obj === 'object') {
+      return Object.fromEntries(
+        Object.entries(obj).map(([k, v]) => [
+          k,
+          this.replaceFlagPlaceholder(v, dynamicFlag),
+        ]),
+      );
+    }
+    return obj;
+  }
+
+  // استخراج الـ prefix من الـ slug
+  // مثال: 'sqli-auth-bypass' → 'FLAG{SQLI_AUTH_BYPASS'
+  private resolveFlagPrefix(slug: string): string {
+    const base = slug.toUpperCase().replace(/-/g, '_');
+    return `FLAG{${base}`;
   }
 }
