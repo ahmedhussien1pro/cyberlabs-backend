@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { PracticeLabsController } from './practice-labs.controller';
 import { PracticeLabsService } from './practice-labs.service';
+import { PracticeLabStateService } from './shared/services/practice-lab-state.service';
 import { DatabaseModule } from '../../core/database';
 import { CommandInjectionModule } from './command-injection/command-injection.module';
 import { AcVulnModule } from './ac-vuln/ac-vuln.module';
@@ -17,6 +18,7 @@ import { RaceConditionModule } from './race-condition/race-condition.module';
 import { CsrfModule } from './csrf/csrf.module';
 import { BadgesModule } from '../badges/badges.module';
 import { NotificationsModule } from '../notifications/notifications.module';
+
 @Module({
   imports: [
     DatabaseModule,
@@ -37,7 +39,7 @@ import { NotificationsModule } from '../notifications/notifications.module';
     ApiHackingModule,
   ],
   controllers: [PracticeLabsController],
-  providers: [PracticeLabsService],
+  providers: [PracticeLabsService, PracticeLabStateService],
   exports: [PracticeLabsService],
 })
 export class PracticeLabsModule {}
