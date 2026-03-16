@@ -96,10 +96,10 @@ async function main() {
 
   try {
     // await seedSubscriptionPlans(prisma);
-    // await seedLabs(prisma);
-    // await seedModuleLabs();
-    // await seedCourses(prisma);
-    // await seedPaths(prisma);
+    await seedLabs(prisma);
+    await seedModuleLabs();
+    await seedCourses(prisma);
+    await seedPaths(prisma);
 
     for (const category of LAB_CATEGORIES) {
       await seedCategoryLabs(prisma, category);

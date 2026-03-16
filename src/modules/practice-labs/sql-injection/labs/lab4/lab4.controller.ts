@@ -1,6 +1,6 @@
 import { Controller, Get, Query, Req, UseGuards } from '@nestjs/common';
 import { Lab4Service } from './lab4.service';
-import { JwtAuthGuard } from '../../../../../core/auth/guards/jwt-auth.guard';
+import { JwtAuthGuard } from '../../../../../common/guards/jwt-auth.guard';
 
 @Controller('practice-labs/sqli-error-based')
 @UseGuards(JwtAuthGuard)

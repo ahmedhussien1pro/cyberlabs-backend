@@ -1,6 +1,6 @@
 import { Controller, Get, Query, Req, UseGuards } from '@nestjs/common';
 import { Lab3Service } from './lab3.service';
-import { JwtAuthGuard } from '../../../../../core/auth/guards/jwt-auth.guard';
+import { JwtAuthGuard } from '../../../../../common/guards/jwt-auth.guard';
 
 @Controller('practice-labs/sqli-blind-boolean')
 @UseGuards(JwtAuthGuard)

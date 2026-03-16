@@ -1,6 +1,6 @@
 import { Controller, Get, Query, Req, UseGuards } from '@nestjs/common';
 import { Lab5Service } from './lab5.service';
-import { JwtAuthGuard } from '../../../../../core/auth/guards/jwt-auth.guard';
+import { JwtAuthGuard } from '../../../../../common/guards/jwt-auth.guard';
 
 @Controller('practice-labs/sqli-time-based')
 @UseGuards(JwtAuthGuard)
