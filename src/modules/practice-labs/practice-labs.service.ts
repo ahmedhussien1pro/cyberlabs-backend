@@ -10,6 +10,7 @@ import * as crypto from 'crypto';
 import { BadgesService } from '../badges/badges.service';
 import { NotificationsService } from '../notifications/services/notifications.service';
 import { NotificationEvents } from '../notifications/notifications.events';
+import { PracticeLabStateService } from './shared/services/practice-lab-state.service';
 
 /** XP formula: Level N requires N×1000 cumulative XP */
 function calcLevel(totalXP: number): number {
@@ -23,6 +24,7 @@ export class PracticeLabsService {
     private configService: ConfigService,
     private badgesService: BadgesService,
     private readonly notifications: NotificationsService,
+    private readonly stateService: PracticeLabStateService,
   ) {}
 
   // ─────────────────────────────────────────────
@@ -274,6 +276,14 @@ export class PracticeLabsService {
             ar_description: true,
             scenario: true,
             ar_scenario: true,
+            // ─ Lab Platform UI fields
+            goal: true,
+            ar_goal: true,
+            briefing: true,
+            ar_briefing: true,
+            stepsOverview: true,
+            ar_stepsOverview: true,
+            // ─ Execution config
             executionMode: true,
             engineConfig: true,
             initialState: true,
@@ -320,7 +330,13 @@ export class PracticeLabsService {
 
     if (!lab) throw new NotFoundException('Lab not found');
 
-    const isCorrect = lab.flagAnswer?.trim() === flagAnswer.trim();
+    // ─ Dynamic flag verification — compare against HMAC-generated flag
+    const expectedFlag = this.stateService.generateDynamicFlag(
+      `FLAG{${lab.slug.toUpperCase().replace(/-/g, '_')}`,
+      userId,
+      labId,
+    );
+    const isCorrect = expectedFlag === flagAnswer.trim();
 
     let progress = lab.usersProgress[0];
 
@@ -395,7 +411,7 @@ export class PracticeLabsService {
           completedCount,
         );
       } catch {
-        // Non-blocking: badge award failure should never fail the submission
+        // Non-blocking
       }
     }
 
@@ -460,8 +476,12 @@ export class PracticeLabsService {
       },
     });
 
+    // ─ بعد فتح الهينت الأخيرة (order 3)، نضيف الحل التفصيلي للأدمن فقط
+    const isLastHint = hint.order >= 3;
+
     return {
       success: true,
+      isLastHint,
       hint: {
         content: hint.content,
         ar_content: hint.ar_content,
@@ -523,10 +543,6 @@ export class PracticeLabsService {
     return names[category] ?? category;
   }
 
-  /**
-   * ✅ Fix: use interactive transaction so we can read the updated XP
-   *       and auto-bump level if needed (was array transaction before)
-   */
   private async awardXP(
     userId: string,
     amount: number,
@@ -542,7 +558,6 @@ export class PracticeLabsService {
         create: { userId, totalXP: amount, level: 1 },
       });
 
-      // ✅ Fix: auto level-up — Level N = N*1000 cumulative XP
       const newLevel = calcLevel(updated.totalXP);
       if (newLevel !== updated.level) {
         await tx.userPoints.update({
