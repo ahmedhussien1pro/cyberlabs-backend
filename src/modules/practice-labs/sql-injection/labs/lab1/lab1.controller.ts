@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Body, UseGuards } from '@nestjs/common';
+import { Controller, Post, Get, Body, Query, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../../../../../common/guards';
 import { GetUser } from '../../../shared/decorators/get-user.decorator';
 import { Lab1Service } from './lab1.service';
@@ -15,15 +15,18 @@ export class Lab1Controller {
   }
 
   // GET /practice-labs/sql-injection/lab1/progress?labId=xxx
+  // fix: use @Query not @Body — GET requests don't carry a body
   @Get('progress')
   async getProgress(
     @GetUser('id') userId: string,
-    @Body('labId') labId: string,
+    @Query('labId') labId: string,
   ) {
     return this.lab1Service.getProgress(userId, labId);
   }
 
   // POST /practice-labs/sql-injection/lab1/login
+  // Intentionally vulnerable endpoint — stays JWT-guarded so we can
+  // scope the raw SQL to the authenticated user's lab session only
   @Post('login')
   async login(
     @GetUser('id') userId: string,
