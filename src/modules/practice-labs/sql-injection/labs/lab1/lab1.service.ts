@@ -3,16 +3,13 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PrismaService } from '../../../../../core/database';
 import { PracticeLabStateService } from '../../../shared/services/practice-lab-state.service';
 
-// ─── Lab Steps ──────────────────────────────────────────────────────────────────
+// ─── Lab Steps ──────────────────────────────────────────────────────────────────────
 //
-// اللاب 3 مراحل إلزامية، مينفعش توصل لـ flag من غير ما تمر بيها كلها:
+// STEP 1 ─ PROBE   : single quote → DB error
+// STEP 2 ─ CONFIRM : OR injection بدون 1=1 أو true بعد
+// STEP 3 ─ EXPLOIT : ' OR '1'='1 → admin login → flag
 //
-// STEP 1 ─ PROBE      : يتحقق أن المستخدم جرب single quote ورأى الخطأ
-// STEP 2 ─ CONFIRM    : يتحقق أنه جرب payload يكسر الاستعلام (OR 1=1 بدون توقف كامل)
-// STEP 3 ─ EXPLOIT    : يكمل الـ payload ويدخل كأدمن
-//
-// كل خطوة تحفظ حالتها في LabGenericLog بـ event type
-// الفرونت يستطلع progress من /lab1/progress
+// كل خطوة تتحقق من الـ resolvedLabId الفعلي
 
 const LAB_SLUG = 'sqli-auth-bypass';
 
@@ -24,15 +21,16 @@ export class Lab1Service {
   ) {}
 
   // ─── Start Lab ──────────────────────────────────────────────────────────────────
-  async initLab(userId: string, labId: string) {
-    const result = await this.stateService.initializeState(userId, labId);
-    // ريست الـ progress log عند كل بداية جديدة
-    await this.prisma.labGenericLog.deleteMany({ where: { userId, labId } });
-    return result;
+  async initLab(userId: string, labIdOrSlug: string) {
+    // initializeState يعمل resolve داخلياً (id أو slug)
+    // ويرجع resolvedLabId = الـ real UUID من الـ DB
+    const result = await this.stateService.initializeState(userId, labIdOrSlug);
+    return result; // { status, message, labId (resolved), dynamicFlag }
   }
 
-  // ─── Get Step Progress ───────────────────────────────────────────────────────────
-  async getProgress(userId: string, labId: string) {
+  // ─── Get Step Progress ─────────────────────────────────────────────────────────
+  async getProgress(userId: string, labIdOrSlug: string) {
+    const labId = await this.stateService.resolveLabId(labIdOrSlug);
     const logs = await this.prisma.labGenericLog.findMany({
       where: { userId, labId },
       select: { event: true },
@@ -45,13 +43,15 @@ export class Lab1Service {
     };
   }
 
-  // ─── Login (vulnerable endpoint) ─────────────────────────────────────────────
+  // ─── Login (vulnerable endpoint) ───────────────────────────────────────────────
   async login(
     userId: string,
-    labId: string,
+    labIdOrSlug: string,
     username: string,
     password: string,
   ) {
+    const labId = await this.stateService.resolveLabId(labIdOrSlug);
+
     const query = `
       SELECT * FROM "LabGenericUser"
       WHERE  "userId"   = '${userId}'
@@ -67,7 +67,6 @@ export class Lab1Service {
       users = (await this.prisma.$queryRawUnsafe(query)) as any[];
     } catch {
       dbError = true;
-      // ─ STEP 1 PROBE: المستخدم وصل للكسر → يسجل الخطوة
       await this.recordStep(userId, labId, 'STEP_1_PROBE');
       return {
         success: false,
@@ -83,7 +82,6 @@ export class Lab1Service {
     const user = users[0];
 
     if (!user) {
-      // ─ هل المستخدم جرب injection pattern لكن لم يكمل بعد?
       const partialInjection = this.detectPartialInjection(username);
       if (partialInjection) {
         await this.recordStep(userId, labId, 'STEP_2_CONFIRM');
@@ -92,17 +90,15 @@ export class Lab1Service {
           exploited: false,
           step: 2,
           stepCompleted: 'STEP_2_CONFIRM',
-          feedback:
-            "You're on the right track. The query structure is becoming clear.",
-          ar_feedback:
-            'أنت في الطريق الصحيح. بنية الاستعلام تتضح شيئاً فشيئاً.',
+          feedback: "You're on the right track. The query structure is becoming clear.",
+          ar_feedback: 'أنت في الطريق الصحيح.',
           hint: 'Now make the WHERE clause always evaluate to true.',
         };
       }
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    // ─ تحقق من أن STEP 1 + 2 مكتملتين قبل STEP 3
+    // تحقق من STEP 1 + 2 قبل STEP 3
     const progress = await this.getProgress(userId, labId);
     const hasStep1 = progress.completedSteps.includes('STEP_1_PROBE');
     const hasStep2 = progress.completedSteps.includes('STEP_2_CONFIRM');
@@ -111,15 +107,12 @@ export class Lab1Service {
       return {
         success: false,
         exploited: false,
-        feedback:
-          'You found a valid login, but you need to probe further first.',
-        ar_feedback:
-          'وجدت دخولاً صحيحاً، لكن عليك استكشاف المزيد أولاً.',
+        feedback: 'You found a valid login, but you need to probe further first.',
+        ar_feedback: 'وجدت دخولاً صحيحاً، لكن عليك استكشاف المزيد أولاً.',
         hint: "Try breaking the query syntax first with a single quote '",
       };
     }
 
-    // ─ STEP 3 EXPLOIT: المستخدم حصل على admin
     if (user.role?.toLowerCase() === 'admin') {
       await this.recordStep(userId, labId, 'STEP_3_EXPLOIT');
       const flag = this.stateService.generateDynamicFlag(
@@ -140,22 +133,18 @@ export class Lab1Service {
       };
     }
 
-    // ─ دخل كمستخدم عادي (non-admin)
     return {
       success: true,
       exploited: false,
       username: user.username,
       role: user.role,
       feedback: 'Logged in as a regular user. The admin account is the target.',
-      ar_feedback:
-        'تسجيل دخول كمستخدم عادي. حساب الأدمن هو الهدف.',
+      ar_feedback: 'تسجيل دخول كمستخدم عادي. حساب الأدمن هو الهدف.',
     };
   }
 
-  // ─── Private Helpers ──────────────────────────────────────────────────────────────────
-
+  // ─── Private Helpers ─────────────────────────────────────────────────────────────
   private async recordStep(userId: string, labId: string, event: string) {
-    // سجل بس لو مكنتش مسجل قبلك
     const exists = await this.prisma.labGenericLog.findFirst({
       where: { userId, labId, event },
     });
@@ -167,7 +156,6 @@ export class Lab1Service {
   }
 
   private detectPartialInjection(username: string): boolean {
-    // اكتشف OR/AND injection keywords بدون إكمال كامل
     const lc = username.toLowerCase();
     return (
       (lc.includes('or') || lc.includes('and')) &&
