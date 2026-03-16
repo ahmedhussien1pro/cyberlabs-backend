@@ -1,12 +1,12 @@
 // src/modules/practice-labs/sql-injection/labs/lab1/lab1.service.ts
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../../../../core/database';
 import { PracticeLabStateService } from '../../../shared/services/practice-lab-state.service';
 
-// ─── Step Events (stored in LabGenericLog.type) ─────────────────────────────────────
-// STEP_1_PROBE   : single quote  → DB error
-// STEP_2_CONFIRM : partial OR injection → no result but detected
-// STEP_3_EXPLOIT : admin login via SQLi → flag revealed
+// ─── Step Events ────────────────────────────────────────────────────────────
+// STEP_1_PROBE   : any input that breaks SQL syntax (single quote etc.)
+// STEP_2_CONFIRM : any OR/AND based injection that manipulates WHERE logic
+// STEP_3_EXPLOIT : full bypass → logged in as admin
 const LAB_SLUG = 'sqli-auth-bypass';
 
 @Injectable()
@@ -16,21 +16,18 @@ export class Lab1Service {
     private stateService: PracticeLabStateService,
   ) {}
 
-  // ─── Start Lab ──────────────────────────────────────────────────────────────────
+  // ─── Start Lab ─────────────────────────────────────────────────────────────
   async initLab(userId: string, labIdOrSlug: string) {
     return this.stateService.initializeState(userId, labIdOrSlug);
   }
 
-  // ─── Get Step Progress ─────────────────────────────────────────────────────────
+  // ─── Get Step Progress ──────────────────────────────────────────────────────
   async getProgress(userId: string, labIdOrSlug: string) {
     const labId = await this.stateService.resolveLabId(labIdOrSlug);
-
-    // استخدم `type` field (schema: LabGenericLog.type)
     const logs = await this.prisma.labGenericLog.findMany({
       where: { userId, labId },
       select: { type: true },
     });
-
     const completedSteps = logs.map((l) => l.type);
     return {
       completedSteps,
@@ -39,7 +36,7 @@ export class Lab1Service {
     };
   }
 
-  // ─── Login (intentionally vulnerable SQL endpoint) ─────────────────────────────
+  // ─── Login (intentionally vulnerable) ──────────────────────────────────────
   async login(
     userId: string,
     labIdOrSlug: string,
@@ -62,6 +59,7 @@ export class Lab1Service {
     try {
       users = (await this.prisma.$queryRawUnsafe(query)) as any[];
     } catch {
+      // SQL syntax error → STEP_1_PROBE
       dbError = true;
       await this.recordStep(userId, labId, 'STEP_1_PROBE');
       return {
@@ -71,34 +69,41 @@ export class Lab1Service {
         stepCompleted: 'STEP_1_PROBE',
         feedback: 'Something went wrong with your input. Interesting...',
         ar_feedback: 'حدث خطأ في مدخلاتك. مثير للاهتمام...',
-        hint: 'The server reacted differently to your input. What does that tell you?',
+        hint: 'The server reacted differently — the quote broke the SQL syntax. Now try to use this to your advantage.',
       };
     }
 
     const user = users[0];
 
     if (!user) {
-      const partialInjection = this.detectPartialInjection(username);
-      if (partialInjection) {
+      // No result — check if this is an injection attempt (STEP_2)
+      if (this.detectInjectionAttempt(username)) {
         await this.recordStep(userId, labId, 'STEP_2_CONFIRM');
         return {
           success: false,
           exploited: false,
           step: 2,
           stepCompleted: 'STEP_2_CONFIRM',
-          feedback: "You're on the right track. The query structure is becoming clear.",
-          ar_feedback: 'أنت في الطريق الصحيح.',
-          hint: 'Now make the WHERE clause always evaluate to true.',
+          feedback: "You're manipulating the query structure — good. The WHERE condition isn't bypassed yet.",
+          ar_feedback: 'أنت تتلاعب في بنية الاستعلام — جيد. لكن الشرط لم يُتجاوز بعد.',
+          hint: "Add -- at the end to comment out the rest of the query. Example: admin' OR '1'='1' --",
         };
       }
-      throw new UnauthorizedException('Invalid credentials');
+      // Normal wrong credentials — return 200 with success: false (NOT 401)
+      return {
+        success: false,
+        exploited: false,
+        feedback: 'Invalid credentials.',
+        ar_feedback: 'بيانات تسجيل الدخول غير صحيحة.',
+      };
     }
 
-    // تحقق من إتمام STEP1 + STEP2 قبل منح الـ flag
+    // Got a user result
     const progress = await this.getProgress(userId, labId);
     const hasStep1 = progress.completedSteps.includes('STEP_1_PROBE');
     const hasStep2 = progress.completedSteps.includes('STEP_2_CONFIRM');
 
+    // Reached admin without going through the steps → guide them
     if (!hasStep1 || !hasStep2) {
       return {
         success: false,
@@ -139,9 +144,20 @@ export class Lab1Service {
     };
   }
 
-  // ─── Private Helpers ─────────────────────────────────────────────────────────────
+  // ─── Helpers ────────────────────────────────────────────────────────────────
 
-  // يسجل الـ step في `type` field تجنباً للتكرار
+  /**
+   * Detects any OR/AND based SQL injection attempt.
+   * Flexible — accepts any variation, not a fixed payload.
+   * Examples that pass: admin' OR 1=1 --, ' OR 'x'='x, admin' OR true --
+   */
+  private detectInjectionAttempt(username: string): boolean {
+    const lc = username.toLowerCase().trim();
+    const hasLogicalOp = /\bor\b|\band\b/.test(lc);
+    const hasSqlSyntax = lc.includes("'") || lc.includes('--') || lc.includes('#');
+    return hasLogicalOp && hasSqlSyntax;
+  }
+
   private async recordStep(userId: string, labId: string, stepType: string) {
     const exists = await this.prisma.labGenericLog.findFirst({
       where: { userId, labId, type: stepType },
@@ -151,16 +167,6 @@ export class Lab1Service {
         data: { userId, labId, type: stepType },
       });
     }
-  }
-
-  private detectPartialInjection(username: string): boolean {
-    const lc = username.toLowerCase();
-    return (
-      (lc.includes('or') || lc.includes('and')) &&
-      (lc.includes("'") || lc.includes('--')) &&
-      !lc.includes('1=1') &&
-      !lc.includes('true')
-    );
   }
 
   private resolveCurrentStep(completedSteps: string[]): number {

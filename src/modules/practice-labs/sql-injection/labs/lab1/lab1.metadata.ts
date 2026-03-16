@@ -18,7 +18,6 @@ export const lab1Metadata: LabMetadata = {
   executionMode: 'SHARED_BACKEND',
   isPublished: true,
 
-  // ─── للمتدرب ────────────────────────────────────────────────────
   goal: 'Access the administrator dashboard without knowing the password.',
   ar_goal: 'ادخل لوحة تحكم المدير دون معرفة كلمة المرور.',
 
@@ -37,39 +36,38 @@ The question is: does the system trust what you type a little too much?`,
 
   stepsOverview: {
     en: [
-      'Probe the login form — observe how the server responds to unexpected characters',
-      'Understand the structure of the SQL query being built behind the scenes',
-      'Craft an input that changes the logic of the query to always succeed',
+      'Probe — inject a special character to test if the input is sanitized',
+      'Confirm — use a logical operator to manipulate the WHERE clause',
+      'Exploit — craft the final payload to bypass authentication completely',
     ],
     ar: [
-      'استكشف نموذج تسجيل الدخول — لاحظ كيف يستجيب الخادم للأحرف غير المتوقعة',
-      'افهم بنية استعلام SQL الذي يُبنى في الخلفية',
-      'صمّم مدخلاً يغير منطق الاستعلام ليتحقق دائماً',
+      'استكشاف — أدخل حرفاً خاصاً لاختبار ما إذا كان المدخل يُعقَّم',
+      'تأكيد — استخدم عاملاً منطقياً للتلاعب في جملة WHERE',
+      'استغلال — اصنع الـ payload النهائي لتجاوز المصادقة بالكامل',
     ],
   },
 
-  // ─── للأدمن فقط ─────────────────────────────────────────────────
   solution: {
     context:
       "Legacy banking portal backend directly concatenates user input into the SQL query without parameterization or sanitization. The query structure is: SELECT * FROM users WHERE username = '$input' AND password = '$pass'.",
     vulnerableCode:
       "SELECT * FROM users WHERE username = '$username' AND password = '$password'",
     exploitation:
-      "Inject `' OR '1'='1` into the username field. This transforms the query to: WHERE username = '' OR '1'='1' AND password = '...', making the WHERE clause always true and returning the first user (admin).",
+      "Inject `admin' OR '1'='1' --` into the username field. This transforms the query to: WHERE username = 'admin' OR '1'='1' -- AND password = '...', making the WHERE clause always true and returning the admin user.",
     steps: {
       en: [
-        'Open the login page and observe the normal login behavior with valid credentials',
-        "Test with a single quote (') in the username field — notice if an error or abnormal response occurs",
-        "Enter `' OR '1'='1` in the username field and any value in the password field",
-        "Submit — the query becomes: WHERE username = '' OR '1'='1' AND password = '...' → always true → logs in as admin",
-        'Retrieve the flag from the admin dashboard',
+        'Open the login page and observe the normal login behavior',
+        "Test with a single quote (') in the username field — observe the error response",
+        "Add a logical OR condition: admin' OR 'x'='y — observe different behavior",
+        "Craft the final payload: admin' OR '1'='1' -- (the -- comments out the password check)",
+        'Submit — you are now logged in as admin. Retrieve the flag.',
       ],
       ar: [
-        'افتح صفحة تسجيل الدخول ولاحظ السلوك الطبيعي باستخدام بيانات صحيحة',
-        "اختبر بعلامة اقتباس مفردة (') في حقل اسم المستخدم — لاحظ إن كان هناك خطأ أو استجابة غير طبيعية",
-        "أدخل `' OR '1'='1` في حقل اسم المستخدم وأي قيمة في حقل كلمة المرور",
-        "أرسل — يصبح الاستعلام: WHERE username = '' OR '1'='1' AND password = '...' → صحيح دائماً → يسجل الدخول كأدمن",
-        'احصل على العلم من لوحة تحكم المدير',
+        'افتح صفحة تسجيل الدخول ولاحظ السلوك الطبيعي',
+        "اختبر بعلامة اقتباس مفردة (') في حقل اسم المستخدم — لاحظ رسالة الخطأ",
+        "أضف شرط OR منطقي: admin' OR 'x'='y — لاحظ الاستجابة المختلفة",
+        "اصنع الـ payload النهائي: admin' OR '1'='1' -- (-- تُعلّق فحص كلمة المرور)",
+        'أرسل — أنت الآن مسجل دخول كأدمن. احصل على العلم.',
       ],
     },
     fix: [
@@ -80,11 +78,10 @@ The question is: does the system trust what you type a little too much?`,
     ],
   },
 
-  // ─── بعد الحل ──────────────────────────────────────────────────
   postSolve: {
     explanation: {
-      en: 'SQL Injection in authentication queries allows an attacker to manipulate the WHERE clause logic. By injecting OR 1=1, the condition always evaluates to true, granting access without valid credentials. This is one of the most classic and dangerous web vulnerabilities.',
-      ar: 'حقن SQL في استعلامات المصادقة يسمح للمهاجم بالتلاعب في منطق جملة WHERE. بحقن OR 1=1، يُقيَّم الشرط دائماً بـ true، مما يمنح الوصول دون بيانات اعتماد صالحة. هذه من أكثر ثغرات الويب كلاسيكية وخطورة.',
+      en: 'SQL Injection in authentication queries allows an attacker to manipulate the WHERE clause logic. By injecting OR 1=1 --, the condition always evaluates to true and the password check is commented out, granting access without valid credentials.',
+      ar: 'حقن SQL في استعلامات المصادقة يسمح للمهاجم بالتلاعب في منطق جملة WHERE. بحقن OR 1=1 --، يُقيَّم الشرط دائماً بـ true ويُعلَّق فحص كلمة المرور، مما يمنح الوصول دون بيانات اعتماد صالحة.',
     },
     impact: {
       en: 'Complete authentication bypass. Attacker gains admin access to the entire banking portal, exposing customer data, transaction history, and financial controls.',
@@ -103,19 +100,19 @@ The question is: does the system trust what you type a little too much?`,
       order: 1,
       xpCost: 10,
       content:
-        "Think about how the backend builds the SQL query. It probably looks like: SELECT * FROM users WHERE username = '$input' AND password = '$pass'",
+        `The backend builds the SQL query by directly inserting your input — no sanitization. The query looks like this:\n\nSELECT * FROM users WHERE username = '$your_input' AND password = '$your_pass'\n\nStart by breaking the syntax: type a single quote (') in the username field and observe the server response. A different response means the input is reflected into the query.`,
     },
     {
       order: 2,
       xpCost: 20,
       content:
-        "What happens if you inject a single quote (') into the username field? Does it break the query syntax?",
+        `The single quote breaks the SQL string. Now use this to inject a logical condition.\n\nTry this in the username field:\n  admin' OR 'x'='y\n\nThis turns the WHERE clause into:\n  WHERE username = 'admin' OR 'x'='y' AND password = '...'\n\nThe server should behave differently — you're now manipulating the query logic.`,
     },
     {
       order: 3,
       xpCost: 30,
       content:
-        'Try to make the WHERE clause always evaluate to true. Think about SQL boolean operators — OR is your friend here.',
+        `You're one step away. The final payload needs to:\n1. Make the WHERE condition always TRUE\n2. Comment out the password check using --\n\nFinal payload to use in the username field:\n  admin' OR '1'='1' --\n\nThis transforms the query to:\n  WHERE username = 'admin' OR '1'='1' -- AND password = '...'\n  → Always TRUE → password check ignored → logged in as admin`,
     },
   ],
 
