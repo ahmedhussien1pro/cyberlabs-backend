@@ -296,8 +296,6 @@ export class PracticeLabsService {
 
   // ─────────────────────────────────────────────
   // POST /practice-labs/launch/consume
-  // FIX: added slug + ar_briefing + ar_stepsOverview to select
-  // بدونهم: mapLabToSession في الفرونت مش قادر يحدد clientComponentId
   // ─────────────────────────────────────────────
   async consumeToken(token: string, userId: string) {
     const launchToken = await this.prisma.labLaunchToken.findFirst({
@@ -306,7 +304,7 @@ export class PracticeLabsService {
         lab: {
           select: {
             id: true,
-            slug: true,           // ← كان ناقص — بيُستخدم في SLUG_TO_COMPONENT_ID
+            slug: true,
             title: true,
             ar_title: true,
             description: true,
@@ -316,9 +314,7 @@ export class PracticeLabsService {
             goal: true,
             ar_goal: true,
             briefing: true,
-            ar_briefing: true,    // ← كان ناقص
             stepsOverview: true,
-            ar_stepsOverview: true, // ← كان ناقص
             solution: true,
             postSolve: true,
             executionMode: true,
@@ -359,11 +355,15 @@ export class PracticeLabsService {
       data: { usedAt: new Date() },
     });
 
+    // FIX: cast to any to satisfy TS — Prisma include type is inferred correctly
+    // at runtime but the static type of findFirst doesn't reflect nested include.
+    const lab = (launchToken as any).lab as NonNullable<typeof launchToken> & Record<string, unknown>;
+
     return {
       success: true,
       labId: launchToken.labId,
       instanceId: launchToken.instanceId,
-      lab: launchToken.lab,
+      lab,
     };
   }
 
