@@ -21,20 +21,20 @@ const MODULE_LABS = [
 const LAB_CATEGORIES: string[] = [
   // ─── Existing categories ───────────────────────────────────────────────────
   'sql-injection',
-  'ac-vuln',
-  'business-logic',
-  'jwt',
+  // 'ac-vuln',
+  // 'business-logic',
+  // 'jwt',
   'xss',
-  'idor',
-  'csrf',
-  'broken-auth',
-  'command-injection',
-  'file-inclusion',
-  'file-upload',
-  'ssti',
-  'race-condition',
-  'captcha-bypass',
-  'api-hacking',
+  // 'idor',
+  // 'csrf',
+  // 'broken-auth',
+  // 'command-injection',
+  // 'file-inclusion',
+  // 'file-upload',
+  // 'ssti',
+  // 'race-condition',
+  // 'captcha-bypass',
+  // 'api-hacking',
   // ─── New categories ────────────────────────────────────────────────────────
   'cryptography',
   'obfuscation',
@@ -108,17 +108,17 @@ async function main() {
 
   try {
     // await seedSubscriptionPlans(prisma);
-    await seedLabs(prisma);
-    await seedModuleLabs();
-    await seedCourses(prisma);
-    await seedPaths(prisma);
+    // await seedLabs(prisma);
+    // await seedModuleLabs();
+    // await seedCourses(prisma);
+    // await seedPaths(prisma);
 
     for (const category of LAB_CATEGORIES) {
       await seedCategoryLabs(prisma, category);
     }
 
     // ✅ Always seed badges (idempotent — skips existing)
-    await seedBadges(prisma);
+    // await seedBadges(prisma);
 
     console.log('\n' + '═'.repeat(50));
     console.log('🎉 All seeds completed successfully!');
