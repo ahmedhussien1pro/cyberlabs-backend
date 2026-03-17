@@ -3,9 +3,9 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../../../../core/database';
 import { PracticeLabStateService } from '../../../shared/services/practice-lab-state.service';
 
-// ─── Step Events ────────────────────────────────────────────────────────────
+// ─── Step Events ─────────────────────────────────────────────────────────────
 // STEP_1_PROBE   : any input that breaks SQL syntax (single quote etc.)
-// STEP_2_CONFIRM : any OR/AND based injection that manipulates WHERE logic
+// STEP_2_CONFIRM : OR/AND injection that manipulates WHERE but returns empty
 // STEP_3_EXPLOIT : full bypass → logged in as admin
 const LAB_SLUG = 'sqli-auth-bypass';
 
@@ -16,12 +16,12 @@ export class Lab1Service {
     private stateService: PracticeLabStateService,
   ) {}
 
-  // ─── Start Lab ─────────────────────────────────────────────────────────────
+  // ─── Start Lab ───────────────────────────────────────────────────────────────
   async initLab(userId: string, labIdOrSlug: string) {
     return this.stateService.initializeState(userId, labIdOrSlug);
   }
 
-  // ─── Get Step Progress ──────────────────────────────────────────────────────
+  // ─── Get Step Progress ───────────────────────────────────────────────────────
   async getProgress(userId: string, labIdOrSlug: string) {
     const labId = await this.stateService.resolveLabId(labIdOrSlug);
     const logs = await this.prisma.labGenericLog.findMany({
@@ -36,7 +36,7 @@ export class Lab1Service {
     };
   }
 
-  // ─── Login (intentionally vulnerable) ──────────────────────────────────────
+  // ─── Login (intentionally vulnerable) ───────────────────────────────────────
   async login(
     userId: string,
     labIdOrSlug: string,
@@ -45,6 +45,7 @@ export class Lab1Service {
   ) {
     const labId = await this.stateService.resolveLabId(labIdOrSlug);
 
+    // Intentionally vulnerable raw query — DO NOT sanitize
     const query = `
       SELECT * FROM "LabGenericUser"
       WHERE  "userId"   = '${userId}'
@@ -54,13 +55,11 @@ export class Lab1Service {
     `;
 
     let users: any[] = [];
-    let dbError = false;
 
     try {
       users = (await this.prisma.$queryRawUnsafe(query)) as any[];
     } catch {
-      // SQL syntax error → STEP_1_PROBE
-      dbError = true;
+      // ── SQL syntax error → STEP_1_PROBE ──────────────────────────────────
       await this.recordStep(userId, labId, 'STEP_1_PROBE');
       return {
         success: false,
@@ -69,15 +68,16 @@ export class Lab1Service {
         stepCompleted: 'STEP_1_PROBE',
         feedback: 'Something went wrong with your input. Interesting...',
         ar_feedback: 'حدث خطأ في مدخلاتك. مثير للاهتمام...',
-        hint: 'The server reacted differently — the quote broke the SQL syntax. Now try to use this to your advantage.',
+        hint: "The server reacted differently — the quote broke the SQL syntax. Now try to use this to your advantage with OR.",
       };
     }
 
-    const user = users[0];
+    const user = users.find((u) => u.role?.toLowerCase() === 'admin') ?? users[0];
 
     if (!user) {
-      // No result — check if this is an injection attempt (STEP_2)
+      // ── Query ran fine but returned no rows ──────────────────────────────
       if (this.detectInjectionAttempt(username)) {
+        // User is manipulating the WHERE clause but condition is false (e.g. OR 'x'='y')
         await this.recordStep(userId, labId, 'STEP_2_CONFIRM');
         return {
           success: false,
@@ -86,10 +86,10 @@ export class Lab1Service {
           stepCompleted: 'STEP_2_CONFIRM',
           feedback: "You're manipulating the query structure — good. The WHERE condition isn't bypassed yet.",
           ar_feedback: 'أنت تتلاعب في بنية الاستعلام — جيد. لكن الشرط لم يُتجاوز بعد.',
-          hint: "Add -- at the end to comment out the rest of the query. Example: admin' OR '1'='1' --",
+          hint: "Make the OR condition always true. Try: admin' OR '1'='1' --",
         };
       }
-      // Normal wrong credentials — return 200 with success: false (NOT 401)
+      // Normal wrong credentials
       return {
         success: false,
         exploited: false,
@@ -98,21 +98,10 @@ export class Lab1Service {
       };
     }
 
-    // Got a user result
-    const progress = await this.getProgress(userId, labId);
-    const hasStep1 = progress.completedSteps.includes('STEP_1_PROBE');
-    const hasStep2 = progress.completedSteps.includes('STEP_2_CONFIRM');
-
-    // Reached admin without going through the steps → guide them
-    if (!hasStep1 || !hasStep2) {
-      return {
-        success: false,
-        exploited: false,
-        feedback: 'You found a valid login, but you need to probe further first.',
-        ar_feedback: 'وجدت دخولاً صحيحاً، لكن عليك استكشاف المزيد أولاً.',
-        hint: "Try breaking the query syntax first with a single quote '",
-      };
-    }
+    // ── Query returned rows → bypass succeeded ───────────────────────────────
+    // Auto-record any missing earlier steps so progress stays consistent
+    await this.recordStep(userId, labId, 'STEP_1_PROBE');
+    await this.recordStep(userId, labId, 'STEP_2_CONFIRM');
 
     if (user.role?.toLowerCase() === 'admin') {
       await this.recordStep(userId, labId, 'STEP_3_EXPLOIT');
@@ -134,6 +123,7 @@ export class Lab1Service {
       };
     }
 
+    // Logged in as a regular user (valid credentials, not admin)
     return {
       success: true,
       exploited: false,
@@ -144,17 +134,18 @@ export class Lab1Service {
     };
   }
 
-  // ─── Helpers ────────────────────────────────────────────────────────────────
+  // ─── Helpers ──────────────────────────────────────────────────────────────────
 
   /**
-   * Detects any OR/AND based SQL injection attempt.
-   * Flexible — accepts any variation, not a fixed payload.
-   * Examples that pass: admin' OR 1=1 --, ' OR 'x'='x, admin' OR true --
+   * Detects OR/AND based SQL injection in the username field.
+   * Matches: admin' OR '1'='1' --, ' OR 1=1 --, admin' OR true --
+   * Does NOT match normal wrong credentials.
    */
   private detectInjectionAttempt(username: string): boolean {
     const lc = username.toLowerCase().trim();
     const hasLogicalOp = /\bor\b|\band\b/.test(lc);
-    const hasSqlSyntax = lc.includes("'") || lc.includes('--') || lc.includes('#');
+    const hasSqlSyntax =
+      lc.includes("'") || lc.includes('--') || lc.includes('#');
     return hasLogicalOp && hasSqlSyntax;
   }
 
