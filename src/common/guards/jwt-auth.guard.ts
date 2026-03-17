@@ -32,20 +32,6 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
       return true;
     }
 
-    if (process.env.LOCAL === 'true') {
-      const req = context.switchToHttp().getRequest();
-      const authHeader = req.headers['authorization'] ?? '';
-      const token = authHeader.replace('Bearer ', '');
-
-      req.user = {
-        id: 'local-dev-user',
-        email: 'local@cyberlabs.dev',
-        username: 'LocalDev',
-        role: 'USER',
-      };
-      return true;
-    }
-
     return super.canActivate(context);
   }
 
