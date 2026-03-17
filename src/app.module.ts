@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
+import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { StorageModule } from './core/storage';
 
 // Controllers
@@ -56,6 +57,20 @@ import { MailModule } from './core/mail';
       },
     }),
 
+    // ── Global Rate Limiter ────────────────────────────────────────────
+    // Default: 100 req / 60s  (overridden per-endpoint with @Throttle)
+    // Lab submit endpoint overrides to: 5 req / 60s
+    ThrottlerModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => ([
+        {
+          name: 'default',
+          ttl: (config.get<number>('rateLimit.ttl') ?? 60) * 1000, // ms
+          limit: config.get<number>('rateLimit.limit') ?? 100,
+        },
+      ]),
+    }),
+
     // Core Modules
     DatabaseModule,
     LoggerModule,
@@ -91,9 +106,15 @@ import { MailModule } from './core/mail';
   controllers: [AppController],
   providers: [
     AppService,
+    // JWT guard — applied globally (ThrottlerGuard is also applied globally below)
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
+    },
+    // ✔ Global throttler guard — enforces rate limits on all endpoints
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
     },
   ],
 })
