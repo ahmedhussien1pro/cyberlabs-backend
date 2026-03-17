@@ -13,6 +13,12 @@ import { NotificationEvents } from '../notifications/notifications.events';
 import { PracticeLabStateService } from './shared/services/practice-lab-state.service';
 import { HintPenaltyService } from './shared/services/hint-penalty.service';
 import { FlagRecordService } from './shared/services/flag-record.service';
+import {
+  FlagPolicyType,
+  HintPenaltyMode,
+  LabWithPolicy,
+  LabLaunchInfo,
+} from './types/lab.types';
 
 /** XP formula: Level N requires N×1000 cumulative XP */
 function calcLevel(totalXP: number): number {
@@ -221,12 +227,13 @@ export class PracticeLabsService {
   // POST /practice-labs/:labId/launch
   // ─────────────────────────────────────────────
   async launchLab(labId: string, userId: string) {
-    const lab = await this.prisma.lab.findUnique({
+    const lab = (await this.prisma.lab.findUnique({
       where: { id: labId, isPublished: true },
-    });
+    })) as LabLaunchInfo | null;
 
     if (!lab) throw new NotFoundException('Lab not found');
 
+    // Expire any outstanding unused tokens for this user+lab
     await this.prisma.labLaunchToken.updateMany({
       where: { userId, labId, usedAt: null },
       data: { expiresAt: new Date(0) },
@@ -250,8 +257,11 @@ export class PracticeLabsService {
       },
     });
 
+    // ✔ Token TTL from config (default 60 min) — was hardcoded 10 min before
+    const ttlMinutes =
+      this.configService.get<number>('labs.launchTokenTTLMinutes') ?? 60;
     const tokenStr = crypto.randomBytes(32).toString('hex');
-    const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
+    const expiresAt = new Date(Date.now() + ttlMinutes * 60 * 1000);
 
     await this.prisma.labLaunchToken.create({
       data: {
@@ -263,7 +273,8 @@ export class PracticeLabsService {
       },
     });
 
-    const flagPolicy = (lab as any).flagPolicyType ?? 'PER_USER_PER_LAB';
+    // Generate & store flag for per-attempt policies
+    const flagPolicy: FlagPolicyType = lab.flagPolicyType ?? 'PER_USER_PER_LAB';
     if (
       flagPolicy === 'PER_USER_PER_ATTEMPT' ||
       flagPolicy === 'PER_SESSION'
@@ -281,16 +292,18 @@ export class PracticeLabsService {
       );
     }
 
-    const labsSubdomain =
-      this.configService.get<string>('LABS_URL') ??
-      'https://www.labs-test.cyber-labs.tech';
+    const labsUrl =
+      this.configService.get<string>('labs.labsUrl') ??
+      'https://www.labs.cyber-labs.tech';
 
     return {
       success: true,
-      launchUrl: `${labsSubdomain}/launch/${tokenStr}`,
+      launchUrl: `${labsUrl}/launch/${tokenStr}`,
       instanceId: instance.id,
       executionMode: lab.executionMode,
-      environmentType: (lab as any).environmentType ?? 'DEFAULT',
+      environmentType: lab.environmentType ?? 'DEFAULT',
+      tokenExpiresAt: expiresAt.toISOString(),
+      tokenTTLMinutes: ttlMinutes,
     };
   }
 
@@ -355,30 +368,31 @@ export class PracticeLabsService {
       data: { usedAt: new Date() },
     });
 
-    // FIX: cast to any to satisfy TS — Prisma include type is inferred correctly
-    // at runtime but the static type of findFirst doesn't reflect nested include.
-    const lab = (launchToken as any).lab as NonNullable<typeof launchToken> & Record<string, unknown>;
-
     return {
       success: true,
       labId: launchToken.labId,
       instanceId: launchToken.instanceId,
-      lab,
+      lab: launchToken.lab,
     };
   }
 
   // ─────────────────────────────────────────────
   // POST /practice-labs/:labId/submit
   // ─────────────────────────────────────────────
-  async submitFlag(labId: string, userId: string, flagAnswer: string, attemptId?: string) {
-    const lab = await this.prisma.lab.findUnique({
+  async submitFlag(
+    labId: string,
+    userId: string,
+    flagAnswer: string,
+    attemptId?: string,
+  ) {
+    const lab = (await this.prisma.lab.findUnique({
       where: { id: labId },
       include: { usersProgress: { where: { userId } } },
-    });
+    })) as (LabWithPolicy & { usersProgress: any[] }) | null;
 
     if (!lab) throw new NotFoundException('Lab not found');
 
-    const flagPolicy = (lab as any).flagPolicyType ?? 'PER_USER_PER_LAB';
+    const flagPolicy: FlagPolicyType = lab.flagPolicyType ?? 'PER_USER_PER_LAB';
     let isCorrect: boolean;
 
     if (
@@ -430,11 +444,11 @@ export class PracticeLabsService {
     const isFirstSolve = isCorrect && !progress.flagSubmitted;
 
     let finalPoints = isFirstSolve ? lab.pointsReward : 0;
-    let finalXP     = isFirstSolve ? lab.xpReward : 0;
+    let finalXP = isFirstSolve ? lab.xpReward : 0;
     let penaltyPercent = 0;
 
     if (isFirstSolve) {
-      const penaltyMode = (lab as any).hintPenaltyMode ?? 'PERCENTAGE';
+      const penaltyMode: HintPenaltyMode = lab.hintPenaltyMode ?? 'PERCENTAGE';
       const penalty = await this.hintPenalty.calculate(
         userId,
         labId,
@@ -442,8 +456,8 @@ export class PracticeLabsService {
         lab.xpReward,
         penaltyMode,
       );
-      finalPoints    = penalty.finalPoints;
-      finalXP        = penalty.finalXP;
+      finalPoints = penalty.finalPoints;
+      finalXP = penalty.finalXP;
       penaltyPercent = penalty.penaltyPercent;
     }
 
@@ -544,8 +558,12 @@ export class PracticeLabsService {
       };
     }
 
-    const lab = await this.prisma.lab.findUnique({ where: { id: labId } });
-    const penaltyMode = (lab as any)?.hintPenaltyMode ?? 'PERCENTAGE';
+    const labForPenalty = await this.prisma.lab.findUnique({
+      where: { id: labId },
+      select: { hintPenaltyMode: true },
+    });
+    const penaltyMode: HintPenaltyMode =
+      (labForPenalty?.hintPenaltyMode as HintPenaltyMode) ?? 'PERCENTAGE';
 
     if (penaltyMode === 'FIXED_XP' && hint.xpCost > 0) {
       const userPoints = await this.prisma.userPoints.findUnique({
