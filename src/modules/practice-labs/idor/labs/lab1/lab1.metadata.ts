@@ -31,6 +31,8 @@ export const idorLab1Metadata: LabMetadata = {
     vulnType: 'IDOR (Insecure Direct Object Reference)',
     cweId: 'CWE-639',
     cvssScore: 7.5,
+    description: 'IDOR arises when sequential or predictable object IDs are used without server-side ownership verification, allowing any authenticated user to access any other user\'s data.',
+    ar_description: 'ينشأ IDOR عندما تُستخدم معرفات كائنات تسلسلية أو يمكن التنبؤ بها دون التحقق من الملكية من جانب الخادم، مما يسمح لأي مستخدم مصادق بالوصول إلى بيانات أي مستخدم آخر.',
     whatYouLearn: [
       'How IDOR arises from missing object-level authorization checks',
       'Why sequential integer IDs are dangerous and easy to enumerate',
@@ -68,16 +70,12 @@ export const idorLab1Metadata: LabMetadata = {
   },
   solution: {
     context: 'TrackShip order endpoint fetches order by ID without verifying order.userId === req.user.id.',
-    vulnerableCode: `app.get('/orders/:orderId', async (req, res) => {
-  const order = await db.orders.findOne({ id: req.params.orderId });
-  // ❌ No ownership check
-  res.json(order);
-});`,
+    vulnerableCode: `app.get('/orders/:orderId', async (req, res) => {\n  const order = await db.orders.findOne({ id: req.params.orderId });\n  // ❌ No ownership check\n  res.json(order);\n});`,
     exploitation: 'GET /orders/ORD-1007 — returns VIP shipment with flag in cargo field.',
     steps: {
       en: [
         'GET /orders/ORD-1001 → your order confirmed',
-        'GET /orders/ORD-1002 → another user\'s order returned → IDOR confirmed',
+        "GET /orders/ORD-1002 → another user's order returned → IDOR confirmed",
         'Enumerate to ORD-1007 → classification: TOP SECRET → flag captured',
       ],
       ar: [
