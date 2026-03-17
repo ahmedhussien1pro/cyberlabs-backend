@@ -73,4 +73,19 @@ export default () => ({
     xpPerLevel: parseInt(process.env.XP_PER_LEVEL || '1000', 10),
     pointsToXpRatio: parseInt(process.env.POINTS_TO_XP_RATIO || '10', 10),
   },
+
+  // ── Labs ────────────────────────────────────────────────────────────────────
+  labs: {
+    /** How long a launch token stays valid (minutes). Default: 60 */
+    launchTokenTTLMinutes: parseInt(
+      process.env.LAB_LAUNCH_TOKEN_TTL_MINUTES ?? '60',
+      10,
+    ),
+    /** HMAC secret used to generate deterministic dynamic flags */
+    flagHmacSecret:
+      process.env.FLAG_HMAC_SECRET ?? 'cyberlabs_flag_secret_2026',
+    /** Base URL of the frontend-labs app */
+    labsUrl:
+      process.env.LABS_URL ?? 'https://www.labs.cyber-labs.tech',
+  },
 });
