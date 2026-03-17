@@ -1,5 +1,6 @@
 // src/modules/practice-labs/broken-auth/labs/lab2/lab2.controller.ts
 import { Controller, Post, Body, UseGuards } from '@nestjs/common';
+import { Throttle, SkipThrottle } from '@nestjs/throttler';
 import { JwtAuthGuard } from '../../../../../common/guards';
 import { GetUser } from '../../../shared/decorators/get-user.decorator';
 import { Lab2Service } from './lab2.service';
@@ -9,11 +10,31 @@ import { Lab2Service } from './lab2.service';
 export class Lab2Controller {
   constructor(private lab2Service: Lab2Service) {}
 
+  // ── read-only / init ─────────────────────────────────────────────────────
+  @SkipThrottle()
   @Post('start')
   start(@GetUser('id') userId: string, @Body('labId') labId: string) {
     return this.lab2Service.initLab(userId, labId);
   }
 
+  @SkipThrottle()
+  @Post('auth/get-remember-token')
+  getRememberToken(
+    @GetUser('id') userId: string,
+    @Body('labId') labId: string,
+  ) {
+    return this.lab2Service.getRememberToken(userId, labId);
+  }
+
+  // ── reset ────────────────────────────────────────────────────────────────
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
+  @Post('reset')
+  reset(@GetUser('id') userId: string, @Body('labId') labId: string) {
+    return this.lab2Service.initLab(userId, labId);
+  }
+
+  // ── vulnerable endpoints ──────────────────────────────────────────────────
+  @Throttle({ default: { limit: 15, ttl: 60000 } })
   @Post('auth/login')
   login(
     @GetUser('id') userId: string,
@@ -24,16 +45,8 @@ export class Lab2Controller {
     return this.lab2Service.login(userId, labId, email, password);
   }
 
-  // يعيد الـ remember-me token الخاص بك
-  @Post('auth/get-remember-token')
-  getRememberToken(
-    @GetUser('id') userId: string,
-    @Body('labId') labId: string,
-  ) {
-    return this.lab2Service.getRememberToken(userId, labId);
-  }
-
-  // يساعد في فهم الخوارزمية
+  // Token analysis helper
+  @Throttle({ default: { limit: 10, ttl: 60000 } })
   @Post('auth/forge-token')
   forgeToken(
     @GetUser('id') userId: string,
@@ -44,7 +57,8 @@ export class Lab2Controller {
     return this.lab2Service.forgeToken(userId, labId, email, role);
   }
 
-  // ❌ الثغرة: يقبل remember-me token بدون DB validation
+  // ❌ Broken Auth: remember-me token accepted without DB validation
+  @Throttle({ default: { limit: 15, ttl: 60000 } })
   @Post('auth/remember-login')
   rememberLogin(
     @GetUser('id') userId: string,

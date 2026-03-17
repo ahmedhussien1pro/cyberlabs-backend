@@ -1,19 +1,34 @@
-import { Controller, Get, Query, Req, UseGuards } from '@nestjs/common';
-import { Lab2Service } from './lab2.service';
+// src/modules/practice-labs/sql-injection/labs/lab2/lab2.controller.ts
+import { Controller, Get, Post, Query, Body, UseGuards } from '@nestjs/common';
+import { Throttle, SkipThrottle } from '@nestjs/throttler';
 import { JwtAuthGuard } from '../../../../../common/guards/jwt-auth.guard';
+import { GetUser } from '../../../shared/decorators/get-user.decorator';
+import { Lab2Service } from './lab2.service';
 
 @Controller('practice-labs/sqli-union-extract')
 @UseGuards(JwtAuthGuard)
 export class Lab2Controller {
   constructor(private readonly lab2: Lab2Service) {}
 
+  // ── read-only / init ─────────────────────────────────────────────────────
+  @SkipThrottle()
   @Get('init')
-  init(@Req() req: any) {
-    return this.lab2.initLab(req.user.id, 'sqli-union-extract');
+  init(@GetUser('id') userId: string) {
+    return this.lab2.initLab(userId, 'sqli-union-extract');
   }
 
+  // ── reset ────────────────────────────────────────────────────────────────
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
+  @Post('reset')
+  reset(@GetUser('id') userId: string) {
+    return this.lab2.initLab(userId, 'sqli-union-extract');
+  }
+
+  // ── vulnerable endpoint ───────────────────────────────────────────────────
+  // ❌ UNION-based SQLi: q injected directly into raw SQL query
+  @Throttle({ default: { limit: 20, ttl: 60000 } })
   @Get('search')
-  search(@Req() req: any, @Query('q') q: string) {
-    return this.lab2.search(req.user.id, 'sqli-union-extract', q ?? '');
+  search(@GetUser('id') userId: string, @Query('q') q: string) {
+    return this.lab2.search(userId, 'sqli-union-extract', q ?? '');
   }
 }

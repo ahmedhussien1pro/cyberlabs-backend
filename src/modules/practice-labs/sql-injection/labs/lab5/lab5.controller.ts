@@ -1,19 +1,35 @@
-import { Controller, Get, Query, Req, UseGuards } from '@nestjs/common';
-import { Lab5Service } from './lab5.service';
+// src/modules/practice-labs/sql-injection/labs/lab5/lab5.controller.ts
+import { Controller, Get, Post, Query, Body, UseGuards } from '@nestjs/common';
+import { Throttle, SkipThrottle } from '@nestjs/throttler';
 import { JwtAuthGuard } from '../../../../../common/guards/jwt-auth.guard';
+import { GetUser } from '../../../shared/decorators/get-user.decorator';
+import { Lab5Service } from './lab5.service';
 
 @Controller('practice-labs/sqli-time-based')
 @UseGuards(JwtAuthGuard)
 export class Lab5Controller {
   constructor(private readonly lab5: Lab5Service) {}
 
+  // ── read-only / init ─────────────────────────────────────────────────────
+  @SkipThrottle()
   @Get('init')
-  init(@Req() req: any) {
-    return this.lab5.initLab(req.user.id, 'sqli-time-based');
+  init(@GetUser('id') userId: string) {
+    return this.lab5.initLab(userId, 'sqli-time-based');
   }
 
+  // ── reset ────────────────────────────────────────────────────────────────
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
+  @Post('reset')
+  reset(@GetUser('id') userId: string) {
+    return this.lab5.initLab(userId, 'sqli-time-based');
+  }
+
+  // ── vulnerable endpoint ───────────────────────────────────────────────────
+  // ❌ Time-based blind SQLi: id causes DB sleep when payload is true
+  // Higher limit — time-based extraction needs many sequential requests
+  @Throttle({ default: { limit: 30, ttl: 60000 } })
   @Get('account')
-  lookupAccount(@Req() req: any, @Query('id') id: string) {
-    return this.lab5.lookupAccount(req.user.id, 'sqli-time-based', id ?? '1');
+  lookupAccount(@GetUser('id') userId: string, @Query('id') id: string) {
+    return this.lab5.lookupAccount(userId, 'sqli-time-based', id ?? '1');
   }
 }
