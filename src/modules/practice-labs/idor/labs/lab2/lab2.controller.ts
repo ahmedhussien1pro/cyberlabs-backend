@@ -1,5 +1,6 @@
 // src/modules/practice-labs/idor/labs/lab2/lab2.controller.ts
 import { Controller, Post, Body, UseGuards } from '@nestjs/common';
+import { Throttle, SkipThrottle } from '@nestjs/throttler';
 import { JwtAuthGuard } from '../../../../../common/guards';
 import { GetUser } from '../../../shared/decorators/get-user.decorator';
 import { Lab2Service } from './lab2.service';
@@ -9,17 +10,29 @@ import { Lab2Service } from './lab2.service';
 export class Lab2Controller {
   constructor(private lab2Service: Lab2Service) {}
 
+  // ── read-only / init ────────────────────────────────────────────────
+  @SkipThrottle()
   @Post('start')
   start(@GetUser('id') userId: string, @Body('labId') labId: string) {
     return this.lab2Service.initLab(userId, labId);
   }
 
+  @SkipThrottle()
   @Post('my-keys')
   getMyKeys(@GetUser('id') userId: string, @Body('labId') labId: string) {
     return this.lab2Service.getMyKeys(userId, labId);
   }
 
-  // ❌ الثغرة: بدون ownership check
+  // ── reset ───────────────────────────────────────────────────────────
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
+  @Post('reset')
+  reset(@GetUser('id') userId: string, @Body('labId') labId: string) {
+    return this.lab2Service.initLab(userId, labId);
+  }
+
+  // ── vulnerable endpoint ─────────────────────────────────────────────
+  // ❌ IDOR: keyId accepted without ownership check → exposes other users' API keys
+  @Throttle({ default: { limit: 20, ttl: 60000 } })
   @Post('api-keys/view')
   viewKey(
     @GetUser('id') userId: string,

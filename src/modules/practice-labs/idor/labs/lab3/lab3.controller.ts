@@ -1,5 +1,6 @@
 // src/modules/practice-labs/idor/labs/lab3/lab3.controller.ts
 import { Controller, Post, Body, UseGuards } from '@nestjs/common';
+import { Throttle, SkipThrottle } from '@nestjs/throttler';
 import { JwtAuthGuard } from '../../../../../common/guards';
 import { GetUser } from '../../../shared/decorators/get-user.decorator';
 import { Lab3Service } from './lab3.service';
@@ -9,24 +10,35 @@ import { Lab3Service } from './lab3.service';
 export class Lab3Controller {
   constructor(private lab3Service: Lab3Service) {}
 
+  // ── read-only / init ────────────────────────────────────────────────
+  @SkipThrottle()
   @Post('start')
   start(@GetUser('id') userId: string, @Body('labId') labId: string) {
     return this.lab3Service.initLab(userId, labId);
   }
 
-  // يصدر reset token للمستخدم الحالي
+  // ── reset ───────────────────────────────────────────────────────────
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
+  @Post('reset')
+  reset(@GetUser('id') userId: string, @Body('labId') labId: string) {
+    return this.lab3Service.initLab(userId, labId);
+  }
+
+  // ── vulnerable endpoints ────────────────────────────────────────────
+  @Throttle({ default: { limit: 10, ttl: 60000 } })
   @Post('auth/request-reset')
   requestReset(@GetUser('id') userId: string, @Body('labId') labId: string) {
     return this.lab3Service.requestReset(userId, labId);
   }
 
-  // للحصول على الـ token (مساعدة تعليمية)
+  @SkipThrottle()
   @Post('auth/get-token')
   getToken(@GetUser('id') userId: string, @Body('labId') labId: string) {
     return this.lab3Service.getToken(userId, labId);
   }
 
-  // ❌ الثغرة: يقبل userId من request body
+  // ❌ IDOR: accepts targetUserId from body — can reset any user's password
+  @Throttle({ default: { limit: 15, ttl: 60000 } })
   @Post('auth/reset-password')
   resetPassword(
     @GetUser('id') userId: string,
@@ -35,16 +47,10 @@ export class Lab3Controller {
     @Body('targetUserId') targetUserId: string,
     @Body('newPassword') newPassword: string,
   ) {
-    return this.lab3Service.resetPassword(
-      userId,
-      labId,
-      token,
-      targetUserId,
-      newPassword,
-    );
+    return this.lab3Service.resetPassword(userId, labId, token, targetUserId, newPassword);
   }
 
-  // تسجيل الدخول بعد إعادة التعيين
+  @Throttle({ default: { limit: 10, ttl: 60000 } })
   @Post('auth/login')
   login(
     @GetUser('id') userId: string,

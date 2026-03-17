@@ -1,5 +1,6 @@
 // src/modules/practice-labs/jwt/labs/lab1/lab1.controller.ts
 import { Controller, Post, Body, Headers, UseGuards } from '@nestjs/common';
+import { Throttle, SkipThrottle } from '@nestjs/throttler';
 import { JwtAuthGuard } from '../../../../../common/guards';
 import { GetUser } from '../../../shared/decorators/get-user.decorator';
 import { Lab1Service } from './lab1.service';
@@ -9,12 +10,22 @@ import { Lab1Service } from './lab1.service';
 export class Lab1Controller {
   constructor(private lab1Service: Lab1Service) {}
 
+  // ── read-only / init ────────────────────────────────────────────────
+  @SkipThrottle()
   @Post('start')
   async startLab(@GetUser('id') userId: string, @Body('labId') labId: string) {
     return this.lab1Service.initLab(userId, labId);
   }
 
-  // يصدر JWT token عادي للمستخدم
+  // ── reset ───────────────────────────────────────────────────────────
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
+  @Post('reset')
+  async reset(@GetUser('id') userId: string, @Body('labId') labId: string) {
+    return this.lab1Service.initLab(userId, labId);
+  }
+
+  // ── vulnerable endpoints ────────────────────────────────────────────
+  @Throttle({ default: { limit: 15, ttl: 60000 } })
   @Post('auth/login')
   async login(
     @GetUser('id') userId: string,
@@ -24,7 +35,8 @@ export class Lab1Controller {
     return this.lab1Service.login(userId, labId, username);
   }
 
-  // ❌ الثغرة: يقبل "alg: none" tokens بدون توقيع
+  // ❌ Accepts "alg: none" tokens without signature verification
+  @Throttle({ default: { limit: 20, ttl: 60000 } })
   @Post('admin/dashboard')
   async adminDashboard(
     @GetUser('id') userId: string,
