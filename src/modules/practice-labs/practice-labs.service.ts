@@ -209,7 +209,6 @@ export class PracticeLabsService {
     const { courseLabs, ...labRest } = lab;
     const course = courseLabs[0]?.course ?? null;
 
-    // Attach hint usage summary for this user
     let hintSummary: { count: number; orders: number[] } | null = null;
     if (userId) {
       hintSummary = await this.hintPenalty.getHintSummary(userId, labId);
@@ -264,9 +263,6 @@ export class PracticeLabsService {
       },
     });
 
-    // ── NEW: generate & store per-user-per-attempt flag ──────────────────────
-    // attemptId = instanceId (stable per re-launch within same instance)
-    // Only when flagPolicyType demands per-attempt or per-session rotation
     const flagPolicy = (lab as any).flagPolicyType ?? 'PER_USER_PER_LAB';
     if (
       flagPolicy === 'PER_USER_PER_ATTEMPT' ||
@@ -275,7 +271,7 @@ export class PracticeLabsService {
       const dynamicFlag = this.stateService.generateDynamicFlag(
         `FLAG{${lab.slug.toUpperCase().replace(/-/g, '_')}`,
         userId,
-        instance.id,  // use instanceId as attemptId
+        instance.id,
       );
       await this.flagRecord.generateAndStore(
         userId,
@@ -284,7 +280,6 @@ export class PracticeLabsService {
         dynamicFlag,
       );
     }
-    // ────────────────────────────────────────────────────────────────────────
 
     const labsSubdomain =
       this.configService.get<string>('LABS_URL') ??
@@ -360,11 +355,15 @@ export class PracticeLabsService {
       data: { usedAt: new Date() },
     });
 
+    // FIX: cast to any to satisfy TS — Prisma include type is inferred correctly
+    // at runtime but the static type of findFirst doesn't reflect nested include.
+    const lab = (launchToken as any).lab as NonNullable<typeof launchToken> & Record<string, unknown>;
+
     return {
       success: true,
       labId: launchToken.labId,
       instanceId: launchToken.instanceId,
-      lab: launchToken.lab,
+      lab,
     };
   }
 
@@ -379,7 +378,6 @@ export class PracticeLabsService {
 
     if (!lab) throw new NotFoundException('Lab not found');
 
-    // ── NEW: flag verification via FlagRecordService ─────────────────────────
     const flagPolicy = (lab as any).flagPolicyType ?? 'PER_USER_PER_LAB';
     let isCorrect: boolean;
 
@@ -402,7 +400,6 @@ export class PracticeLabsService {
       }
       isCorrect = result === 'correct';
     } else {
-      // Legacy / PER_USER_PER_LAB / STATIC: use state-based dynamic flag
       const expectedFlag = this.stateService.generateDynamicFlag(
         `FLAG{${lab.slug.toUpperCase().replace(/-/g, '_')}`,
         userId,
@@ -410,7 +407,6 @@ export class PracticeLabsService {
       );
       isCorrect = expectedFlag === flagAnswer.trim();
     }
-    // ────────────────────────────────────────────────────────────────────────
 
     let progress = lab.usersProgress[0];
 
@@ -433,7 +429,6 @@ export class PracticeLabsService {
 
     const isFirstSolve = isCorrect && !progress.flagSubmitted;
 
-    // ── NEW: apply hint penalty on first solve ───────────────────────────────
     let finalPoints = isFirstSolve ? lab.pointsReward : 0;
     let finalXP     = isFirstSolve ? lab.xpReward : 0;
     let penaltyPercent = 0;
@@ -451,7 +446,6 @@ export class PracticeLabsService {
       finalXP        = penalty.finalXP;
       penaltyPercent = penalty.penaltyPercent;
     }
-    // ────────────────────────────────────────────────────────────────────────
 
     const submission = await this.prisma.labSubmission.create({
       data: {
@@ -528,7 +522,6 @@ export class PracticeLabsService {
 
     if (!hint) throw new NotFoundException('Hint not found');
 
-    // ── NEW: audit log check — prevent double unlock ─────────────────────────
     const alreadyRecorded = !(await this.hintPenalty.recordHintUsage(
       userId,
       labId,
@@ -538,7 +531,6 @@ export class PracticeLabsService {
     ));
 
     if (alreadyRecorded) {
-      // Hint already unlocked — return content without deducting XP again
       return {
         success: true,
         alreadyUnlocked: true,
@@ -551,9 +543,7 @@ export class PracticeLabsService {
         },
       };
     }
-    // ────────────────────────────────────────────────────────────────────────
 
-    // Only deduct XP for FIXED_XP labs (PERCENTAGE labs deduct at submission)
     const lab = await this.prisma.lab.findUnique({ where: { id: labId } });
     const penaltyMode = (lab as any)?.hintPenaltyMode ?? 'PERCENTAGE';
 
@@ -563,7 +553,6 @@ export class PracticeLabsService {
       });
 
       if (!userPoints || userPoints.totalXP < hint.xpCost) {
-        // Rollback audit record on insufficient XP
         await this.prisma.labHintUsage.delete({
           where: { userId_labId_hintOrder: { userId, labId, hintOrder } },
         });
@@ -594,10 +583,7 @@ export class PracticeLabsService {
     });
 
     const isLastHint = hint.order >= 3;
-
-    // Preview of penalty that will apply at submission
     const hintSummary = await this.hintPenalty.getHintSummary(userId, labId);
-    const nextPenalty = Math.min(hintSummary.count, 4) * 10;  // rough preview
 
     return {
       success: true,
