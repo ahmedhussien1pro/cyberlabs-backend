@@ -50,7 +50,15 @@ export const envValidationSchema = Joi.object({
   R2_BUCKET_NAME: Joi.string().optional(),
   R2_PUBLIC_URL: Joi.string().optional(),
 
-  // Rate Limiting
+  // Rate Limiting (global)
   THROTTLE_TTL: Joi.number().default(60),
   THROTTLE_LIMIT: Joi.number().default(100),
+
+  // ── Labs ───────────────────────────────────────
+  /** Launch token validity in minutes (default 60) */
+  LAB_LAUNCH_TOKEN_TTL_MINUTES: Joi.number().default(60),
+  /** HMAC secret for dynamic flag generation */
+  FLAG_HMAC_SECRET: Joi.string().optional(),
+  /** Base URL of the frontend-labs app */
+  LABS_URL: Joi.string().optional(),
 });
