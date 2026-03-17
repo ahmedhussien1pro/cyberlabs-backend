@@ -76,7 +76,17 @@ export type LabEnvironmentType =
   | 'BLOG_CMS'
   | 'PORTAL_AUTH'
   | 'BANKING_DASHBOARD'
-  | 'GENERIC';
+  | 'BANKING_PORTAL'
+  | 'BANKING_APP'
+  | 'GENERIC'
+  | 'STREAMING_PLATFORM'
+  | 'TRAVEL_BOOKING'
+  | 'HEALTHCARE_PORTAL'
+  | 'CORPORATE_SSO'
+  | 'LOGISTICS'
+  | 'DEVELOPER_PLATFORM'
+  | 'PROJECT_MANAGEMENT'
+  | 'ANALYTICS_SAAS';
 
 // ─── Main LabMetadata ────────────────────────────────────────────────────────
 export interface LabMetadata {
@@ -106,9 +116,7 @@ export interface LabMetadata {
   imageUrl?: string;
 
   // ─── Grouping & inventory ─────────────────────────────────────
-  /** Maps to a canonical vulnerability concept (for dedup/grouping) */
   canonicalConceptId?: string;
-  /** Which React environment component to render */
   environmentType?: LabEnvironmentType;
 
   // ─── Lab Platform Fields ────────────────────────────────────────
