@@ -10,10 +10,17 @@ import { Lab5Service } from './lab5.service';
 export class Lab5Controller {
   constructor(private readonly lab5: Lab5Service) {}
 
-  // ── read-only / init ─────────────────────────────────────────────────────
+  // ── init (legacy GET) ────────────────────────────────────────────────────
   @SkipThrottle()
   @Get('init')
   init(@GetUser('id') userId: string) {
+    return this.lab5.initLab(userId, 'sqli-time-based');
+  }
+
+  // ── start (POST alias expected by frontend useLabBase) ───────────────────
+  @SkipThrottle()
+  @Post('start')
+  start(@GetUser('id') userId: string) {
     return this.lab5.initLab(userId, 'sqli-time-based');
   }
 

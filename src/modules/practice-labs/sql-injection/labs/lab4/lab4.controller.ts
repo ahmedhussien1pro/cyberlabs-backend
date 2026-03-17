@@ -10,10 +10,17 @@ import { Lab4Service } from './lab4.service';
 export class Lab4Controller {
   constructor(private readonly lab4: Lab4Service) {}
 
-  // ── read-only / init ─────────────────────────────────────────────────────
+  // ── init (legacy GET) ────────────────────────────────────────────────────
   @SkipThrottle()
   @Get('init')
   init(@GetUser('id') userId: string) {
+    return this.lab4.initLab(userId, 'sqli-error-based');
+  }
+
+  // ── start (POST alias expected by frontend useLabBase) ───────────────────
+  @SkipThrottle()
+  @Post('start')
+  start(@GetUser('id') userId: string) {
     return this.lab4.initLab(userId, 'sqli-error-based');
   }
 

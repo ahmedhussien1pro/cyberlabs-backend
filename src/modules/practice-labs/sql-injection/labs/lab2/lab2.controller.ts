@@ -10,10 +10,17 @@ import { Lab2Service } from './lab2.service';
 export class Lab2Controller {
   constructor(private readonly lab2: Lab2Service) {}
 
-  // ── read-only / init ─────────────────────────────────────────────────────
+  // ── init (legacy GET) ────────────────────────────────────────────────────
   @SkipThrottle()
   @Get('init')
   init(@GetUser('id') userId: string) {
+    return this.lab2.initLab(userId, 'sqli-union-extract');
+  }
+
+  // ── start (POST alias expected by frontend useLabBase) ───────────────────
+  @SkipThrottle()
+  @Post('start')
+  start(@GetUser('id') userId: string) {
     return this.lab2.initLab(userId, 'sqli-union-extract');
   }
 

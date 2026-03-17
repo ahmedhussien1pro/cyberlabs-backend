@@ -10,10 +10,17 @@ import { Lab3Service } from './lab3.service';
 export class Lab3Controller {
   constructor(private readonly lab3: Lab3Service) {}
 
-  // ── read-only / init ─────────────────────────────────────────────────────
+  // ── init (legacy GET) ────────────────────────────────────────────────────
   @SkipThrottle()
   @Get('init')
   init(@GetUser('id') userId: string) {
+    return this.lab3.initLab(userId, 'sqli-blind-boolean');
+  }
+
+  // ── start (POST alias expected by frontend useLabBase) ───────────────────
+  @SkipThrottle()
+  @Post('start')
+  start(@GetUser('id') userId: string) {
     return this.lab3.initLab(userId, 'sqli-blind-boolean');
   }
 
