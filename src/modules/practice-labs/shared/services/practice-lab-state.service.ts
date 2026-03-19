@@ -16,7 +16,8 @@ export class PracticeLabStateService {
       .digest('hex')
       .slice(0, 12)
       .toUpperCase();
-    return `${prefix}_${token}`;
+    // ✅ closing } — FLAG{PREFIX_TOKEN}
+    return `${prefix}_${token}}`;
   }
 
   // ─── Verify Dynamic Flag ─────────────────────────────────────────────────────
@@ -30,16 +31,12 @@ export class PracticeLabStateService {
   }
 
   // ─── Resolve Lab (by id OR slug) ─────────────────────────────────────────────
-  // يدعم labId كـ UUID أو كـ slug مباشرة
-  // هذا يحل مشكلة "Lab configuration not found" لو الـ lab موجود بالـ slug
   private async resolveLab(labId: string) {
-    // 1. جرب بالـ id أولاً
     let lab = await this.prisma.lab.findUnique({
       where: { id: labId },
       select: { id: true, initialState: true, slug: true },
     });
 
-    // 2. fallback: ابحث بالـ slug لو الـ id مش UUID أو مش موجود
     if (!lab) {
       lab = await this.prisma.lab.findUnique({
         where: { slug: labId },
@@ -56,11 +53,9 @@ export class PracticeLabStateService {
 
     if (!lab) throw new NotFoundException('Lab configuration not found');
 
-    // استخدم الـ real DB id دائماً بعد الـ resolve
     const resolvedLabId = lab.id;
     const config = lab.initialState as any;
 
-    // 1. تنظيف أي بيانات قديمة للمستخدم في هذا اللاب (Isolation)
     await this.prisma.$transaction([
       this.prisma.labGenericUser.deleteMany({ where: { userId, labId: resolvedLabId } }),
       this.prisma.labGenericBank.deleteMany({ where: { userId, labId: resolvedLabId } }),
@@ -68,7 +63,6 @@ export class PracticeLabStateService {
       this.prisma.labGenericLog.deleteMany({ where: { userId, labId: resolvedLabId } }),
     ]);
 
-    // 2. توليد dynamic flag
     const dynamicFlag = this.generateDynamicFlag(
       this.resolveFlagPrefix(lab.slug),
       userId,
@@ -76,7 +70,6 @@ export class PracticeLabStateService {
     );
     const resolvedConfig = this.replaceFlagPlaceholder(config, dynamicFlag);
 
-    // 3. إنشاء البيانات الجديدة
     if (resolvedConfig?.users?.length) {
       await this.prisma.labGenericUser.createMany({
         data: resolvedConfig.users.map((u: any) => ({ ...u, userId, labId: resolvedLabId })),
@@ -98,13 +91,12 @@ export class PracticeLabStateService {
     return {
       status: 'success',
       message: 'Lab environment initialized',
-      labId: resolvedLabId,   // ← الفرونت يستخدم هذا في كل طلبات بعد كده
+      labId: resolvedLabId,
       dynamicFlag,
     };
   }
 
   // ─── Get Resolved Lab ID ─────────────────────────────────────────────────────
-  // helper للـ services التانية تعمل resolve من غير ما تعمل init
   async resolveLabId(labIdOrSlug: string): Promise<string> {
     const lab = await this.resolveLab(labIdOrSlug);
     if (!lab) throw new NotFoundException('Lab configuration not found');
