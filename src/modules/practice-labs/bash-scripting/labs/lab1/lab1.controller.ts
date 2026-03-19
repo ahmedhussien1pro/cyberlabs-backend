@@ -1,5 +1,5 @@
 // src/modules/practice-labs/bash-scripting/labs/lab1/lab1.controller.ts
-import { Controller, Post, Get, Body, UseGuards } from '@nestjs/common';
+import { Controller, Post, Get, Body, Query, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../../../../../common/guards';
 import { GetUser } from '../../../shared/decorators/get-user.decorator';
 import { Lab1Service } from './lab1.service';
@@ -14,8 +14,12 @@ export class Lab1Controller {
     return this.lab1Service.initLab(userId, labId);
   }
 
+  // GET يقرأ labId من query string بدل body
   @Get('challenge')
-  async getChallenge(@GetUser('id') userId: string, @Body('labId') labId: string) {
+  async getChallenge(
+    @GetUser('id') userId: string,
+    @Query('labId') labId: string,
+  ) {
     return this.lab1Service.getChallenge(userId, labId);
   }
 

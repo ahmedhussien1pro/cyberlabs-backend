@@ -11,22 +11,28 @@ export class Lab1Service {
   ) {}
 
   async initLab(userId: string, labId: string) {
+    // initializeState يولد dynamic flag ويحفظه ويرجعه
     return this.stateService.initializeState(userId, labId);
   }
 
   async getChallenge(userId: string, labId: string) {
-    // Script مشفر بـ base64 يحتوي على flag
-    // Original script:
-    // #!/bin/bash
-    // key="FLAG{BASH_BASE64_DECODE_MASTER}"
-    // echo $key
-    const originalScript = '#!/bin/bash\nkey="FLAG{BASH_BASE64_DECODE_MASTER}"\necho $key';
+    const resolvedLabId = await this.stateService.resolveLabId(labId);
+
+    // توليد الفلاج الديناميك لهذا اليوزر
+    const dynamicFlag = this.stateService.generateDynamicFlag(
+      'FLAG{BASH_LAB1_BASE64_SCRIPT',
+      userId,
+      resolvedLabId,
+    );
+
+    // السكريبت الأصلي يحتوي على الفلاج الديناميك
+    const originalScript = `#!/bin/bash\nkey="${dynamicFlag}"\necho $key`;
     const encoded = Buffer.from(originalScript).toString('base64');
 
     return {
       challenge: {
-        encodedScript: encoded,
-        description: 'This bash script was encoded in Base64. Decode it to find the flag.',
+        script: encoded,
+        task: 'This bash script was encoded in Base64. Decode it to find the flag.',
         hint: 'Use: echo "<encoded>" | base64 -d',
       },
       instructions:
@@ -37,8 +43,14 @@ export class Lab1Service {
   async submitFlag(userId: string, labId: string, submittedFlag: string) {
     if (!submittedFlag) throw new BadRequestException('flag is required');
 
-    const correct = 'FLAG{BASH_BASE64_DECODE_MASTER}';
-    const isCorrect = submittedFlag.trim().toUpperCase() === correct.toUpperCase();
+    const resolvedLabId = await this.stateService.resolveLabId(labId);
+
+    const isCorrect = this.stateService.verifyDynamicFlag(
+      'FLAG{BASH_LAB1_BASE64_SCRIPT',
+      userId,
+      resolvedLabId,
+      submittedFlag,
+    );
 
     if (!isCorrect) {
       return {
@@ -47,11 +59,16 @@ export class Lab1Service {
       };
     }
 
+    const dynamicFlag = this.stateService.generateDynamicFlag(
+      'FLAG{BASH_LAB1_BASE64_SCRIPT',
+      userId,
+      resolvedLabId,
+    );
+
     return {
       success: true,
-      flag: correct,
+      flag: dynamicFlag,
       message: 'Well done! You decoded the bash script and extracted the flag.',
-      originalScript: '#!/bin/bash\nkey="FLAG{BASH_BASE64_DECODE_MASTER}"\necho $key',
       explanation:
         'Base64 encoding is often used to obfuscate scripts in CTF challenges and real malware. ' +
         'Always check for Base64-encoded payloads in scripts, environment variables, and config files.',

@@ -1,5 +1,5 @@
 // src/modules/practice-labs/bash-scripting/labs/lab2/lab2.controller.ts
-import { Controller, Post, Get, Body, UseGuards } from '@nestjs/common';
+import { Controller, Post, Get, Body, Query, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../../../../../common/guards';
 import { GetUser } from '../../../shared/decorators/get-user.decorator';
 import { Lab2Service } from './lab2.service';
@@ -15,8 +15,20 @@ export class Lab2Controller {
   }
 
   @Get('challenge')
-  async getChallenge(@GetUser('id') userId: string, @Body('labId') labId: string) {
+  async getChallenge(
+    @GetUser('id') userId: string,
+    @Query('labId') labId: string,
+  ) {
     return this.lab2Service.getChallenge(userId, labId);
+  }
+
+  @Post('command')
+  async runCommand(
+    @GetUser('id') userId: string,
+    @Body('labId') labId: string,
+    @Body('cmd') cmd: string,
+  ) {
+    return this.lab2Service.runCommand(userId, labId, cmd);
   }
 
   @Post('submit')
