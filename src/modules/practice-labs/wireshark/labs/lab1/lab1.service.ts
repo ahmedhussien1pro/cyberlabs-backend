@@ -4,7 +4,6 @@ import { PrismaService } from '../../../../../core/database';
 import { PracticeLabStateService } from '../../../shared/services/practice-lab-state.service';
 import { FlagRecordService } from '../../../shared/services/flag-record.service';
 
-// Flag prefix ثابت مرتبط بالـ slug
 const FLAG_PREFIX = 'FLAG{WIRESHARK-LAB1-HTTP-CREDENTIALS';
 
 @Injectable()
@@ -15,11 +14,10 @@ export class Lab1Service {
     private flagRecord: FlagRecordService,
   ) {}
 
-  // ─── initLab ───────────────────────────────────────────────────────────────
+  // ─── initLab ─────────────────────────────────────────────────────────
   async initLab(userId: string, labId: string) {
     const result = await this.stateService.initializeState(userId, labId);
 
-    // احفظ الـ dynamic flag في الـ FlagRecord عشان يتحقق منه عند الـ submit
     await this.flagRecord.generateAndStore(
       userId,
       result.labId,
@@ -31,13 +29,9 @@ export class Lab1Service {
     return { status: 'success', message: 'Lab environment initialized', labId: result.labId };
   }
 
-  // ─── getCapture ────────────────────────────────────────────────────────────
-  // يرجع simulated HTTP traffic مع الـ dynamic flag مدمج في الـ packet
+  // ─── getCapture ────────────────────────────────────────────────────────
   async getCapture(userId: string, labId: string) {
-    // resolve الـ labId الحقيقي من الـ DB
     const resolvedLabId = await this.stateService.resolveLabId(labId);
-
-    // ولّد الـ dynamic flag الخاص بالـ user
     const dynamicFlag = this.stateService.generateDynamicFlag(FLAG_PREFIX, userId, resolvedLabId);
 
     const packets = [
@@ -71,8 +65,7 @@ export class Lab1Service {
             'Content-Type': 'application/x-www-form-urlencoded',
             Host: '192.168.1.1',
           },
-          // الـ dynamic flag موجود في الـ body للـ POST request
-          body: `username=admin&password=${dynamicFlag}}`,
+          body: `username=admin&password=${dynamicFlag}`,
         },
       },
       {
@@ -89,7 +82,28 @@ export class Lab1Service {
     return { packets };
   }
 
-  // ─── submitFlag ────────────────────────────────────────────────────────────
+  // ─── getProgress — يستخدمه useLabBase.syncProgress() ──────────────────────────
+  async getProgress(userId: string, labId: string) {
+    try {
+      const resolvedLabId = await this.stateService.resolveLabId(labId);
+      const progress = await this.prisma.userLabProgress.findFirst({
+        where: { userId, labId: resolvedLabId },
+        select: { flagSubmitted: true, hintsUsed: true, startedAt: true, completedAt: true },
+      });
+      return {
+        step: progress?.flagSubmitted ? 'COMPLETED' : 'RUNNING',
+        flagSubmitted: progress?.flagSubmitted ?? false,
+        hintsUsed: progress?.hintsUsed ?? 0,
+        startedAt: progress?.startedAt ?? null,
+        completedAt: progress?.completedAt ?? null,
+      };
+    } catch {
+      // لو فيه حاجة مش متوقعة — نرجع حالة فارغة بدل ما يطلع 500
+      return { step: 'RUNNING', flagSubmitted: false, hintsUsed: 0 };
+    }
+  }
+
+  // ─── submitFlag ─────────────────────────────────────────────────────────
   async submitFlag(userId: string, labId: string, submittedFlag: string) {
     if (!submittedFlag?.trim()) throw new BadRequestException('flag is required');
 

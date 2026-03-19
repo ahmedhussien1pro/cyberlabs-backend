@@ -14,14 +14,21 @@ export class Lab1Controller {
     return this.lab1Service.initLab(userId, labId);
   }
 
-  // endpoint اسمه 'capture' عشان يتطابق مع الفرونت
-  // labId بييجي كـ query param مش body (GET مش بيبعت body)
   @Get('capture')
   async getCapture(
     @GetUser('id') userId: string,
     @Query('labId') labId: string,
   ) {
     return this.lab1Service.getCapture(userId, labId);
+  }
+
+  // بيستخدمه useLabBase.syncProgress() — لازم يتجنب الـ 404
+  @Get('progress')
+  async getProgress(
+    @GetUser('id') userId: string,
+    @Query('labId') labId: string,
+  ) {
+    return this.lab1Service.getProgress(userId, labId);
   }
 
   @Post('submit')
