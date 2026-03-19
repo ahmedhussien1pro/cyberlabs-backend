@@ -20,7 +20,6 @@ import {
   LabLaunchInfo,
 } from './types/lab.types';
 
-/** XP formula: Level N requires N×1000 cumulative XP */
 function calcLevel(totalXP: number): number {
   return Math.floor(totalXP / 1000) + 1;
 }
@@ -88,12 +87,7 @@ export class PracticeLabsService {
     });
 
     const categories = this.groupLabsByCategory(labs);
-
-    return {
-      success: true,
-      categories,
-      totalLabs: labs.length,
-    };
+    return { success: true, categories, totalLabs: labs.length };
   }
 
   // ─────────────────────────────────────────────
@@ -102,9 +96,7 @@ export class PracticeLabsService {
   async getStats() {
     const [totalLabs, completedCount, avgAttempts] = await Promise.all([
       this.prisma.lab.count({ where: { isPublished: true } }),
-      this.prisma.userLabProgress.count({
-        where: { completedAt: { not: null } },
-      }),
+      this.prisma.userLabProgress.count({ where: { completedAt: { not: null } } }),
       this.prisma.userLabProgress.aggregate({ _avg: { attempts: true } }),
     ]);
 
@@ -121,10 +113,7 @@ export class PracticeLabsService {
         completedCount,
         avgAttempts: avgAttempts._avg.attempts ?? 0,
         byDifficulty: labsByDifficulty.reduce(
-          (acc, curr) => {
-            acc[curr.difficulty.toLowerCase()] = curr._count;
-            return acc;
-          },
+          (acc, curr) => { acc[curr.difficulty.toLowerCase()] = curr._count; return acc; },
           {} as Record<string, number>,
         ),
       },
@@ -132,13 +121,41 @@ export class PracticeLabsService {
   }
 
   // ─────────────────────────────────────────────
-  // GET /practice-labs/progress
+  // GET /practice-labs/progress?labId=xxx
+  // يرجع الـ attempts الحقيقي + ملخص مفيد للفرونت
   // ─────────────────────────────────────────────
   async getUserProgress(userId: string, labId?: string) {
-    const where = labId ? { userId, labId } : { userId };
+    if (labId) {
+      // طلب لاب بعينه — يرجع ملخص مباشر للفرونت
+      const p = await this.prisma.userLabProgress.findFirst({
+        where: { userId, labId },
+        select: {
+          attempts: true,
+          hintsUsed: true,
+          flagSubmitted: true,
+          startedAt: true,
+          completedAt: true,
+          lastAccess: true,
+          progress: true,
+        },
+      });
+      return {
+        success: true,
+        // step يستخدمه useLabBase.syncProgress()
+        step: p?.flagSubmitted ? 'COMPLETED' : p ? 'RUNNING' : 'NOT_STARTED',
+        attempts: p?.attempts ?? 0,
+        hintsUsed: p?.hintsUsed ?? 0,
+        flagSubmitted: p?.flagSubmitted ?? false,
+        startedAt: p?.startedAt ?? null,
+        completedAt: p?.completedAt ?? null,
+        lastAccess: p?.lastAccess ?? null,
+        progress: p?.progress ?? 0,
+      };
+    }
 
-    const progress = await this.prisma.userLabProgress.findMany({
-      where,
+    // بدون labId — كل progress المستخدم
+    const progressList = await this.prisma.userLabProgress.findMany({
+      where: { userId },
       include: {
         lab: {
           select: {
@@ -155,7 +172,7 @@ export class PracticeLabsService {
       orderBy: { lastAccess: 'desc' },
     });
 
-    return { success: true, progress };
+    return { success: true, progress: progressList };
   }
 
   // ─────────────────────────────────────────────
@@ -166,19 +183,12 @@ export class PracticeLabsService {
       where: { id: labId, isPublished: true },
       include: {
         hints: {
-          select: {
-            id: true,
-            order: true,
-            xpCost: true,
-            penaltyPercent: true,
-          },
+          select: { id: true, order: true, xpCost: true, penaltyPercent: true },
           orderBy: { order: 'asc' },
         },
         courseLabs: {
           take: 1,
-          include: {
-            course: { select: { id: true, title: true, ar_title: true } },
-          },
+          include: { course: { select: { id: true, title: true, ar_title: true } } },
         },
         ...(userId && {
           usersProgress: {
@@ -233,7 +243,6 @@ export class PracticeLabsService {
 
     if (!lab) throw new NotFoundException('Lab not found');
 
-    // Expire any outstanding unused tokens for this user+lab
     await this.prisma.labLaunchToken.updateMany({
       where: { userId, labId, usedAt: null },
       data: { expiresAt: new Date(0) },
@@ -245,51 +254,36 @@ export class PracticeLabsService {
       create: { userId, labId, isActive: true },
     });
 
+    // ✅ زيادة attempts عند كل launch — يظهر العدد الحقيقي عند دخول اللاب
     await this.prisma.userLabProgress.upsert({
       where: { userId_labId: { userId, labId } },
-      update: { lastAccess: new Date() },
+      update: { lastAccess: new Date(), attempts: { increment: 1 } },
       create: {
         userId,
         labId,
-        attempts: 0,
+        attempts: 1,
         startedAt: new Date(),
         lastAccess: new Date(),
       },
     });
 
-    // ✔ Token TTL from config (default 60 min) — was hardcoded 10 min before
     const ttlMinutes =
       this.configService.get<number>('labs.launchTokenTTLMinutes') ?? 60;
     const tokenStr = crypto.randomBytes(32).toString('hex');
     const expiresAt = new Date(Date.now() + ttlMinutes * 60 * 1000);
 
     await this.prisma.labLaunchToken.create({
-      data: {
-        token: tokenStr,
-        userId,
-        labId,
-        instanceId: instance.id,
-        expiresAt,
-      },
+      data: { token: tokenStr, userId, labId, instanceId: instance.id, expiresAt },
     });
 
-    // Generate & store flag for per-attempt policies
     const flagPolicy: FlagPolicyType = lab.flagPolicyType ?? 'PER_USER_PER_LAB';
-    if (
-      flagPolicy === 'PER_USER_PER_ATTEMPT' ||
-      flagPolicy === 'PER_SESSION'
-    ) {
+    if (flagPolicy === 'PER_USER_PER_ATTEMPT' || flagPolicy === 'PER_SESSION') {
       const dynamicFlag = this.stateService.generateDynamicFlag(
         `FLAG{${lab.slug.toUpperCase().replace(/-/g, '_')}`,
         userId,
         instance.id,
       );
-      await this.flagRecord.generateAndStore(
-        userId,
-        labId,
-        instance.id,
-        dynamicFlag,
-      );
+      await this.flagRecord.generateAndStore(userId, labId, instance.id, dynamicFlag);
     }
 
     const labsUrl =
@@ -316,42 +310,20 @@ export class PracticeLabsService {
       include: {
         lab: {
           select: {
-            id: true,
-            slug: true,
-            title: true,
-            ar_title: true,
-            description: true,
-            ar_description: true,
-            scenario: true,
-            ar_scenario: true,
-            goal: true,
-            ar_goal: true,
-            briefing: true,
-            stepsOverview: true,
-            solution: true,
-            postSolve: true,
-            executionMode: true,
-            environmentType: true,
-            engineConfig: true,
-            initialState: true,
-            difficulty: true,
-            category: true,
-            skills: true,
-            xpReward: true,
-            pointsReward: true,
-            duration: true,
-            missionBrief: true,
-            labInfo: true,
-            immersiveAssets: true,
-            hintPenaltyMode: true,
-            flagPolicyType: true,
+            id: true, slug: true, title: true, ar_title: true,
+            description: true, ar_description: true,
+            scenario: true, ar_scenario: true,
+            goal: true, ar_goal: true,
+            briefing: true, ar_briefing: true,
+            stepsOverview: true, solution: true, postSolve: true,
+            executionMode: true, environmentType: true,
+            engineConfig: true, initialState: true,
+            difficulty: true, category: true, skills: true,
+            xpReward: true, pointsReward: true, duration: true,
+            missionBrief: true, labInfo: true, immersiveAssets: true,
+            hintPenaltyMode: true, flagPolicyType: true,
             hints: {
-              select: {
-                id: true,
-                order: true,
-                xpCost: true,
-                penaltyPercent: true,
-              },
+              select: { id: true, order: true, xpCost: true, penaltyPercent: true },
               orderBy: { order: 'asc' },
             },
           },
@@ -378,11 +350,12 @@ export class PracticeLabsService {
 
   // ─────────────────────────────────────────────
   // POST /practice-labs/:labId/submit
+  // flag موحد (controller + service) — لا يوجد attemptId للابs العادية
   // ─────────────────────────────────────────────
   async submitFlag(
     labId: string,
     userId: string,
-    flagAnswer: string,
+    flag: string,
     attemptId?: string,
   ) {
     const lab = (await this.prisma.lab.findUnique({
@@ -400,44 +373,36 @@ export class PracticeLabsService {
       (flagPolicy === 'PER_USER_PER_ATTEMPT' || flagPolicy === 'PER_SESSION')
     ) {
       const result = await this.flagRecord.verifyAndConsume(
-        userId,
-        labId,
-        attemptId,
-        flagAnswer,
+        userId, labId, attemptId, flag,
       );
-
-      if (result === 'already_used') {
+      if (result === 'already_used')
         throw new BadRequestException('Flag already used — lab already solved.');
-      }
-      if (result === 'expired') {
+      if (result === 'expired')
         throw new BadRequestException('Flag expired. Please relaunch the lab.');
-      }
       isCorrect = result === 'correct';
     } else {
+      // PER_USER_PER_LAB: الفلاج مربوط بـ userId + labId — مش الـ instanceId
+      // ✅ موحد مع ما يولده generateDynamicFlag في كل الـ labs
       const expectedFlag = this.stateService.generateDynamicFlag(
         `FLAG{${lab.slug.toUpperCase().replace(/-/g, '_')}`,
         userId,
         labId,
       );
-      isCorrect = expectedFlag === flagAnswer.trim();
+      isCorrect = expectedFlag === flag.trim();
     }
 
+    // ✅ متابعة الـ attempts: فقط نزيد لو ماكنشش تم اللاب قبل كده
     let progress = lab.usersProgress[0];
 
     if (!progress) {
       progress = await this.prisma.userLabProgress.create({
-        data: {
-          userId,
-          labId,
-          attempts: 1,
-          startedAt: new Date(),
-          lastAccess: new Date(),
-        },
+        data: { userId, labId, attempts: 1, startedAt: new Date(), lastAccess: new Date() },
       });
-    } else {
+    } else if (!progress.flagSubmitted) {
+      // لو اللاب تم قبل — متابعة بس attempts بدون increment عشان منتنسابشي
       progress = await this.prisma.userLabProgress.update({
         where: { id: progress.id },
-        data: { attempts: { increment: 1 }, lastAccess: new Date() },
+        data: { lastAccess: new Date() },
       });
     }
 
@@ -450,29 +415,27 @@ export class PracticeLabsService {
     if (isFirstSolve) {
       const penaltyMode: HintPenaltyMode = lab.hintPenaltyMode ?? 'PERCENTAGE';
       const penalty = await this.hintPenalty.calculate(
-        userId,
-        labId,
-        lab.pointsReward,
-        lab.xpReward,
-        penaltyMode,
+        userId, labId, lab.pointsReward, lab.xpReward, penaltyMode,
       );
       finalPoints = penalty.finalPoints;
       finalXP = penalty.finalXP;
       penaltyPercent = penalty.penaltyPercent;
     }
 
+    // احسب الـ attemptNumber من الـ submissions السابقة + 1
+    const submissionCount = await this.prisma.labSubmission.count({
+      where: { userId, labId },
+    });
+
     const submission = await this.prisma.labSubmission.create({
       data: {
-        userId,
-        labId,
-        flagAnswer,
+        userId, labId,
+        flagAnswer: flag,
         isCorrect,
-        attemptNumber: progress.attempts,
+        attemptNumber: submissionCount + 1,
         pointsEarned: finalPoints,
         xpEarned: finalXP,
-        timeTaken: Math.floor(
-          (Date.now() - progress.startedAt.getTime()) / 1000,
-        ),
+        timeTaken: Math.floor((Date.now() - new Date(progress.startedAt).getTime()) / 1000),
       },
     });
 
@@ -486,10 +449,7 @@ export class PracticeLabsService {
       await this.awardPoints(userId, finalPoints, `Completed lab: ${lab.title}`);
 
       this.notifications
-        .notify(
-          userId,
-          NotificationEvents.labCompleted(lab.title, finalXP, finalPoints),
-        )
+        .notify(userId, NotificationEvents.labCompleted(lab.title, finalXP, finalPoints))
         .catch(() => {});
 
       try {
@@ -497,9 +457,7 @@ export class PracticeLabsService {
           where: { userId, completedAt: { not: null } },
         });
         await this.badgesService.checkLabMilestoneBadges(userId, completedCount);
-      } catch {
-        // Non-blocking
-      }
+      } catch { /* Non-blocking */ }
     }
 
     return {
@@ -507,7 +465,7 @@ export class PracticeLabsService {
       isCorrect,
       isFirstSolve,
       isCompleted: isCorrect,
-      totalAttempts: progress.attempts,
+      totalAttempts: submissionCount + 1,
       penaltyPercent,
       message: isCorrect
         ? isFirstSolve
@@ -537,11 +495,7 @@ export class PracticeLabsService {
     if (!hint) throw new NotFoundException('Hint not found');
 
     const alreadyRecorded = !(await this.hintPenalty.recordHintUsage(
-      userId,
-      labId,
-      hint.id,
-      hint.order,
-      hint.xpCost,
+      userId, labId, hint.id, hint.order, hint.xpCost,
     ));
 
     if (alreadyRecorded) {
@@ -566,10 +520,7 @@ export class PracticeLabsService {
       (labForPenalty?.hintPenaltyMode as HintPenaltyMode) ?? 'PERCENTAGE';
 
     if (penaltyMode === 'FIXED_XP' && hint.xpCost > 0) {
-      const userPoints = await this.prisma.userPoints.findUnique({
-        where: { userId },
-      });
-
+      const userPoints = await this.prisma.userPoints.findUnique({ where: { userId } });
       if (!userPoints || userPoints.totalXP < hint.xpCost) {
         await this.prisma.labHintUsage.delete({
           where: { userId_labId_hintOrder: { userId, labId, hintOrder } },
@@ -581,7 +532,6 @@ export class PracticeLabsService {
           available: userPoints?.totalXP ?? 0,
         };
       }
-
       await this.prisma.userPoints.update({
         where: { userId },
         data: { totalXP: { decrement: hint.xpCost } },
@@ -591,13 +541,7 @@ export class PracticeLabsService {
     await this.prisma.userLabProgress.upsert({
       where: { userId_labId: { userId, labId } },
       update: { hintsUsed: { increment: 1 } },
-      create: {
-        userId,
-        labId,
-        hintsUsed: 1,
-        startedAt: new Date(),
-        lastAccess: new Date(),
-      },
+      create: { userId, labId, hintsUsed: 1, startedAt: new Date(), lastAccess: new Date() },
     });
 
     const isLastHint = hint.order >= 3;
@@ -624,22 +568,19 @@ export class PracticeLabsService {
   // Helpers
   // ─────────────────────────────────────────────
   private groupLabsByCategory(labs: any[]) {
-    const grouped = labs.reduce(
-      (acc, lab) => {
-        const category: string = lab.category ?? 'FUNDAMENTALS';
-        if (!acc[category]) {
-          acc[category] = {
-            id: category,
-            name: this.getCategoryName(category),
-            ar_name: this.getCategoryNameAr(category),
-            labs: [],
-          };
-        }
-        acc[category].labs.push(lab);
-        return acc;
-      },
-      {} as Record<string, any>,
-    );
+    const grouped = labs.reduce((acc, lab) => {
+      const category: string = lab.category ?? 'FUNDAMENTALS';
+      if (!acc[category]) {
+        acc[category] = {
+          id: category,
+          name: this.getCategoryName(category),
+          ar_name: this.getCategoryNameAr(category),
+          labs: [],
+        };
+      }
+      acc[category].labs.push(lab);
+      return acc;
+    }, {} as Record<string, any>);
     return Object.values(grouped);
   }
 
@@ -673,32 +614,19 @@ export class PracticeLabsService {
     return names[category] ?? category;
   }
 
-  private async awardXP(
-    userId: string,
-    amount: number,
-    source: any,
-    reason: string,
-  ) {
+  private async awardXP(userId: string, amount: number, source: any, reason: string) {
     if (amount <= 0) return;
-
     await this.prisma.$transaction(async (tx) => {
       const updated = await tx.userPoints.upsert({
         where: { userId },
         update: { totalXP: { increment: amount } },
         create: { userId, totalXP: amount, level: 1 },
       });
-
       const newLevel = calcLevel(updated.totalXP);
       if (newLevel !== updated.level) {
-        await tx.userPoints.update({
-          where: { userId },
-          data: { level: newLevel },
-        });
+        await tx.userPoints.update({ where: { userId }, data: { level: newLevel } });
       }
-
-      await tx.xPLog.create({
-        data: { userId, source, amount, reason },
-      });
+      await tx.xPLog.create({ data: { userId, source, amount, reason } });
     });
   }
 
@@ -710,9 +638,7 @@ export class PracticeLabsService {
         update: { totalPoints: { increment: amount } },
         create: { userId, totalPoints: amount },
       }),
-      this.prisma.pointsLog.create({
-        data: { userId, amount, reason },
-      }),
+      this.prisma.pointsLog.create({ data: { userId, amount, reason } }),
     ]);
   }
 }

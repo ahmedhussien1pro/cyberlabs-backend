@@ -20,16 +20,12 @@ import { GetUser } from './shared/decorators/get-user.decorator';
 export class PracticeLabsController {
   constructor(private readonly practiceLabsService: PracticeLabsService) {}
 
-  // ── Read-only endpoints — no rate limit needed ─────────────────────────────
-
-  // GET /api/practice-labs
   @SkipThrottle()
   @Get()
   getAllLabs(@GetUser('id') userId: string) {
     return this.practiceLabsService.getAllLabs(userId);
   }
 
-  // GET /api/practice-labs/stats
   @SkipThrottle()
   @Get('stats')
   getStats() {
@@ -37,6 +33,7 @@ export class PracticeLabsController {
   }
 
   // GET /api/practice-labs/progress?labId=xxx
+  // يرجع الـ attempts الحقيقي من DB + حالة اللاب
   @SkipThrottle()
   @Get('progress')
   getUserProgress(
@@ -46,17 +43,12 @@ export class PracticeLabsController {
     return this.practiceLabsService.getUserProgress(userId, labId);
   }
 
-  // GET /api/practice-labs/:labId
   @SkipThrottle()
   @Get(':labId')
   getLabById(@Param('labId') labId: string, @GetUser('id') userId: string) {
     return this.practiceLabsService.getLabById(labId, userId);
   }
 
-  // ── Mutating endpoints — rate limited ──────────────────────────────────
-
-  // POST /api/practice-labs/launch/consume
-  // Light throttle — user loads the lab page
   @Throttle({ default: { limit: 10, ttl: 60000 } })
   @Post('launch/consume')
   consumeToken(@Body('token') token: string, @GetUser('id') userId: string) {
@@ -66,8 +58,6 @@ export class PracticeLabsController {
     return this.practiceLabsService.consumeToken(token, userId);
   }
 
-  // POST /api/practice-labs/:labId/launch
-  // Moderate throttle — launching too many times is suspicious
   @Throttle({ default: { limit: 5, ttl: 60000 } })
   @Post(':labId/launch')
   launchLab(@Param('labId') labId: string, @GetUser('id') userId: string) {
@@ -75,8 +65,7 @@ export class PracticeLabsController {
   }
 
   // POST /api/practice-labs/:labId/submit
-  // 🔴 Strictest throttle — prevents brute-force flag guessing
-  // Max 5 attempts per 60s, and 15 total per 10 minutes
+  // الفرونت بيبعت flag — موحد مع الـ service
   @Throttle({ default: { limit: 5, ttl: 60000 } })
   @Post(':labId/submit')
   submitFlag(
@@ -95,8 +84,6 @@ export class PracticeLabsController {
     );
   }
 
-  // POST /api/practice-labs/:labId/hint
-  // Moderate throttle — prevents hint farming / spam
   @Throttle({ default: { limit: 8, ttl: 60000 } })
   @Post(':labId/hint')
   getHint(
