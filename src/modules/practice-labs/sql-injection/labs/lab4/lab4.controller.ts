@@ -5,7 +5,7 @@ import { JwtAuthGuard } from '../../../../../common/guards/jwt-auth.guard';
 import { GetUser } from '../../../shared/decorators/get-user.decorator';
 import { Lab4Service } from './lab4.service';
 
-@Controller('practice-labs/sqli-error-based')
+@Controller('practice-labs/sql-injection/lab4')
 @UseGuards(JwtAuthGuard)
 export class Lab4Controller {
   constructor(private readonly lab4: Lab4Service) {}
