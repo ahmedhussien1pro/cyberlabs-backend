@@ -5,7 +5,7 @@ import { JwtAuthGuard } from '../../../../../common/guards/jwt-auth.guard';
 import { GetUser } from '../../../shared/decorators/get-user.decorator';
 import { Lab3Service } from './lab3.service';
 
-@Controller('practice-labs/sqli-blind-boolean')
+@Controller('practice-labs/sql-injection/lab3')
 @UseGuards(JwtAuthGuard)
 export class Lab3Controller {
   constructor(private readonly lab3: Lab3Service) {}
