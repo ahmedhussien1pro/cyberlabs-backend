@@ -11,21 +11,18 @@ export class Lab1Service {
   ) {}
 
   async initLab(userId: string, labId: string) {
-    // initializeState يولد dynamic flag ويحفظه ويرجعه
     return this.stateService.initializeState(userId, labId);
   }
 
   async getChallenge(userId: string, labId: string) {
     const resolvedLabId = await this.stateService.resolveLabId(labId);
 
-    // توليد الفلاج الديناميك لهذا اليوزر
     const dynamicFlag = this.stateService.generateDynamicFlag(
       'FLAG{BASH_LAB1_BASE64_SCRIPT',
       userId,
       resolvedLabId,
     );
 
-    // السكريبت الأصلي يحتوي على الفلاج الديناميك
     const originalScript = `#!/bin/bash\nkey="${dynamicFlag}"\necho $key`;
     const encoded = Buffer.from(originalScript).toString('base64');
 
@@ -55,7 +52,8 @@ export class Lab1Service {
     if (!isCorrect) {
       return {
         success: false,
-        message: 'Incorrect. Did you fully decode the Base64 and read the script?',
+        message:
+          'Incorrect. Did you fully decode the Base64 and read the script?',
       };
     }
 

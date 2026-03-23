@@ -20,11 +20,12 @@ const MODULE_LABS = [
 
 const LAB_CATEGORIES: string[] = [
   // ─── Existing categories ───────────────────────────────────────────────────
-  'sql-injection',
+  'bash-scripting',
+  // 'sql-injection',
   // 'ac-vuln',
   // 'business-logic',
   // 'jwt',
-  'xss',
+  // 'xss',
   // 'idor',
   // 'csrf',
   // 'broken-auth',
@@ -35,13 +36,11 @@ const LAB_CATEGORIES: string[] = [
   // 'race-condition',
   // 'captcha-bypass',
   // 'api-hacking',
-  // ─── New categories ────────────────────────────────────────────────────────
-  'cryptography',
-  'obfuscation',
-  'cookies-lab',
-  'linux',
-  'bash-scripting',
-  'wireshark',
+  // 'cryptography',
+  // 'obfuscation',
+  // 'cookies-lab',
+  // 'linux',
+  // 'wireshark',
 ];
 
 function toJson(val: unknown): Prisma.InputJsonValue | undefined {
