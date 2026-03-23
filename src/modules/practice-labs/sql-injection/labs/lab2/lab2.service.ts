@@ -1,3 +1,4 @@
+// src/modules/practice-labs/sql-injection/labs/lab2/lab2.service.ts
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../../../../core/database';
 import { PracticeLabStateService } from '../../../shared/services/practice-lab-state.service';
@@ -13,6 +14,21 @@ export class Lab2Service {
 
   async initLab(userId: string, labIdOrSlug: string) {
     return this.stateService.initializeState(userId, labIdOrSlug);
+  }
+
+  // ─── Get Step Progress ───────────────────────────────────────────────────────
+  async getProgress(userId: string, labIdOrSlug: string) {
+    const labId = await this.stateService.resolveLabId(labIdOrSlug);
+    const logs = await this.prisma.labGenericLog.findMany({
+      where: { userId, labId },
+      select: { type: true },
+    });
+    const completedSteps = [...new Set(logs.map((l) => l.type))];
+    return {
+      completedSteps,
+      currentStep: this.resolveCurrentStep(completedSteps),
+      totalSteps: 3,
+    };
   }
 
   async search(userId: string, labIdOrSlug: string, query: string) {
@@ -98,6 +114,14 @@ export class Lab2Service {
       p.name.toLowerCase().includes(lq.replace(/[^a-z0-9 ]/g, '')),
     );
     return { success: true, results };
+  }
+
+  // ─── Helpers ─────────────────────────────────────────────────────────────────
+  private resolveCurrentStep(completedSteps: string[]): number {
+    if (completedSteps.includes('STEP_3_EXTRACT')) return 3;
+    if (completedSteps.includes('STEP_2_STRING_COLUMN')) return 3;
+    if (completedSteps.includes('STEP_1_COLUMN_COUNT')) return 2;
+    return 1;
   }
 
   private async recordStep(userId: string, labId: string, stepType: string) {

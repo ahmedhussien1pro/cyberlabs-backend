@@ -31,6 +31,16 @@ export class Lab4Controller {
     return this.lab4.initLab(userId, 'sqli-error-based');
   }
 
+  // ── progress ─────────────────────────────────────────────────────────────
+  @SkipThrottle()
+  @Get('progress')
+  getProgress(
+    @GetUser('id') userId: string,
+    @Query('labId') labId: string,
+  ) {
+    return this.lab4.getProgress(userId, labId ?? 'sqli-error-based');
+  }
+
   // ── vulnerable endpoint ───────────────────────────────────────────────────
   // ❌ Error-based SQLi: id injected into raw SQL — DB errors leaked in response
   @Throttle({ default: { limit: 20, ttl: 60000 } })

@@ -1,3 +1,4 @@
+// src/modules/practice-labs/sql-injection/labs/lab4/lab4.service.ts
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../../../../core/database';
 import { PracticeLabStateService } from '../../../shared/services/practice-lab-state.service';
@@ -13,6 +14,21 @@ export class Lab4Service {
 
   async initLab(userId: string, labIdOrSlug: string) {
     return this.stateService.initializeState(userId, labIdOrSlug);
+  }
+
+  // ─── Get Step Progress ───────────────────────────────────────────────────────
+  async getProgress(userId: string, labIdOrSlug: string) {
+    const labId = await this.stateService.resolveLabId(labIdOrSlug);
+    const logs = await this.prisma.labGenericLog.findMany({
+      where: { userId, labId },
+      select: { type: true },
+    });
+    const completedSteps = [...new Set(logs.map((l) => l.type))];
+    return {
+      completedSteps,
+      currentStep: this.resolveCurrentStep(completedSteps),
+      totalSteps: 3,
+    };
   }
 
   async lookupUser(userId: string, labIdOrSlug: string, idParam: string) {
@@ -50,7 +66,8 @@ export class Lab4Service {
       await this.recordStep(userId, labId, 'STEP_3_EXTRACT');
       const flag = this.stateService.generateDynamicFlag(
         `FLAG{${LAB_SLUG.toUpperCase().replace(/-/g, '_')}`,
-        userId, labId,
+        userId,
+        labId,
       );
       return {
         success: false,
@@ -72,6 +89,14 @@ export class Lab4Service {
       return { success: false, error: `invalid input syntax for type integer: "${raw.slice(0, 30)}"` };
     }
     return { success: false, error: 'User not found' };
+  }
+
+  // ─── Helpers ─────────────────────────────────────────────────────────────────
+  private resolveCurrentStep(completedSteps: string[]): number {
+    if (completedSteps.includes('STEP_3_EXTRACT')) return 3;
+    if (completedSteps.includes('STEP_2_ENUM_TABLES')) return 3;
+    if (completedSteps.includes('STEP_1_CAST_CONFIRM')) return 2;
+    return 1;
   }
 
   private async recordStep(userId: string, labId: string, stepType: string) {

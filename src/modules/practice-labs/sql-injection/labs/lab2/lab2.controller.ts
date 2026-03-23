@@ -31,6 +31,16 @@ export class Lab2Controller {
     return this.lab2.initLab(userId, 'sqli-union-extract');
   }
 
+  // ── progress ─────────────────────────────────────────────────────────────
+  @SkipThrottle()
+  @Get('progress')
+  getProgress(
+    @GetUser('id') userId: string,
+    @Query('labId') labId: string,
+  ) {
+    return this.lab2.getProgress(userId, labId ?? 'sqli-union-extract');
+  }
+
   // ── vulnerable endpoint ───────────────────────────────────────────────────
   // ❌ UNION-based SQLi: q injected directly into raw SQL query
   @Throttle({ default: { limit: 20, ttl: 60000 } })

@@ -1,3 +1,4 @@
+// src/modules/practice-labs/sql-injection/labs/lab3/lab3.service.ts
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../../../../core/database';
 import { PracticeLabStateService } from '../../../shared/services/practice-lab-state.service';
@@ -14,6 +15,21 @@ export class Lab3Service {
 
   async initLab(userId: string, labIdOrSlug: string) {
     return this.stateService.initializeState(userId, labIdOrSlug);
+  }
+
+  // ─── Get Step Progress ───────────────────────────────────────────────────────
+  async getProgress(userId: string, labIdOrSlug: string) {
+    const labId = await this.stateService.resolveLabId(labIdOrSlug);
+    const logs = await this.prisma.labGenericLog.findMany({
+      where: { userId, labId },
+      select: { type: true },
+    });
+    const completedSteps = [...new Set(logs.map((l) => l.type))];
+    return {
+      completedSteps,
+      currentStep: this.resolveCurrentStep(completedSteps),
+      totalSteps: 3,
+    };
   }
 
   async getArticle(userId: string, labIdOrSlug: string, idParam: string) {
@@ -75,15 +91,16 @@ export class Lab3Service {
       if (correct && logs.length >= ADMIN_PASSWORD.length) {
         const flag = this.stateService.generateDynamicFlag(
           `FLAG{${LAB_SLUG.toUpperCase().replace(/-/g, '_')}`,
-          userId, labId,
+          userId,
+          labId,
         );
         return {
           found: true,
           stepCompleted: 'STEP_3_EXTRACT',
           exploited: true,
           flag,
-          message: `Full password extracted: ${ADMIN_PASSWORD}`,
-          ar_message: `تم استخراج كلمة المرور الكاملة: ${ADMIN_PASSWORD}`,
+          message: 'Full password extracted!',
+          ar_message: 'تم استخراج كلمة المرور الكاملة!',
         };
       }
 
@@ -91,10 +108,10 @@ export class Lab3Service {
         found: correct,
         stepCompleted: correct ? 'STEP_3_EXTRACT' : undefined,
         feedback: correct
-          ? `Position ${pos + 1} = '${ADMIN_PASSWORD[pos]}' ✓`
+          ? `Position ${pos + 1} confirmed ✓`
           : `Wrong ASCII at position ${pos + 1}`,
         ar_feedback: correct
-          ? `الموضع ${pos + 1} = '${ADMIN_PASSWORD[pos]}' ✓`
+          ? `الموضع ${pos + 1} صحيح ✓`
           : `ASCII خاطئ في الموضع ${pos + 1}`,
       };
     }
@@ -105,6 +122,14 @@ export class Lab3Service {
       return { found: true, article: { id: 5, title: 'Getting Started with Node.js', content: 'Node.js is a JavaScript runtime...' } };
     }
     return { found: false };
+  }
+
+  // ─── Helpers ─────────────────────────────────────────────────────────────────
+  private resolveCurrentStep(completedSteps: string[]): number {
+    if (completedSteps.includes('STEP_3_EXTRACT')) return 3;
+    if (completedSteps.includes('STEP_2_LENGTH')) return 3;
+    if (completedSteps.includes('STEP_1_CONFIRM')) return 2;
+    return 1;
   }
 
   private async recordStep(userId: string, labId: string, stepType: string) {

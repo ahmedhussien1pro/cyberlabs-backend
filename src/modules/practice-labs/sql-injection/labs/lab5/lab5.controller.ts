@@ -31,6 +31,16 @@ export class Lab5Controller {
     return this.lab5.initLab(userId, 'sqli-time-based');
   }
 
+  // ── progress ─────────────────────────────────────────────────────────────
+  @SkipThrottle()
+  @Get('progress')
+  getProgress(
+    @GetUser('id') userId: string,
+    @Query('labId') labId: string,
+  ) {
+    return this.lab5.getProgress(userId, labId ?? 'sqli-time-based');
+  }
+
   // ── vulnerable endpoint ───────────────────────────────────────────────────
   // ❌ Time-based blind SQLi: id causes DB sleep when payload is true
   // Higher limit — time-based extraction needs many sequential requests

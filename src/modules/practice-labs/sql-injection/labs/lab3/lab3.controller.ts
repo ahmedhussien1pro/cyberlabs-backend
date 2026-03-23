@@ -31,6 +31,16 @@ export class Lab3Controller {
     return this.lab3.initLab(userId, 'sqli-blind-boolean');
   }
 
+  // ── progress ─────────────────────────────────────────────────────────────
+  @SkipThrottle()
+  @Get('progress')
+  getProgress(
+    @GetUser('id') userId: string,
+    @Query('labId') labId: string,
+  ) {
+    return this.lab3.getProgress(userId, labId ?? 'sqli-blind-boolean');
+  }
+
   // ── vulnerable endpoint ───────────────────────────────────────────────────
   // ❌ Blind Boolean SQLi: id injected into raw SQL — true/false response only
   // Higher limit because blind SQLi requires many requests by design
