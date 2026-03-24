@@ -34,7 +34,7 @@ import type { RequestUser } from '../../../common/types';
 import { Serialize } from '../../../common/decorators';
 import { AuthResponseSerializer } from '../serializers';
 
-// ── httpOnly Cookie helpers ───────────────────────────────────────────────────────────
+// ── httpOnly Cookie helpers ───────────────────────────────────────────────────
 const REFRESH_COOKIE = 'cyb_rt';
 
 function getRefreshCookieOpts(): CookieOptions {
@@ -43,11 +43,9 @@ function getRefreshCookieOpts(): CookieOptions {
     httpOnly: true,
     secure: isProd,
     sameSite: 'lax',
-    ...(isProd
-      ? { domain: process.env.COOKIE_DOMAIN ?? '.cyber-labs.tech' }
-      : {}),
+    ...(isProd ? { domain: process.env.COOKIE_DOMAIN ?? '.cyber-labs.tech' } : {}),
     path: '/api/v1/auth/refresh',
-    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    maxAge: 7 * 24 * 60 * 60 * 1000,
   };
 }
 
@@ -57,13 +55,19 @@ function clearRefreshCookieOpts(): CookieOptions {
     httpOnly: true,
     secure: isProd,
     sameSite: 'lax',
-    ...(isProd
-      ? { domain: process.env.COOKIE_DOMAIN ?? '.cyber-labs.tech' }
-      : {}),
+    ...(isProd ? { domain: process.env.COOKIE_DOMAIN ?? '.cyber-labs.tech' } : {}),
     path: '/api/v1/auth/refresh',
   };
 }
-// ───────────────────────────────────────────────────────────────────────────
+
+/** استخرج IP + UserAgent من الـ request */
+function extractMeta(req: Request): { ip?: string; userAgent?: string } {
+  return {
+    ip: (req.headers['x-forwarded-for'] as string)?.split(',')[0]?.trim() || req.ip,
+    userAgent: req.headers['user-agent'],
+  };
+}
+// ─────────────────────────────────────────────────────────────────────────────
 
 @Controller('auth')
 export class AuthController {
@@ -82,6 +86,7 @@ export class AuthController {
   @Serialize(AuthResponseSerializer)
   async register(
     @Body() dto: RegisterDto,
+    @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ) {
     const result = await this.authService.register(dto);
@@ -89,21 +94,15 @@ export class AuthController {
     return result;
   }
 
-  /**
-   * Login.
-   * • Normal login  → sets refreshToken cookie + returns { user, accessToken, ... }
-   * • 2FA required  → returns { requires2fa: true, userId } — NO cookie set
-   *
-   * @Serialize is intentionally omitted so requires2fa payload is never stripped.
-   */
   @Public()
   @Post('login')
   @HttpCode(HttpStatus.OK)
   async login(
     @Body() dto: LoginDto,
+    @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ) {
-    const result = await this.authService.login(dto);
+    const result = await this.authService.login(dto, extractMeta(req));
 
     if ('requires2fa' in result && result.requires2fa) {
       return result;
@@ -113,11 +112,6 @@ export class AuthController {
     return result;
   }
 
-  /**
-   * Dual-mode refresh:
-   *  - Cookie mode  (*.cyber-labs.tech): reads cyb_rt cookie automatically
-   *  - Legacy mode  (localhost dev)    : reads refreshToken from body
-   */
   @Public()
   @Post('refresh')
   @HttpCode(HttpStatus.OK)
@@ -134,7 +128,7 @@ export class AuthController {
       throw new UnauthorizedException('No refresh token provided');
     }
 
-    const result = await this.authService.refreshToken(refreshToken);
+    const result = await this.authService.refreshToken(refreshToken, extractMeta(req));
     res.cookie(REFRESH_COOKIE, result.refreshToken, getRefreshCookieOpts());
     return result;
   }
@@ -181,10 +175,7 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   async forgotPassword(@Body() dto: ForgotPasswordDto) {
     await this.passwordResetService.sendPasswordResetEmail(dto.email);
-    return {
-      success: true,
-      message: 'If the email exists, a password reset link has been sent',
-    };
+    return { success: true, message: 'If the email exists, a password reset link has been sent' };
   }
 
   @Public()
@@ -202,11 +193,7 @@ export class AuthController {
     @CurrentUser() user: RequestUser,
     @Body() dto: ChangePasswordDto,
   ) {
-    await this.passwordResetService.changePassword(
-      user.id,
-      dto.currentPassword,
-      dto.newPassword,
-    );
+    await this.passwordResetService.changePassword(user.id, dto.currentPassword, dto.newPassword);
     return { success: true, message: 'Password changed successfully' };
   }
 
@@ -217,7 +204,6 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   async generateTwoFactor(@CurrentUser() user: RequestUser) {
     const result = await this.twoFactorService.generateTwoFactorSecret(user.id);
-    // Spread directly so frontend receives { qrCode, secret } at root level
     return { success: true, ...result };
   }
 
@@ -228,10 +214,7 @@ export class AuthController {
     @CurrentUser() user: RequestUser,
     @Body() body: { code: string },
   ) {
-    const result = await this.twoFactorService.enableTwoFactor(
-      user.id,
-      body.code,
-    );
+    const result = await this.twoFactorService.enableTwoFactor(user.id, body.code);
     return { success: true, ...result };
   }
 
@@ -242,33 +225,25 @@ export class AuthController {
     @CurrentUser() user: RequestUser,
     @Body() body: { code: string },
   ) {
-    const result = await this.twoFactorService.disableTwoFactor(
-      user.id,
-      body.code,
-    );
+    const result = await this.twoFactorService.disableTwoFactor(user.id, body.code);
     return { success: true, ...result };
   }
 
-  /**
-   * Step-up login: verify TOTP code then issue a full session.
-   */
   @Public()
   @Post('2fa/verify')
   @HttpCode(HttpStatus.OK)
   async verifyTwoFactor(
     @Body() body: { userId: string; code: string },
+    @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ) {
-    const isValid = await this.twoFactorService.verifyTwoFactorCode(
-      body.userId,
-      body.code,
-    );
+    const isValid = await this.twoFactorService.verifyTwoFactorCode(body.userId, body.code);
 
     if (!isValid) {
       throw new UnauthorizedException('Invalid verification code');
     }
 
-    const result = await this.authService.getUserForToken(body.userId);
+    const result = await this.authService.getUserForToken(body.userId, extractMeta(req));
     res.cookie(REFRESH_COOKIE, result.refreshToken, getRefreshCookieOpts());
     return result;
   }

@@ -4,6 +4,7 @@ import {
   ConflictException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import * as crypto from 'crypto';
 import { PrismaService } from '../../../core/database';
 import { HashingService } from '../../../core/security';
 import { LoggerService } from '../../../core/logger';
@@ -14,6 +15,13 @@ import { UserRole } from '../../../common/enums';
 import { OAuthProfile } from '../../../common/types';
 import { NotificationsService } from '../../notifications/services/notifications.service';
 import { NotificationEvents } from '../../notifications/notifications.events';
+
+/** SHA-256 hash للـ token قبل ما يتحفظ في DB */
+const hashToken = (token: string): string =>
+  crypto.createHash('sha256').update(token).digest('hex');
+
+/** 7 أيام بالـ milliseconds */
+const REFRESH_TTL_MS = 7 * 24 * 60 * 60 * 1000;
 
 @Injectable()
 export class AuthService {
@@ -29,31 +37,91 @@ export class AuthService {
     private readonly notifications: NotificationsService,
   ) {
     this.logger.setContext('AuthService');
-
-    // يقرأ الـ expiry من الـ env مرة واحدة عند الـ init
     const raw = this.configService.get<string>('jwt.accessExpiry') ?? '15m';
     this.accessExpirySeconds = this.parseExpiryToSeconds(raw);
   }
 
-  // ── helper: "15m" | "1h" | "7d" → seconds ─────────────────────────
   private parseExpiryToSeconds(expiry: string): number {
     const match = expiry.match(/^(\d+)([smhd])$/);
-    if (!match) return 900; // fallback 15m
+    if (!match) return 900;
     const value = parseInt(match[1]);
     const unit = match[2];
-    const multipliers: Record<string, number> = {
-      s: 1,
-      m: 60,
-      h: 3600,
-      d: 86400,
-    };
+    const multipliers: Record<string, number> = { s: 1, m: 60, h: 3600, d: 86400 };
     return value * (multipliers[unit] ?? 60);
   }
 
-  // ─────────────────────────────────────────────────────────────────────
-  /**
-   * Register new user
-   */
+  // ─── Helper: احفظ refreshToken في DB ─────────────────────────────────────
+  private async saveRefreshToken(
+    userId: string,
+    refreshToken: string,
+    meta?: { ip?: string; userAgent?: string },
+  ): Promise<void> {
+    const tokenHash = hashToken(refreshToken);
+    const expiresAt = new Date(Date.now() + REFRESH_TTL_MS);
+
+    // احذف التوكنات المنتهية الصلاحية أو المبطلة للمستخدم ده (cleanup)
+    await this.prisma.refreshToken.deleteMany({
+      where: {
+        userId,
+        OR: [
+          { expiresAt: { lt: new Date() } },
+          { revokedAt: { not: null } },
+        ],
+      },
+    });
+
+    await this.prisma.refreshToken.create({
+      data: {
+        userId,
+        tokenHash,
+        expiresAt,
+        ip: meta?.ip,
+        userAgent: meta?.userAgent,
+      },
+    });
+  }
+
+  // ─── Helper: تحقق من DB إن الـ token صالح (غير مبطل وغير منتهي) ──────────
+  private async validateRefreshTokenInDb(
+    userId: string,
+    refreshToken: string,
+  ): Promise<{ id: string }> {
+    const tokenHash = hashToken(refreshToken);
+
+    const stored = await this.prisma.refreshToken.findFirst({
+      where: {
+        userId,
+        tokenHash,
+        revokedAt: null,
+        expiresAt: { gt: new Date() },
+      },
+      select: { id: true },
+    });
+
+    if (!stored) {
+      throw new UnauthorizedException('Refresh token is invalid or expired');
+    }
+
+    return stored;
+  }
+
+  // ─── Helper: ابطل token واحد بعد الاستخدام (rotation) ──────────────────
+  private async revokeRefreshToken(id: string): Promise<void> {
+    await this.prisma.refreshToken.update({
+      where: { id },
+      data: { revokedAt: new Date() },
+    });
+  }
+
+  // ─── Helper: ابطل كل tokens المستخدم (عند logout) ───────────────────────
+  private async revokeAllUserTokens(userId: string): Promise<void> {
+    await this.prisma.refreshToken.updateMany({
+      where: { userId, revokedAt: null },
+      data: { revokedAt: new Date() },
+    });
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────
   async register(dto: RegisterDto) {
     const existingUser = await this.prisma.user.findUnique({
       where: { email: dto.email },
@@ -62,16 +130,10 @@ export class AuthService {
       where: { name: dto.name },
     });
 
-    if (existingName) {
-      throw new ConflictException(
-        'UserName already registered, please choose another one',
-      );
-    }
-    if (existingUser) {
-      throw new ConflictException(
-        'Email already registered, please login or Forgot Password instead',
-      );
-    }
+    if (existingName)
+      throw new ConflictException('UserName already registered, please choose another one');
+    if (existingUser)
+      throw new ConflictException('Email already registered, please login or Forgot Password instead');
 
     const hashedPassword = await this.hashingService.hash(dto.password);
 
@@ -85,248 +147,137 @@ export class AuthService {
         isActive: true,
       },
       select: {
-        id: true,
-        email: true,
-        name: true,
-        role: true,
-        isEmailVerified: true,
-        isActive: true,
-        createdAt: true,
+        id: true, email: true, name: true, role: true,
+        isEmailVerified: true, isActive: true, createdAt: true,
       },
     });
 
-    // إرسال OTP email
     try {
-      await this.emailVerificationService.sendVerificationEmail(
-        user.id,
-        user.email,
-      );
-      this.logger.log(
-        `✅ Verification email sent successfully to ${user.email}`,
-      );
+      await this.emailVerificationService.sendVerificationEmail(user.id, user.email);
+      this.logger.log(`✅ Verification email sent to ${user.email}`);
     } catch (error) {
-      this.logger.error(
-        `❌ Failed to send verification email to ${user.email}: ${error.message}`,
-        error.stack,
-      );
+      this.logger.error(`❌ Failed to send verification email: ${error.message}`, error.stack);
     }
 
     this.logger.log(`New user registered: ${user.email}`);
+    this.notifications.notify(user.id, NotificationEvents.register(user.name)).catch(() => {});
 
-    // إشعار ترحيب
-    this.notifications
-      .notify(user.id, NotificationEvents.register(user.name))
-      .catch(() => {});
-
-    const accessToken = this.jwtService.generateAccessToken(
-      user.id,
-      user.email,
-      user.role as UserRole,
-    );
+    const accessToken = this.jwtService.generateAccessToken(user.id, user.email, user.role as UserRole);
     const refreshToken = this.jwtService.generateRefreshToken(user.id);
 
-    return {
-      user,
-      accessToken,
-      refreshToken,
-      expiresIn: this.accessExpirySeconds,
-    };
+    // ✅ احفظ الـ refreshToken في DB
+    await this.saveRefreshToken(user.id, refreshToken);
+
+    return { user, accessToken, refreshToken, expiresIn: this.accessExpirySeconds };
   }
 
-  // ─────────────────────────────────────────────────────────────────────
-  /**
-   * Login user.
-   * Returns { requires2fa: true, userId } if TOTP is enabled.
-   * Returns { user, accessToken, refreshToken } on normal login.
-   */
-  async login(dto: LoginDto): Promise<any> {
+  // ─────────────────────────────────────────────────────────────────────────
+  async login(dto: LoginDto, meta?: { ip?: string; userAgent?: string }): Promise<any> {
     const user = await this.prisma.user.findUnique({
       where: { email: dto.email },
       select: {
-        id: true,
-        email: true,
-        name: true,
-        avatarUrl: true,
-        password: true,
-        role: true,
-        isEmailVerified: true,
-        isActive: true,
-        twoFactorEnabled: true,
+        id: true, email: true, name: true, avatarUrl: true,
+        password: true, role: true, isEmailVerified: true,
+        isActive: true, twoFactorEnabled: true,
       },
     });
 
-    if (!user) {
-      throw new UnauthorizedException('Invalid credentials');
-    }
+    if (!user) throw new UnauthorizedException('Invalid credentials');
+    if (!user.isActive) throw new UnauthorizedException('Account is deactivated');
 
-    if (!user.isActive) {
-      throw new UnauthorizedException('Account is deactivated');
-    }
+    const isPasswordValid = await this.hashingService.compare(dto.password, user.password);
+    if (!isPasswordValid) throw new UnauthorizedException('Invalid credentials');
 
-    const isPasswordValid = await this.hashingService.compare(
-      dto.password,
-      user.password,
-    );
-
-    if (!isPasswordValid) {
-      throw new UnauthorizedException('Invalid credentials');
-    }
-
-    // 2FA is enabled — frontend must complete TOTP challenge before getting tokens
-    if (user.twoFactorEnabled) {
-      return {
-        requires2fa: true,
-        userId: user.id,
-      };
-    }
+    if (user.twoFactorEnabled) return { requires2fa: true, userId: user.id };
 
     this.logger.log(`User logged in: ${user.email}`);
+    this.notifications.notify(user.id, NotificationEvents.login()).catch(() => {});
 
-    // إشعار تسجيل الدخول
-    this.notifications
-      .notify(user.id, NotificationEvents.login())
-      .catch(() => {});
-
-    const accessToken = this.jwtService.generateAccessToken(
-      user.id,
-      user.email,
-      user.role as UserRole,
-    );
+    const accessToken = this.jwtService.generateAccessToken(user.id, user.email, user.role as UserRole);
     const refreshToken = this.jwtService.generateRefreshToken(user.id);
 
-    const { password, ...userWithoutPassword } = user;
+    // ✅ احفظ الـ refreshToken في DB
+    await this.saveRefreshToken(user.id, refreshToken, meta);
 
-    return {
-      user: userWithoutPassword,
-      accessToken,
-      refreshToken,
-      expiresIn: this.accessExpirySeconds,
-    };
+    const { password, ...userWithoutPassword } = user;
+    return { user: userWithoutPassword, accessToken, refreshToken, expiresIn: this.accessExpirySeconds };
   }
 
-  // ─────────────────────────────────────────────────────────────────────
-  /**
-   * Issue a full session after successful 2FA TOTP verification.
-   * Called by /auth/2fa/verify after verifyTwoFactorCode passes.
-   */
-  async getUserForToken(userId: string): Promise<any> {
+  // ─────────────────────────────────────────────────────────────────────────
+  async getUserForToken(userId: string, meta?: { ip?: string; userAgent?: string }): Promise<any> {
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
       select: {
-        id: true,
-        email: true,
-        name: true,
-        avatarUrl: true,
-        role: true,
-        isEmailVerified: true,
-        isActive: true,
-        twoFactorEnabled: true,
+        id: true, email: true, name: true, avatarUrl: true,
+        role: true, isEmailVerified: true, isActive: true, twoFactorEnabled: true,
       },
     });
 
-    if (!user) {
-      throw new UnauthorizedException('User not found');
-    }
-
-    if (!user.isActive) {
-      throw new UnauthorizedException('Account is deactivated');
-    }
+    if (!user) throw new UnauthorizedException('User not found');
+    if (!user.isActive) throw new UnauthorizedException('Account is deactivated');
 
     this.logger.log(`User logged in via 2FA: ${user.email}`);
+    this.notifications.notify(user.id, NotificationEvents.login()).catch(() => {});
 
-    this.notifications
-      .notify(user.id, NotificationEvents.login())
-      .catch(() => {});
-
-    const accessToken = this.jwtService.generateAccessToken(
-      user.id,
-      user.email,
-      user.role as UserRole,
-    );
+    const accessToken = this.jwtService.generateAccessToken(user.id, user.email, user.role as UserRole);
     const refreshToken = this.jwtService.generateRefreshToken(user.id);
 
-    return {
-      user,
-      accessToken,
-      refreshToken,
-      expiresIn: this.accessExpirySeconds,
-    };
+    // ✅ احفظ الـ refreshToken في DB
+    await this.saveRefreshToken(user.id, refreshToken, meta);
+
+    return { user, accessToken, refreshToken, expiresIn: this.accessExpirySeconds };
   }
 
-  // ─────────────────────────────────────────────────────────────────────
-  /**
-   * Refresh access token
-   */
-  async refreshToken(refreshToken: string) {
+  // ─────────────────────────────────────────────────────────────────────────
+  async refreshToken(token: string, meta?: { ip?: string; userAgent?: string }) {
     try {
-      const payload = this.jwtService.verifyRefreshToken(refreshToken);
+      // 1) تحقق من الـ JWT signature أولاً
+      const payload = this.jwtService.verifyRefreshToken(token);
+
+      // 2) تحقق من الـ DB إن الـ token موجود وغير مبطل
+      const stored = await this.validateRefreshTokenInDb(payload.sub, token);
 
       const user = await this.prisma.user.findUnique({
         where: { id: payload.sub },
-        select: {
-          id: true,
-          email: true,
-          role: true,
-          isActive: true,
-        },
+        select: { id: true, email: true, role: true, isActive: true },
       });
 
-      if (!user) {
-        throw new UnauthorizedException('User not found');
-      }
+      if (!user) throw new UnauthorizedException('User not found');
+      if (!user.isActive) throw new UnauthorizedException('Account is deactivated');
 
-      if (!user.isActive) {
-        throw new UnauthorizedException('Account is deactivated');
-      }
+      // 3) ابطل الـ token القديم (token rotation — منع إعادة الاستخدام)
+      await this.revokeRefreshToken(stored.id);
 
-      const newAccessToken = this.jwtService.generateAccessToken(
-        user.id,
-        user.email,
-        user.role as UserRole,
-      );
+      // 4) أنشئ tokens جديدة واحفظهم في DB
+      const newAccessToken = this.jwtService.generateAccessToken(user.id, user.email, user.role as UserRole);
       const newRefreshToken = this.jwtService.generateRefreshToken(user.id);
 
-      return {
-        accessToken: newAccessToken,
-        refreshToken: newRefreshToken,
-        expiresIn: this.accessExpirySeconds,
-      };
+      await this.saveRefreshToken(user.id, newRefreshToken, meta);
+
+      return { accessToken: newAccessToken, refreshToken: newRefreshToken, expiresIn: this.accessExpirySeconds };
     } catch (error) {
+      if (error instanceof UnauthorizedException) throw error;
       throw new UnauthorizedException('Invalid refresh token');
     }
   }
 
-  // ─────────────────────────────────────────────────────────────────────
-  /**
-   * Logout user
-   */
+  // ─────────────────────────────────────────────────────────────────────────
   async logout(userId: string) {
-    this.logger.log(`User logged out: ${userId}`);
+    // ✅ ابطل كل refresh tokens المستخدم في DB
+    await this.revokeAllUserTokens(userId);
+    this.logger.log(`User logged out + all tokens revoked: ${userId}`);
     return { message: 'Logged out successfully' };
   }
 
-  // ─────────────────────────────────────────────────────────────────────
-  /**
-   * OAuth Login/Register (Google, GitHub)
-   */
-  async oauthLogin(profile: OAuthProfile) {
+  // ─────────────────────────────────────────────────────────────────────────
+  async oauthLogin(profile: OAuthProfile, meta?: { ip?: string; userAgent?: string }) {
     let oauthAccount = await this.prisma.oAuthAccount.findUnique({
-      where: {
-        provider_providerId: {
-          provider: profile.provider,
-          providerId: profile.providerId,
-        },
-      },
+      where: { provider_providerId: { provider: profile.provider, providerId: profile.providerId } },
       include: {
         user: {
           select: {
-            id: true,
-            email: true,
-            name: true,
-            avatarUrl: true,
-            role: true,
-            isEmailVerified: true,
-            isActive: true,
+            id: true, email: true, name: true, avatarUrl: true,
+            role: true, isEmailVerified: true, isActive: true,
           },
         },
       },
@@ -337,31 +288,19 @@ export class AuthService {
 
     if (oauthAccount) {
       user = oauthAccount.user;
-
-      if (!user.isActive) {
-        throw new UnauthorizedException('Account is deactivated');
-      }
+      if (!user.isActive) throw new UnauthorizedException('Account is deactivated');
     } else {
-      const existingUser = await this.prisma.user.findUnique({
-        where: { email: profile.email },
-      });
+      const existingUser = await this.prisma.user.findUnique({ where: { email: profile.email } });
       const existingName = await this.prisma.user.findUnique({
         where: { name: `${profile.firstName} ${profile.lastName}` },
       });
 
-      if (existingName) {
-        throw new ConflictException('Name already registered');
-      }
+      if (existingName) throw new ConflictException('Name already registered');
 
       if (existingUser) {
         await this.prisma.oAuthAccount.create({
-          data: {
-            provider: profile.provider,
-            providerId: profile.providerId,
-            userId: existingUser.id,
-          },
+          data: { provider: profile.provider, providerId: profile.providerId, userId: existingUser.id },
         });
-
         user = existingUser;
       } else {
         user = await this.prisma.user.create({
@@ -374,53 +313,31 @@ export class AuthService {
             isEmailVerified: true,
             isActive: true,
             oauthAccounts: {
-              create: {
-                provider: profile.provider,
-                providerId: profile.providerId,
-              },
+              create: { provider: profile.provider, providerId: profile.providerId },
             },
           },
           select: {
-            id: true,
-            email: true,
-            name: true,
-            avatarUrl: true,
-            role: true,
-            isEmailVerified: true,
-            isActive: true,
+            id: true, email: true, name: true, avatarUrl: true,
+            role: true, isEmailVerified: true, isActive: true,
           },
         });
-
         isNewUser = true;
-        this.logger.log(
-          `New user registered via ${profile.provider}: ${user.email}`,
-        );
+        this.logger.log(`New user registered via ${profile.provider}: ${user.email}`);
       }
     }
 
-    // ── Notifications ─────────────────────────────────────────────────
     if (isNewUser) {
-      this.notifications
-        .notify(user.id, NotificationEvents.register(user.name))
-        .catch(() => {});
+      this.notifications.notify(user.id, NotificationEvents.register(user.name)).catch(() => {});
     } else {
-      this.notifications
-        .notify(user.id, NotificationEvents.login())
-        .catch(() => {});
+      this.notifications.notify(user.id, NotificationEvents.login()).catch(() => {});
     }
 
-    const accessToken = this.jwtService.generateAccessToken(
-      user.id,
-      user.email,
-      user.role as UserRole,
-    );
+    const accessToken = this.jwtService.generateAccessToken(user.id, user.email, user.role as UserRole);
     const refreshToken = this.jwtService.generateRefreshToken(user.id);
 
-    return {
-      user,
-      accessToken,
-      refreshToken,
-      expiresIn: this.accessExpirySeconds,
-    };
+    // ✅ احفظ الـ refreshToken في DB
+    await this.saveRefreshToken(user.id, refreshToken, meta);
+
+    return { user, accessToken, refreshToken, expiresIn: this.accessExpirySeconds };
   }
 }
