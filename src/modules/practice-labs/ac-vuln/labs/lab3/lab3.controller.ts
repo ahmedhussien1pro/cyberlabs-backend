@@ -1,5 +1,5 @@
 // src/modules/practice-labs/ac-vuln/labs/lab3/lab3.controller.ts
-import { Controller, Post, Body, UseGuards } from '@nestjs/common';
+import { Controller, Post, Get, Body, Query, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../../../../../common/guards';
 import { GetUser } from '../../../shared/decorators/get-user.decorator';
 import { Lab3Service } from './lab3.service';
@@ -10,13 +10,12 @@ export class Lab3Controller {
   constructor(private lab3Service: Lab3Service) {}
 
   @Post('start')
-  async startLab(@GetUser('id') userId: string, @Body('labId') labId: string) {
+  start(@GetUser('id') userId: string, @Body('labId') labId: string) {
     return this.lab3Service.initLab(userId, labId);
   }
 
-  // ❌ الثغرة: accountNo يأتي من request body بدون التحقق من ownership
   @Post('account/balance')
-  async getBalance(
+  getBalance(
     @GetUser('id') userId: string,
     @Body('labId') labId: string,
     @Body('accountNo') accountNo: string,
@@ -24,13 +23,22 @@ export class Lab3Controller {
     return this.lab3Service.getBalance(userId, labId, accountNo);
   }
 
-  // ❌ نفس الثغرة في endpoint التحويلات
   @Post('account/transactions')
-  async getTransactions(
+  getTransactions(
     @GetUser('id') userId: string,
     @Body('labId') labId: string,
     @Body('accountNo') accountNo: string,
   ) {
     return this.lab3Service.getTransactions(userId, labId, accountNo);
+  }
+
+  @Get('progress')
+  progress(@GetUser('id') userId: string, @Query('labId') labId: string) {
+    return this.lab3Service.getProgress(userId, labId);
+  }
+
+  @Post('submit')
+  submit(@GetUser('id') userId: string, @Body('labId') labId: string) {
+    return this.lab3Service.submitFlag(userId, labId);
   }
 }
