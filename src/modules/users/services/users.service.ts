@@ -182,8 +182,8 @@ export class UsersService {
             },
           },
         },
-        password: false,
-        refreshToken: false,
+        // password, twoFactorSecret and refreshTokens (relation) are
+        // intentionally excluded from the select — no need for `false` flags.
         twoFactorSecret: false,
       },
     });
