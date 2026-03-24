@@ -13,6 +13,7 @@ import {
 import { Throttle, SkipThrottle } from '@nestjs/throttler';
 import { PracticeLabsService } from './practice-labs.service';
 import { JwtAuthGuard } from '../../common/guards';
+import { AdminGuard } from '../../common/guards/admin.guard';
 import { GetUser } from './shared/decorators/get-user.decorator';
 
 @Controller('practice-labs')
@@ -32,8 +33,6 @@ export class PracticeLabsController {
     return this.practiceLabsService.getStats();
   }
 
-  // GET /api/practice-labs/progress?labId=xxx
-  // يرجع الـ attempts الحقيقي من DB + حالة اللاب
   @SkipThrottle()
   @Get('progress')
   getUserProgress(
@@ -47,6 +46,15 @@ export class PracticeLabsController {
   @Get(':labId')
   getLabById(@Param('labId') labId: string, @GetUser('id') userId: string) {
     return this.practiceLabsService.getLabById(labId, userId);
+  }
+
+  // ✅ Admin-only: solution / postSolve / scenarioAdmin
+  // Uses existing AdminGuard from src/common/guards/admin.guard.ts
+  @SkipThrottle()
+  @Get(':labId/admin/solution')
+  @UseGuards(AdminGuard)
+  getAdminSolution(@Param('labId') labId: string) {
+    return this.practiceLabsService.getAdminSolution(labId);
   }
 
   @Throttle({ default: { limit: 10, ttl: 60000 } })
@@ -64,8 +72,6 @@ export class PracticeLabsController {
     return this.practiceLabsService.launchLab(labId, userId);
   }
 
-  // POST /api/practice-labs/:labId/submit
-  // الفرونت بيبعت flag — موحد مع الـ service
   @Throttle({ default: { limit: 5, ttl: 60000 } })
   @Post(':labId/submit')
   submitFlag(
