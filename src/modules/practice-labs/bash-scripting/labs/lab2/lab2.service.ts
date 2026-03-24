@@ -1,157 +1,285 @@
 // src/modules/practice-labs/bash-scripting/labs/lab2/lab2.service.ts
-import { Injectable, BadRequestException } from '@nestjs/common';
-import { PrismaService } from '../../../../../core/database';
+import {
+  Injectable,
+  BadRequestException,
+  ForbiddenException,
+} from '@nestjs/common';
 import { PracticeLabStateService } from '../../../shared/services/practice-lab-state.service';
+
+/**
+ * Lab 2 — "Breach Investigation"
+ *
+ * The student analyses a realistic server access log that contains:
+ *   • A brute-force sequence (multiple WARN lines from one IP)
+ *   • A privilege-escalation event (ERROR line with an opaque token — NOT the flag)
+ *   • Normal INFO traffic
+ *
+ * Steps (sequential, server-side verified):
+ *   STEP_1 → Identify the attacker’s IP  (answer: "45.33.32.156")
+ *   STEP_2 → Count the failed login attempts from that IP  (answer: "7")
+ *   STEP_3 → Find the exact timestamp of the privilege-escalation event
+ *             (answer: "2026-03-17 00:04:02")
+ *
+ * The flag is NEVER in any log line or command output.
+ * It is only returned by /submit after all 3 steps pass.
+ */
+
+const FLAG_PREFIX = 'FLAG{BASH_LAB2_LOG_ANALYSIS';
+
+// In-memory step tracker  { "userId:labId" → Set<step> }
+const stepStore = new Map<string, Set<string>>();
+const key = (u: string, l: string) => `${u}:${l}`;
+
+// Static log — no dynamic data, no flag, no seed
+const LOG_LINES = [
+  '2026-03-17 00:01:12 INFO  user=alice     action=login         ip=192.168.1.10',
+  '2026-03-17 00:01:45 INFO  user=bob       action=login         ip=10.0.0.5',
+  '2026-03-17 00:02:03 INFO  user=carol     action=login         ip=172.16.0.3',
+  '2026-03-17 00:02:10 WARN  user=unknown   action=failed_login  ip=45.33.32.156',
+  '2026-03-17 00:02:11 WARN  user=unknown   action=failed_login  ip=45.33.32.156',
+  '2026-03-17 00:02:12 WARN  user=unknown   action=failed_login  ip=45.33.32.156',
+  '2026-03-17 00:02:13 WARN  user=unknown   action=failed_login  ip=45.33.32.156',
+  '2026-03-17 00:02:14 WARN  user=unknown   action=failed_login  ip=45.33.32.156',
+  '2026-03-17 00:02:15 WARN  user=unknown   action=failed_login  ip=45.33.32.156',
+  '2026-03-17 00:02:16 WARN  user=unknown   action=failed_login  ip=45.33.32.156',
+  '2026-03-17 00:03:10 INFO  user=alice     action=view_report   ip=192.168.1.10',
+  '2026-03-17 00:03:45 INFO  user=bob       action=logout        ip=10.0.0.5',
+  '2026-03-17 00:04:02 ERROR user=unknown   action=priv_escalation token=7f3a9c2b ip=45.33.32.156',
+  '2026-03-17 00:04:30 INFO  user=carol     action=logout        ip=172.16.0.3',
+  '2026-03-17 00:05:00 INFO  user=alice     action=logout        ip=192.168.1.10',
+];
 
 @Injectable()
 export class Lab2Service {
-  constructor(
-    private prisma: PrismaService,
-    private stateService: PracticeLabStateService,
-  ) {}
+  constructor(private stateService: PracticeLabStateService) {}
 
+  // ── Init ────────────────────────────────────────────────────────────────
   async initLab(userId: string, labId: string) {
-    return this.stateService.initializeState(userId, labId);
+    const result = await this.stateService.initializeState(userId, labId);
+    stepStore.delete(key(userId, result.labId));
+    return { status: 'success', message: 'Log analysis environment ready' };
   }
 
-  async getChallenge(userId: string, labId: string) {
-    const resolvedLabId = await this.stateService.resolveLabId(labId);
-
-    // توليد الفلاج الديناميك
-    const dynamicFlag = this.stateService.generateDynamicFlag(
-      'FLAG{BASH_LAB2_LOG_ANALYSIS',
-      userId,
-      resolvedLabId,
-    );
-
-    const logContent = [
-      '2026-03-17 00:01:12 INFO  user=alice action=login ip=192.168.1.10',
-      '2026-03-17 00:01:45 INFO  user=bob action=login ip=10.0.0.5',
-      '2026-03-17 00:02:10 WARN  user=bob action=failed_login ip=10.0.0.5',
-      '2026-03-17 00:02:11 WARN  user=bob action=failed_login ip=10.0.0.5',
-      '2026-03-17 00:02:12 WARN  user=bob action=failed_login ip=10.0.0.5',
-      '2026-03-17 00:02:13 WARN  user=bob action=failed_login ip=10.0.0.5',
-      '2026-03-17 00:02:14 WARN  user=bob action=failed_login ip=10.0.0.5',
-      `2026-03-17 00:03:00 ERROR user=admin action=secret_access flag=${dynamicFlag}`,
-      '2026-03-17 00:03:45 INFO  user=alice action=logout ip=192.168.1.10',
-    ].join('\n');
-
+  // ── Challenge ────────────────────────────────────────────────────────────
+  async getChallenge(_userId: string, _labId: string) {
     return {
       challenge: {
-        logFile: logContent,
-        task: 'Analyze this log file. Find the hidden flag using grep or awk.',
-        hint: 'Use: grep "FLAG" on the log content',
+        task: 'A web server was breached last night. You have its full access log. Investigate the attack: identify the attacker, measure the brute-force attempt, and pinpoint when they escalated privileges.',
+        logFile: '/var/log/access.log',
+        steps: [
+          { id: 'STEP_1', label: 'Identify the attacker’s IP address' },
+          { id: 'STEP_2', label: 'Count the total failed login attempts from that IP' },
+          { id: 'STEP_3', label: 'Find the exact timestamp of the privilege escalation event' },
+        ],
+        availableCommands: [
+          'cat /var/log/access.log',
+          'grep "PATTERN" /var/log/access.log',
+          'grep -c "PATTERN" /var/log/access.log',
+          'awk "/PATTERN/{print}" /var/log/access.log',
+          'awk "{print $N}" /var/log/access.log',
+          'cut -d" " -fN /var/log/access.log',
+          'sort /var/log/access.log',
+          'uniq',
+        ],
       },
-      instructions:
-        'Analyze the log file above. Find the line containing the flag. Submit as FLAG{...}.',
     };
   }
 
-  async runCommand(userId: string, labId: string, cmd: string): Promise<{ output: string }> {
-    const resolvedLabId = await this.stateService.resolveLabId(labId);
+  // ── Run Command (CLEAN — zero flag leakage) ───────────────────────────────
+  async runCommand(_userId: string, _labId: string, cmd: string): Promise<{ output: string }> {
+    const t = cmd.trim();
+    const logJoined = LOG_LINES.join('\n');
 
-    const dynamicFlag = this.stateService.generateDynamicFlag(
-      'FLAG{BASH_LAB2_LOG_ANALYSIS',
-      userId,
-      resolvedLabId,
-    );
+    // ─ cat ───────────────────────────────────────────────────────────────
+    if (/^cat\s+(\/var\/log\/)?access\.log$/.test(t)) {
+      return { output: logJoined };
+    }
 
-    const logLines = [
-      '2026-03-17 00:01:12 INFO  user=alice action=login ip=192.168.1.10',
-      '2026-03-17 00:01:45 INFO  user=bob action=login ip=10.0.0.5',
-      '2026-03-17 00:02:10 WARN  user=bob action=failed_login ip=10.0.0.5',
-      '2026-03-17 00:02:11 WARN  user=bob action=failed_login ip=10.0.0.5',
-      '2026-03-17 00:02:12 WARN  user=bob action=failed_login ip=10.0.0.5',
-      '2026-03-17 00:02:13 WARN  user=bob action=failed_login ip=10.0.0.5',
-      '2026-03-17 00:02:14 WARN  user=bob action=failed_login ip=10.0.0.5',
-      `2026-03-17 00:03:00 ERROR user=admin action=secret_access flag=${dynamicFlag}`,
-      '2026-03-17 00:03:45 INFO  user=alice action=logout ip=192.168.1.10',
-    ];
-
-    const trimmed = cmd.trim();
-
-    // محاكاة أوامر bash على الـ log
-    if (trimmed === 'cat /var/log/access.log' || trimmed === 'cat access.log') {
-      return { output: logLines.join('\n') };
-    }
-    if (trimmed.startsWith('grep')) {
-      const matchArg = trimmed.match(/grep\s+['"]?([^'"\s]+)['"]?/);
-      const pattern = matchArg?.[1] ?? '';
-      const matched = logLines.filter((l) => l.includes(pattern));
-      return { output: matched.length ? matched.join('\n') : '(no output)' };
-    }
-    if (trimmed.startsWith('awk')) {
-      // awk '/FLAG/{print}'
-      if (trimmed.includes('FLAG')) {
-        const matched = logLines.filter((l) => l.includes('FLAG'));
-        return { output: matched.length ? matched.join('\n') : '(no output)' };
-      }
-      // awk '{print $1}' → طباعة أول field
-      const fieldMatch = trimmed.match(/\$([0-9]+)/);
-      const fieldIdx = fieldMatch ? parseInt(fieldMatch[1], 10) - 1 : 0;
-      const out = logLines.map((l) => l.split(/\s+/)[fieldIdx] ?? '').join('\n');
-      return { output: out || '(no output)' };
-    }
-    if (trimmed.startsWith('cut')) {
-      const fMatch = trimmed.match(/-f(\d+)/);
-      const dMatch = trimmed.match(/-d["']?([^"'\s]+)/);
-      const delim = dMatch?.[1] ?? '\t';
-      const fieldNum = fMatch ? parseInt(fMatch[1], 10) - 1 : 0;
-      const out = logLines.map((l) => l.split(delim)[fieldNum] ?? '').join('\n');
-      return { output: out || '(no output)' };
-    }
-    if (trimmed === 'ls' || trimmed === 'ls /var/log/') {
+    // ─ ls ───────────────────────────────────────────────────────────────
+    if (/^ls(\s+\/var\/log\/?)?$/.test(t)) {
       return { output: 'access.log' };
     }
-    if (trimmed === 'help') {
+
+    // ─ grep -c ──────────────────────────────────────────────────────────
+    const grepC = t.match(/^grep\s+-c\s+['"]?([^'"\s]+)['"]?/);
+    if (grepC) {
+      const pattern = grepC[1];
+      const count = LOG_LINES.filter((l) => l.includes(pattern)).length;
+      return { output: String(count) };
+    }
+
+    // ─ grep ─────────────────────────────────────────────────────────────
+    const grepM = t.match(/^grep\s+(-i\s+)?['"]?([^'"\s]+)['"]?/);
+    if (grepM) {
+      const pattern = grepM[2];
+      const ci = !!grepM[1];
+      const matched = LOG_LINES.filter((l) =>
+        ci ? l.toLowerCase().includes(pattern.toLowerCase()) : l.includes(pattern),
+      );
+      return { output: matched.length ? matched.join('\n') : '(no match)' };
+    }
+
+    // ─ awk ─────────────────────────────────────────────────────────────
+    if (t.startsWith('awk')) {
+      // awk '/PATTERN/{print}'
+      const filterM = t.match(/\/([^/]+)\/{print}/);
+      if (filterM) {
+        const pattern = filterM[1];
+        const matched = LOG_LINES.filter((l) => l.includes(pattern));
+        return { output: matched.length ? matched.join('\n') : '(no match)' };
+      }
+      // awk '{print $N}'
+      const fieldM = t.match(/\$([0-9]+)/);
+      if (fieldM) {
+        const idx = parseInt(fieldM[1], 10) - 1;
+        const out = LOG_LINES.map((l) => l.split(/\s+/)[idx] ?? '').join('\n');
+        return { output: out || '(no output)' };
+      }
+      return { output: '(awk: unsupported expression)' };
+    }
+
+    // ─ cut ─────────────────────────────────────────────────────────────
+    if (t.startsWith('cut')) {
+      const fM = t.match(/-f(\d+)/);
+      const dM = t.match(/-d["']?([^"'\s]+)/);
+      const delim = dM?.[1] ?? '\t';
+      const fi = fM ? parseInt(fM[1], 10) - 1 : 0;
+      const out = LOG_LINES.map((l) => l.split(delim)[fi] ?? '').join('\n');
+      return { output: out || '(no output)' };
+    }
+
+    // ─ sort ─────────────────────────────────────────────────────────────
+    if (t.startsWith('sort')) {
+      return { output: [...LOG_LINES].sort().join('\n') };
+    }
+
+    // ─ help ─────────────────────────────────────────────────────────────
+    if (t === 'help') {
       return {
         output: [
           'Available commands:',
-          '  cat /var/log/access.log  — view full log',
-          '  grep "PATTERN" access.log — filter lines',
-          '  awk "/FLAG/{print}" access.log — extract flag lines',
-          '  cut -d" " -f1 access.log — extract first field',
-          '  ls /var/log/ — list files',
+          '  cat /var/log/access.log            — view full log',
+          '  grep "PATTERN" /var/log/access.log — filter lines',
+          '  grep -c "PATTERN" access.log       — count matching lines',
+          '  awk "/PATTERN/{print}" access.log  — pattern-based extraction',
+          '  awk "{print $N}" access.log        — extract Nth field',
+          '  cut -d" " -fN access.log           — cut by delimiter',
+          '  sort access.log                   — sort lines',
+          '  ls /var/log/                      — list available files',
         ].join('\n'),
       };
     }
 
-    return { output: `bash: ${trimmed.split(' ')[0]}: command simulated — no output` };
+    return { output: `bash: ${t.split(' ')[0]}: command not found` };
   }
 
+  // ── Verify Step ────────────────────────────────────────────────────────────
+  async verifyStep(
+    userId: string,
+    labId: string,
+    step: string,
+    answer: string,
+  ) {
+    const resolvedLabId = await this.stateService.resolveLabId(labId);
+    const k = key(userId, resolvedLabId);
+    if (!stepStore.has(k)) stepStore.set(k, new Set());
+    const done = stepStore.get(k)!;
+
+    const norm = (s: string) => s.trim().toLowerCase();
+
+    switch (step) {
+      case 'STEP_1': {
+        if (norm(answer) !== '45.33.32.156') {
+          return {
+            correct: false,
+            feedback: 'Not the attacker. Filter by WARN lines and look for the repeated IP address.',
+          };
+        }
+        done.add('STEP_1');
+        return {
+          correct: true,
+          feedback: '✅ Correct attacker IP! Now count how many times they failed to log in.',
+        };
+      }
+
+      case 'STEP_2': {
+        if (!done.has('STEP_1')) throw new ForbiddenException('Complete STEP_1 first');
+        if (answer.trim() !== '7') {
+          return {
+            correct: false,
+            feedback: 'Wrong count. Use grep -c to count exactly how many WARN lines came from the attacker IP.',
+          };
+        }
+        done.add('STEP_2');
+        return {
+          correct: true,
+          feedback: '✅ Correct! 7 failed login attempts. Now find when they escalated privileges — look for the ERROR line.',
+        };
+      }
+
+      case 'STEP_3': {
+        if (!done.has('STEP_2')) throw new ForbiddenException('Complete STEP_2 first');
+        if (answer.trim() !== '2026-03-17 00:04:02') {
+          return {
+            correct: false,
+            feedback: 'Wrong timestamp. Filter for the ERROR/priv_escalation line and copy the date+time exactly.',
+          };
+        }
+        done.add('STEP_3');
+        return {
+          correct: true,
+          feedback: '✅ All steps complete! Excellent investigation. You can now submit to receive your flag.',
+          allStepsDone: true,
+        };
+      }
+
+      default:
+        throw new BadRequestException('Invalid step. Use STEP_1, STEP_2, or STEP_3');
+    }
+  }
+
+  // ── Progress ───────────────────────────────────────────────────────────────
+  async getProgress(userId: string, labId: string) {
+    const resolvedLabId = await this.stateService.resolveLabId(labId);
+    const done = stepStore.get(key(userId, resolvedLabId)) ?? new Set<string>();
+    return {
+      completedSteps: [...done],
+      allStepsDone: done.has('STEP_1') && done.has('STEP_2') && done.has('STEP_3'),
+    };
+  }
+
+  // ── Submit Flag ────────────────────────────────────────────────────────────
   async submitFlag(userId: string, labId: string, submittedFlag: string) {
     if (!submittedFlag) throw new BadRequestException('flag is required');
 
     const resolvedLabId = await this.stateService.resolveLabId(labId);
+    const done = stepStore.get(key(userId, resolvedLabId)) ?? new Set<string>();
+
+    if (!done.has('STEP_1') || !done.has('STEP_2') || !done.has('STEP_3')) {
+      throw new ForbiddenException('Complete all 3 investigation steps before submitting');
+    }
 
     const isCorrect = this.stateService.verifyDynamicFlag(
-      'FLAG{BASH_LAB2_LOG_ANALYSIS',
+      FLAG_PREFIX,
       userId,
       resolvedLabId,
       submittedFlag,
     );
 
     if (!isCorrect) {
-      return {
-        success: false,
-        message: 'Incorrect. Try using grep "FLAG" on the log file.',
-      };
+      return { success: false, message: 'Incorrect flag. Did you use the flag generated after completing all steps?' };
     }
 
-    const dynamicFlag = this.stateService.generateDynamicFlag(
-      'FLAG{BASH_LAB2_LOG_ANALYSIS',
-      userId,
-      resolvedLabId,
-    );
+    stepStore.delete(key(userId, resolvedLabId));
 
+    const flag = this.stateService.generateDynamicFlag(FLAG_PREFIX, userId, resolvedLabId);
     return {
       success: true,
-      flag: dynamicFlag,
-      message: 'Correct! You found the hidden flag in the log file.',
-      solution: 'grep "FLAG" access.log  OR  awk "/FLAG/{print}" access.log',
+      flag,
+      message: 'Outstanding investigation! You identified the attacker, measured the brute-force, and caught the privilege escalation.',
       explanation:
-        'Log analysis is a critical skill in security. Tools like grep, awk, and sed ' +
-        'allow you to quickly search through thousands of log lines to find anomalies or hidden data.',
+        'Log analysis with grep/awk is a core skill for incident response. ' +
+        'Real breaches leave traces in access logs — knowing how to filter, count, and timestamp events is essential.',
     };
   }
 }

@@ -10,20 +10,24 @@ export class Lab2Controller {
   constructor(private lab2Service: Lab2Service) {}
 
   @Post('start')
-  async startLab(@GetUser('id') userId: string, @Body('labId') labId: string) {
+  start(
+    @GetUser('id') userId: string,
+    @Body('labId') labId: string,
+  ) {
     return this.lab2Service.initLab(userId, labId);
   }
 
   @Get('challenge')
-  async getChallenge(
+  challenge(
     @GetUser('id') userId: string,
     @Query('labId') labId: string,
   ) {
     return this.lab2Service.getChallenge(userId, labId);
   }
 
+  /** POST /command  { labId, cmd } — clean output, no flag ever */
   @Post('command')
-  async runCommand(
+  command(
     @GetUser('id') userId: string,
     @Body('labId') labId: string,
     @Body('cmd') cmd: string,
@@ -31,8 +35,28 @@ export class Lab2Controller {
     return this.lab2Service.runCommand(userId, labId, cmd);
   }
 
+  /** POST /verify-step  { labId, step: 'STEP_1'|'STEP_2'|'STEP_3', answer } */
+  @Post('verify-step')
+  verifyStep(
+    @GetUser('id') userId: string,
+    @Body('labId') labId: string,
+    @Body('step') step: string,
+    @Body('answer') answer: string,
+  ) {
+    return this.lab2Service.verifyStep(userId, labId, step, answer);
+  }
+
+  /** GET /progress?labId= */
+  @Get('progress')
+  progress(
+    @GetUser('id') userId: string,
+    @Query('labId') labId: string,
+  ) {
+    return this.lab2Service.getProgress(userId, labId);
+  }
+
   @Post('submit')
-  async submitFlag(
+  submit(
     @GetUser('id') userId: string,
     @Body('labId') labId: string,
     @Body('flag') flag: string,
