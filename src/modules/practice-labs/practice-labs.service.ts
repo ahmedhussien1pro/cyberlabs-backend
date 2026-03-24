@@ -20,10 +20,6 @@ import {
   LabLaunchInfo,
 } from './types/lab.types';
 
-function calcLevel(totalXP: number): number {
-  return Math.floor(totalXP / 1000) + 1;
-}
-
 @Injectable()
 export class PracticeLabsService {
   constructor(
@@ -217,6 +213,30 @@ export class PracticeLabsService {
   }
 
   // ─────────────────────────────────────────────
+  // GET /practice-labs/:labId/admin/solution
+  // Admin-only — protected by AdminGuard in controller
+  // ─────────────────────────────────────────────
+  async getAdminSolution(labId: string) {
+    const lab = await this.prisma.lab.findUnique({
+      where: { id: labId },
+      select: {
+        id: true,
+        slug: true,
+        title: true,
+        solution: true,
+        postSolve: true,
+        scenarioAdmin: true,
+        briefing: true,
+        stepsOverview: true,
+      },
+    });
+
+    if (!lab) throw new NotFoundException('Lab not found');
+
+    return { success: true, solution: lab };
+  }
+
+  // ─────────────────────────────────────────────
   // POST /practice-labs/:labId/launch
   // ─────────────────────────────────────────────
   async launchLab(labId: string, userId: string) {
@@ -237,7 +257,7 @@ export class PracticeLabsService {
       create: { userId, labId, isActive: true },
     });
 
-    // ✅ increment attempts عند كل launch
+    // ✅ increment attempts عند كل launch جديد
     await this.prisma.userLabProgress.upsert({
       where: { userId_labId: { userId, labId } },
       update: { lastAccess: new Date(), attempts: { increment: 1 } },
@@ -277,11 +297,10 @@ export class PracticeLabsService {
 
   // ─────────────────────────────────────────────
   // POST /practice-labs/launch/consume
-  // ✅ عملنا query منفصلة للـ lab بعد verify الـ token
-  //    عشان Prisma يقدر يدي type الـ lab صح
+  // ✅ solution / postSolve / scenarioAdmin مش موجودين هنا
+  //    يتجابوا فقط من /admin/solution بالـ AdminGuard
   // ─────────────────────────────────────────────
   async consumeToken(token: string, userId: string) {
-    // Step 1: verify token only
     const launchToken = await this.prisma.labLaunchToken.findFirst({
       where: { token, usedAt: null, expiresAt: { gt: new Date() }, userId },
     });
@@ -290,13 +309,12 @@ export class PracticeLabsService {
       throw new BadRequestException('Token invalid, expired, or already used');
     }
 
-    // Step 2: mark as used
     await this.prisma.labLaunchToken.update({
       where: { id: launchToken.id },
       data: { usedAt: new Date() },
     });
 
-    // Step 3: fetch full lab data separately — avoids Prisma nested type issues
+    // ✅ NO solution / postSolve / scenarioAdmin — admin-only fields removed
     const lab = await this.prisma.lab.findUnique({
       where: { id: launchToken.labId },
       select: {
@@ -304,8 +322,8 @@ export class PracticeLabsService {
         description: true, ar_description: true,
         scenario: true, ar_scenario: true,
         goal: true, ar_goal: true,
-        briefing: true,
-        stepsOverview: true, solution: true, postSolve: true,
+        briefing: true, ar_briefing: true,
+        stepsOverview: true, ar_stepsOverview: true,
         executionMode: true, environmentType: true,
         engineConfig: true, initialState: true,
         difficulty: true, category: true, skills: true,
@@ -316,6 +334,9 @@ export class PracticeLabsService {
           select: { id: true, order: true, xpCost: true, penaltyPercent: true },
           orderBy: { order: 'asc' },
         },
+        // solution: REMOVED
+        // postSolve: REMOVED
+        // scenarioAdmin: REMOVED
       },
     });
 
@@ -393,6 +414,15 @@ export class PracticeLabsService {
 
     const submissionCount = await this.prisma.labSubmission.count({ where: { userId, labId } });
 
+    // ✅ FIX: timeTaken uses instance.startedAt (this attempt), not progress.startedAt (first-ever)
+    const instance = await this.prisma.labInstance.findUnique({
+      where: { userId_labId: { userId, labId } },
+      select: { startedAt: true },
+    });
+    const timeTaken = Math.floor(
+      (Date.now() - new Date(instance?.startedAt ?? progress.startedAt).getTime()) / 1000,
+    );
+
     const submission = await this.prisma.labSubmission.create({
       data: {
         userId, labId,
@@ -401,7 +431,7 @@ export class PracticeLabsService {
         attemptNumber: submissionCount + 1,
         pointsEarned: finalPoints,
         xpEarned: finalXP,
-        timeTaken: Math.floor((Date.now() - new Date(progress.startedAt).getTime()) / 1000),
+        timeTaken,
       },
     });
 
@@ -451,6 +481,11 @@ export class PracticeLabsService {
   // POST /practice-labs/:labId/hint
   // ─────────────────────────────────────────────
   async getHint(labId: string, userId: string, hintOrder: number) {
+    // ✅ FIX: enforce hint order 1–3 only for students (solution is admin-only)
+    if (hintOrder < 1 || hintOrder > 3) {
+      throw new BadRequestException('Invalid hint order. Must be between 1 and 3.');
+    }
+
     const hint = await this.prisma.labHint.findFirst({ where: { labId, order: hintOrder } });
     if (!hint) throw new NotFoundException('Hint not found');
 
@@ -548,6 +583,18 @@ export class PracticeLabsService {
     return names[category] ?? category;
   }
 
+  // ✅ FIX: use Level table instead of hardcoded formula
+  private async calcLevel(userId: string, totalXP: number): Promise<number> {
+    try {
+      const levels = await this.prisma.level.findMany({ orderBy: { level: 'desc' } });
+      if (levels.length === 0) return Math.floor(totalXP / 1000) + 1; // fallback
+      const matched = levels.find((l) => totalXP >= l.xpNeeded);
+      return matched?.level ?? 1;
+    } catch {
+      return Math.floor(totalXP / 1000) + 1; // fallback if Level table doesn't exist yet
+    }
+  }
+
   private async awardXP(userId: string, amount: number, source: any, reason: string) {
     if (amount <= 0) return;
     await this.prisma.$transaction(async (tx) => {
@@ -556,7 +603,7 @@ export class PracticeLabsService {
         update: { totalXP: { increment: amount } },
         create: { userId, totalXP: amount, level: 1 },
       });
-      const newLevel = calcLevel(updated.totalXP);
+      const newLevel = await this.calcLevel(userId, updated.totalXP);
       if (newLevel !== updated.level) {
         await tx.userPoints.update({ where: { userId }, data: { level: newLevel } });
       }
