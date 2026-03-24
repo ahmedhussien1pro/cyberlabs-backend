@@ -2,10 +2,25 @@
 import {
   Injectable,
   BadRequestException,
+  ForbiddenException,
   NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from '../../../../../core/database';
 import { PracticeLabStateService } from '../../../shared/services/practice-lab-state.service';
+
+/**
+ * Lab 3 — "IDOR: Banking Account Balance Leak"
+ *
+ *   STEP_1 → Load own account (ACC-1001)         → own balance visible
+ *   STEP_2 → Enumerate another account (ACC-1002) → no ownership check discovered
+ *   STEP_3 → Access VIP-9876-2026 transactions   → full exploit → dynamic flag
+ *
+ * /submit requires NO flag input.
+ */
+
+const FLAG_PREFIX = 'FLAG{HORIZONTAL_PRIVESC_BANK_IDOR';
+const stepStore   = new Map<string, Set<string>>();
+const key = (u: string, l: string) => `${u}:${l}`;
 
 @Injectable()
 export class Lab3Service {
@@ -15,22 +30,22 @@ export class Lab3Service {
   ) {}
 
   async initLab(userId: string, labId: string) {
-    return this.stateService.initializeState(userId, labId);
+    const result = await this.stateService.initializeState(userId, labId);
+    stepStore.delete(key(userId, result.labId));
+    return { status: 'success', message: 'SecureBank portal initialized' };
   }
 
-  // ❌ الثغرة: IDOR — يجلب الرصيد بناءً على accountNo بدون التحقق من ownership
+  // ❌ IDOR: no ownership check on accountNo
   async getBalance(userId: string, labId: string, accountNo: string) {
-    if (!accountNo) {
-      throw new BadRequestException('accountNo is required');
-    }
+    if (!accountNo) throw new BadRequestException('accountNo is required');
 
-    // ❌ لا يوجد check: هل accountNo ينتمي للمستخدم الحالي؟
+    const resolvedLabId = await this.stateService.resolveLabId(labId);
+    const k = key(userId, resolvedLabId);
+    if (!stepStore.has(k)) stepStore.set(k, new Set());
+    const done = stepStore.get(k)!;
+
     const account = await this.prisma.labGenericBank.findFirst({
-      where: {
-        userId,
-        labId,
-        accountNo,
-      },
+      where: { userId, labId: resolvedLabId, accountNo },
     });
 
     if (!account) {
@@ -41,22 +56,29 @@ export class Lab3Service {
       };
     }
 
-    // تحقق من الوصول إلى VIP account
-    const isVIPAccount = accountNo === 'VIP-9876-2026';
-
-    if (isVIPAccount) {
+    if (accountNo === 'ACC-1001' && !done.has('STEP_1')) {
+      done.add('STEP_1');
       return {
         success: true,
-        exploited: true,
+        exploited: false,
         accountNo,
         balance: account.balance,
         ownerName: account.ownerName,
-        accountType: 'VIP Premium',
-        vulnerability: 'Horizontal Privilege Escalation (IDOR)',
-        impact:
-          "You accessed another customer's account balance without authorization. " +
-          'This is a critical financial data breach.',
-        note: 'Request the transactions endpoint with this accountNo to find the flag.',
+        stepUnlocked: 'STEP_1',
+        note: 'Your account loaded. Notice the accountNo parameter — try changing it to access other accounts.',
+      };
+    }
+
+    if (accountNo !== 'ACC-1001' && accountNo !== 'VIP-9876-2026' && done.has('STEP_1') && !done.has('STEP_2')) {
+      done.add('STEP_2');
+      return {
+        success: true,
+        exploited: false,
+        accountNo,
+        balance: account.balance,
+        ownerName: account.ownerName,
+        stepUnlocked: 'STEP_2',
+        note: 'Another account exposed! No ownership check. Now try the VIP format: VIP-XXXX-YYYY and also fetch /transactions.',
       };
     }
 
@@ -69,53 +91,42 @@ export class Lab3Service {
     };
   }
 
+  // ❌ IDOR: same vulnerability in transactions endpoint
   async getTransactions(userId: string, labId: string, accountNo: string) {
-    if (!accountNo) {
-      throw new BadRequestException('accountNo is required');
-    }
+    if (!accountNo) throw new BadRequestException('accountNo is required');
 
-    // ❌ نفس الثغرة: لا يوجد check على ownership
+    const resolvedLabId = await this.stateService.resolveLabId(labId);
+    const k = key(userId, resolvedLabId);
+    if (!stepStore.has(k)) stepStore.set(k, new Set());
+    const done = stepStore.get(k)!;
+
     const account = await this.prisma.labGenericBank.findFirst({
-      where: { userId, labId, accountNo },
+      where: { userId, labId: resolvedLabId, accountNo },
     });
 
-    if (!account) {
-      throw new NotFoundException('Account not found');
-    }
+    if (!account) throw new NotFoundException('Account not found');
 
     const transactions = await this.prisma.labGenericLog.findMany({
-      where: {
-        userId,
-        labId,
-        type: 'TRANSACTION',
-      },
+      where: { userId, labId: resolvedLabId, type: 'TRANSACTION' },
     });
 
-    const accountTransactions = transactions.filter((t) => {
-      const meta = t.meta as any;
-      return meta?.accountNo === accountNo;
-    });
+    const accountTxns = transactions.filter((t) => (t.meta as Record<string, unknown>)?.accountNo === accountNo);
 
-    const isVIPAccount = accountNo === 'VIP-9876-2026';
-
-    if (isVIPAccount && accountTransactions.length > 0) {
+    if (accountNo === 'VIP-9876-2026') {
+      done.add('STEP_1');
+      done.add('STEP_2');
+      done.add('STEP_3');
       return {
         success: true,
         exploited: true,
         accountNo,
         ownerName: account.ownerName,
         balance: account.balance,
-        transactions: accountTransactions.map((t) => ({
-          id: t.id,
-          ...(t.meta as any),
-          timestamp: t.createdAt,
-        })),
-        flag: 'FLAG{HORIZONTAL_PRIVESC_BANK_IDOR_VIP_ACC}',
-        vulnerability:
-          'Horizontal Privilege Escalation via Parameter Tampering',
-        fix:
-          'Always verify account ownership: ' +
-          'WHERE accountNo = ? AND userId = authenticatedUserId',
+        stepUnlocked: 'STEP_3',
+        transactions: accountTxns.map((t) => ({ ...(t.meta as Record<string, unknown>), timestamp: t.createdAt })),
+        vulnerability: 'Horizontal Privilege Escalation via Parameter Tampering',
+        impact: "You accessed a VIP customer's full transaction history without authorization. Critical financial data breach.",
+        note: 'All steps complete! Click "Get Your Flag" to claim your reward.',
       };
     }
 
@@ -123,10 +134,36 @@ export class Lab3Service {
       success: true,
       exploited: false,
       accountNo,
-      transactions: accountTransactions.map((t) => ({
-        ...(t.meta as any),
-        timestamp: t.createdAt,
-      })),
+      transactions: accountTxns.map((t) => ({ ...(t.meta as Record<string, unknown>), timestamp: t.createdAt })),
+    };
+  }
+
+  async getProgress(userId: string, labId: string) {
+    const resolvedLabId = await this.stateService.resolveLabId(labId);
+    const done = stepStore.get(key(userId, resolvedLabId)) ?? new Set<string>();
+    return {
+      completedSteps: [...done],
+      allStepsDone: done.has('STEP_1') && done.has('STEP_2') && done.has('STEP_3'),
+    };
+  }
+
+  async submitFlag(userId: string, labId: string) {
+    const resolvedLabId = await this.stateService.resolveLabId(labId);
+    const done = stepStore.get(key(userId, resolvedLabId)) ?? new Set<string>();
+
+    if (!done.has('STEP_1') || !done.has('STEP_2') || !done.has('STEP_3'))
+      throw new ForbiddenException('Complete all 3 steps before submitting');
+
+    stepStore.delete(key(userId, resolvedLabId));
+    const flag = this.stateService.generateDynamicFlag(FLAG_PREFIX, userId, resolvedLabId);
+
+    return {
+      success: true,
+      flag,
+      message: "You exploited horizontal privilege escalation to access a VIP customer's bank account transactions.",
+      explanation:
+        'Parameter tampering on accountNo allowed you to access data belonging to other users. ' +
+        'Fix: always verify account ownership with WHERE accountNo = ? AND ownerId = authenticatedUserId.',
     };
   }
 }

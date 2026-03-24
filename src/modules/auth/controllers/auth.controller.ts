@@ -1,5 +1,3 @@
-// src/modules/auth/controllers/auth.controller.ts
-
 import {
   Controller,
   Post,
@@ -34,7 +32,6 @@ import type { RequestUser } from '../../../common/types';
 import { Serialize } from '../../../common/decorators';
 import { AuthResponseSerializer } from '../serializers';
 
-// ── httpOnly Cookie helpers ───────────────────────────────────────────────────
 const REFRESH_COOKIE = 'cyb_rt';
 
 function getRefreshCookieOpts(): CookieOptions {
@@ -60,14 +57,12 @@ function clearRefreshCookieOpts(): CookieOptions {
   };
 }
 
-/** استخرج IP + UserAgent من الـ request */
 function extractMeta(req: Request): { ip?: string; userAgent?: string } {
   return {
     ip: (req.headers['x-forwarded-for'] as string)?.split(',')[0]?.trim() || req.ip,
     userAgent: req.headers['user-agent'],
   };
 }
-// ─────────────────────────────────────────────────────────────────────────────
 
 @Controller('auth')
 export class AuthController {
@@ -77,8 +72,6 @@ export class AuthController {
     private passwordResetService: PasswordResetService,
     private twoFactorService: TwoFactorService,
   ) {}
-
-  // ==================== Authentication ====================
 
   @Public()
   @Post('register')
@@ -103,11 +96,7 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
   ) {
     const result = await this.authService.login(dto, extractMeta(req));
-
-    if ('requires2fa' in result && result.requires2fa) {
-      return result;
-    }
-
+    if ('requires2fa' in result && result.requires2fa) return result;
     res.cookie(REFRESH_COOKIE, result.refreshToken, getRefreshCookieOpts());
     return result;
   }
@@ -124,9 +113,7 @@ export class AuthController {
     const cookieToken = cookies?.[REFRESH_COOKIE];
     const refreshToken = cookieToken || bodyRefreshToken;
 
-    if (!refreshToken) {
-      throw new UnauthorizedException('No refresh token provided');
-    }
+    if (!refreshToken) throw new UnauthorizedException('No refresh token provided');
 
     const result = await this.authService.refreshToken(refreshToken, extractMeta(req));
     res.cookie(REFRESH_COOKIE, result.refreshToken, getRefreshCookieOpts());
@@ -150,8 +137,6 @@ export class AuthController {
     return { success: true, user };
   }
 
-  // ==================== Email Verification ====================
-
   @Public()
   @Post('verify-email')
   @HttpCode(HttpStatus.OK)
@@ -167,8 +152,6 @@ export class AuthController {
     await this.emailVerificationService.resendVerificationEmail(dto.email);
     return { success: true, message: 'Verification email sent successfully' };
   }
-
-  // ==================== Password Management ====================
 
   @Public()
   @Post('forgot-password')
@@ -196,8 +179,6 @@ export class AuthController {
     await this.passwordResetService.changePassword(user.id, dto.currentPassword, dto.newPassword);
     return { success: true, message: 'Password changed successfully' };
   }
-
-  // ==================== Two-Factor Authentication ====================
 
   @UseGuards(JwtAuthGuard)
   @Post('2fa/generate')
@@ -238,11 +219,7 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
   ) {
     const isValid = await this.twoFactorService.verifyTwoFactorCode(body.userId, body.code);
-
-    if (!isValid) {
-      throw new UnauthorizedException('Invalid verification code');
-    }
-
+    if (!isValid) throw new UnauthorizedException('Invalid verification code');
     const result = await this.authService.getUserForToken(body.userId, extractMeta(req));
     res.cookie(REFRESH_COOKIE, result.refreshToken, getRefreshCookieOpts());
     return result;

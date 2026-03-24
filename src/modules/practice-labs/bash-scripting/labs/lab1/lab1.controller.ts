@@ -25,7 +25,6 @@ export class Lab1Controller {
     return this.lab1Service.getChallenge(userId, labId);
   }
 
-  /** POST /verify-step  { labId, step: 'STEP_1'|'STEP_2'|'STEP_3', answer: string } */
   @Post('verify-step')
   verifyStep(
     @GetUser('id') userId: string,
@@ -36,7 +35,6 @@ export class Lab1Controller {
     return this.lab1Service.verifyStep(userId, labId, step, answer);
   }
 
-  /** GET /progress?labId= */
   @Get('progress')
   progress(
     @GetUser('id') userId: string,
@@ -45,12 +43,12 @@ export class Lab1Controller {
     return this.lab1Service.getProgress(userId, labId);
   }
 
+  /** POST /submit { labId } — no flag input, server generates flag */
   @Post('submit')
   submit(
     @GetUser('id') userId: string,
     @Body('labId') labId: string,
-    @Body('flag') flag: string,
   ) {
-    return this.lab1Service.submitFlag(userId, labId, flag);
+    return this.lab1Service.submitFlag(userId, labId);
   }
 }
