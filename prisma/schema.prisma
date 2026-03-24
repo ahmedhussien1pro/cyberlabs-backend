@@ -269,7 +269,6 @@ model User {
   deletedAt          DateTime?
   deletionReason     String?
 
-  refreshToken        String?
   isEmailVerified     Boolean   @default(false)
   failedLoginAttempts Int       @default(0)
   lockedUntil         DateTime?
@@ -1237,36 +1236,16 @@ model Lab {
   steps Json?
 
   // ─── NEW: Environment & Concept metadata ────────────────────────────────
-  // Determines which React environment component renders this lab.
-  // Default = existing behaviour (no change for old labs).
   environmentType  LabEnvironmentType @default(DEFAULT)
-
-  // Canonical concept ID — groups variants under one concept.
-  // e.g. "CONCEPT-001" links xss-reflected, xss-stored, xss-dom together.
   canonicalConceptId String?
-
-  // Optional: marks this lab as a variant of another lab.
   variantOfLabId     String?
-
-  // Target actor role inside the lab scenario.
-  // e.g. "guest" | "user" | "moderator" | "admin"
   targetRole         String?
-
-  // Hint penalty mode for this lab.
-  // PERCENTAGE = new standard; FIXED_XP = legacy fallback.
   hintPenaltyMode    HintPenaltyMode @default(PERCENTAGE)
-
-  // Flag policy for this lab.
   flagPolicyType     FlagPolicyType  @default(PER_USER_PER_LAB)
-
-  // JSON blob for environment-specific seeded assets:
-  // e.g. { products: [...], accounts: [...], posts: [...] }
   immersiveAssets    Json?
-
-  // Structured dialog content (maps to MissionBriefDialog, LabInfoDialog, ScenarioDialog)
   missionBrief       Json?
   labInfo            Json?
-  scenarioAdmin      Json?   // admin-only full scenario + solution walkthrough
+  scenarioAdmin      Json?
   // ─────────────────────────────────────────────────────────────────────────
 
   isPublished Boolean  @default(false)
@@ -1366,8 +1345,6 @@ model LabHint {
   xpCost     Int     @default(0)
 
   // NEW: percentage penalty at submission time (0–100)
-  // Used when lab.hintPenaltyMode = PERCENTAGE
-  // hint1=10, hint2=30, hint3=60, solution=90
   penaltyPercent Int @default(0)
 
   hintUsages LabHintUsage[]
@@ -1402,22 +1379,19 @@ model UserLabProgress {
 }
 
 // ─── NEW: Lab Hint Audit Log ───────────────────────────────────────────────
-// Records every hint unlock per user per lab.
-// Enforces single-use per hint (@@unique) — no double XP deduction.
 model LabHintUsage {
   id         String   @id @default(cuid())
   userId     String
   labId      String
   hintId     String
-  hintOrder  Int      // 1, 2, 3 or 4 (solution)
-  xpCost     Int      // XP deducted at unlock
+  hintOrder  Int
+  xpCost     Int
   usedAt     DateTime @default(now())
 
   user  User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   lab   Lab     @relation(fields: [labId], references: [id], onDelete: Cascade)
   hint  LabHint @relation(fields: [hintId], references: [id], onDelete: Cascade)
 
-  // Prevent the same hint being unlocked twice by the same user
   @@unique([userId, labId, hintOrder])
   @@index([userId, labId])
   @@index([labId])
@@ -1425,15 +1399,12 @@ model LabHintUsage {
 }
 
 // ─── NEW: Lab Flag Record ──────────────────────────────────────────────────
-// Server-side flag registry.
-// Flags are stored as SHA-256 hashes — never plaintext.
-// used=true after first correct submission; reuse is rejected.
 model LabFlagRecord {
   id          String    @id @default(cuid())
   userId      String
   labId       String
-  attemptId   String    // ties to a specific launch/attempt
-  flagHash    String    // SHA-256(flag) — no plaintext storage
+  attemptId   String
+  flagHash    String
   used        Boolean   @default(false)
   usedAt      DateTime?
   expiresAt   DateTime
