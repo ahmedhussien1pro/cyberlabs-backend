@@ -269,6 +269,7 @@ model User {
   deletedAt          DateTime?
   deletionReason     String?
 
+  refreshToken        String?
   isEmailVerified     Boolean   @default(false)
   failedLoginAttempts Int       @default(0)
   lockedUntil         DateTime?
