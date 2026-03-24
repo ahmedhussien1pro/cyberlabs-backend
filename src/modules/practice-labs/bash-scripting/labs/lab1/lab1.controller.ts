@@ -10,21 +10,43 @@ export class Lab1Controller {
   constructor(private lab1Service: Lab1Service) {}
 
   @Post('start')
-  async startLab(@GetUser('id') userId: string, @Body('labId') labId: string) {
+  start(
+    @GetUser('id') userId: string,
+    @Body('labId') labId: string,
+  ) {
     return this.lab1Service.initLab(userId, labId);
   }
 
-  // GET يقرأ labId من query string بدل body
   @Get('challenge')
-  async getChallenge(
+  challenge(
     @GetUser('id') userId: string,
     @Query('labId') labId: string,
   ) {
     return this.lab1Service.getChallenge(userId, labId);
   }
 
+  /** POST /verify-step  { labId, step: 'STEP_1'|'STEP_2'|'STEP_3', answer: string } */
+  @Post('verify-step')
+  verifyStep(
+    @GetUser('id') userId: string,
+    @Body('labId') labId: string,
+    @Body('step') step: string,
+    @Body('answer') answer: string,
+  ) {
+    return this.lab1Service.verifyStep(userId, labId, step, answer);
+  }
+
+  /** GET /progress?labId= */
+  @Get('progress')
+  progress(
+    @GetUser('id') userId: string,
+    @Query('labId') labId: string,
+  ) {
+    return this.lab1Service.getProgress(userId, labId);
+  }
+
   @Post('submit')
-  async submitFlag(
+  submit(
     @GetUser('id') userId: string,
     @Body('labId') labId: string,
     @Body('flag') flag: string,
