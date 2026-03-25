@@ -37,7 +37,8 @@ const PATH_LIST_SELECT = {
   ar_description:     true,
   longDescription:    true,
   ar_longDescription: true,
-  // Visual (NO thumbnail — field does not exist in LearningPath model)
+  // Visual
+  thumbnail:          true,
   iconName:           true,
   color:              true,
   // Classification
