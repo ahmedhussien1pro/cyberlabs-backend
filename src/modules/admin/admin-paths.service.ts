@@ -14,21 +14,51 @@ function generateSlug(base: string): string {
     .substring(0, 80);
 }
 
+/** Split a comma-separated string into a trimmed string array.
+ *  If the value is already an array it is returned as-is.
+ *  If it is undefined / empty string, returns undefined (so Prisma skips the field). */
+function parseCsv(value: unknown): string[] | undefined {
+  if (Array.isArray(value)) return value.length ? value : undefined;
+  if (typeof value === 'string') {
+    const parts = value.split(',').map((s) => s.trim()).filter(Boolean);
+    return parts.length ? parts : [];
+  }
+  return undefined;
+}
+
 const PATH_LIST_SELECT = {
-  id: true,
-  title: true,
-  ar_title: true,
-  slug: true,
-  isPublished: true,
-  description: true,
-  difficulty: true,
-  totalCourses: true,
-  totalLabs: true,
-  estimatedHours: true,
-  isFeatured: true,
-  isNew: true,
-  createdAt: true,
-  updatedAt: true,
+  // ── Identity ──────────────────────────────────────────────────────────
+  id:              true,
+  title:           true,
+  ar_title:        true,
+  slug:            true,
+  description:     true,
+  ar_description:  true,
+  longDescription:    true,
+  ar_longDescription: true,
+  // ── Visual ────────────────────────────────────────────────────────────
+  iconName:        true,
+  color:           true,
+  thumbnail:       true,
+  // ── Classification ────────────────────────────────────────────────────
+  difficulty:      true,
+  estimatedHours:  true,
+  order:           true,
+  totalCourses:    true,
+  totalLabs:       true,
+  // ── Tags / Skills / Prerequisites ─────────────────────────────────────
+  tags:            true,
+  skills:          true,
+  prerequisites:   true,
+  // ── Flags ─────────────────────────────────────────────────────────────
+  isPublished:     true,
+  isFeatured:      true,
+  isNew:           true,
+  isComingSoon:    true,
+  // ── Timestamps ────────────────────────────────────────────────────────
+  createdAt:       true,
+  updatedAt:       true,
+  // ── Counts ────────────────────────────────────────────────────────────
   _count: { select: { modules: true, enrollments: true } },
 };
 
@@ -42,23 +72,22 @@ export class AdminPathsService {
       where: { pathId },
       include: {
         course: { select: { estimatedHours: true } },
-        lab: { select: { duration: true } },
+        lab:    { select: { duration: true } },
       },
     });
 
     const totalCourses = modules.filter((m) => m.courseId !== null).length;
-    const totalLabs = modules.filter((m) => m.labId !== null).length;
+    const totalLabs    = modules.filter((m) => m.labId   !== null).length;
 
     const estimatedHours = modules.reduce((sum, m) => {
       if (m.course?.estimatedHours) return sum + m.course.estimatedHours;
-      // lab.duration is in minutes → convert to hours (round up)
-      if (m.lab?.duration) return sum + Math.ceil(m.lab.duration / 60);
+      if (m.lab?.duration)          return sum + Math.ceil(m.lab.duration / 60);
       return sum;
     }, 0);
 
     await this.prisma.learningPath.update({
       where: { id: pathId },
-      data: { totalCourses, totalLabs, estimatedHours },
+      data:  { totalCourses, totalLabs, estimatedHours },
     });
   }
 
@@ -85,7 +114,7 @@ export class AdminPathsService {
 
     return {
       data: {
-        total: paths.length,
+        total:  paths.length,
         synced: results.filter((r) => r.status === 'synced').length,
         failed: results.filter((r) => r.status !== 'synced').length,
         results,
@@ -104,14 +133,14 @@ export class AdminPathsService {
 
   // ─── List ─────────────────────────────────────────────────────────────────
   async findAll(query: any) {
-    const page = Math.max(1, query.page ?? 1);
+    const page  = Math.max(1, query.page  ?? 1);
     const limit = Math.min(100, Math.max(1, query.limit ?? 20));
-    const skip = (page - 1) * limit;
+    const skip  = (page - 1) * limit;
 
     const where: any = {};
     if (query.search) {
       where.OR = [
-        { title: { contains: query.search, mode: 'insensitive' } },
+        { title:    { contains: query.search, mode: 'insensitive' } },
         { ar_title: { contains: query.search, mode: 'insensitive' } },
       ];
     }
@@ -124,9 +153,9 @@ export class AdminPathsService {
       this.prisma.learningPath.findMany({
         where,
         skip,
-        take: limit,
-        orderBy: { createdAt: 'desc' },
-        select: PATH_LIST_SELECT,
+        take:      limit,
+        orderBy:   { createdAt: 'desc' },
+        select:    PATH_LIST_SELECT,
       }),
       this.prisma.learningPath.count({ where }),
     ]);
@@ -140,7 +169,7 @@ export class AdminPathsService {
   // ─── Single ────────────────────────────────────────────────────────────────
   async findOne(id: string) {
     const path = await this.prisma.learningPath.findUnique({
-      where: { id },
+      where:   { id },
       include: {
         modules: {
           orderBy: { order: 'asc' },
@@ -155,27 +184,32 @@ export class AdminPathsService {
 
   // ─── Create ────────────────────────────────────────────────────────────────
   async create(dto: any) {
-    const slug = dto.slug ?? generateSlug(dto.title ?? 'untitled-path');
-    const existing = await this.prisma.learningPath.findFirst({
-      where: { slug },
-    });
-    if (existing)
-      throw new BadRequestException(`Slug "${slug}" already exists`);
+    const slug     = dto.slug ?? generateSlug(dto.title ?? 'untitled-path');
+    const existing = await this.prisma.learningPath.findFirst({ where: { slug } });
+    if (existing) throw new BadRequestException(`Slug "${slug}" already exists`);
 
-    const { modules, ...pathData } = dto;
+    const { modules, tags, skills, prerequisites, ...pathData } = dto;
+
     const path = await this.prisma.learningPath.create({
-      data: { ...pathData, slug, isPublished: pathData.isPublished ?? false },
+      data: {
+        ...pathData,
+        slug,
+        isPublished:  pathData.isPublished  ?? false,
+        tags:         parseCsv(tags)         ?? [],
+        skills:       parseCsv(skills)       ?? [],
+        prerequisites: parseCsv(prerequisites) ?? [],
+      },
     });
 
     if (modules?.length) {
       for (const [i, mod] of modules.entries()) {
         await this.prisma.pathModule.create({
           data: {
-            pathId: path.id,
-            labId: mod.labId ?? null,
+            pathId:   path.id,
+            labId:    mod.labId    ?? null,
             courseId: mod.courseId ?? null,
-            order: mod.order ?? i,
-            title: mod.title ?? '',
+            order:    mod.order    ?? i,
+            title:    mod.title    ?? '',
           },
         });
       }
@@ -188,12 +222,25 @@ export class AdminPathsService {
   // ─── Update ────────────────────────────────────────────────────────────────
   async update(id: string, dto: any) {
     await this.findOne(id);
-    const { modules, ...pathData } = dto;
+
+    const { modules, tags, skills, prerequisites, ...pathData } = dto;
+
+    // Parse CSV strings → string[] only when the field was provided
+    const parsedTags          = tags          !== undefined ? parseCsv(tags)          : undefined;
+    const parsedSkills        = skills        !== undefined ? parseCsv(skills)        : undefined;
+    const parsedPrerequisites = prerequisites !== undefined ? parseCsv(prerequisites) : undefined;
+
     const updated = await this.prisma.learningPath.update({
       where: { id },
-      data: pathData,
+      data:  {
+        ...pathData,
+        ...(parsedTags          !== undefined && { tags:          parsedTags }),
+        ...(parsedSkills        !== undefined && { skills:        parsedSkills }),
+        ...(parsedPrerequisites !== undefined && { prerequisites: parsedPrerequisites }),
+      },
       select: PATH_LIST_SELECT,
     });
+
     return { data: updated };
   }
 
@@ -201,8 +248,8 @@ export class AdminPathsService {
   async publish(id: string) {
     await this.findOne(id);
     const updated = await this.prisma.learningPath.update({
-      where: { id },
-      data: { isPublished: true },
+      where:  { id },
+      data:   { isPublished: true },
       select: PATH_LIST_SELECT,
     });
     return { data: updated };
@@ -211,8 +258,8 @@ export class AdminPathsService {
   async unpublish(id: string) {
     await this.findOne(id);
     const updated = await this.prisma.learningPath.update({
-      where: { id },
-      data: { isPublished: false },
+      where:  { id },
+      data:   { isPublished: false },
       select: PATH_LIST_SELECT,
     });
     return { data: updated };
@@ -231,26 +278,21 @@ export class AdminPathsService {
   async duplicate(id: string) {
     const { data: original } = await this.findOne(id);
 
-    const baseSlug = original.slug
+    const baseSlug      = original.slug
       ? `${original.slug}-copy`
       : generateSlug(`${original.title}-copy`);
-    let candidateSlug = baseSlug;
-    let attempt = 0;
+    let candidateSlug   = baseSlug;
+    let attempt         = 0;
     while (
-      await this.prisma.learningPath.findFirst({
-        where: { slug: candidateSlug },
-      })
+      await this.prisma.learningPath.findFirst({ where: { slug: candidateSlug } })
     ) {
       attempt++;
       candidateSlug = `${baseSlug}-${attempt}`;
     }
 
     const {
-      id: _id,
-      createdAt: _c,
-      updatedAt: _u,
-      modules,
-      _count,
+      id: _id, createdAt: _c, updatedAt: _u,
+      modules, _count,
       ...rest
     } = original as any;
 
@@ -258,11 +300,9 @@ export class AdminPathsService {
       const newPath = await tx.learningPath.create({
         data: {
           ...rest,
-          title: `${original.title} (Copy)`,
-          ar_title: original.ar_title
-            ? `${original.ar_title} (نسخة)`
-            : undefined,
-          slug: candidateSlug,
+          title:       `${original.title} (Copy)`,
+          ar_title:    original.ar_title ? `${original.ar_title} (نسخة)` : undefined,
+          slug:        candidateSlug,
           isPublished: false,
         },
       });
@@ -270,11 +310,11 @@ export class AdminPathsService {
       for (const [i, mod] of (modules ?? []).entries()) {
         await tx.pathModule.create({
           data: {
-            pathId: newPath.id,
-            labId: mod.labId ?? null,
+            pathId:   newPath.id,
+            labId:    mod.labId    ?? null,
             courseId: mod.courseId ?? null,
-            order: mod.order ?? i,
-            title: mod.title ?? '',
+            order:    mod.order    ?? i,
+            title:    mod.title    ?? '',
           },
         });
       }
@@ -289,18 +329,15 @@ export class AdminPathsService {
   // ─── Lab relations ─────────────────────────────────────────────────────────
   async getLabs(pathId: string) {
     const path = await this.prisma.learningPath.findUnique({
-      where: { id: pathId },
+      where:   { id: pathId },
       include: {
         modules: {
           orderBy: { order: 'asc' },
           include: {
             lab: {
               select: {
-                id: true,
-                title: true,
-                slug: true,
-                difficulty: true,
-                isPublished: true,
+                id: true, title: true, slug: true,
+                difficulty: true, isPublished: true,
               },
             },
           },
@@ -314,12 +351,12 @@ export class AdminPathsService {
   async attachLab(pathId: string, labId: string, dto: any) {
     await this.findOne(pathId);
     const count = await this.prisma.pathModule.count({ where: { pathId } });
-    const mod = await this.prisma.pathModule.create({
+    const mod   = await this.prisma.pathModule.create({
       data: {
         pathId,
         labId,
-        order: dto?.order ?? count,
-        title: dto?.title ?? '',
+        order:    dto?.order ?? count,
+        title:    dto?.title ?? '',
         courseId: null,
       },
       include: { lab: true },
@@ -329,9 +366,7 @@ export class AdminPathsService {
   }
 
   async detachLab(pathId: string, labId: string) {
-    const mod = await this.prisma.pathModule.findFirst({
-      where: { pathId, labId },
-    });
+    const mod = await this.prisma.pathModule.findFirst({ where: { pathId, labId } });
     if (!mod) throw new NotFoundException('Lab not found in this path');
     await this.prisma.pathModule.delete({ where: { id: mod.id } });
     await this.syncPathStats(pathId);
@@ -342,20 +377,17 @@ export class AdminPathsService {
   async attachCourse(pathId: string, courseId: string, dto: any) {
     await this.findOne(pathId);
 
-    const existing = await this.prisma.pathModule.findFirst({
-      where: { pathId, courseId },
-    });
-    if (existing)
-      throw new BadRequestException('Course already attached to this path');
+    const existing = await this.prisma.pathModule.findFirst({ where: { pathId, courseId } });
+    if (existing) throw new BadRequestException('Course already attached to this path');
 
     const count = await this.prisma.pathModule.count({ where: { pathId } });
-    const mod = await this.prisma.pathModule.create({
+    const mod   = await this.prisma.pathModule.create({
       data: {
         pathId,
         courseId,
-        labId: null,
-        order: dto?.order ?? count,
-        title: dto?.title ?? '',
+        labId:  null,
+        order:  dto?.order ?? count,
+        title:  dto?.title ?? '',
       },
       include: { course: true },
     });
@@ -364,9 +396,7 @@ export class AdminPathsService {
   }
 
   async detachCourse(pathId: string, courseId: string) {
-    const mod = await this.prisma.pathModule.findFirst({
-      where: { pathId, courseId },
-    });
+    const mod = await this.prisma.pathModule.findFirst({ where: { pathId, courseId } });
     if (!mod) throw new NotFoundException('Course not found in this path');
     await this.prisma.pathModule.delete({ where: { id: mod.id } });
     await this.syncPathStats(pathId);
@@ -380,11 +410,12 @@ export class AdminPathsService {
   ) {
     await this.findOne(pathId);
 
+    // Two-pass update to avoid unique-order conflicts
     await this.prisma.$transaction(
       orders.map(({ id }, i) =>
         this.prisma.pathModule.update({
           where: { id },
-          data: { order: 10000 + i },
+          data:  { order: 10000 + i },
         }),
       ),
     );
