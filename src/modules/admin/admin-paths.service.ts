@@ -26,39 +26,43 @@ function parseCsv(value: unknown): string[] | undefined {
   return undefined;
 }
 
+// ── Only fields that actually exist in the LearningPath Prisma model ──────────
 const PATH_LIST_SELECT = {
-  // ── Identity ──────────────────────────────────────────────────────────
-  id:              true,
-  title:           true,
-  ar_title:        true,
-  slug:            true,
-  description:     true,
-  ar_description:  true,
+  // Identity
+  id:                 true,
+  title:              true,
+  ar_title:           true,
+  slug:               true,
+  description:        true,
+  ar_description:     true,
   longDescription:    true,
   ar_longDescription: true,
-  // ── Visual ────────────────────────────────────────────────────────────
-  iconName:        true,
-  color:           true,
-  thumbnail:       true,
-  // ── Classification ────────────────────────────────────────────────────
-  difficulty:      true,
-  estimatedHours:  true,
-  order:           true,
-  totalCourses:    true,
-  totalLabs:       true,
-  // ── Tags / Skills / Prerequisites ─────────────────────────────────────
-  tags:            true,
-  skills:          true,
-  prerequisites:   true,
-  // ── Flags ─────────────────────────────────────────────────────────────
-  isPublished:     true,
-  isFeatured:      true,
-  isNew:           true,
-  isComingSoon:    true,
-  // ── Timestamps ────────────────────────────────────────────────────────
-  createdAt:       true,
-  updatedAt:       true,
-  // ── Counts ────────────────────────────────────────────────────────────
+  // Visual (NO thumbnail — field does not exist in LearningPath model)
+  iconName:           true,
+  color:              true,
+  // Classification
+  difficulty:         true,
+  estimatedHours:     true,
+  order:              true,
+  totalModules:       true,
+  totalCourses:       true,
+  totalLabs:          true,
+  // Tags / Skills / Prerequisites (EN + AR)
+  tags:               true,
+  ar_tags:            true,
+  skills:             true,
+  ar_skills:          true,
+  prerequisites:      true,
+  ar_prerequisites:   true,
+  // Flags
+  isPublished:        true,
+  isFeatured:         true,
+  isNew:              true,
+  isComingSoon:       true,
+  // Timestamps
+  createdAt:          true,
+  updatedAt:          true,
+  // Counts
   _count: { select: { modules: true, enrollments: true } },
 };
 
@@ -66,7 +70,7 @@ const PATH_LIST_SELECT = {
 export class AdminPathsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  // ─── Sync stats for ONE path ────────────────────────────────────────────
+  // ─── Sync stats for ONE path ──────────────────────────────────────────────
   async syncPathStats(pathId: string) {
     const modules = await this.prisma.pathModule.findMany({
       where: { pathId },
@@ -78,6 +82,7 @@ export class AdminPathsService {
 
     const totalCourses = modules.filter((m) => m.courseId !== null).length;
     const totalLabs    = modules.filter((m) => m.labId   !== null).length;
+    const totalModules = modules.length;
 
     const estimatedHours = modules.reduce((sum, m) => {
       if (m.course?.estimatedHours) return sum + m.course.estimatedHours;
@@ -87,11 +92,11 @@ export class AdminPathsService {
 
     await this.prisma.learningPath.update({
       where: { id: pathId },
-      data:  { totalCourses, totalLabs, estimatedHours },
+      data:  { totalCourses, totalLabs, totalModules, estimatedHours },
     });
   }
 
-  // ─── Sync stats for ALL paths (repair endpoint) ───────────────────────
+  // ─── Sync stats for ALL paths (repair endpoint) ───────────────────────────
   async syncAllPathsStats() {
     const paths = await this.prisma.learningPath.findMany({
       select: { id: true, title: true },
@@ -122,7 +127,7 @@ export class AdminPathsService {
     };
   }
 
-  // ─── Stats ─────────────────────────────────────────────────────────────────
+  // ─── Stats ────────────────────────────────────────────────────────────────
   async getStats() {
     const [total, published] = await Promise.all([
       this.prisma.learningPath.count(),
@@ -153,9 +158,9 @@ export class AdminPathsService {
       this.prisma.learningPath.findMany({
         where,
         skip,
-        take:      limit,
-        orderBy:   { createdAt: 'desc' },
-        select:    PATH_LIST_SELECT,
+        take:    limit,
+        orderBy: { createdAt: 'desc' },
+        select:  PATH_LIST_SELECT,
       }),
       this.prisma.learningPath.count({ where }),
     ]);
@@ -166,7 +171,7 @@ export class AdminPathsService {
     };
   }
 
-  // ─── Single ────────────────────────────────────────────────────────────────
+  // ─── Single ───────────────────────────────────────────────────────────────
   async findOne(id: string) {
     const path = await this.prisma.learningPath.findUnique({
       where:   { id },
@@ -182,7 +187,7 @@ export class AdminPathsService {
     return { data: path };
   }
 
-  // ─── Create ────────────────────────────────────────────────────────────────
+  // ─── Create ───────────────────────────────────────────────────────────────
   async create(dto: any) {
     const slug     = dto.slug ?? generateSlug(dto.title ?? 'untitled-path');
     const existing = await this.prisma.learningPath.findFirst({ where: { slug } });
@@ -194,9 +199,9 @@ export class AdminPathsService {
       data: {
         ...pathData,
         slug,
-        isPublished:  pathData.isPublished  ?? false,
-        tags:         parseCsv(tags)         ?? [],
-        skills:       parseCsv(skills)       ?? [],
+        isPublished:   pathData.isPublished   ?? false,
+        tags:          parseCsv(tags)          ?? [],
+        skills:        parseCsv(skills)        ?? [],
         prerequisites: parseCsv(prerequisites) ?? [],
       },
     });
@@ -219,7 +224,7 @@ export class AdminPathsService {
     return this.findOne(path.id);
   }
 
-  // ─── Update ────────────────────────────────────────────────────────────────
+  // ─── Update ───────────────────────────────────────────────────────────────
   async update(id: string, dto: any) {
     await this.findOne(id);
 
@@ -244,7 +249,7 @@ export class AdminPathsService {
     return { data: updated };
   }
 
-  // ─── Publish / Unpublish ───────────────────────────────────────────────────
+  // ─── Publish / Unpublish ──────────────────────────────────────────────────
   async publish(id: string) {
     await this.findOne(id);
     const updated = await this.prisma.learningPath.update({
@@ -265,7 +270,7 @@ export class AdminPathsService {
     return { data: updated };
   }
 
-  // ─── Delete ────────────────────────────────────────────────────────────────
+  // ─── Delete ───────────────────────────────────────────────────────────────
   async remove(id: string) {
     await this.findOne(id);
     await this.prisma.learningPath.delete({ where: { id } });
@@ -274,15 +279,15 @@ export class AdminPathsService {
     };
   }
 
-  // ─── Duplicate ─────────────────────────────────────────────────────────────
+  // ─── Duplicate ────────────────────────────────────────────────────────────
   async duplicate(id: string) {
     const { data: original } = await this.findOne(id);
 
-    const baseSlug      = original.slug
+    const baseSlug    = original.slug
       ? `${original.slug}-copy`
       : generateSlug(`${original.title}-copy`);
-    let candidateSlug   = baseSlug;
-    let attempt         = 0;
+    let candidateSlug = baseSlug;
+    let attempt       = 0;
     while (
       await this.prisma.learningPath.findFirst({ where: { slug: candidateSlug } })
     ) {
@@ -326,7 +331,7 @@ export class AdminPathsService {
     return { data: copy };
   }
 
-  // ─── Lab relations ─────────────────────────────────────────────────────────
+  // ─── Lab relations ────────────────────────────────────────────────────────
   async getLabs(pathId: string) {
     const path = await this.prisma.learningPath.findUnique({
       where:   { id: pathId },
@@ -373,7 +378,7 @@ export class AdminPathsService {
     return { data: { success: true } };
   }
 
-  // ─── Course relations ───────────────────────────────────────────────────────
+  // ─── Course relations ─────────────────────────────────────────────────────
   async attachCourse(pathId: string, courseId: string, dto: any) {
     await this.findOne(pathId);
 
@@ -403,7 +408,7 @@ export class AdminPathsService {
     return { data: { success: true } };
   }
 
-  // ─── Reorder ───────────────────────────────────────────────────────────────
+  // ─── Reorder ──────────────────────────────────────────────────────────────
   async reorderModules(
     pathId: string,
     orders: { id: string; order: number }[],
