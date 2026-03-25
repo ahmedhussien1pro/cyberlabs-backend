@@ -1,3 +1,4 @@
+// src/modules/certificates/certificates.service.ts
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../core/database';
 
@@ -78,7 +79,18 @@ export class CertificatesService {
   }
 
   /**
-   * Issue certificate when course is completed.
+   * Internal helper — generates a human-readable verification ID.
+   */
+  private generateVerificationId(): string {
+    const date = new Date();
+    const datePart = `${date.getFullYear()}${String(date.getMonth() + 1).padStart(2, '0')}${String(date.getDate()).padStart(2, '0')}`;
+    const random = Math.random().toString(36).slice(2, 8).toUpperCase();
+    return `CL-${datePart}-${random}`;
+  }
+
+  /**
+   * Issue a certificate for a COURSE completion.
+   * Kept internal / legacy — prefer issuePathCertificate for path-gated certs.
    * Idempotent — safe to call multiple times.
    */
   async issueCertificate(userId: string, courseId: string) {
@@ -87,18 +99,76 @@ export class CertificatesService {
     });
     if (existing) return existing;
 
-    // Generate a human-readable verification ID: CL-YYYYMMDD-RANDOM
-    const date = new Date();
-    const datePart = `${date.getFullYear()}${String(date.getMonth() + 1).padStart(2, '0')}${String(date.getDate()).padStart(2, '0')}`;
-    const random = Math.random().toString(36).slice(2, 8).toUpperCase();
-    const verificationId = `CL-${datePart}-${random}`;
-
     return this.prisma.issuedCertificate.create({
       data: {
         userId,
         courseId,
-        certificateUrl: '', // filled later when PDF template exists
-        verificationId,
+        certificateUrl: '',
+        verificationId: this.generateVerificationId(),
+        status: 'ACTIVE',
+      },
+    });
+  }
+
+  /**
+   * Issue a certificate ONLY when the user has completed every module
+   * in the learning path.
+   *
+   * Flow:
+   *  1. Collect all courseIds & labIds in the path.
+   *  2. Verify each one is completed by the user.
+   *  3. If all done → issue certificate against the FIRST course in the path
+   *     (used as the representative courseId on IssuedCertificate).
+   *  4. Idempotent — calling multiple times is safe.
+   *
+   * Returns the certificate record, or null if the path is not yet complete.
+   */
+  async issuePathCertificate(userId: string, pathId: string) {
+    const path = await this.prisma.learningPath.findUnique({
+      where: { id: pathId },
+      include: {
+        modules: {
+          orderBy: { order: 'asc' },
+          select: { courseId: true, labId: true },
+        },
+      },
+    });
+
+    if (!path || path.modules.length === 0) return null;
+
+    // ── Verify every module is completed ───────────────────────────────
+    for (const mod of path.modules) {
+      if (mod.courseId) {
+        const enrollment = await this.prisma.enrollment.findUnique({
+          where: { userId_courseId: { userId, courseId: mod.courseId } },
+          select: { isCompleted: true },
+        });
+        if (!enrollment?.isCompleted) return null;
+      } else if (mod.labId) {
+        const labProgress = await this.prisma.userLabProgress.findUnique({
+          where: { userId_labId: { userId, labId: mod.labId } },
+          select: { completedAt: true },
+        });
+        if (!labProgress?.completedAt) return null;
+      }
+    }
+
+    // ── All modules done — find representative courseId ─────────────────
+    const representativeCourseId = path.modules.find((m) => m.courseId)?.courseId;
+    if (!representativeCourseId) return null; // path has only labs — no cert model yet
+
+    // ── Idempotency check ───────────────────────────────────────────────
+    const existing = await this.prisma.issuedCertificate.findUnique({
+      where: { userId_courseId: { userId, courseId: representativeCourseId } },
+    });
+    if (existing) return existing;
+
+    return this.prisma.issuedCertificate.create({
+      data: {
+        userId,
+        courseId: representativeCourseId,
+        certificateUrl: '',
+        verificationId: this.generateVerificationId(),
         status: 'ACTIVE',
       },
     });

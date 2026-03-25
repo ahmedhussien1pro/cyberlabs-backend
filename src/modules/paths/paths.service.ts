@@ -7,6 +7,7 @@ import { PrismaService } from '../../core/database';
 import { Prisma } from '@prisma/client';
 import { NotificationsService } from '../notifications/services/notifications.service';
 import { NotificationEvents } from '../notifications/notifications.events';
+import { CertificatesService } from '../certificates/certificates.service';
 import { courseCardSelect } from '../../common/selects/course-card.select';
 import { toCourseCard } from '../../common/transformers/course-card.transformer';
 
@@ -15,6 +16,7 @@ export class PathsService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly notifications: NotificationsService,
+    private readonly certificates: CertificatesService,
   ) {}
 
   // ── List Paths ────────────────────────────────────────────────────────
@@ -89,7 +91,6 @@ export class PathsService {
       where: { userId },
       orderBy: { enrolledAt: 'desc' },
       include: {
-        // ✅ Fix: correct relation name in Prisma schema is 'path', not 'learningPath'
         path: {
           select: {
             id: true,
@@ -107,15 +108,13 @@ export class PathsService {
       },
     });
 
-    // Map to a shape the frontend PathsCard can consume directly
     return enrollments.map((e) => ({
       id: e.id,
       progress: e.progress,
       isCompleted: e.isCompleted,
       enrolledAt: e.enrolledAt,
       completedAt: e.completedAt ?? null,
-      startedAt: e.enrolledAt,          // frontend reads startedAt
-      // Nested under `careerPath` — mirrors UserCareerPath frontend type
+      startedAt: e.enrolledAt,
       careerPath: {
         id: e.path.id,
         slug: e.path.slug,
@@ -123,7 +122,7 @@ export class PathsService {
         ar_name: e.path.ar_title ?? null,
         description: e.path.description ?? null,
         ar_description: e.path.ar_description ?? null,
-        iconUrl: null,  // LearningPath uses iconName (lucide icon) not iconUrl
+        iconUrl: null,
         iconName: e.path.iconName,
         difficulty: e.path.difficulty,
         estimatedHours: e.path.estimatedHours ?? null,
@@ -266,6 +265,12 @@ export class PathsService {
   }
 
   // ── Sync Path Progress ────────────────────────────────────────────────
+  /**
+   * Recalculates path progress from completed modules and persists it.
+   * If the path reaches 100% for the first time:
+   *  - Sends a pathCompleted notification.
+   *  - Issues a path certificate via CertificatesService.issuePathCertificate.
+   */
   async syncPathProgress(userId: string, pathId: string) {
     const path = await this.prisma.learningPath.findUnique({
       where: { id: pathId },
@@ -291,6 +296,12 @@ export class PathsService {
     const progress = Math.round((completedCount / path.modules.length) * 100);
     const isCompleted = progress >= 100;
 
+    // Fetch existing enrollment to detect first-time completion
+    const existingEnrollment = await this.prisma.pathEnrollment.findUnique({
+      where: { userId_pathId: { userId, pathId } },
+      select: { isCompleted: true },
+    });
+
     await this.prisma.pathEnrollment.update({
       where: { userId_pathId: { userId, pathId } },
       data: {
@@ -300,9 +311,16 @@ export class PathsService {
       },
     });
 
-    if (isCompleted) {
+    // Fire side-effects only on first-time completion
+    if (isCompleted && !existingEnrollment?.isCompleted) {
+      // 1. Notification
       this.notifications
         .notify(userId, NotificationEvents.pathCompleted(path.title, path.slug))
+        .catch(() => {});
+
+      // 2. Certificate — issued only when the full path is complete
+      this.certificates
+        .issuePathCertificate(userId, pathId)
         .catch(() => {});
     }
   }
