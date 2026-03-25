@@ -1763,6 +1763,7 @@ model LearningPath {
   ar_description  String?
   longDescription String?      @db.Text
   ar_longDescription String?   @db.Text
+  thumbnail       String?
   iconName        String       @default("Map")
   color           CourseColor  @default(BLUE)
   difficulty      Difficulty   @default(BEGINNER)
