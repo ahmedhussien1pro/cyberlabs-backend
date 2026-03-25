@@ -6,45 +6,27 @@ import {
   UseGuards,
   UseInterceptors,
   BadRequestException,
+  ServiceUnavailableException,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { memoryStorage } from 'multer';
 import { AdminGuard } from '../../common/guards';
 import { R2Service } from '../../core/storage/r2.service';
-import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
-import { ConfigService } from '@nestjs/config';
 import { randomUUID } from 'crypto';
 
 @UseGuards(AdminGuard)
 @Controller('admin/upload')
 export class AdminUploadController {
-  private client: S3Client;
-  private bucket: string;
-
-  constructor(
-    private readonly r2: R2Service,
-    private readonly config: ConfigService,
-  ) {
-    this.bucket = this.config.get<string>('R2_BUCKET_NAME')!;
-    this.client = new S3Client({
-      region: 'auto',
-      endpoint: `https://${this.config.get('R2_ACCOUNT_ID')}.r2.cloudflarestorage.com`,
-      credentials: {
-        accessKeyId:     this.config.get<string>('R2_ACCESS_KEY_ID')!,
-        secretAccessKey: this.config.get<string>('R2_SECRET_ACCESS_KEY')!,
-      },
-    });
-  }
+  constructor(private readonly r2: R2Service) {}
 
   /**
    * POST /admin/upload/image
-   * multipart/form-data: file (image/*)
+   * multipart/form-data: { file: image/* }
    *
-   * Returns: { url: string }  — public Cloudflare R2 URL
+   * Uploads an image to Cloudflare R2 and returns its public URL.
+   * Used by the admin panel for thumbnails, path covers, course images, etc.
    *
-   * Used by curriculum editor: when saving a topic that has image elements
-   * with a pending local blob, the frontend uploads them here first to get
-   * a persistent URL, then saves the curriculum with that URL.
+   * Returns: { url: string, key: string }
    */
   @Post('image')
   @UseInterceptors(
@@ -60,21 +42,25 @@ export class AdminUploadController {
     }),
   )
   async uploadImage(@UploadedFile() file: Express.Multer.File) {
-    if (!file) throw new BadRequestException('Image file is required');
+    if (!file) {
+      throw new BadRequestException('Image file is required');
+    }
+
+    if (!this.r2.isReady()) {
+      throw new ServiceUnavailableException(
+        'Image upload is temporarily unavailable — storage not configured',
+      );
+    }
 
     const ext = file.mimetype.split('/')[1]?.replace('jpeg', 'jpg') ?? 'jpg';
-    const key = `courses/curriculum/${randomUUID()}.${ext}`;
+    const key = `admin/images/${randomUUID()}.${ext}`;
 
-    await this.client.send(
-      new PutObjectCommand({
-        Bucket:      this.bucket,
-        Key:         key,
-        Body:        file.buffer,
-        ContentType: file.mimetype,
-      }),
-    );
+    const url = await this.r2.uploadBuffer({
+      key,
+      body:        file.buffer,
+      contentType: file.mimetype,
+    });
 
-    const url = this.r2.getPublicUrl(key);
     return { url, key };
   }
 }

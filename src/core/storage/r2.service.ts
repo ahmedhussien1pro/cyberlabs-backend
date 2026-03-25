@@ -1,4 +1,5 @@
-import { Injectable } from '@nestjs/common';
+// src/core/storage/r2.service.ts
+import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import {
   S3Client,
@@ -9,91 +10,112 @@ import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { randomUUID } from 'crypto';
 
 @Injectable()
-export class R2Service {
-  private client: S3Client;
-  private bucket: string;
-  private publicUrl: string;
+export class R2Service implements OnModuleInit {
+  private readonly logger = new Logger(R2Service.name);
 
-  constructor(private config: ConfigService) {
-    this.bucket = this.config.get<string>('R2_BUCKET_NAME')!;
+  private client!: S3Client;
+  private bucket!: string;
+  private publicUrl!: string;
 
-    /**
-     * Strip any trailing slash from R2_PUBLIC_URL.
-     * Without this, a value like "https://pub-xxx.r2.dev/" would produce
-     * double-slash URLs: "https://pub-xxx.r2.dev//users/..."
-     */
-    this.publicUrl = (
-      this.config.get<string>('R2_PUBLIC_URL') ?? ''
-    ).replace(/\/+$/, '');
+  private ready = false;
+
+  constructor(private config: ConfigService) {}
+
+  // ─ Lazy init — runs after all env vars are confirmed loaded ─────────────
+  onModuleInit() {
+    const accountId  = this.config.get<string>('R2_ACCOUNT_ID');
+    const accessKey  = this.config.get<string>('R2_ACCESS_KEY_ID');
+    const secretKey  = this.config.get<string>('R2_SECRET_ACCESS_KEY');
+    const bucketName = this.config.get<string>('R2_BUCKET_NAME');
+    const pubUrl     = this.config.get<string>('R2_PUBLIC_URL') ?? '';
+
+    if (!accountId || !accessKey || !secretKey || !bucketName) {
+      this.logger.warn(
+        '⚠️  R2 env vars missing — upload features will be disabled. ' +
+        'Required: R2_ACCOUNT_ID, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY, R2_BUCKET_NAME',
+      );
+      return; // don't throw — let the server start anyway
+    }
+
+    this.bucket    = bucketName;
+    this.publicUrl = pubUrl.replace(/\/+$/, '');
 
     this.client = new S3Client({
-      region: 'auto',
-      endpoint: `https://${this.config.get('R2_ACCOUNT_ID')}.r2.cloudflarestorage.com`,
+      region:   'auto',
+      endpoint: `https://${accountId}.r2.cloudflarestorage.com`,
       credentials: {
-        accessKeyId: this.config.get<string>('R2_ACCESS_KEY_ID')!,
-        secretAccessKey: this.config.get<string>('R2_SECRET_ACCESS_KEY')!,
+        accessKeyId:     accessKey,
+        secretAccessKey: secretKey,
       },
     });
+
+    this.ready = true;
+    this.logger.log('✅ R2 storage ready');
   }
 
-  /**
-   * Build a public URL for a given R2 object key.
-   * Single source of truth — use this everywhere instead of
-   * manually concatenating config.get('R2_PUBLIC_URL') + key.
-   */
+  isReady(): boolean {
+    return this.ready;
+  }
+
+  // ─ Public URL ───────────────────────────────────────────────────────────
   getPublicUrl(key: string): string {
     return `${this.publicUrl}/${key}`;
   }
 
-  /**
-   * Generate a presigned URL for a browser-initiated avatar upload.
-   * Key format: users/{userId}/avatar/{uuid}.{ext}
-   * Expires in 5 minutes.
-   *
-   * NOTE: The R2 bucket MUST have CORS configured to allow
-   * PUT requests from the frontend origin:
-   * https://developers.cloudflare.com/r2/buckets/cors/
-   */
+  // ─ Upload buffer directly (server-side) ──────────────────────────────
+  async uploadBuffer(options: {
+    key:         string;
+    body:        Buffer;
+    contentType: string;
+  }): Promise<string> {
+    if (!this.ready) throw new Error('R2 storage is not configured');
+
+    await this.client.send(
+      new PutObjectCommand({
+        Bucket:      this.bucket,
+        Key:         options.key,
+        Body:        options.body,
+        ContentType: options.contentType,
+      }),
+    );
+
+    return this.getPublicUrl(options.key);
+  }
+
+  // ─ Presigned upload URL (browser → R2 direct) ───────────────────────
   async getPresignedUploadUrl(
     userId: string,
     contentType: string,
   ): Promise<{ uploadUrl: string; key: string; publicUrl: string }> {
+    if (!this.ready) throw new Error('R2 storage is not configured');
+
     const ext = contentType.split('/')[1] ?? 'jpg';
     const key = `users/${userId}/avatar/${randomUUID()}.${ext}`;
 
     const command = new PutObjectCommand({
-      Bucket: this.bucket,
-      Key: key,
+      Bucket:      this.bucket,
+      Key:         key,
       ContentType: contentType,
     });
 
-    const uploadUrl = await getSignedUrl(this.client, command, {
-      expiresIn: 300, // 5 minutes
-    });
+    const uploadUrl = await getSignedUrl(this.client, command, { expiresIn: 300 });
 
-    return {
-      uploadUrl,
-      key,
-      publicUrl: this.getPublicUrl(key),
-    };
+    return { uploadUrl, key, publicUrl: this.getPublicUrl(key) };
   }
 
-  /**
-   * Delete an object from R2 by key.
-   */
+  // ─ Delete ──────────────────────────────────────────────────────────────────
   async deleteObject(key: string): Promise<void> {
+    if (!this.ready) return; // silent fail on delete if not configured
     await this.client.send(
       new DeleteObjectCommand({ Bucket: this.bucket, Key: key }),
     );
   }
 
-  /**
-   * Extract R2 key from a public URL.
-   */
+  // ─ Extract key from URL ──────────────────────────────────────────────────
   extractKey(publicUrl: string): string | null {
     try {
       const url = new URL(publicUrl);
-      return url.pathname.slice(1); // remove leading /
+      return url.pathname.slice(1);
     } catch {
       return null;
     }
