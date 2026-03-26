@@ -2,8 +2,8 @@
 import { PrismaClient } from '@prisma/client';
 import { readFileSync, existsSync } from 'fs';
 import { join } from 'path';
-import { COURSES_META } from '../seed-config';
-import { SYSTEM_INSTRUCTOR_ID } from '../seed-config';
+import { COURSES_META, SYSTEM_INSTRUCTOR_ID } from '../seed-config';
+
 function safeNumber(val: any, fallback = 0): number {
   const n = Number(val);
   return isNaN(n) ? fallback : n;
@@ -21,15 +21,68 @@ export async function seedCourses(prisma: PrismaClient) {
   if (!instructor) throw new Error('❌ No user found — seed users first.');
 
   const instructorId = SYSTEM_INSTRUCTOR_ID;
+  const baseDir     = join(process.cwd(), 'prisma/seed-data/course-data');
 
-  const baseDir = join(process.cwd(), 'prisma/seed-data/course-data');
-  let seeded = 0;
+  let seeded     = 0;
+  let skipped    = 0;
+  let comingSoon = 0;
 
   for (const meta of COURSES_META) {
+
+    // ⏳ Coming Soon — upsert placeholder only (no JSON needed)
+    if (meta.isComingSoon) {
+      try {
+        await prisma.course.upsert({
+          where:  { slug: meta.slug },
+          update: {
+            color:          meta.color          as any,
+            difficulty:     meta.difficulty      as any,
+            access:         meta.access          as any,
+            contentType:    meta.contentType     as any,
+            category:       meta.category        as any,
+            estimatedHours: meta.estimatedHours,
+            isPublished:    false,
+            isNew:          meta.isNew      ?? false,
+            isFeatured:     meta.isFeatured ?? false,
+            tags:           meta.tags       ?? [],
+            skills:         meta.skills     ?? [],
+            ar_skills:      meta.ar_skills  ?? [],
+          },
+          create: {
+            slug:           meta.slug,
+            title:          meta.slug.replace(/-/g, ' '),   // placeholder title
+            color:          meta.color          as any,
+            difficulty:     meta.difficulty      as any,
+            access:         meta.access          as any,
+            contentType:    meta.contentType     as any,
+            category:       meta.category        as any,
+            estimatedHours: meta.estimatedHours,
+            duration:       meta.estimatedHours * 60,
+            state:          'DRAFT'             as any,
+            isPublished:    false,
+            isNew:          meta.isNew      ?? false,
+            isFeatured:     meta.isFeatured ?? false,
+            tags:           meta.tags       ?? [],
+            skills:         meta.skills     ?? [],
+            ar_skills:      meta.ar_skills  ?? [],
+            thumbnail:      '',
+            instructor:     { connect: { id: instructorId } },
+          },
+        });
+        console.log(`  ⏳ [COMING SOON] ${meta.slug}`);
+        comingSoon++;
+      } catch (e: any) {
+        console.error(`  ❌ [COMING SOON] ${meta.slug}:`, e.message);
+      }
+      continue;
+    }
+
+    // ✅ Regular course — requires JSON file
     const filePath = join(baseDir, meta.jsonFile);
 
-    if (!existsSync(filePath)) {
-      console.warn(`  ⚠️  JSON not found: ${meta.jsonFile} — skipping`);
+    if (!meta.jsonFile || !existsSync(filePath)) {
+      console.warn(`  ⚠️  JSON not found: ${meta.jsonFile || '(empty)'} — skipping ${meta.slug}`);
+      skipped++;
       continue;
     }
 
@@ -38,6 +91,7 @@ export async function seedCourses(prisma: PrismaClient) {
       raw = JSON.parse(readFileSync(filePath, 'utf-8'));
     } catch {
       console.warn(`  ⚠️  Could not parse: ${meta.jsonFile} — skipping`);
+      skipped++;
       continue;
     }
 
@@ -56,15 +110,13 @@ export async function seedCourses(prisma: PrismaClient) {
         : ld.ar_description;
 
     const topicsArr: any[] = raw.topics ?? [];
-
-    const totalTopics = topicsArr.length;
+    const totalTopics      = topicsArr.length;
 
     const topicsList: string[] =
       meta.topics ??
       topicsArr
-        .map(
-          (t: any) =>
-            (typeof t.title === 'object' ? t.title?.en : t.title) ?? '',
+        .map((t: any) =>
+          (typeof t.title === 'object' ? t.title?.en : t.title) ?? '',
         )
         .filter(Boolean);
 
@@ -75,37 +127,37 @@ export async function seedCourses(prisma: PrismaClient) {
         .filter(Boolean);
 
     const coursePayload = {
-      title: titleEn,
-      ar_title: titleAr,
-      description: descEn,
+      title:          titleEn,
+      ar_title:       titleAr,
+      description:    descEn,
       ar_description: descAr,
-      color: meta.color as any,
-      difficulty: meta.difficulty as any,
-      access: meta.access as any,
-      contentType: meta.contentType as any,
-      category: meta.category as any,
+      color:          meta.color          as any,
+      difficulty:     meta.difficulty      as any,
+      access:         meta.access          as any,
+      contentType:    meta.contentType     as any,
+      category:       meta.category        as any,
       estimatedHours: meta.estimatedHours,
-      duration: meta.estimatedHours * 60,
-      state: 'PUBLISHED' as any,
-      isPublished: true,
-      isNew: meta.isNew ?? false,
-      isFeatured: meta.isFeatured ?? false,
-      thumbnail: meta.thumbnail ?? '',
-      tags: meta.tags ?? [],
-      skills: meta.skills ?? [],
-      ar_skills: meta.ar_skills ?? [],
-      topics: topicsList,
-      ar_topics: ar_topicsList,
+      duration:       meta.estimatedHours * 60,
+      state:          'PUBLISHED'          as any,
+      isPublished:    true,
+      isNew:          meta.isNew      ?? false,
+      isFeatured:     meta.isFeatured ?? false,
+      thumbnail:      meta.thumbnail  ?? '',
+      tags:           meta.tags       ?? [],
+      skills:         meta.skills     ?? [],
+      ar_skills:      meta.ar_skills  ?? [],
+      topics:         topicsList,
+      ar_topics:      ar_topicsList,
       totalTopics,
     };
 
     try {
       const course = await prisma.course.upsert({
-        where: { slug: meta.slug },
+        where:  { slug: meta.slug },
         update: coursePayload,
         create: {
           ...coursePayload,
-          slug: meta.slug,
+          slug:       meta.slug,
           instructor: { connect: { id: instructorId } },
         },
       });
@@ -125,11 +177,14 @@ export async function seedCourses(prisma: PrismaClient) {
     }
   }
 
-  console.log(`  🎉 ${seeded}/${COURSES_META.length} courses seeded\n`);
+  console.log(
+    `  🎉 ${seeded} seeded | ⏳ ${comingSoon} coming-soon | ⚠️  ${skipped} skipped\n`,
+  );
 }
 
+// ───────────────────────────────────────────────────────────────────
 async function linkCourseToLabs(
-  prisma: PrismaClient,
+  prisma:   PrismaClient,
   courseId: string,
   labSlugs: string[],
 ) {
@@ -137,7 +192,7 @@ async function linkCourseToLabs(
 
   for (let i = 0; i < labSlugs.length; i++) {
     const lab = await prisma.lab.findUnique({
-      where: { slug: labSlugs[i] },
+      where:  { slug: labSlugs[i] },
       select: { id: true },
     });
     if (!lab) {
@@ -145,21 +200,22 @@ async function linkCourseToLabs(
       continue;
     }
     await (prisma as any).courseLab.upsert({
-      where: { courseId_labId: { courseId, labId: lab.id } },
+      where:  { courseId_labId: { courseId, labId: lab.id } },
       update: { order: i + 1 },
       create: { courseId, labId: lab.id, order: i + 1 },
     });
   }
 }
 
+// ───────────────────────────────────────────────────────────────────
 async function seedCourseSections(
-  prisma: PrismaClient,
+  prisma:   PrismaClient,
   courseId: string,
-  topics: any[],
+  topics:   any[],
 ) {
-  await prisma.lesson.deleteMany({ where: { courseId } });
+  await prisma.lesson.deleteMany({  where: { courseId } });
   await prisma.section.deleteMany({ where: { courseId } });
-  await prisma.module.deleteMany({ where: { courseId } });
+  await prisma.module.deleteMany({  where: { courseId } });
 
   for (let sIdx = 0; sIdx < topics.length; sIdx++) {
     const topic = topics[sIdx];
@@ -180,7 +236,7 @@ async function seedCourseSections(
       prisma.section.create({
         data: {
           courseId,
-          title: sTitle,
+          title:    sTitle,
           ar_title: sTitleAr,
           order,
           ...(sDesc ? { description: sDesc } : {}),
@@ -189,7 +245,7 @@ async function seedCourseSections(
       prisma.module.create({
         data: {
           courseId,
-          title: sTitle,
+          title:    sTitle,
           ar_title: sTitleAr,
           order,
           ...(sDesc ? { description: sDesc } : {}),
@@ -200,7 +256,7 @@ async function seedCourseSections(
     const elements: any[] = topic.elements ?? topic.lessons ?? [];
 
     for (let eIdx = 0; eIdx < elements.length; eIdx++) {
-      const el = elements[eIdx];
+      const el          = elements[eIdx];
       const lessonOrder = safeNumber(el.order, eIdx + 1);
 
       const lTitle =
@@ -217,13 +273,13 @@ async function seedCourseSections(
         data: {
           courseId,
           sectionId: section.id,
-          moduleId: mod.id,
-          title: lTitle,
-          ar_title: lTitleAr,
-          order: lessonOrder,
-          type: lessonType,
-          duration: safeNumber(el.duration, 0),
-          content: el.content ?? '',
+          moduleId:  mod.id,
+          title:     lTitle,
+          ar_title:  lTitleAr,
+          order:     lessonOrder,
+          type:      lessonType,
+          duration:  safeNumber(el.duration, 0),
+          content:   el.content ?? '',
           ...(el.videoUrl || el.video_url
             ? { videoUrl: el.videoUrl ?? el.video_url }
             : {}),
