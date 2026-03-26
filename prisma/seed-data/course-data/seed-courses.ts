@@ -3,7 +3,7 @@ import { PrismaClient } from '@prisma/client';
 import { readFileSync, existsSync } from 'fs';
 import { join } from 'path';
 import { COURSES_META } from '../seed-config';
-
+import { SYSTEM_INSTRUCTOR_ID } from '../seed-config';
 function safeNumber(val: any, fallback = 0): number {
   const n = Number(val);
   return isNaN(n) ? fallback : n;
@@ -20,7 +20,8 @@ export async function seedCourses(prisma: PrismaClient) {
 
   if (!instructor) throw new Error('❌ No user found — seed users first.');
 
-  const instructorId = instructor.id;
+  const instructorId = SYSTEM_INSTRUCTOR_ID;
+
   const baseDir = join(process.cwd(), 'prisma/seed-data/course-data');
   let seeded = 0;
 
@@ -56,10 +57,8 @@ export async function seedCourses(prisma: PrismaClient) {
 
     const topicsArr: any[] = raw.topics ?? [];
 
-    // ✅ عدد التوبيكس الفعلي (عدد الـ sections مش عدد العناصر)
     const totalTopics = topicsArr.length;
 
-    // Topic titles للكارد
     const topicsList: string[] =
       meta.topics ??
       topicsArr
@@ -97,7 +96,6 @@ export async function seedCourses(prisma: PrismaClient) {
       ar_skills: meta.ar_skills ?? [],
       topics: topicsList,
       ar_topics: ar_topicsList,
-      // ✅ عدد الـ sections الفعلي
       totalTopics,
     };
 
