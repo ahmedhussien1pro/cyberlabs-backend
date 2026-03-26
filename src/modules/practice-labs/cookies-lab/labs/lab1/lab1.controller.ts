@@ -10,13 +10,15 @@ export class Lab1Controller {
   constructor(private lab1Service: Lab1Service) {}
 
   @Post('start')
-  async startLab(@GetUser('id') userId: string, @Body('labId') labId: string) {
+  start(
+    @GetUser('id') userId: string,
+    @Body('labId') labId: string,
+  ) {
     return this.lab1Service.initLab(userId, labId);
   }
 
-  // تسجيل الدخول بالـ credentials الضعيفة
   @Post('login')
-  async login(
+  login(
     @GetUser('id') userId: string,
     @Body('labId') labId: string,
     @Body('email') email: string,
@@ -25,9 +27,9 @@ export class Lab1Controller {
     return this.lab1Service.login(userId, labId, email, password);
   }
 
-  // ❌ الثغرة: يقرأ role من cookie header
+  // ❌ Vuln: reads role from the x-session header (cookie value) without verification
   @Post('admin')
-  async adminPanel(
+  adminPanel(
     @GetUser('id') userId: string,
     @Body('labId') labId: string,
     @Headers('x-session') sessionCookie: string,

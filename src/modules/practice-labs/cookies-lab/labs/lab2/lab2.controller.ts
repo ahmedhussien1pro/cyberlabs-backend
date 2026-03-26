@@ -10,25 +10,30 @@ export class Lab2Controller {
   constructor(private lab2Service: Lab2Service) {}
 
   @Post('start')
-  async startLab(@GetUser('id') userId: string, @Body('labId') labId: string) {
+  start(
+    @GetUser('id') userId: string,
+    @Body('labId') labId: string,
+  ) {
     return this.lab2Service.initLab(userId, labId);
   }
 
   @Post('login')
-  async login(
+  login(
     @GetUser('id') userId: string,
     @Body('labId') labId: string,
-    @Body('username') username: string,
+    @Body('email') email: string,
+    @Body('password') password: string,
   ) {
-    return this.lab2Service.login(userId, labId, username);
+    return this.lab2Service.login(userId, labId, email, password);
   }
 
+  // ❌ Vuln: trusts Base64-encoded userId from x-session header without signature check
   @Post('admin')
-  async adminPanel(
+  adminPanel(
     @GetUser('id') userId: string,
     @Body('labId') labId: string,
-    @Headers('x-session') cookie: string,
+    @Headers('x-session') sessionCookie: string,
   ) {
-    return this.lab2Service.adminPanel(userId, labId, cookie);
+    return this.lab2Service.adminPanel(userId, labId, sessionCookie);
   }
 }
