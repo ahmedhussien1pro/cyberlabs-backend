@@ -4,7 +4,6 @@ import {
   NotFoundException,
   BadRequestException,
   Logger,
-  ConflictException,
 } from '@nestjs/common';
 import { PrismaService } from '../../core/database';
 import Stripe from 'stripe';
@@ -56,24 +55,43 @@ export class PricingService {
     };
   }
 
+  /**
+   * Smart checkout:
+   * - No active subscription  → create a Stripe Checkout Session
+   * - Has active subscription → redirect to Stripe Billing Portal
+   *                             (plan upgrades/downgrades happen there)
+   *
+   * Returns { action: 'checkout', checkoutUrl } OR { action: 'portal', portalUrl }
+   */
   async createCheckoutSession(
     userId: string,
     planId: string,
     billingCycle: 'MONTHLY' | 'YEARLY',
     successUrl?: string,
-  ) {
+  ): Promise<
+    | { action: 'checkout'; checkoutUrl: string; sessionId: string }
+    | { action: 'portal'; portalUrl: string }
+  > {
     const user = await this.prisma.user.findUnique({ where: { id: userId } });
     if (!user) throw new NotFoundException('User not found');
 
+    const frontendUrl =
+      this.config.get('FRONTEND_URL') || 'http://localhost:5173';
+
+    // ── User already has a subscription → send to billing portal ────
     const activeSub = await this.prisma.subscription.findFirst({
       where: { userId, isActive: true },
     });
+
     if (activeSub) {
-      throw new ConflictException(
-        'You already have an active subscription. Please manage it via the billing portal.',
+      this.logger.log(
+        `User ${userId} has active subscription — redirecting to portal`,
       );
+      const portalResult = await this.createPortalSession(userId);
+      return { action: 'portal', portalUrl: portalResult.portalUrl };
     }
 
+    // ── Fresh subscription → create Stripe Checkout Session ─────────
     const durationEnum =
       billingCycle === 'YEARLY'
         ? SubscriptionDuration.YEARLY
@@ -113,9 +131,6 @@ export class PricingService {
       }
     }
 
-    const frontendUrl =
-      this.config.get('FRONTEND_URL') || 'http://localhost:5173';
-
     try {
       const session = await this.stripe.checkout.sessions.create({
         customer: customerId,
@@ -131,7 +146,11 @@ export class PricingService {
         },
       });
 
-      return { checkoutUrl: session.url, sessionId: session.id };
+      return {
+        action: 'checkout',
+        checkoutUrl: session.url!,
+        sessionId: session.id,
+      };
     } catch (error: any) {
       this.logger.error(`Failed to create checkout session: ${error.message}`);
       throw new BadRequestException('Could not initiate checkout session');
@@ -152,7 +171,6 @@ export class PricingService {
     try {
       const session = await this.stripe.billingPortal.sessions.create({
         customer: customerId,
-        // ✅ FIXED: كانت /settings/billing → الآن الصفحة الصح
         return_url: `${frontendUrl}/dashboard/settings?tab=billing`,
       });
       return { portalUrl: session.url };
@@ -172,8 +190,6 @@ export class PricingService {
       throw new BadRequestException('No active subscription found');
     }
 
-    // ✅ FIXED: لو الاشتراك seeded/manual (بدون stripeSubscriptionId)
-    // نحدّث الـ DB مباشرة بدون محاولة الاتصال بـ Stripe
     if (!sub.stripeSubscriptionId) {
       this.logger.warn(
         `Subscription ${sub.id} has no stripeSubscriptionId — updating DB only`,
@@ -289,7 +305,6 @@ export class PricingService {
       this.logger.error(
         '❌ Missing metadata or subscription ID in checkout session',
       );
-      this.logger.error(`   Session: ${JSON.stringify(session, null, 2)}`);
       return;
     }
 
@@ -308,8 +323,6 @@ export class PricingService {
 
       const dbBillingCycle: BillingCycle =
         billingCycle === 'YEARLY' ? BillingCycle.ANNUAL : BillingCycle.MONTHLY;
-
-      this.logger.log(`   Mapped billing cycle: ${dbBillingCycle}`);
 
       const deactivated = await this.prisma.subscription.updateMany({
         where: { userId, isActive: true },
@@ -336,7 +349,6 @@ export class PricingService {
       this.logger.log(`   DB ID: ${newSub.id}`);
     } catch (error: any) {
       this.logger.error(`❌ Error fulfilling subscription: ${error.message}`);
-      this.logger.error(`   Stack: ${error.stack}`);
       throw error;
     }
   }
