@@ -36,6 +36,7 @@ export interface CourseMeta {
   contentType: CourseContentType;
   isNew?: boolean;
   isFeatured?: boolean;
+  isComingSoon?: boolean;
   thumbnail?: string;
   labSlugs?: string[];
   badgeCodes?: string[];
@@ -90,6 +91,7 @@ export interface PathMeta {
   isNew?: boolean;
   isFeatured?: boolean;
   isPublished?: boolean;
+  isComingSoon?: boolean;
   tags?: string[];
   skills?: string[];
   ar_skills?: string[];
@@ -102,10 +104,16 @@ export interface PathMeta {
 export const SYSTEM_INSTRUCTOR_ID = 'ec4a19d8-17b3-4a55-97c4-97e13b029b03';
 
 // ═══════════════════════════════════════════════════════════════════
-//  COURSES — Introduction to Cybersecurity Path (14 courses)
-//  ✔️ Pre-Security courses already seeded — removed from here
+//  COURSES
+//  ✔️ Section A : Introduction to Cybersecurity Path (14 courses) — TO SEED
+//  ⏳ Section B : Coming Soon courses (10 courses) — isPublished:false
 // ═══════════════════════════════════════════════════════════════════
 export const COURSES_META: CourseMeta[] = [
+
+  // ════════════════════════════════════════════════════════════════
+  //  SECTION A — Introduction to Cybersecurity Path
+  //  ✔️ Pre-Security 27 courses already seeded — not listed here
+  // ════════════════════════════════════════════════════════════════
 
   // ── 01 · Active Directory Fundamentals ─────────────────────────
   {
@@ -330,6 +338,176 @@ export const COURSES_META: CourseMeta[] = [
     skills:         ['Disk Imaging', 'Memory Forensics', 'File Recovery', 'Timeline Analysis', 'Volatility', 'Chain of Custody'],
     ar_skills:      ['نسخ القرص', 'تحليل الذاكرة', 'استعادة الملفات', 'تحليل الجداول الزمنية', 'Volatility', 'سلسلة الحضانة'],
   },
+
+  // ════════════════════════════════════════════════════════════════
+  //  SECTION B — Coming Soon Courses (10 high-demand courses)
+  //  isPublished: false | isComingSoon: true | jsonFile: ''
+  // ════════════════════════════════════════════════════════════════
+
+  // ── CS-01 · Burp Suite Mastery ────────────────────────────────
+  {
+    jsonFile:       '',
+    slug:           'burp-suite-mastery',
+    color:          'ORANGE',
+    difficulty:     'INTERMEDIATE',
+    access:         'PRO',
+    contentType:    'PRACTICAL',
+    category:       'WEB_SECURITY',
+    estimatedHours: 10,
+    isComingSoon:   true,
+    tags:           ['burp-suite', 'web-security', 'proxy', 'scanning', 'intruder', 'repeater'],
+    skills:         ['Burp Proxy', 'Burp Intruder', 'Burp Scanner', 'Burp Extensions', 'Intercept & Modify', 'Active Scanning'],
+    ar_skills:      ['بروكسي Burp', 'متتحكم Burp', 'ماسح Burp', 'إضافات Burp', 'اعتراض وتعديل الطلبات', 'المسح النشط'],
+  },
+
+  // ── CS-02 · API Security & Hacking ───────────────────────────
+  {
+    jsonFile:       '',
+    slug:           'api-security-and-hacking',
+    color:          'VIOLET',
+    difficulty:     'INTERMEDIATE',
+    access:         'PRO',
+    contentType:    'PRACTICAL',
+    category:       'WEB_SECURITY',
+    estimatedHours: 10,
+    isComingSoon:   true,
+    isNew:          true,
+    tags:           ['API', 'REST', 'GraphQL', 'OWASP-API', 'JWT', 'broken-object-level'],
+    skills:         ['OWASP API Top 10', 'BOLA/BFLA', 'Mass Assignment', 'GraphQL Injection', 'JWT Abuse', 'API Fuzzing'],
+    ar_skills:      ['OWASP API Top 10', 'BOLA/BFLA', 'Mass Assignment', 'GraphQL Injection', 'إساءة استخدام JWT', 'API Fuzzing'],
+  },
+
+  // ── CS-03 · SSRF, XXE & Server-Side Attacks ─────────────────
+  {
+    jsonFile:       '',
+    slug:           'ssrf-xxe-server-side-attacks',
+    color:          'ROSE',
+    difficulty:     'ADVANCED',
+    access:         'PRO',
+    contentType:    'PRACTICAL',
+    category:       'WEB_SECURITY',
+    estimatedHours: 9,
+    isComingSoon:   true,
+    tags:           ['SSRF', 'XXE', 'server-side', 'blind-SSRF', 'XML', 'internal-network'],
+    skills:         ['Blind SSRF', 'XXE to RCE', 'Cloud Metadata Abuse', 'SSRF Bypass', 'XXE OOB', 'SSRF Chaining'],
+    ar_skills:      ['Blind SSRF', 'XXE إلى RCE', 'إساءة استخدام ميتاديتا السحابة', 'تجاوز SSRF', 'XXE OOB', 'تسلسل SSRF'],
+  },
+
+  // ── CS-04 · Cloud Security Fundamentals (AWS/Azure) ────────────
+  {
+    jsonFile:       '',
+    slug:           'cloud-security-fundamentals',
+    color:          'CYAN',
+    difficulty:     'INTERMEDIATE',
+    access:         'PRO',
+    contentType:    'MIXED',
+    category:       'CLOUD_SECURITY',
+    estimatedHours: 12,
+    isComingSoon:   true,
+    isNew:          true,
+    tags:           ['cloud', 'AWS', 'Azure', 'IAM', 'S3', 'cloud-security'],
+    skills:         ['AWS IAM Misconfig', 'S3 Bucket Attacks', 'Azure AD Attacks', 'Cloud Enumeration', 'Privilege Escalation Cloud', 'Terraform Security'],
+    ar_skills:      ['إساءة إعداد AWS IAM', 'هجمات S3 Bucket', 'هجمات Azure AD', 'تعداد السحابة', 'رفع صلاحيات السحابة', 'أمان Terraform'],
+  },
+
+  // ── CS-05 · Windows Privilege Escalation ───────────────────────
+  {
+    jsonFile:       '',
+    slug:           'windows-privilege-escalation',
+    color:          'BLUE',
+    difficulty:     'INTERMEDIATE',
+    access:         'PRO',
+    contentType:    'PRACTICAL',
+    category:       'PENETRATION_TESTING',
+    estimatedHours: 10,
+    isComingSoon:   true,
+    tags:           ['windows', 'privilege-escalation', 'token-impersonation', 'registry', 'services', 'UAC-bypass'],
+    skills:         ['Token Impersonation', 'Registry Exploits', 'Weak Service Permissions', 'UAC Bypass', 'DLL Hijacking', 'AlwaysInstallElevated'],
+    ar_skills:      ['انتحال Token', 'ثغرات الريجستري', 'صلاحيات خدمة ضعيفة', 'تجاوز UAC', 'DLL Hijacking', 'AlwaysInstallElevated'],
+  },
+
+  // ── CS-06 · Web Application Penetration Testing (Full) ─────────
+  {
+    jsonFile:       '',
+    slug:           'web-application-pentesting',
+    color:          'ROSE',
+    difficulty:     'ADVANCED',
+    access:         'PRO',
+    contentType:    'PRACTICAL',
+    category:       'PENETRATION_TESTING',
+    estimatedHours: 20,
+    isComingSoon:   true,
+    isFeatured:     true,
+    tags:           ['web-pentesting', 'OWASP', 'full-course', 'advanced', 'bug-bounty', 'recon'],
+    skills:         ['Full Recon', 'Business Logic Vulns', 'File Upload Attacks', 'SSTI', 'Deserialization', 'OAuth Attacks', 'Race Conditions'],
+    ar_skills:      ['استطلاع كامل', 'ثغرات المنطق التجاري', 'هجمات رفع الملفات', 'SSTI', 'إلغاء التسلسل', 'هجمات OAuth', 'ظروف السباق'],
+  },
+
+  // ── CS-07 · Docker & Container Security ──────────────────────
+  {
+    jsonFile:       '',
+    slug:           'docker-container-security',
+    color:          'CYAN',
+    difficulty:     'INTERMEDIATE',
+    access:         'PRO',
+    contentType:    'PRACTICAL',
+    category:       'CLOUD_SECURITY',
+    estimatedHours: 9,
+    isComingSoon:   true,
+    tags:           ['docker', 'containers', 'kubernetes', 'escape', 'misconfig', 'DevSecOps'],
+    skills:         ['Docker Escape', 'Container Misconfig', 'Kubernetes Attacks', 'Image Analysis', 'Secrets in Containers', 'DevSecOps Basics'],
+    ar_skills:      ['هروب Docker', 'إساءة إعداد الحاويات', 'هجمات Kubernetes', 'تحليل الصور', 'الأسرار في الحاويات', 'أساسيات DevSecOps'],
+  },
+
+  // ── CS-08 · Reverse Engineering Basics ───────────────────────
+  {
+    jsonFile:       '',
+    slug:           'reverse-engineering-basics',
+    color:          'ORANGE',
+    difficulty:     'ADVANCED',
+    access:         'PRO',
+    contentType:    'PRACTICAL',
+    category:       'MALWARE_ANALYSIS',
+    estimatedHours: 12,
+    isComingSoon:   true,
+    tags:           ['reverse-engineering', 'assembly', 'ghidra', 'IDA', 'binary', 'crackme'],
+    skills:         ['x86 Assembly', 'Ghidra', 'IDA Free', 'Binary Patching', 'Anti-Debug Bypass', 'CrackMe Challenges'],
+    ar_skills:      ['تجميع x86', 'Ghidra', 'IDA Free', 'تعديل الباينري', 'تجاوز Anti-Debug', 'تحديات CrackMe'],
+  },
+
+  // ── CS-09 · Bug Bounty Hunting Methodology ──────────────────
+  {
+    jsonFile:       '',
+    slug:           'bug-bounty-hunting-methodology',
+    color:          'EMERALD',
+    difficulty:     'INTERMEDIATE',
+    access:         'PRO',
+    contentType:    'MIXED',
+    category:       'PENETRATION_TESTING',
+    estimatedHours: 11,
+    isComingSoon:   true,
+    isNew:          true,
+    isFeatured:     true,
+    tags:           ['bug-bounty', 'HackerOne', 'Bugcrowd', 'recon', 'methodology', 'report-writing'],
+    skills:         ['Recon Automation', 'Subdomain Enumeration', 'Finding P1/P2 Bugs', 'Report Writing', 'Scope Analysis', 'Chaining Vulnerabilities'],
+    ar_skills:      ['أتمتة الاستطلاع', 'تعداد النطاقات الفرعية', 'إيجاد ثغرات P1/P2', 'كتابة التقارير', 'تحليل النطاق', 'تسلسل الثغرات'],
+  },
+
+  // ── CS-10 · Incident Response & Threat Hunting Advanced ────────
+  {
+    jsonFile:       '',
+    slug:           'incident-response-threat-hunting',
+    color:          'BLUE',
+    difficulty:     'ADVANCED',
+    access:         'PRO',
+    contentType:    'MIXED',
+    category:       'TOOLS_AND_TECHNIQUES',
+    estimatedHours: 12,
+    isComingSoon:   true,
+    tags:           ['incident-response', 'threat-hunting', 'DFIR', 'forensics', 'SOC', 'playbooks'],
+    skills:         ['IR Playbooks', 'Threat Hunting Sigma', 'Memory Analysis', 'Ransomware IR', 'SOC Automation', 'MITRE ATT&CK'],
+    ar_skills:      ['كتيبات IR', 'Sigma Threat Hunting', 'تحليل الذاكرة', 'IR الفدية', 'أتمتة SOC', 'MITRE ATT&CK'],
+  },
 ];
 
 // ═══════════════════════════════════════════════════════════════════
@@ -339,23 +517,29 @@ export const LABS_META: LabMeta[] = [];
 
 // ═══════════════════════════════════════════════════════════════════
 //  LEARNING PATHS
+//  PATH 1 — Pre-Security          ✔️ Published (upsert)
+//  PATH 2 — Intro Cybersecurity   ✔️ Published (upsert)
+//  PATH 3 — Web App Pentesting    ⏳ Coming Soon
+//  PATH 4 — SOC Analyst           ⏳ Coming Soon
+//  PATH 5 — Cloud Security        ⏳ Coming Soon
 // ═══════════════════════════════════════════════════════════════════
 export const PATHS_META: PathMeta[] = [
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  //  PATH 1 — Pre-Security  (✔️ already seeded — kept for upsert safety)
+  //  PATH 1 — Pre-Security
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   {
     slug:           'pre-security',
     title:          'Pre-Security Path',
     ar_title:       'مسار ما قبل الأمن السيبراني',
     description:    'Build the foundational skills needed before diving into cybersecurity — Linux, Windows, networking, web basics, and scripting.',
-    ar_description: 'طوّر المهارات الأساسية اللازمة قبل الدخول في الأمن السيبراني — لينكس، ويندوز، الشبكات، أساسيات الويب، والسكريبتينج.',
+    ar_description: 'طوّر المهارات الأساسية قبل الدخول في الأمن السيبراني — لينكس، ويندوز، الشبكات، أساسيات الويب، والسكريبتينج.',
     color:          'EMERALD',
     difficulty:     'BEGINNER',
     isNew:          true,
     isFeatured:     true,
     isPublished:    true,
+    isComingSoon:   false,
     tags:           ['beginner', 'linux', 'windows', 'networking', 'web', 'python', 'scripting'],
     skills:         ['Linux Administration', 'Windows Security', 'Bash Scripting', 'Web Fundamentals', 'Cryptography Basics', 'Python for Security', 'OSINT'],
     ar_skills:      ['إدارة لينكس', 'أمن ويندوز', 'Bash Scripting', 'أساسيات الويب', 'أساسيات التشفير', 'Python للأمن', 'OSINT'],
@@ -392,8 +576,6 @@ export const PATHS_META: PathMeta[] = [
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   //  PATH 2 — Introduction to Cybersecurity
-  //  Prerequisite: Pre-Security Path
-  //  14 courses | INTERMEDIATE | ~123 hours total
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   {
     slug:           'introduction-cybersecurity',
@@ -406,30 +588,107 @@ export const PATHS_META: PathMeta[] = [
     isNew:          true,
     isFeatured:     true,
     isPublished:    true,
-    tags:           ['intermediate', 'network-security', 'web-hacking', 'active-directory', 'privilege-escalation', 'malware', 'forensics', 'incident-response'],
-    skills:         ['Nmap', 'Wireshark', 'Burp Suite', 'Metasploit', 'Active Directory Attacks', 'Web Application Hacking', 'Privilege Escalation', 'Malware Analysis', 'Digital Forensics', 'SIEM & Log Analysis'],
-    ar_skills:      ['Nmap', 'Wireshark', 'Burp Suite', 'Metasploit', 'هجمات Active Directory', 'اختراق تطبيقات الويب', 'رفع الصلاحيات', 'تحليل البرمجيات الضارة', 'الجنائيات الرقمية', 'تحليل السجلات وـ SIEM'],
+    isComingSoon:   false,
+    tags:           ['intermediate', 'network-security', 'web-hacking', 'active-directory', 'privilege-escalation', 'malware', 'forensics'],
+    skills:         ['Nmap', 'Wireshark', 'Metasploit', 'Active Directory Attacks', 'Web Hacking', 'Privilege Escalation', 'Malware Analysis', 'SIEM'],
+    ar_skills:      ['Nmap', 'Wireshark', 'Metasploit', 'هجمات AD', 'اختراق ويب', 'رفع صلاحيات', 'تحليل مالور', 'SIEM'],
     modules: [
-      // ── PHASE 1: Recon & Scanning ─────────────────────────────────
-      { type: 'COURSE', slug: 'nmap-network-discovery',           order: 1,  estimatedHours: 8,  isLocked: false },
-      { type: 'COURSE', slug: 'wireshark-packet-analysis',        order: 2,  estimatedHours: 9,  isLocked: false },
-      // ── PHASE 2: Network Attacks ────────────────────────────────
-      { type: 'COURSE', slug: 'network-attacks-and-exploitation', order: 3,  estimatedHours: 8,  isLocked: false },
-      { type: 'COURSE', slug: 'wireless-security-and-attacks',   order: 4,  estimatedHours: 7,  isLocked: false },
-      // ── PHASE 3: Web Hacking ──────────────────────────────────
-      { type: 'COURSE', slug: 'owasp-authentication-authorization', order: 5, estimatedHours: 9,  isLocked: false },
-      { type: 'COURSE', slug: 'owasp-xss-csrf',                  order: 6,  estimatedHours: 7,  isLocked: false },
-      { type: 'COURSE', slug: 'sql-injection',                   order: 7,  estimatedHours: 8,  isLocked: false },
-      // ── PHASE 4: Exploitation ──────────────────────────────────
-      { type: 'COURSE', slug: 'metasploit-framework',            order: 8,  estimatedHours: 9,  isLocked: false },
-      { type: 'COURSE', slug: 'linux-privilege-escalation',      order: 9,  estimatedHours: 11, isLocked: false },
-      // ── PHASE 5: Active Directory ──────────────────────────────
-      { type: 'COURSE', slug: 'active-directory-fundamentals',   order: 10, estimatedHours: 7,  isLocked: false },
-      { type: 'COURSE', slug: 'active-directory-attacks',        order: 11, estimatedHours: 12, isLocked: false },
-      // ── PHASE 6: Blue Team ────────────────────────────────────
-      { type: 'COURSE', slug: 'log-analysis-and-siem',           order: 12, estimatedHours: 8,  isLocked: false },
-      { type: 'COURSE', slug: 'malware-analysis-introduction',   order: 13, estimatedHours: 10, isLocked: false },
-      { type: 'COURSE', slug: 'digital-forensics-basics',        order: 14, estimatedHours: 8,  isLocked: false },
+      { type: 'COURSE', slug: 'nmap-network-discovery',              order: 1,  estimatedHours: 8  },
+      { type: 'COURSE', slug: 'wireshark-packet-analysis',           order: 2,  estimatedHours: 9  },
+      { type: 'COURSE', slug: 'network-attacks-and-exploitation',    order: 3,  estimatedHours: 8  },
+      { type: 'COURSE', slug: 'wireless-security-and-attacks',       order: 4,  estimatedHours: 7  },
+      { type: 'COURSE', slug: 'owasp-authentication-authorization',  order: 5,  estimatedHours: 9  },
+      { type: 'COURSE', slug: 'owasp-xss-csrf',                      order: 6,  estimatedHours: 7  },
+      { type: 'COURSE', slug: 'sql-injection',                       order: 7,  estimatedHours: 8  },
+      { type: 'COURSE', slug: 'metasploit-framework',                order: 8,  estimatedHours: 9  },
+      { type: 'COURSE', slug: 'linux-privilege-escalation',          order: 9,  estimatedHours: 11 },
+      { type: 'COURSE', slug: 'active-directory-fundamentals',       order: 10, estimatedHours: 7  },
+      { type: 'COURSE', slug: 'active-directory-attacks',            order: 11, estimatedHours: 12 },
+      { type: 'COURSE', slug: 'log-analysis-and-siem',               order: 12, estimatedHours: 8  },
+      { type: 'COURSE', slug: 'malware-analysis-introduction',       order: 13, estimatedHours: 10 },
+      { type: 'COURSE', slug: 'digital-forensics-basics',            order: 14, estimatedHours: 8  },
+    ],
+  },
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  //  PATH 3 — Web Application Penetration Testing  ⏳ COMING SOON
+  //  Advanced | ~70h | Prereq: Introduction to Cybersecurity
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  {
+    slug:           'web-application-pentesting',
+    title:          'Web Application Penetration Testing',
+    ar_title:       'اختبار اختراق تطبيقات الويب',
+    description:    'Master web application hacking from recon to full exploitation — Burp Suite, API attacks, SSRF, XXE, business logic, and bug bounty methodology.',
+    ar_description: 'أتقن اختراق تطبيقات الويب من الاستطلاع حتى الاستغلال الكامل — Burp Suite، هجمات API، SSRF، XXE، منطق أعمال، ومنهجية Bug Bounty.',
+    color:          'ROSE',
+    difficulty:     'ADVANCED',
+    isNew:          true,
+    isFeatured:     true,
+    isPublished:    false,
+    isComingSoon:   true,
+    tags:           ['web-pentesting', 'burp-suite', 'API', 'SSRF', 'XXE', 'bug-bounty', 'advanced'],
+    skills:         ['Burp Suite Mastery', 'API Hacking', 'SSRF & XXE', 'Business Logic Vulns', 'Bug Bounty Methodology', 'Web App Full Recon'],
+    ar_skills:      ['إتقان Burp Suite', 'اختراق API', 'SSRF & XXE', 'ثغرات المنطق التجاري', 'منهجية Bug Bounty', 'استطلاع كامل'],
+    modules: [
+      { type: 'COURSE', slug: 'burp-suite-mastery',             order: 1,  estimatedHours: 10, isLocked: true },
+      { type: 'COURSE', slug: 'api-security-and-hacking',       order: 2,  estimatedHours: 10, isLocked: true },
+      { type: 'COURSE', slug: 'ssrf-xxe-server-side-attacks',   order: 3,  estimatedHours: 9,  isLocked: true },
+      { type: 'COURSE', slug: 'web-application-pentesting',     order: 4,  estimatedHours: 20, isLocked: true },
+      { type: 'COURSE', slug: 'bug-bounty-hunting-methodology', order: 5,  estimatedHours: 11, isLocked: true },
+    ],
+  },
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  //  PATH 4 — SOC Analyst Path  ⏳ COMING SOON
+  //  Intermediate | ~60h | Prereq: Pre-Security
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  {
+    slug:           'soc-analyst',
+    title:          'SOC Analyst Path',
+    ar_title:       'مسار محلل مركز عمليات الأمن',
+    description:    'Become a job-ready SOC Analyst — master log analysis, SIEM, threat hunting, phishing analysis, and incident response workflows.',
+    ar_description: 'كن محلل SOC جاهزًا لسوق العمل — أتقن تحليل السجلات، SIEM، التحقيق في التهديدات، تحليل التصيد الالكتروني، وسير عمل الاستجابة للحوادث.',
+    color:          'ORANGE',
+    difficulty:     'INTERMEDIATE',
+    isNew:          true,
+    isFeatured:     true,
+    isPublished:    false,
+    isComingSoon:   true,
+    tags:           ['SOC', 'blue-team', 'SIEM', 'threat-hunting', 'incident-response', 'log-analysis'],
+    skills:         ['SIEM & Log Analysis', 'Threat Hunting', 'Incident Response', 'Phishing Analysis', 'SOC Automation', 'MITRE ATT&CK'],
+    ar_skills:      ['تحليل سجلات SIEM', 'Threat Hunting', 'الاستجابة للحوادث', 'تحليل التصيد', 'أتمتة SOC', 'MITRE ATT&CK'],
+    modules: [
+      { type: 'COURSE', slug: 'log-analysis-and-siem',              order: 1, estimatedHours: 8,  isLocked: true },
+      { type: 'COURSE', slug: 'malware-analysis-introduction',      order: 2, estimatedHours: 10, isLocked: true },
+      { type: 'COURSE', slug: 'digital-forensics-basics',           order: 3, estimatedHours: 8,  isLocked: true },
+      { type: 'COURSE', slug: 'incident-response-threat-hunting',   order: 4, estimatedHours: 12, isLocked: true },
+    ],
+  },
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  //  PATH 5 — Cloud Security Path  ⏳ COMING SOON
+  //  Advanced | ~55h | Prereq: Introduction to Cybersecurity
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  {
+    slug:           'cloud-security',
+    title:          'Cloud Security Path',
+    ar_title:       'مسار أمن السحابة',
+    description:    'Learn how to attack and defend cloud environments — AWS, Azure, IAM misconfigurations, S3 attacks, container security, and cloud pentesting.',
+    ar_description: 'تعلّم كيف تهاجم بيئات السحابة وتدافع عنها — AWS، Azure، إساءة إعداد IAM، هجمات S3، أمن الحاويات، واختبار اختراق السحابة.',
+    color:          'CYAN',
+    difficulty:     'ADVANCED',
+    isNew:          true,
+    isFeatured:     false,
+    isPublished:    false,
+    isComingSoon:   true,
+    tags:           ['cloud', 'AWS', 'Azure', 'IAM', 'containers', 'kubernetes', 'DevSecOps'],
+    skills:         ['AWS Security', 'Azure Security', 'IAM Attacks', 'Container Security', 'Cloud Pentesting', 'DevSecOps'],
+    ar_skills:      ['أمن AWS', 'أمن Azure', 'هجمات IAM', 'أمن الحاويات', 'اختبار اختراق السحابة', 'DevSecOps'],
+    modules: [
+      { type: 'COURSE', slug: 'cloud-security-fundamentals',    order: 1, estimatedHours: 12, isLocked: true },
+      { type: 'COURSE', slug: 'docker-container-security',      order: 2, estimatedHours: 9,  isLocked: true },
+      { type: 'COURSE', slug: 'windows-privilege-escalation',   order: 3, estimatedHours: 10, isLocked: true },
+      { type: 'COURSE', slug: 'incident-response-threat-hunting', order: 4, estimatedHours: 12, isLocked: true },
     ],
   },
 ];
