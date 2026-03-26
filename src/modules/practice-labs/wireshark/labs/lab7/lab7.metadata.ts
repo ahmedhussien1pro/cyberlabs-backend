@@ -5,7 +5,7 @@ export const LAB7_METADATA = {
   title:       'Wireshark: C2 Beacon Detection',
   description: 'An EDR alert flagged periodic outbound connections from an internal workstation. Investigate the capture, identify the beacon interval, find the C2 server IP, extract the beacon signature, then submit the flag.',
   difficulty:  'ADVANCED',
-  category:    'NETWORK_ANALYSIS',
+  category:    'NETWORK_SECURITY',
   estimatedMinutes: 35,
   points:      400,
   topics: [

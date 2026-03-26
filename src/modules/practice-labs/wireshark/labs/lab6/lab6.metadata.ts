@@ -5,7 +5,7 @@ export const LAB6_METADATA = {
   title:       'Wireshark: SQLi Hunt via HTTP Traffic',
   description: 'A WAF flagged anomalous HTTP traffic. Investigate the capture, build the correct Wireshark display filter to isolate SQL injection attempts, identify the attacker IP and injected payload, then submit the flag.',
   difficulty:  'INTERMEDIATE',
-  category:    'NETWORK_ANALYSIS',
+  category:    'NETWORK_SECURITY',
   estimatedMinutes: 25,
   points:      300,
   topics: [

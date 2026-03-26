@@ -5,7 +5,7 @@ export const LAB8_METADATA = {
   title:       'Wireshark: Web Shell Upload Detection',
   description: 'A compromised web server triggered an IDS alert. Investigate the HTTP capture, find the malicious PHP web shell upload POST request, decode the hex-encoded flag from the shell content, then submit.',
   difficulty:  'ADVANCED',
-  category:    'NETWORK_ANALYSIS',
+  category:    'NETWORK_SECURITY',
   estimatedMinutes: 40,
   points:      450,
   topics: [
