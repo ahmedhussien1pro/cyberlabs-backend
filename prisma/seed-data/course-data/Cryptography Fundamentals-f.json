@@ -1,0 +1,2241 @@
+{
+  "landingData": {
+    "title": {
+      "en": "Cryptography Fundamentals",
+      "ar": "أساسيات التشفير"
+    },
+    "description": {
+      "en": "Master the essential concepts of cryptography, from symmetric and asymmetric encryption to hashing algorithms, digital signatures, and Public Key Infrastructure. Learn how encryption protects data in the real world.",
+      "ar": "تعلم المفاهيم الأساسية للتشفير، من التشفير المتماثل وغير المتماثل إلى خوارزميات الهاش والتوقيعات الرقمية والبنية التحتية للمفاتيح العامة. اكتشف كيف يحمي التشفير البيانات في العالم الحقيقي."
+    },
+    "difficulty": {
+      "en": "Beginner",
+      "ar": "مبتدئ"
+    },
+    "duration": {
+      "en": "90 Minutes",
+      "ar": "90 دقيقة"
+    },
+    "instructor": "CyberLab",
+    "rating": 4.9,
+    "students": 250
+  },
+  "topics": [
+    {
+      "id": "topic-1",
+      "title": {
+        "en": "What is Cryptography and Why Does It Matter?",
+        "ar": "ما هو التشفير ولماذا هو مهم؟"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "Understanding Cryptography in Daily Life",
+            "ar": "فهم التشفير في الحياة اليومية"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "Cryptography is the science of protecting information by transforming it into an unreadable format. Only authorized people with the correct key can read the original message. Every time you send a message on WhatsApp, buy something online, or check your bank account, cryptography protects your data from attackers.",
+            "ar": "التشفير هو علم حماية المعلومات عن طريق تحويلها إلى شكل غير قابل للقراءة. فقط الأشخاص المصرح لهم الذين يملكون المفتاح الصحيح يمكنهم قراءة الرسالة الأصلية. في كل مرة ترسل فيها رسالة على واتساب، أو تشتري شيئاً عبر الإنترنت، أو تتحقق من حسابك المصرفي، يحمي التشفير بياناتك من المهاجمين."
+          }
+        },
+        {
+          "id": 1773503170648.8916,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Cryptography%20Fundamentals/1-1-concept%20of%20cryptography.webp"
+        },
+        {
+          "id": 4,
+          "type": "text",
+          "value": {
+            "en": "The word cryptography comes from Greek words meaning 'hidden writing'. Ancient civilizations used simple codes to protect military secrets. Today, cryptography uses complex mathematics to secure digital data. Without cryptography, hackers could easily steal passwords, credit card numbers, and private messages.",
+            "ar": "كلمة التشفير (Cryptography) تأتي من كلمات يونانية تعني 'الكتابة المخفية'. استخدمت الحضارات القديمة شفرات بسيطة لحماية الأسرار العسكرية. اليوم، يستخدم التشفير رياضيات معقدة لتأمين البيانات الرقمية. بدون التشفير، يمكن للمخترقين سرقة كلمات المرور وأرقام بطاقات الائتمان والرسائل الخاصة بسهولة."
+          }
+        },
+        {
+          "id": 5,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Think of cryptography like sending a letter in a locked box. Only the person with the correct key can open the box and read the letter inside. The box protects the letter during transport.",
+            "ar": "فكر في التشفير مثل إرسال رسالة في صندوق مقفل. فقط الشخص الذي يملك المفتاح الصحيح يمكنه فتح الصندوق وقراءة الرسالة بداخله. الصندوق يحمي الرسالة أثناء النقل."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 6,
+          "type": "title",
+          "value": {
+            "en": "The Three Main Goals of Cryptography",
+            "ar": "الأهداف الثلاثة الرئيسية للتشفير"
+          }
+        },
+        {
+          "id": 7,
+          "type": "text",
+          "value": {
+            "en": "Cryptography serves three critical purposes in information security. These goals protect data throughout its entire lifecycle, from creation to storage to transmission. Understanding these goals helps you see why different encryption methods exist and when to use each one.",
+            "ar": "يخدم التشفير ثلاثة أهداف حاسمة في أمن المعلومات. هذه الأهداف تحمي البيانات طوال دورة حياتها الكاملة، من الإنشاء إلى التخزين إلى الإرسال. فهم هذه الأهداف يساعدك على رؤية لماذا توجد طرق تشفير مختلفة ومتى تستخدم كل واحدة."
+          }
+        },
+        {
+          "id": 8,
+          "type": "table",
+          "title": {
+            "en": "Cryptography Goals Explained",
+            "ar": "أهداف التشفير موضحة"
+          },
+          "headers": {
+            "en": [
+              "Goal",
+              "What It Means",
+              "Real-Life Example"
+            ],
+            "ar": [
+              "الهدف",
+              "ماذا يعني",
+              "مثال من الحياة الواقعية"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "Confidentiality",
+                "Only authorized people can read the data",
+                "Your bank password should only be visible to you"
+              ],
+              "ar": [
+                "السرية",
+                "فقط الأشخاص المصرح لهم يمكنهم قراءة البيانات",
+                "كلمة مرور البنك الخاصة بك يجب أن تكون مرئية لك فقط"
+              ]
+            },
+            {
+              "en": [
+                "Integrity",
+                "Data has not been changed or tampered with",
+                "Your medical records should not be modified by hackers"
+              ],
+              "ar": [
+                "التكامل",
+                "البيانات لم يتم تغييرها أو العبث بها",
+                "سجلاتك الطبية يجب ألا يتم تعديلها من قبل المخترقين"
+              ]
+            },
+            {
+              "en": [
+                "Authentication",
+                "Verify the identity of the sender",
+                "Confirm that an email really came from your bank"
+              ],
+              "ar": [
+                "المصادقة",
+                "التحقق من هوية المرسل",
+                "تأكيد أن البريد الإلكتروني جاء فعلاً من البنك الخاص بك"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 9,
+          "type": "text",
+          "value": {
+            "en": "Confidentiality ensures privacy. When you encrypt a message, attackers who intercept it see only random characters. Integrity prevents tampering. If someone changes even one character in encrypted data, the system detects the modification. Authentication proves identity. Digital signatures confirm that a message truly came from the claimed sender.",
+            "ar": "السرية تضمن الخصوصية. عندما تشفر رسالة، المهاجمون الذين يعترضونها يرون فقط أحرفاً عشوائية. التكامل يمنع العبث. إذا غيّر شخص ما حتى حرفاً واحداً في البيانات المشفرة، النظام يكتشف التعديل. المصادقة تثبت الهوية. التوقيعات الرقمية تؤكد أن الرسالة جاءت فعلاً من المرسل المزعوم."
+          }
+        },
+        {
+          "id": 1773503579906.8176,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Cryptography%20Fundamentals/1-2-three%20cryptography%20goals.webp"
+        },
+        {
+          "id": 11,
+          "type": "title",
+          "value": {
+            "en": "Where Cryptography Protects You Every Day",
+            "ar": "أين يحميك التشفير كل يوم"
+          }
+        },
+        {
+          "id": 12,
+          "type": "text",
+          "value": {
+            "en": "You use cryptography constantly without realizing it. When you visit a website with HTTPS in the address bar, cryptography encrypts all data between your browser and the website. This prevents attackers on public WiFi from stealing your login credentials. The small padlock icon in your browser indicates active encryption protection.",
+            "ar": "تستخدم التشفير باستمرار دون أن تدرك ذلك. عندما تزور موقعاً إلكترونياً يحتوي على HTTPS في شريط العنوان، يقوم التشفير بتشفير جميع البيانات بين المتصفح والموقع. هذا يمنع المهاجمين على شبكة WiFi العامة من سرقة بيانات تسجيل الدخول الخاصة بك. رمز القفل الصغير في متصفحك يشير إلى حماية التشفير النشطة."
+          }
+        },
+        {
+          "id": 13,
+          "type": "text",
+          "value": {
+            "en": "Messaging apps like WhatsApp and Signal use end-to-end encryption. This means only you and the person you message can read the conversation. Even the company running the app cannot see your messages. Without cryptography, your private conversations could be intercepted and read by anyone on the network.",
+            "ar": "تطبيقات المراسلة مثل واتساب وسيجنال تستخدم التشفير من طرف إلى طرف. هذا يعني أن فقط أنت والشخص الذي تراسله يمكنكما قراءة المحادثة. حتى الشركة التي تدير التطبيق لا يمكنها رؤية رسائلك. بدون التشفير، محادثاتك الخاصة يمكن أن تُعترض وتُقرأ من قبل أي شخص على الشبكة."
+          }
+        },
+        {
+          "id": 14,
+          "type": "list",
+          "title": {
+            "en": "Daily Activities Protected by Cryptography",
+            "ar": "الأنشطة اليومية المحمية بالتشفير"
+          },
+          "items": {
+            "en": [
+              "Online banking - Encrypts account numbers and transaction details",
+              "Credit card payments - Protects card numbers during online purchases",
+              "Email services - Secures messages and attachments in transit",
+              "Cloud storage - Encrypts files stored on remote servers",
+              "Mobile phone calls - Protects voice data from eavesdropping",
+              "Digital signatures - Verifies official documents and contracts"
+            ],
+            "ar": [
+              "الخدمات المصرفية عبر الإنترنت - تشفر أرقام الحسابات وتفاصيل المعاملات",
+              "مدفوعات بطاقة الائتمان - تحمي أرقام البطاقات أثناء الشراء عبر الإنترنت",
+              "خدمات البريد الإلكتروني - تؤمن الرسائل والمرفقات أثناء النقل",
+              "التخزين السحابي - يشفر الملفات المخزنة على الخوادم البعيدة",
+              "مكالمات الهاتف المحمول - تحمي بيانات الصوت من التنصت",
+              "التوقيعات الرقمية - تتحقق من المستندات والعقود الرسمية"
+            ]
+          }
+        },
+        {
+          "id": 15,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "Common mistake: Many people think antivirus software provides encryption. Antivirus detects malicious programs, but cryptography protects data confidentiality. They serve different security purposes.",
+            "ar": "خطأ شائع: يعتقد الكثيرون أن برامج مكافحة الفيروسات توفر التشفير. برامج مكافحة الفيروسات تكتشف البرامج الضارة، لكن التشفير يحمي سرية البيانات. كل منهما يخدم أغراض أمنية مختلفة."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 16,
+          "type": "title",
+          "value": {
+            "en": "What Happens Without Cryptography",
+            "ar": "ماذا يحدث بدون التشفير"
+          }
+        },
+        {
+          "id": 17,
+          "type": "text",
+          "value": {
+            "en": "Imagine sending a postcard through the mail. Anyone handling the postcard can read your message. Without cryptography, all internet communication works like postcards. Your passwords, credit card numbers, and private messages travel in plain text. Any attacker who intercepts the data can immediately read and steal it.",
+            "ar": "تخيل إرسال بطاقة بريدية عبر البريد. أي شخص يتعامل مع البطاقة البريدية يمكنه قراءة رسالتك. بدون التشفير، تعمل جميع الاتصالات عبر الإنترنت مثل البطاقات البريدية. كلمات المرور وأرقام بطاقات الائتمان والرسائل الخاصة تنتقل كنص عادي. أي مهاجم يعترض البيانات يمكنه قراءتها وسرقتها فوراً."
+          }
+        },
+        {
+          "id": 18,
+          "type": "text",
+          "value": {
+            "en": "In the early days of the internet, most websites did not use encryption. Hackers could easily capture login credentials by monitoring network traffic. Today, major websites require HTTPS encryption. Browsers now warn users when they visit unencrypted sites because the risks are so high.",
+            "ar": "في الأيام الأولى للإنترنت، معظم المواقع لم تستخدم التشفير. كان بإمكان المخترقين التقاط بيانات تسجيل الدخول بسهولة عن طريق مراقبة حركة مرور الشبكة. اليوم، المواقع الرئيسية تتطلب تشفير HTTPS. المتصفحات الآن تحذر المستخدمين عندما يزورون مواقع غير مشفرة لأن المخاطر عالية جداً."
+          }
+        },
+        {
+          "id": 20,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Professional tip: Always check for the padlock icon and HTTPS before entering sensitive information on any website. This simple check confirms that cryptography is protecting your data.",
+            "ar": "نصيحة احترافية: تحقق دائماً من رمز القفل وHTTPS قبل إدخال معلومات حساسة على أي موقع ويب. هذا الفحص البسيط يؤكد أن التشفير يحمي بياناتك."
+          },
+          "link": "",
+          "isLab": false
+        }
+      ]
+    },
+    {
+      "id": "topic-2",
+      "title": {
+        "en": "Symmetric vs Asymmetric Encryption - The Two Main Approaches",
+        "ar": "التشفير المتماثل مقابل غير المتماثل - النهجان الرئيسيان"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "Understanding the Two Fundamental Encryption Methods",
+            "ar": "فهم طريقتي التشفير الأساسيتين"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "All encryption systems fall into two main categories: symmetric and asymmetric. The difference lies in how keys work. Symmetric encryption uses one secret key for both encryption and decryption. Asymmetric encryption uses two different keys: a public key for encryption and a private key for decryption. Understanding this distinction is crucial because each method has specific advantages and use cases.",
+            "ar": "جميع أنظمة التشفير تنقسم إلى فئتين رئيسيتين: متماثل وغير متماثل. الفرق يكمن في كيفية عمل المفاتيح. التشفير المتماثل يستخدم مفتاحاً سرياً واحداً للتشفير وفك التشفير. التشفير غير المتماثل يستخدم مفتاحين مختلفين: مفتاح عام للتشفير ومفتاح خاص لفك التشفير. فهم هذا التمييز أمر بالغ الأهمية لأن كل طريقة لها مزايا وحالات استخدام محددة."
+          }
+        },
+        {
+          "id": 1773503628340.7876,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Cryptography%20Fundamentals/2-1-symmetric%20vs%20asymmetric%20encryption.webp"
+        },
+        {
+          "id": 4,
+          "type": "title",
+          "value": {
+            "en": "Symmetric Encryption - One Shared Secret Key",
+            "ar": "التشفير المتماثل - مفتاح سري مشترك واحد"
+          }
+        },
+        {
+          "id": 5,
+          "type": "text",
+          "value": {
+            "en": "Symmetric encryption works like a locked diary with one key. You use the same key to lock the diary and unlock it later. In digital terms, the sender uses a secret key to encrypt a message. The receiver uses the exact same key to decrypt it. Both parties must have the key before communication begins. This method is fast and efficient for encrypting large amounts of data.",
+            "ar": "التشفير المتماثل يعمل مثل مذكرة مقفلة بمفتاح واحد. تستخدم نفس المفتاح لقفل المذكرة وفتحها لاحقاً. في المصطلحات الرقمية، المرسل يستخدم مفتاحاً سرياً لتشفير رسالة. المستقبل يستخدم نفس المفتاح بالضبط لفك تشفيرها. يجب أن يكون لدى الطرفين المفتاح قبل بدء الاتصال. هذه الطريقة سريعة وفعالة لتشفير كميات كبيرة من البيانات."
+          }
+        },
+        {
+          "id": 6,
+          "type": "text",
+          "value": {
+            "en": "The main challenge with symmetric encryption is key distribution. How do you safely share the secret key with the other person? If you send the key over the internet, an attacker might intercept it. Once an attacker has the key, they can decrypt all your messages. This problem becomes worse when you need to communicate with many people, because you need a different key for each person.",
+            "ar": "التحدي الرئيسي مع التشفير المتماثل هو توزيع المفتاح. كيف تشارك المفتاح السري بشكل آمن مع الشخص الآخر؟ إذا أرسلت المفتاح عبر الإنترنت، قد يعترضه مهاجم. بمجرد حصول المهاجم على المفتاح، يمكنه فك تشفير جميع رسائلك. هذه المشكلة تصبح أسوأ عندما تحتاج للتواصل مع العديد من الأشخاص، لأنك تحتاج مفتاحاً مختلفاً لكل شخص."
+          }
+        },
+        {
+          "id": 7,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Think of symmetric encryption like a house with one key. Everyone who needs to enter the house must have a copy of the same key. If the key is lost or stolen, the house is no longer secure.",
+            "ar": "فكر في التشفير المتماثل مثل منزل بمفتاح واحد. كل شخص يحتاج لدخول المنزل يجب أن يكون لديه نسخة من نفس المفتاح. إذا ضاع المفتاح أو سُرق، المنزل لم يعد آمناً."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 8,
+          "type": "table",
+          "title": {
+            "en": "Symmetric Encryption Characteristics",
+            "ar": "خصائص التشفير المتماثل"
+          },
+          "headers": {
+            "en": [
+              "Feature",
+              "Description",
+              "Example Use Case"
+            ],
+            "ar": [
+              "الميزة",
+              "الوصف",
+              "مثال حالة الاستخدام"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "Speed",
+                "Very fast - efficient for large files",
+                "Encrypting entire hard drives"
+              ],
+              "ar": [
+                "السرعة",
+                "سريع جداً - فعال للملفات الكبيرة",
+                "تشفير محركات الأقراص الصلبة بالكامل"
+              ]
+            },
+            {
+              "en": [
+                "Key Management",
+                "Difficult - must share secret key securely",
+                "Requires secure channel for key exchange"
+              ],
+              "ar": [
+                "إدارة المفاتيح",
+                "صعب - يجب مشاركة المفتاح السري بشكل آمن",
+                "يتطلب قناة آمنة لتبادل المفاتيح"
+              ]
+            },
+            {
+              "en": [
+                "Scalability",
+                "Poor - need unique key per relationship",
+                "10 people need 45 different keys"
+              ],
+              "ar": [
+                "قابلية التوسع",
+                "ضعيفة - تحتاج مفتاحاً فريداً لكل علاقة",
+                "10 أشخاص يحتاجون 45 مفتاحاً مختلفاً"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 9,
+          "type": "hr"
+        },
+        {
+          "id": 10,
+          "type": "title",
+          "value": {
+            "en": "Asymmetric Encryption - Public and Private Key Pairs",
+            "ar": "التشفير غير المتماثل - أزواج المفاتيح العامة والخاصة"
+          }
+        },
+        {
+          "id": 11,
+          "type": "text",
+          "value": {
+            "en": "Asymmetric encryption solves the key distribution problem by using two mathematically related keys. Each person has a key pair: a public key and a private key. The public key can be shared openly with anyone. The private key must be kept absolutely secret. Data encrypted with the public key can only be decrypted with the matching private key. This clever system eliminates the need to share secret keys over insecure channels.",
+            "ar": "التشفير غير المتماثل يحل مشكلة توزيع المفاتيح باستخدام مفتاحين مرتبطين رياضياً. كل شخص لديه زوج من المفاتيح: مفتاح عام ومفتاح خاص. المفتاح العام يمكن مشاركته علناً مع أي شخص. المفتاح الخاص يجب أن يُحفظ سرياً تماماً. البيانات المشفرة بالمفتاح العام يمكن فك تشفيرها فقط بالمفتاح الخاص المطابق. هذا النظام الذكي يلغي الحاجة لمشاركة المفاتيح السرية عبر قنوات غير آمنة."
+          }
+        },
+        {
+          "id": 12,
+          "type": "text",
+          "value": {
+            "en": "Here is how it works in practice. Imagine you want to send a secure message to your bank. You obtain your bank's public key from their website. You encrypt your message using this public key. Now only the bank can decrypt it using their private key, which they keep secret. Even if attackers intercept the encrypted message, they cannot read it without the private key. This method enables secure communication without meeting in person to exchange keys.",
+            "ar": "هذه هي كيفية عمله في الممارسة العملية. تخيل أنك تريد إرسال رسالة آمنة إلى البنك الخاص بك. تحصل على المفتاح العام للبنك من موقعهم الإلكتروني. تشفر رسالتك باستخدام هذا المفتاح العام. الآن فقط البنك يمكنه فك تشفيرها باستخدام مفتاحهم الخاص، الذي يحتفظون به سراً. حتى لو اعترض المهاجمون الرسالة المشفرة، لا يمكنهم قراءتها بدون المفتاح الخاص. هذه الطريقة تتيح التواصل الآمن دون اللقاء شخصياً لتبادل المفاتيح."
+          }
+        },
+        {
+          "id": 1773503639483.4668,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Cryptography%20Fundamentals/2-3-showing%20hybrid%20encryption%20advantages.webp"
+        },
+        {
+          "id": 14,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "Critical security rule: Never share your private key with anyone. Your public key can be distributed freely, but your private key is like your master password. If someone gets your private key, they can decrypt all messages intended for you.",
+            "ar": "قاعدة أمنية حرجة: لا تشارك أبداً مفتاحك الخاص مع أي شخص. مفتاحك العام يمكن توزيعه بحرية، لكن مفتاحك الخاص يشبه كلمة المرور الرئيسية الخاصة بك. إذا حصل شخص ما على مفتاحك الخاص، يمكنه فك تشفير جميع الرسائل الموجهة إليك."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 15,
+          "type": "text",
+          "value": {
+            "en": "Asymmetric encryption also enables digital signatures, which work in reverse. You encrypt a message with your private key. Anyone with your public key can decrypt it. This proves that the message came from you, because only you have access to your private key. Digital signatures provide authentication and prevent someone from denying they sent a message.",
+            "ar": "التشفير غير المتماثل يمكّن أيضاً التوقيعات الرقمية، التي تعمل بالعكس. تشفر رسالة بمفتاحك الخاص. أي شخص لديه مفتاحك العام يمكنه فك تشفيرها. هذا يثبت أن الرسالة جاءت منك، لأنك فقط لديك الوصول إلى مفتاحك الخاص. التوقيعات الرقمية توفر المصادقة وتمنع شخصاً ما من إنكار أنه أرسل رسالة."
+          }
+        },
+        {
+          "id": 16,
+          "type": "table",
+          "title": {
+            "en": "Asymmetric Encryption Characteristics",
+            "ar": "خصائص التشفير غير المتماثل"
+          },
+          "headers": {
+            "en": [
+              "Feature",
+              "Description",
+              "Example Use Case"
+            ],
+            "ar": [
+              "الميزة",
+              "الوصف",
+              "مثال حالة الاستخدام"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "Speed",
+                "Slower - computationally intensive",
+                "Encrypting small data like passwords"
+              ],
+              "ar": [
+                "السرعة",
+                "أبطأ - مكثف حسابياً",
+                "تشفير البيانات الصغيرة مثل كلمات المرور"
+              ]
+            },
+            {
+              "en": [
+                "Key Management",
+                "Easy - public key can be shared openly",
+                "Email encryption and HTTPS websites"
+              ],
+              "ar": [
+                "إدارة المفاتيح",
+                "سهل - المفتاح العام يمكن مشاركته علناً",
+                "تشفير البريد الإلكتروني ومواقع HTTPS"
+              ]
+            },
+            {
+              "en": [
+                "Scalability",
+                "Excellent - one key pair per person",
+                "10 people need only 10 key pairs total"
+              ],
+              "ar": [
+                "قابلية التوسع",
+                "ممتازة - زوج مفاتيح واحد لكل شخص",
+                "10 أشخاص يحتاجون فقط 10 أزواج مفاتيح إجمالاً"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 17,
+          "type": "hr"
+        },
+        {
+          "id": 18,
+          "type": "title",
+          "value": {
+            "en": "Hybrid Encryption - Combining Both Approaches",
+            "ar": "التشفير الهجين - الجمع بين النهجين"
+          }
+        },
+        {
+          "id": 19,
+          "type": "text",
+          "value": {
+            "en": "Modern systems use hybrid encryption to get the best of both methods. Asymmetric encryption is used only to securely exchange a symmetric key. Then symmetric encryption handles the actual data encryption. This approach combines the easy key distribution of asymmetric encryption with the speed of symmetric encryption. Nearly all secure internet communication uses this hybrid model.",
+            "ar": "الأنظمة الحديثة تستخدم التشفير الهجين للحصول على أفضل ما في كلتا الطريقتين. التشفير غير المتماثل يُستخدم فقط لتبادل مفتاح متماثل بشكل آمن. ثم يتولى التشفير المتماثل تشفير البيانات الفعلية. هذا النهج يجمع بين سهولة توزيع المفاتيح للتشفير غير المتماثل وسرعة التشفير المتماثل. تقريباً جميع الاتصالات الآمنة عبر الإنترنت تستخدم هذا النموذج الهجين."
+          }
+        },
+        {
+          "id": 20,
+          "type": "text",
+          "value": {
+            "en": "When you visit an HTTPS website, your browser and the server perform a hybrid encryption process. First, they use asymmetric encryption to agree on a symmetric session key. This session key is unique to your connection and exists only for that browsing session. All subsequent data transfer uses fast symmetric encryption with that session key. This process happens automatically in milliseconds without you noticing.",
+            "ar": "عندما تزور موقع HTTPS، متصفحك والخادم يؤديان عملية تشفير هجين. أولاً، يستخدمان التشفير غير المتماثل للاتفاق على مفتاح جلسة متماثل. مفتاح الجلسة هذا فريد لاتصالك ويوجد فقط لتلك الجلسة. جميع عمليات نقل البيانات اللاحقة تستخدم التشفير المتماثل السريع بمفتاح الجلسة هذا. تحدث هذه العملية تلقائياً في أجزاء من الثانية دون أن تلاحظ."
+          }
+        },
+        {
+          "id": 21,
+          "type": "orderedList",
+          "title": {
+            "en": "Hybrid Encryption Process Steps",
+            "ar": "خطوات عملية التشفير الهجين"
+          },
+          "items": [
+            {
+              "subtitle": {
+                "en": "Establish Connection",
+                "ar": "إنشاء الاتصال"
+              },
+              "text": {
+                "en": "Client requests secure connection from server. Server responds with its public key certificate.",
+                "ar": "العميل يطلب اتصالاً آمناً من الخادم. الخادم يستجيب بشهادة مفتاحه العام."
+              },
+              "example": {
+                "en": "Your browser connects to bank website",
+                "ar": "متصفحك يتصل بموقع البنك"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Exchange Session Key",
+                "ar": "تبادل مفتاح الجلسة"
+              },
+              "text": {
+                "en": "Client generates random symmetric key. Encrypts it using server's public key and sends it securely.",
+                "ar": "العميل يولد مفتاحاً متماثلاً عشوائياً. يشفره باستخدام المفتاح العام للخادم ويرسله بأمان."
+              },
+              "example": {
+                "en": "Browser creates temporary session key",
+                "ar": "المتصفح ينشئ مفتاح جلسة مؤقت"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Decrypt Session Key",
+                "ar": "فك تشفير مفتاح الجلسة"
+              },
+              "text": {
+                "en": "Server receives encrypted session key. Uses its private key to decrypt and obtain the symmetric key.",
+                "ar": "الخادم يستقبل مفتاح الجلسة المشفر. يستخدم مفتاحه الخاص لفك التشفير والحصول على المفتاح المتماثل."
+              },
+              "example": {
+                "en": "Bank server extracts the session key",
+                "ar": "خادم البنك يستخرج مفتاح الجلسة"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Secure Communication",
+                "ar": "الاتصال الآمن"
+              },
+              "text": {
+                "en": "Both sides now have the same symmetric key. All further communication uses fast symmetric encryption.",
+                "ar": "كلا الجانبين لديهما الآن نفس المفتاح المتماثل. جميع الاتصالات الإضافية تستخدم التشفير المتماثل السريع."
+              },
+              "example": {
+                "en": "Login data and transactions encrypted quickly",
+                "ar": "بيانات تسجيل الدخول والمعاملات مشفرة بسرعة"
+              }
+            }
+          ]
+        },
+        {
+          "id": 1773503634423.6533,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Cryptography%20Fundamentals/2-3-showing%20hybrid%20encryption%20advantages.webp"
+        },
+        {
+          "id": 23,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Professional insight: The asymmetric encryption phase in HTTPS is called the TLS handshake. It typically takes 1-2 round trips between client and server. Once the handshake completes, symmetric encryption provides speed for the rest of the session.",
+            "ar": "رؤية احترافية: مرحلة التشفير غير المتماثل في HTTPS تسمى مصافحة TLS. عادة ما تستغرق رحلة أو رحلتين ذهاباً وإياباً بين العميل والخادم. بمجرد اكتمال المصافحة، يوفر التشفير المتماثل السرعة لبقية الجلسة."
+          },
+          "link": "",
+          "isLab": false
+        }
+      ]
+    },
+    {
+      "id": "topic-3",
+      "title": {
+        "en": "Encryption Algorithms - AES, RSA, and ECC",
+        "ar": "خوارزميات التشفير - AES و RSA و ECC"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "Introduction to Modern Encryption Algorithms",
+            "ar": "مقدمة لخوارزميات التشفير الحديثة"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "An encryption algorithm is the mathematical formula that transforms readable data into encrypted data and back again. Different algorithms serve different purposes and offer varying levels of security and speed. The three most important algorithms in modern cryptography are AES for symmetric encryption, RSA for asymmetric encryption, and ECC as a newer alternative to RSA. Understanding these algorithms helps you make informed decisions about data protection.",
+            "ar": "خوارزمية التشفير هي الصيغة الرياضية التي تحول البيانات القابلة للقراءة إلى بيانات مشفرة والعكس. خوارزميات مختلفة تخدم أغراضاً مختلفة وتوفر مستويات متفاوتة من الأمان والسرعة. الخوارزميات الثلاث الأكثر أهمية في التشفير الحديث هي AES للتشفير المتماثل، وRSA للتشفير غير المتماثل، وECC كبديل أحدث لـ RSA. فهم هذه الخوارزميات يساعدك على اتخاذ قرارات مستنيرة حول حماية البيانات."
+          }
+        },
+        {
+          "id": 1773503686518.5557,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Cryptography%20Fundamentals/3-1-three%20main%20encryption%20algorithms..webp"
+        },
+        {
+          "id": 4,
+          "type": "title",
+          "value": {
+            "en": "AES - Advanced Encryption Standard",
+            "ar": "AES - معيار التشفير المتقدم"
+          }
+        },
+        {
+          "id": 5,
+          "type": "text",
+          "value": {
+            "en": "AES is the gold standard for symmetric encryption worldwide. The United States government selected it in 2001 to protect classified information. AES encrypts data in fixed blocks of 128 bits using keys of 128, 192, or 256 bits. Longer keys provide stronger security but require slightly more processing time. AES-256 is currently considered unbreakable by any known technology, including future quantum computers.",
+            "ar": "AES هو المعيار الذهبي للتشفير المتماثل في جميع أنحاء العالم. اختارته حكومة الولايات المتحدة في عام 2001 لحماية المعلومات السرية. يشفر AES البيانات في كتل ثابتة من 128 بت باستخدام مفاتيح من 128 أو 192 أو 256 بت. المفاتيح الأطول توفر أماناً أقوى ولكنها تتطلب وقت معالجة أطول قليلاً. يُعتبر AES-256 حالياً غير قابل للكسر بأي تقنية معروفة، بما في ذلك أجهزة الكمبيوتر الكمومية المستقبلية."
+          }
+        },
+        {
+          "id": 6,
+          "type": "text",
+          "value": {
+            "en": "AES works through a series of substitution and permutation operations called rounds. AES-128 uses 10 rounds, AES-192 uses 12 rounds, and AES-256 uses 14 rounds. Each round scrambles the data further, making it exponentially harder to crack. The algorithm is designed to be fast on modern processors while maintaining exceptional security. Most modern CPUs have special hardware instructions that accelerate AES encryption.",
+            "ar": "يعمل AES من خلال سلسلة من عمليات الاستبدال والتبديل تسمى الجولات. AES-128 يستخدم 10 جولات، وAES-192 يستخدم 12 جولة، وAES-256 يستخدم 14 جولة. كل جولة تخلط البيانات أكثر، مما يجعل كسرها أصعب بشكل أسي. الخوارزمية مصممة لتكون سريعة على المعالجات الحديثة مع الحفاظ على أمان استثنائي. معظم وحدات المعالجة المركزية الحديثة لديها تعليمات أجهزة خاصة تسرع تشفير AES."
+          }
+        },
+        {
+          "id": 7,
+          "type": "list",
+          "title": {
+            "en": "Common Uses of AES Encryption",
+            "ar": "الاستخدامات الشائعة لتشفير AES"
+          },
+          "items": {
+            "en": [
+              "Full disk encryption - Protects entire hard drives on laptops and servers",
+              "File encryption - Secures individual files and folders",
+              "VPN tunnels - Encrypts data traveling through Virtual Private Networks",
+              "Wireless security - WPA3 WiFi encryption uses AES",
+              "Mobile device encryption - Protects data on smartphones and tablets",
+              "Database encryption - Secures sensitive information in databases"
+            ],
+            "ar": [
+              "تشفير القرص الكامل - يحمي محركات الأقراص الصلبة الكاملة على أجهزة الكمبيوتر المحمولة والخوادم",
+              "تشفير الملفات - يؤمن الملفات والمجلدات الفردية",
+              "أنفاق VPN - يشفر البيانات التي تنتقل عبر الشبكات الخاصة الافتراضية",
+              "أمان اللاسلكي - تشفير WiFi WPA3 يستخدم AES",
+              "تشفير الأجهزة المحمولة - يحمي البيانات على الهواتف الذكية والأجهزة اللوحية",
+              "تشفير قواعد البيانات - يؤمن المعلومات الحساسة في قواعد البيانات"
+            ]
+          }
+        },
+        {
+          "id": 8,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Key strength comparison: AES-256 would take billions of years to crack using brute force with current technology. Even if computers become a million times faster, it would still be computationally impossible to break.",
+            "ar": "مقارنة قوة المفتاح: سيستغرق AES-256 مليارات السنين لكسره باستخدام القوة الغاشمة بالتقنية الحالية. حتى لو أصبحت الحواسيب أسرع مليون مرة، سيظل من المستحيل حسابياً كسره."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 1773503701983.8606,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Cryptography%20Fundamentals/3-2-AES%20encryption%20process%20conceptually.webp"
+        },
+        {
+          "id": 10,
+          "type": "hr"
+        },
+        {
+          "id": 11,
+          "type": "title",
+          "value": {
+            "en": "RSA - Rivest Shamir Adleman Algorithm",
+            "ar": "RSA - خوارزمية ريفيست شامير أدلمان"
+          }
+        },
+        {
+          "id": 12,
+          "type": "text",
+          "value": {
+            "en": "RSA is the most widely used asymmetric encryption algorithm. Created in 1977, it revolutionized cryptography by solving the key distribution problem. RSA security relies on the mathematical difficulty of factoring very large numbers. Creating the public and private keys involves multiplying two huge prime numbers. Reversing this process to find the original primes from the product is extremely difficult and time-consuming.",
+            "ar": "RSA هي خوارزمية التشفير غير المتماثل الأكثر استخداماً على نطاق واسع. أُنشئت في عام 1977، أحدثت ثورة في التشفير من خلال حل مشكلة توزيع المفاتيح. أمان RSA يعتمد على الصعوبة الرياضية لتحليل الأعداد الكبيرة جداً. إنشاء المفاتيح العامة والخاصة يتضمن ضرب عددين أوليين ضخمين. عكس هذه العملية لإيجاد الأعداد الأولية الأصلية من الناتج صعب للغاية ويستغرق وقتاً طويلاً."
+          }
+        },
+        {
+          "id": 13,
+          "type": "text",
+          "value": {
+            "en": "RSA key sizes typically range from 1024 to 4096 bits. Modern security standards recommend at least 2048-bit keys. A 2048-bit RSA key provides security roughly equivalent to AES-128. However, RSA is much slower than AES. Encrypting a large file with RSA would take excessive time. This is why RSA is primarily used to encrypt small amounts of data, like encryption keys themselves or digital signatures.",
+            "ar": "أحجام مفاتيح RSA عادة ما تتراوح من 1024 إلى 4096 بت. معايير الأمان الحديثة توصي بمفاتيح 2048 بت على الأقل. مفتاح RSA بحجم 2048 بت يوفر أماناً يعادل تقريباً AES-128. ومع ذلك، RSA أبطأ بكثير من AES. تشفير ملف كبير باستخدام RSA سيستغرق وقتاً مفرطاً. هذا هو السبب في أن RSA يُستخدم بشكل أساسي لتشفير كميات صغيرة من البيانات، مثل مفاتيح التشفير نفسها أو التوقيعات الرقمية."
+          }
+        },
+        {
+          "id": 14,
+          "type": "table",
+          "title": {
+            "en": "RSA vs AES Comparison",
+            "ar": "مقارنة RSA مقابل AES"
+          },
+          "headers": {
+            "en": [
+              "Aspect",
+              "RSA",
+              "AES"
+            ],
+            "ar": [
+              "الجانب",
+              "RSA",
+              "AES"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "Encryption Type",
+                "Asymmetric (2 keys)",
+                "Symmetric (1 key)"
+              ],
+              "ar": [
+                "نوع التشفير",
+                "غير متماثل (مفتاحين)",
+                "متماثل (مفتاح واحد)"
+              ]
+            },
+            {
+              "en": [
+                "Speed",
+                "Slow - 100x slower than AES",
+                "Very fast - ideal for bulk data"
+              ],
+              "ar": [
+                "السرعة",
+                "بطيء - أبطأ 100 مرة من AES",
+                "سريع جداً - مثالي للبيانات الضخمة"
+              ]
+            },
+            {
+              "en": [
+                "Key Size",
+                "2048-4096 bits typical",
+                "128-256 bits typical"
+              ],
+              "ar": [
+                "حجم المفتاح",
+                "2048-4096 بت نموذجي",
+                "128-256 بت نموذجي"
+              ]
+            },
+            {
+              "en": [
+                "Best Use",
+                "Key exchange, digital signatures",
+                "Encrypting files and communications"
+              ],
+              "ar": [
+                "أفضل استخدام",
+                "تبادل المفاتيح، التوقيعات الرقمية",
+                "تشفير الملفات والاتصالات"
+              ]
+            },
+            {
+              "en": [
+                "Quantum Threat",
+                "Vulnerable to quantum computers",
+                "Resistant to known quantum attacks"
+              ],
+              "ar": [
+                "التهديد الكمومي",
+                "عرضة لأجهزة الكمبيوتر الكمومية",
+                "مقاوم للهجمات الكمومية المعروفة"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 15,
+          "type": "text",
+          "value": {
+            "en": "RSA has one significant vulnerability: quantum computers. Researchers predict that future quantum computers could factor large numbers efficiently, breaking RSA encryption. However, such quantum computers do not yet exist at the scale needed. Organizations are already developing post-quantum cryptography algorithms to replace RSA when quantum threats become real.",
+            "ar": "لدى RSA نقطة ضعف واحدة مهمة: أجهزة الكمبيوتر الكمومية. يتوقع الباحثون أن أجهزة الكمبيوتر الكمومية المستقبلية يمكنها تحليل الأعداد الكبيرة بكفاءة، مما يكسر تشفير RSA. ومع ذلك، مثل هذه الحواسيب الكمومية غير موجودة بعد بالحجم المطلوب. المنظمات تطور بالفعل خوارزميات تشفير ما بعد الكم لتحل محل RSA عندما تصبح التهديدات الكمومية حقيقية."
+          }
+        },
+        {
+          "id": 16,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "Security warning: RSA keys smaller than 2048 bits are now considered weak. If you encounter systems using 1024-bit RSA, recommend upgrading immediately. Many organizations have deprecated 1024-bit keys entirely.",
+            "ar": "تحذير أمني: مفاتيح RSA الأصغر من 2048 بت تُعتبر الآن ضعيفة. إذا واجهت أنظمة تستخدم RSA 1024 بت، أوصِ بالترقية فوراً. العديد من المنظمات توقفت تماماً عن استخدام مفاتيح 1024 بت."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 17,
+          "type": "hr"
+        },
+        {
+          "id": 18,
+          "type": "title",
+          "value": {
+            "en": "ECC - Elliptic Curve Cryptography",
+            "ar": "ECC - تشفير المنحنى الإهليلجي"
+          }
+        },
+        {
+          "id": 19,
+          "type": "text",
+          "value": {
+            "en": "ECC is a newer asymmetric encryption method that provides the same security as RSA using much smaller keys. A 256-bit ECC key provides security equivalent to a 3072-bit RSA key. This dramatic difference makes ECC ideal for devices with limited processing power and battery life, such as smartphones, smart cards, and IoT devices. ECC is becoming increasingly popular as the world moves toward mobile and embedded computing.",
+            "ar": "ECC هي طريقة تشفير غير متماثل أحدث توفر نفس الأمان الذي توفره RSA باستخدام مفاتيح أصغر بكثير. مفتاح ECC بحجم 256 بت يوفر أماناً يعادل مفتاح RSA بحجم 3072 بت. هذا الفرق الكبير يجعل ECC مثالياً للأجهزة ذات قوة المعالجة وعمر البطارية المحدود، مثل الهواتف الذكية والبطاقات الذكية وأجهزة إنترنت الأشياء. يصبح ECC شائعاً بشكل متزايد مع تحول العالم نحو الحوسبة المحمولة والمدمجة."
+          }
+        },
+        {
+          "id": 20,
+          "type": "text",
+          "value": {
+            "en": "ECC security relies on the mathematical properties of elliptic curves. The specific problem is called the elliptic curve discrete logarithm problem. This problem is even harder to solve than the factoring problem used in RSA. Smaller key sizes mean faster computations, lower power consumption, and reduced storage requirements. These advantages make ECC the preferred choice for modern mobile applications and blockchain technology.",
+            "ar": "أمان ECC يعتمد على الخصائص الرياضية للمنحنيات الإهليلجية. المشكلة المحددة تسمى مشكلة اللوغاريتم المنفصل للمنحنى الإهليلجي. هذه المشكلة أصعب حتى في الحل من مشكلة التحليل المستخدمة في RSA. أحجام المفاتيح الأصغر تعني حسابات أسرع، استهلاك طاقة أقل، ومتطلبات تخزين مخفضة. هذه المزايا تجعل ECC الخيار المفضل للتطبيقات المحمولة الحديثة وتقنية البلوكشين."
+          }
+        },
+        {
+          "id": 21,
+          "type": "list",
+          "title": {
+            "en": "Advantages of ECC Over RSA",
+            "ar": "مزايا ECC على RSA"
+          },
+          "items": {
+            "en": [
+              "Smaller key sizes - 256-bit ECC equals 3072-bit RSA security",
+              "Faster computation - Quicker encryption and decryption operations",
+              "Lower power consumption - Essential for battery-powered devices",
+              "Reduced bandwidth - Smaller keys mean less data transmission",
+              "Better performance on mobile devices and IoT sensors",
+              "Growing adoption in blockchain and cryptocurrency systems"
+            ],
+            "ar": [
+              "أحجام مفاتيح أصغر - ECC 256 بت يعادل أمان RSA 3072 بت",
+              "حساب أسرع - عمليات تشفير وفك تشفير أسرع",
+              "استهلاك طاقة أقل - ضروري للأجهزة التي تعمل بالبطارية",
+              "نطاق ترددي مخفض - مفاتيح أصغر تعني نقل بيانات أقل",
+              "أداء أفضل على الأجهزة المحمولة ومستشعرات إنترنت الأشياء",
+              "اعتماد متزايد في البلوكشين وأنظمة العملات المشفرة"
+            ]
+          }
+        },
+        {
+          "id": 22,
+          "type": "text",
+          "value": {
+            "en": "Major technology companies have embraced ECC. Apple uses ECC for iMessage encryption. Bitcoin and Ethereum cryptocurrencies rely on ECC for transaction signatures. Modern TLS certificates increasingly use ECC instead of RSA. The transition from RSA to ECC represents a major shift in how we approach public key cryptography, driven by the need for efficiency in mobile and cloud computing.",
+            "ar": "شركات التكنولوجيا الكبرى تبنت ECC. تستخدم Apple تقنية ECC لتشفير iMessage. تعتمد عملات البيتكوين والإيثريوم المشفرة على ECC لتوقيعات المعاملات. شهادات TLS الحديثة تستخدم ECC بشكل متزايد بدلاً من RSA. الانتقال من RSA إلى ECC يمثل تحولاً كبيراً في كيفية تعاملنا مع تشفير المفتاح العام، مدفوعاً بالحاجة إلى الكفاءة في الحوسبة المحمولة والسحابية."
+          }
+        },
+        {
+          "id": 1773503694060.118,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Cryptography%20Fundamentals/3-3-key%20size%20efficiency.webp"
+        },
+        {
+          "id": 24,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Professional tip: When choosing between RSA and ECC for new systems, consider ECC for mobile and IoT applications where efficiency matters. Use RSA only when you need compatibility with older systems that do not support ECC.",
+            "ar": "نصيحة احترافية: عند الاختيار بين RSA وECC للأنظمة الجديدة، اختر ECC للتطبيقات المحمولة وإنترنت الأشياء حيث تهم الكفاءة. استخدم RSA فقط عندما تحتاج إلى التوافق مع الأنظمة القديمة التي لا تدعم ECC."
+          },
+          "link": "",
+          "isLab": false
+        }
+      ]
+    },
+    {
+      "id": "topic-4",
+      "title": {
+        "en": "Hashing Algorithms - MD5, SHA-256, and SHA-3",
+        "ar": "خوارزميات الهاش - MD5 و SHA-256 و SHA-3"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "Understanding Hashing vs Encryption",
+            "ar": "فهم الهاش مقابل التشفير"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "Hashing is fundamentally different from encryption. Encryption is reversible - you can decrypt encrypted data back to its original form using the correct key. Hashing is a one-way function - once data is hashed, you cannot reverse the process to recover the original data. This irreversibility is not a weakness but rather the core purpose of hashing. Hashing creates a unique digital fingerprint of data that can verify integrity and identity.",
+            "ar": "الهاش مختلف بشكل أساسي عن التشفير. التشفير قابل للعكس - يمكنك فك تشفير البيانات المشفرة للعودة إلى شكلها الأصلي باستخدام المفتاح الصحيح. الهاش هو دالة أحادية الاتجاه - بمجرد عمل هاش للبيانات، لا يمكنك عكس العملية لاستعادة البيانات الأصلية. هذا اللاعكسية ليس نقطة ضعف بل هو الهدف الأساسي من الهاش. ينشئ الهاش بصمة رقمية فريدة للبيانات يمكنها التحقق من التكامل والهوية."
+          }
+        },
+        {
+          "id": 1773503742105.0095,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Cryptography%20Fundamentals/4-1-encryption%20vs%20hashing.webp"
+        },
+        {
+          "id": 4,
+          "type": "text",
+          "value": {
+            "en": "A hash function takes input data of any size and produces a fixed-size output called a hash value or digest. The same input always produces the same hash. However, even changing a single character in the input produces a completely different hash. This property makes hashing perfect for detecting any modifications to data. If someone changes even one bit of a file, the hash value will be completely different.",
+            "ar": "دالة الهاش تأخذ بيانات إدخال بأي حجم وتنتج مخرجات بحجم ثابت تسمى قيمة هاش أو ملخص. نفس الإدخال ينتج دائماً نفس الهاش. ومع ذلك، حتى تغيير حرف واحد في الإدخال ينتج هاشاً مختلفاً تماماً. هذه الخاصية تجعل الهاش مثالياً لاكتشاف أي تعديلات على البيانات. إذا غيّر شخص ما حتى بت واحد من ملف، ستكون قيمة الهاش مختلفة تماماً."
+          }
+        },
+        {
+          "id": 5,
+          "type": "table",
+          "title": {
+            "en": "Key Properties of Hash Functions",
+            "ar": "الخصائص الرئيسية لدوال الهاش"
+          },
+          "headers": {
+            "en": [
+              "Property",
+              "What It Means",
+              "Why It Matters"
+            ],
+            "ar": [
+              "الخاصية",
+              "ماذا تعني",
+              "لماذا مهمة"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "Deterministic",
+                "Same input always produces same hash",
+                "Allows verification and comparison"
+              ],
+              "ar": [
+                "حتمية",
+                "نفس الإدخال ينتج دائماً نفس الهاش",
+                "تسمح بالتحقق والمقارنة"
+              ]
+            },
+            {
+              "en": [
+                "Fixed Size",
+                "Output length constant regardless of input size",
+                "1 byte or 1 GB produces same length hash"
+              ],
+              "ar": [
+                "حجم ثابت",
+                "طول المخرجات ثابت بغض النظر عن حجم الإدخال",
+                "1 بايت أو 1 جيجابايت ينتج هاشاً بنفس الطول"
+              ]
+            },
+            {
+              "en": [
+                "Avalanche Effect",
+                "Small input change causes large output change",
+                "Tiny modification completely alters hash"
+              ],
+              "ar": [
+                "تأثير الانهيار الجليدي",
+                "تغيير صغير في الإدخال يسبب تغييراً كبيراً في المخرجات",
+                "تعديل صغير يغير الهاش تماماً"
+              ]
+            },
+            {
+              "en": [
+                "One-Way",
+                "Cannot reverse hash to find original data",
+                "Protects original data from disclosure"
+              ],
+              "ar": [
+                "أحادي الاتجاه",
+                "لا يمكن عكس الهاش لإيجاد البيانات الأصلية",
+                "يحمي البيانات الأصلية من الكشف"
+              ]
+            },
+            {
+              "en": [
+                "Collision Resistant",
+                "Extremely difficult to find two inputs with same hash",
+                "Prevents forgery and tampering"
+              ],
+              "ar": [
+                "مقاوم للتصادم",
+                "صعب جداً إيجاد إدخالين بنفس الهاش",
+                "يمنع التزوير والعبث"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 6,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Think of a hash like a fingerprint. Your fingerprint uniquely identifies you, but you cannot reconstruct a person from their fingerprint alone. Similarly, a hash uniquely identifies data but cannot be reversed to recreate the original.",
+            "ar": "فكر في الهاش مثل بصمة الإصبع. بصمة إصبعك تحددك بشكل فريد، لكن لا يمكنك إعادة بناء شخص من بصمة إصبعه وحدها. وبالمثل، يحدد الهاش البيانات بشكل فريد لكن لا يمكن عكسه لإعادة إنشاء الأصل."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 7,
+          "type": "title",
+          "value": {
+            "en": "Common Uses of Hashing in Security",
+            "ar": "الاستخدامات الشائعة للهاش في الأمن"
+          }
+        },
+        {
+          "id": 8,
+          "type": "text",
+          "value": {
+            "en": "Password storage is the most critical use of hashing. When you create an account, the website should never store your actual password. Instead, it hashes your password and stores only the hash. When you log in, the website hashes what you type and compares it to the stored hash. If they match, you are authenticated. This means even if hackers steal the database, they get only hashes, not actual passwords.",
+            "ar": "تخزين كلمات المرور هو الاستخدام الأكثر أهمية للهاش. عندما تنشئ حساباً، يجب ألا يخزن الموقع كلمة مرورك الفعلية أبداً. بدلاً من ذلك، يعمل هاش لكلمة مرورك ويخزن الهاش فقط. عندما تسجل الدخول، يعمل الموقع هاش لما تكتبه ويقارنه بالهاش المخزن. إذا تطابقا، يتم مصادقتك. هذا يعني حتى لو سرق المخترقون قاعدة البيانات، يحصلون فقط على الهاش، وليس كلمات المرور الفعلية."
+          }
+        },
+        {
+          "id": 9,
+          "type": "text",
+          "value": {
+            "en": "File integrity verification uses hashing extensively. Software developers publish hash values alongside downloads. After downloading, you calculate the hash of the file on your computer. If it matches the published hash, the file was not corrupted or tampered with during download. This simple check protects against malware injection and transmission errors. Major software companies provide SHA-256 hashes for all their downloads.",
+            "ar": "التحقق من تكامل الملفات يستخدم الهاش بشكل مكثف. مطورو البرامج ينشرون قيم الهاش جنباً إلى جنب مع التنزيلات. بعد التنزيل، تحسب الهاش للملف على جهاز الكمبيوتر الخاص بك. إذا تطابق مع الهاش المنشور، فإن الملف لم يتم إفساده أو العبث به أثناء التنزيل. هذا الفحص البسيط يحمي من حقن البرمجيات الخبيثة وأخطاء النقل. شركات البرمجيات الكبرى توفر هاش SHA-256 لجميع تنزيلاتها."
+          }
+        },
+        {
+          "id": 10,
+          "type": "list",
+          "title": {
+            "en": "Real-World Applications of Hashing",
+            "ar": "التطبيقات العملية للهاش"
+          },
+          "items": {
+            "en": [
+              "Password storage - Websites store password hashes, not passwords",
+              "File integrity - Verify downloads have not been modified",
+              "Digital signatures - Hash data before signing for efficiency",
+              "Blockchain - Each block contains hash of previous block",
+              "Data deduplication - Identify duplicate files in storage systems",
+              "Message authentication codes - Verify message sender identity"
+            ],
+            "ar": [
+              "تخزين كلمات المرور - المواقع تخزن هاش كلمات المرور، وليس كلمات المرور",
+              "تكامل الملفات - التحقق من أن التنزيلات لم يتم تعديلها",
+              "التوقيعات الرقمية - عمل هاش للبيانات قبل التوقيع للكفاءة",
+              "البلوكشين - كل كتلة تحتوي على هاش الكتلة السابقة",
+              "إلغاء تكرار البيانات - تحديد الملفات المكررة في أنظمة التخزين",
+              "رموز مصادقة الرسائل - التحقق من هوية مرسل الرسالة"
+            ]
+          }
+        },
+        {
+          "id": 1773503763811.261,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Cryptography%20Fundamentals/4-2-how%20password%20hashing%20works.webp"
+        },
+        {
+          "id": 12,
+          "type": "hr"
+        },
+        {
+          "id": 13,
+          "type": "title",
+          "value": {
+            "en": "MD5 - The Broken Hash Algorithm",
+            "ar": "MD5 - خوارزمية الهاش المكسورة"
+          }
+        },
+        {
+          "id": 14,
+          "type": "text",
+          "value": {
+            "en": "MD5 (Message Digest Algorithm 5) was created in 1991 and produces 128-bit hash values. For many years, MD5 was widely used for password hashing and file verification. However, researchers discovered serious security flaws. They found ways to create hash collisions - two different inputs that produce the same hash. Once collisions become practical, the hash function is considered broken and insecure.",
+            "ar": "MD5 (خوارزمية ملخص الرسائل 5) تم إنشاؤها في عام 1991 وتنتج قيم هاش 128 بت. لسنوات عديدة، كان MD5 مستخدماً على نطاق واسع لهاش كلمات المرور والتحقق من الملفات. ومع ذلك، اكتشف الباحثون عيوباً أمنية خطيرة. وجدوا طرقاً لإنشاء تصادمات هاش - إدخالين مختلفين ينتجان نفس الهاش. بمجرد أن تصبح التصادمات عملية، تُعتبر دالة الهاش مكسورة وغير آمنة."
+          }
+        },
+        {
+          "id": 15,
+          "type": "text",
+          "value": {
+            "en": "In 2004, researchers demonstrated practical MD5 collision attacks. By 2008, attackers used MD5 collisions to create fraudulent SSL certificates, undermining web security. Today, MD5 is completely deprecated for security purposes. However, you still see MD5 used for non-security purposes like file checksums where collision resistance is not critical. Never use MD5 for passwords, digital signatures, or any security-sensitive application.",
+            "ar": "في عام 2004، أظهر الباحثون هجمات تصادم MD5 العملية. بحلول عام 2008، استخدم المهاجمون تصادمات MD5 لإنشاء شهادات SSL احتيالية، مما قوض أمان الويب. اليوم، MD5 مُهمل تماماً للأغراض الأمنية. ومع ذلك، لا تزال ترى MD5 مستخدماً لأغراض غير أمنية مثل فحوصات الملفات حيث مقاومة التصادم ليست حاسمة. لا تستخدم أبداً MD5 لكلمات المرور أو التوقيعات الرقمية أو أي تطبيق حساس أمنياً."
+          }
+        },
+        {
+          "id": 16,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "Critical security warning: If you find systems still using MD5 for password hashing, this is a serious vulnerability. Recommend immediate migration to modern algorithms like SHA-256 or bcrypt. MD5 passwords can be cracked using rainbow tables within minutes.",
+            "ar": "تحذير أمني حرج: إذا وجدت أنظمة لا تزال تستخدم MD5 لهاش كلمات المرور، فهذه ثغرة أمنية خطيرة. أوصِ بالترحيل الفوري إلى خوارزميات حديثة مثل SHA-256 أو bcrypt. يمكن كسر كلمات مرور MD5 باستخدام جداول قوس قزح في دقائق."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 17,
+          "type": "hr"
+        },
+        {
+          "id": 18,
+          "type": "title",
+          "value": {
+            "en": "SHA-256 - The Industry Standard",
+            "ar": "SHA-256 - المعيار الصناعي"
+          }
+        },
+        {
+          "id": 19,
+          "type": "text",
+          "value": {
+            "en": "SHA-256 belongs to the SHA-2 family of hash functions created by the United States National Security Agency in 2001. The number 256 refers to the hash output size: 256 bits or 32 bytes. SHA-256 is currently the most widely used cryptographic hash function and is considered highly secure. No practical collision attacks have been demonstrated against SHA-256, making it suitable for all security-critical applications.",
+            "ar": "SHA-256 ينتمي إلى عائلة دوال هاش SHA-2 التي أنشأتها وكالة الأمن القومي للولايات المتحدة في عام 2001. الرقم 256 يشير إلى حجم مخرجات الهاش: 256 بت أو 32 بايت. SHA-256 حالياً هو دالة الهاش التشفيرية الأكثر استخداماً على نطاق واسع ويُعتبر آمناً للغاية. لم يتم إظهار هجمات تصادم عملية ضد SHA-256، مما يجعله مناسباً لجميع التطبيقات الحرجة أمنياً."
+          }
+        },
+        {
+          "id": 20,
+          "type": "text",
+          "value": {
+            "en": "SHA-256 processes data in 512-bit blocks and performs 64 rounds of complex operations. Each round includes bitwise operations, modular additions, and logical functions. The algorithm is designed to be efficient on both hardware and software while providing strong security guarantees. Bitcoin mining, for example, requires performing trillions of SHA-256 operations to find valid blocks, demonstrating both its security and computational properties.",
+            "ar": "يعالج SHA-256 البيانات في كتل 512 بت ويؤدي 64 جولة من العمليات المعقدة. كل جولة تتضمن عمليات بتية، إضافات معيارية، ودوال منطقية. الخوارزمية مصممة لتكون فعالة على كل من الأجهزة والبرمجيات مع توفير ضمانات أمنية قوية. تعدين البيتكوين، على سبيل المثال، يتطلب أداء تريليونات من عمليات SHA-256 لإيجاد كتل صالحة، مما يوضح كلاً من أمانه وخصائصه الحسابية."
+          }
+        },
+        {
+          "id": 21,
+          "type": "table",
+          "title": {
+            "en": "Comparison of Hash Algorithms",
+            "ar": "مقارنة خوارزميات الهاش"
+          },
+          "headers": {
+            "en": [
+              "Algorithm",
+              "Output Size",
+              "Security Status",
+              "Current Use"
+            ],
+            "ar": [
+              "الخوارزمية",
+              "حجم المخرجات",
+              "الحالة الأمنية",
+              "الاستخدام الحالي"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "MD5",
+                "128 bits",
+                "Broken - Insecure",
+                "Non-security checksums only"
+              ],
+              "ar": [
+                "MD5",
+                "128 بت",
+                "مكسور - غير آمن",
+                "فحوصات غير أمنية فقط"
+              ]
+            },
+            {
+              "en": [
+                "SHA-1",
+                "160 bits",
+                "Deprecated - Weak",
+                "Being phased out everywhere"
+              ],
+              "ar": [
+                "SHA-1",
+                "160 بت",
+                "مُهمل - ضعيف",
+                "يتم التخلص منه تدريجياً في كل مكان"
+              ]
+            },
+            {
+              "en": [
+                "SHA-256",
+                "256 bits",
+                "Secure - Recommended",
+                "Widely used in all applications"
+              ],
+              "ar": [
+                "SHA-256",
+                "256 بت",
+                "آمن - موصى به",
+                "مستخدم على نطاق واسع في جميع التطبيقات"
+              ]
+            },
+            {
+              "en": [
+                "SHA-3",
+                "Variable",
+                "Secure - Modern",
+                "Growing adoption for new systems"
+              ],
+              "ar": [
+                "SHA-3",
+                "متغير",
+                "آمن - حديث",
+                "اعتماد متزايد للأنظمة الجديدة"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 22,
+          "type": "text",
+          "value": {
+            "en": "SHA-256 is used everywhere in modern security. SSL/TLS certificates use SHA-256 for signatures. Git version control uses SHA-256 to identify commits. Blockchain systems rely heavily on SHA-256 for proof-of-work and transaction verification. Password managers hash master passwords with SHA-256. The algorithm's proven security record and widespread implementation make it the default choice for new applications.",
+            "ar": "يُستخدم SHA-256 في كل مكان في الأمن الحديث. شهادات SSL/TLS تستخدم SHA-256 للتوقيعات. نظام التحكم بالإصدارات Git يستخدم SHA-256 لتحديد الالتزامات. أنظمة البلوكشين تعتمد بشكل كبير على SHA-256 لإثبات العمل والتحقق من المعاملات. مديرو كلمات المرور يعملون هاش لكلمات المرور الرئيسية باستخدام SHA-256. سجل الأمان المثبت للخوارزمية والتنفيذ الواسع يجعلها الخيار الافتراضي للتطبيقات الجديدة."
+          }
+        },
+        {
+          "id": 1773503753178.3452,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Cryptography%20Fundamentals/4-3-SHA-256%20adoption%20across%20industries.webp"
+        },
+        {
+          "id": 24,
+          "type": "hr"
+        },
+        {
+          "id": 25,
+          "type": "title",
+          "value": {
+            "en": "SHA-3 - The Next Generation",
+            "ar": "SHA-3 - الجيل القادم"
+          }
+        },
+        {
+          "id": 26,
+          "type": "text",
+          "value": {
+            "en": "SHA-3 is the newest member of the Secure Hash Algorithm family, standardized in 2015. Unlike SHA-2, SHA-3 uses a completely different internal structure called Keccak. This diversity is important for security. If a fundamental flaw were discovered in SHA-2's design, SHA-3 would not be affected because it works differently. SHA-3 can produce various output sizes: SHA3-224, SHA3-256, SHA3-384, and SHA3-512.",
+            "ar": "SHA-3 هو أحدث عضو في عائلة خوارزميات الهاش الآمنة، تم توحيده في عام 2015. على عكس SHA-2، يستخدم SHA-3 بنية داخلية مختلفة تماماً تسمى Keccak. هذا التنوع مهم للأمان. إذا تم اكتشاف عيب أساسي في تصميم SHA-2، فلن يتأثر SHA-3 لأنه يعمل بشكل مختلف. يمكن لـ SHA-3 إنتاج أحجام مخرجات مختلفة: SHA3-224، SHA3-256، SHA3-384، و SHA3-512."
+          }
+        },
+        {
+          "id": 27,
+          "type": "text",
+          "value": {
+            "en": "SHA-3 introduces innovative features beyond traditional hashing. It includes extendable-output functions (XOFs) that can produce hashes of arbitrary length. This flexibility makes SHA-3 suitable for specialized applications. SHA-3 is also designed to be more resistant to certain types of attacks and performs better in hardware implementations. While SHA-256 remains dominant, SHA-3 adoption is growing, especially in new systems and blockchain projects.",
+            "ar": "يقدم SHA-3 ميزات مبتكرة تتجاوز الهاش التقليدي. يتضمن دوال المخرجات القابلة للتمديد (XOFs) التي يمكنها إنتاج هاش بطول عشوائي. هذه المرونة تجعل SHA-3 مناسباً للتطبيقات المتخصصة. تم تصميم SHA-3 أيضاً ليكون أكثر مقاومة لأنواع معينة من الهجمات ويؤدي بشكل أفضل في تطبيقات الأجهزة. بينما يبقى SHA-256 مهيمناً، يتزايد اعتماد SHA-3، خاصة في الأنظمة الجديدة ومشاريع البلوكشين."
+          }
+        },
+        {
+          "id": 28,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Professional insight: SHA-256 and SHA-3 are both secure. Choose SHA-256 for maximum compatibility with existing systems. Choose SHA-3 for new projects where you want cutting-edge security or need specialized features like variable-length output.",
+            "ar": "رؤية احترافية: SHA-256 وSHA-3 كلاهما آمنان. اختر SHA-256 لأقصى توافق مع الأنظمة الحالية. اختر SHA-3 للمشاريع الجديدة حيث تريد أماناً متطوراً أو تحتاج ميزات متخصصة مثل المخرجات ذات الطول المتغير."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 29,
+          "type": "title",
+          "value": {
+            "en": "Salting - Protecting Hashed Passwords",
+            "ar": "التمليح - حماية كلمات المرور المهشرة"
+          }
+        },
+        {
+          "id": 30,
+          "type": "text",
+          "value": {
+            "en": "Hashing alone is not sufficient for password security. Attackers create rainbow tables - precomputed databases of hashes for common passwords. If your password is common, attackers can look up your hash and instantly find the original password. Salting solves this problem by adding random data to each password before hashing. Even if two users have the same password, their salted hashes will be completely different.",
+            "ar": "الهاش وحده ليس كافياً لأمان كلمات المرور. ينشئ المهاجمون جداول قوس قزح - قواعد بيانات محسوبة مسبقاً من الهاش لكلمات المرور الشائعة. إذا كانت كلمة مرورك شائعة، يمكن للمهاجمين البحث عن الهاش الخاص بك والعثور فوراً على كلمة المرور الأصلية. التمليح يحل هذه المشكلة بإضافة بيانات عشوائية لكل كلمة مرور قبل الهاش. حتى لو كان لدى مستخدمين نفس كلمة المرور، ستكون الهاش المملح مختلفة تماماً."
+          }
+        },
+        {
+          "id": 31,
+          "type": "text",
+          "value": {
+            "en": "A salt is a random string added to the password before hashing. Each user gets a unique salt that is stored alongside their password hash. When a user logs in, the system retrieves their salt, adds it to the entered password, hashes the combination, and compares it to the stored hash. Salting makes rainbow table attacks useless because attackers would need to create separate rainbow tables for every possible salt value.",
+            "ar": "الملح هو سلسلة عشوائية تُضاف إلى كلمة المرور قبل الهاش. كل مستخدم يحصل على ملح فريد يُخزن جنباً إلى جنب مع هاش كلمة مروره. عندما يسجل مستخدم الدخول، يسترجع النظام ملحه، يضيفه إلى كلمة المرور المدخلة، يعمل هاش للتركيبة، ويقارنها بالهاش المخزن. التمليح يجعل هجمات جدول قوس قزح عديمة الفائدة لأن المهاجمين سيحتاجون لإنشاء جداول قوس قزح منفصلة لكل قيمة ملح ممكنة."
+          }
+        },
+        {
+          "id": 32,
+          "type": "code",
+          "language": "python",
+          "value": "# Simple example of password salting (conceptual)\nimport hashlib\nimport os\n\n# Generate random salt\nsalt = os.urandom(32)  # 32 random bytes\n\n# User's password\npassword = \"MySecurePassword123\"\n\n# Combine password and salt, then hash\nsalted_password = password.encode() + salt\npassword_hash = hashlib.sha256(salted_password).hexdigest()\n\n# Store: password_hash and salt\nprint(f\"Hash: {password_hash}\")\nprint(f\"Salt: {salt.hex()}\")"
+        },
+        {
+          "id": 1773503748001.0908,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Cryptography%20Fundamentals/4-4-evolution%20and%20current%20state%20of%20hash%20algorithms..webp"
+        }
+      ]
+    },
+    {
+      "id": "topic-5",
+      "title": {
+        "en": "Digital Signatures and Certificates",
+        "ar": "التوقيعات الرقمية والشهادات"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "What Are Digital Signatures?",
+            "ar": "ما هي التوقيعات الرقمية؟"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "A digital signature is the electronic equivalent of a handwritten signature, but far more secure. It provides three critical guarantees: authentication (proves who sent the message), integrity (confirms the message was not altered), and non-repudiation (the sender cannot deny sending it). Digital signatures use asymmetric cryptography combined with hashing to achieve these properties. They are legally binding in most countries and essential for secure digital communication.",
+            "ar": "التوقيع الرقمي هو المعادل الإلكتروني للتوقيع المكتوب بخط اليد، لكنه أكثر أماناً بكثير. يوفر ثلاثة ضمانات حاسمة: المصادقة (يثبت من أرسل الرسالة)، التكامل (يؤكد أن الرسالة لم يتم تغييرها)، وعدم الإنكار (المرسل لا يمكنه إنكار إرسالها). تستخدم التوقيعات الرقمية التشفير غير المتماثل مع الهاش لتحقيق هذه الخصائص. إنها ملزمة قانوناً في معظم البلدان وأساسية للاتصال الرقمي الآمن."
+          }
+        },
+        {
+          "id": 1773527517495.4922,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Cryptography%20Fundamentals/5-1-three%20properties%20of%20digital%20signatures..webp"
+        },
+        {
+          "id": 4,
+          "type": "text",
+          "value": {
+            "en": "Digital signatures work differently from handwritten signatures. A handwritten signature looks the same on every document. A digital signature is unique for each document because it incorporates the document's content. If even one character changes in the document, the digital signature becomes invalid. This makes digital signatures much more secure than traditional signatures, which can be forged or copied.",
+            "ar": "تعمل التوقيعات الرقمية بشكل مختلف عن التوقيعات المكتوبة بخط اليد. التوقيع المكتوب بخط اليد يبدو نفسه على كل مستند. التوقيع الرقمي فريد لكل مستند لأنه يتضمن محتوى المستند. إذا تغير حتى حرف واحد في المستند، يصبح التوقيع الرقمي غير صالح. هذا يجعل التوقيعات الرقمية أكثر أماناً بكثير من التوقيعات التقليدية، التي يمكن تزويرها أو نسخها."
+          }
+        },
+        {
+          "id": 5,
+          "type": "title",
+          "value": {
+            "en": "How Digital Signatures Work Step by Step",
+            "ar": "كيف تعمل التوقيعات الرقمية خطوة بخطوة"
+          }
+        },
+        {
+          "id": 6,
+          "type": "text",
+          "value": {
+            "en": "Creating a digital signature involves two main processes: signing by the sender and verification by the receiver. The signing process uses the sender's private key, while verification uses the sender's public key. This asymmetric approach ensures that only the legitimate sender can create the signature, but anyone can verify it. The process also incorporates hashing to handle documents of any size efficiently.",
+            "ar": "إنشاء توقيع رقمي يتضمن عمليتين رئيسيتين: التوقيع من قبل المرسل والتحقق من قبل المستقبل. عملية التوقيع تستخدم المفتاح الخاص للمرسل، بينما يستخدم التحقق المفتاح العام للمرسل. هذا النهج غير المتماثل يضمن أن المرسل الشرعي فقط يمكنه إنشاء التوقيع، لكن أي شخص يمكنه التحقق منه. تتضمن العملية أيضاً الهاش للتعامل مع المستندات بأي حجم بكفاءة."
+          }
+        },
+        {
+          "id": 7,
+          "type": "orderedList",
+          "title": {
+            "en": "Creating a Digital Signature - Signing Process",
+            "ar": "إنشاء توقيع رقمي - عملية التوقيع"
+          },
+          "items": [
+            {
+              "subtitle": {
+                "en": "Hash the Document",
+                "ar": "عمل هاش للمستند"
+              },
+              "text": {
+                "en": "The sender uses a hash algorithm like SHA-256 to create a fixed-size hash of the entire document. This hash acts as a unique fingerprint of the content.",
+                "ar": "المرسل يستخدم خوارزمية هاش مثل SHA-256 لإنشاء هاش بحجم ثابت للمستند بالكامل. يعمل هذا الهاش كبصمة فريدة للمحتوى."
+              },
+              "example": {
+                "en": "1GB document becomes 256-bit hash value",
+                "ar": "مستند 1 جيجابايت يصبح قيمة هاش 256 بت"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Encrypt the Hash",
+                "ar": "تشفير الهاش"
+              },
+              "text": {
+                "en": "The sender encrypts the hash using their private key. This encrypted hash becomes the digital signature. Only the sender can perform this step because only they have the private key.",
+                "ar": "المرسل يشفر الهاش باستخدام مفتاحه الخاص. هذا الهاش المشفر يصبح التوقيع الرقمي. فقط المرسل يمكنه أداء هذه الخطوة لأنه فقط لديه المفتاح الخاص."
+              },
+              "example": {
+                "en": "Hash encrypted with sender's private RSA key",
+                "ar": "الهاش مشفر بمفتاح RSA الخاص بالمرسل"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Attach Signature",
+                "ar": "إرفاق التوقيع"
+              },
+              "text": {
+                "en": "The digital signature is attached to the original document. Both the document and signature are sent to the receiver together.",
+                "ar": "التوقيع الرقمي يُرفق بالمستند الأصلي. يُرسل كل من المستند والتوقيع معاً إلى المستقبل."
+              },
+              "example": {
+                "en": "Email with signed PDF attachment",
+                "ar": "بريد إلكتروني مع مرفق PDF موقع"
+              }
+            }
+          ]
+        },
+        {
+          "id": 8,
+          "type": "orderedList",
+          "title": {
+            "en": "Verifying a Digital Signature - Verification Process",
+            "ar": "التحقق من توقيع رقمي - عملية التحقق"
+          },
+          "items": [
+            {
+              "subtitle": {
+                "en": "Hash the Received Document",
+                "ar": "عمل هاش للمستند المستلم"
+              },
+              "text": {
+                "en": "The receiver independently calculates the hash of the received document using the same hash algorithm. This creates a fresh hash for comparison.",
+                "ar": "المستقبل يحسب بشكل مستقل هاش المستند المستلم باستخدام نفس خوارزمية الهاش. هذا ينشئ هاشاً جديداً للمقارنة."
+              },
+              "example": {
+                "en": "Receiver runs SHA-256 on received document",
+                "ar": "المستقبل يشغل SHA-256 على المستند المستلم"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Decrypt the Signature",
+                "ar": "فك تشفير التوقيع"
+              },
+              "text": {
+                "en": "The receiver uses the sender's public key to decrypt the digital signature. This reveals the original hash that the sender created. The public key is freely available.",
+                "ar": "المستقبل يستخدم المفتاح العام للمرسل لفك تشفير التوقيع الرقمي. هذا يكشف الهاش الأصلي الذي أنشأه المرسل. المفتاح العام متاح بحرية."
+              },
+              "example": {
+                "en": "Public key reveals sender's original hash",
+                "ar": "المفتاح العام يكشف هاش المرسل الأصلي"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Compare Hash Values",
+                "ar": "مقارنة قيم الهاش"
+              },
+              "text": {
+                "en": "The receiver compares the hash they calculated with the hash from the signature. If they match exactly, the signature is valid and the document is authentic and unmodified.",
+                "ar": "المستقبل يقارن الهاش الذي حسبه مع الهاش من التوقيع. إذا تطابقا تماماً، التوقيع صالح والمستند أصلي وغير معدل."
+              },
+              "example": {
+                "en": "Match = Valid signature, Mismatch = Tampered or forged",
+                "ar": "تطابق = توقيع صالح، عدم تطابق = معدل أو مزور"
+              }
+            }
+          ]
+        },
+        {
+          "id": 1773527536232.684,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Cryptography%20Fundamentals/5-2-digital%20signature%20creation%20and%20verification.webp"
+        },
+        {
+          "id": 10,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Key insight: Digital signatures use private key for signing and public key for verification. This is the opposite of encryption, where public key encrypts and private key decrypts. This reversal enables authentication.",
+            "ar": "رؤية رئيسية: التوقيعات الرقمية تستخدم المفتاح الخاص للتوقيع والمفتاح العام للتحقق. هذا عكس التشفير، حيث يشفر المفتاح العام ويفك المفتاح الخاص التشفير. هذا الانعكاس يمكّن المصادقة."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 11,
+          "type": "hr"
+        },
+        {
+          "id": 12,
+          "type": "title",
+          "value": {
+            "en": "Digital Certificates - Binding Identity to Public Keys",
+            "ar": "الشهادات الرقمية - ربط الهوية بالمفاتيح العامة"
+          }
+        },
+        {
+          "id": 13,
+          "type": "text",
+          "value": {
+            "en": "Digital signatures solve one problem but create another. How do you know that a public key truly belongs to the person or organization claiming to own it? An attacker could create a key pair, claim the public key belongs to your bank, and trick you into encrypting sensitive data with it. Digital certificates solve this problem by having a trusted third party verify and vouch for the binding between an identity and a public key.",
+            "ar": "التوقيعات الرقمية تحل مشكلة واحدة لكن تخلق أخرى. كيف تعرف أن المفتاح العام ينتمي حقاً للشخص أو المنظمة التي تدعي امتلاكه؟ يمكن لمهاجم إنشاء زوج مفاتيح، الادعاء أن المفتاح العام ينتمي لبنكك، وخداعك لتشفير بيانات حساسة به. الشهادات الرقمية تحل هذه المشكلة بجعل طرف ثالث موثوق يتحقق ويضمن الربط بين الهوية والمفتاح العام."
+          }
+        },
+        {
+          "id": 14,
+          "type": "text",
+          "value": {
+            "en": "A digital certificate is like a digital passport. It contains the public key, identity information about the owner, and a digital signature from a trusted Certificate Authority. The Certificate Authority (CA) is an organization that verifies identities before issuing certificates. Major CAs include DigiCert, Let's Encrypt, and GlobalSign. Your browser trusts these CAs and accepts certificates they sign as legitimate.",
+            "ar": "الشهادة الرقمية تشبه جواز السفر الرقمي. تحتوي على المفتاح العام، معلومات الهوية عن المالك، وتوقيع رقمي من سلطة شهادات موثوقة. سلطة الشهادات (CA) هي منظمة تتحقق من الهويات قبل إصدار الشهادات. سلطات الشهادات الرئيسية تشمل DigiCert وLet's Encrypt وGlobalSign. متصفحك يثق بهذه السلطات ويقبل الشهادات التي توقعها كشهادات شرعية."
+          }
+        },
+        {
+          "id": 15,
+          "type": "table",
+          "title": {
+            "en": "Contents of a Digital Certificate",
+            "ar": "محتويات الشهادة الرقمية"
+          },
+          "headers": {
+            "en": [
+              "Field",
+              "Contains",
+              "Purpose"
+            ],
+            "ar": [
+              "الحقل",
+              "يحتوي على",
+              "الغرض"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "Subject",
+                "Owner's name and details",
+                "Identifies who the certificate belongs to"
+              ],
+              "ar": [
+                "الموضوع",
+                "اسم المالك والتفاصيل",
+                "يحدد من تنتمي إليه الشهادة"
+              ]
+            },
+            {
+              "en": [
+                "Public Key",
+                "Owner's public key value",
+                "Allows others to encrypt data or verify signatures"
+              ],
+              "ar": [
+                "المفتاح العام",
+                "قيمة المفتاح العام للمالك",
+                "يسمح للآخرين بتشفير البيانات أو التحقق من التوقيعات"
+              ]
+            },
+            {
+              "en": [
+                "Issuer",
+                "Certificate Authority name",
+                "Shows which CA verified and signed the certificate"
+              ],
+              "ar": [
+                "المصدر",
+                "اسم سلطة الشهادات",
+                "يظهر أي سلطة شهادات تحققت ووقعت الشهادة"
+              ]
+            },
+            {
+              "en": [
+                "Validity Period",
+                "Start and expiration dates",
+                "Certificate only valid during this time window"
+              ],
+              "ar": [
+                "فترة الصلاحية",
+                "تواريخ البدء والانتهاء",
+                "الشهادة صالحة فقط خلال هذه الفترة الزمنية"
+              ]
+            },
+            {
+              "en": [
+                "Serial Number",
+                "Unique certificate identifier",
+                "Allows tracking and revocation if compromised"
+              ],
+              "ar": [
+                "الرقم التسلسلي",
+                "معرف فريد للشهادة",
+                "يسمح بالتتبع والإلغاء إذا تم اختراقها"
+              ]
+            },
+            {
+              "en": [
+                "CA Signature",
+                "Digital signature from CA",
+                "Proves certificate authenticity and integrity"
+              ],
+              "ar": [
+                "توقيع السلطة",
+                "توقيع رقمي من سلطة الشهادات",
+                "يثبت أصالة وتكامل الشهادة"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 16,
+          "type": "text",
+          "value": {
+            "en": "Certificate verification follows a chain of trust. Your browser contains a list of trusted root CAs. When you visit an HTTPS website, the server presents its certificate. Your browser checks that a trusted CA signed the certificate, verifies the signature is valid, confirms the certificate has not expired, and ensures the domain name matches the certificate. Only if all checks pass does your browser trust the connection.",
+            "ar": "التحقق من الشهادة يتبع سلسلة ثقة. متصفحك يحتوي على قائمة بسلطات الشهادات الجذرية الموثوقة. عندما تزور موقع HTTPS، الخادم يقدم شهادته. متصفحك يتحقق من أن سلطة شهادات موثوقة وقعت الشهادة، يتحقق من أن التوقيع صالح، يؤكد أن الشهادة لم تنته صلاحيتها، ويضمن أن اسم النطاق يطابق الشهادة. فقط إذا مرت جميع الفحوصات يثق متصفحك بالاتصال."
+          }
+        },
+        {
+          "id": 17,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "Security warning: If you see a certificate error in your browser, do not proceed. The error indicates that something is wrong - the certificate might be expired, forged, or the connection might be under attack. Never ignore certificate warnings.",
+            "ar": "تحذير أمني: إذا رأيت خطأ شهادة في متصفحك، لا تتابع. الخطأ يشير إلى أن شيئاً ما خطأ - قد تكون الشهادة منتهية الصلاحية أو مزورة أو قد يكون الاتصال تحت هجوم. لا تتجاهل أبداً تحذيرات الشهادات."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 18,
+          "type": "title",
+          "value": {
+            "en": "Types of Digital Certificates",
+            "ar": "أنواع الشهادات الرقمية"
+          }
+        },
+        {
+          "id": 19,
+          "type": "text",
+          "value": {
+            "en": "Different types of certificates provide different levels of validation and serve different purposes. Domain Validation certificates verify only that you control the domain. Organization Validation certificates verify your organization exists and is legitimate. Extended Validation certificates require the most rigorous verification process and display the company name in the browser. Code signing certificates allow developers to sign software. Email certificates secure email communication.",
+            "ar": "أنواع مختلفة من الشهادات توفر مستويات مختلفة من التحقق وتخدم أغراضاً مختلفة. شهادات التحقق من النطاق تتحقق فقط من أنك تتحكم في النطاق. شهادات التحقق من المنظمة تتحقق من أن منظمتك موجودة وشرعية. شهادات التحقق الموسع تتطلب عملية التحقق الأكثر صرامة وتعرض اسم الشركة في المتصفح. شهادات توقيع الكود تسمح للمطورين بتوقيع البرامج. شهادات البريد الإلكتروني تؤمن اتصال البريد الإلكتروني."
+          }
+        },
+        {
+          "id": 20,
+          "type": "list",
+          "title": {
+            "en": "Common Certificate Types and Uses",
+            "ar": "أنواع واستخدامات الشهادات الشائعة"
+          },
+          "items": {
+            "en": [
+              "SSL/TLS Certificates - Secure website connections with HTTPS",
+              "Code Signing Certificates - Verify software authenticity and integrity",
+              "Email Certificates - Encrypt and sign email messages",
+              "Client Certificates - Authenticate users to systems and services",
+              "Document Signing Certificates - Sign PDF and other documents",
+              "Device Certificates - Authenticate IoT devices and hardware"
+            ],
+            "ar": [
+              "شهادات SSL/TLS - اتصالات مواقع الويب الآمنة مع HTTPS",
+              "شهادات توقيع الكود - التحقق من أصالة وتكامل البرامج",
+              "شهادات البريد الإلكتروني - تشفير وتوقيع رسائل البريد الإلكتروني",
+              "شهادات العميل - مصادقة المستخدمين للأنظمة والخدمات",
+              "شهادات توقيع المستندات - توقيع PDF والمستندات الأخرى",
+              "شهادات الأجهزة - مصادقة أجهزة إنترنت الأشياء والأجهزة"
+            ]
+          }
+        },
+        {
+          "id": 1773527526562.652,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Cryptography%20Fundamentals/5-3-certificate%20chain%20of%20trust.webp"
+        },
+        {
+          "id": 22,
+          "type": "title",
+          "value": {
+            "en": "Certificate Revocation and Security",
+            "ar": "إلغاء الشهادات والأمن"
+          }
+        },
+        {
+          "id": 23,
+          "type": "text",
+          "value": {
+            "en": "Sometimes certificates must be invalidated before they expire. This happens when a private key is compromised, when an organization changes ownership, or when errors are discovered in the certificate. Certificate Authorities maintain Certificate Revocation Lists that browsers check. If a certificate appears on the revocation list, browsers reject it even if it has not expired. Modern systems also use Online Certificate Status Protocol for real-time revocation checking.",
+            "ar": "أحياناً يجب إبطال الشهادات قبل انتهاء صلاحيتها. يحدث هذا عندما يتم اختراق المفتاح الخاص، عندما تتغير ملكية منظمة، أو عندما يتم اكتشاف أخطاء في الشهادة. سلطات الشهادات تحتفظ بقوائم إلغاء الشهادات التي تتحقق منها المتصفحات. إذا ظهرت شهادة في قائمة الإلغاء، ترفضها المتصفحات حتى لو لم تنته صلاحيتها. الأنظمة الحديثة تستخدم أيضاً بروتوكول حالة الشهادة عبر الإنترنت للتحقق من الإلغاء في الوقت الفعلي."
+          }
+        },
+        {
+          "id": 24,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Professional tip: Certificates typically expire after 1-2 years. Set up automated renewal systems to prevent website outages. Let's Encrypt offers free certificates with 90-day validity and supports automated renewal.",
+            "ar": "نصيحة احترافية: الشهادات عادة تنتهي صلاحيتها بعد 1-2 سنة. أنشئ أنظمة تجديد تلقائية لمنع انقطاعات الموقع. Let's Encrypt تقدم شهادات مجانية بصلاحية 90 يوماً وتدعم التجديد التلقائي."
+          },
+          "link": "",
+          "isLab": false
+        }
+      ]
+    },
+    {
+      "id": "topic-6",
+      "title": {
+        "en": "SSL/TLS and Public Key Infrastructure (PKI)",
+        "ar": "SSL/TLS والبنية التحتية للمفاتيح العامة (PKI)"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "What is SSL/TLS?",
+            "ar": "ما هو SSL/TLS؟"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "SSL (Secure Sockets Layer) and TLS (Transport Layer Security) are protocols that secure communication over the internet. TLS is the modern successor to SSL, but people often still say SSL when they mean TLS. When you see HTTPS in a website address and a padlock icon in your browser, TLS is protecting your connection. It encrypts all data between your browser and the website, preventing eavesdroppers from reading passwords, credit card numbers, or any other sensitive information.",
+            "ar": "SSL (طبقة المقابس الآمنة) وTLS (أمن طبقة النقل) هي بروتوكولات تؤمن الاتصال عبر الإنترنت. TLS هو الخلف الحديث لـ SSL، لكن الناس غالباً لا يزالون يقولون SSL عندما يقصدون TLS. عندما ترى HTTPS في عنوان موقع ويب ورمز قفل في متصفحك، TLS يحمي اتصالك. يشفر جميع البيانات بين متصفحك والموقع، مما يمنع المتنصتين من قراءة كلمات المرور أو أرقام بطاقات الائتمان أو أي معلومات حساسة أخرى."
+          }
+        },
+        {
+          "id": 1773527594604.4373,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Cryptography%20Fundamentals/6-1-HTTP%20vs%20HTTPS%20comparison.webp"
+        },
+        {
+          "id": 4,
+          "type": "text",
+          "value": {
+            "en": "TLS combines multiple cryptographic techniques we have learned. It uses asymmetric encryption for the initial handshake and key exchange. It uses symmetric encryption for fast data transfer. It uses hashing for message integrity. It uses digital certificates to authenticate the server. This combination provides confidentiality, integrity, and authentication - the three pillars of information security. TLS is one of the most important security protocols ever developed.",
+            "ar": "يجمع TLS بين عدة تقنيات تشفير تعلمناها. يستخدم التشفير غير المتماثل للمصافحة الأولية وتبادل المفاتيح. يستخدم التشفير المتماثل لنقل البيانات السريع. يستخدم الهاش لتكامل الرسائل. يستخدم الشهادات الرقمية لمصادقة الخادم. هذا المزيج يوفر السرية والتكامل والمصادقة - الأركان الثلاثة لأمن المعلومات. TLS هو أحد أهم بروتوكولات الأمان التي تم تطويرها على الإطلاق."
+          }
+        },
+        {
+          "id": 5,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Historical note: SSL was developed by Netscape in the 1990s. SSL 3.0 had security flaws, so the Internet Engineering Task Force created TLS 1.0 in 1999 as an improved replacement. Today we use TLS 1.2 and TLS 1.3, with older versions deprecated.",
+            "ar": "ملاحظة تاريخية: تم تطوير SSL من قبل Netscape في التسعينيات. كان لدى SSL 3.0 عيوب أمنية، لذا أنشأت فرقة عمل هندسة الإنترنت TLS 1.0 في عام 1999 كبديل محسّن. اليوم نستخدم TLS 1.2 وTLS 1.3، مع إهمال الإصدارات الأقدم."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 6,
+          "type": "title",
+          "value": {
+            "en": "The TLS Handshake - Establishing Secure Connection",
+            "ar": "مصافحة TLS - إنشاء اتصال آمن"
+          }
+        },
+        {
+          "id": 7,
+          "type": "text",
+          "value": {
+            "en": "Before any encrypted data can be exchanged, the client and server must perform the TLS handshake. This process accomplishes several goals: authenticate the server's identity, agree on encryption algorithms, and securely exchange keys. The handshake happens automatically in milliseconds when you visit an HTTPS website. Understanding the handshake reveals how TLS combines different cryptographic concepts into a complete security system.",
+            "ar": "قبل أن يمكن تبادل أي بيانات مشفرة، يجب على العميل والخادم أداء مصافحة TLS. تحقق هذه العملية عدة أهداف: مصادقة هوية الخادم، الاتفاق على خوارزميات التشفير، وتبادل المفاتيح بشكل آمن. تحدث المصافحة تلقائياً في أجزاء من الثانية عندما تزور موقع HTTPS. فهم المصافحة يكشف كيف يجمع TLS مفاهيم تشفير مختلفة في نظام أمان كامل."
+          }
+        },
+        {
+          "id": 8,
+          "type": "orderedList",
+          "title": {
+            "en": "TLS Handshake Process Steps",
+            "ar": "خطوات عملية مصافحة TLS"
+          },
+          "items": [
+            {
+              "subtitle": {
+                "en": "Client Hello",
+                "ar": "تحية العميل"
+              },
+              "text": {
+                "en": "Your browser sends a message to the server listing supported TLS versions, cipher suites, and random data. This initiates the handshake.",
+                "ar": "متصفحك يرسل رسالة إلى الخادم تسرد إصدارات TLS المدعومة، مجموعات التشفير، والبيانات العشوائية. هذا يبدأ المصافحة."
+              },
+              "example": {
+                "en": "Browser says: I support TLS 1.3, AES-256, etc.",
+                "ar": "المتصفح يقول: أدعم TLS 1.3، AES-256، إلخ."
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Server Hello & Certificate",
+                "ar": "تحية الخادم والشهادة"
+              },
+              "text": {
+                "en": "The server chooses the best TLS version and cipher suite from the client's list. It sends its digital certificate containing its public key and sends its own random data.",
+                "ar": "الخادم يختار أفضل إصدار TLS ومجموعة تشفير من قائمة العميل. يرسل شهادته الرقمية التي تحتوي على مفتاحه العام ويرسل بياناته العشوائية الخاصة."
+              },
+              "example": {
+                "en": "Server responds: Let's use TLS 1.3, here's my certificate",
+                "ar": "الخادم يستجيب: دعنا نستخدم TLS 1.3، هذه شهادتي"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Certificate Verification",
+                "ar": "التحقق من الشهادة"
+              },
+              "text": {
+                "en": "Your browser verifies the server's certificate by checking the CA signature, expiration date, and domain name match. If verification fails, the browser shows a security warning.",
+                "ar": "متصفحك يتحقق من شهادة الخادم من خلال فحص توقيع سلطة الشهادات، تاريخ الانتهاء، وتطابق اسم النطاق. إذا فشل التحقق، المتصفح يظهر تحذير أمني."
+              },
+              "example": {
+                "en": "Browser checks: Certificate valid, signed by trusted CA",
+                "ar": "المتصفح يتحقق: الشهادة صالحة، موقعة من سلطة موثوقة"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Key Exchange",
+                "ar": "تبادل المفاتيح"
+              },
+              "text": {
+                "en": "The client generates a pre-master secret, encrypts it with the server's public key, and sends it. Both sides use this and the random data to derive the same symmetric session keys.",
+                "ar": "العميل يولد سراً رئيسياً مسبقاً، يشفره بالمفتاح العام للخادم، ويرسله. كلا الجانبين يستخدمان هذا والبيانات العشوائية لاشتقاق نفس مفاتيح الجلسة المتماثلة."
+              },
+              "example": {
+                "en": "Client and server now have matching AES-256 keys",
+                "ar": "العميل والخادم لديهما الآن مفاتيح AES-256 متطابقة"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Finished Messages",
+                "ar": "رسائل الانتهاء"
+              },
+              "text": {
+                "en": "Both client and server send encrypted 'Finished' messages using the new session keys. If both can decrypt these messages, the handshake succeeded and secure communication begins.",
+                "ar": "كل من العميل والخادم يرسلان رسائل 'انتهى' مشفرة باستخدام مفاتيح الجلسة الجديدة. إذا تمكن كلاهما من فك تشفير هذه الرسائل، نجحت المصافحة ويبدأ الاتصال الآمن."
+              },
+              "example": {
+                "en": "Both confirm: Handshake complete, switching to encrypted mode",
+                "ar": "كلاهما يؤكد: المصافحة اكتملت، التبديل إلى الوضع المشفر"
+              }
+            }
+          ]
+        },
+        {
+          "id": 9,
+          "type": "text",
+          "value": {
+            "en": "After the handshake completes, all subsequent communication uses symmetric encryption with the session keys. The asymmetric encryption was used only during the handshake for key exchange. This hybrid approach gives you the security benefits of asymmetric encryption with the speed benefits of symmetric encryption. Every HTTPS connection you make performs this handshake automatically.",
+            "ar": "بعد اكتمال المصافحة، تستخدم جميع الاتصالات اللاحقة التشفير المتماثل بمفاتيح الجلسة. تم استخدام التشفير غير المتماثل فقط أثناء المصافحة لتبادل المفاتيح. هذا النهج الهجين يمنحك فوائد الأمان من التشفير غير المتماثل مع فوائد السرعة من التشفير المتماثل. كل اتصال HTTPS تقوم به يؤدي هذه المصافحة تلقائياً."
+          }
+        },
+        {
+          "id": 1773527615632.3801,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Cryptography%20Fundamentals/6-2-TLS%20handshake.webp"
+        },
+        {
+          "id": 11,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "Common attack: Man-in-the-Middle (MITM) attacks try to intercept the handshake. The attacker pretends to be the server to the client and pretends to be the client to the server. Certificate verification defeats this attack because the attacker cannot provide a valid certificate signed by a trusted CA.",
+            "ar": "هجوم شائع: هجمات الرجل في الوسط (MITM) تحاول اعتراض المصافحة. المهاجم يتظاهر بأنه الخادم للعميل ويتظاهر بأنه العميل للخادم. التحقق من الشهادة يهزم هذا الهجوم لأن المهاجم لا يمكنه تقديم شهادة صالحة موقعة من سلطة موثوقة."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 12,
+          "type": "hr"
+        },
+        {
+          "id": 13,
+          "type": "title",
+          "value": {
+            "en": "Understanding Public Key Infrastructure (PKI)",
+            "ar": "فهم البنية التحتية للمفاتيح العامة (PKI)"
+          }
+        },
+        {
+          "id": 14,
+          "type": "text",
+          "value": {
+            "en": "Public Key Infrastructure is the complete system that manages digital certificates and public key encryption. PKI is not a single technology but rather a framework that includes Certificate Authorities, registration processes, certificate storage, revocation systems, and policies governing all these components. Without PKI, we could not have the secure internet we use today. PKI makes it possible for strangers to communicate securely without meeting in person.",
+            "ar": "البنية التحتية للمفاتيح العامة هي النظام الكامل الذي يدير الشهادات الرقمية وتشفير المفتاح العام. PKI ليست تقنية واحدة بل إطار عمل يتضمن سلطات الشهادات، عمليات التسجيل، تخزين الشهادات، أنظمة الإلغاء، والسياسات التي تحكم جميع هذه المكونات. بدون PKI، لا يمكننا الحصول على الإنترنت الآمن الذي نستخدمه اليوم. PKI تجعل من الممكن للغرباء التواصل بأمان دون اللقاء شخصياً."
+          }
+        },
+        {
+          "id": 15,
+          "type": "text",
+          "value": {
+            "en": "PKI solves a fundamental problem in cryptography called the key distribution problem. How do you safely share keys with someone you have never met? PKI answers this through a hierarchy of trust. Root Certificate Authorities are trusted by default in your operating system and browser. These root CAs issue certificates to intermediate CAs. Intermediate CAs issue certificates to end entities like websites and individuals. This creates a chain of trust extending from your browser to any website in the world.",
+            "ar": "تحل PKI مشكلة أساسية في التشفير تسمى مشكلة توزيع المفاتيح. كيف تشارك المفاتيح بأمان مع شخص لم تقابله أبداً؟ تجيب PKI على هذا من خلال تسلسل هرمي من الثقة. سلطات الشهادات الجذرية موثوقة افتراضياً في نظام التشغيل والمتصفح الخاص بك. تصدر هذه السلطات الجذرية شهادات لسلطات وسيطة. تصدر السلطات الوسيطة شهادات للكيانات النهائية مثل المواقع والأفراد. هذا ينشئ سلسلة ثقة تمتد من متصفحك إلى أي موقع في العالم."
+          }
+        },
+        {
+          "id": 16,
+          "type": "table",
+          "title": {
+            "en": "PKI Components and Functions",
+            "ar": "مكونات ووظائف PKI"
+          },
+          "headers": {
+            "en": [
+              "Component",
+              "Role",
+              "Real-World Example"
+            ],
+            "ar": [
+              "المكون",
+              "الدور",
+              "مثال من العالم الحقيقي"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "Root CA",
+                "Ultimate trust anchor",
+                "DigiCert Root CA trusted by all browsers"
+              ],
+              "ar": [
+                "سلطة شهادات جذرية",
+                "مرساة الثقة النهائية",
+                "سلطة DigiCert الجذرية الموثوقة من جميع المتصفحات"
+              ]
+            },
+            {
+              "en": [
+                "Intermediate CA",
+                "Issues end-entity certificates",
+                "DigiCert SHA2 Secure Server CA"
+              ],
+              "ar": [
+                "سلطة شهادات وسيطة",
+                "تصدر شهادات الكيان النهائي",
+                "DigiCert SHA2 Secure Server CA"
+              ]
+            },
+            {
+              "en": [
+                "Registration Authority",
+                "Verifies certificate applicants",
+                "Validates company documents before issuance"
+              ],
+              "ar": [
+                "سلطة التسجيل",
+                "تتحقق من المتقدمين للشهادات",
+                "تتحقق من مستندات الشركة قبل الإصدار"
+              ]
+            },
+            {
+              "en": [
+                "Certificate Database",
+                "Stores issued certificates",
+                "Public ledger of all valid certificates"
+              ],
+              "ar": [
+                "قاعدة بيانات الشهادات",
+                "تخزن الشهادات الصادرة",
+                "سجل عام لجميع الشهادات الصالحة"
+              ]
+            },
+            {
+              "en": [
+                "Certificate Repository",
+                "Publishes certificates",
+                "Website where users download certificates"
+              ],
+              "ar": [
+                "مستودع الشهادات",
+                "ينشر الشهادات",
+                "موقع ويب حيث يقوم المستخدمون بتنزيل الشهادات"
+              ]
+            },
+            {
+              "en": [
+                "Revocation System",
+                "Invalidates compromised certificates",
+                "Certificate Revocation Lists and OCSP"
+              ],
+              "ar": [
+                "نظام الإلغاء",
+                "يبطل الشهادات المخترقة",
+                "قوائم إلغاء الشهادات وOCSP"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 17,
+          "type": "text",
+          "value": {
+            "en": "Organizations can operate internal PKI systems for private networks. A company might run its own CA to issue certificates to employees, devices, and internal servers. This private PKI operates independently from the public PKI used on the internet. Internal PKI certificates are trusted only within the organization. This approach provides strong authentication and encryption for corporate resources without involving external Certificate Authorities.",
+            "ar": "يمكن للمنظمات تشغيل أنظمة PKI داخلية للشبكات الخاصة. قد تدير شركة سلطة شهادات خاصة بها لإصدار شهادات للموظفين والأجهزة والخوادم الداخلية. تعمل هذه PKI الخاصة بشكل مستقل عن PKI العامة المستخدمة على الإنترنت. شهادات PKI الداخلية موثوقة فقط داخل المنظمة. يوفر هذا النهج مصادقة وتشفيراً قويين لموارد الشركة دون إشراك سلطات شهادات خارجية."
+          }
+        },
+        {
+          "id": 18,
+          "type": "title",
+          "value": {
+            "en": "Real-World PKI Applications",
+            "ar": "تطبيقات PKI في العالم الحقيقي"
+          }
+        },
+        {
+          "id": 19,
+          "type": "text",
+          "value": {
+            "en": "PKI extends far beyond securing websites. Governments use PKI for digital identity cards and e-government services. Healthcare systems use PKI to protect electronic health records and verify medical professional identities. Financial institutions rely on PKI for secure online banking and transaction authorization. Code signing certificates prevent malware distribution by verifying software publishers. Email encryption using S/MIME relies on PKI certificates. Smart cards and hardware tokens use PKI for physical access control.",
+            "ar": "تمتد PKI إلى ما هو أبعد من تأمين المواقع. تستخدم الحكومات PKI لبطاقات الهوية الرقمية وخدمات الحكومة الإلكترونية. تستخدم أنظمة الرعاية الصحية PKI لحماية السجلات الصحية الإلكترونية والتحقق من هويات المهنيين الطبيين. تعتمد المؤسسات المالية على PKI للخدمات المصرفية الآمنة عبر الإنترنت وتفويض المعاملات. شهادات توقيع الكود تمنع توزيع البرمجيات الخبيثة بالتحقق من ناشري البرامج. تشفير البريد الإلكتروني باستخدام S/MIME يعتمد على شهادات PKI. البطاقات الذكية والرموز الأجهزة تستخدم PKI للتحكم في الوصول الفعلي."
+          }
+        },
+        {
+          "id": 20,
+          "type": "list",
+          "title": {
+            "en": "Industries Using PKI Daily",
+            "ar": "الصناعات التي تستخدم PKI يومياً"
+          },
+          "items": {
+            "en": [
+              "Banking - Secure online transactions and customer authentication",
+              "Healthcare - Protect patient records and verify prescriptions",
+              "Government - Digital ID cards, tax filing, citizen services",
+              "Enterprises - Employee authentication and VPN access",
+              "IoT Devices - Authenticate billions of connected devices",
+              "Blockchain - Verify identities in cryptocurrency transactions"
+            ],
+            "ar": [
+              "الخدمات المصرفية - المعاملات الآمنة عبر الإنترنت ومصادقة العملاء",
+              "الرعاية الصحية - حماية سجلات المرضى والتحقق من الوصفات الطبية",
+              "الحكومة - بطاقات الهوية الرقمية، تقديم الضرائب، خدمات المواطنين",
+              "المؤسسات - مصادقة الموظفين والوصول إلى VPN",
+              "أجهزة إنترنت الأشياء - مصادقة مليارات الأجهزة المتصلة",
+              "البلوكشين - التحقق من الهويات في معاملات العملات المشفرة"
+            ]
+          }
+        },
+        {
+          "id": 1773527607662.9788,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Cryptography%20Fundamentals/6-3-%20PKI%20applications%20across%20sectors.webp"
+        },
+        {
+          "id": 22,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Future development: Quantum computing threatens current PKI systems because it can break RSA and ECC encryption. Post-quantum cryptography research is developing new algorithms resistant to quantum attacks. Organizations are beginning to plan migration to post-quantum PKI.",
+            "ar": "التطوير المستقبلي: الحوسبة الكمومية تهدد أنظمة PKI الحالية لأنها يمكن أن تكسر تشفير RSA وECC. أبحاث التشفير ما بعد الكم تطور خوارزميات جديدة مقاومة للهجمات الكمومية. المنظمات بدأت تخطط للانتقال إلى PKI ما بعد الكم."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 23,
+          "type": "hr"
+        },
+        {
+          "id": 24,
+          "type": "title",
+          "value": {
+            "en": "Best Practices for Using TLS and PKI",
+            "ar": "أفضل الممارسات لاستخدام TLS و PKI"
+          }
+        },
+        {
+          "id": 25,
+          "type": "text",
+          "value": {
+            "en": "Using TLS and PKI correctly requires following security best practices. Always use the latest TLS version - currently TLS 1.2 or TLS 1.3. Disable older versions like SSL 3.0, TLS 1.0, and TLS 1.1 which have known vulnerabilities. Choose strong cipher suites that use AES-256 for symmetric encryption and SHA-256 for hashing. Regularly renew certificates before they expire to prevent service disruptions. Monitor certificate revocation lists to detect compromised certificates.",
+            "ar": "استخدام TLS وPKI بشكل صحيح يتطلب اتباع أفضل الممارسات الأمنية. استخدم دائماً أحدث إصدار TLS - حالياً TLS 1.2 أو TLS 1.3. عطّل الإصدارات الأقدم مثل SSL 3.0 وTLS 1.0 وTLS 1.1 التي لديها ثغرات معروفة. اختر مجموعات تشفير قوية تستخدم AES-256 للتشفير المتماثل وSHA-256 للهاش. جدد الشهادات بانتظام قبل انتهاء صلاحيتها لمنع انقطاعات الخدمة. راقب قوائم إلغاء الشهادات لاكتشاف الشهادات المخترقة."
+          }
+        },
+        {
+          "id": 26,
+          "type": "text",
+          "value": {
+            "en": "Certificate management requires ongoing attention. Organizations should maintain an inventory of all certificates they use. Set up automated alerts for certificates approaching expiration. Implement certificate pinning for critical applications to prevent man-in-the-middle attacks. Use Certificate Transparency logs to detect unauthorized certificate issuance for your domains. Consider using automated certificate management tools like Certbot for Let's Encrypt certificates.",
+            "ar": "إدارة الشهادات تتطلب اهتماماً مستمراً. يجب على المنظمات الاحتفاظ بجرد لجميع الشهادات التي تستخدمها. أنشئ تنبيهات تلقائية للشهادات التي تقترب من انتهاء الصلاحية. نفذ تثبيت الشهادات للتطبيقات الحرجة لمنع هجمات الرجل في الوسط. استخدم سجلات شفافية الشهادات لاكتشاف إصدار الشهادات غير المصرح به لنطاقاتك. فكر في استخدام أدوات إدارة الشهادات التلقائية مثل Certbot لشهادات Let's Encrypt."
+          }
+        },
+        {
+          "id": 27,
+          "type": "orderedList",
+          "title": {
+            "en": "Security Checklist for TLS Implementation",
+            "ar": "قائمة التحقق الأمنية لتنفيذ TLS"
+          },
+          "items": [
+            {
+              "subtitle": {
+                "en": "Use Current TLS Versions",
+                "ar": "استخدم إصدارات TLS الحالية"
+              },
+              "text": {
+                "en": "Enable TLS 1.2 and TLS 1.3 only. Disable all older protocols including SSL 2.0, SSL 3.0, TLS 1.0, and TLS 1.1.",
+                "ar": "فعّل TLS 1.2 وTLS 1.3 فقط. عطّل جميع البروتوكولات الأقدم بما في ذلك SSL 2.0 وSSL 3.0 وTLS 1.0 وTLS 1.1."
+              },
+              "example": {
+                "en": "Configure web server to reject old protocol connections",
+                "ar": "قم بتكوين خادم الويب لرفض اتصالات البروتوكول القديم"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Select Strong Cipher Suites",
+                "ar": "اختر مجموعات تشفير قوية"
+              },
+              "text": {
+                "en": "Prefer AES-256-GCM and ChaCha20-Poly1305 for encryption. Use SHA-256 or SHA-384 for hashing. Disable weak ciphers like RC4 and 3DES.",
+                "ar": "فضّل AES-256-GCM وChaCha20-Poly1305 للتشفير. استخدم SHA-256 أو SHA-384 للهاش. عطّل الشفرات الضعيفة مثل RC4 و3DES."
+              },
+              "example": {
+                "en": "Use Mozilla SSL Configuration Generator for best settings",
+                "ar": "استخدم مولد تكوين SSL من Mozilla لأفضل الإعدادات"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Obtain Valid Certificates",
+                "ar": "احصل على شهادات صالحة"
+              },
+              "text": {
+                "en": "Get certificates from trusted public CAs. Ensure certificates cover all domain names you use. Use wildcard or multi-domain certificates when appropriate.",
+                "ar": "احصل على شهادات من سلطات شهادات عامة موثوقة. تأكد من أن الشهادات تغطي جميع أسماء النطاقات التي تستخدمها. استخدم شهادات البدل أو متعددة النطاقات عند الاقتضاء."
+              },
+              "example": {
+                "en": "Let's Encrypt provides free automated certificates",
+                "ar": "Let's Encrypt توفر شهادات تلقائية مجانية"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Implement HSTS",
+                "ar": "نفذ HSTS"
+              },
+              "text": {
+                "en": "Enable HTTP Strict Transport Security to force browsers to use HTTPS. Set appropriate max-age values. Include subdomains in the policy.",
+                "ar": "فعّل أمان النقل الصارم HTTP لإجبار المتصفحات على استخدام HTTPS. حدد قيم max-age المناسبة. قم بتضمين النطاقات الفرعية في السياسة."
+              },
+              "example": {
+                "en": "Header: Strict-Transport-Security: max-age=31536000",
+                "ar": "الرأس: Strict-Transport-Security: max-age=31536000"
+              }
+            }
+          ]
+        },
+        {
+          "id": 1773527603297.099,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Cryptography%20Fundamentals/5-4-complete%20cryptography%20ecosystem.webp"
+        },
+        {
+          "id": 29,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Professional perspective: Understanding how TLS combines encryption, hashing, digital signatures, and certificates shows the power of cryptographic systems. No single technology provides complete security. Real-world security comes from integrating multiple techniques into cohesive protocols like TLS.",
+            "ar": "منظور احترافي: فهم كيف يجمع TLS بين التشفير والهاش والتوقيعات الرقمية والشهادات يُظهر قوة الأنظمة التشفيرية. لا توفر تقنية واحدة أماناً كاملاً. الأمان الحقيقي يأتي من دمج تقنيات متعددة في بروتوكولات متماسكة مثل TLS."
+          },
+          "link": "",
+          "isLab": false
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "createdAt": "2026-03-14T22:34:43.011Z",
+    "totalTopics": 6,
+    "totalElements": 152
+  }
+}

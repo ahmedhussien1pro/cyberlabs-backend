@@ -1,11 +1,4 @@
 // prisma/seed-data/seed-config.ts
-// ═══════════════════════════════════════════════════════════════════
-//  MASTER SEED CONFIG
-//  ► لإضافة كورس: أضف JSON في course-data/ + أضف entry في COURSES_META
-//  ► لإضافة لاب:  أضف entry في LABS_META
-//  ► لإضافة مسار: أضف entry في PATHS_META
-//  ثم شغّل: npx prisma db seed
-// ═══════════════════════════════════════════════════════════════════
 
 // ── Types ──────────────────────────────────────────────────────────
 export type CourseColor =
@@ -33,7 +26,6 @@ export type PathModuleType = 'COURSE' | 'LAB' | 'QUIZ' | 'PROJECT';
 
 // ── Interfaces ─────────────────────────────────────────────────────
 export interface CourseMeta {
-  /** اسم ملف الـ JSON بالكامل داخل course-data/ */
   jsonFile: string;
   slug: string;
   color: CourseColor;
@@ -45,14 +37,11 @@ export interface CourseMeta {
   isNew?: boolean;
   isFeatured?: boolean;
   thumbnail?: string;
-  /** Slugs of labs linked to this course (many-to-many) */
   labSlugs?: string[];
-  /** Badge codes awarded when user completes this course */
   badgeCodes?: string[];
   skills?: string[];
   ar_skills?: string[];
   tags?: string[];
-  /** Override auto-extracted topic titles (optional) */
   topics?: string[];
   ar_topics?: string[];
 }
@@ -82,10 +71,8 @@ export interface LabMeta {
 
 export interface PathModuleEntry {
   type: PathModuleType;
-  /** slug of the linked Course or Lab */
   slug: string;
   order: number;
-  /** Override title (optional — defaults to the resource title) */
   title?: string;
   ar_title?: string;
   estimatedHours?: number;
@@ -110,223 +97,16 @@ export interface PathMeta {
 }
 
 // ═══════════════════════════════════════════════════════════════════
-//  COURSES — أضف كورس جديد هنا
+//  COURSES
 // ═══════════════════════════════════════════════════════════════════
 export const COURSES_META: CourseMeta[] = [
-  {
-    jsonFile: 'Introduction to Cyber Security Fundamentals.json',
-    slug: 'introduction-to-cybersecurity', // standalone مش في paths
-    color: 'EMERALD',
-    estimatedHours: 2,
-    access: 'FREE',
-    difficulty: 'BEGINNER',
-    category: 'FUNDAMENTALS',
-    contentType: 'THEORETICAL',
-    isNew: true,
-    isFeatured: true,
-    skills: ['CIA Triad', 'Threat Analysis', 'Security Concepts'],
-    ar_skills: ['مثلث CIA', 'تحليل التهديدات', 'مفاهيم الأمن'],
-    tags: ['beginner', 'fundamentals'],
-  },
-  {
-    jsonFile: 'Networking Basics Part 1.json',
-    slug: 'networking-basics-part-1',
-    color: 'BLUE',
-    estimatedHours: 3,
-    access: 'FREE',
-    difficulty: 'BEGINNER',
-    category: 'NETWORK_SECURITY',
-    contentType: 'THEORETICAL',
-    skills: ['OSI Model', 'TCP/IP', 'Network Basics'],
-    ar_skills: ['نموذج OSI', 'TCP/IP', 'أساسيات الشبكات'],
-    tags: ['networking', 'beginner'],
-  },
-  {
-    jsonFile: 'Networking Basics Part 2.json',
-    slug: 'networking-basics-part-2',
-    color: 'BLUE',
-    estimatedHours: 4,
-    access: 'FREE',
-    difficulty: 'INTERMEDIATE',
-    category: 'NETWORK_SECURITY',
-    contentType: 'MIXED',
-    skills: ['Subnetting', 'Routing', 'Switching'],
-    ar_skills: ['التقسيم الشبكي', 'التوجيه', 'التحويل'],
-    tags: ['networking', 'intermediate'],
-  },
-  {
-    jsonFile: 'Network Protocols.json',
-    slug: 'network-protocols', // standalone
-    color: 'CYAN',
-    estimatedHours: 5,
-    access: 'FREE',
-    difficulty: 'INTERMEDIATE',
-    category: 'NETWORK_SECURITY',
-    contentType: 'THEORETICAL',
-    skills: ['HTTP', 'DNS', 'FTP', 'SMTP'],
-    ar_skills: ['HTTP', 'DNS', 'FTP', 'SMTP'],
-    tags: ['protocols', 'network'],
-  },
-  {
-    jsonFile: 'Network Analysis & Monitoring.json',
-    slug: 'wireshark-packet-analysis',
-    color: 'CYAN',
-    estimatedHours: 5,
-    access: 'PRO',
-    difficulty: 'INTERMEDIATE',
-    category: 'NETWORK_SECURITY',
-    contentType: 'PRACTICAL',
-    skills: ['Wireshark', 'Packet Analysis', 'Traffic Monitoring'],
-    ar_skills: ['Wireshark', 'تحليل الحزم', 'مراقبة الشبكة'],
-    tags: ['network', 'wireshark', 'analysis'],
-  },
-  {
-    jsonFile: 'Network Security Tools.json',
-    slug: 'nmap-network-discovery-mastery',
-    color: 'ORANGE',
-    estimatedHours: 3,
-    access: 'PRO',
-    difficulty: 'INTERMEDIATE',
-    category: 'TOOLS_AND_TECHNIQUES',
-    contentType: 'PRACTICAL',
-    skills: ['Nmap', 'Nessus', 'Security Scanning'],
-    ar_skills: ['Nmap', 'Nessus', 'فحص الأمان'],
-    tags: ['tools', 'nmap', 'scanning'],
-  },
-  {
-    jsonFile: 'SQL Injection.json',
-    slug: 'owasp-sql-injection',
-    color: 'ROSE',
-    estimatedHours: 4,
-    access: 'FREE',
-    difficulty: 'INTERMEDIATE',
-    category: 'WEB_SECURITY',
-    contentType: 'MIXED',
-    skills: ['SQL Injection', 'Database Security', 'OWASP'],
-    ar_skills: ['حقن SQL', 'أمن قواعد البيانات', 'OWASP'],
-    tags: ['owasp', 'sqli', 'web'],
-  },
-  {
-    jsonFile: 'OWASP Top 10 - XSS & CSRF.json',
-    slug: 'owasp-xss-csrf',
-    color: 'ROSE',
-    estimatedHours: 3,
-    access: 'FREE',
-    difficulty: 'INTERMEDIATE',
-    category: 'WEB_SECURITY',
-    contentType: 'MIXED',
-    skills: ['XSS', 'CSRF', 'Web Security'],
-    ar_skills: ['XSS', 'CSRF', 'أمن الويب'],
-    tags: ['owasp', 'xss', 'csrf'],
-  },
-  {
-    jsonFile: 'OWASP Top 10 - Authentication & Authorization.json',
-    slug: 'owasp-authentication-authorization',
-    color: 'ORANGE',
-    estimatedHours: 4,
-    access: 'FREE',
-    difficulty: 'INTERMEDIATE',
-    category: 'WEB_SECURITY',
-    contentType: 'MIXED',
-    skills: ['OWASP', 'Authentication', 'Authorization'],
-    ar_skills: ['OWASP', 'المصادقة', 'التفويض'],
-    tags: ['owasp', 'auth', 'web'],
-  },
-  {
-    jsonFile: 'Active Directory.json',
-    slug: 'active-directory-fundamentals',
-    color: 'VIOLET',
-    estimatedHours: 4,
-    access: 'PRO',
-    difficulty: 'INTERMEDIATE',
-    category: 'NETWORK_SECURITY',
-    contentType: 'THEORETICAL',
-    skills: ['Active Directory', 'LDAP', 'Group Policy'],
-    ar_skills: ['Active Directory', 'LDAP', 'سياسات المجموعة'],
-    tags: ['active-directory', 'windows'],
-  },
-  {
-    jsonFile: 'Active Directory Attacks & Enumeration.json',
-    slug: 'ad-attacks-enumeration',
-    color: 'ROSE',
-    estimatedHours: 6,
-    access: 'PRO',
-    difficulty: 'ADVANCED',
-    category: 'PENETRATION_TESTING',
-    contentType: 'PRACTICAL',
-    isNew: true,
-    isFeatured: true,
-    skills: ['Kerberoasting', 'Pass-the-Hash', 'BloodHound'],
-    ar_skills: ['Kerberoasting', 'Pass-the-Hash', 'BloodHound'],
-    tags: ['active-directory', 'pentest', 'advanced'],
-  },
-  {
-    jsonFile: 'Careers in Cybersecurity From SOC to Cloud.json',
-    slug: 'careers-in-cybersecurity-from-soc-to-cloud',
-    color: 'EMERALD',
-    estimatedHours: 3,
-    access: 'FREE',
-    difficulty: 'BEGINNER',
-    category: 'CAREER_AND_INDUSTRY',
-    contentType: 'THEORETICAL',
-    skills: ['Career Planning', 'SOC', 'Cloud Security'],
-    ar_skills: ['التخطيط المهني', 'SOC', 'أمن السحابة'],
-    tags: ['career', 'beginner'],
-  },
-  {
-    jsonFile: 'Security Frameworks & Compliance.json',
-    slug: 'security-frameworks-and-compliance',
-    color: 'BLUE',
-    estimatedHours: 3,
-    access: 'FREE',
-    difficulty: 'BEGINNER',
-    category: 'FUNDAMENTALS',
-    contentType: 'THEORETICAL',
-    skills: ['ISO 27001', 'NIST', 'Compliance'],
-    ar_skills: ['ISO 27001', 'NIST', 'الامتثال'],
-    tags: ['frameworks', 'compliance', 'beginner'],
-  },
-  {
-    jsonFile: 'Threats & Risk Management.json',
-    slug: 'threats-and-risk-management',
-    color: 'ORANGE',
-    estimatedHours: 3,
-    access: 'FREE',
-    difficulty: 'BEGINNER',
-    category: 'FUNDAMENTALS',
-    contentType: 'THEORETICAL',
-    skills: ['Risk Management', 'Threat Modeling', 'Risk Assessment'],
-    ar_skills: ['إدارة المخاطر', 'نمذجة التهديدات', 'تقييم المخاطر'],
-    tags: ['threats', 'risk', 'beginner'],
-  },
-  // Add These courses also:
-  // Linux Fundamentals Part 1.json
-  // Linux Fundamentals Part 2.json
-  // VPN & Secure Communications.json
+  // Add Courses Here
 ];
 
 // ═══════════════════════════════════════════════════════════════════
 //  LABS
 // ═══════════════════════════════════════════════════════════════════
-export const LABS_META: LabMeta[] = [
-  // ─── أضف لاب جديد هنا ────────────────────────────────────────
-  // {
-  //   slug: 'sqli-basics',
-  //   title: 'SQL Injection Basics',
-  //   ar_title: 'أساسيات حقن SQL',
-  //   description: 'Practice SQL injection in a safe environment',
-  //   ar_description: 'تدرّب على حقن SQL في بيئة آمنة',
-  //   difficulty: 'BEGINNER',
-  //   category: 'WEB_SECURITY',
-  //   executionMode: 'SHARED_BACKEND',
-  //   xpReward: 100,
-  //   pointsReward: 50,
-  //   duration: 30,
-  //   skills: ['SQL Injection', 'Database Security'],
-  //   isPublished: true,
-  //   engineConfig: { targetUrl: 'http://sqli-lab:3001' },
-  // },
-];
+export const LABS_META: LabMeta[] = [];
 
 // ═══════════════════════════════════════════════════════════════════
 //  LEARNING PATHS
@@ -376,10 +156,7 @@ export const PATHS_META: PathMeta[] = [
       'OSINT',
     ],
     modules: [
-      // owasp-sql-injection ✅
-      // owasp-xss-csrf ✅
-      // owasp-authentication-authorization ✅
-      // active-directory-fundamentals ✅
+      // All Courses Here But Sort it
     ],
   },
 

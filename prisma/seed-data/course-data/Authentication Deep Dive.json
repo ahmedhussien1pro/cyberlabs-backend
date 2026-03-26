@@ -1,0 +1,1864 @@
+{
+  "landingData": {
+    "title": {
+      "en": "Authentication Deep Dive",
+      "ar": "الغوص العميق في المصادقة"
+    },
+    "description": {
+      "en": "Master authentication and authorization mechanisms from the ground up. Learn session management, cookies, JWT tokens, and OAuth 2.0 with practical security insights for modern web applications.",
+      "ar": "أتقن آليات المصادقة والتفويض من الأساس. تعلم إدارة الجلسات وملفات تعريف الارتباط ورموز JWT وبروتوكول OAuth 2.0 مع رؤى أمنية عملية للتطبيقات الحديثة."
+    },
+    "difficulty": {
+      "en": "Beginner to Intermediate",
+      "ar": "من المبتدئ إلى المتوسط"
+    },
+    "duration": {
+      "en": "90 Minutes",
+      "ar": "90 دقيقة"
+    },
+    "instructor": "CyberLab",
+    "rating": 4.9,
+    "students": 250
+  },
+  "topics": [
+    {
+      "id": "topic-1",
+      "title": {
+        "en": "Authentication vs Authorization: Understanding the Core Difference",
+        "ar": "المصادقة مقابل التفويض: فهم الفرق الأساسي"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "What Is Authentication?",
+            "ar": "ما هي المصادقة؟"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "Authentication is the process of verifying who you are. When you enter your username and password on a website, the system checks if these credentials match what it has stored. If they match, the system confirms your identity. Authentication answers the question: Are you really who you claim to be? This is like showing your ID card at an airport security checkpoint. The officer checks if the photo and name on the card match you as a person.",
+            "ar": "المصادقة هي عملية التحقق من هويتك. عندما تدخل اسم المستخدم وكلمة المرور على موقع ويب، يتحقق النظام مما إذا كانت هذه البيانات تطابق ما تم تخزينه. إذا تطابقت، يؤكد النظام هويتك. المصادقة تجيب على السؤال: هل أنت حقاً من تدعي أنك؟ هذا مثل إظهار بطاقة الهوية عند نقطة التفتيش الأمني في المطار. يتحقق الموظف مما إذا كانت الصورة والاسم على البطاقة يطابقانك كشخص."
+          }
+        },
+        {
+          "id": 1772840174954.794,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Authentication%20Deep%20Dive/1-1-authentication%20concept..webp"
+        },
+        {
+          "id": 4,
+          "type": "title",
+          "value": {
+            "en": "What Is Authorization?",
+            "ar": "ما هو التفويض؟"
+          }
+        },
+        {
+          "id": 5,
+          "type": "text",
+          "value": {
+            "en": "Authorization is the process of determining what you are allowed to do after your identity is confirmed. Once the system knows who you are through authentication, it then checks what permissions you have. Can you read certain files? Can you delete data? Can you access admin features? Authorization answers the question: What are you permitted to access or modify? Going back to the airport analogy, after the security officer confirms your identity with your ID card, authorization is like checking your boarding pass to see which gate you can enter and which class seat you have.",
+            "ar": "التفويض هو عملية تحديد ما يُسمح لك بفعله بعد تأكيد هويتك. بمجرد أن يعرف النظام من أنت من خلال المصادقة، يتحقق بعد ذلك من الأذونات التي تملكها. هل يمكنك قراءة ملفات معينة؟ هل يمكنك حذف البيانات؟ هل يمكنك الوصول إلى ميزات المسؤول؟ التفويض يجيب على السؤال: ما الذي يُسمح لك بالوصول إليه أو تعديله؟ بالعودة إلى مثال المطار، بعد أن يؤكد موظف الأمن هويتك ببطاقة الهوية، التفويض يشبه فحص بطاقة الصعود لمعرفة أي بوابة يمكنك دخولها وأي فئة مقعد تملك."
+          }
+        },
+        {
+          "id": 6,
+          "type": "text",
+          "value": {
+            "en": "The key insight is that authentication always comes first. You cannot have authorization without authentication. The system must know your identity before it can decide what permissions to give you. However, having authentication does not automatically give you authorization to do everything. These are two separate but connected steps in security.",
+            "ar": "الفكرة الأساسية هي أن المصادقة تأتي دائماً أولاً. لا يمكن أن يكون لديك تفويض بدون مصادقة. يجب أن يعرف النظام هويتك قبل أن يتمكن من تحديد الأذونات التي يمنحك إياها. ومع ذلك، وجود المصادقة لا يمنحك تلقائياً تفويضاً لفعل كل شيء. هذه خطوتان منفصلتان لكن مترابطتان في الأمن."
+          }
+        },
+        {
+          "id": 7,
+          "type": "table",
+          "title": {
+            "en": "Authentication vs Authorization: Key Differences",
+            "ar": "المصادقة مقابل التفويض: الفروقات الأساسية"
+          },
+          "headers": {
+            "en": [
+              "Aspect",
+              "Authentication",
+              "Authorization"
+            ],
+            "ar": [
+              "الجانب",
+              "المصادقة",
+              "التفويض"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "Purpose",
+                "Verifies who you are",
+                "Determines what you can do"
+              ],
+              "ar": [
+                "الهدف",
+                "يتحقق من هويتك",
+                "يحدد ما يمكنك فعله"
+              ]
+            },
+            {
+              "en": [
+                "Question Answered",
+                "Are you who you claim?",
+                "What are you allowed to access?"
+              ],
+              "ar": [
+                "السؤال المجاب",
+                "هل أنت من تدعي؟",
+                "ما المسموح لك بالوصول إليه؟"
+              ]
+            },
+            {
+              "en": [
+                "Happens When",
+                "Before you enter the system",
+                "After identity is confirmed"
+              ],
+              "ar": [
+                "يحدث متى",
+                "قبل دخولك إلى النظام",
+                "بعد تأكيد الهوية"
+              ]
+            },
+            {
+              "en": [
+                "Example Method",
+                "Password, fingerprint, face ID",
+                "User roles, access control lists"
+              ],
+              "ar": [
+                "مثال على الطريقة",
+                "كلمة مرور، بصمة، التعرف على الوجه",
+                "أدوار المستخدم، قوائم التحكم بالوصول"
+              ]
+            },
+            {
+              "en": [
+                "Can Happen Without the Other",
+                "No - needs authorization after",
+                "No - needs authentication first"
+              ],
+              "ar": [
+                "يمكن أن يحدث بدون الآخر",
+                "لا - يحتاج التفويض بعده",
+                "لا - يحتاج المصادقة أولاً"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 1772840191860.3198,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Authentication%20Deep%20Dive/1-2-authentication-authorization%20flow.webp"
+        },
+        {
+          "id": 9,
+          "type": "title",
+          "value": {
+            "en": "Real-World Examples to Understand the Difference",
+            "ar": "أمثلة واقعية لفهم الفرق"
+          }
+        },
+        {
+          "id": 10,
+          "type": "text",
+          "value": {
+            "en": "Let us look at a bank scenario. When you visit your bank's website, you first log in with your account number and password. This is authentication - the bank verifies you are the account holder. After you log in successfully, you see your account balance and can transfer money. But you cannot see other customers' accounts or change the bank's interest rates. This is authorization - the bank system grants you permission only to your own data and specific actions. Even though the bank confirmed your identity, you do not have permission to access everything in the bank's system.",
+            "ar": "لننظر إلى سيناريو البنك. عندما تزور موقع البنك الإلكتروني، تسجل الدخول أولاً برقم حسابك وكلمة المرور. هذه هي المصادقة - البنك يتحقق من أنك صاحب الحساب. بعد تسجيل الدخول بنجاح، ترى رصيد حسابك ويمكنك تحويل الأموال. لكن لا يمكنك رؤية حسابات العملاء الآخرين أو تغيير معدلات الفائدة في البنك. هذا هو التفويض - نظام البنك يمنحك الإذن فقط لبياناتك الخاصة وإجراءات محددة. على الرغم من أن البنك أكد هويتك، ليس لديك إذن للوصول إلى كل شيء في نظام البنك."
+          }
+        },
+        {
+          "id": 11,
+          "type": "text",
+          "value": {
+            "en": "Another example is a library system. When you show your library card at the entrance, the librarian scans it to confirm you are a registered member. This is authentication. Once inside, you can borrow books based on your membership level. If you are a student member, you might be allowed to borrow 5 books for 2 weeks. If you are a faculty member, you might borrow 20 books for a full semester. Both types of members were authenticated the same way, but they receive different authorization levels. The system recognizes who you are first, then applies rules about what you can do.",
+            "ar": "مثال آخر هو نظام المكتبة. عندما تُظهر بطاقة المكتبة عند المدخل، يمسحها أمين المكتبة لتأكيد أنك عضو مسجل. هذه هي المصادقة. بمجرد الدخول، يمكنك استعارة الكتب بناءً على مستوى عضويتك. إذا كنت عضواً طالباً، قد يُسمح لك باستعارة 5 كتب لمدة أسبوعين. إذا كنت عضواً من أعضاء هيئة التدريس، قد تستعير 20 كتاباً لفصل دراسي كامل. تمت مصادقة كلا النوعين من الأعضاء بنفس الطريقة، لكنهم يتلقون مستويات تفويض مختلفة. النظام يتعرف على هويتك أولاً، ثم يطبق قواعد حول ما يمكنك فعله."
+          }
+        },
+        {
+          "id": 12,
+          "type": "hr"
+        },
+        {
+          "id": 13,
+          "type": "title",
+          "value": {
+            "en": "Why This Distinction Matters for Security",
+            "ar": "لماذا هذا التمييز مهم للأمن"
+          }
+        },
+        {
+          "id": 14,
+          "type": "text",
+          "value": {
+            "en": "Understanding the difference between authentication and authorization is critical for security. If a system only focuses on authentication but ignores authorization, a verified user might access sensitive data they should not see. For example, imagine a hospital system that authenticates doctors correctly but does not check authorization. A doctor from the cardiology department might accidentally access psychiatric patient records, violating privacy rules. Strong authentication confirms identity, but strong authorization ensures each person only accesses what they need for their job.",
+            "ar": "فهم الفرق بين المصادقة والتفويض أمر بالغ الأهمية للأمن. إذا كان النظام يركز فقط على المصادقة لكنه يتجاهل التفويض، فقد يصل مستخدم تم التحقق منه إلى بيانات حساسة لا ينبغي أن يراها. على سبيل المثال، تخيل نظام مستشفى يصادق على الأطباء بشكل صحيح لكنه لا يتحقق من التفويض. قد يصل طبيب من قسم أمراض القلب عن طريق الخطأ إلى سجلات مرضى الطب النفسي، منتهكاً قواعد الخصوصية. المصادقة القوية تؤكد الهوية، لكن التفويض القوي يضمن أن كل شخص يصل فقط إلى ما يحتاجه لوظيفته."
+          }
+        },
+        {
+          "id": 15,
+          "type": "text",
+          "value": {
+            "en": "Many security breaches happen because authorization is weak even when authentication is strong. An attacker who gains access to a low-level user account should not be able to access admin functions. This is called privilege escalation. Proper authorization prevents this by strictly controlling what each authenticated user can do. Every action in the system should check two things: Is this user authenticated (who are they)? Is this user authorized (are they allowed to do this specific action)?",
+            "ar": "تحدث العديد من الانتهاكات الأمنية لأن التفويض ضعيف حتى عندما تكون المصادقة قوية. المهاجم الذي يحصل على وصول إلى حساب مستخدم منخفض المستوى لا ينبغي أن يتمكن من الوصول إلى وظائف المسؤول. يُسمى هذا تصعيد الامتيازات. التفويض الصحيح يمنع هذا من خلال التحكم الصارم فيما يمكن لكل مستخدم تم التحقق منه فعله. كل إجراء في النظام يجب أن يتحقق من شيئين: هل تمت مصادقة هذا المستخدم (من هو)؟ هل هذا المستخدم مفوَّض (هل يُسمح له بفعل هذا الإجراء المحدد)؟"
+          }
+        },
+        {
+          "id": 16,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "Warning: Never assume that authentication alone is enough. Always implement proper authorization checks for every sensitive action. Even if a user successfully logs in, verify they have permission before allowing them to view, edit, or delete data.",
+            "ar": "تحذير: لا تفترض أبداً أن المصادقة وحدها كافية. نفذ دائماً فحوصات التفويض الصحيحة لكل إجراء حساس. حتى لو سجل المستخدم الدخول بنجاح، تحقق من أن لديه الإذن قبل السماح له بعرض البيانات أو تحريرها أو حذفها."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 17,
+          "type": "title",
+          "value": {
+            "en": "Common Mistakes When Confusing Authentication and Authorization",
+            "ar": "الأخطاء الشائعة عند الخلط بين المصادقة والتفويض"
+          }
+        },
+        {
+          "id": 18,
+          "type": "orderedList",
+          "title": {
+            "en": "Typical Errors in Systems",
+            "ar": "الأخطاء النموذجية في الأنظمة"
+          },
+          "items": [
+            {
+              "subtitle": {
+                "en": "Treating Login as Full Permission",
+                "ar": "معاملة تسجيل الدخول كإذن كامل"
+              },
+              "text": {
+                "en": "Some systems assume that if a user logs in successfully, they can access everything. This is wrong. Authentication confirms identity, but authorization must control access to specific resources.",
+                "ar": "بعض الأنظمة تفترض أنه إذا سجل المستخدم الدخول بنجاح، فيمكنه الوصول إلى كل شيء. هذا خطأ. المصادقة تؤكد الهوية، لكن التفويض يجب أن يتحكم في الوصول إلى موارد محددة."
+              },
+              "example": {
+                "en": "Example: A customer logs into an online store and can suddenly access admin product editing features.",
+                "ar": "مثال: يسجل العميل الدخول إلى متجر إلكتروني ويمكنه فجأة الوصول إلى ميزات تحرير المنتجات الخاصة بالمسؤول."
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Skipping Authorization Checks",
+                "ar": "تخطي فحوصات التفويض"
+              },
+              "text": {
+                "en": "Developers sometimes check authentication at login but forget to verify authorization for each action inside the application. Every request to read or modify data should include an authorization check.",
+                "ar": "المطورون أحياناً يتحققون من المصادقة عند تسجيل الدخول لكنهم ينسون التحقق من التفويض لكل إجراء داخل التطبيق. يجب أن يتضمن كل طلب لقراءة البيانات أو تعديلها فحص تفويض."
+              },
+              "example": {
+                "en": "Example: A user changes a URL parameter to view another user's private messages without any permission check.",
+                "ar": "مثال: يغير المستخدم معامل URL لعرض الرسائل الخاصة لمستخدم آخر دون أي فحص للإذن."
+              }
+            },
+            {
+              "id": 19,
+              "subtitle": {
+                "en": "Using Only Client-Side Authorization",
+                "ar": "استخدام التفويض من جانب العميل فقط"
+              },
+              "text": {
+                "en": "Hiding buttons or menu items on the user interface is not real authorization. An attacker can bypass the interface and send requests directly to the server. Authorization must always be enforced on the server side.",
+                "ar": "إخفاء الأزرار أو عناصر القائمة على واجهة المستخدم ليس تفويضاً حقيقياً. يمكن للمهاجم تجاوز الواجهة وإرسال الطلبات مباشرة إلى الخادم. يجب دائماً تطبيق التفويض على جانب الخادم."
+              },
+              "example": {
+                "en": "Example: Admin features are hidden in the UI, but the server API still processes admin commands from any authenticated user.",
+                "ar": "مثال: ميزات المسؤول مخفية في واجهة المستخدم، لكن واجهة برمجة التطبيقات الخاصة بالخادم لا تزال تعالج أوامر المسؤول من أي مستخدم تم التحقق منه."
+              }
+            }
+          ]
+        },
+        {
+          "id": 1772840185293.6094,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Authentication%20Deep%20Dive/1-3-contrasting%20correct%20vs%20incorrect%20implementation..webp"
+        },
+        {
+          "id": 21,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Professional Tip: Always design your system with the principle of least privilege. This means each user or component should have only the minimum level of access needed to perform their tasks. Start with no permissions and add only what is necessary.",
+            "ar": "نصيحة مهنية: صمم دائماً نظامك بمبدأ الامتياز الأدنى. هذا يعني أن كل مستخدم أو مكون يجب أن يكون لديه فقط الحد الأدنى من مستوى الوصول اللازم لأداء مهامه. ابدأ بدون أذونات وأضف فقط ما هو ضروري."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 22,
+          "type": "title",
+          "value": {
+            "en": "How Systems Implement Both Mechanisms",
+            "ar": "كيف تنفذ الأنظمة كلا الآليتين"
+          }
+        },
+        {
+          "id": 23,
+          "type": "text",
+          "value": {
+            "en": "Modern web applications implement authentication and authorization together in a coordinated flow. When you log in, the system first authenticates you by checking your credentials against a database. If correct, the system creates a session or token that remembers your identity. This session data often includes information about your role or permissions. Then, for every action you try to perform, the system checks the session to confirm who you are (authentication state) and checks your role or permissions to decide if you are allowed to do that action (authorization check). Both steps work together but serve different purposes.",
+            "ar": "تطبيقات الويب الحديثة تنفذ المصادقة والتفويض معاً في تدفق منسق. عندما تسجل الدخول، يصادق عليك النظام أولاً من خلال التحقق من بيانات الاعتماد الخاصة بك مقابل قاعدة بيانات. إذا كانت صحيحة، ينشئ النظام جلسة أو رمزاً يتذكر هويتك. غالباً ما تتضمن بيانات الجلسة هذه معلومات حول دورك أو أذوناتك. ثم، لكل إجراء تحاول تنفيذه، يتحقق النظام من الجلسة لتأكيد من أنت (حالة المصادقة) ويتحقق من دورك أو أذوناتك لتحديد ما إذا كان مسموحاً لك بفعل ذلك الإجراء (فحص التفويض). كلا الخطوتين تعملان معاً لكن تخدمان أغراضاً مختلفة."
+          }
+        },
+        {
+          "id": 24,
+          "type": "text",
+          "value": {
+            "en": "Some systems use role-based access control, or RBAC. In RBAC, each user is assigned a role like admin, editor, or viewer. Each role has a predefined set of permissions. When the system authorizes an action, it checks the user's role. Other systems use attribute-based access control, or ABAC, which looks at multiple attributes like user department, time of day, or data sensitivity before granting access. Regardless of the method, the pattern is the same: authenticate to know who, then authorize to control what.",
+            "ar": "بعض الأنظمة تستخدم التحكم في الوصول المستند إلى الدور، أو RBAC. في RBAC، يتم تعيين كل مستخدم إلى دور مثل مسؤول أو محرر أو مشاهد. كل دور لديه مجموعة محددة مسبقاً من الأذونات. عندما يفوض النظام إجراءً، يتحقق من دور المستخدم. الأنظمة الأخرى تستخدم التحكم في الوصول المستند إلى السمات، أو ABAC، والذي ينظر إلى سمات متعددة مثل قسم المستخدم أو وقت اليوم أو حساسية البيانات قبل منح الوصول. بغض النظر عن الطريقة، النمط هو نفسه: صادق لتعرف من، ثم فوّض للتحكم في ماذا."
+          }
+        },
+        {
+          "id": 25,
+          "type": "code",
+          "language": "python",
+          "value": "# Simple example showing authentication and authorization checks\n\ndef login(username, password):\n    # Authentication: verify credentials\n    user = database.find_user(username)\n    if user and user.password == hash(password):\n        session.user_id = user.id\n        session.role = user.role  # Store role for authorization\n        return True\n    return False\n\ndef delete_user(target_user_id):\n    # First check: Is user authenticated?\n    if not session.user_id:\n        return \"Error: Not logged in\"\n    \n    # Second check: Is user authorized?\n    if session.role != \"admin\":\n        return \"Error: Insufficient permissions\"\n    \n    # Both checks passed, perform action\n    database.delete_user(target_user_id)\n    return \"User deleted successfully\""
+        },
+        {
+          "id": 26,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Key Insight: Authentication and authorization are like two locks on a secure door. The first lock confirms you have the right key (identity). The second lock confirms you have permission to enter this specific room (access level). Both must work correctly for security.",
+            "ar": "فكرة رئيسية: المصادقة والتفويض مثل قفلين على باب آمن. القفل الأول يؤكد أن لديك المفتاح الصحيح (الهوية). القفل الثاني يؤكد أن لديك الإذن بدخول هذه الغرفة المحددة (مستوى الوصول). يجب أن يعمل كلاهما بشكل صحيح للأمن."
+          },
+          "link": "",
+          "isLab": false
+        }
+      ]
+    },
+    {
+      "id": "topic-2",
+      "title": {
+        "en": "Session Management Security: Protecting User Sessions",
+        "ar": "أمن إدارة الجلسات: حماية جلسات المستخدم"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "What Are Sessions and Why Do We Need Them?",
+            "ar": "ما هي الجلسات ولماذا نحتاجها؟"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "When you log into a website, the server needs to remember who you are as you navigate from page to page. HTTP, the protocol used for web communication, is stateless by design. This means each request you make is independent and the server does not automatically remember previous requests. Without sessions, you would need to log in again every time you click a link or load a new page. Sessions solve this problem by creating a temporary memory of your authenticated state. After you log in successfully, the server creates a session and gives you a session identifier, usually stored in a cookie. Your browser sends this identifier with every subsequent request so the server knows it is still you.",
+            "ar": "عندما تسجل الدخول إلى موقع ويب، يحتاج الخادم إلى تذكر من أنت أثناء تنقلك من صفحة إلى صفحة. بروتوكول HTTP، المستخدم للاتصال عبر الويب، عديم الحالة بالتصميم. هذا يعني أن كل طلب تقوم به مستقل والخادم لا يتذكر تلقائياً الطلبات السابقة. بدون الجلسات، ستحتاج إلى تسجيل الدخول مرة أخرى في كل مرة تنقر على رابط أو تحمل صفحة جديدة. الجلسات تحل هذه المشكلة من خلال إنشاء ذاكرة مؤقتة لحالة المصادقة الخاصة بك. بعد تسجيل الدخول بنجاح، ينشئ الخادم جلسة ويعطيك معرف جلسة، عادة ما يتم تخزينه في ملف تعريف ارتباط. متصفحك يرسل هذا المعرف مع كل طلب لاحق حتى يعرف الخادم أنك لا تزال أنت."
+          }
+        },
+        {
+          "id": 1772840243930.0344,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Authentication%20Deep%20Dive/2-1-Sessions%20and%20Why%20Do%20We%20Need%20Them.webp"
+        },
+        {
+          "id": 4,
+          "type": "text",
+          "value": {
+            "en": "Think of a session like a visitor badge at an office building. When you arrive, the security desk checks your identity and gives you a badge with a number. As you move around the building, you show your badge at different doors. The badge proves you were checked in and are allowed to be there. When you leave, you return the badge and your visit session ends. Web sessions work the same way - the session ID is your digital visitor badge proving you logged in and should have access during your visit.",
+            "ar": "فكر في الجلسة مثل شارة زائر في مبنى مكتب. عندما تصل، يتحقق مكتب الأمن من هويتك ويعطيك شارة برقم. أثناء تنقلك في المبنى، تُظهر شارتك عند الأبواب المختلفة. الشارة تثبت أنك تم تسجيل دخولك ومسموح لك بالتواجد هناك. عندما تغادر، تعيد الشارة وتنتهي جلسة زيارتك. الجلسات على الويب تعمل بنفس الطريقة - معرف الجلسة هو شارة الزائر الرقمية الخاصة بك تثبت أنك سجلت الدخول ويجب أن يكون لديك وصول أثناء زيارتك."
+          }
+        },
+        {
+          "id": 5,
+          "type": "hr"
+        },
+        {
+          "id": 6,
+          "type": "title",
+          "value": {
+            "en": "Session Fixation Attack: How It Works",
+            "ar": "هجوم تثبيت الجلسة: كيف يعمل"
+          }
+        },
+        {
+          "id": 7,
+          "type": "text",
+          "value": {
+            "en": "Session fixation is an attack where the attacker tricks you into using a session ID that they already know. Here is how it works: The attacker gets a valid session ID from the website before you log in. They might do this by visiting the site themselves or by exploiting how the site generates IDs. Then they trick you into using that specific session ID. They might send you a link with the session ID embedded in the URL, or they might use other techniques to set the session ID in your browser. When you log in using that fixed session ID, the server associates your authenticated user account with that session. Since the attacker knows the session ID, they can now use it to access your account. The server thinks the attacker's requests are coming from you because they are using your authenticated session ID.",
+            "ar": "تثبيت الجلسة هو هجوم حيث يخدعك المهاجم لاستخدام معرف جلسة يعرفه بالفعل. إليك كيف يعمل: يحصل المهاجم على معرف جلسة صالح من الموقع قبل تسجيل دخولك. قد يفعلون هذا من خلال زيارة الموقع بأنفسهم أو باستغلال كيفية إنشاء الموقع للمعرفات. ثم يخدعونك لاستخدام معرف الجلسة المحدد ذلك. قد يرسلون لك رابطاً مع معرف الجلسة مضمناً في URL، أو قد يستخدمون تقنيات أخرى لتعيين معرف الجلسة في متصفحك. عندما تسجل الدخول باستخدام معرف الجلسة الثابت ذلك، يربط الخادم حساب المستخدم المصادق عليه بتلك الجلسة. بما أن المهاجم يعرف معرف الجلسة، يمكنه الآن استخدامه للوصول إلى حسابك. يعتقد الخادم أن طلبات المهاجم قادمة منك لأنهم يستخدمون معرف الجلسة المصادق عليه الخاص بك."
+          }
+        },
+        {
+          "id": 8,
+          "type": "text",
+          "value": {
+            "en": "The danger of session fixation is that the victim does everything correctly. You use the right password. You do not fall for a phishing email. You log in through the legitimate website. But because the attacker controlled which session ID you used before you logged in, they can hijack your authenticated session afterward. The vulnerability is in how the web application handles session IDs, not in the user's behavior. A secure application must generate a new, unpredictable session ID after successful login and invalidate any session ID that existed before authentication.",
+            "ar": "خطر تثبيت الجلسة هو أن الضحية يفعل كل شيء بشكل صحيح. تستخدم كلمة المرور الصحيحة. لا تقع في فخ بريد إلكتروني احتيالي. تسجل الدخول من خلال الموقع الشرعي. لكن لأن المهاجم تحكم في معرف الجلسة الذي استخدمته قبل تسجيل الدخول، يمكنه اختطاف جلستك المصادق عليها بعد ذلك. نقطة الضعف تكمن في كيفية تعامل تطبيق الويب مع معرفات الجلسة، وليس في سلوك المستخدم. يجب على التطبيق الآمن إنشاء معرف جلسة جديد لا يمكن التنبؤ به بعد تسجيل الدخول الناجح وإبطال أي معرف جلسة كان موجوداً قبل المصادقة."
+          }
+        },
+        {
+          "id": 1772840291388.2131,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Authentication%20Deep%20Dive/2-2-Session%20Fixation%20Attack.webp"
+        },
+        {
+          "id": 10,
+          "type": "orderedList",
+          "title": {
+            "en": "How to Prevent Session Fixation",
+            "ar": "كيفية منع تثبيت الجلسة"
+          },
+          "items": [
+            {
+              "subtitle": {
+                "en": "Regenerate Session ID After Login",
+                "ar": "إعادة توليد معرف الجلسة بعد تسجيل الدخول"
+              },
+              "text": {
+                "en": "The most important defense is to create a completely new session ID immediately after successful authentication. Discard the old session ID and issue a fresh one. This ensures that even if an attacker fixed the session ID before login, it becomes useless after the user authenticates.",
+                "ar": "الدفاع الأهم هو إنشاء معرف جلسة جديد تماماً فوراً بعد المصادقة الناجحة. تخلص من معرف الجلسة القديم وأصدر واحداً جديداً. هذا يضمن أنه حتى لو ثبت المهاجم معرف الجلسة قبل تسجيل الدخول، يصبح عديم الفائدة بعد مصادقة المستخدم."
+              },
+              "example": {
+                "en": "Example: After verifying username and password, the server calls session_regenerate_id() before setting user data in the session.",
+                "ar": "مثال: بعد التحقق من اسم المستخدم وكلمة المرور، يستدعي الخادم session_regenerate_id() قبل تعيين بيانات المستخدم في الجلسة."
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Do Not Accept Session IDs from URL",
+                "ar": "لا تقبل معرفات الجلسة من URL"
+              },
+              "text": {
+                "en": "Configure your web framework to only accept session IDs from cookies, not from URL parameters. URL-based session IDs make it easier for attackers to send malicious links containing fixed session IDs.",
+                "ar": "قم بتكوين إطار عمل الويب الخاص بك لقبول معرفات الجلسة فقط من ملفات تعريف الارتباط، وليس من معاملات URL. معرفات الجلسة المستندة إلى URL تسهل على المهاجمين إرسال روابط ضارة تحتوي على معرفات جلسة ثابتة."
+              },
+              "example": {
+                "en": "Example: Reject requests like website.com/page?sessionid=12345 and only use session cookies.",
+                "ar": "مثال: ارفض الطلبات مثل website.com/page?sessionid=12345 واستخدم فقط ملفات تعريف ارتباط الجلسة."
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Set Short Session Timeouts",
+                "ar": "حدد مهلات جلسة قصيرة"
+              },
+              "text": {
+                "en": "Limit how long a session remains valid. After a period of inactivity or a maximum session duration, force the user to log in again. This reduces the window of time an attacker has to exploit a compromised session.",
+                "ar": "حدد المدة التي تظل فيها الجلسة صالحة. بعد فترة من عدم النشاط أو مدة جلسة قصوى، أجبر المستخدم على تسجيل الدخول مرة أخرى. هذا يقلل من نافذة الوقت التي يمتلكها المهاجم لاستغلال جلسة معرضة للخطر."
+              },
+              "example": {
+                "en": "Example: Expire the session after 30 minutes of inactivity or 8 hours maximum, whichever comes first.",
+                "ar": "مثال: انتهي صلاحية الجلسة بعد 30 دقيقة من عدم النشاط أو 8 ساعات كحد أقصى، أيهما يأتي أولاً."
+              }
+            }
+          ]
+        },
+        {
+          "id": 11,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "Warning: Never trust session IDs that come from user input or URLs. Always generate session IDs on the server using cryptographically secure random functions, and regenerate them after any privilege level change, especially login.",
+            "ar": "تحذير: لا تثق أبداً في معرفات الجلسة القادمة من إدخال المستخدم أو URLs. أنشئ دائماً معرفات الجلسة على الخادم باستخدام وظائف عشوائية آمنة تشفيرياً، وأعد توليدها بعد أي تغيير في مستوى الامتياز، خاصة تسجيل الدخول."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 12,
+          "type": "hr"
+        },
+        {
+          "id": 13,
+          "type": "title",
+          "value": {
+            "en": "Session Hijacking Attack: Stealing Active Sessions",
+            "ar": "هجوم اختطاف الجلسة: سرقة الجلسات النشطة"
+          }
+        },
+        {
+          "id": 14,
+          "type": "text",
+          "value": {
+            "en": "Session hijacking is when an attacker steals your active session ID and uses it to impersonate you. Unlike session fixation where the attacker sets the session ID before you log in, hijacking involves stealing a valid session ID after you have already authenticated. If the attacker obtains your session ID, they can send requests to the server pretending to be you. The server cannot tell the difference because it only sees the valid session ID. The attacker does not need your username or password - just your session ID is enough to take over your account for as long as that session remains valid.",
+            "ar": "اختطاف الجلسة هو عندما يسرق المهاجم معرف الجلسة النشط الخاص بك ويستخدمه لانتحال شخصيتك. على عكس تثبيت الجلسة حيث يحدد المهاجم معرف الجلسة قبل تسجيل دخولك، الاختطاف يتضمن سرقة معرف جلسة صالح بعد أن تكون قد صادقت بالفعل. إذا حصل المهاجم على معرف الجلسة الخاص بك، يمكنه إرسال طلبات إلى الخادم يتظاهر بأنه أنت. لا يمكن للخادم معرفة الفرق لأنه يرى فقط معرف الجلسة الصالح. لا يحتاج المهاجم إلى اسم المستخدم أو كلمة المرور الخاصة بك - معرف الجلسة الخاص بك وحده كافٍ للسيطرة على حسابك طالما ظلت تلك الجلسة صالحة."
+          }
+        },
+        {
+          "id": 15,
+          "type": "text",
+          "value": {
+            "en": "There are several ways attackers steal session IDs. One common method is through network sniffing. If you connect to a website using regular HTTP without encryption, your session ID travels across the network in plain text. Anyone monitoring the network traffic can capture it. This is especially dangerous on public WiFi networks where many people share the same network. Another method is cross-site scripting, or XSS, where an attacker injects malicious JavaScript code into a vulnerable website. This code can read the session cookie and send it to the attacker's server. Malware on your device can also steal session cookies stored in your browser. Some attackers use physical access, reading session IDs from unlocked computers or from browser memory.",
+            "ar": "هناك عدة طرق يسرق بها المهاجمون معرفات الجلسة. إحدى الطرق الشائعة هي من خلال استنشاق الشبكة. إذا اتصلت بموقع ويب باستخدام HTTP عادي بدون تشفير، يسافر معرف الجلسة الخاص بك عبر الشبكة بنص عادي. يمكن لأي شخص يراقب حركة مرور الشبكة التقاطه. هذا خطير بشكل خاص على شبكات WiFi العامة حيث يشارك العديد من الأشخاص نفس الشبكة. طريقة أخرى هي البرمجة النصية عبر المواقع، أو XSS، حيث يحقن المهاجم كود JavaScript ضار في موقع ويب ضعيف. يمكن لهذا الكود قراءة ملف تعريف ارتباط الجلسة وإرساله إلى خادم المهاجم. البرامج الضارة على جهازك يمكنها أيضاً سرقة ملفات تعريف ارتباط الجلسة المخزنة في متصفحك. بعض المهاجمين يستخدمون الوصول الفعلي، قراءة معرفات الجلسة من أجهزة الكمبيوتر غير المقفلة أو من ذاكرة المتصفح."
+          }
+        },
+        {
+          "id": 16,
+          "type": "table",
+          "title": {
+            "en": "Common Session Hijacking Methods",
+            "ar": "طرق اختطاف الجلسة الشائعة"
+          },
+          "headers": {
+            "en": [
+              "Method",
+              "How It Works",
+              "Where It Happens"
+            ],
+            "ar": [
+              "الطريقة",
+              "كيف تعمل",
+              "أين تحدث"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "Network Sniffing",
+                "Captures unencrypted traffic",
+                "Public WiFi, shared networks"
+              ],
+              "ar": [
+                "استنشاق الشبكة",
+                "يلتقط حركة المرور غير المشفرة",
+                "WiFi عام، شبكات مشتركة"
+              ]
+            },
+            {
+              "en": [
+                "Cross-Site Scripting (XSS)",
+                "Injects code to steal cookies",
+                "Vulnerable websites with user input"
+              ],
+              "ar": [
+                "البرمجة النصية عبر المواقع (XSS)",
+                "يحقن كوداً لسرقة ملفات تعريف الارتباط",
+                "مواقع ويب ضعيفة مع إدخال المستخدم"
+              ]
+            },
+            {
+              "en": [
+                "Malware",
+                "Reads cookies from browser storage",
+                "Infected computers and devices"
+              ],
+              "ar": [
+                "البرامج الضارة",
+                "يقرأ ملفات تعريف الارتباط من تخزين المتصفح",
+                "أجهزة كمبيوتر وأجهزة مصابة"
+              ]
+            },
+            {
+              "en": [
+                "Physical Access",
+                "Directly accesses unlocked device",
+                "Unattended workstations, stolen devices"
+              ],
+              "ar": [
+                "الوصول الفعلي",
+                "يصل مباشرة إلى جهاز غير مقفل",
+                "محطات عمل غير مراقبة، أجهزة مسروقة"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 1772840286865.2424,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Authentication%20Deep%20Dive/2-3-multiple%20session%20hijacking%20vectors.webp"
+        },
+        {
+          "id": 18,
+          "type": "title",
+          "value": {
+            "en": "Defending Against Session Hijacking",
+            "ar": "الدفاع ضد اختطاف الجلسة"
+          }
+        },
+        {
+          "id": 19,
+          "type": "text",
+          "value": {
+            "en": "The primary defense against session hijacking is to use HTTPS for all communication. HTTPS encrypts the data traveling between your browser and the server, including session IDs. Even if an attacker is monitoring the network, they cannot read the encrypted session ID. Modern browsers show a padlock icon in the address bar when HTTPS is active. Always check for this before entering sensitive information or logging in. Websites should enforce HTTPS and redirect all HTTP requests to HTTPS automatically.",
+            "ar": "الدفاع الأساسي ضد اختطاف الجلسة هو استخدام HTTPS لجميع الاتصالات. HTTPS يشفر البيانات المسافرة بين متصفحك والخادم، بما في ذلك معرفات الجلسة. حتى لو كان المهاجم يراقب الشبكة، لا يمكنه قراءة معرف الجلسة المشفر. المتصفحات الحديثة تظهر رمز قفل في شريط العنوان عندما يكون HTTPS نشطاً. تحقق دائماً من هذا قبل إدخال معلومات حساسة أو تسجيل الدخول. يجب على مواقع الويب فرض HTTPS وإعادة توجيه جميع طلبات HTTP إلى HTTPS تلقائياً."
+          }
+        },
+        {
+          "id": 20,
+          "type": "list",
+          "title": {
+            "en": "Key Session Hijacking Defenses",
+            "ar": "دفاعات اختطاف الجلسة الرئيسية"
+          },
+          "items": {
+            "en": [
+              "Use HTTPS everywhere to encrypt session IDs in transit",
+              "Set HttpOnly flag on session cookies to prevent JavaScript access",
+              "Set Secure flag to ensure cookies only sent over HTTPS",
+              "Implement session binding to IP address or user-agent (with caution)",
+              "Regenerate session ID periodically and after privilege changes",
+              "Use short session timeouts for automatic expiration",
+              "Implement logout functionality that destroys the session completely",
+              "Monitor for suspicious session activity like multiple locations"
+            ],
+            "ar": [
+              "استخدم HTTPS في كل مكان لتشفير معرفات الجلسة أثناء النقل",
+              "حدد علامة HttpOnly على ملفات تعريف ارتباط الجلسة لمنع وصول JavaScript",
+              "حدد علامة Secure لضمان إرسال ملفات تعريف الارتباط فقط عبر HTTPS",
+              "نفذ ربط الجلسة بعنوان IP أو وكيل المستخدم (بحذر)",
+              "أعد توليد معرف الجلسة بشكل دوري وبعد تغييرات الامتياز",
+              "استخدم مهلات جلسة قصيرة لانتهاء الصلاحية التلقائي",
+              "نفذ وظيفة تسجيل الخروج التي تدمر الجلسة تماماً",
+              "راقب نشاط الجلسة المشبوه مثل مواقع متعددة"
+            ]
+          }
+        },
+        {
+          "id": 21,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Professional Tip: Session security is a layered defense. No single protection is perfect. Use HTTPS, secure cookie flags, session timeouts, and proper logout together. Also educate users to log out when finished, especially on shared computers, and to avoid public WiFi for sensitive activities.",
+            "ar": "نصيحة مهنية: أمن الجلسة هو دفاع متعدد الطبقات. لا توجد حماية واحدة مثالية. استخدم HTTPS وعلامات ملفات تعريف الارتباط الآمنة ومهلات الجلسة وتسجيل الخروج الصحيح معاً. أيضاً ثقف المستخدمين لتسجيل الخروج عند الانتهاء، خاصة على أجهزة الكمبيوتر المشتركة، ولتجنب WiFi العام للأنشطة الحساسة."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 22,
+          "type": "title",
+          "value": {
+            "en": "Session Storage: Where Sessions Live",
+            "ar": "تخزين الجلسة: أين تعيش الجلسات"
+          }
+        },
+        {
+          "id": 23,
+          "type": "text",
+          "value": {
+            "en": "When the server creates a session, it needs to store the session data somewhere. There are different approaches. The simplest is server-side storage where the server keeps session data in memory, in files, or in a database. The browser only stores the session ID in a cookie, not the actual session data. This is more secure because sensitive information like user roles and permissions stays on the server. The downside is that the server must look up the session data on every request. For high-traffic websites with multiple servers, this can be complex because all servers need access to the same session storage.",
+            "ar": "عندما ينشئ الخادم جلسة، يحتاج إلى تخزين بيانات الجلسة في مكان ما. هناك طرق مختلفة. الأبسط هو التخزين من جانب الخادم حيث يحتفظ الخادم ببيانات الجلسة في الذاكرة، في ملفات، أو في قاعدة بيانات. المتصفح يخزن فقط معرف الجلسة في ملف تعريف ارتباط، وليس بيانات الجلسة الفعلية. هذا أكثر أماناً لأن المعلومات الحساسة مثل أدوار المستخدم والأذونات تبقى على الخادم. الجانب السلبي هو أن الخادم يجب أن يبحث عن بيانات الجلسة في كل طلب. لمواقع الويب ذات حركة المرور العالية مع خوادم متعددة، يمكن أن يكون هذا معقداً لأن جميع الخوادم تحتاج إلى الوصول إلى نفس تخزين الجلسة."
+          }
+        },
+        {
+          "id": 24,
+          "type": "text",
+          "value": {
+            "en": "Another approach is client-side storage using technologies like JWT (which we will cover in detail later). Here, the session data itself is encoded and sent to the browser. The browser sends this data back with each request. The benefit is that the server does not need to store anything, making it easier to scale across multiple servers. However, this requires careful security because now sensitive data travels to and from the client. You must sign or encrypt the data to prevent tampering. Client-side storage also means you cannot easily revoke a session before it expires naturally. Each approach has trade-offs between security, scalability, and complexity.",
+            "ar": "نهج آخر هو التخزين من جانب العميل باستخدام تقنيات مثل JWT (التي سنغطيها بالتفصيل لاحقاً). هنا، يتم ترميز بيانات الجلسة نفسها وإرسالها إلى المتصفح. المتصفح يرسل هذه البيانات مرة أخرى مع كل طلب. الفائدة هي أن الخادم لا يحتاج إلى تخزين أي شيء، مما يسهل التوسع عبر خوادم متعددة. ومع ذلك، يتطلب هذا أماناً دقيقاً لأن البيانات الحساسة الآن تسافر من وإلى العميل. يجب عليك توقيع أو تشفير البيانات لمنع العبث. التخزين من جانب العميل يعني أيضاً أنك لا يمكنك إلغاء جلسة بسهولة قبل أن تنتهي صلاحيتها بشكل طبيعي. كل نهج له مقايضات بين الأمن وقابلية التوسع والتعقيد."
+          }
+        },
+        {
+          "id": 25,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Key Concept: Whether you store sessions on the server or send them to the client, always protect session identifiers and data with encryption, secure flags, and proper validation. Never trust data from the client without verification.",
+            "ar": "مفهوم رئيسي: سواء قمت بتخزين الجلسات على الخادم أو إرسالها إلى العميل، احمِ دائماً معرفات الجلسة والبيانات بالتشفير والعلامات الآمنة والتحقق الصحيح. لا تثق أبداً في البيانات من العميل دون التحقق."
+          },
+          "link": "",
+          "isLab": false
+        }
+      ]
+    },
+    {
+      "id": "topic-3",
+      "title": {
+        "en": "Cookies Deep Dive: Secure, HttpOnly, and SameSite Attributes",
+        "ar": "الغوص العميق في ملفات تعريف الارتباط: سمات Secure وHttpOnly وSameSite"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "What Are Cookies and How Do They Work?",
+            "ar": "ما هي ملفات تعريف الارتباط وكيف تعمل؟"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "Cookies are small pieces of data that a website sends to your browser, and your browser stores them locally. When you visit the website again, your browser automatically sends these cookies back to the server with every request. This allows the website to remember information about you across different pages and visits. Cookies are the most common way to implement sessions. After you log in, the server sends a cookie containing your session ID. Your browser stores this cookie and includes it in every subsequent request to that website, allowing the server to recognize you without asking you to log in again on every page.",
+            "ar": "ملفات تعريف الارتباط هي قطع صغيرة من البيانات يرسلها موقع الويب إلى متصفحك، ويخزنها متصفحك محلياً. عندما تزور الموقع مرة أخرى، يرسل متصفحك تلقائياً ملفات تعريف الارتباط هذه مرة أخرى إلى الخادم مع كل طلب. هذا يسمح للموقع بتذكر معلومات عنك عبر صفحات وزيارات مختلفة. ملفات تعريف الارتباط هي الطريقة الأكثر شيوعاً لتنفيذ الجلسات. بعد تسجيل الدخول، يرسل الخادم ملف تعريف ارتباط يحتوي على معرف الجلسة الخاص بك. يخزن متصفحك ملف تعريف الارتباط هذا ويدرجه في كل طلب لاحق لذلك الموقع، مما يسمح للخادم بالتعرف عليك دون أن يطلب منك تسجيل الدخول مرة أخرى في كل صفحة."
+          }
+        },
+        {
+          "id": 1772840387830.3267,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Authentication%20Deep%20Dive/3-1-cookie%20mechanism.webp"
+        },
+        {
+          "id": 4,
+          "type": "text",
+          "value": {
+            "en": "Think of cookies like a loyalty card at a coffee shop. The first time you visit, the shop gives you a card with a unique number. This card is stored in your wallet (like your browser storage). Every time you return, you show the card, and the shop can look up your purchase history and preferences using that number. You do not need to introduce yourself each time - the card does it for you. Cookies work the same way, allowing websites to recognize returning visitors and maintain context across multiple interactions.",
+            "ar": "فكر في ملفات تعريف الارتباط مثل بطاقة ولاء في مقهى. في المرة الأولى التي تزور فيها، يعطيك المتجر بطاقة برقم فريد. يتم تخزين هذه البطاقة في محفظتك (مثل تخزين المتصفح الخاص بك). في كل مرة تعود، تُظهر البطاقة، ويمكن للمتجر البحث عن سجل مشترياتك وتفضيلاتك باستخدام ذلك الرقم. لا تحتاج إلى تعريف نفسك في كل مرة - البطاقة تفعل ذلك نيابة عنك. ملفات تعريف الارتباط تعمل بنفس الطريقة، مما يسمح لمواقع الويب بالتعرف على الزوار العائدين والحفاظ على السياق عبر تفاعلات متعددة."
+          }
+        },
+        {
+          "id": 5,
+          "type": "text",
+          "value": {
+            "en": "Cookies contain several pieces of information. The most important is the name-value pair, like sessionid=abc123xyz. Cookies also have attributes that control their behavior and security. These attributes determine when the cookie expires, which domains and paths can access it, and whether it should be sent over secure connections only. Understanding these attributes is crucial for security because misconfigured cookies can be vulnerable to theft or misuse.",
+            "ar": "ملفات تعريف الارتباط تحتوي على عدة قطع من المعلومات. الأهم هو زوج الاسم-القيمة، مثل sessionid=abc123xyz. ملفات تعريف الارتباط لديها أيضاً سمات تتحكم في سلوكها وأمانها. تحدد هذه السمات متى تنتهي صلاحية ملف تعريف الارتباط، وأي نطاقات ومسارات يمكنها الوصول إليه، وما إذا كان يجب إرساله فقط عبر اتصالات آمنة. فهم هذه السمات أمر بالغ الأهمية للأمن لأن ملفات تعريف الارتباط المكونة بشكل خاطئ يمكن أن تكون عرضة للسرقة أو سوء الاستخدام."
+          }
+        },
+        {
+          "id": 6,
+          "type": "hr"
+        },
+        {
+          "id": 7,
+          "type": "title",
+          "value": {
+            "en": "The Secure Attribute: HTTPS Only Transmission",
+            "ar": "سمة Secure: الإرسال عبر HTTPS فقط"
+          }
+        },
+        {
+          "id": 8,
+          "type": "text",
+          "value": {
+            "en": "The Secure attribute is a flag you can set on a cookie to tell the browser: only send this cookie over HTTPS connections, never over plain HTTP. When a cookie has the Secure flag, the browser will refuse to send it if the connection is not encrypted. This is critical for protecting sensitive cookies like session identifiers from being intercepted by network attackers. If you log in over HTTPS but the session cookie does not have the Secure flag, an attacker on the same network could potentially capture your session ID if you accidentally access any part of the site over HTTP.",
+            "ar": "سمة Secure هي علامة يمكنك تعيينها على ملف تعريف ارتباط لإخبار المتصفح: أرسل ملف تعريف الارتباط هذا فقط عبر اتصالات HTTPS، أبداً عبر HTTP عادي. عندما يكون لملف تعريف الارتباط علامة Secure، سيرفض المتصفح إرساله إذا لم يكن الاتصال مشفراً. هذا أمر بالغ الأهمية لحماية ملفات تعريف الارتباط الحساسة مثل معرفات الجلسة من اعتراضها من قبل مهاجمي الشبكة. إذا سجلت الدخول عبر HTTPS لكن ملف تعريف ارتباط الجلسة لا يحتوي على علامة Secure، فقد يتمكن المهاجم على نفس الشبكة من التقاط معرف الجلسة الخاص بك إذا وصلت عن طريق الخطأ إلى أي جزء من الموقع عبر HTTP."
+          }
+        },
+        {
+          "id": 9,
+          "type": "text",
+          "value": {
+            "en": "Imagine sending a secret letter through the postal service. Using HTTP is like sending the letter in a transparent envelope - anyone handling the mail can read it. Using HTTPS is like putting the letter in an opaque, sealed envelope - only the recipient can open and read it. The Secure flag on a cookie is like writing on the envelope: Only deliver this if you can guarantee secure transport. Without this instruction, the postal service might deliver your secret letter in a transparent envelope if that is more convenient, exposing your secret.",
+            "ar": "تخيل إرسال رسالة سرية من خلال خدمة البريد. استخدام HTTP مثل إرسال الرسالة في ظرف شفاف - يمكن لأي شخص يتعامل مع البريد قراءتها. استخدام HTTPS مثل وضع الرسالة في ظرف معتم ومختوم - فقط المستلم يمكنه فتحها وقراءتها. علامة Secure على ملف تعريف الارتباط مثل الكتابة على الظرف: سلم هذا فقط إذا كان بإمكانك ضمان نقل آمن. بدون هذا التعليم، قد تسلم خدمة البريد رسالتك السرية في ظرف شفاف إذا كان ذلك أكثر ملاءمة، مما يكشف سرك."
+          }
+        },
+        {
+          "id": 10,
+          "type": "text",
+          "value": {
+            "en": "Setting the Secure attribute is straightforward. When the server sends the Set-Cookie header to create a cookie, it simply adds the word Secure to the attributes. For example: Set-Cookie: sessionid=abc123; Secure. Modern web frameworks usually provide easy ways to set this flag. All cookies containing sensitive information, especially authentication tokens and session IDs, should always have the Secure flag. There is no good reason to send authentication data over unencrypted connections in modern web development.",
+            "ar": "تعيين سمة Secure أمر بسيط. عندما يرسل الخادم رأس Set-Cookie لإنشاء ملف تعريف ارتباط، يضيف ببساطة كلمة Secure إلى السمات. على سبيل المثال: Set-Cookie: sessionid=abc123; Secure. أطر عمل الويب الحديثة عادة ما توفر طرقاً سهلة لتعيين هذه العلامة. يجب أن تحتوي جميع ملفات تعريف الارتباط التي تحتوي على معلومات حساسة، خاصة رموز المصادقة ومعرفات الجلسة، دائماً على علامة Secure. لا يوجد سبب وجيه لإرسال بيانات المصادقة عبر اتصالات غير مشفرة في تطوير الويب الحديث."
+          }
+        },
+        {
+          "id": 11,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "Warning: The Secure flag only protects cookies in transit. It does not protect them from other attacks like XSS (cross-site scripting) where malicious code runs in the user's browser. You need additional protections, which we will discuss next with the HttpOnly attribute.",
+            "ar": "تحذير: علامة Secure تحمي فقط ملفات تعريف الارتباط أثناء النقل. لا تحميها من هجمات أخرى مثل XSS (البرمجة النصية عبر المواقع) حيث يعمل الكود الضار في متصفح المستخدم. تحتاج إلى حماية إضافية، والتي سنناقشها بعد ذلك مع سمة HttpOnly."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 12,
+          "type": "hr"
+        },
+        {
+          "id": 13,
+          "type": "title",
+          "value": {
+            "en": "The HttpOnly Attribute: Blocking JavaScript Access",
+            "ar": "سمة HttpOnly: منع وصول JavaScript"
+          }
+        },
+        {
+          "id": 14,
+          "type": "text",
+          "value": {
+            "en": "The HttpOnly attribute tells the browser that this cookie should not be accessible to JavaScript code running on the page. Normally, JavaScript can read cookies using document.cookie. This is useful for legitimate purposes, but it also creates a security risk. If an attacker can inject malicious JavaScript into your website through a cross-site scripting (XSS) vulnerability, that code can steal cookie values and send them to the attacker. The HttpOnly flag prevents this by making the cookie invisible to JavaScript. The cookie still works normally for HTTP requests - the browser still sends it to the server - but JavaScript cannot read or modify it.",
+            "ar": "سمة HttpOnly تخبر المتصفح أن ملف تعريف الارتباط هذا لا يجب أن يكون متاحاً لكود JavaScript الذي يعمل على الصفحة. عادة، يمكن لـ JavaScript قراءة ملفات تعريف الارتباط باستخدام document.cookie. هذا مفيد لأغراض مشروعة، لكنه يخلق أيضاً خطراً أمنياً. إذا تمكن المهاجم من حقن JavaScript ضار في موقعك عبر ثغرة البرمجة النصية عبر المواقع (XSS)، يمكن لذلك الكود سرقة قيم ملفات تعريف الارتباط وإرسالها إلى المهاجم. علامة HttpOnly تمنع هذا من خلال جعل ملف تعريف الارتباط غير مرئي لـ JavaScript. ملف تعريف الارتباط لا يزال يعمل بشكل طبيعي لطلبات HTTP - المتصفح لا يزال يرسله إلى الخادم - لكن JavaScript لا يمكنه قراءته أو تعديله."
+          }
+        },
+        {
+          "id": 1772840405783.1128,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Authentication%20Deep%20Dive/3-2-HttpOnly%20Attribute.webp"
+        },
+        {
+          "id": 16,
+          "type": "text",
+          "value": {
+            "en": "Why is this important? Cross-site scripting attacks are common. They happen when a website does not properly validate or sanitize user input. An attacker might post a comment containing malicious JavaScript, or inject code through a URL parameter. When other users view the page, this code executes in their browsers. Without HttpOnly, the attacker's code can immediately grab all cookies and transmit them to a server the attacker controls. With HttpOnly, the malicious code cannot access the session cookie, significantly reducing the damage from an XSS attack. The attacker might still be able to perform actions on behalf of the user while they are on the compromised page, but they cannot steal the session for later use.",
+            "ar": "لماذا هذا مهم؟ هجمات البرمجة النصية عبر المواقع شائعة. تحدث عندما لا يتحقق الموقع بشكل صحيح أو يعقم إدخال المستخدم. قد ينشر المهاجم تعليقاً يحتوي على JavaScript ضار، أو يحقن كوداً من خلال معامل URL. عندما يشاهد المستخدمون الآخرون الصفحة، ينفذ هذا الكود في متصفحاتهم. بدون HttpOnly، يمكن لكود المهاجم على الفور الاستيلاء على جميع ملفات تعريف الارتباط وإرسالها إلى خادم يسيطر عليه المهاجم. مع HttpOnly، لا يمكن للكود الضار الوصول إلى ملف تعريف ارتباط الجلسة، مما يقلل بشكل كبير من الضرر من هجوم XSS. قد لا يزال بإمكان المهاجم تنفيذ إجراءات نيابة عن المستخدم أثناء وجوده على الصفحة المعرضة للخطر، لكن لا يمكنه سرقة الجلسة للاستخدام اللاحق."
+          }
+        },
+        {
+          "id": 17,
+          "type": "text",
+          "value": {
+            "en": "Setting HttpOnly is as simple as adding the attribute to the cookie: Set-Cookie: sessionid=abc123; Secure; HttpOnly. Notice you can combine multiple attributes. A properly secured session cookie should have both Secure and HttpOnly. Modern web frameworks often set HttpOnly by default for session cookies because there is rarely a legitimate reason for client-side JavaScript to access the session identifier. If your application needs to store data that JavaScript must read, use a separate cookie for that purpose, not the authentication cookie.",
+            "ar": "تعيين HttpOnly بسيط مثل إضافة السمة إلى ملف تعريف الارتباط: Set-Cookie: sessionid=abc123; Secure; HttpOnly. لاحظ أنه يمكنك دمج سمات متعددة. يجب أن يحتوي ملف تعريف ارتباط الجلسة المؤمن بشكل صحيح على كل من Secure وHttpOnly. أطر عمل الويب الحديثة غالباً ما تعين HttpOnly افتراضياً لملفات تعريف ارتباط الجلسة لأنه نادراً ما يكون هناك سبب مشروع لـ JavaScript من جانب العميل للوصول إلى معرف الجلسة. إذا كان تطبيقك يحتاج إلى تخزين بيانات يجب على JavaScript قراءتها، استخدم ملف تعريف ارتباط منفصل لهذا الغرض، وليس ملف تعريف ارتباط المصادقة."
+          }
+        },
+        {
+          "id": 18,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Professional Tip: Use both Secure and HttpOnly together for all authentication cookies. These two attributes address different attack vectors - Secure protects against network interception, HttpOnly protects against XSS. Both are necessary for comprehensive cookie security.",
+            "ar": "نصيحة مهنية: استخدم كلاً من Secure وHttpOnly معاً لجميع ملفات تعريف ارتباط المصادقة. هاتان السمتان تتناولان متجهات هجوم مختلفة - Secure تحمي ضد اعتراض الشبكة، HttpOnly تحمي ضد XSS. كلاهما ضروري لأمن شامل لملفات تعريف الارتباط."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 19,
+          "type": "hr"
+        },
+        {
+          "id": 20,
+          "type": "title",
+          "value": {
+            "en": "The SameSite Attribute: CSRF Protection",
+            "ar": "سمة SameSite: الحماية من CSRF"
+          }
+        },
+        {
+          "id": 21,
+          "type": "text",
+          "value": {
+            "en": "The SameSite attribute controls whether cookies are sent with cross-site requests. To understand this, you first need to know what cross-site requests are. When you visit a website, that site might include images, scripts, or forms from other domains. It might also contain links to other sites. If you click a link or submit a form that goes to a different domain, that is a cross-site request. By default, browsers send all relevant cookies with every request, even cross-site ones. This behavior enables an attack called Cross-Site Request Forgery or CSRF. An attacker can trick you into making a request to another website where you are logged in, and your browser will automatically include your authentication cookies, allowing the attacker to perform actions as you.",
+            "ar": "سمة SameSite تتحكم فيما إذا كان يتم إرسال ملفات تعريف الارتباط مع الطلبات عبر المواقع. لفهم هذا، تحتاج أولاً إلى معرفة ما هي الطلبات عبر المواقع. عندما تزور موقع ويب، قد يتضمن هذا الموقع صوراً أو نصوصاً أو نماذج من نطاقات أخرى. قد يحتوي أيضاً على روابط إلى مواقع أخرى. إذا نقرت على رابط أو أرسلت نموذجاً يذهب إلى نطاق مختلف، فهذا طلب عبر الموقع. افتراضياً، ترسل المتصفحات جميع ملفات تعريف الارتباط ذات الصلة مع كل طلب، حتى الطلبات عبر المواقع. هذا السلوك يمكّن هجوماً يسمى تزوير الطلب عبر المواقع أو CSRF. يمكن للمهاجم خداعك لتقديم طلب إلى موقع آخر حيث أنت مسجل الدخول، وسيتضمن متصفحك تلقائياً ملفات تعريف ارتباط المصادقة الخاصة بك، مما يسمح للمهاجم بتنفيذ إجراءات باسمك."
+          }
+        },
+        {
+          "id": 22,
+          "type": "text",
+          "value": {
+            "en": "Here is a CSRF attack example. Imagine you are logged into your bank website. An attacker sends you an email with a link to a different website they control. That malicious website contains a hidden form that submits a transfer request to your bank. When you visit the attacker's site, the form automatically submits in the background. Your browser, following normal behavior, includes your bank authentication cookies with the request. The bank server receives a valid request with valid authentication, so it processes the transfer. You just sent money to the attacker without realizing it. The SameSite attribute prevents this by instructing the browser not to send cookies with cross-site requests.",
+            "ar": "إليك مثال على هجوم CSRF. تخيل أنك مسجل الدخول إلى موقع البنك الخاص بك. يرسل إليك المهاجم بريداً إلكترونياً مع رابط إلى موقع مختلف يسيطر عليه. يحتوي هذا الموقع الضار على نموذج مخفي يقدم طلب تحويل إلى البنك الخاص بك. عندما تزور موقع المهاجم، يُقدَّم النموذج تلقائياً في الخلفية. متصفحك، باتباع السلوك العادي، يتضمن ملفات تعريف ارتباط مصادقة البنك مع الطلب. يتلقى خادم البنك طلباً صالحاً مع مصادقة صالحة، لذلك يعالج التحويل. لقد أرسلت للتو أموالاً إلى المهاجم دون أن تدرك ذلك. سمة SameSite تمنع هذا من خلال توجيه المتصفح لعدم إرسال ملفات تعريف الارتباط مع الطلبات عبر المواقع."
+          }
+        },
+        {
+          "id": 23,
+          "type": "text",
+          "value": {
+            "en": "SameSite has three possible values: Strict, Lax, and None. SameSite=Strict is the most restrictive. Cookies with Strict are never sent with cross-site requests, only when you navigate directly to the domain that set the cookie. This provides maximum CSRF protection but can harm user experience - for example, if you click a link to a website from an email, you will appear logged out initially because the authentication cookie was not sent. SameSite=Lax is a balance. It sends cookies with safe cross-site requests like GET requests from links, but not with POST requests or other potentially dangerous methods. This prevents most CSRF attacks while maintaining reasonable user experience. SameSite=None disables the protection entirely and requires the cookie to also have the Secure attribute. This is used when you intentionally need cross-site cookie behavior, like for embedded content or third-party integrations.",
+            "ar": "SameSite لديها ثلاث قيم ممكنة: Strict وLax وNone. SameSite=Strict هي الأكثر تقييداً. ملفات تعريف الارتباط مع Strict لا يتم إرسالها أبداً مع الطلبات عبر المواقع، فقط عندما تنتقل مباشرة إلى النطاق الذي عيّن ملف تعريف الارتباط. هذا يوفر أقصى حماية من CSRF لكن يمكن أن يضر بتجربة المستخدم - على سبيل المثال، إذا نقرت على رابط إلى موقع من بريد إلكتروني، ستظهر خارج تسجيل الدخول في البداية لأن ملف تعريف ارتباط المصادقة لم يتم إرساله. SameSite=Lax هو توازن. يرسل ملفات تعريف الارتباط مع طلبات عبر المواقع الآمنة مثل طلبات GET من الروابط، لكن ليس مع طلبات POST أو طرق أخرى خطيرة محتملة. هذا يمنع معظم هجمات CSRF مع الحفاظ على تجربة مستخدم معقولة. SameSite=None تعطل الحماية تماماً وتتطلب أن يحتوي ملف تعريف الارتباط أيضاً على سمة Secure. يُستخدم هذا عندما تحتاج عمداً إلى سلوك ملف تعريف ارتباط عبر المواقع، مثل المحتوى المضمن أو التكاملات مع طرف ثالث."
+          }
+        },
+        {
+          "id": 24,
+          "type": "table",
+          "title": {
+            "en": "SameSite Values Comparison",
+            "ar": "مقارنة قيم SameSite"
+          },
+          "headers": {
+            "en": [
+              "Value",
+              "Behavior",
+              "Use Case",
+              "CSRF Protection"
+            ],
+            "ar": [
+              "القيمة",
+              "السلوك",
+              "حالة الاستخدام",
+              "الحماية من CSRF"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "Strict",
+                "Never sent cross-site",
+                "Maximum security applications",
+                "Highest"
+              ],
+              "ar": [
+                "Strict",
+                "لا يُرسل أبداً عبر المواقع",
+                "تطبيقات ذات أمان أقصى",
+                "الأعلى"
+              ]
+            },
+            {
+              "en": [
+                "Lax",
+                "Sent with safe methods only",
+                "Most web applications",
+                "Good"
+              ],
+              "ar": [
+                "Lax",
+                "يُرسل مع الطرق الآمنة فقط",
+                "معظم تطبيقات الويب",
+                "جيدة"
+              ]
+            },
+            {
+              "en": [
+                "None",
+                "Always sent (requires Secure)",
+                "Third-party integrations",
+                "None"
+              ],
+              "ar": [
+                "None",
+                "يُرسل دائماً (يتطلب Secure)",
+                "تكاملات طرف ثالث",
+                "لا شيء"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 1772840400031.266,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Authentication%20Deep%20Dive/3-3-all%20three%20cookie%20security%20attributes%20together.webp"
+        },
+        {
+          "id": 26,
+          "type": "code",
+          "language": "python",
+          "value": "# Example: Setting secure cookies with all three attributes\n\nfrom flask import Flask, make_response\n\napp = Flask(__name__)\n\n@app.route('/login', methods=['POST'])\ndef login():\n    # After validating credentials...\n    response = make_response('Login successful')\n    \n    # Set session cookie with all security attributes\n    response.set_cookie(\n        'session_id',\n        value='abc123xyz',\n        secure=True,        # Only sent over HTTPS\n        httponly=True,      # Not accessible to JavaScript\n        samesite='Lax',     # Not sent with dangerous cross-site requests\n        max_age=3600        # Expires in 1 hour\n    )\n    \n    return response\n\n# The resulting Set-Cookie header:\n# Set-Cookie: session_id=abc123xyz; Secure; HttpOnly; SameSite=Lax; Max-Age=3600"
+        },
+        {
+          "id": 27,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Best Practice: For authentication cookies, use all three attributes together: Secure to require HTTPS, HttpOnly to prevent JavaScript access, and SameSite=Lax (or Strict for highly sensitive applications) to prevent CSRF attacks. These form a strong defense-in-depth strategy.",
+            "ar": "أفضل ممارسة: لملفات تعريف ارتباط المصادقة، استخدم السمات الثلاث معاً: Secure لطلب HTTPS، HttpOnly لمنع وصول JavaScript، وSameSite=Lax (أو Strict للتطبيقات شديدة الحساسية) لمنع هجمات CSRF. تشكل هذه استراتيجية دفاع متعمق قوية."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 28,
+          "type": "title",
+          "value": {
+            "en": "Additional Cookie Security Considerations",
+            "ar": "اعتبارات أمان إضافية لملفات تعريف الارتباط"
+          }
+        },
+        {
+          "id": 29,
+          "type": "text",
+          "value": {
+            "en": "Beyond the three main security attributes, there are other important considerations for cookie security. First is the expiration time. Session cookies should have reasonable expiration times. If a cookie lasts forever, a stolen cookie remains useful to an attacker indefinitely. Use Max-Age or Expires attributes to limit cookie lifetime. For sensitive applications, use short-lived cookies that require periodic re-authentication. Second is the Domain and Path attributes, which control which parts of your website can access the cookie. Set these as narrowly as possible. Do not make a cookie accessible to subdomains unless necessary. Third, regularly rotate session identifiers. Even during an active session, periodically generate a new session ID to limit the window of opportunity for session hijacking.",
+            "ar": "بالإضافة إلى السمات الأمنية الثلاث الرئيسية، هناك اعتبارات مهمة أخرى لأمان ملفات تعريف الارتباط. الأول هو وقت انتهاء الصلاحية. يجب أن تحتوي ملفات تعريف ارتباط الجلسة على أوقات انتهاء صلاحية معقولة. إذا استمر ملف تعريف الارتباط إلى الأبد، يظل ملف تعريف الارتباط المسروق مفيداً للمهاجم إلى أجل غير مسمى. استخدم سمات Max-Age أو Expires لتحديد عمر ملف تعريف الارتباط. للتطبيقات الحساسة، استخدم ملفات تعريف ارتباط قصيرة الأجل تتطلب إعادة مصادقة دورية. الثاني هو سمات Domain وPath، التي تتحكم في أي أجزاء من موقعك يمكنها الوصول إلى ملف تعريف الارتباط. حددها بأضيق نطاق ممكن. لا تجعل ملف تعريف الارتباط متاحاً للنطاقات الفرعية ما لم يكن ضرورياً. ثالثاً، قم بتدوير معرفات الجلسة بانتظام. حتى أثناء جلسة نشطة، قم بإنشاء معرف جلسة جديد بشكل دوري لتحديد نافذة الفرصة لاختطاف الجلسة."
+          }
+        },
+        {
+          "id": 30,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "Remember: Cookie security is part of a larger security picture. Secure cookies protect data in transit and storage, but you also need secure server-side code, input validation, output encoding, and regular security updates. Defense in depth means using multiple layers of protection together.",
+            "ar": "تذكر: أمان ملفات تعريف الارتباط جزء من صورة أمنية أكبر. ملفات تعريف الارتباط الآمنة تحمي البيانات أثناء النقل والتخزين، لكنك تحتاج أيضاً إلى كود آمن من جانب الخادم، والتحقق من الإدخال، وترميز الإخراج، وتحديثات أمنية منتظمة. الدفاع المتعمق يعني استخدام طبقات متعددة من الحماية معاً."
+          },
+          "link": "",
+          "isLab": false
+        }
+      ]
+    },
+    {
+      "id": "topic-4",
+      "title": {
+        "en": "JWT (JSON Web Tokens): Structure, Usage, and Security",
+        "ar": "JWT (رموز الويب JSON): البنية والاستخدام والأمان"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "What Is JWT and Why Was It Created?",
+            "ar": "ما هو JWT ولماذا تم إنشاؤه؟"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "JWT stands for JSON Web Token. It is a standard way to securely transmit information between parties as a JSON object. Unlike traditional session-based authentication where the server stores session data and sends only a session ID to the client, JWT takes a different approach. With JWT, the server creates a token that contains all the necessary information about the user, signs it cryptographically, and sends the entire token to the client. The client stores this token and sends it back with every request. The server can verify the token's signature and extract the user information without needing to look up anything in a database. This makes JWT stateless - the server does not need to remember anything between requests.",
+            "ar": "JWT تعني رمز الويب JSON. إنه طريقة قياسية لنقل المعلومات بشكل آمن بين الأطراف ككائن JSON. على عكس المصادقة التقليدية المستندة إلى الجلسة حيث يخزن الخادم بيانات الجلسة ويرسل فقط معرف الجلسة إلى العميل، يتخذ JWT نهجاً مختلفاً. مع JWT، ينشئ الخادم رمزاً يحتوي على جميع المعلومات الضرورية حول المستخدم، يوقعه تشفيرياً، ويرسل الرمز بالكامل إلى العميل. يخزن العميل هذا الرمز ويرسله مرة أخرى مع كل طلب. يمكن للخادم التحقق من توقيع الرمز واستخراج معلومات المستخدم دون الحاجة إلى البحث عن أي شيء في قاعدة بيانات. هذا يجعل JWT عديم الحالة - الخادم لا يحتاج إلى تذكر أي شيء بين الطلبات."
+          }
+        },
+        {
+          "id": 1772840453645.9143,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Authentication%20Deep%20Dive/4-1-traditional%20session%20vs%20JWT%20authentication..webp"
+        },
+        {
+          "id": 4,
+          "type": "text",
+          "value": {
+            "en": "Think of JWT like a stamped passport. When you enter a country, immigration checks your documents and stamps your passport with an official seal. As you move through the country, various checkpoints can look at the stamp to verify you were authorized to enter. They do not need to call back to the immigration office each time - the stamp itself is proof. Similarly, a JWT contains user information and a cryptographic signature. Any service that knows how to verify the signature can trust the information inside the token without contacting the original authentication server. This is especially useful in distributed systems with multiple services or microservices architecture, where each service can independently verify tokens.",
+            "ar": "فكر في JWT مثل جواز سفر مختوم. عندما تدخل بلداً، تتحقق الهجرة من مستنداتك وتختم جواز سفرك بختم رسمي. أثناء تحركك في البلد، يمكن لنقاط التفتيش المختلفة النظر إلى الختم للتحقق من أنك مصرح لك بالدخول. لا يحتاجون إلى الاتصال بمكتب الهجرة في كل مرة - الختم نفسه هو دليل. وبالمثل، يحتوي JWT على معلومات المستخدم وتوقيع تشفيري. يمكن لأي خدمة تعرف كيفية التحقق من التوقيع أن تثق في المعلومات داخل الرمز دون الاتصال بخادم المصادقة الأصلي. هذا مفيد بشكل خاص في الأنظمة الموزعة مع خدمات متعددة أو بنية الخدمات المصغرة، حيث يمكن لكل خدمة التحقق من الرموز بشكل مستقل."
+          }
+        },
+        {
+          "id": 5,
+          "type": "text",
+          "value": {
+            "en": "JWT became popular because it solves several problems. First, scalability - since the server does not need to store session data, it is easier to scale applications horizontally by adding more servers. Any server can handle any request because all the information needed is in the token. Second, cross-domain and mobile-friendly - JWT works well in single-page applications and mobile apps where traditional cookie-based sessions can be problematic. Third, microservices compatibility - in modern architectures with many independent services, JWT allows services to verify authentication without a central session store. However, JWT also introduces new security challenges that we must understand and address carefully.",
+            "ar": "أصبح JWT شائعاً لأنه يحل عدة مشاكل. أولاً، قابلية التوسع - نظراً لأن الخادم لا يحتاج إلى تخزين بيانات الجلسة، فمن الأسهل توسيع التطبيقات أفقياً بإضافة المزيد من الخوادم. يمكن لأي خادم التعامل مع أي طلب لأن جميع المعلومات اللازمة موجودة في الرمز. ثانياً، متوافق مع النطاقات المتعددة والأجهزة المحمولة - يعمل JWT بشكل جيد في تطبيقات الصفحة الواحدة وتطبيقات الأجهزة المحمولة حيث يمكن أن تكون الجلسات التقليدية المستندة إلى ملفات تعريف الارتباط مشكلة. ثالثاً، توافق الخدمات المصغرة - في البنى الحديثة مع العديد من الخدمات المستقلة، يسمح JWT للخدمات بالتحقق من المصادقة دون مخزن جلسة مركزي. ومع ذلك، يقدم JWT أيضاً تحديات أمنية جديدة يجب أن نفهمها ونعالجها بعناية."
+          }
+        },
+        {
+          "id": 6,
+          "type": "hr"
+        },
+        {
+          "id": 7,
+          "type": "title",
+          "value": {
+            "en": "JWT Structure: The Three Parts Explained",
+            "ar": "بنية JWT: شرح الأجزاء الثلاثة"
+          }
+        },
+        {
+          "id": 8,
+          "type": "text",
+          "value": {
+            "en": "A JWT consists of three distinct parts separated by dots: Header.Payload.Signature. Each part is Base64URL encoded, making the token a long string that looks like random characters but actually contains structured data. The three parts work together to create a secure, verifiable package of information. Let us examine each part in detail to understand what it contains and why it matters for security.",
+            "ar": "يتكون JWT من ثلاثة أجزاء متميزة مفصولة بنقاط: Header.Payload.Signature. كل جزء مشفر بـBase64URL، مما يجعل الرمز سلسلة طويلة تبدو وكأنها أحرف عشوائية لكنها في الواقع تحتوي على بيانات منظمة. الأجزاء الثلاثة تعمل معاً لإنشاء حزمة آمنة وقابلة للتحقق من المعلومات. دعونا نفحص كل جزء بالتفصيل لفهم ما يحتويه ولماذا يهم للأمن."
+          }
+        },
+        {
+          "id": 9,
+          "type": "orderedList",
+          "title": {
+            "en": "The Three Components of JWT",
+            "ar": "المكونات الثلاثة لـJWT"
+          },
+          "items": [
+            {
+              "subtitle": {
+                "en": "Header: Algorithm and Token Type",
+                "ar": "الرأس: الخوارزمية ونوع الرمز"
+              },
+              "text": {
+                "en": "The header contains metadata about the token itself. It specifies which algorithm was used to create the signature (such as HS256 for HMAC-SHA256 or RS256 for RSA-SHA256) and declares that this is a JWT. This information is critical because the verifier needs to know which cryptographic algorithm to use when checking the signature. The header is a JSON object that gets Base64URL encoded.",
+                "ar": "يحتوي الرأس على بيانات وصفية حول الرمز نفسه. يحدد الخوارزمية المستخدمة لإنشاء التوقيع (مثل HS256 لـHMAC-SHA256 أو RS256 لـRSA-SHA256) ويعلن أن هذا JWT. هذه المعلومات حاسمة لأن المتحقق يحتاج إلى معرفة الخوارزمية التشفيرية التي يجب استخدامها عند التحقق من التوقيع. الرأس هو كائن JSON يتم ترميزه بـBase64URL."
+              },
+              "example": {
+                "en": "Example Header: {\"alg\": \"HS256\", \"typ\": \"JWT\"} encodes to: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9",
+                "ar": "مثال على الرأس: {\"alg\": \"HS256\", \"typ\": \"JWT\"} يُشفّر إلى: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Payload: The Claims and User Data",
+                "ar": "الحمولة: المطالبات وبيانات المستخدم"
+              },
+              "text": {
+                "en": "The payload contains the actual information you want to transmit. This includes claims, which are statements about the user and additional metadata. There are standard claims like 'sub' for subject (user ID), 'exp' for expiration time, 'iat' for issued at time, and 'iss' for issuer. You can also add custom claims like user role, email, or permissions. The payload is also a JSON object that gets Base64URL encoded. Important: the payload is not encrypted, only encoded, so never put sensitive information like passwords in it.",
+                "ar": "تحتوي الحمولة على المعلومات الفعلية التي تريد نقلها. يتضمن ذلك المطالبات، وهي بيانات حول المستخدم وبيانات وصفية إضافية. هناك مطالبات قياسية مثل 'sub' للموضوع (معرف المستخدم)، 'exp' لوقت انتهاء الصلاحية، 'iat' لوقت الإصدار، و'iss' للمُصدر. يمكنك أيضاً إضافة مطالبات مخصصة مثل دور المستخدم أو البريد الإلكتروني أو الأذونات. الحمولة أيضاً كائن JSON يتم ترميزه بـBase64URL. مهم: الحمولة ليست مشفرة، فقط مشفرة، لذا لا تضع أبداً معلومات حساسة مثل كلمات المرور فيها."
+              },
+              "example": {
+                "en": "Example Payload: {\"sub\": \"1234\", \"name\": \"Ahmed\", \"role\": \"user\", \"exp\": 1735689600}",
+                "ar": "مثال على الحمولة: {\"sub\": \"1234\", \"name\": \"Ahmed\", \"role\": \"user\", \"exp\": 1735689600}"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Signature: Cryptographic Verification",
+                "ar": "التوقيع: التحقق التشفيري"
+              },
+              "text": {
+                "en": "The signature is created by taking the encoded header and encoded payload, combining them with a dot, and then applying the cryptographic algorithm specified in the header using a secret key. This signature ensures that the token has not been tampered with. If anyone changes even a single character in the header or payload, the signature will not match when verified. The server (or any party with the secret key or public key) can recalculate the signature and compare it to verify authenticity.",
+                "ar": "يتم إنشاء التوقيع من خلال أخذ الرأس المشفر والحمولة المشفرة، دمجهما بنقطة، ثم تطبيق الخوارزمية التشفيرية المحددة في الرأس باستخدام مفتاح سري. يضمن هذا التوقيع عدم العبث بالرمز. إذا غيّر أي شخص حتى حرفاً واحداً في الرأس أو الحمولة، فلن يتطابق التوقيع عند التحقق. يمكن للخادم (أو أي طرف لديه المفتاح السري أو المفتاح العام) إعادة حساب التوقيع ومقارنته للتحقق من الأصالة."
+              },
+              "example": {
+                "en": "Example: Signature = HMACSHA256(base64UrlEncode(header) + \".\" + base64UrlEncode(payload), secret)",
+                "ar": "مثال: Signature = HMACSHA256(base64UrlEncode(header) + \".\" + base64UrlEncode(payload), secret)"
+              }
+            }
+          ]
+        },
+        {
+          "id": 1772840470238.3845,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Authentication%20Deep%20Dive/4-2-JWT%20showing%20all%20three%20parts..webp"
+        },
+        {
+          "id": 11,
+          "type": "text",
+          "value": {
+            "en": "When you put all three parts together with dots between them, you get a complete JWT. A real token might look like: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0IiwibmFtZSI6IkFobWVkIiwicm9sZSI6InVzZXIiLCJleHAiOjE3MzU2ODk2MDB9.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c. This looks like gibberish, but it is actually three Base64URL-encoded pieces. Anyone can decode the header and payload to read the information - they are not secret. The security comes from the signature, which proves that the token was created by someone who knows the secret key and has not been modified since creation.",
+            "ar": "عندما تضع جميع الأجزاء الثلاثة معاً مع نقاط بينها، تحصل على JWT كامل. قد يبدو الرمز الحقيقي كالتالي: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0IiwibmFtZSI6IkFobWVkIiwicm9sZSI6InVzZXIiLCJleHAiOjE3MzU2ODk2MDB9.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c. يبدو هذا وكأنه هراء، لكنه في الواقع ثلاث قطع مشفرة بـBase64URL. يمكن لأي شخص فك الرأس والحمولة لقراءة المعلومات - ليست سرية. يأتي الأمان من التوقيع، الذي يثبت أن الرمز تم إنشاؤه من قبل شخص يعرف المفتاح السري ولم يتم تعديله منذ الإنشاء."
+          }
+        },
+        {
+          "id": 12,
+          "type": "hr"
+        },
+        {
+          "id": 13,
+          "type": "title",
+          "value": {
+            "en": "How JWT Is Used in Authentication Flow",
+            "ar": "كيف يُستخدم JWT في تدفق المصادقة"
+          }
+        },
+        {
+          "id": 14,
+          "type": "text",
+          "value": {
+            "en": "The typical JWT authentication flow starts when a user logs in. The user submits their username and password to the server. The server verifies these credentials against its database. If correct, the server creates a JWT containing user information and claims, signs it with the secret key, and sends it back to the client. The client (web browser or mobile app) stores this token, usually in local storage or in memory. For subsequent requests, the client includes the JWT in the HTTP Authorization header using the Bearer scheme: Authorization: Bearer <token>. When the server receives a request with a JWT, it extracts the token, verifies the signature, checks the expiration time, and if everything is valid, processes the request using the information from the payload.",
+            "ar": "يبدأ تدفق مصادقة JWT النموذجي عندما يسجل المستخدم الدخول. يرسل المستخدم اسم المستخدم وكلمة المرور إلى الخادم. يتحقق الخادم من هذه البيانات مقابل قاعدة البيانات. إذا كانت صحيحة، ينشئ الخادم JWT يحتوي على معلومات المستخدم والمطالبات، يوقعه بالمفتاح السري، ويرسله مرة أخرى إلى العميل. يخزن العميل (متصفح الويب أو تطبيق الأجهزة المحمولة) هذا الرمز، عادة في التخزين المحلي أو في الذاكرة. للطلبات اللاحقة، يتضمن العميل JWT في رأس HTTP Authorization باستخدام نظام Bearer: Authorization: Bearer <token>. عندما يتلقى الخادم طلباً مع JWT، يستخرج الرمز، يتحقق من التوقيع، يتحقق من وقت انتهاء الصلاحية، وإذا كان كل شيء صالحاً، يعالج الطلب باستخدام المعلومات من الحمولة."
+          }
+        },
+        {
+          "id": 15,
+          "type": "text",
+          "value": {
+            "en": "The beauty of this system is its simplicity for the server. The server does not need to maintain a session database. Each request is self-contained - all the information needed to authenticate and authorize the request is in the token. Multiple servers can process requests from the same user without sharing session state because each server can independently verify the JWT. This makes the system highly scalable. The client is responsible for storing and managing the token, while the server only needs to verify it on each request.",
+            "ar": "جمال هذا النظام هو بساطته للخادم. لا يحتاج الخادم إلى الاحتفاظ بقاعدة بيانات جلسة. كل طلب مكتفٍ ذاتياً - جميع المعلومات اللازمة لمصادقة الطلب وتفويضه موجودة في الرمز. يمكن لخوادم متعددة معالجة الطلبات من نفس المستخدم دون مشاركة حالة الجلسة لأن كل خادم يمكنه التحقق من JWT بشكل مستقل. هذا يجعل النظام قابلاً للتوسع بشكل كبير. العميل مسؤول عن تخزين وإدارة الرمز، بينما يحتاج الخادم فقط إلى التحقق منه في كل طلب."
+          }
+        },
+        {
+          "id": 16,
+          "type": "code",
+          "language": "python",
+          "value": "import jwt\nfrom datetime import datetime, timedelta\n\n# Secret Key (يجب أن يكون قوي وسري)\nSECRET_KEY = \"your-super-secret-key\"\n\n# ----------------------------------\n# Login: إنشاء JWT بعد تسجيل الدخول\n# ----------------------------------\ndef login(username, password):\n\n    # البحث عن المستخدم في قاعدة البيانات\n    user = database.find_user(username)\n\n    # التحقق من صحة البيانات\n    if not user or not verify_password(password, user.password_hash):\n        return {\"error\": \"Invalid username or password\"}\n\n    # بيانات التوكن (Claims)\n    payload = {\n        \"sub\": user.id,                         # ID المستخدم\n        \"name\": user.name,                      # اسم المستخدم\n        \"role\": user.role,                      # صلاحية المستخدم\n        \"iat\": datetime.utcnow(),               # وقت إنشاء التوكن\n        \"exp\": datetime.utcnow() + timedelta(hours=1)  # انتهاء بعد ساعة\n    }\n\n    # إنشاء التوكن وتوقيعه\n    token = jwt.encode(payload, SECRET_KEY, algorithm=\"HS256\")\n\n    return {\n        \"message\": \"Login successful\",\n        \"token\": token\n    }\n\n\n# ----------------------------------\n# Protected Route: التحقق من التوكن\n# ----------------------------------\ndef protected_route(request):\n\n    # قراءة Authorization Header\n    auth_header = request.headers.get(\"Authorization\")\n\n    # التحقق من وجود التوكن\n    if not auth_header or not auth_header.startswith(\"Bearer \"):\n        return {\"error\": \"Authorization token missing\"}\n\n    # استخراج التوكن\n    token = auth_header.split(\" \")[1]\n\n    try:\n        # فك التوكن والتحقق منه\n        payload = jwt.decode(token, SECRET_KEY, algorithms=[\"HS256\"])\n\n        user_id = payload[\"sub\"]\n        user_name = payload[\"name\"]\n        user_role = payload[\"role\"]\n\n        return {\n            \"message\": f\"Welcome {user_name}\",\n            \"user_id\": user_id,\n            \"role\": user_role\n        }\n\n    except jwt.ExpiredSignatureError:\n        return {\"error\": \"Token expired\"}\n\n    except jwt.InvalidTokenError:\n        return {\"error\": \"Invalid token\"}"
+        },
+        {
+          "id": 17,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Key Insight: JWT shifts responsibility from server to client. The server does not track sessions - it only verifies signatures. This improves scalability but requires careful handling of token storage and expiration on the client side.",
+            "ar": "فكرة رئيسية: JWT ينقل المسؤولية من الخادم إلى العميل. الخادم لا يتتبع الجلسات - يتحقق فقط من التوقيعات. هذا يحسن قابلية التوسع لكنه يتطلب معالجة دقيقة لتخزين الرمز وانتهاء صلاحيته على جانب العميل."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 18,
+          "type": "hr"
+        },
+        {
+          "id": 19,
+          "type": "title",
+          "value": {
+            "en": "JWT Security Vulnerabilities and Best Practices",
+            "ar": "ثغرات أمان JWT وأفضل الممارسات"
+          }
+        },
+        {
+          "id": 20,
+          "type": "text",
+          "value": {
+            "en": "While JWT offers many benefits, it also introduces specific security risks that must be carefully managed. The most critical vulnerability is that JWT cannot be easily revoked. Unlike server-side sessions where you can delete the session from the database, a JWT remains valid until it expires. If a token is stolen, the attacker can use it until expiration time. This is why setting appropriate expiration times is crucial. Use short-lived access tokens (15-60 minutes) and implement refresh tokens for extended sessions. A refresh token is a separate, longer-lived token used to obtain new access tokens without requiring the user to log in again.",
+            "ar": "بينما يوفر JWT العديد من الفوائد، فإنه يقدم أيضاً مخاطر أمنية محددة يجب إدارتها بعناية. الثغرة الأكثر أهمية هي أن JWT لا يمكن إلغاؤه بسهولة. على عكس الجلسات من جانب الخادم حيث يمكنك حذف الجلسة من قاعدة البيانات، يظل JWT صالحاً حتى ينتهي. إذا تم سرقة رمز، يمكن للمهاجم استخدامه حتى وقت انتهاء الصلاحية. هذا هو السبب في أن تحديد أوقات انتهاء الصلاحية المناسبة أمر حاسم. استخدم رموز وصول قصيرة الأجل (15-60 دقيقة) ونفذ رموز تحديث للجلسات الممتدة. رمز التحديث هو رمز منفصل طويل الأجل يُستخدم للحصول على رموز وصول جديدة دون مطالبة المستخدم بتسجيل الدخول مرة أخرى."
+          }
+        },
+        {
+          "id": 21,
+          "type": "text",
+          "value": {
+            "en": "Another significant risk is the algorithm confusion attack. The JWT header specifies which algorithm to use for signature verification. Some libraries have had vulnerabilities where an attacker could change the algorithm from RS256 (asymmetric) to HS256 (symmetric) and use the public key as the secret. This would allow them to forge valid signatures. The defense is to always explicitly specify which algorithms your application accepts and reject tokens using unexpected algorithms. Never allow the 'none' algorithm, which indicates no signature verification. Additionally, always validate all JWT claims, especially the expiration time, issuer, and audience claims to ensure the token is intended for your application.",
+            "ar": "خطر كبير آخر هو هجوم الخلط بين الخوارزمية. يحدد رأس JWT الخوارزمية التي يجب استخدامها للتحقق من التوقيع. كان لدى بعض المكتبات ثغرات حيث يمكن للمهاجم تغيير الخوارزمية من RS256 (غير متماثل) إلى HS256 (متماثل) واستخدام المفتاح العام كسر. هذا سيسمح لهم بتزوير توقيعات صالحة. الدفاع هو تحديد الخوارزميات التي يقبلها تطبيقك بشكل صريح دائماً ورفض الرموز باستخدام الخوارزميات غير المتوقعة. لا تسمح أبداً بخوارزمية 'none'، التي تشير إلى عدم وجود التحقق من التوقيع. بالإضافة إلى ذلك، تحقق دائماً من جميع مطالبات JWT، خاصة وقت انتهاء الصلاحية ومطالبات المُصدر والجمهور لضمان أن الرمز مخصص لتطبيقك."
+          }
+        },
+        {
+          "id": 1772840463185.5957,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Authentication%20Deep%20Dive/4-3-summary%20image%20for%20JWT.webp"
+        },
+        {
+          "id": 23,
+          "type": "list",
+          "title": {
+            "en": "Essential JWT Security Practices",
+            "ar": "ممارسات أمان JWT الأساسية"
+          },
+          "items": {
+            "en": [
+              "Use strong, randomly generated secret keys with sufficient length (at least 256 bits)",
+              "Set short expiration times for access tokens (15-60 minutes maximum)",
+              "Implement refresh token mechanism for long-lived sessions",
+              "Always transmit JWT over HTTPS to prevent interception",
+              "Validate all JWT claims including expiration, issuer, and audience",
+              "Explicitly specify allowed algorithms and reject unexpected ones",
+              "Never use the 'none' algorithm which disables signature verification",
+              "Store tokens securely - avoid localStorage if possible, prefer httpOnly cookies or memory",
+              "Do not include sensitive information in the payload (it is not encrypted)",
+              "Implement token blacklisting for critical logout scenarios",
+              "Consider using asymmetric algorithms (RS256) for better key management",
+              "Regularly rotate signing keys and update tokens"
+            ],
+            "ar": [
+              "استخدم مفاتيح سرية قوية تم إنشاؤها عشوائياً بطول كافٍ (256 بت على الأقل)",
+              "حدد أوقات انتهاء صلاحية قصيرة لرموز الوصول (15-60 دقيقة كحد أقصى)",
+              "نفذ آلية رمز التحديث للجلسات طويلة الأجل",
+              "أرسل دائماً JWT عبر HTTPS لمنع الاعتراض",
+              "تحقق من جميع مطالبات JWT بما في ذلك انتهاء الصلاحية والمُصدر والجمهور",
+              "حدد الخوارزميات المسموح بها بشكل صريح وارفض الخوارزميات غير المتوقعة",
+              "لا تستخدم أبداً خوارزمية 'none' التي تعطل التحقق من التوقيع",
+              "خزن الرموز بشكل آمن - تجنب localStorage إن أمكن، فضل ملفات تعريف ارتباط httpOnly أو الذاكرة",
+              "لا تتضمن معلومات حساسة في الحمولة (ليست مشفرة)",
+              "نفذ القائمة السوداء للرموز لسيناريوهات تسجيل الخروج الحرجة",
+              "فكر في استخدام خوارزميات غير متماثلة (RS256) لإدارة أفضل للمفاتيح",
+              "قم بتدوير مفاتيح التوقيع بانتظام وتحديث الرموز"
+            ]
+          }
+        },
+        {
+          "id": 24,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "Critical Warning: JWT tokens cannot be invalidated before expiration. If a token is compromised, it remains valid until it expires. This is why short expiration times and proper storage are non-negotiable security requirements. For highly sensitive operations, consider requiring re-authentication.",
+            "ar": "تحذير حرج: لا يمكن إبطال رموز JWT قبل انتهاء الصلاحية. إذا تم اختراق رمز، يظل صالحاً حتى ينتهي. هذا هو السبب في أن أوقات انتهاء الصلاحية القصيرة والتخزين الصحيح متطلبات أمنية غير قابلة للتفاوض. للعمليات شديدة الحساسية، فكر في طلب إعادة المصادقة."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 25,
+          "type": "title",
+          "value": {
+            "en": "JWT vs Session-Based Authentication: When to Use Each",
+            "ar": "JWT مقابل المصادقة المستندة إلى الجلسة: متى تستخدم كل منهما"
+          }
+        },
+        {
+          "id": 26,
+          "type": "text",
+          "value": {
+            "en": "Choosing between JWT and traditional session-based authentication depends on your application's requirements. JWT excels in stateless, distributed environments. If you have multiple servers or microservices that need to verify authentication independently without a shared session store, JWT is ideal. It also works well for mobile applications and single-page applications where traditional cookie-based sessions can be problematic. JWT is excellent when you need to authenticate requests to multiple services or APIs with a single token. The scalability benefits are significant for high-traffic applications.",
+            "ar": "الاختيار بين JWT والمصادقة التقليدية المستندة إلى الجلسة يعتمد على متطلبات تطبيقك. يتفوق JWT في البيئات عديمة الحالة الموزعة. إذا كان لديك خوادم متعددة أو خدمات مصغرة تحتاج إلى التحقق من المصادقة بشكل مستقل دون مخزن جلسة مشترك، فإن JWT مثالي. يعمل أيضاً بشكل جيد لتطبيقات الأجهزة المحمولة وتطبيقات الصفحة الواحدة حيث يمكن أن تكون الجلسات التقليدية المستندة إلى ملفات تعريف الارتباط مشكلة. JWT ممتاز عندما تحتاج إلى مصادقة الطلبات إلى خدمات أو واجهات برمجة تطبيقات متعددة برمز واحد. فوائد قابلية التوسع كبيرة للتطبيقات ذات حركة المرور العالية."
+          }
+        },
+        {
+          "id": 27,
+          "type": "text",
+          "value": {
+            "en": "However, session-based authentication has advantages in certain scenarios. Sessions give you immediate control - you can invalidate a session instantly by deleting it from the server. This is crucial for immediate logout or security incident response. Sessions are better when you need fine-grained control over user state and want to track or limit active sessions per user. They are also simpler to implement correctly and have fewer security pitfalls for beginners. For traditional web applications with server-side rendering and a monolithic architecture, sessions are often the more straightforward choice. Many applications use a hybrid approach: sessions for the main web application and JWT for API access or mobile apps.",
+            "ar": "ومع ذلك، فإن المصادقة المستندة إلى الجلسة لها مزايا في سيناريوهات معينة. الجلسات تمنحك تحكماً فورياً - يمكنك إبطال جلسة على الفور من خلال حذفها من الخادم. هذا أمر بالغ الأهمية لتسجيل الخروج الفوري أو الاستجابة لحوادث الأمان. الجلسات أفضل عندما تحتاج إلى تحكم دقيق في حالة المستخدم وتريد تتبع أو تحديد الجلسات النشطة لكل مستخدم. هي أيضاً أبسط في التنفيذ بشكل صحيح ولديها عدد أقل من المخاطر الأمنية للمبتدئين. لتطبيقات الويب التقليدية مع العرض من جانب الخادم والبنية الأحادية، غالباً ما تكون الجلسات الخيار الأكثر وضوحاً. العديد من التطبيقات تستخدم نهجاً مختلطاً: الجلسات لتطبيق الويب الرئيسي وJWT للوصول إلى API أو تطبيقات الأجهزة المحمولة."
+          }
+        },
+        {
+          "id": 28,
+          "type": "table",
+          "title": {
+            "en": "JWT vs Session-Based Authentication Comparison",
+            "ar": "مقارنة JWT مقابل المصادقة المستندة إلى الجلسة"
+          },
+          "headers": {
+            "en": [
+              "Aspect",
+              "JWT",
+              "Session-Based"
+            ],
+            "ar": [
+              "الجانب",
+              "JWT",
+              "المستند إلى الجلسة"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "State",
+                "Stateless - no server storage",
+                "Stateful - server stores sessions"
+              ],
+              "ar": [
+                "الحالة",
+                "عديم الحالة - لا تخزين خادم",
+                "ذو حالة - الخادم يخزن الجلسات"
+              ]
+            },
+            {
+              "en": [
+                "Scalability",
+                "Excellent - easy horizontal scaling",
+                "Requires shared session store"
+              ],
+              "ar": [
+                "قابلية التوسع",
+                "ممتازة - توسع أفقي سهل",
+                "يتطلب مخزن جلسة مشترك"
+              ]
+            },
+            {
+              "en": [
+                "Revocation",
+                "Difficult - valid until expiration",
+                "Easy - delete from database"
+              ],
+              "ar": [
+                "الإلغاء",
+                "صعب - صالح حتى انتهاء الصلاحية",
+                "سهل - احذف من قاعدة البيانات"
+              ]
+            },
+            {
+              "en": [
+                "Size",
+                "Larger - contains full data",
+                "Smaller - just session ID"
+              ],
+              "ar": [
+                "الحجم",
+                "أكبر - يحتوي على بيانات كاملة",
+                "أصغر - مجرد معرف جلسة"
+              ]
+            },
+            {
+              "en": [
+                "Performance",
+                "No database lookup per request",
+                "Database lookup per request"
+              ],
+              "ar": [
+                "الأداء",
+                "لا بحث في قاعدة البيانات لكل طلب",
+                "بحث في قاعدة البيانات لكل طلب"
+              ]
+            },
+            {
+              "en": [
+                "Best For",
+                "APIs, microservices, mobile apps",
+                "Traditional web apps, immediate control needed"
+              ],
+              "ar": [
+                "الأفضل لـ",
+                "APIs، خدمات مصغرة، تطبيقات محمولة",
+                "تطبيقات ويب تقليدية، حاجة للتحكم الفوري"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 29,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Decision Guide: Choose JWT for distributed systems, APIs, and mobile apps where scalability is critical. Choose sessions for traditional web applications where immediate control and simpler security are priorities. Consider a hybrid approach using both for different parts of your system.",
+            "ar": "دليل القرار: اختر JWT للأنظمة الموزعة وAPIs وتطبيقات الأجهزة المحمولة حيث قابلية التوسع حاسمة. اختر الجلسات لتطبيقات الويب التقليدية حيث التحكم الفوري والأمان الأبسط هي الأولويات. فكر في نهج مختلط باستخدام كليهما لأجزاء مختلفة من نظامك."
+          },
+          "link": "",
+          "isLab": false
+        }
+      ]
+    },
+    {
+      "id": "topic-5",
+      "title": {
+        "en": "OAuth 2.0 Basics: Understanding Authorization Flow",
+        "ar": "أساسيات OAuth 2.0: فهم تدفق التفويض"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "What Is OAuth 2.0 and What Problem Does It Solve?",
+            "ar": "ما هو OAuth 2.0 وما المشكلة التي يحلها؟"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "OAuth 2.0 is an authorization framework that allows applications to obtain limited access to user accounts on another service without exposing the user's password. The key word here is authorization, not authentication. OAuth 2.0 is primarily about granting permissions and delegating access, not verifying identity. It solves a critical problem: how can you allow one application to access your data on another application without giving away your password? For example, when you use a third-party app that says 'Sign in with Google' or 'Connect your Facebook account', OAuth 2.0 is working behind the scenes. You do not give the third-party app your Google or Facebook password. Instead, Google or Facebook asks you directly if you want to give the third-party app specific permissions, like reading your profile or posting on your behalf.",
+            "ar": "OAuth 2.0 هو إطار تفويض يسمح للتطبيقات بالحصول على وصول محدود إلى حسابات المستخدمين على خدمة أخرى دون الكشف عن كلمة مرور المستخدم. الكلمة الأساسية هنا هي التفويض، وليس المصادقة. OAuth 2.0 يتعلق بشكل أساسي بمنح الأذونات وتفويض الوصول، وليس التحقق من الهوية. يحل مشكلة حاسمة: كيف يمكنك السماح لتطبيق واحد بالوصول إلى بياناتك على تطبيق آخر دون التخلي عن كلمة المرور الخاصة بك؟ على سبيل المثال، عندما تستخدم تطبيقاً من طرف ثالث يقول 'سجل الدخول بحساب Google' أو 'اربط حساب Facebook الخاص بك'، فإن OAuth 2.0 يعمل خلف الكواليس. لا تعطي تطبيق الطرف الثالث كلمة مرور Google أو Facebook الخاصة بك. بدلاً من ذلك، يسألك Google أو Facebook مباشرة إذا كنت تريد منح تطبيق الطرف الثالث أذونات محددة، مثل قراءة ملفك الشخصي أو النشر نيابة عنك."
+          }
+        },
+        {
+          "id": 1772840543886.0317,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Authentication%20Deep%20Dive/5-1-OAuth%202.0%20problem%20and%20solution.webp"
+        },
+        {
+          "id": 4,
+          "type": "text",
+          "value": {
+            "en": "Before OAuth 2.0, if you wanted to give a third-party application access to your account on another service, you had to share your username and password with that third-party app. This created serious security and trust problems. The third-party app could do anything with your account, not just the specific actions you wanted. You could not easily revoke access without changing your password. If the third-party app was compromised or malicious, your account was at risk. OAuth 2.0 eliminates these problems through delegation. You grant specific, limited permissions (called scopes) to applications. These permissions can be revoked at any time without changing your password. The third-party app never sees your actual credentials.",
+            "ar": "قبل OAuth 2.0، إذا أردت منح تطبيق طرف ثالث وصولاً إلى حسابك على خدمة أخرى، كان عليك مشاركة اسم المستخدم وكلمة المرور مع تطبيق الطرف الثالث ذلك. أدى هذا إلى مشاكل أمنية وثقة خطيرة. يمكن لتطبيق الطرف الثالث فعل أي شيء بحسابك، وليس فقط الإجراءات المحددة التي أردتها. لا يمكنك إلغاء الوصول بسهولة دون تغيير كلمة المرور الخاصة بك. إذا تم اختراق تطبيق الطرف الثالث أو كان ضاراً، كان حسابك في خطر. OAuth 2.0 يلغي هذه المشاكل من خلال التفويض. تمنح أذونات محددة ومحدودة (تسمى النطاقات) للتطبيقات. يمكن إلغاء هذه الأذونات في أي وقت دون تغيير كلمة المرور. تطبيق الطرف الثالث لا يرى بيانات اعتمادك الفعلية أبداً."
+          }
+        },
+        {
+          "id": 5,
+          "type": "text",
+          "value": {
+            "en": "Think of OAuth 2.0 like valet parking. When you arrive at a hotel, you do not give the valet driver your house keys along with your car keys. You only give them the car key, and often the car has a valet mode that limits how fast they can drive and prevents access to the trunk. Similarly, OAuth 2.0 gives third-party applications a special limited-access key (access token) rather than your master password. This key only works for specific actions and can be revoked anytime. The service you trust (Google, Facebook, etc.) remains in control and acts as the valet service manager, deciding what limited access to grant.",
+            "ar": "فكر في OAuth 2.0 مثل موقف السيارات مع الخدمة. عندما تصل إلى فندق، لا تعطي سائق الخدمة مفاتيح منزلك مع مفاتيح سيارتك. تعطيهم فقط مفتاح السيارة، وغالباً ما تحتوي السيارة على وضع خدمة يحد من مدى سرعة القيادة ويمنع الوصول إلى صندوق الأمتعة. وبالمثل، يعطي OAuth 2.0 تطبيقات الطرف الثالث مفتاح وصول خاص محدود (رمز الوصول) بدلاً من كلمة المرور الرئيسية. هذا المفتاح يعمل فقط لإجراءات محددة ويمكن إلغاؤه في أي وقت. الخدمة التي تثق بها (Google وFacebook وما إلى ذلك) تبقى في السيطرة وتعمل كمدير خدمة موقف السيارات، تقرر أي وصول محدود تمنحه."
+          }
+        },
+        {
+          "id": 6,
+          "type": "hr"
+        },
+        {
+          "id": 7,
+          "type": "title",
+          "value": {
+            "en": "OAuth 2.0 Roles: The Four Main Actors",
+            "ar": "أدوار OAuth 2.0: الممثلون الأربعة الرئيسيون"
+          }
+        },
+        {
+          "id": 8,
+          "type": "text",
+          "value": {
+            "en": "Understanding OAuth 2.0 requires knowing the four roles involved in every OAuth flow. Each role has specific responsibilities and interactions with the others. First is the Resource Owner, which is typically you, the user. You own the data or resources that are being protected. You decide whether to grant access to your resources. Second is the Client, which is the third-party application requesting access to your resources. This could be a mobile app, a website, or any software that wants to act on your behalf. The client wants to access your protected resources but should not have your password.",
+            "ar": "فهم OAuth 2.0 يتطلب معرفة الأدوار الأربعة المشاركة في كل تدفق OAuth. كل دور لديه مسؤوليات محددة وتفاعلات مع الآخرين. الأول هو مالك المورد، والذي عادة ما يكون أنت، المستخدم. أنت تملك البيانات أو الموارد التي يتم حمايتها. أنت تقرر ما إذا كان يجب منح الوصول إلى مواردك. الثاني هو العميل، وهو تطبيق الطرف الثالث الذي يطلب الوصول إلى مواردك. قد يكون هذا تطبيق محمول أو موقع ويب أو أي برنامج يريد التصرف نيابة عنك. يريد العميل الوصول إلى مواردك المحمية لكن لا ينبغي أن يكون لديه كلمة المرور الخاصة بك."
+          }
+        },
+        {
+          "id": 9,
+          "type": "text",
+          "value": {
+            "en": "Third is the Authorization Server, which is the trusted service that verifies your identity and issues access tokens. When you click 'Sign in with Google', Google's authorization server handles the login and permission grant process. This server knows your credentials and authenticates you directly. After you grant permission, it generates and provides the access token to the client. Fourth is the Resource Server, which hosts your protected resources or data. This server accepts access tokens and validates them before providing access to the requested resources. In many cases, the authorization server and resource server belong to the same organization (like Google), but they have distinct functions within the OAuth flow.",
+            "ar": "الثالث هو خادم التفويض، وهو الخدمة الموثوقة التي تتحقق من هويتك وتصدر رموز الوصول. عندما تنقر على 'سجل الدخول بحساب Google'، يتعامل خادم التفويض الخاص بـGoogle مع عملية تسجيل الدخول ومنح الإذن. هذا الخادم يعرف بيانات اعتمادك ويصادق عليك مباشرة. بعد أن تمنح الإذن، ينشئ ويوفر رمز الوصول للعميل. الرابع هو خادم المورد، الذي يستضيف مواردك أو بياناتك المحمية. يقبل هذا الخادم رموز الوصول ويتحقق منها قبل توفير الوصول إلى الموارد المطلوبة. في كثير من الحالات، ينتمي خادم التفويض وخادم المورد إلى نفس المنظمة (مثل Google)، لكن لديهم وظائف متميزة ضمن تدفق OAuth."
+          }
+        },
+        {
+          "id": 10,
+          "type": "table",
+          "title": {
+            "en": "OAuth 2.0 Roles Explained",
+            "ar": "شرح أدوار OAuth 2.0"
+          },
+          "headers": {
+            "en": [
+              "Role",
+              "Who/What",
+              "Responsibility",
+              "Real Example"
+            ],
+            "ar": [
+              "الدور",
+              "من/ماذا",
+              "المسؤولية",
+              "مثال حقيقي"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "Resource Owner",
+                "You (the user)",
+                "Owns protected data, grants access",
+                "You with your Google account"
+              ],
+              "ar": [
+                "مالك المورد",
+                "أنت (المستخدم)",
+                "يملك البيانات المحمية، يمنح الوصول",
+                "أنت مع حساب Google الخاص بك"
+              ]
+            },
+            {
+              "en": [
+                "Client",
+                "Third-party application",
+                "Requests access to resources",
+                "Photo printing app wanting your photos"
+              ],
+              "ar": [
+                "العميل",
+                "تطبيق طرف ثالث",
+                "يطلب الوصول إلى الموارد",
+                "تطبيق طباعة الصور الذي يريد صورك"
+              ]
+            },
+            {
+              "en": [
+                "Authorization Server",
+                "Trusted identity provider",
+                "Authenticates user, issues tokens",
+                "Google's OAuth server"
+              ],
+              "ar": [
+                "خادم التفويض",
+                "مزود هوية موثوق",
+                "يصادق على المستخدم، يصدر رموز",
+                "خادم OAuth الخاص بـGoogle"
+              ]
+            },
+            {
+              "en": [
+                "Resource Server",
+                "API/Data hosting service",
+                "Protects resources, validates tokens",
+                "Google Photos API server"
+              ],
+              "ar": [
+                "خادم المورد",
+                "خدمة استضافة API/البيانات",
+                "يحمي الموارد، يتحقق من الرموز",
+                "خادم API صور Google"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 11,
+          "type": "text",
+          "value": {
+            "en": "These four roles work together in a carefully choreographed dance. The resource owner initiates the process by using the client application. The client redirects the resource owner to the authorization server. The authorization server authenticates the resource owner and asks for consent. Upon approval, the authorization server gives the client an access token. The client then uses this token to request resources from the resource server. The resource server validates the token and provides the requested data. At no point does the client see the resource owner's password - this is the fundamental security principle of OAuth 2.0.",
+            "ar": "هذه الأدوار الأربعة تعمل معاً في رقصة منسقة بعناية. يبدأ مالك المورد العملية باستخدام تطبيق العميل. يعيد العميل توجيه مالك المورد إلى خادم التفويض. يصادق خادم التفويض على مالك المورد ويطلب الموافقة. عند الموافقة، يعطي خادم التفويض العميل رمز وصول. يستخدم العميل بعد ذلك هذا الرمز لطلب الموارد من خادم المورد. يتحقق خادم المورد من الرمز ويوفر البيانات المطلوبة. في أي نقطة لا يرى العميل كلمة مرور مالك المورد - هذا هو المبدأ الأمني الأساسي لـOAuth 2.0."
+          }
+        },
+        {
+          "id": 12,
+          "type": "hr"
+        },
+        {
+          "id": 13,
+          "type": "title",
+          "value": {
+            "en": "Authorization Code Flow: The Most Common OAuth 2.0 Flow",
+            "ar": "تدفق رمز التفويض: تدفق OAuth 2.0 الأكثر شيوعاً"
+          }
+        },
+        {
+          "id": 14,
+          "type": "text",
+          "value": {
+            "en": "OAuth 2.0 defines several different flows (called grant types) for different scenarios. The most secure and commonly used flow for web applications is the Authorization Code Flow. This flow is designed specifically for applications that have a server backend that can securely store secrets. Let us walk through each step of this flow to understand exactly what happens when you click 'Sign in with Google' or similar buttons. Understanding this flow is essential because it forms the foundation for how modern applications delegate authentication and authorization.",
+            "ar": "يحدد OAuth 2.0 عدة تدفقات مختلفة (تسمى أنواع المنح) لسيناريوهات مختلفة. التدفق الأكثر أماناً وشيوعاً لتطبيقات الويب هو تدفق رمز التفويض. تم تصميم هذا التدفق خصيصاً للتطبيقات التي لديها خلفية خادم يمكنها تخزين الأسرار بشكل آمن. دعونا نمر خلال كل خطوة من هذا التدفق لفهم بالضبط ما يحدث عندما تنقر على 'سجل الدخول بحساب Google' أو أزرار مماثلة. فهم هذا التدفق أمر ضروري لأنه يشكل الأساس لكيفية تفويض التطبيقات الحديثة للمصادقة والتفويض."
+          }
+        },
+        {
+          "id": 1772840562497.9824,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Authentication%20Deep%20Dive/5-2-Authorization%20Code%20Flow.webp"
+        },
+        {
+          "id": 16,
+          "type": "orderedList",
+          "title": {
+            "en": "Authorization Code Flow Steps Detailed",
+            "ar": "خطوات تدفق رمز التفويض بالتفصيل"
+          },
+          "items": [
+            {
+              "subtitle": {
+                "en": "User Initiates Login",
+                "ar": "المستخدم يبدأ تسجيل الدخول"
+              },
+              "text": {
+                "en": "You visit a third-party website or app and click a button like 'Sign in with Google'. The client application receives this action and knows it needs to request authorization from the OAuth provider.",
+                "ar": "تزور موقع ويب أو تطبيق طرف ثالث وتنقر على زر مثل 'سجل الدخول بحساب Google'. يتلقى تطبيق العميل هذا الإجراء ويعرف أنه يحتاج إلى طلب التفويض من مزود OAuth."
+              },
+              "example": {
+                "en": "Example: Clicking 'Continue with Google' on a photo printing website",
+                "ar": "مثال: النقر على 'متابعة مع Google' على موقع طباعة الصور"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Authorization Request Redirect",
+                "ar": "إعادة توجيه طلب التفويض"
+              },
+              "text": {
+                "en": "The client redirects your browser to the authorization server with specific parameters: client_id (identifies the client app), redirect_uri (where to return after authorization), scope (what permissions are requested), and state (a random value for security). Your browser now shows the authorization server's login page.",
+                "ar": "يعيد العميل توجيه متصفحك إلى خادم التفويض مع معاملات محددة: client_id (يحدد تطبيق العميل)، redirect_uri (أين يعود بعد التفويض)، scope (ما الأذونات المطلوبة)، وstate (قيمة عشوائية للأمان). متصفحك الآن يعرض صفحة تسجيل الدخول لخادم التفويض."
+              },
+              "example": {
+                "en": "Example: Your browser goes to accounts.google.com/oauth/authorize with parameters",
+                "ar": "مثال: ينتقل متصفحك إلى accounts.google.com/oauth/authorize مع المعاملات"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "User Authentication and Consent",
+                "ar": "مصادقة المستخدم والموافقة"
+              },
+              "text": {
+                "en": "The authorization server authenticates you directly (you log in with your username and password to Google, for example). Then it shows a consent screen asking if you want to grant the requested permissions to the client application. You see exactly what access you are granting. You click approve or deny.",
+                "ar": "يصادق خادم التفويض عليك مباشرة (تسجل الدخول باسم المستخدم وكلمة المرور إلى Google، على سبيل المثال). ثم يعرض شاشة موافقة تسأل إذا كنت تريد منح الأذونات المطلوبة لتطبيق العميل. ترى بالضبط أي وصول تمنحه. تنقر على الموافقة أو الرفض."
+              },
+              "example": {
+                "en": "Example: Screen says 'Photo Printer wants to: View your photos, Access your profile'",
+                "ar": "مثال: الشاشة تقول 'طابعة الصور تريد: عرض صورك، الوصول إلى ملفك الشخصي'"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Authorization Code Issued",
+                "ar": "رمز التفويض المُصدر"
+              },
+              "text": {
+                "en": "If you approve, the authorization server redirects your browser back to the client application's redirect_uri. Included in this redirect URL is an authorization code - a short-lived, one-time-use code. This code is not the access token yet. It is an intermediate credential that proves you granted permission.",
+                "ar": "إذا وافقت، يعيد خادم التفويض توجيه متصفحك إلى redirect_uri الخاص بتطبيق العميل. متضمن في URL إعادة التوجيه هذا رمز التفويض - رمز قصير الأجل لاستخدام واحد. هذا الرمز ليس رمز الوصول بعد. إنه بيانات اعتماد وسيطة تثبت أنك منحت الإذن."
+              },
+              "example": {
+                "en": "Example: Browser goes to photoprinter.com/callback?code=ABC123XYZ&state=random123",
+                "ar": "مثال: المتصفح ينتقل إلى photoprinter.com/callback?code=ABC123XYZ&state=random123"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Token Exchange (Backend)",
+                "ar": "تبادل الرمز (الخلفية)"
+              },
+              "text": {
+                "en": "The client application's backend server takes the authorization code and sends it directly to the authorization server's token endpoint. This request includes the authorization code, client_id, client_secret (a password for the client app), and redirect_uri. This happens server-to-server, not in the browser, which keeps the client_secret safe. The authorization server verifies everything and responds with an access token (and often a refresh token).",
+                "ar": "يأخذ خادم خلفية تطبيق العميل رمز التفويض ويرسله مباشرة إلى نقطة نهاية الرمز لخادم التفويض. يتضمن هذا الطلب رمز التفويض، client_id، client_secret (كلمة مرور لتطبيق العميل)، وredirect_uri. يحدث هذا من خادم إلى خادم، وليس في المتصفح، مما يحافظ على أمان client_secret. يتحقق خادم التفويض من كل شيء ويستجيب برمز وصول (وغالباً رمز تحديث)."
+              },
+              "example": {
+                "en": "Example: POST to oauth.google.com/token with code, client_id, client_secret",
+                "ar": "مثال: POST إلى oauth.google.com/token مع الرمز، client_id، client_secret"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Accessing Protected Resources",
+                "ar": "الوصول إلى الموارد المحمية"
+              },
+              "text": {
+                "en": "Now the client application has a valid access token. It can make API requests to the resource server, including the access token in the Authorization header. The resource server validates the token and checks what permissions (scopes) it grants. If valid, the resource server returns the requested data.",
+                "ar": "الآن تطبيق العميل لديه رمز وصول صالح. يمكنه تقديم طلبات API إلى خادم المورد، بما في ذلك رمز الوصول في رأس Authorization. يتحقق خادم المورد من الرمز ويفحص الأذونات (النطاقات) التي يمنحها. إذا كان صالحاً، يعيد خادم المورد البيانات المطلوبة."
+              },
+              "example": {
+                "en": "Example: GET photos.googleapis.com/v1/albums with Authorization: Bearer <access_token>",
+                "ar": "مثال: GET photos.googleapis.com/v1/albums مع Authorization: Bearer <access_token>"
+              }
+            }
+          ]
+        },
+        {
+          "id": 17,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Security Insight: The authorization code flow uses two separate credentials (authorization code, then access token) to enhance security. The authorization code is exposed in the browser URL briefly, but it cannot be used alone - it requires the client_secret, which only the backend server knows. This two-step exchange protects the access token from exposure in the browser.",
+            "ar": "رؤية أمنية: يستخدم تدفق رمز التفويض بيانات اعتماد منفصلة (رمز التفويض، ثم رمز الوصول) لتعزيز الأمان. يتم الكشف عن رمز التفويض في URL المتصفح لفترة وجيزة، لكن لا يمكن استخدامه وحده - يتطلب client_secret، الذي يعرفه فقط خادم الخلفية. هذا التبادل من خطوتين يحمي رمز الوصول من التعرض في المتصفح."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 18,
+          "type": "hr"
+        },
+        {
+          "id": 19,
+          "type": "title",
+          "value": {
+            "en": "Scopes and Permissions: Controlling Access Granularity",
+            "ar": "النطاقات والأذونات: التحكم في دقة الوصول"
+          }
+        },
+        {
+          "id": 20,
+          "type": "text",
+          "value": {
+            "en": "One of OAuth 2.0's most important features is the concept of scopes. Scopes define specific permissions that the client is requesting. Instead of giving an application full access to your account, you grant only the specific capabilities it needs. For example, a photo printing application might request the scope 'read_photos' but not 'write_photos' or 'delete_photos'. A social media scheduling tool might request 'post_updates' but not 'read_private_messages'. Scopes allow fine-grained control over what third-party applications can do with your data.",
+            "ar": "واحدة من أهم ميزات OAuth 2.0 هي مفهوم النطاقات. تحدد النطاقات الأذونات المحددة التي يطلبها العميل. بدلاً من منح تطبيق وصولاً كاملاً إلى حسابك، تمنح فقط القدرات المحددة التي يحتاجها. على سبيل المثال، قد يطلب تطبيق طباعة الصور النطاق 'read_photos' لكن ليس 'write_photos' أو 'delete_photos'. قد تطلب أداة جدولة وسائل التواصل الاجتماعي 'post_updates' لكن ليس 'read_private_messages'. تسمح النطاقات بالتحكم الدقيق فيما يمكن لتطبيقات الطرف الثالث فعله ببياناتك."
+          }
+        },
+        {
+          "id": 21,
+          "type": "text",
+          "value": {
+            "en": "When you see the consent screen during OAuth authorization, you are actually reviewing the scopes that the application is requesting. The authorization server translates technical scope names into human-readable descriptions. You can see statements like 'This app wants to: View your email address, Access your Google Drive files, Post to your Twitter account'. Each of these corresponds to specific scopes in the authorization request. You have the power to approve or deny the entire request. Some modern OAuth implementations even allow you to selectively approve only some of the requested scopes while denying others, giving you even more control.",
+            "ar": "عندما ترى شاشة الموافقة أثناء تفويض OAuth، أنت في الواقع تراجع النطاقات التي يطلبها التطبيق. يترجم خادم التفويض أسماء النطاق التقنية إلى أوصاف قابلة للقراءة البشرية. يمكنك رؤية بيانات مثل 'هذا التطبيق يريد: عرض عنوان بريدك الإلكتروني، الوصول إلى ملفات Google Drive الخاصة بك، النشر على حساب Twitter الخاص بك'. يتوافق كل من هذه مع نطاقات محددة في طلب التفويض. لديك القدرة على الموافقة أو رفض الطلب بالكامل. تسمح لك بعض تطبيقات OAuth الحديثة حتى بالموافقة بشكل انتقائي على بعض النطاقات المطلوبة فقط بينما ترفض الآخرين، مما يمنحك مزيداً من التحكم."
+          }
+        },
+        {
+          "id": 22,
+          "type": "text",
+          "value": {
+            "en": "The principle of least privilege applies perfectly to OAuth scopes. Applications should request only the minimum scopes necessary for their functionality. As a user, be cautious when you see applications requesting excessive permissions. If a simple weather app asks for permission to read your emails and post to your social media, that is a red flag. Legitimate applications clearly explain why they need each permission. Reputable OAuth providers (Google, Facebook, Microsoft, etc.) provide dashboards where you can review which applications have access to your account and what permissions they have. You can revoke access at any time, and the application's access token immediately becomes invalid.",
+            "ar": "مبدأ الامتياز الأدنى ينطبق تماماً على نطاقات OAuth. يجب أن تطلب التطبيقات فقط الحد الأدنى من النطاقات الضرورية لوظائفها. كمستخدم، كن حذراً عندما ترى تطبيقات تطلب أذونات مفرطة. إذا طلب تطبيق طقس بسيط إذناً لقراءة رسائل البريد الإلكتروني الخاصة بك والنشر على وسائل التواصل الاجتماعي الخاصة بك، فهذه علامة حمراء. التطبيقات الشرعية تشرح بوضوح لماذا تحتاج إلى كل إذن. مزودو OAuth ذوو السمعة الطيبة (Google وFacebook وMicrosoft وما إلى ذلك) يوفرون لوحات معلومات حيث يمكنك مراجعة التطبيقات التي لديها وصول إلى حسابك وما الأذونات التي لديها. يمكنك إلغاء الوصول في أي وقت، ويصبح رمز وصول التطبيق غير صالح على الفور."
+          }
+        },
+        {
+          "id": 23,
+          "type": "list",
+          "title": {
+            "en": "Common OAuth 2.0 Scope Examples",
+            "ar": "أمثلة نطاقات OAuth 2.0 الشائعة"
+          },
+          "items": {
+            "en": [
+              "profile - Access basic profile information (name, picture)",
+              "email - Access email address",
+              "openid - Enables OpenID Connect authentication",
+              "read:user - Read user account data",
+              "write:user - Modify user account data",
+              "repo - Full control of private repositories (GitHub)",
+              "public_repo - Access public repositories (GitHub)",
+              "user_posts - Read and write user posts (Facebook)",
+              "user_photos - Access user photos (Facebook)",
+              "drive.readonly - View Google Drive files",
+              "drive.file - Access files created by this app only",
+              "calendar.readonly - View calendar events",
+              "contacts.readonly - View contact information"
+            ],
+            "ar": [
+              "profile - الوصول إلى معلومات الملف الشخصي الأساسية (الاسم، الصورة)",
+              "email - الوصول إلى عنوان البريد الإلكتروني",
+              "openid - يمكّن مصادقة OpenID Connect",
+              "read:user - قراءة بيانات حساب المستخدم",
+              "write:user - تعديل بيانات حساب المستخدم",
+              "repo - التحكم الكامل في المستودعات الخاصة (GitHub)",
+              "public_repo - الوصول إلى المستودعات العامة (GitHub)",
+              "user_posts - قراءة وكتابة منشورات المستخدم (Facebook)",
+              "user_photos - الوصول إلى صور المستخدم (Facebook)",
+              "drive.readonly - عرض ملفات Google Drive",
+              "drive.file - الوصول إلى الملفات التي أنشأها هذا التطبيق فقط",
+              "calendar.readonly - عرض أحداث التقويم",
+              "contacts.readonly - عرض معلومات الاتصال"
+            ]
+          }
+        },
+        {
+          "id": 24,
+          "type": "hr"
+        },
+        {
+          "id": 25,
+          "type": "title",
+          "value": {
+            "en": "OAuth 2.0 Security Best Practices and Common Pitfalls",
+            "ar": "أفضل ممارسات أمان OAuth 2.0 والمخاطر الشائعة"
+          }
+        },
+        {
+          "id": 26,
+          "type": "text",
+          "value": {
+            "en": "While OAuth 2.0 is designed to be secure, incorrect implementation can create serious vulnerabilities. The most critical security measure is using the state parameter. This random value protects against CSRF attacks on the OAuth flow itself. When the client initiates the authorization request, it includes a randomly generated state value. When the authorization server redirects back with the authorization code, it must include the same state value. The client verifies that the state matches before proceeding. This ensures that the authorization response is genuinely in response to the client's request and not an attack where a malicious actor tricks the user's browser into using an authorization code meant for the attacker.",
+            "ar": "بينما تم تصميم OAuth 2.0 ليكون آمناً، يمكن أن يؤدي التنفيذ غير الصحيح إلى ثغرات خطيرة. أهم إجراء أمني هو استخدام معامل state. تحمي هذه القيمة العشوائية من هجمات CSRF على تدفق OAuth نفسه. عندما يبدأ العميل طلب التفويض، يتضمن قيمة state تم إنشاؤها عشوائياً. عندما يعيد خادم التفويض التوجيه مع رمز التفويض، يجب أن يتضمن نفس قيمة state. يتحقق العميل من تطابق state قبل المتابعة. هذا يضمن أن استجابة التفويض هي حقاً استجابة لطلب العميل وليست هجوماً حيث يخدع ممثل ضار متصفح المستخدم لاستخدام رمز تفويض مخصص للمهاجم."
+          }
+        },
+        {
+          "id": 27,
+          "type": "text",
+          "value": {
+            "en": "Another critical requirement is validating the redirect_uri strictly. The authorization server must only redirect to URLs that were pre-registered by the client application. If the authorization server accepts arbitrary redirect URLs, an attacker could register a malicious application with the same client_id and trick users into authorizing it, then capture the authorization code. Always use HTTPS for all OAuth endpoints and redirects - OAuth credentials sent over unencrypted connections can be intercepted. Store client secrets securely and never expose them in client-side code or version control repositories. For mobile and single-page applications that cannot securely store secrets, use PKCE (Proof Key for Code Exchange), an extension that adds additional security without requiring a client secret.",
+            "ar": "متطلب حرج آخر هو التحقق من redirect_uri بشكل صارم. يجب على خادم التفويض إعادة التوجيه فقط إلى عناوين URL التي تم تسجيلها مسبقاً من قبل تطبيق العميل. إذا قبل خادم التفويض عناوين URL لإعادة التوجيه التعسفية، فقد يسجل المهاجم تطبيقاً ضاراً بنفس client_id ويخدع المستخدمين للتفويض له، ثم يلتقط رمز التفويض. استخدم دائماً HTTPS لجميع نقاط نهاية OAuth وإعادة التوجيه - يمكن اعتراض بيانات اعتماد OAuth المرسلة عبر اتصالات غير مشفرة. خزّن أسرار العميل بشكل آمن ولا تكشف عنها أبداً في كود جانب العميل أو مستودعات التحكم في الإصدارات. لتطبيقات الأجهزة المحمولة والصفحة الواحدة التي لا يمكنها تخزين الأسرار بشكل آمن، استخدم PKCE (مفتاح الإثبات لتبادل الرمز)، وهو امتداد يضيف أماناً إضافياً دون الحاجة إلى سر عميل."
+          }
+        },
+        {
+          "id": 1772840552420.2693,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Authentication%20Deep%20Dive/5-3-OAuth%202.0%20Security%20Best%20Practices.webp"
+        },
+        {
+          "id": 28,
+          "type": "text",
+          "value": {
+            "en": "[INFOGRAPHIC_HINT] Create a security best practices summary for OAuth 2.0. Use 16:9 landscape with white background and mix of green (good practices) and red (vulnerabilities to avoid). Display a central OAuth shield icon with 6 security measures radiating outward in a circular pattern: 1) State parameter icon with CSRF protection label, 2) HTTPS lock icon with encrypted communication label, 3) Redirect validation icon with whitelist concept, 4) Client secret safe icon with secure storage label, 5) Scope minimization icon with least privilege label, 6) Token expiration clock icon with short-lived tokens label. Add small red warning badges near common mistakes: 'Never expose client_secret', 'Always validate redirect_uri', 'Don't skip state parameter'. Use simple icons and minimal text for each measure. This visual summarizes critical OAuth 2.0 security practices.",
+            "ar": "[INFOGRAPHIC_HINT] أنشئ ملخص أفضل ممارسات الأمان لـOAuth 2.0. استخدم نسبة 16:9 أفقية مع خلفية بيضاء ومزيج من الأخضر (الممارسات الجيدة) والأحمر (الثغرات التي يجب تجنبها). اعرض رمز درع OAuth مركزي مع 6 تدابير أمنية تشع للخارج في نمط دائري: 1) رمز معامل State مع تسمية حماية CSRF، 2) رمز قفل HTTPS مع تسمية اتصال مشفر، 3) رمز التحقق من إعادة التوجيه مع مفهوم القائمة البيضاء، 4) رمز خزنة سر العميل مع تسمية تخزين آمن، 5) رمز تقليل النطاق مع تسمية الامتياز الأدنى، 6) رمز ساعة انتهاء صلاحية الرمز مع تسمية رموز قصيرة الأجل. أضف شارات تحذير حمراء صغيرة بالقرب من الأخطاء الشائعة: 'لا تكشف أبداً عن client_secret'، 'تحقق دائماً من redirect_uri'، 'لا تتخطى معامل state'. استخدم رموزاً بسيطة ونصاً محدوداً لكل إجراء. هذه الصورة تلخص ممارسات أمان OAuth 2.0 الحرجة."
+          }
+        },
+        {
+          "id": 29,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "Critical Warning: OAuth 2.0 is authorization, not authentication. While it can be used as part of an authentication system (via OpenID Connect), OAuth 2.0 access tokens alone do not reliably identify users. Never use access tokens as authentication proof without additional verification. Use OpenID Connect (built on top of OAuth 2.0) for proper authentication.",
+            "ar": "تحذير حرج: OAuth 2.0 هو تفويض، وليس مصادقة. بينما يمكن استخدامه كجزء من نظام المصادقة (عبر OpenID Connect)، لا تحدد رموز وصول OAuth 2.0 وحدها المستخدمين بشكل موثوق. لا تستخدم أبداً رموز الوصول كدليل مصادقة دون التحقق الإضافي. استخدم OpenID Connect (المبني على OAuth 2.0) للمصادقة الصحيحة."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 30,
+          "type": "title",
+          "value": {
+            "en": "OAuth 2.0 vs OpenID Connect: Authentication Layer",
+            "ar": "OAuth 2.0 مقابل OpenID Connect: طبقة المصادقة"
+          }
+        },
+        {
+          "id": 31,
+          "type": "text",
+          "value": {
+            "en": "It is important to understand that OAuth 2.0 was designed for authorization (granting access), not authentication (verifying identity). However, many applications need both - they want to know who the user is and get permission to access their resources. This led to the creation of OpenID Connect, or OIDC, which is an identity layer built on top of OAuth 2.0. OpenID Connect adds authentication capabilities to the OAuth 2.0 framework. When you use 'Sign in with Google', you are actually using OpenID Connect, not just OAuth 2.0. OIDC extends OAuth by adding an ID token in addition to the access token. This ID token is a JWT that contains verified information about the user's identity.",
+            "ar": "من المهم أن نفهم أن OAuth 2.0 تم تصميمه للتفويض (منح الوصول)، وليس المصادقة (التحقق من الهوية). ومع ذلك، تحتاج العديد من التطبيقات إلى كليهما - يريدون معرفة من هو المستخدم والحصول على إذن للوصول إلى مواردهم. أدى هذا إلى إنشاء OpenID Connect، أو OIDC، وهي طبقة هوية مبنية على OAuth 2.0. يضيف OpenID Connect قدرات المصادقة إلى إطار OAuth 2.0. عندما تستخدم 'سجل الدخول بحساب Google'، أنت في الواقع تستخدم OpenID Connect، وليس فقط OAuth 2.0. يوسع OIDC OAuth من خلال إضافة رمز ID بالإضافة إلى رمز الوصول. رمز ID هذا هو JWT يحتوي على معلومات تم التحقق منها حول هوية المستخدم."
+          }
+        },
+        {
+          "id": 32,
+          "type": "text",
+          "value": {
+            "en": "The distinction matters for implementation. If you only need authorization (accessing user data with permission), OAuth 2.0 alone is sufficient. If you need authentication (knowing who the user is for login purposes), use OpenID Connect. The good news is that OpenID Connect uses the same flow as OAuth 2.0 (like the authorization code flow we discussed) with small additions. The authorization request includes the scope 'openid', and the token response includes an ID token along with the access token. The ID token is signed and can be verified, ensuring it came from the authorization server and contains trustworthy identity information. Modern identity providers like Google, Microsoft, Facebook, and others support OpenID Connect, making it the standard for delegated authentication.",
+            "ar": "التمييز مهم للتنفيذ. إذا كنت تحتاج فقط إلى التفويض (الوصول إلى بيانات المستخدم بإذن)، فإن OAuth 2.0 وحده كافٍ. إذا كنت تحتاج إلى المصادقة (معرفة من هو المستخدم لأغراض تسجيل الدخول)، استخدم OpenID Connect. الخبر السار هو أن OpenID Connect يستخدم نفس التدفق مثل OAuth 2.0 (مثل تدفق رمز التفويض الذي ناقشناه) مع إضافات صغيرة. يتضمن طلب التفويض النطاق 'openid'، وتتضمن استجابة الرمز رمز ID مع رمز الوصول. رمز ID موقع ويمكن التحقق منه، مما يضمن أنه جاء من خادم التفويض ويحتوي على معلومات هوية جديرة بالثقة. مزودو الهوية الحديثون مثل Google وMicrosoft وFacebook وغيرهم يدعمون OpenID Connect، مما يجعله المعيار للمصادقة المفوضة."
+          }
+        },
+        {
+          "id": 33,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Key Takeaway: OAuth 2.0 enables secure, delegated authorization without sharing passwords. It uses access tokens with specific scopes to control what third-party applications can do. For authentication, use OpenID Connect which builds on OAuth 2.0. Always implement security best practices including state parameters, HTTPS, redirect validation, and minimal scopes. OAuth 2.0 is the foundation of modern application integration and API access control.",
+            "ar": "الخلاصة الرئيسية: يمكّن OAuth 2.0 من التفويض الآمن المفوض دون مشاركة كلمات المرور. يستخدم رموز الوصول مع نطاقات محددة للتحكم فيما يمكن لتطبيقات الطرف الثالث فعله. للمصادقة، استخدم OpenID Connect الذي يبني على OAuth 2.0. نفذ دائماً أفضل ممارسات الأمان بما في ذلك معاملات state وHTTPS والتحقق من إعادة التوجيه والنطاقات الدنيا. OAuth 2.0 هو أساس تكامل التطبيقات الحديثة والتحكم في الوصول إلى API."
+          },
+          "link": "",
+          "isLab": false
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "createdAt": "2026-03-06T23:45:24.818Z",
+    "totalTopics": 5,
+    "totalElements": 143
+  }
+}

@@ -1,0 +1,2390 @@
+{
+  "landingData": {
+    "title": {
+      "en": "How the Web Works: A Complete Beginner's Guide",
+      "ar": "كيف يعمل الويب: دليل شامل للمبتدئين"
+    },
+    "description": {
+      "en": "Master the fundamentals of web communication, from typing a URL to receiving a webpage. Understand HTTP/HTTPS, DNS resolution, request-response cycles, cookies, sessions, and browser tools through practical examples and real-world scenarios.",
+      "ar": "أتقن أساسيات اتصالات الويب، من كتابة عنوان URL إلى استقبال صفحة الويب. افهم HTTP/HTTPS، وعملية DNS، ودورة الطلب والاستجابة، وملفات تعريف الارتباط، والجلسات، وأدوات المتصفح من خلال أمثلة عملية وسيناريوهات واقعية."
+    },
+    "difficulty": {
+      "en": "Beginner",
+      "ar": "مبتدئ"
+    },
+    "duration": {
+      "en": "90 Minutes",
+      "ar": "90 دقيقة"
+    },
+    "instructor": "CyberLab",
+    "rating": 4.9,
+    "students": 250
+  },
+  "topics": [
+    {
+      "id": "topic-1",
+      "title": {
+        "en": "The Big Picture: What Happens When You Visit a Website",
+        "ar": "الصورة الكبيرة: ماذا يحدث عندما تزور موقعاً إلكترونياً"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "Understanding the Web Journey",
+            "ar": "فهم رحلة الويب"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "When you type a website address like www.example.com into your browser and press Enter, a complex but fascinating journey begins. Your computer does not directly know where this website lives on the internet. It needs help from multiple systems working together. Think of it like sending a letter: you write an address on an envelope, but you need a postal service to find the recipient's house, deliver your letter, and bring back a reply. The web works similarly, but everything happens in milliseconds.",
+            "ar": "عندما تكتب عنوان موقع ويب مثل www.example.com في متصفحك وتضغط على Enter، تبدأ رحلة معقدة ولكنها رائعة. جهاز الكمبيوتر الخاص بك لا يعرف مباشرة أين يوجد هذا الموقع على الإنترنت. إنه يحتاج إلى مساعدة من أنظمة متعددة تعمل معاً. فكر في الأمر مثل إرسال رسالة: تكتب عنواناً على مظروف، لكنك تحتاج إلى خدمة بريدية للعثور على منزل المستلم، وتسليم رسالتك، وإعادة الرد إليك. يعمل الويب بطريقة مماثلة، لكن كل شيء يحدث في أجزاء من الثانية."
+          }
+        },
+        {
+          "id": 1772824631103.0874,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/How%20the%20Web%20Works/1-1-complete%20web%20journey.webp"
+        },
+        {
+          "id": 4,
+          "type": "text",
+          "value": {
+            "en": "The web is built on a client-server model. Your computer or phone acts as the client, making requests for information. Somewhere on the internet, a web server holds the files for the website you want to visit. The server's job is to listen for requests and send back the right information. But before your request can reach the server, several important steps must happen. Your browser must translate the human-friendly domain name into a machine-friendly IP address. Then it must establish a connection and send a properly formatted request.",
+            "ar": "يُبنى الويب على نموذج العميل-الخادم (Client-Server). جهاز الكمبيوتر أو الهاتف الخاص بك يعمل كعميل، يقوم بإرسال طلبات للحصول على المعلومات. في مكان ما على الإنترنت، يحتفظ خادم ويب بملفات الموقع الذي تريد زيارته. مهمة الخادم هي الاستماع إلى الطلبات وإرسال المعلومات الصحيحة. لكن قبل أن يصل طلبك إلى الخادم، يجب أن تحدث عدة خطوات مهمة. يجب على المتصفح الخاص بك ترجمة اسم النطاق المفهوم للإنسان إلى عنوان IP مفهوم للآلة. ثم يجب عليه إنشاء اتصال وإرسال طلب منسق بشكل صحيح."
+          }
+        },
+        {
+          "id": 5,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Professional Tip: The entire process from typing a URL to seeing a webpage typically takes less than 2 seconds, but involves hundreds of technical operations. Understanding these steps helps you troubleshoot problems and recognize security risks.",
+            "ar": "نصيحة احترافية: تستغرق العملية بأكملها من كتابة URL إلى رؤية صفحة ويب عادة أقل من ثانيتين، لكنها تتضمن مئات العمليات التقنية. فهم هذه الخطوات يساعدك على استكشاف المشكلات والتعرف على المخاطر الأمنية."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 6,
+          "type": "title",
+          "value": {
+            "en": "The Role of Protocols in Web Communication",
+            "ar": "دور البروتوكولات في اتصالات الويب"
+          }
+        },
+        {
+          "id": 7,
+          "type": "text",
+          "value": {
+            "en": "A protocol is simply a set of rules that computers follow to communicate with each other. Imagine two people speaking different languages trying to have a conversation. They would need an agreed-upon system or translator to understand each other. On the web, protocols serve this purpose. They define how data should be formatted, sent, received, and interpreted. Without protocols, the internet would be chaos, with each computer trying to communicate in its own unique way and no one understanding anyone else.",
+            "ar": "البروتوكول هو ببساطة مجموعة من القواعد التي تتبعها أجهزة الكمبيوتر للتواصل مع بعضها البعض. تخيل شخصين يتحدثان لغات مختلفة ويحاولان إجراء محادثة. سيحتاجان إلى نظام متفق عليه أو مترجم لفهم بعضهما البعض. على الويب، تخدم البروتوكولات هذا الغرض. تحدد كيف يجب تنسيق البيانات وإرسالها واستلامها وتفسيرها. بدون البروتوكولات، سيكون الإنترنت فوضى، حيث يحاول كل كمبيوتر التواصل بطريقته الفريدة الخاصة ولا يفهم أحد أي شخص آخر."
+          }
+        },
+        {
+          "id": 8,
+          "type": "text",
+          "value": {
+            "en": "The most important protocol for the web is HTTP, which stands for HyperText Transfer Protocol. HTTP defines how web browsers request pages and how web servers respond. Every time you click a link or submit a form, your browser uses HTTP to communicate with the server. HTTP organizes information into requests and responses, each with specific structures. Later in this course, we will explore HTTPS, which is HTTP with added security. Understanding these protocols is essential because they form the foundation of all web interactions.",
+            "ar": "أهم بروتوكول للويب هو HTTP، والذي يرمز إلى بروتوكول نقل النص الفائق (HyperText Transfer Protocol). يحدد HTTP كيف تطلب متصفحات الويب الصفحات وكيف تستجيب خوادم الويب. في كل مرة تنقر فيها على رابط أو تقدم نموذجاً، يستخدم متصفحك HTTP للتواصل مع الخادم. ينظم HTTP المعلومات في طلبات واستجابات، كل منها بهياكل محددة. لاحقاً في هذه الدورة، سنستكشف HTTPS، وهو HTTP مع إضافة الأمان. فهم هذه البروتوكولات أمر ضروري لأنها تشكل أساس جميع تفاعلات الويب."
+          }
+        },
+        {
+          "id": 1772824646367.9072,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/How%20the%20Web%20Works/1-2-how%20protocols%20enable%20communication%20between%20different%20systems.webp"
+        },
+        {
+          "id": 10,
+          "type": "table",
+          "title": {
+            "en": "Key Web Protocols Comparison",
+            "ar": "مقارنة بروتوكولات الويب الرئيسية"
+          },
+          "headers": {
+            "en": [
+              "Protocol",
+              "Full Name",
+              "Primary Purpose",
+              "Security Level"
+            ],
+            "ar": [
+              "البروتوكول",
+              "الاسم الكامل",
+              "الغرض الأساسي",
+              "مستوى الأمان"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "HTTP",
+                "HyperText Transfer Protocol",
+                "Transfer web pages",
+                "Basic (No encryption)"
+              ],
+              "ar": [
+                "HTTP",
+                "بروتوكول نقل النص الفائق",
+                "نقل صفحات الويب",
+                "أساسي (بدون تشفير)"
+              ]
+            },
+            {
+              "en": [
+                "HTTPS",
+                "HTTP Secure",
+                "Transfer web pages securely",
+                "High (With encryption)"
+              ],
+              "ar": [
+                "HTTPS",
+                "HTTP الآمن",
+                "نقل صفحات الويب بشكل آمن",
+                "عالي (مع تشفير)"
+              ]
+            },
+            {
+              "en": [
+                "DNS",
+                "Domain Name System",
+                "Translate domain names to IP addresses",
+                "Variable"
+              ],
+              "ar": [
+                "DNS",
+                "نظام أسماء النطاقات",
+                "ترجمة أسماء النطاقات إلى عناوين IP",
+                "متغير"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 11,
+          "type": "title",
+          "value": {
+            "en": "Real-World Analogy: The Web as a Postal System",
+            "ar": "تشبيه واقعي: الويب كنظام بريدي"
+          }
+        },
+        {
+          "id": 12,
+          "type": "text",
+          "value": {
+            "en": "To make web communication easier to understand, let's compare it to sending a letter through the postal service. When you want to send a letter, you write a message, put it in an envelope, and write the recipient's address on the outside. You then drop it in a mailbox. The postal service takes over from there. They look at the address, figure out the route, transport the letter through various sorting centers, and finally deliver it to the recipient's mailbox. The recipient opens the envelope, reads your message, and can choose to send a reply back to you using your return address.",
+            "ar": "لتسهيل فهم اتصالات الويب، دعنا نقارنها بإرسال رسالة عبر الخدمة البريدية. عندما تريد إرسال رسالة، تكتب رسالة، تضعها في مظروف، وتكتب عنوان المستلم على الخارج. ثم تضعها في صندوق البريد. تتولى الخدمة البريدية الأمر من هناك. ينظرون إلى العنوان، يحددون المسار، ينقلون الرسالة عبر مراكز فرز مختلفة، وأخيراً يسلمونها إلى صندوق بريد المستلم. يفتح المستلم المظروف، يقرأ رسالتك، ويمكنه اختيار إرسال رد إليك باستخدام عنوان العودة الخاص بك."
+          }
+        },
+        {
+          "id": 13,
+          "type": "text",
+          "value": {
+            "en": "The web works very similarly. Your browser is like you writing a letter. The website address (domain name) is like the recipient's address. DNS is like the postal service's address lookup system that converts 'John Smith, 123 Main St' into the actual location. The internet infrastructure (routers and cables) is like the postal trucks and sorting centers that move your letter. The web server is like the recipient who receives your request, processes it, and sends back a response. Finally, your browser is like you receiving the reply letter, opening it, and reading the contents.",
+            "ar": "يعمل الويب بطريقة مشابهة جداً. متصفحك مثل أنت تكتب رسالة. عنوان الموقع (اسم النطاق) مثل عنوان المستلم. DNS مثل نظام البحث عن العناوين في الخدمة البريدية الذي يحول 'جون سميث، شارع مين 123' إلى الموقع الفعلي. البنية التحتية للإنترنت (أجهزة التوجيه والكابلات) مثل شاحنات البريد ومراكز الفرز التي تنقل رسالتك. خادم الويب مثل المستلم الذي يتلقى طلبك، يعالجه، ويرسل رداً. أخيراً، متصفحك مثل أنت تستلم رسالة الرد، تفتحها، وتقرأ المحتويات."
+          }
+        },
+        {
+          "id": 14,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Key Difference: Unlike postal mail that can take days, web communication happens in milliseconds. Modern internet speeds mean that data can travel around the world faster than you can blink. This speed makes the web feel instant, but the underlying steps are still the same.",
+            "ar": "الفرق الرئيسي: على عكس البريد البريدي الذي قد يستغرق أياماً، يحدث اتصال الويب في أجزاء من الثانية. تعني سرعات الإنترنت الحديثة أن البيانات يمكن أن تسافر حول العالم أسرع مما يمكنك أن ترمش. هذه السرعة تجعل الويب يبدو فورياً، لكن الخطوات الأساسية لا تزال كما هي."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 15,
+          "type": "hr"
+        },
+        {
+          "id": 16,
+          "type": "title",
+          "value": {
+            "en": "What Makes Web Communication Special",
+            "ar": "ما الذي يجعل اتصالات الويب مميزة"
+          }
+        },
+        {
+          "id": 17,
+          "type": "text",
+          "value": {
+            "en": "Web communication has several unique characteristics that make it different from other forms of communication. First, it is stateless by default. This means each request-response cycle is independent. The server does not automatically remember previous interactions with you. Imagine calling a library where the librarian forgets who you are every time you hang up and call back. This stateless nature is both a strength and a challenge. It makes servers simpler and more scalable, but websites need special techniques like cookies and sessions to remember users across multiple requests.",
+            "ar": "تتمتع اتصالات الويب بعدة خصائص فريدة تجعلها مختلفة عن أشكال الاتصال الأخرى. أولاً، إنها بلا حالة (stateless) بشكل افتراضي. هذا يعني أن كل دورة طلب-استجابة مستقلة. لا يتذكر الخادم تلقائياً التفاعلات السابقة معك. تخيل الاتصال بمكتبة حيث ينسى أمين المكتبة من أنت في كل مرة تغلق فيها الهاتف وتتصل مرة أخرى. هذه الطبيعة بلا حالة هي نقطة قوة وتحدٍ في نفس الوقت. إنها تجعل الخوادم أبسط وأكثر قابلية للتوسع، لكن المواقع الإلكترونية تحتاج إلى تقنيات خاصة مثل ملفات تعريف الارتباط والجلسات لتذكر المستخدمين عبر طلبات متعددة."
+          }
+        },
+        {
+          "id": 18,
+          "type": "text",
+          "value": {
+            "en": "Second, web communication is typically asynchronous. You send a request and wait for a response. During this wait, your browser might display a loading indicator. The server processes your request, which might involve querying databases, running calculations, or gathering data from other services. Once ready, the server packages the response and sends it back. This asynchronous nature means that slow servers or poor internet connections directly impact your browsing experience. Understanding this helps you recognize when delays are network-related versus server-related.",
+            "ar": "ثانياً، اتصال الويب عادة غير متزامن (asynchronous). ترسل طلباً وتنتظر رداً. أثناء هذا الانتظار، قد يعرض متصفحك مؤشر تحميل. يعالج الخادم طلبك، والذي قد يتضمن الاستعلام عن قواعد البيانات، أو تشغيل الحسابات، أو جمع البيانات من خدمات أخرى. بمجرد أن يصبح جاهزاً، يقوم الخادم بتغليف الاستجابة وإرسالها إليك. هذه الطبيعة غير المتزامنة تعني أن الخوادم البطيئة أو اتصالات الإنترنت الضعيفة تؤثر بشكل مباشر على تجربة التصفح الخاصة بك. فهم هذا يساعدك على التعرف على وقت التأخير المتعلق بالشبكة مقابل الخادم."
+          }
+        },
+        {
+          "id": 1772824639694.6665,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/How%20the%20Web%20Works/1-3-%20stateless%20vs%20stateful%20communication.webp"
+        },
+        {
+          "id": 20,
+          "type": "list",
+          "title": {
+            "en": "Key Characteristics of Web Communication",
+            "ar": "الخصائص الرئيسية لاتصالات الويب"
+          },
+          "items": {
+            "en": [
+              "Stateless by default: Each request is independent and servers do not remember previous interactions",
+              "Request-Response pattern: Client always initiates, server always responds",
+              "Asynchronous: There is a wait time between sending a request and receiving a response",
+              "Protocol-driven: Communication follows strict rules defined by HTTP/HTTPS",
+              "Text-based headers: Human-readable information about requests and responses",
+              "Standardized: Works the same way across different browsers and servers worldwide"
+            ],
+            "ar": [
+              "بلا حالة بشكل افتراضي: كل طلب مستقل ولا تتذكر الخوادم التفاعلات السابقة",
+              "نمط الطلب-الاستجابة: العميل دائماً يبدأ، والخادم دائماً يستجيب",
+              "غير متزامن: هناك وقت انتظار بين إرسال الطلب واستلام الاستجابة",
+              "مدفوع بالبروتوكول: يتبع الاتصال قواعد صارمة يحددها HTTP/HTTPS",
+              "رؤوس نصية: معلومات مقروءة للإنسان حول الطلبات والاستجابات",
+              "موحد: يعمل بنفس الطريقة عبر متصفحات وخوادم مختلفة في جميع أنحاء العالم"
+            ]
+          }
+        },
+        {
+          "id": 21,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "Security Implication: Because web communication is text-based and travels across public networks, attackers can potentially intercept and read your data. This is why HTTPS encryption is critical for protecting sensitive information like passwords and credit card numbers.",
+            "ar": "الآثار الأمنية: نظراً لأن اتصال الويب قائم على النص ويسافر عبر الشبكات العامة، يمكن للمهاجمين اعتراض بياناتك وقراءتها. لهذا السبب يعد تشفير HTTPS أمراً بالغ الأهمية لحماية المعلومات الحساسة مثل كلمات المرور وأرقام بطاقات الائتمان."
+          },
+          "link": "",
+          "isLab": false
+        }
+      ]
+    },
+    {
+      "id": "topic-2",
+      "title": {
+        "en": "HTTP vs HTTPS: Security Differences Explained",
+        "ar": "HTTP مقابل HTTPS: شرح الفروقات الأمنية"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "What is HTTP and How Does It Work",
+            "ar": "ما هو HTTP وكيف يعمل"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "HTTP stands for HyperText Transfer Protocol. It is the foundation of data communication on the World Wide Web. When you type a URL that starts with http://, your browser uses this protocol to request and receive web pages. HTTP defines the structure of messages exchanged between your browser and the web server. Each HTTP request includes a method (like GET to retrieve a page or POST to submit form data), the resource you want (like /about.html), and various headers containing additional information. The server responds with a status code (like 200 for success or 404 for not found), headers, and the requested content.",
+            "ar": "HTTP يرمز إلى بروتوكول نقل النص الفائق (HyperText Transfer Protocol). إنه أساس اتصال البيانات على شبكة الويب العالمية. عندما تكتب URL يبدأ بـ http://، يستخدم متصفحك هذا البروتوكول لطلب واستلام صفحات الويب. يحدد HTTP بنية الرسائل المتبادلة بين متصفحك وخادم الويب. يتضمن كل طلب HTTP طريقة (method) (مثل GET لاسترداد صفحة أو POST لإرسال بيانات نموذج)، والمورد الذي تريده (مثل /about.html)، ورؤوس (headers) متنوعة تحتوي على معلومات إضافية. يستجيب الخادم برمز حالة (status code) (مثل 200 للنجاح أو 404 لعدم العثور)، ورؤوس، والمحتوى المطلوب."
+          }
+        },
+        {
+          "id": 1772824689572.7466,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/How%20the%20Web%20Works/2-1-basic%20HTTP%20communication%20flow.webp"
+        },
+        {
+          "id": 4,
+          "type": "text",
+          "value": {
+            "en": "The major problem with HTTP is that it sends all data in plain text. Plain text means the information is not encrypted or scrambled in any way. Anyone who can intercept the communication can read everything: your passwords, personal messages, credit card numbers, or any other data you send. Think of it like sending a postcard through the mail. Anyone handling the postcard along the way can read what you wrote. This is fine for public information like news articles or public blog posts, but it is extremely dangerous for any sensitive or private data.",
+            "ar": "المشكلة الرئيسية مع HTTP هي أنه يرسل جميع البيانات كنص عادي (plain text). النص العادي يعني أن المعلومات غير مشفرة أو مخلوطة بأي شكل من الأشكال. يمكن لأي شخص اعتراض الاتصال قراءة كل شيء: كلمات المرور الخاصة بك، والرسائل الشخصية، وأرقام بطاقات الائتمان، أو أي بيانات أخرى ترسلها. فكر في الأمر مثل إرسال بطاقة بريدية عبر البريد. يمكن لأي شخص يتعامل مع البطاقة البريدية على طول الطريق قراءة ما كتبته. هذا مقبول للمعلومات العامة مثل المقالات الإخبارية أو منشورات المدونات العامة، لكنه خطير للغاية لأي بيانات حساسة أو خاصة."
+          }
+        },
+        {
+          "id": 5,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "Critical Security Risk: Never enter passwords, financial information, or personal data on websites that use HTTP. Always check for HTTPS (with the padlock icon) before submitting sensitive information. Modern browsers now warn users when visiting HTTP sites.",
+            "ar": "خطر أمني حرج: لا تدخل أبداً كلمات المرور أو المعلومات المالية أو البيانات الشخصية على المواقع التي تستخدم HTTP. تحقق دائماً من HTTPS (مع رمز القفل) قبل إرسال معلومات حساسة. تحذر المتصفحات الحديثة الآن المستخدمين عند زيارة مواقع HTTP."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 6,
+          "type": "title",
+          "value": {
+            "en": "Understanding HTTPS and Encryption",
+            "ar": "فهم HTTPS والتشفير"
+          }
+        },
+        {
+          "id": 7,
+          "type": "text",
+          "value": {
+            "en": "HTTPS stands for HTTP Secure. The 'S' at the end makes all the difference. HTTPS is essentially HTTP with an added layer of security through encryption. When you connect to an HTTPS website, your browser and the server establish an encrypted connection before any data is exchanged. Encryption is a mathematical process that scrambles your data into an unreadable format. Even if someone intercepts the communication, all they see is meaningless gibberish. Only the intended recipient (the server you are communicating with) has the mathematical key to unscramble and read the data.",
+            "ar": "HTTPS يرمز إلى HTTP الآمن (HTTP Secure). الحرف 'S' في النهاية يحدث كل الفرق. HTTPS هو في الأساس HTTP مع طبقة أمان إضافية من خلال التشفير. عندما تتصل بموقع HTTPS، يقوم متصفحك والخادم بإنشاء اتصال مشفر قبل تبادل أي بيانات. التشفير هو عملية رياضية تخلط بياناتك إلى تنسيق غير قابل للقراءة. حتى لو اعترض شخص ما الاتصال، كل ما يرونه هو هراء بلا معنى. فقط المستلم المقصود (الخادم الذي تتواصل معه) لديه المفتاح الرياضي لفك التشفير وقراءة البيانات."
+          }
+        },
+        {
+          "id": 8,
+          "type": "text",
+          "value": {
+            "en": "HTTPS uses a technology called TLS (Transport Layer Security), previously known as SSL (Secure Sockets Layer). TLS creates a secure tunnel between your browser and the server. Inside this tunnel, all data is encrypted. The encryption process involves complex mathematics, but you do not need to understand the math to use HTTPS safely. What matters is that HTTPS provides three critical security benefits: encryption (data is scrambled), authentication (you know you are talking to the real website, not an imposter), and integrity (data cannot be modified in transit without detection).",
+            "ar": "يستخدم HTTPS تقنية تسمى TLS (أمان طبقة النقل - Transport Layer Security)، المعروفة سابقاً باسم SSL (طبقة المقابس الآمنة - Secure Sockets Layer). ينشئ TLS نفقاً آمناً بين متصفحك والخادم. داخل هذا النفق، يتم تشفير جميع البيانات. تتضمن عملية التشفير رياضيات معقدة، لكن لا تحتاج إلى فهم الرياضيات لاستخدام HTTPS بأمان. ما يهم هو أن HTTPS يوفر ثلاث فوائد أمنية حاسمة: التشفير (يتم خلط البيانات)، والمصادقة (تعرف أنك تتحدث إلى الموقع الحقيقي، وليس محتالاً)، والنزاهة (لا يمكن تعديل البيانات أثناء النقل دون اكتشاف)."
+          }
+        },
+        {
+          "id": 1772824705381.1338,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/How%20the%20Web%20Works/2-2-HTTP%20vs%20HTTPS%20encryption.webp"
+        },
+        {
+          "id": 9,
+          "type": "text",
+          "value": {
+            "en": "[INFOGRAPHIC_HINT] Create a comparison image showing HTTP vs HTTPS encryption. Use 16:9 landscape format with white background. Divide vertically into two equal panels with a clear separator line. TOP panel labeled 'HTTP - Unencrypted': show a postcard icon with visible text 'Password: 12345' being read by multiple eye icons along a path from laptop to server (use red/orange warning colors). BOTTOM panel labeled 'HTTPS - Encrypted': show a locked safe/envelope icon with scrambled symbols traveling from laptop to server, with eye icons seeing only scrambled data, and only the server having a key icon to decrypt (use green/blue security colors). Include a padlock icon prominently in the HTTPS section.",
+            "ar": "[تلميح الرسم البياني] أنشئ صورة مقارنة تُظهر تشفير HTTP مقابل HTTPS. استخدم تنسيق أفقي 16:9 مع خلفية بيضاء. قسم عمودياً إلى لوحتين متساويتين مع خط فاصل واضح. اللوحة العلوية موسومة بـ 'HTTP - غير مشفر': اعرض أيقونة بطاقة بريدية مع نص مرئي 'كلمة المرور: 12345' يتم قراءتها بواسطة أيقونات عين متعددة على طول مسار من كمبيوتر محمول إلى خادم (استخدم ألوان تحذير حمراء/برتقالية). اللوحة السفلية موسومة بـ 'HTTPS - مشفر': اعرض أيقونة خزنة/مظروف مقفل مع رموز مخلوطة تسافر من كمبيوتر محمول إلى خادم."
+          }
+        },
+        {
+          "id": 10,
+          "type": "hr"
+        },
+        {
+          "id": 11,
+          "type": "title",
+          "value": {
+            "en": "How to Identify HTTPS Websites",
+            "ar": "كيفية التعرف على مواقع HTTPS"
+          }
+        },
+        {
+          "id": 12,
+          "type": "text",
+          "value": {
+            "en": "Recognizing whether a website uses HTTPS is simple and crucial for your security. Modern web browsers provide clear visual indicators. First, look at the URL in the address bar at the top of your browser. Secure websites start with https:// instead of http://. Second, look for a padlock icon next to the URL. This padlock indicates that the connection is encrypted. In most browsers, you can click the padlock to see more details about the security certificate, including who issued it and when it expires. Some browsers also display the word 'Secure' or 'Not Secure' explicitly.",
+            "ar": "التعرف على ما إذا كان موقع الويب يستخدم HTTPS أمر بسيط وحاسم لأمانك. توفر متصفحات الويب الحديثة مؤشرات بصرية واضحة. أولاً، انظر إلى URL في شريط العنوان أعلى متصفحك. تبدأ المواقع الآمنة بـ https:// بدلاً من http://. ثانياً، ابحث عن رمز قفل بجوار URL. يشير هذا القفل إلى أن الاتصال مشفر. في معظم المتصفحات، يمكنك النقر على القفل لرؤية مزيد من التفاصيل حول شهادة الأمان، بما في ذلك من أصدرها ومتى تنتهي صلاحيتها. تعرض بعض المتصفحات أيضاً كلمة 'آمن' أو 'غير آمن' بشكل صريح."
+          }
+        },
+        {
+          "id": 13,
+          "type": "text",
+          "value": {
+            "en": "However, it is important to understand that HTTPS only encrypts the communication channel. It does not guarantee that the website itself is trustworthy or legitimate. A scammer can create a fake website with HTTPS encryption. The padlock tells you that your communication is private, but it does not verify the website owner's intentions. Always check the full URL carefully to ensure you are on the correct website. Look for misspellings or suspicious domain names. For example, a scammer might create 'amaz0n.com' instead of 'amazon.com' and use HTTPS encryption to make it look legitimate.",
+            "ar": "ومع ذلك، من المهم أن تفهم أن HTTPS يشفر فقط قناة الاتصال. إنه لا يضمن أن الموقع نفسه جدير بالثقة أو شرعي. يمكن للمحتال إنشاء موقع ويب مزيف مع تشفير HTTPS. يخبرك القفل أن اتصالك خاص، لكنه لا يتحقق من نوايا مالك الموقع. تحقق دائماً من URL الكامل بعناية للتأكد من أنك على الموقع الصحيح. ابحث عن أخطاء إملائية أو أسماء نطاقات مشبوهة. على سبيل المثال، قد ينشئ المحتال 'amaz0n.com' بدلاً من 'amazon.com' ويستخدم تشفير HTTPS لجعله يبدو شرعياً."
+          }
+        },
+        {
+          "id": 14,
+          "type": "orderedList",
+          "title": {
+            "en": "Steps to Verify Website Security",
+            "ar": "خطوات التحقق من أمان الموقع"
+          },
+          "items": [
+            {
+              "subtitle": {
+                "en": "Check the URL Protocol",
+                "ar": "تحقق من بروتوكول URL"
+              },
+              "text": {
+                "en": "Look at the beginning of the URL. It should start with https:// for secure sites. If it starts with http://, the connection is not encrypted.",
+                "ar": "انظر إلى بداية URL. يجب أن يبدأ بـ https:// للمواقع الآمنة. إذا كان يبدأ بـ http://، فالاتصال غير مشفر."
+              },
+              "example": {
+                "en": "Secure: https://www.bank.com | Insecure: http://www.bank.com",
+                "ar": "آمن: https://www.bank.com | غير آمن: http://www.bank.com"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Look for the Padlock Icon",
+                "ar": "ابحث عن رمز القفل"
+              },
+              "text": {
+                "en": "Check the address bar for a padlock symbol. This icon appears before the URL on secure websites. Click it to see certificate details.",
+                "ar": "تحقق من شريط العنوان بحثاً عن رمز قفل. تظهر هذه الأيقونة قبل URL على المواقع الآمنة. انقر عليها لرؤية تفاصيل الشهادة."
+              },
+              "example": {
+                "en": "Padlock present = Encrypted | No padlock = Not encrypted",
+                "ar": "القفل موجود = مشفر | لا يوجد قفل = غير مشفر"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Read the Domain Name Carefully",
+                "ar": "اقرأ اسم النطاق بعناية"
+              },
+              "text": {
+                "en": "Scammers often use misspelled or similar-looking domain names. Check every letter and character. Be especially careful with numbers replacing letters.",
+                "ar": "غالباً ما يستخدم المحتالون أسماء نطاقات بها أخطاء إملائية أو تبدو مشابهة. تحقق من كل حرف ورمز. كن حذراً بشكل خاص مع الأرقام التي تحل محل الحروف."
+              },
+              "example": {
+                "en": "Real: paypal.com | Fake: paypa1.com (using number 1 instead of letter l)",
+                "ar": "حقيقي: paypal.com | مزيف: paypa1.com (استخدام الرقم 1 بدلاً من الحرف l)"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Check for Browser Warnings",
+                "ar": "تحقق من تحذيرات المتصفح"
+              },
+              "text": {
+                "en": "Modern browsers display warnings for insecure sites or invalid certificates. Never ignore these warnings, especially before entering sensitive data.",
+                "ar": "تعرض المتصفحات الحديثة تحذيرات للمواقع غير الآمنة أو الشهادات غير الصالحة. لا تتجاهل أبداً هذه التحذيرات، خاصة قبل إدخال بيانات حساسة."
+              },
+              "example": {
+                "en": "Warning: 'Your connection is not private' = Do not proceed",
+                "ar": "تحذير: 'اتصالك ليس خاصاً' = لا تتابع"
+              }
+            }
+          ]
+        },
+        {
+          "id": 15,
+          "type": "table",
+          "title": {
+            "en": "HTTP vs HTTPS: Key Differences",
+            "ar": "HTTP مقابل HTTPS: الفروقات الرئيسية"
+          },
+          "headers": {
+            "en": [
+              "Feature",
+              "HTTP",
+              "HTTPS"
+            ],
+            "ar": [
+              "الميزة",
+              "HTTP",
+              "HTTPS"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "URL Format",
+                "http://",
+                "https://"
+              ],
+              "ar": [
+                "تنسيق URL",
+                "http://",
+                "https://"
+              ]
+            },
+            {
+              "en": [
+                "Encryption",
+                "No encryption (plain text)",
+                "Strong encryption (TLS/SSL)"
+              ],
+              "ar": [
+                "التشفير",
+                "بدون تشفير (نص عادي)",
+                "تشفير قوي (TLS/SSL)"
+              ]
+            },
+            {
+              "en": [
+                "Security",
+                "Data can be intercepted and read",
+                "Data is scrambled and protected"
+              ],
+              "ar": [
+                "الأمان",
+                "يمكن اعتراض البيانات وقراءتها",
+                "يتم خلط البيانات وحمايتها"
+              ]
+            },
+            {
+              "en": [
+                "Visual Indicator",
+                "No padlock / Warning",
+                "Padlock icon in address bar"
+              ],
+              "ar": [
+                "المؤشر البصري",
+                "لا يوجد قفل / تحذير",
+                "رمز قفل في شريط العنوان"
+              ]
+            },
+            {
+              "en": [
+                "Use Case",
+                "Public information only",
+                "All websites (especially with sensitive data)"
+              ],
+              "ar": [
+                "حالة الاستخدام",
+                "المعلومات العامة فقط",
+                "جميع المواقع (خاصة مع البيانات الحساسة)"
+              ]
+            },
+            {
+              "en": [
+                "Authentication",
+                "No identity verification",
+                "Certificate verifies website identity"
+              ],
+              "ar": [
+                "المصادقة",
+                "لا يوجد تحقق من الهوية",
+                "الشهادة تتحقق من هوية الموقع"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 16,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Modern Standard: As of 2026, most major websites use HTTPS by default. Google Chrome and other browsers now mark HTTP sites as 'Not Secure' to encourage website owners to upgrade. Many browsers are even planning to phase out HTTP support entirely.",
+            "ar": "المعيار الحديث: اعتباراً من عام 2026، تستخدم معظم المواقع الرئيسية HTTPS بشكل افتراضي. يضع Google Chrome والمتصفحات الأخرى الآن علامة على مواقع HTTP بأنها 'غير آمنة' لتشجيع مالكي المواقع على الترقية. تخطط العديد من المتصفحات حتى للتخلص من دعم HTTP بالكامل."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 17,
+          "type": "hr"
+        },
+        {
+          "id": 18,
+          "type": "title",
+          "value": {
+            "en": "Real-World Security Scenarios",
+            "ar": "سيناريوهات أمنية واقعية"
+          }
+        },
+        {
+          "id": 19,
+          "type": "text",
+          "value": {
+            "en": "Let's explore practical scenarios where HTTP vs HTTPS makes a real difference. Imagine you are at a coffee shop using public WiFi. You visit an HTTP website and log in with your username and password. Anyone else on that same WiFi network with basic hacking tools can intercept your login credentials. They can capture the plain-text data traveling between your device and the server. Within minutes, they have your password and can access your account. This attack is called a man-in-the-middle attack, and it is frighteningly easy to execute on HTTP connections.",
+            "ar": "دعنا نستكشف سيناريوهات عملية حيث يحدث HTTP مقابل HTTPS فرقاً حقيقياً. تخيل أنك في مقهى تستخدم WiFi عاماً. تزور موقع HTTP وتسجل الدخول باسم المستخدم وكلمة المرور الخاصين بك. يمكن لأي شخص آخر على نفس شبكة WiFi مع أدوات اختراق أساسية اعتراض بيانات اعتماد تسجيل الدخول الخاصة بك. يمكنهم التقاط البيانات النصية العادية التي تنتقل بين جهازك والخادم. في غضون دقائق، لديهم كلمة المرور الخاصة بك ويمكنهم الوصول إلى حسابك. يسمى هذا الهجوم هجوم الرجل في الوسط (man-in-the-middle)، وهو سهل التنفيذ بشكل مخيف على اتصالات HTTP."
+          }
+        },
+        {
+          "id": 20,
+          "type": "text",
+          "value": {
+            "en": "Now consider the same scenario but with an HTTPS website. You connect to the HTTPS site, and your browser and the server establish an encrypted tunnel using TLS. Even though you are still on public WiFi, attackers intercepting the traffic see only scrambled, meaningless data. They cannot extract your password or any other information. The encryption protects you. This is why security experts strongly recommend only using HTTPS websites, especially on public networks. The difference between HTTP and HTTPS can be the difference between keeping your account safe and having it compromised.",
+            "ar": "الآن فكر في نفس السيناريو ولكن مع موقع HTTPS. تتصل بموقع HTTPS، ويقوم متصفحك والخادم بإنشاء نفق مشفر باستخدام TLS. على الرغم من أنك لا تزال على WiFi عام، يرى المهاجمون الذين يعترضون حركة المرور بيانات مخلوطة وبلا معنى فقط. لا يمكنهم استخراج كلمة المرور الخاصة بك أو أي معلومات أخرى. يحميك التشفير. لهذا السبب يوصي خبراء الأمان بشدة باستخدام مواقع HTTPS فقط، خاصة على الشبكات العامة. الفرق بين HTTP وHTTPS يمكن أن يكون الفرق بين الحفاظ على حسابك آمناً والتعرض للاختراق."
+          }
+        },
+        {
+          "id": 1772824695778.971,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/How%20the%20Web%20Works/2-3-public%20WiFi%20security%20risks.%20Use.webp"
+        },
+        {
+          "id": 22,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "Public WiFi Warning: Public networks in airports, cafes, and hotels are high-risk environments. Always verify you are using HTTPS before entering any login credentials or personal information. Consider using a VPN (Virtual Private Network) for additional protection on public networks.",
+            "ar": "تحذير WiFi العام: الشبكات العامة في المطارات والمقاهي والفنادق هي بيئات عالية المخاطر. تحقق دائماً من أنك تستخدم HTTPS قبل إدخال أي بيانات اعتماد تسجيل دخول أو معلومات شخصية. فكر في استخدام VPN (شبكة خاصة افتراضية) للحماية الإضافية على الشبكات العامة."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 23,
+          "type": "list",
+          "title": {
+            "en": "Best Practices for Secure Web Browsing",
+            "ar": "أفضل الممارسات لتصفح الويب الآمن"
+          },
+          "items": {
+            "en": [
+              "Always check for HTTPS and the padlock icon before entering sensitive information",
+              "Never ignore browser security warnings about certificates or insecure connections",
+              "Be extra cautious on public WiFi networks and verify HTTPS on every site",
+              "Verify the full domain name to ensure you are on the legitimate website",
+              "Keep your browser updated to benefit from the latest security features",
+              "Consider browser extensions that force HTTPS connections when available",
+              "Avoid entering passwords or financial data on any HTTP website",
+              "Understand that HTTPS encrypts data in transit but does not guarantee website trustworthiness"
+            ],
+            "ar": [
+              "تحقق دائماً من HTTPS ورمز القفل قبل إدخال معلومات حساسة",
+              "لا تتجاهل أبداً تحذيرات أمان المتصفح حول الشهادات أو الاتصالات غير الآمنة",
+              "كن حذراً للغاية على شبكات WiFi العامة وتحقق من HTTPS على كل موقع",
+              "تحقق من اسم النطاق الكامل للتأكد من أنك على الموقع الشرعي",
+              "حافظ على تحديث متصفحك للاستفادة من أحدث ميزات الأمان",
+              "فكر في ملحقات المتصفح التي تفرض اتصالات HTTPS عند توفرها",
+              "تجنب إدخال كلمات المرور أو البيانات المالية على أي موقع HTTP",
+              "افهم أن HTTPS يشفر البيانات أثناء النقل لكن لا يضمن جدارة الموقع بالثقة"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "topic-3",
+      "title": {
+        "en": "DNS Resolution: From Domain Names to IP Addresses",
+        "ar": "عملية DNS: من أسماء النطاقات إلى عناوين IP"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "Why We Need DNS: The Internet's Phone Book",
+            "ar": "لماذا نحتاج DNS: دليل هاتف الإنترنت"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "Computers and servers on the internet do not understand friendly names like www.example.com. Instead, every device connected to the internet has a unique numerical address called an IP address. An IP address looks like 192.168.1.1 or in the newer IPv6 format, '2001:0db8:85a3:0000:0000:8a2e:0370:7334'. These numbers are how computers actually locate and communicate with each other. However, humans are much better at remembering names than long strings of numbers. Imagine if you had to memorize number sequences to visit your favorite websites. It would be nearly impossible to use the internet effectively.",
+            "ar": "لا تفهم أجهزة الكمبيوتر والخوادم على الإنترنت الأسماء الودية مثل www.example.com. بدلاً من ذلك، كل جهاز متصل بالإنترنت لديه عنوان رقمي فريد يسمى عنوان IP. يبدو عنوان IP مثل 192.168.1.1 أو في تنسيق IPv6 الأحدث، 2001:0db8:85a3:0000:0000:8a2e:0370:7334. هذه الأرقام هي الطريقة التي تحدد بها أجهزة الكمبيوتر فعلياً وتتواصل مع بعضها البعض. ومع ذلك، البشر أفضل بكثير في تذكر الأسماء من سلاسل طويلة من الأرقام. تخيل لو كان عليك حفظ تسلسلات رقمية لزيارة مواقعك المفضلة. سيكون من المستحيل تقريباً استخدام الإنترنت بفعالية."
+          }
+        },
+        {
+          "id": 1772824752297.759,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/How%20the%20Web%20Works/3-1-illustrating%20the%20DNS%20concept.webp"
+        },
+        {
+          "id": 4,
+          "type": "text",
+          "value": {
+            "en": "This is where DNS comes in. DNS stands for Domain Name System. It acts as the internet's phone book or directory. When you type a domain name like www.google.com, your computer asks the DNS system to look up the IP address associated with that name. The DNS system responds with the IP address, and then your computer can connect to the correct server. This translation from human-friendly names to machine-friendly numbers happens automatically in the background every time you visit a website. Without DNS, the internet as we know it would not exist because it would be too difficult for people to use.",
+            "ar": "هنا يأتي دور DNS. يرمز DNS إلى نظام أسماء النطاقات (Domain Name System). إنه يعمل ككتاب هاتف أو دليل للإنترنت. عندما تكتب اسم نطاق مثل www.google.com، يطلب جهاز الكمبيوتر الخاص بك من نظام DNS البحث عن عنوان IP المرتبط بذلك الاسم. يستجيب نظام DNS بعنوان IP، ثم يمكن لجهاز الكمبيوتر الخاص بك الاتصال بالخادم الصحيح. تحدث هذه الترجمة من الأسماء الودية للإنسان إلى الأرقام الودية للآلة تلقائياً في الخلفية في كل مرة تزور فيها موقعاً إلكترونياً. بدون DNS، لن يوجد الإنترنت كما نعرفه لأنه سيكون من الصعب جداً على الناس استخدامه."
+          }
+        },
+        {
+          "id": 5,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Quick Fact: DNS was invented in 1983 by Paul Mockapetris. Before DNS, there was a single file called HOSTS.TXT that listed all internet hosts. As the internet grew, this approach became unmanageable, leading to the creation of the distributed DNS system we use today.",
+            "ar": "حقيقة سريعة: تم اختراع DNS في عام 1983 بواسطة بول موكابيتريس. قبل DNS، كان هناك ملف واحد يسمى HOSTS.TXT يدرج جميع مضيفي الإنترنت. مع نمو الإنترنت، أصبح هذا النهج غير قابل للإدارة، مما أدى إلى إنشاء نظام DNS الموزع الذي نستخدمه اليوم."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 6,
+          "type": "title",
+          "value": {
+            "en": "The DNS Resolution Process Step-by-Step",
+            "ar": "عملية DNS خطوة بخطوة"
+          }
+        },
+        {
+          "id": 7,
+          "type": "text",
+          "value": {
+            "en": "When you type a website address and press Enter, a fascinating multi-step process begins. Your browser first checks its own cache to see if it recently looked up this domain. Caching means storing information temporarily for quick access later. If the browser has visited this site recently, it already knows the IP address and can skip the DNS lookup entirely. If not, the browser asks your operating system, which also maintains a cache. If still not found, your computer reaches out to a DNS resolver, typically provided by your Internet Service Provider (ISP) or a public DNS service like Google DNS or Cloudflare DNS.",
+            "ar": "عندما تكتب عنوان موقع ويب وتضغط على Enter، تبدأ عملية متعددة الخطوات رائعة. يتحقق متصفحك أولاً من ذاكرة التخزين المؤقت الخاصة به لمعرفة ما إذا كان قد بحث مؤخراً عن هذا النطاق. يعني التخزين المؤقت (caching) تخزين المعلومات مؤقتاً للوصول السريع لاحقاً. إذا كان المتصفح قد زار هذا الموقع مؤخراً، فإنه يعرف بالفعل عنوان IP ويمكنه تخطي بحث DNS بالكامل. إذا لم يكن كذلك، يسأل المتصفح نظام التشغيل الخاص بك، والذي يحتفظ أيضاً بذاكرة تخزين مؤقت. إذا لم يتم العثور عليه، يصل جهاز الكمبيوتر الخاص بك إلى محلل DNS (DNS resolver)، يتم توفيره عادةً بواسطة مزود خدمة الإنترنت (ISP) أو خدمة DNS عامة مثل Google DNS أو Cloudflare DNS."
+          }
+        },
+        {
+          "id": 8,
+          "type": "text",
+          "value": {
+            "en": "The DNS resolver acts as a middleman. If it has the answer cached from a previous request, it returns the IP address immediately. Otherwise, it starts a process called recursive resolution. The resolver first contacts a root DNS server. There are 13 root server systems distributed globally (actually hundreds of physical servers using the same 13 IP addresses). The root server does not know the IP address for www.example.com, but it knows which servers handle the .com top-level domain. It directs the resolver to a TLD (Top-Level Domain) server responsible for .com domains.",
+            "ar": "يعمل محلل DNS كوسيط. إذا كانت لديه الإجابة مخزنة مؤقتاً من طلب سابق، فإنه يعيد عنوان IP على الفور. خلاف ذلك، يبدأ عملية تسمى الدقة التكرارية (recursive resolution). يتصل المحلل أولاً بخادم DNS جذر (root DNS server). هناك 13 نظام خادم جذر موزعة عالمياً (في الواقع مئات الخوادم الفعلية تستخدم نفس 13 عنوان IP). خادم الجذر لا يعرف عنوان IP لـ www.example.com، لكنه يعرف أي خوادم تتعامل مع نطاق المستوى الأعلى .com. يوجه المحلل إلى خادم TLD (نطاق المستوى الأعلى - Top-Level Domain) مسؤول عن نطاقات .com."
+          }
+        },
+        {
+          "id": 9,
+          "type": "text",
+          "value": {
+            "en": "The resolver then queries the .com TLD server. This server also does not have the final IP address, but it knows which authoritative name server is responsible for example.com. It provides the resolver with the address of the authoritative name server. Finally, the resolver contacts the authoritative name server for example.com. This server has the definitive answer: the IP address for www.example.com. The authoritative server responds with the IP address, and the resolver returns this information to your computer. Your browser can now connect to the web server at that IP address. This entire process typically completes in just 20-100 milliseconds.",
+            "ar": "يستعلم المحلل بعد ذلك خادم TLD الخاص بـ .com. هذا الخادم أيضاً ليس لديه عنوان IP النهائي، لكنه يعرف أي خادم اسم موثوق (authoritative name server) مسؤول عن example.com. يزود المحلل بعنوان خادم الاسم الموثوق. أخيراً، يتصل المحلل بخادم الاسم الموثوق لـ example.com. لدى هذا الخادم الإجابة النهائية: عنوان IP لـ www.example.com. يستجيب الخادم الموثوق بعنوان IP، ويعيد المحلل هذه المعلومات إلى جهاز الكمبيوتر الخاص بك. يمكن لمتصفحك الآن الاتصال بخادم الويب على عنوان IP هذا. تكتمل هذه العملية بأكملها عادةً في 20-100 ميلي ثانية فقط."
+          }
+        },
+        {
+          "id": 1772824765999.3271,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/How%20the%20Web%20Works/3-2-DNS%20resolution%20flow%20diagram.webp"
+        },
+        {
+          "id": 11,
+          "type": "orderedList",
+          "title": {
+            "en": "Complete DNS Resolution Steps",
+            "ar": "خطوات عملية DNS الكاملة"
+          },
+          "items": [
+            {
+              "subtitle": {
+                "en": "Browser Cache Check",
+                "ar": "فحص ذاكرة التخزين المؤقت للمتصفح"
+              },
+              "text": {
+                "en": "Your browser first checks if it has recently visited this domain and has the IP address stored in its local cache. This is the fastest method.",
+                "ar": "يتحقق متصفحك أولاً مما إذا كان قد زار مؤخراً هذا النطاق ولديه عنوان IP مخزن في ذاكرة التخزين المؤقت المحلية. هذه هي الطريقة الأسرع."
+              },
+              "example": {
+                "en": "If you visited example.com 5 minutes ago, the IP is likely still cached",
+                "ar": "إذا زرت example.com قبل 5 دقائق، فمن المحتمل أن يكون IP لا يزال مخزناً مؤقتاً"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Operating System Cache Check",
+                "ar": "فحص ذاكرة التخزين المؤقت لنظام التشغيل"
+              },
+              "text": {
+                "en": "If not in browser cache, the operating system's DNS cache is checked. The OS maintains its own cache of recent DNS lookups.",
+                "ar": "إذا لم يكن في ذاكرة التخزين المؤقت للمتصفح، يتم فحص ذاكرة DNS لنظام التشغيل. يحتفظ نظام التشغيل بذاكرة التخزين المؤقت الخاصة به من عمليات بحث DNS الأخيرة."
+              },
+              "example": {
+                "en": "Windows: ipconfig /displaydns shows cached entries",
+                "ar": "ويندوز: ipconfig /displaydns يعرض الإدخالات المخزنة مؤقتاً"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "DNS Resolver Query",
+                "ar": "استعلام محلل DNS"
+              },
+              "text": {
+                "en": "Your computer sends a query to a DNS resolver, usually your ISP's DNS server or a public DNS service. This server acts as a middleman.",
+                "ar": "يرسل جهاز الكمبيوتر الخاص بك استعلاماً إلى محلل DNS، عادةً خادم DNS الخاص بمزود خدمة الإنترنت أو خدمة DNS عامة. يعمل هذا الخادم كوسيط."
+              },
+              "example": {
+                "en": "Common public DNS: 8.8.8.8 (Google), 1.1.1.1 (Cloudflare)",
+                "ar": "DNS عام شائع: 8.8.8.8 (جوجل)، 1.1.1.1 (كلاود فلير)"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Root Server Contact",
+                "ar": "الاتصال بخادم الجذر"
+              },
+              "text": {
+                "en": "If the resolver doesn't have the answer cached, it contacts a root DNS server. Root servers know which servers handle each top-level domain.",
+                "ar": "إذا لم يكن لدى المحلل الإجابة مخزنة مؤقتاً، فإنه يتصل بخادم DNS جذر. تعرف خوادم الجذر أي خوادم تتعامل مع كل نطاق من المستوى الأعلى."
+              },
+              "example": {
+                "en": "Root server: 'For .com domains, contact this TLD server'",
+                "ar": "خادم الجذر: 'لنطاقات .com، اتصل بخادم TLD هذا'"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "TLD Server Query",
+                "ar": "استعلام خادم TLD"
+              },
+              "text": {
+                "en": "The resolver queries the Top-Level Domain server (.com, .org, .net, etc.). This server knows which authoritative server handles the specific domain.",
+                "ar": "يستعلم المحلل خادم نطاق المستوى الأعلى (.com، .org، .net، إلخ). يعرف هذا الخادم أي خادم موثوق يتعامل مع النطاق المحدد."
+              },
+              "example": {
+                "en": "TLD server: 'For example.com, contact ns1.example.com'",
+                "ar": "خادم TLD: 'لـ example.com، اتصل بـ ns1.example.com'"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Authoritative Server Response",
+                "ar": "استجابة الخادم الموثوق"
+              },
+              "text": {
+                "en": "Finally, the resolver contacts the authoritative name server for the domain. This server has the definitive IP address and returns it to the resolver, which caches it and sends it to your computer.",
+                "ar": "أخيراً، يتصل المحلل بخادم الاسم الموثوق للنطاق. لدى هذا الخادم عنوان IP النهائي ويعيده إلى المحلل، الذي يخزنه مؤقتاً ويرسله إلى جهاز الكمبيوتر الخاص بك."
+              },
+              "example": {
+                "en": "Authoritative server: 'www.example.com is at 93.184.216.34'",
+                "ar": "الخادم الموثوق: 'www.example.com موجود على 93.184.216.34'"
+              }
+            }
+          ]
+        },
+        {
+          "id": 12,
+          "type": "hr"
+        },
+        {
+          "id": 13,
+          "type": "title",
+          "value": {
+            "en": "DNS Caching and Performance",
+            "ar": "التخزين المؤقت لـ DNS والأداء"
+          }
+        },
+        {
+          "id": 14,
+          "type": "text",
+          "value": {
+            "en": "Caching is essential for DNS performance. Without caching, every single request to any website would require going through the entire DNS resolution process. This would make the internet unbearably slow. Instead, DNS responses include a TTL (Time To Live) value. TTL specifies how long the information can be cached before it expires and must be looked up again. A TTL might be set to 3600 seconds (1 hour), meaning resolvers and browsers can reuse the IP address for one hour before checking again. Website administrators balance between performance (longer TTL means fewer lookups) and flexibility (shorter TTL means changes propagate faster).",
+            "ar": "التخزين المؤقت ضروري لأداء DNS. بدون التخزين المؤقت، سيتطلب كل طلب واحد لأي موقع ويب المرور بعملية DNS الكاملة. سيجعل هذا الإنترنت بطيئاً بشكل لا يطاق. بدلاً من ذلك، تتضمن استجابات DNS قيمة TTL (الوقت للبقاء - Time To Live). يحدد TTL المدة التي يمكن فيها تخزين المعلومات مؤقتاً قبل انتهاء صلاحيتها ويجب البحث عنها مرة أخرى. قد يتم تعيين TTL على 3600 ثانية (ساعة واحدة)، مما يعني أن المحللين والمتصفحات يمكنهم إعادة استخدام عنوان IP لمدة ساعة واحدة قبل التحقق مرة أخرى. يوازن مديرو المواقع بين الأداء (TTL أطول يعني عمليات بحث أقل) والمرونة (TTL أقصر يعني أن التغييرات تنتشر بشكل أسرع)."
+          }
+        },
+        {
+          "id": 15,
+          "type": "text",
+          "value": {
+            "en": "DNS caching happens at multiple levels. Your browser caches DNS records, typically for a few minutes to an hour. Your operating system also caches them. Your home router might cache DNS responses. Your ISP's DNS resolver caches responses from authoritative servers. Even the authoritative name servers themselves might cache certain information. This multi-level caching dramatically improves performance. When you visit a popular website like google.com, your resolver likely has the IP address cached from another user's recent request. You benefit from that cached information without needing a full lookup.",
+            "ar": "يحدث التخزين المؤقت لـ DNS على مستويات متعددة. يخزن متصفحك سجلات DNS مؤقتاً، عادةً لبضع دقائق إلى ساعة. يخزنها نظام التشغيل الخاص بك أيضاً مؤقتاً. قد يخزن جهاز التوجيه المنزلي الخاص بك استجابات DNS مؤقتاً. يخزن محلل DNS الخاص بمزود خدمة الإنترنت الاستجابات من الخوادم الموثوقة مؤقتاً. حتى خوادم الأسماء الموثوقة نفسها قد تخزن معلومات معينة مؤقتاً. يحسن هذا التخزين المؤقت متعدد المستويات الأداء بشكل كبير. عندما تزور موقعاً شائعاً مثل google.com، من المحتمل أن يكون لدى المحلل الخاص بك عنوان IP مخزن مؤقتاً من طلب حديث لمستخدم آخر. تستفيد من تلك المعلومات المخزنة مؤقتاً دون الحاجة إلى بحث كامل."
+          }
+        },
+        {
+          "id": 16,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Performance Tip: If you experience slow website loading, try clearing your DNS cache. In Windows, use 'ipconfig /flushdns' in Command Prompt. On Mac, use 'sudo dscacheutil -flushcache' in Terminal. This forces fresh DNS lookups and can resolve issues caused by outdated cached entries.",
+            "ar": "نصيحة للأداء: إذا واجهت تحميل موقع ويب بطيئاً، حاول مسح ذاكرة DNS المؤقتة. في ويندوز، استخدم 'ipconfig /flushdns' في موجه الأوامر. على ماك، استخدم 'sudo dscacheutil -flushcache' في الطرفية. يجبر هذا عمليات بحث DNS جديدة ويمكن أن يحل المشكلات الناتجة عن إدخالات مخزنة مؤقتاً قديمة."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 17,
+          "type": "terminal",
+          "label": {
+            "en": "Command Line: Check DNS Resolution",
+            "ar": "سطر الأوامر: التحقق من عملية DNS"
+          },
+          "value": "user@computer:~$ nslookup www.example.com\nServer: 8.8.8.8\nAddress: 8.8.8.8#53\n\nNon-authoritative answer:\nName: www.example.com\nAddress: 93.184.216.34"
+        },
+        {
+          "id": 18,
+          "type": "title",
+          "value": {
+            "en": "DNS Security Concerns and Protection",
+            "ar": "مخاوف أمان DNS والحماية"
+          }
+        },
+        {
+          "id": 19,
+          "type": "text",
+          "value": {
+            "en": "DNS was designed for functionality, not security. This creates vulnerabilities that attackers can exploit. One common attack is DNS spoofing or DNS poisoning. In this attack, a malicious actor provides false DNS information to redirect users to fake websites. Imagine you try to visit your bank's website, but an attacker has poisoned your DNS resolver's cache. Instead of receiving the real bank's IP address, you receive the IP of a fake website that looks identical. You enter your login credentials, and the attacker captures them. This attack is particularly dangerous because everything appears normal to the user.",
+            "ar": "تم تصميم DNS للوظيفة، وليس للأمان. هذا يخلق نقاط ضعف يمكن للمهاجمين استغلالها. أحد الهجمات الشائعة هو انتحال DNS أو تسميم DNS (DNS spoofing أو DNS poisoning). في هذا الهجوم، يوفر فاعل خبيث معلومات DNS خاطئة لإعادة توجيه المستخدمين إلى مواقع ويب مزيفة. تخيل أنك تحاول زيارة موقع البنك الخاص بك، لكن المهاجم سمّم ذاكرة التخزين المؤقت لمحلل DNS الخاص بك. بدلاً من تلقي عنوان IP الحقيقي للبنك، تتلقى IP لموقع ويب مزيف يبدو متطابقاً. تدخل بيانات اعتماد تسجيل الدخول الخاصة بك، ويلتقطها المهاجم. هذا الهجوم خطير بشكل خاص لأن كل شيء يبدو طبيعياً للمستخدم."
+          }
+        },
+        {
+          "id": 20,
+          "type": "text",
+          "value": {
+            "en": "Another concern is DNS privacy. Traditional DNS queries are sent in plain text, meaning your ISP and anyone monitoring the network can see every website you try to visit. Even if you use HTTPS for the actual website connection, the DNS query reveals your browsing intentions. To address these concerns, new technologies have emerged. DNS over HTTPS (DoH) encrypts DNS queries, hiding them from eavesdroppers. DNS over TLS (DoT) provides similar protection. DNSSEC (DNS Security Extensions) adds authentication to DNS responses, making it much harder for attackers to inject false information. Modern browsers and operating systems increasingly support these security enhancements.",
+            "ar": "قلق آخر هو خصوصية DNS. يتم إرسال استعلامات DNS التقليدية كنص عادي، مما يعني أن مزود خدمة الإنترنت الخاص بك وأي شخص يراقب الشبكة يمكنه رؤية كل موقع ويب تحاول زيارته. حتى إذا كنت تستخدم HTTPS لاتصال الموقع الفعلي، يكشف استعلام DNS عن نوايا التصفح الخاصة بك. لمعالجة هذه المخاوف، ظهرت تقنيات جديدة. DNS عبر HTTPS (DoH) يشفر استعلامات DNS، مما يخفيها عن المتنصتين. DNS عبر TLS (DoT) يوفر حماية مماثلة. DNSSEC (ملحقات أمان DNS) يضيف مصادقة إلى استجابات DNS، مما يجعل من الصعب جداً على المهاجمين حقن معلومات خاطئة. تدعم المتصفحات وأنظمة التشغيل الحديثة بشكل متزايد تحسينات الأمان هذه."
+          }
+        },
+        {
+          "id": 1772824759737.768,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/How%20the%20Web%20Works/3-3-DNS%20vulnerabilities%20and%20protections.webp"
+        },
+        {
+          "id": 22,
+          "type": "table",
+          "title": {
+            "en": "DNS Security Technologies Comparison",
+            "ar": "مقارنة تقنيات أمان DNS"
+          },
+          "headers": {
+            "en": [
+              "Technology",
+              "Protection Offered",
+              "Encryption",
+              "Adoption Status"
+            ],
+            "ar": [
+              "التقنية",
+              "الحماية المقدمة",
+              "التشفير",
+              "حالة الاعتماد"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "Traditional DNS",
+                "None (vulnerable to attacks)",
+                "No encryption",
+                "Legacy (being phased out)"
+              ],
+              "ar": [
+                "DNS التقليدي",
+                "لا شيء (عرضة للهجمات)",
+                "بدون تشفير",
+                "قديم (يتم التخلص منه تدريجياً)"
+              ]
+            },
+            {
+              "en": [
+                "DNS over HTTPS (DoH)",
+                "Encrypts queries, hides from ISP",
+                "HTTPS encryption",
+                "Growing (supported by major browsers)"
+              ],
+              "ar": [
+                "DNS عبر HTTPS (DoH)",
+                "يشفر الاستعلامات، يخفيها عن مزود خدمة الإنترنت",
+                "تشفير HTTPS",
+                "متنامي (مدعوم من المتصفحات الرئيسية)"
+              ]
+            },
+            {
+              "en": [
+                "DNS over TLS (DoT)",
+                "Encrypts queries at transport layer",
+                "TLS encryption",
+                "Moderate (some OS support)"
+              ],
+              "ar": [
+                "DNS عبر TLS (DoT)",
+                "يشفر الاستعلامات في طبقة النقل",
+                "تشفير TLS",
+                "معتدل (بعض دعم نظام التشغيل)"
+              ]
+            },
+            {
+              "en": [
+                "DNSSEC",
+                "Authenticates responses, prevents poisoning",
+                "No query encryption (adds signatures)",
+                "Partial (complex deployment)"
+              ],
+              "ar": [
+                "DNSSEC",
+                "يصادق على الاستجابات، يمنع التسميم",
+                "لا يوجد تشفير للاستعلام (يضيف توقيعات)",
+                "جزئي (نشر معقد)"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 23,
+          "type": "list",
+          "title": {
+            "en": "Best Practices for DNS Security",
+            "ar": "أفضل الممارسات لأمان DNS"
+          },
+          "items": {
+            "en": [
+              "Use DNS over HTTPS (DoH) or DNS over TLS (DoT) when available in your browser or OS settings",
+              "Consider using reputable public DNS services like Cloudflare (1.1.1.1) or Google (8.8.8.8) that offer better security",
+              "Keep your operating system and browser updated to benefit from latest DNS security features",
+              "Be cautious on public WiFi where DNS attacks are more common",
+              "Always verify website URLs carefully, even if DNS appears to work correctly",
+              "Use HTTPS for website connections as an additional layer of protection beyond DNS",
+              "Enable DNSSEC validation if supported by your DNS resolver",
+              "Clear DNS cache periodically to remove potentially poisoned entries"
+            ],
+            "ar": [
+              "استخدم DNS عبر HTTPS (DoH) أو DNS عبر TLS (DoT) عند توفرهما في إعدادات المتصفح أو نظام التشغيل",
+              "فكر في استخدام خدمات DNS عامة موثوقة مثل Cloudflare (1.1.1.1) أو Google (8.8.8.8) التي توفر أماناً أفضل",
+              "حافظ على تحديث نظام التشغيل والمتصفح للاستفادة من أحدث ميزات أمان DNS",
+              "كن حذراً على WiFi العام حيث تكون هجمات DNS أكثر شيوعاً",
+              "تحقق دائماً من عناوين URL للمواقع بعناية، حتى لو بدا أن DNS يعمل بشكل صحيح",
+              "استخدم HTTPS لاتصالات المواقع كطبقة حماية إضافية تتجاوز DNS",
+              "قم بتمكين التحقق من صحة DNSSEC إذا كان مدعوماً من قبل محلل DNS الخاص بك",
+              "امسح ذاكرة DNS المؤقتة بشكل دوري لإزالة الإدخالات المسممة المحتملة"
+            ]
+          }
+        },
+        {
+          "id": 24,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "Critical Warning: DNS attacks can be extremely difficult to detect because everything appears to work normally. Always combine DNS security with other protections: verify HTTPS certificates, check URLs carefully, and be suspicious of unexpected login prompts or security warnings.",
+            "ar": "تحذير حرج: يمكن أن تكون هجمات DNS صعبة الاكتشاف للغاية لأن كل شيء يبدو يعمل بشكل طبيعي. اجمع دائماً بين أمان DNS والحماية الأخرى: تحقق من شهادات HTTPS، وتحقق من عناوين URL بعناية، وكن مشبوهاً من مطالبات تسجيل الدخول غير المتوقعة أو التحذيرات الأمنية."
+          },
+          "link": "",
+          "isLab": false
+        }
+      ]
+    },
+    {
+      "id": "topic-4",
+      "title": {
+        "en": "Request-Response Cycle: Client-Server Communication",
+        "ar": "دورة الطلب والاستجابة: اتصال العميل-الخادم"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "Understanding the Client-Server Model",
+            "ar": "فهم نموذج العميل-الخادم"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "The web operates on a client-server architecture, which is a fundamental concept in computer networking. In this model, there are two main roles: the client and the server. The client is the device making requests for resources, typically your web browser running on your computer or smartphone. The server is a powerful computer that stores website files and waits to respond to client requests. Think of it like a restaurant: you (the client) look at a menu and order food, while the kitchen (the server) prepares your order and delivers it to your table. The client always initiates communication, and the server always responds.",
+            "ar": "يعمل الويب على بنية العميل-الخادم (client-server architecture)، وهو مفهوم أساسي في شبكات الكمبيوتر. في هذا النموذج، هناك دوران رئيسيان: العميل والخادم. العميل هو الجهاز الذي يقدم طلبات للحصول على الموارد، عادةً متصفح الويب الذي يعمل على جهاز الكمبيوتر أو الهاتف الذكي الخاص بك. الخادم هو جهاز كمبيوتر قوي يخزن ملفات الموقع وينتظر للرد على طلبات العميل. فكر في الأمر مثل مطعم: أنت (العميل) تنظر إلى القائمة وتطلب الطعام، بينما المطبخ (الخادم) يعد طلبك ويسلمه إلى طاولتك. العميل دائماً يبدأ الاتصال، والخادم دائماً يستجيب."
+          }
+        },
+        {
+          "id": 1772824812002.295,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/How%20the%20Web%20Works/4-1-client-server%20model%20as%20a%20restaurant.webp"
+        },
+        {
+          "id": 4,
+          "type": "text",
+          "value": {
+            "en": "This client-server model is extremely powerful because it centralizes resources. Instead of every device needing to store all website files, one server can serve thousands or millions of clients. When you visit a news website, you do not download the entire website to your computer permanently. Instead, your browser requests the specific page you want, the server sends it, and your browser displays it temporarily. If the news site updates an article, the changes happen on the server. The next time you visit, you automatically receive the updated version. This centralization makes content management efficient and ensures everyone sees the same, current information.",
+            "ar": "نموذج العميل-الخادم هذا قوي للغاية لأنه يركز الموارد. بدلاً من حاجة كل جهاز لتخزين جميع ملفات الموقع، يمكن لخادم واحد خدمة الآلاف أو الملايين من العملاء. عندما تزور موقع أخبار، لا تقوم بتنزيل الموقع بأكمله إلى جهاز الكمبيوتر الخاص بك بشكل دائم. بدلاً من ذلك، يطلب متصفحك الصفحة المحددة التي تريدها، يرسلها الخادم، ويعرضها متصفحك مؤقتاً. إذا قام موقع الأخبار بتحديث مقال، تحدث التغييرات على الخادم. في المرة القادمة التي تزورها، تتلقى تلقائياً النسخة المحدثة. هذا التركيز يجعل إدارة المحتوى فعالة ويضمن أن يرى الجميع نفس المعلومات الحالية."
+          }
+        },
+        {
+          "id": 5,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Important Concept: One server can handle multiple clients simultaneously. Large websites use many servers working together (called server farms or data centers) to handle millions of requests per day. Load balancers distribute requests across multiple servers to prevent any single server from becoming overwhelmed.",
+            "ar": "مفهوم مهم: يمكن لخادم واحد التعامل مع عملاء متعددين في وقت واحد. تستخدم المواقع الكبيرة العديد من الخوادم التي تعمل معاً (تسمى مزارع الخوادم أو مراكز البيانات) للتعامل مع ملايين الطلبات يومياً. توزع موازنات الحمل (load balancers) الطلبات عبر خوادم متعددة لمنع أي خادم واحد من الإرهاق."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 6,
+          "type": "title",
+          "value": {
+            "en": "Anatomy of an HTTP Request",
+            "ar": "تشريح طلب HTTP"
+          }
+        },
+        {
+          "id": 7,
+          "type": "text",
+          "value": {
+            "en": "When your browser sends an HTTP request to a server, the request has a specific structure with multiple components. Understanding this structure helps you troubleshoot problems and recognize security issues. Every HTTP request starts with a request line that contains three parts: the HTTP method, the resource path, and the HTTP version. The most common method is GET, which requests a resource without changing anything on the server. Another common method is POST, which submits data to the server (like when you fill out a form). The resource path tells the server exactly which file or page you want, such as /index.html or /about.html.",
+            "ar": "عندما يرسل متصفحك طلب HTTP إلى خادم، يكون للطلب بنية محددة مع مكونات متعددة. فهم هذه البنية يساعدك على استكشاف المشكلات والتعرف على المشكلات الأمنية. يبدأ كل طلب HTTP بسطر طلب (request line) يحتوي على ثلاثة أجزاء: طريقة HTTP (method)، ومسار المورد (resource path)، وإصدار HTTP. الطريقة الأكثر شيوعاً هي GET، التي تطلب مورداً دون تغيير أي شيء على الخادم. طريقة شائعة أخرى هي POST، التي تقدم بيانات إلى الخادم (مثل عندما تملأ نموذجاً). يخبر مسار المورد الخادم بالضبط أي ملف أو صفحة تريدها، مثل /index.html أو /about.html."
+          }
+        },
+        {
+          "id": 8,
+          "type": "text",
+          "value": {
+            "en": "After the request line come the headers. Headers are key-value pairs that provide additional information about the request. Common headers include Host (which domain you are requesting from), User-Agent (information about your browser and operating system), Accept (what types of content your browser can handle), and Accept-Language (your preferred languages). Headers also include authentication tokens, cookies, and other metadata. If you are submitting data with a POST request, the request also includes a body containing the data you are sending, such as form fields or file uploads. All this information travels together from your browser to the server.",
+            "ar": "بعد سطر الطلب تأتي الرؤوس (headers). الرؤوس هي أزواج مفتاح-قيمة توفر معلومات إضافية حول الطلب. تتضمن الرؤوس الشائعة Host (أي نطاق تطلبه)، User-Agent (معلومات حول متصفحك ونظام التشغيل)، Accept (أنواع المحتوى التي يمكن لمتصفحك التعامل معها)، وAccept-Language (لغاتك المفضلة). تتضمن الرؤوس أيضاً رموز المصادقة وملفات تعريف الارتباط والبيانات الوصفية الأخرى. إذا كنت تقدم بيانات مع طلب POST، يتضمن الطلب أيضاً نصاً (body) يحتوي على البيانات التي ترسلها، مثل حقول النموذج أو تحميلات الملفات. تسافر كل هذه المعلومات معاً من متصفحك إلى الخادم."
+          }
+        },
+        {
+          "id": 9,
+          "type": "code",
+          "language": "http",
+          "value": "GET /index.html HTTP/1.1\nHost: www.example.com\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64)\nAccept: text/html,application/xhtml+xml\nAccept-Language: en-US,en;q=0.9\nAccept-Encoding: gzip, deflate, br\nConnection: keep-alive\nCookie: session_id=abc123xyz789"
+        },
+        {
+          "id": 1772825152640.7617,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/How%20the%20Web%20Works/4-2-structure%20of%20an%20HTTP%20request.webp"
+        },
+        {
+          "id": 11,
+          "type": "table",
+          "title": {
+            "en": "Common HTTP Request Methods",
+            "ar": "طرق طلب HTTP الشائعة"
+          },
+          "headers": {
+            "en": [
+              "Method",
+              "Purpose",
+              "Has Body",
+              "Common Use Case"
+            ],
+            "ar": [
+              "الطريقة",
+              "الغرض",
+              "لديه نص",
+              "حالة الاستخدام الشائعة"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "GET",
+                "Retrieve a resource",
+                "No",
+                "Loading web pages, fetching data"
+              ],
+              "ar": [
+                "GET",
+                "استرداد مورد",
+                "لا",
+                "تحميل صفحات الويب، جلب البيانات"
+              ]
+            },
+            {
+              "en": [
+                "POST",
+                "Submit data to server",
+                "Yes",
+                "Submitting forms, uploading files"
+              ],
+              "ar": [
+                "POST",
+                "إرسال بيانات إلى الخادم",
+                "نعم",
+                "إرسال النماذج، تحميل الملفات"
+              ]
+            },
+            {
+              "en": [
+                "PUT",
+                "Update/replace a resource",
+                "Yes",
+                "Updating user profile, replacing file"
+              ],
+              "ar": [
+                "PUT",
+                "تحديث/استبدال مورد",
+                "نعم",
+                "تحديث ملف المستخدم، استبدال ملف"
+              ]
+            },
+            {
+              "en": [
+                "DELETE",
+                "Remove a resource",
+                "No",
+                "Deleting account, removing post"
+              ],
+              "ar": [
+                "DELETE",
+                "إزالة مورد",
+                "لا",
+                "حذف حساب، إزالة منشور"
+              ]
+            },
+            {
+              "en": [
+                "HEAD",
+                "Get headers only (no body)",
+                "No",
+                "Checking if resource exists"
+              ],
+              "ar": [
+                "HEAD",
+                "الحصول على الرؤوس فقط (بدون نص)",
+                "لا",
+                "التحقق من وجود المورد"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 12,
+          "type": "hr"
+        },
+        {
+          "id": 13,
+          "type": "title",
+          "value": {
+            "en": "Anatomy of an HTTP Response",
+            "ar": "تشريح استجابة HTTP"
+          }
+        },
+        {
+          "id": 14,
+          "type": "text",
+          "value": {
+            "en": "When the server receives your request, it processes it and sends back an HTTP response. Like requests, responses have a specific structure. The response starts with a status line containing the HTTP version, a status code, and a status message. The status code is a three-digit number that tells you the outcome of your request. Codes starting with 2 (like 200) mean success. Codes starting with 3 (like 301 or 302) mean redirection to another location. Codes starting with 4 (like 404) mean client error - you requested something incorrectly or something that does not exist. Codes starting with 5 (like 500) mean server error - the server encountered a problem processing your request.",
+            "ar": "عندما يتلقى الخادم طلبك، يعالجه ويرسل استجابة HTTP. مثل الطلبات، للاستجابات بنية محددة. تبدأ الاستجابة بسطر حالة (status line) يحتوي على إصدار HTTP، ورمز حالة (status code)، ورسالة حالة. رمز الحالة هو رقم مكون من ثلاثة أرقام يخبرك بنتيجة طلبك. الرموز التي تبدأ بـ 2 (مثل 200) تعني النجاح. الرموز التي تبدأ بـ 3 (مثل 301 أو 302) تعني إعادة التوجيه إلى موقع آخر. الرموز التي تبدأ بـ 4 (مثل 404) تعني خطأ العميل - طلبت شيئاً بشكل غير صحيح أو شيئاً غير موجود. الرموز التي تبدأ بـ 5 (مثل 500) تعني خطأ الخادم - واجه الخادم مشكلة في معالجة طلبك."
+          }
+        },
+        {
+          "id": 15,
+          "type": "text",
+          "value": {
+            "en": "After the status line come response headers, similar to request headers. Response headers provide information about the server, the content being sent, caching instructions, cookies to store, and much more. Common response headers include Content-Type (what kind of data is in the response body, like text/html for web pages or application/json for data), Content-Length (how large the response is), Set-Cookie (cookies the server wants your browser to store), and Cache-Control (how long the browser can cache this response). Finally, the response includes a body containing the actual content - the HTML for a web page, the bytes of an image, JSON data, or whatever resource you requested.",
+            "ar": "بعد سطر الحالة تأتي رؤوس الاستجابة (response headers)، مشابهة لرؤوس الطلب. توفر رؤوس الاستجابة معلومات حول الخادم، والمحتوى الذي يتم إرساله، وتعليمات التخزين المؤقت، وملفات تعريف الارتباط للتخزين، وأكثر من ذلك بكثير. تتضمن رؤوس الاستجابة الشائعة Content-Type (نوع البيانات في نص الاستجابة، مثل text/html لصفحات الويب أو application/json للبيانات)، Content-Length (حجم الاستجابة)، Set-Cookie (ملفات تعريف الارتباط التي يريد الخادم من متصفحك تخزينها)، وCache-Control (المدة التي يمكن للمتصفح تخزين هذه الاستجابة مؤقتاً). أخيراً، تتضمن الاستجابة نصاً (body) يحتوي على المحتوى الفعلي - HTML لصفحة ويب، أو بايتات صورة، أو بيانات JSON، أو أي مورد طلبته."
+          }
+        },
+        {
+          "id": 16,
+          "type": "code",
+          "language": "http",
+          "value": "HTTP/1.1 200 OK\nDate: Wed, 04 Mar 2026 12:54:00 GMT\nServer: Apache/2.4.41\nContent-Type: text/html; charset=UTF-8\nContent-Length: 1024\nCache-Control: max-age=3600\nSet-Cookie: user_id=12345; HttpOnly; Secure\nConnection: keep-alive\n\n<!DOCTYPE html>\n<html>\n<head><title>Welcome</title></head>\n<body><h1>Hello World!</h1></body>\n</html>"
+        },
+        {
+          "id": 17,
+          "type": "text",
+          "value": {
+            "en": "Understanding status codes is crucial for troubleshooting. When you encounter a 404 error, you know the problem is that the page does not exist at that URL - maybe you typed it wrong, or the page was moved or deleted. A 403 error means you do not have permission to access that resource. A 500 error means something went wrong on the server side - it is not your fault, and you should try again later or contact the website owner. A 503 error means the server is temporarily unavailable, often due to maintenance or being overloaded with traffic. Recognizing these codes helps you understand what is happening and how to respond.",
+            "ar": "فهم رموز الحالة أمر بالغ الأهمية لاستكشاف الأخطاء. عندما تواجه خطأ 404، تعرف أن المشكلة هي أن الصفحة غير موجودة على عنوان URL هذا - ربما كتبتها بشكل خاطئ، أو تم نقل الصفحة أو حذفها. خطأ 403 يعني أنك لا تملك إذناً للوصول إلى ذلك المورد. خطأ 500 يعني أن شيئاً ما حدث خطأ على جانب الخادم - إنه ليس خطأك، ويجب عليك المحاولة مرة أخرى لاحقاً أو الاتصال بمالك الموقع. خطأ 503 يعني أن الخادم غير متاح مؤقتاً، غالباً بسبب الصيانة أو الإرهاق بحركة المرور. التعرف على هذه الرموز يساعدك على فهم ما يحدث وكيفية الرد."
+          }
+        },
+        {
+          "id": 18,
+          "type": "orderedList",
+          "title": {
+            "en": "HTTP Status Code Categories",
+            "ar": "فئات رموز حالة HTTP"
+          },
+          "items": [
+            {
+              "subtitle": {
+                "en": "1xx: Informational (Processing)",
+                "ar": "1xx: معلوماتي (قيد المعالجة)"
+              },
+              "text": {
+                "en": "Rare codes indicating the request is being processed. You typically do not see these as a user because they are intermediate responses.",
+                "ar": "رموز نادرة تشير إلى أن الطلب قيد المعالجة. عادة لا تراها كمستخدم لأنها استجابات وسيطة."
+              },
+              "example": {
+                "en": "100 Continue: Server received request headers, send body now",
+                "ar": "100 متابعة: استلم الخادم رؤوس الطلب، أرسل النص الآن"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "2xx: Success (Request Completed)",
+                "ar": "2xx: نجاح (اكتمل الطلب)"
+              },
+              "text": {
+                "en": "The request was successfully received, understood, and processed. This is what you want to see for normal operations.",
+                "ar": "تم استلام الطلب بنجاح وفهمه ومعالجته. هذا ما تريد رؤيته للعمليات العادية."
+              },
+              "example": {
+                "en": "200 OK: Success, 201 Created: New resource created successfully",
+                "ar": "200 موافق: نجاح، 201 تم الإنشاء: تم إنشاء مورد جديد بنجاح"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "3xx: Redirection (Go Elsewhere)",
+                "ar": "3xx: إعادة توجيه (اذهب إلى مكان آخر)"
+              },
+              "text": {
+                "en": "The resource you requested has moved or you need to take additional action. Your browser usually handles these automatically.",
+                "ar": "المورد الذي طلبته قد انتقل أو تحتاج إلى اتخاذ إجراء إضافي. متصفحك عادة يتعامل مع هذه تلقائياً."
+              },
+              "example": {
+                "en": "301 Moved Permanently, 302 Found (Temporary Redirect)",
+                "ar": "301 تم النقل بشكل دائم، 302 تم العثور (إعادة توجيه مؤقتة)"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "4xx: Client Error (Your Mistake)",
+                "ar": "4xx: خطأ العميل (خطأك)"
+              },
+              "text": {
+                "en": "Something is wrong with your request. The most common is 404, meaning the page does not exist. These errors require action from you.",
+                "ar": "هناك خطأ في طلبك. الأكثر شيوعاً هو 404، مما يعني أن الصفحة غير موجودة. تتطلب هذه الأخطاء إجراءً منك."
+              },
+              "example": {
+                "en": "404 Not Found, 403 Forbidden, 401 Unauthorized (login required)",
+                "ar": "404 غير موجود، 403 محظور، 401 غير مصرح (تسجيل الدخول مطلوب)"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "5xx: Server Error (Server's Problem)",
+                "ar": "5xx: خطأ الخادم (مشكلة الخادم)"
+              },
+              "text": {
+                "en": "The server encountered an error and could not complete the request. This is not your fault. Wait and try again, or contact the website.",
+                "ar": "واجه الخادم خطأ ولم يتمكن من إكمال الطلب. هذا ليس خطأك. انتظر وحاول مرة أخرى، أو اتصل بالموقع."
+              },
+              "example": {
+                "en": "500 Internal Server Error, 503 Service Unavailable (overloaded)",
+                "ar": "500 خطأ داخلي في الخادم، 503 الخدمة غير متاحة (مثقل)"
+              }
+            }
+          ]
+        },
+        {
+          "id": 19,
+          "type": "hr"
+        },
+        {
+          "id": 20,
+          "type": "title",
+          "value": {
+            "en": "The Complete Request-Response Cycle in Action",
+            "ar": "دورة الطلب-الاستجابة الكاملة أثناء العمل"
+          }
+        },
+        {
+          "id": 21,
+          "type": "text",
+          "value": {
+            "en": "Let's walk through a complete real-world example of what happens when you click a link to visit a product page on an online shopping website. First, your browser constructs an HTTP GET request. It includes the method (GET), the path to the product page (like /products/laptop-15inch), and headers with your browser information, accepted content types, and any cookies from previous visits to this site. The request travels through your local network, your ISP's infrastructure, possibly through multiple routers and switches, until it reaches the web server hosting the shopping website. This journey takes just milliseconds.",
+            "ar": "دعنا نتابع مثالاً كاملاً من العالم الواقعي لما يحدث عندما تنقر على رابط لزيارة صفحة منتج على موقع تسوق عبر الإنترنت. أولاً، يبني متصفحك طلب GET لـ HTTP. يتضمن الطريقة (GET)، والمسار إلى صفحة المنتج (مثل /products/laptop-15inch)، ورؤوس بمعلومات متصفحك، وأنواع المحتوى المقبولة، وأي ملفات تعريف ارتباط من الزيارات السابقة لهذا الموقع. يسافر الطلب عبر شبكتك المحلية، والبنية التحتية لمزود خدمة الإنترنت، وربما عبر أجهزة توجيه ومحولات متعددة، حتى يصل إلى خادم الويب الذي يستضيف موقع التسوق. تستغرق هذه الرحلة ميلي ثانية فقط."
+          }
+        },
+        {
+          "id": 22,
+          "type": "text",
+          "value": {
+            "en": "When the server receives your request, it processes it through several steps. First, it validates the request to ensure it is properly formatted. Then it checks authentication - if this is a members-only page, are you logged in? It checks authorization - do you have permission to view this specific product? Next, the server queries its database to retrieve information about the laptop you want to see: price, description, images, availability, customer reviews. The server might also check inventory systems, calculate shipping costs, or gather recommended products. All this processing typically completes in 50-200 milliseconds for a well-designed system.",
+            "ar": "عندما يتلقى الخادم طلبك، يعالجه من خلال عدة خطوات. أولاً، يتحقق من صحة الطلب للتأكد من تنسيقه بشكل صحيح. ثم يتحقق من المصادقة (authentication) - إذا كانت هذه صفحة للأعضاء فقط، هل أنت مسجل الدخول؟ يتحقق من التفويض (authorization) - هل لديك إذن لعرض هذا المنتج المحدد؟ بعد ذلك، يستعلم الخادم قاعدة بياناته لاسترداد معلومات حول الكمبيوتر المحمول الذي تريد رؤيته: السعر، الوصف، الصور، التوفر، مراجعات العملاء. قد يتحقق الخادم أيضاً من أنظمة المخزون، أو يحسب تكاليف الشحن، أو يجمع المنتجات الموصى بها. تكتمل كل هذه المعالجة عادةً في 50-200 ميلي ثانية لنظام مصمم جيداً."
+          }
+        },
+        {
+          "id": 1772825174086.2815,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/How%20the%20Web%20Works/4-3-complete%20request-response%20cycle.webp"
+        },
+        {
+          "id": 24,
+          "type": "text",
+          "value": {
+            "en": "Once the server has gathered all the information, it constructs an HTTP response. It generates the HTML for the product page, embedding the product details, images, prices, and review snippets. The server sets the status code to 200 OK (success), adds response headers including Content-Type: text/html, Cache-Control instructions, and possibly Set-Cookie headers to remember your session. The complete response travels back through the internet to your browser. Your browser receives the response, parses the HTML, and begins rendering the page. It may make additional requests for CSS stylesheets, JavaScript files, and images referenced in the HTML. Each of these is a separate request-response cycle happening in parallel.",
+            "ar": "بمجرد أن يجمع الخادم جميع المعلومات، يبني استجابة HTTP. يولد HTML لصفحة المنتج، مضمناً تفاصيل المنتج والصور والأسعار ومقتطفات المراجعات. يضبط الخادم رمز الحالة على 200 OK (نجاح)، ويضيف رؤوس الاستجابة بما في ذلك Content-Type: text/html، وتعليمات Cache-Control، وربما رؤوس Set-Cookie لتذكر جلستك. تسافر الاستجابة الكاملة مرة أخرى عبر الإنترنت إلى متصفحك. يتلقى متصفحك الاستجابة، ويحلل HTML، ويبدأ في عرض الصفحة. قد يقوم بطلبات إضافية لأوراق أنماط CSS، وملفات JavaScript، والصور المشار إليها في HTML. كل من هذه دورة طلب-استجابة منفصلة تحدث بالتوازي."
+          }
+        },
+        {
+          "id": 25,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Modern Optimization: A single web page typically requires 50-100 separate HTTP requests for all resources (HTML, CSS, JavaScript, images, fonts). Modern protocols like HTTP/2 and HTTP/3 allow multiple requests to share a single connection, dramatically improving performance compared to older HTTP/1.1 which required one connection per request.",
+            "ar": "التحسين الحديث: تتطلب صفحة ويب واحدة عادةً 50-100 طلب HTTP منفصل لجميع الموارد (HTML، CSS، JavaScript، الصور، الخطوط). تسمح البروتوكولات الحديثة مثل HTTP/2 وHTTP/3 لطلبات متعددة بمشاركة اتصال واحد، مما يحسن الأداء بشكل كبير مقارنة بـ HTTP/1.1 الأقدم الذي تطلب اتصالاً واحداً لكل طلب."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 26,
+          "type": "list",
+          "title": {
+            "en": "Key Factors Affecting Request-Response Performance",
+            "ar": "العوامل الرئيسية المؤثرة على أداء الطلب-الاستجابة"
+          },
+          "items": {
+            "en": [
+              "Network latency: Physical distance between client and server affects speed (speed of light limitation)",
+              "Server processing time: Complex database queries or calculations slow responses",
+              "Network bandwidth: Amount of data that can be transferred per second affects large files",
+              "Number of requests: More resources (images, scripts) mean more round trips",
+              "Caching: Properly cached resources eliminate unnecessary requests entirely",
+              "Server load: Busy servers with many simultaneous users respond more slowly",
+              "Connection reuse: HTTP/2 and HTTP/3 share connections for better efficiency",
+              "DNS resolution time: First visit requires DNS lookup, subsequent visits use cache"
+            ],
+            "ar": [
+              "زمن انتقال الشبكة: المسافة المادية بين العميل والخادم تؤثر على السرعة (حد سرعة الضوء)",
+              "وقت معالجة الخادم: استعلامات قاعدة البيانات المعقدة أو الحسابات تبطئ الاستجابات",
+              "عرض النطاق الترددي للشبكة: كمية البيانات التي يمكن نقلها في الثانية تؤثر على الملفات الكبيرة",
+              "عدد الطلبات: المزيد من الموارد (الصور، النصوص البرمجية) تعني المزيد من الرحلات ذهاباً وإياباً",
+              "التخزين المؤقت: الموارد المخزنة مؤقتاً بشكل صحيح تلغي الطلبات غير الضرورية تماماً",
+              "حمل الخادم: الخوادم المشغولة بالعديد من المستخدمين المتزامنين تستجيب بشكل أبطأ",
+              "إعادة استخدام الاتصال: HTTP/2 وHTTP/3 يشتركان في الاتصالات لكفاءة أفضل",
+              "وقت عملية DNS: الزيارة الأولى تتطلب بحث DNS، الزيارات اللاحقة تستخدم الكاش"
+            ]
+          }
+        },
+        {
+          "id": 27,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "Security Consideration: Every request-response cycle is an opportunity for attackers to intercept or manipulate data. Always use HTTPS to encrypt the entire communication. Be cautious about sensitive data in URLs (like passwords in GET parameters) because URLs may be logged even with HTTPS. Use POST requests for sensitive data submission.",
+            "ar": "اعتبار أمني: كل دورة طلب-استجابة هي فرصة للمهاجمين لاعتراض البيانات أو التلاعب بها. استخدم دائماً HTTPS لتشفير الاتصال بالكامل. كن حذراً بشأن البيانات الحساسة في عناوين URL (مثل كلمات المرور في معاملات GET) لأن عناوين URL قد يتم تسجيلها حتى مع HTTPS. استخدم طلبات POST لإرسال البيانات الحساسة."
+          },
+          "link": "",
+          "isLab": false
+        }
+      ]
+    },
+    {
+      "id": "topic-5",
+      "title": {
+        "en": "Cookies and Sessions: Maintaining State on the Web",
+        "ar": "الكوكيز والجلسات: الحفاظ على الحالة على الويب"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "The Stateless Problem and Why We Need Cookies",
+            "ar": "مشكلة عدم الحالة ولماذا نحتاج إلى الكوكيز"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "As we learned earlier, HTTP is stateless by design. This means the server treats each request as completely independent with no memory of previous interactions. Imagine visiting an online shopping site, adding items to your cart, and then clicking to view your cart. Without a mechanism to remember who you are, the server would have no idea what items you added just moments ago. You would see an empty cart every time. Similarly, if you logged into a website and then clicked a link to another page on the same site, the server would not remember you logged in. You would need to enter your username and password again for every single page - clearly unusable.",
+            "ar": "كما تعلمنا سابقاً، HTTP بلا حالة (stateless) بالتصميم. هذا يعني أن الخادم يعامل كل طلب على أنه مستقل تماماً بدون ذاكرة للتفاعلات السابقة. تخيل زيارة موقع تسوق عبر الإنترنت، إضافة عناصر إلى عربة التسوق الخاصة بك، ثم النقر لعرض عربتك. بدون آلية لتذكر من أنت، لن يكون لدى الخادم أي فكرة عن العناصر التي أضفتها قبل لحظات فقط. سترى عربة فارغة في كل مرة. وبالمثل، إذا سجلت الدخول إلى موقع ويب ثم نقرت على رابط إلى صفحة أخرى على نفس الموقع، فلن يتذكر الخادم أنك سجلت الدخول. ستحتاج إلى إدخال اسم المستخدم وكلمة المرور مرة أخرى لكل صفحة واحدة - وهو ما يكون غير قابل للاستخدام بوضوح."
+          }
+        },
+        {
+          "id": 1772825197883.3271,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/How%20the%20Web%20Works/5-1-complete%20request-response%20cycle.webp"
+        },
+        {
+          "id": 4,
+          "type": "text",
+          "value": {
+            "en": "Cookies were invented to solve this problem. A cookie is a small piece of data that the server sends to your browser, asking the browser to store it and send it back with future requests to the same website. Think of it like a claim ticket at a coat check. When you arrive at a restaurant and give them your coat, they give you a numbered ticket. You do not carry your coat around - you just keep the small ticket. When you are ready to leave, you show the ticket, and they retrieve your specific coat. Cookies work similarly: the server gives your browser a unique identifier (the ticket), and your browser includes it with every subsequent request. The server uses this identifier to look up your information and maintain continuity across multiple requests.",
+            "ar": "تم اختراع الكوكيز لحل هذه المشكلة. الكوكيز (Cookie) هي قطعة صغيرة من البيانات يرسلها الخادم إلى متصفحك، ويطلب من المتصفح تخزينها وإرسالها مرة أخرى مع الطلبات المستقبلية إلى نفس الموقع. فكر في الأمر مثل تذكرة مطالبة في فحص المعاطف. عندما تصل إلى مطعم وتعطيهم معطفك، يعطونك تذكرة مرقمة. لا تحمل معطفك - فقط تحتفظ بالتذكرة الصغيرة. عندما تكون مستعداً للمغادرة، تُظهر التذكرة، ويستردون معطفك المحدد. تعمل الكوكيز بطريقة مماثلة: يعطي الخادم متصفحك معرفاً فريداً (التذكرة)، ويتضمن متصفحك ذلك مع كل طلب لاحق. يستخدم الخادم هذا المعرف للبحث عن معلوماتك والحفاظ على الاستمرارية عبر طلبات متعددة."
+          }
+        },
+        {
+          "id": 5,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Cookie History: Cookies were invented in 1994 by Lou Montulli at Netscape Communications. The name 'cookie' comes from 'magic cookie', an old programming term for a piece of data passed between programs. Despite privacy concerns, cookies remain essential for modern web functionality.",
+            "ar": "تاريخ الكوكيز: تم اختراع الكوكيز في عام 1994 بواسطة لو مونتولي في Netscape Communications. يأتي اسم 'cookie' من 'magic cookie'، وهو مصطلح برمجي قديم لقطعة من البيانات يتم تمريرها بين البرامج. على الرغم من مخاوف الخصوصية، تظل الكوكيز ضرورية لوظائف الويب الحديثة."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 6,
+          "type": "title",
+          "value": {
+            "en": "How Cookies Work: Technical Details",
+            "ar": "كيف تعمل الكوكيز: التفاصيل التقنية"
+          }
+        },
+        {
+          "id": 7,
+          "type": "text",
+          "value": {
+            "en": "When you visit a website for the first time, the server can send a Set-Cookie header in its HTTP response. This header contains a name-value pair, such as 'user_id=12345' or 'session_token=abc123xyz789'. Your browser receives this header and stores the cookie locally on your computer. The cookie is associated with the specific domain that set it (like example.com), ensuring that cookies from one website are not sent to different websites. From that point forward, every time your browser makes a request to that same domain, it automatically includes a Cookie header containing all cookies associated with that domain.",
+            "ar": "عندما تزور موقعاً إلكترونياً لأول مرة، يمكن للخادم إرسال رأس Set-Cookie في استجابة HTTP الخاصة به. يحتوي هذا الرأس على زوج اسم-قيمة، مثل 'user_id=12345' أو 'session_token=abc123xyz789'. يتلقى متصفحك هذا الرأس ويخزن الكوكيز محلياً على جهاز الكمبيوتر الخاص بك. ترتبط الكوكيز بالنطاق المحدد الذي قام بتعيينها (مثل example.com)، مما يضمن عدم إرسال كوكيز من موقع واحد إلى مواقع مختلفة. من تلك النقطة فصاعداً، في كل مرة يقدم فيها متصفحك طلباً إلى نفس النطاق، يتضمن تلقائياً رأس Cookie يحتوي على جميع الكوكيز المرتبطة بهذا النطاق."
+          }
+        },
+        {
+          "id": 8,
+          "type": "text",
+          "value": {
+            "en": "Cookies have several important attributes that control their behavior. The Expires or Max-Age attribute determines when the cookie should be deleted. Without this attribute, the cookie is a session cookie that gets deleted when you close your browser. With an expiration date, it becomes a persistent cookie that survives browser restarts. The Domain attribute specifies which domain can access the cookie. The Path attribute limits which parts of the website can access it. The Secure attribute ensures the cookie is only sent over HTTPS connections, preventing interception on insecure HTTP. The HttpOnly attribute prevents JavaScript code from accessing the cookie, protecting against certain types of attacks.",
+            "ar": "تحتوي الكوكيز على عدة سمات مهمة تتحكم في سلوكها. تحدد سمة Expires أو Max-Age متى يجب حذف الكوكيز. بدون هذه السمة، تكون الكوكيز كوكيز جلسة (session cookie) يتم حذفها عند إغلاق المتصفح. مع تاريخ انتهاء الصلاحية، تصبح كوكيز مستمرة (persistent cookie) تنجو من إعادة تشغيل المتصفح. تحدد سمة Domain أي نطاق يمكنه الوصول إلى الكوكيز. تحدد سمة Path أي أجزاء من الموقع يمكنها الوصول إليها. تضمن سمة Secure إرسال الكوكيز فقط عبر اتصالات HTTPS، مما يمنع الاعتراض على HTTP غير الآمن. تمنع سمة HttpOnly كود JavaScript من الوصول إلى الكوكيز، مما يحمي من أنواع معينة من الهجمات."
+          }
+        },
+        {
+          "id": 9,
+          "type": "code",
+          "language": "http",
+          "value": "HTTP Response Setting a Cookie:\nHTTP/1.1 200 OK\nSet-Cookie: session_id=abc123xyz789; Expires=Wed, 11 Mar 2026 12:00:00 GMT; Path=/; Domain=example.com; Secure; HttpOnly\nSet-Cookie: user_pref=dark_mode; Max-Age=31536000; Path=/\n\nHTTP Request Including Cookies:\nGET /profile.html HTTP/1.1\nHost: www.example.com\nCookie: session_id=abc123xyz789; user_pref=dark_mode"
+        },
+        {
+          "id": 1772825216896.7666,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/How%20the%20Web%20Works/5-2-cookie%20lifecycle%20from%20creation%20to%20usage.webp"
+        },
+        {
+          "id": 11,
+          "type": "table",
+          "title": {
+            "en": "Cookie Attributes and Their Purposes",
+            "ar": "سمات الكوكيز وأغراضها"
+          },
+          "headers": {
+            "en": [
+              "Attribute",
+              "Purpose",
+              "Example Value",
+              "Security Impact"
+            ],
+            "ar": [
+              "السمة",
+              "الغرض",
+              "قيمة المثال",
+              "التأثير الأمني"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "Name=Value",
+                "The actual data stored",
+                "user_id=12345",
+                "Contains sensitive data, protect carefully"
+              ],
+              "ar": [
+                "Name=Value",
+                "البيانات الفعلية المخزنة",
+                "user_id=12345",
+                "تحتوي على بيانات حساسة، احمها بعناية"
+              ]
+            },
+            {
+              "en": [
+                "Expires / Max-Age",
+                "When cookie should be deleted",
+                "Max-Age=3600 (1 hour)",
+                "Longer expiration = longer exposure risk"
+              ],
+              "ar": [
+                "Expires / Max-Age",
+                "متى يجب حذف الكوكيز",
+                "Max-Age=3600 (ساعة واحدة)",
+                "انتهاء صلاحية أطول = خطر تعرض أطول"
+              ]
+            },
+            {
+              "en": [
+                "Domain",
+                "Which domain can access cookie",
+                "Domain=example.com",
+                "Restricts cookie to specific domain"
+              ],
+              "ar": [
+                "Domain",
+                "أي نطاق يمكنه الوصول إلى الكوكيز",
+                "Domain=example.com",
+                "يقيد الكوكيز بنطاق محدد"
+              ]
+            },
+            {
+              "en": [
+                "Path",
+                "Which URL paths can access cookie",
+                "Path=/shop",
+                "Limits cookie to specific site sections"
+              ],
+              "ar": [
+                "Path",
+                "أي مسارات URL يمكنها الوصول إلى الكوكيز",
+                "Path=/shop",
+                "يحد من الكوكيز لأقسام موقع محددة"
+              ]
+            },
+            {
+              "en": [
+                "Secure",
+                "Only send over HTTPS",
+                "Secure",
+                "CRITICAL: Prevents interception on HTTP"
+              ],
+              "ar": [
+                "Secure",
+                "إرسال فقط عبر HTTPS",
+                "Secure",
+                "حرج: يمنع الاعتراض على HTTP"
+              ]
+            },
+            {
+              "en": [
+                "HttpOnly",
+                "Prevent JavaScript access",
+                "HttpOnly",
+                "CRITICAL: Protects against XSS attacks"
+              ],
+              "ar": [
+                "HttpOnly",
+                "منع وصول JavaScript",
+                "HttpOnly",
+                "حرج: يحمي من هجمات XSS"
+              ]
+            },
+            {
+              "en": [
+                "SameSite",
+                "Control cross-site sending",
+                "SameSite=Strict",
+                "Protects against CSRF attacks"
+              ],
+              "ar": [
+                "SameSite",
+                "التحكم في الإرسال عبر المواقع",
+                "SameSite=Strict",
+                "يحمي من هجمات CSRF"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 12,
+          "type": "hr"
+        },
+        {
+          "id": 13,
+          "type": "title",
+          "value": {
+            "en": "Sessions: Server-Side State Management",
+            "ar": "الجلسات: إدارة الحالة من جانب الخادم"
+          }
+        },
+        {
+          "id": 14,
+          "type": "text",
+          "value": {
+            "en": "While cookies store small pieces of data in your browser, sessions store data on the server. A session is a temporary, server-side storage area associated with a specific user. Here is how it works: when you first visit a website, the server creates a session for you - essentially a container to store information about your interaction. The server generates a unique session ID (a long random string like 'a3f9c7e2b8d4f1e0') and sends it to your browser as a cookie. Your browser stores this session ID cookie and includes it with every subsequent request. The server uses the session ID from the cookie to retrieve your session data from its storage.",
+            "ar": "بينما تخزن الكوكيز قطع صغيرة من البيانات في متصفحك، تخزن الجلسات (Sessions) البيانات على الخادم. الجلسة هي منطقة تخزين مؤقتة من جانب الخادم مرتبطة بمستخدم محدد. إليك كيف يعمل: عندما تزور موقعاً إلكترونياً لأول مرة، ينشئ الخادم جلسة لك - في الأساس حاوية لتخزين معلومات حول تفاعلك. يولد الخادم معرف جلسة فريداً (سلسلة عشوائية طويلة مثل 'a3f9c7e2b8d4f1e0') ويرسله إلى متصفحك ككوكيز. يخزن متصفحك كوكيز معرف الجلسة هذا ويتضمنه مع كل طلب لاحق. يستخدم الخادم معرف الجلسة من الكوكيز لاسترداد بيانات جلستك من تخزينه."
+          }
+        },
+        {
+          "id": 15,
+          "type": "text",
+          "value": {
+            "en": "The key difference between cookies and sessions is where data is stored. Cookie data lives in your browser and travels with every request. Session data lives on the server, and only the session ID travels in the cookie. This has important implications. Cookies are limited in size (typically 4KB maximum per cookie), while sessions can store much larger amounts of data. Cookies can be viewed and modified by users through browser developer tools, making them unsuitable for sensitive information. Session data remains on the server where users cannot access or tamper with it. For example, when you log into a website, your username and password are verified, and the server stores 'user_authenticated=true' in your session. Only the session ID is sent to your browser as a cookie.",
+            "ar": "الفرق الرئيسي بين الكوكيز والجلسات هو مكان تخزين البيانات. تعيش بيانات الكوكيز في متصفحك وتسافر مع كل طلب. تعيش بيانات الجلسة على الخادم، ومعرف الجلسة فقط يسافر في الكوكيز. لهذا آثار مهمة. تقتصر الكوكيز في الحجم (عادةً 4KB كحد أقصى لكل كوكيز)، بينما يمكن للجلسات تخزين كميات أكبر بكثير من البيانات. يمكن للمستخدمين عرض الكوكيز وتعديلها من خلال أدوات تطوير المتصفح، مما يجعلها غير مناسبة للمعلومات الحساسة. تبقى بيانات الجلسة على الخادم حيث لا يمكن للمستخدمين الوصول إليها أو العبث بها. على سبيل المثال، عندما تسجل الدخول إلى موقع ويب، يتم التحقق من اسم المستخدم وكلمة المرور، ويخزن الخادم 'user_authenticated=true' في جلستك. يتم إرسال معرف الجلسة فقط إلى متصفحك ككوكيز."
+          }
+        },
+        {
+          "id": 16,
+          "type": "text",
+          "value": {
+            "en": "Sessions have a lifecycle. They are created when needed (usually on first visit), persist while you interact with the site, and eventually expire. Session expiration can happen in several ways: idle timeout (no activity for a certain period, like 30 minutes), absolute timeout (session ends after a fixed duration regardless of activity), or explicit logout (user clicks logout button). When a session expires, the server deletes the session data. If you try to use an expired session ID, the server creates a new session. This security measure prevents attackers from hijacking old sessions and ensures that abandoned sessions do not consume server resources indefinitely.",
+            "ar": "للجلسات دورة حياة. يتم إنشاؤها عند الحاجة (عادةً في الزيارة الأولى)، وتستمر أثناء تفاعلك مع الموقع، وتنتهي في النهاية. يمكن أن يحدث انتهاء صلاحية الجلسة بعدة طرق: مهلة الخمول (لا يوجد نشاط لفترة معينة، مثل 30 دقيقة)، مهلة مطلقة (تنتهي الجلسة بعد مدة ثابتة بغض النظر عن النشاط)، أو تسجيل خروج صريح (المستخدم ينقر على زر تسجيل الخروج). عندما تنتهي صلاحية الجلسة، يحذف الخادم بيانات الجلسة. إذا حاولت استخدام معرف جلسة منتهي الصلاحية، ينشئ الخادم جلسة جديدة. يمنع هذا الإجراء الأمني المهاجمين من اختطاف الجلسات القديمة ويضمن عدم استهلاك الجلسات المهجورة موارد الخادم إلى أجل غير مسمى."
+          }
+        },
+        {
+          "id": 17,
+          "type": "orderedList",
+          "title": {
+            "en": "How Login Sessions Work Step-by-Step",
+            "ar": "كيف تعمل جلسات تسجيل الدخول خطوة بخطوة"
+          },
+          "items": [
+            {
+              "subtitle": {
+                "en": "User Submits Login Form",
+                "ar": "المستخدم يقدم نموذج تسجيل الدخول"
+              },
+              "text": {
+                "en": "You enter your username and password and click login. Your browser sends a POST request to the server with these credentials.",
+                "ar": "تدخل اسم المستخدم وكلمة المرور وتنقر على تسجيل الدخول. يرسل متصفحك طلب POST إلى الخادم مع بيانات الاعتماد هذه."
+              },
+              "example": {
+                "en": "POST /login - Body: username=john&password=secret123",
+                "ar": "POST /login - النص: username=john&password=secret123"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Server Verifies Credentials",
+                "ar": "الخادم يتحقق من بيانات الاعتماد"
+              },
+              "text": {
+                "en": "The server checks your username and password against its database. If correct, it proceeds to create a session. If incorrect, it rejects the login.",
+                "ar": "يتحقق الخادم من اسم المستخدم وكلمة المرور مقابل قاعدة بياناته. إذا كانت صحيحة، يستمر في إنشاء جلسة. إذا كانت غير صحيحة، يرفض تسجيل الدخول."
+              },
+              "example": {
+                "en": "Server queries database: SELECT * FROM users WHERE username='john'",
+                "ar": "الخادم يستعلم قاعدة البيانات: SELECT * FROM users WHERE username='john'"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Server Creates Session",
+                "ar": "الخادم ينشئ الجلسة"
+              },
+              "text": {
+                "en": "Upon successful authentication, the server generates a random session ID and creates a session storage entry with your user information.",
+                "ar": "عند المصادقة الناجحة، يولد الخادم معرف جلسة عشوائياً وينشئ إدخال تخزين جلسة مع معلومات المستخدم الخاصة بك."
+              },
+              "example": {
+                "en": "",
+                "ar": ""
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Server Sends Session ID Cookie",
+                "ar": "الخادم يرسل كوكيز معرف الجلسة"
+              },
+              "text": {
+                "en": "The server includes a Set-Cookie header in the response containing the session ID. It sets Secure and HttpOnly flags for protection.",
+                "ar": "يتضمن الخادم رأس Set-Cookie في الاستجابة يحتوي على معرف الجلسة. يضبط علامات Secure وHttpOnly للحماية."
+              },
+              "example": {
+                "en": "Set-Cookie: session_id=a3f9c7e2b8d4f1e0; Secure; HttpOnly; SameSite=Strict",
+                "ar": "Set-Cookie: session_id=a3f9c7e2b8d4f1e0; Secure; HttpOnly; SameSite=Strict"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Browser Stores and Sends Cookie",
+                "ar": "المتصفح يخزن ويرسل الكوكيز"
+              },
+              "text": {
+                "en": "Your browser stores the session ID cookie. For every subsequent request to this site, the browser automatically includes this cookie.",
+                "ar": "يخزن متصفحك كوكيز معرف الجلسة. لكل طلب لاحق إلى هذا الموقع، يتضمن المتصفح تلقائياً هذا الكوكيز."
+              },
+              "example": {
+                "en": "GET /dashboard - Cookie: session_id=a3f9c7e2b8d4f1e0",
+                "ar": "GET /dashboard - Cookie: session_id=a3f9c7e2b8d4f1e0"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Server Recognizes Authenticated User",
+                "ar": "الخادم يتعرف على المستخدم المصادق"
+              },
+              "text": {
+                "en": "For each request, the server reads the session ID from the cookie, retrieves your session data, and knows you are logged in as 'john'. You stay logged in until the session expires or you logout.",
+                "ar": "لكل طلب، يقرأ الخادم معرف الجلسة من الكوكيز، يسترد بيانات جلستك، ويعرف أنك مسجل الدخول كـ 'john'. تبقى مسجلاً حتى تنتهي صلاحية الجلسة أو تسجل الخروج."
+              },
+              "example": {
+                "en": "Server retrieves session: user_id=123, username='john' → Grants access to dashboard",
+                "ar": "الخادم يسترد الجلسة: user_id=123، username='john' → يمنح الوصول إلى لوحة التحكم"
+              }
+            }
+          ]
+        },
+        {
+          "id": 18,
+          "type": "hr"
+        },
+        {
+          "id": 19,
+          "type": "title",
+          "value": {
+            "en": "Cookie and Session Security Concerns",
+            "ar": "مخاوف أمان الكوكيز والجلسات"
+          }
+        },
+        {
+          "id": 20,
+          "type": "text",
+          "value": {
+            "en": "Cookies and sessions, while essential for web functionality, introduce security risks if not implemented properly. The most serious risk is session hijacking, where an attacker steals your session ID and impersonates you. If an attacker obtains your session ID cookie, they can send requests to the server pretending to be you. The server cannot tell the difference because it only sees the valid session ID. This is why the Secure and HttpOnly cookie attributes are critical. Secure ensures the session ID only travels over encrypted HTTPS connections, preventing interception. HttpOnly prevents malicious JavaScript from stealing the cookie through cross-site scripting (XSS) attacks.",
+            "ar": "الكوكيز والجلسات، على الرغم من كونها ضرورية لوظائف الويب، تقدم مخاطر أمنية إذا لم يتم تنفيذها بشكل صحيح. المخاطر الأكثر خطورة هو اختطاف الجلسة (session hijacking)، حيث يسرق المهاجم معرف جلستك وينتحل شخصيتك. إذا حصل المهاجم على كوكيز معرف الجلسة الخاص بك، يمكنه إرسال طلبات إلى الخادم متظاهراً بأنه أنت. لا يمكن للخادم معرفة الفرق لأنه يرى فقط معرف الجلسة الصالح. لهذا السبب سمات الكوكيز Secure وHttpOnly حرجة. يضمن Secure أن معرف الجلسة يسافر فقط عبر اتصالات HTTPS المشفرة، مما يمنع الاعتراض. يمنع HttpOnly JavaScript الخبيث من سرقة الكوكيز من خلال هجمات البرمجة النصية عبر المواقع (XSS)."
+          }
+        },
+        {
+          "id": 1772825206961.9553,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/How%20the%20Web%20Works/5-3-showing%20session%20hijacking%20attack%20and%20protection..webp"
+        },
+        {
+          "id": 22,
+          "type": "text",
+          "value": {
+            "en": "Another important concern is cookie privacy and tracking. Third-party cookies allow advertisers and analytics companies to track your browsing across multiple websites. When you visit a site with embedded ads or social media widgets, those third parties can set cookies in your browser. As you browse different sites that use the same ad networks, these cookies track your movements, building a profile of your interests and habits. This is why modern browsers increasingly block third-party cookies by default and why privacy regulations like GDPR require websites to obtain consent before setting non-essential cookies. Users should understand their browser's cookie settings and periodically clear cookies they do not need.",
+            "ar": "قلق مهم آخر هو خصوصية الكوكيز والتتبع. تسمح كوكيز الطرف الثالث (third-party cookies) للمعلنين وشركات التحليلات بتتبع تصفحك عبر مواقع ويب متعددة. عندما تزور موقعاً يحتوي على إعلانات مضمنة أو أدوات وسائل التواصل الاجتماعي، يمكن لأطراف ثالثة تعيين كوكيز في متصفحك. أثناء تصفح مواقع مختلفة تستخدم نفس شبكات الإعلانات، تتبع هذه الكوكيز تحركاتك، وتبني ملف تعريف لاهتماماتك وعاداتك. لهذا السبب تحظر المتصفحات الحديثة بشكل متزايد كوكيز الطرف الثالث بشكل افتراضي ولماذا تتطلب لوائح الخصوصية مثل GDPR من المواقع الحصول على موافقة قبل تعيين كوكيز غير أساسية. يجب على المستخدمين فهم إعدادات الكوكيز في متصفحهم ومسح الكوكيز التي لا يحتاجونها بشكل دوري."
+          }
+        },
+        {
+          "id": 23,
+          "type": "list",
+          "title": {
+            "en": "Best Practices for Cookie and Session Security",
+            "ar": "أفضل الممارسات لأمان الكوكيز والجلسات"
+          },
+          "items": {
+            "en": [
+              "Always use HTTPS for entire site, especially for authenticated areas",
+              "Set Secure flag on all cookies to prevent transmission over unencrypted HTTP",
+              "Set HttpOnly flag on session cookies to prevent JavaScript access and XSS attacks",
+              "Use SameSite attribute to protect against Cross-Site Request Forgery (CSRF) attacks",
+              "Implement reasonable session timeouts (15-30 minutes of inactivity for sensitive sites)",
+              "Regenerate session ID after login to prevent session fixation attacks",
+              "Never store sensitive data directly in cookies - use sessions instead",
+              "Implement proper logout functionality that destroys the session on the server",
+              "Use strong, cryptographically random session IDs that cannot be guessed",
+              "Regularly review and clear unnecessary cookies from your browser",
+              "Be cautious about logging in on public or shared computers",
+              "Configure browser to block third-party cookies for better privacy"
+            ],
+            "ar": [
+              "استخدم دائماً HTTPS للموقع بأكمله، خاصة للمناطق المصادق عليها",
+              "قم بتعيين علامة Secure على جميع الكوكيز لمنع الإرسال عبر HTTP غير المشفر",
+              "قم بتعيين علامة HttpOnly على كوكيز الجلسة لمنع وصول JavaScript وهجمات XSS",
+              "استخدم سمة SameSite للحماية من هجمات التزوير عبر المواقع (CSRF)",
+              "قم بتنفيذ مهلات جلسة معقولة (15-30 دقيقة من عدم النشاط للمواقع الحساسة)",
+              "أعد إنشاء معرف الجلسة بعد تسجيل الدخول لمنع هجمات تثبيت الجلسة",
+              "لا تخزن أبداً البيانات الحساسة مباشرة في الكوكيز - استخدم الجلسات بدلاً من ذلك",
+              "قم بتنفيذ وظيفة تسجيل خروج مناسبة تدمر الجلسة على الخادم",
+              "استخدم معرفات جلسة قوية وعشوائية تشفيرياً لا يمكن تخمينها",
+              "راجع بانتظام وامسح الكوكيز غير الضرورية من متصفحك",
+              "كن حذراً بشأن تسجيل الدخول على أجهزة كمبيوتر عامة أو مشتركة",
+              "قم بتكوين المتصفح لحظر كوكيز الطرف الثالث لخصوصية أفضل"
+            ]
+          }
+        },
+        {
+          "id": 24,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "Critical Security Warning: If you use a public computer (library, internet cafe), always explicitly log out when finished and clear the browser's cookies and history. Simply closing the browser may leave your session active, allowing the next user to access your accounts. Use private/incognito browsing mode on shared computers.",
+            "ar": "تحذير أمني حرج: إذا كنت تستخدم كمبيوتر عاماً (مكتبة، مقهى إنترنت)، قم دائماً بتسجيل الخروج بشكل صريح عند الانتهاء وامسح كوكيز المتصفح والتاريخ. مجرد إغلاق المتصفح قد يترك جلستك نشطة، مما يسمح للمستخدم التالي بالوصول إلى حساباتك. استخدم وضع التصفح الخاص/المتخفي على أجهزة الكمبيوتر المشتركة."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 25,
+          "type": "table",
+          "title": {
+            "en": "Cookies vs Sessions: Key Differences",
+            "ar": "الكوكيز مقابل الجلسات: الفروقات الرئيسية"
+          },
+          "headers": {
+            "en": [
+              "Aspect",
+              "Cookies",
+              "Sessions"
+            ],
+            "ar": [
+              "الجانب",
+              "الكوكيز",
+              "الجلسات"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "Storage Location",
+                "Client-side (in browser)",
+                "Server-side (on web server)"
+              ],
+              "ar": [
+                "موقع التخزين",
+                "جانب العميل (في المتصفح)",
+                "جانب الخادم (على خادم الويب)"
+              ]
+            },
+            {
+              "en": [
+                "Data Capacity",
+                "Limited (~4KB per cookie)",
+                "Much larger (depends on server)"
+              ],
+              "ar": [
+                "سعة البيانات",
+                "محدودة (~4KB لكل كوكيز)",
+                "أكبر بكثير (يعتمد على الخادم)"
+              ]
+            },
+            {
+              "en": [
+                "User Accessibility",
+                "Users can view and modify",
+                "Users cannot access or modify"
+              ],
+              "ar": [
+                "إمكانية وصول المستخدم",
+                "يمكن للمستخدمين العرض والتعديل",
+                "لا يمكن للمستخدمين الوصول أو التعديل"
+              ]
+            },
+            {
+              "en": [
+                "Security",
+                "Less secure (client-side)",
+                "More secure (server-side)"
+              ],
+              "ar": [
+                "الأمان",
+                "أقل أماناً (جانب العميل)",
+                "أكثر أماناً (جانب الخادم)"
+              ]
+            },
+            {
+              "en": [
+                "Expiration",
+                "Can be persistent or session",
+                "Typically expires with inactivity"
+              ],
+              "ar": [
+                "انتهاء الصلاحية",
+                "يمكن أن يكون مستمراً أو جلسة",
+                "عادةً ينتهي مع عدم النشاط"
+              ]
+            },
+            {
+              "en": [
+                "Data Transmitted",
+                "All cookie data sent with each request",
+                "Only session ID sent with request"
+              ],
+              "ar": [
+                "البيانات المرسلة",
+                "جميع بيانات الكوكيز ترسل مع كل طلب",
+                "معرف الجلسة فقط يرسل مع الطلب"
+              ]
+            },
+            {
+              "en": [
+                "Best Use Case",
+                "User preferences, tracking",
+                "Authentication, shopping cart, sensitive data"
+              ],
+              "ar": [
+                "أفضل حالة استخدام",
+                "تفضيلات المستخدم، التتبع",
+                "المصادقة، عربة التسوق، البيانات الحساسة"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "topic-6",
+      "title": {
+        "en": "Web Browsers and Developer Tools: Inspecting Web Communication",
+        "ar": "متصفحات الويب وأدوات المطور: فحص اتصالات الويب"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "What Web Browsers Actually Do",
+            "ar": "ما تفعله متصفحات الويب فعلياً"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "A web browser is far more than just a window to view websites. It is a sophisticated software application that orchestrates dozens of complex processes every time you visit a webpage. When you type a URL, the browser acts as your agent, handling DNS lookups, establishing network connections, sending HTTP requests, receiving responses, parsing HTML, applying CSS styles, executing JavaScript code, rendering graphics, and managing security. Modern browsers like Chrome, Firefox, Edge, and Safari are actually powerful platforms that include rendering engines, JavaScript interpreters, networking stacks, security systems, and much more. Understanding what your browser does helps you recognize when something goes wrong and why certain security practices matter.",
+            "ar": "متصفح الويب هو أكثر بكثير من مجرد نافذة لعرض المواقع الإلكترونية. إنه تطبيق برمجي متطور ينسق عشرات العمليات المعقدة في كل مرة تزور فيها صفحة ويب. عندما تكتب URL، يعمل المتصفح كوكيل لك، يتعامل مع عمليات بحث DNS، وإنشاء اتصالات الشبكة، وإرسال طلبات HTTP، واستقبال الاستجابات، وتحليل HTML، وتطبيق أنماط CSS، وتنفيذ كود JavaScript، وعرض الرسومات، وإدارة الأمان. المتصفحات الحديثة مثل Chrome وFirefox وEdge وSafari هي في الواقع منصات قوية تتضمن محركات عرض، ومترجمات JavaScript، ومجموعات شبكات، وأنظمة أمان، وأكثر من ذلك بكثير. فهم ما يفعله متصفحك يساعدك على التعرف على وقت حدوث خطأ ما ولماذا تهم ممارسات أمان معينة."
+          }
+        },
+        {
+          "id": 1772825269599.4397,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/How%20the%20Web%20Works/6-1-showing%20the%20browser%20as%20a%20multi-functional%20platform.webp"
+        },
+        {
+          "id": 4,
+          "type": "text",
+          "value": {
+            "en": "The browser's rendering engine is responsible for turning HTML, CSS, and images into the visual page you see. It parses the HTML document structure, applies styling rules from CSS, calculates layouts, and paints pixels on your screen. This happens incredibly fast, but complex pages with thousands of elements, animations, and dynamic content require significant processing power. The JavaScript engine executes code that makes websites interactive - form validation, animations, dynamic content updates, and communication with servers without full page reloads. Modern JavaScript engines like V8 (Chrome), SpiderMonkey (Firefox), and JavaScriptCore (Safari) use sophisticated optimization techniques to run code at near-native speeds.",
+            "ar": "محرك العرض في المتصفح مسؤول عن تحويل HTML وCSS والصور إلى الصفحة المرئية التي تراها. يحلل بنية مستند HTML، ويطبق قواعد الأنماط من CSS، ويحسب التخطيطات، ويرسم بكسلات على شاشتك. يحدث هذا بسرعة لا تصدق، لكن الصفحات المعقدة مع آلاف العناصر والرسوم المتحركة والمحتوى الديناميكي تتطلب قوة معالجة كبيرة. يقوم محرك JavaScript بتنفيذ كود يجعل المواقع الإلكترونية تفاعلية - التحقق من صحة النموذج، والرسوم المتحركة، وتحديثات المحتوى الديناميكية، والاتصال بالخوادم دون إعادة تحميل الصفحة بالكامل. تستخدم محركات JavaScript الحديثة مثل V8 (Chrome) وSpiderMonkey (Firefox) وJavaScriptCore (Safari) تقنيات تحسين متطورة لتشغيل الكود بسرعات قريبة من الأصلية."
+          }
+        },
+        {
+          "id": 5,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Browser Diversity: Different browsers use different rendering engines and may display the same website slightly differently. Chrome/Edge use Blink, Firefox uses Gecko, and Safari uses WebKit. Web developers must test sites across multiple browsers to ensure consistent experience. As a user, keeping your browser updated ensures you have the latest rendering capabilities and security fixes.",
+            "ar": "تنوع المتصفحات: تستخدم المتصفحات المختلفة محركات عرض مختلفة وقد تعرض نفس الموقع بشكل مختلف قليلاً. يستخدم Chrome/Edge محرك Blink، ويستخدم Firefox محرك Gecko، ويستخدم Safari محرك WebKit. يجب على مطوري الويب اختبار المواقع عبر متصفحات متعددة لضمان تجربة متسقة. كمستخدم، يضمن الحفاظ على تحديث متصفحك أن لديك أحدث قدرات العرض وإصلاحات الأمان."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 6,
+          "type": "title",
+          "value": {
+            "en": "Introduction to Browser Developer Tools",
+            "ar": "مقدمة إلى أدوات مطور المتصفح"
+          }
+        },
+        {
+          "id": 7,
+          "type": "text",
+          "value": {
+            "en": "Every modern browser includes powerful developer tools (DevTools) that let you peek behind the scenes of any website. These tools were originally created for web developers to debug their code, but they are incredibly valuable for anyone wanting to understand how the web works or troubleshoot issues. You can access DevTools in most browsers by pressing F12 or right-clicking anywhere on a page and selecting 'Inspect' or 'Inspect Element'. A panel opens showing various tabs: Elements (or Inspector), Console, Network, Application (or Storage), and more. Even as a beginner, learning to use a few basic features of DevTools empowers you to learn about web technologies hands-on.",
+            "ar": "يتضمن كل متصفح حديث أدوات مطور قوية (DevTools) تتيح لك إلقاء نظرة خلف كواليس أي موقع ويب. تم إنشاء هذه الأدوات في الأصل لمطوري الويب لتصحيح أخطاء أكوادهم، لكنها قيمة بشكل لا يصدق لأي شخص يريد فهم كيفية عمل الويب أو استكشاف المشكلات. يمكنك الوصول إلى DevTools في معظم المتصفحات بالضغط على F12 أو النقر بزر الماوس الأيمن في أي مكان على الصفحة واختيار 'فحص' أو 'فحص العنصر'. تفتح لوحة تعرض علامات تبويب متنوعة: العناصر (أو المفتش)، وحدة التحكم، الشبكة، التطبيق (أو التخزين)، والمزيد. حتى كمبتدئ، فإن تعلم استخدام بعض الميزات الأساسية لـ DevTools يمكّنك من التعلم عن تقنيات الويب بشكل عملي."
+          }
+        },
+        {
+          "id": 8,
+          "type": "text",
+          "value": {
+            "en": "The Elements/Inspector tab shows you the HTML structure of the page and the CSS styles applied to each element. You can click on any element on the page to highlight it in the DevTools and see its code. You can even modify the HTML or CSS temporarily to see how changes would look - these modifications only exist in your browser and disappear when you reload the page. This is perfect for experimentation and learning. The Console tab displays messages from the website's JavaScript code, including errors, warnings, and informational logs. It also provides an interactive command line where you can type JavaScript commands and see immediate results. This is powerful for testing and learning how JavaScript interacts with the page.",
+            "ar": "تُظهر علامة التبويب العناصر/المفتش بنية HTML للصفحة وأنماط CSS المطبقة على كل عنصر. يمكنك النقر على أي عنصر في الصفحة لتمييزه في DevTools ورؤية كوده. يمكنك حتى تعديل HTML أو CSS مؤقتاً لرؤية كيف ستبدو التغييرات - هذه التعديلات موجودة فقط في متصفحك وتختفي عند إعادة تحميل الصفحة. هذا مثالي للتجريب والتعلم. تعرض علامة التبويب وحدة التحكم رسائل من كود JavaScript للموقع، بما في ذلك الأخطاء والتحذيرات وسجلات المعلومات. توفر أيضاً سطر أوامر تفاعلياً حيث يمكنك كتابة أوامر JavaScript ورؤية نتائج فورية. هذا قوي للاختبار والتعلم عن كيفية تفاعل JavaScript مع الصفحة."
+          }
+        },
+        {
+          "id": 9,
+          "type": "orderedList",
+          "title": {
+            "en": "How to Open and Navigate Developer Tools",
+            "ar": "كيفية فتح أدوات المطور والتنقل فيها"
+          },
+          "items": [
+            {
+              "subtitle": {
+                "en": "Opening DevTools",
+                "ar": "فتح DevTools"
+              },
+              "text": {
+                "en": "Press F12 on your keyboard, or right-click anywhere on a webpage and select 'Inspect' or 'Inspect Element'. The developer tools panel will open, usually at the bottom or right side of your browser window.",
+                "ar": "اضغط على F12 على لوحة المفاتيح، أو انقر بزر الماوس الأيمن في أي مكان على صفحة ويب واختر 'فحص' أو 'فحص العنصر'. ستفتح لوحة أدوات المطور، عادةً في الجزء السفلي أو الجانب الأيمن من نافذة المتصفح."
+              },
+              "example": {
+                "en": "Chrome: F12 or Ctrl+Shift+I | Firefox: F12 or Ctrl+Shift+I | Safari: Enable in Preferences first",
+                "ar": "Chrome: F12 أو Ctrl+Shift+I | Firefox: F12 أو Ctrl+Shift+I | Safari: قم بالتمكين في التفضيلات أولاً"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Elements/Inspector Tab",
+                "ar": "علامة تبويب العناصر/المفتش"
+              },
+              "text": {
+                "en": "This tab shows the HTML structure (DOM tree) and CSS styles. Click any element to select it. Hover over elements to highlight them on the page. You can expand and collapse sections to navigate the document structure.",
+                "ar": "تُظهر هذه العلامة بنية HTML (شجرة DOM) وأنماط CSS. انقر على أي عنصر لتحديده. مرر الماوس فوق العناصر لتمييزها على الصفحة. يمكنك توسيع الأقسام وطيها للتنقل في بنية المستند."
+              },
+              "example": {
+                "en": "Select a heading, see its styles in the right panel, temporarily change color",
+                "ar": "حدد عنواناً، راجع أنماطه في اللوحة اليمنى، غيّر اللون مؤقتاً"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Console Tab",
+                "ar": "علامة تبويب وحدة التحكم"
+              },
+              "text": {
+                "en": "View JavaScript errors, warnings, and log messages. Use the command line at the bottom to execute JavaScript. Try typing simple commands like 'document.title' to see the page title or 'alert(\"Hello\")' to show a popup.",
+                "ar": "عرض أخطاء JavaScript والتحذيرات ورسائل السجل. استخدم سطر الأوامر في الأسفل لتنفيذ JavaScript. جرب كتابة أوامر بسيطة مثل 'document.title' لرؤية عنوان الصفحة أو 'alert(\"Hello\")' لإظهار نافذة منبثقة."
+              },
+              "example": {
+                "en": "Type: console.log('Learning DevTools') and press Enter to see output",
+                "ar": "اكتب: console.log('Learning DevTools') واضغط Enter لرؤية الإخراج"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Network Tab (Most Important for This Course)",
+                "ar": "علامة تبويب الشبكة (الأكثر أهمية لهذه الدورة)"
+              },
+              "text": {
+                "en": "This tab records all network activity: every HTTP request and response. Reload the page with Network tab open to see all requests. Click on any request to see detailed headers, response data, timing, and cookies.",
+                "ar": "تسجل هذه العلامة جميع نشاط الشبكة: كل طلب واستجابة HTTP. أعد تحميل الصفحة مع فتح علامة تبويب الشبكة لرؤية جميع الطلبات. انقر على أي طلب لرؤية رؤوس تفصيلية وبيانات الاستجابة والتوقيت والكوكيز."
+              },
+              "example": {
+                "en": "Open Network tab, reload page, observe dozens of requests for HTML, CSS, JS, images",
+                "ar": "افتح علامة تبويب الشبكة، أعد تحميل الصفحة، لاحظ عشرات الطلبات لـ HTML وCSS وJS والصور"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Application/Storage Tab",
+                "ar": "علامة تبويب التطبيق/التخزين"
+              },
+              "text": {
+                "en": "View all cookies, local storage, session storage, and cached data stored by the website. You can inspect, modify, or delete individual cookies. This helps understand what data websites store in your browser.",
+                "ar": "عرض جميع الكوكيز والتخزين المحلي وتخزين الجلسة والبيانات المخزنة مؤقتاً بواسطة الموقع. يمكنك فحص الكوكيز الفردية أو تعديلها أو حذفها. هذا يساعد على فهم البيانات التي تخزنها المواقع في متصفحك."
+              },
+              "example": {
+                "en": "Navigate to Cookies section, see all cookies for the domain with their values and attributes",
+                "ar": "انتقل إلى قسم الكوكيز، راجع جميع الكوكيز للنطاق مع قيمها وسماتها"
+              }
+            }
+          ]
+        },
+        {
+          "id": 10,
+          "type": "hr"
+        },
+        {
+          "id": 11,
+          "type": "title",
+          "value": {
+            "en": "Using the Network Tab to Inspect HTTP Traffic",
+            "ar": "استخدام علامة تبويب الشبكة لفحص حركة المرور HTTP"
+          }
+        },
+        {
+          "id": 12,
+          "type": "text",
+          "value": {
+            "en": "The Network tab is your window into all web communication happening between your browser and servers. It captures every single HTTP request your browser makes and every response it receives. To use it effectively, open the Network tab in DevTools, then reload the page you want to analyze. You will see a list populate with dozens or even hundreds of requests. Each row represents one request-response cycle. The list shows the resource name, HTTP method (GET, POST, etc.), status code (200, 404, etc.), type of resource (document, stylesheet, script, image), size, and time taken. This real-time visibility into network activity is incredibly powerful for learning and troubleshooting.",
+            "ar": "علامة تبويب الشبكة هي نافذتك إلى جميع اتصالات الويب التي تحدث بين متصفحك والخوادم. تلتقط كل طلب HTTP واحد يقوم به متصفحك وكل استجابة يتلقاها. لاستخدامها بفعالية، افتح علامة تبويب الشبكة في DevTools، ثم أعد تحميل الصفحة التي تريد تحليلها. سترى قائمة تملأ بعشرات أو حتى مئات الطلبات. يمثل كل صف دورة طلب-استجابة واحدة. تُظهر القائمة اسم المورد، وطريقة HTTP (GET، POST، إلخ)، ورمز الحالة (200، 404، إلخ)، ونوع المورد (مستند، ورقة أنماط، نص برمجي، صورة)، والحجم، والوقت المستغرق. هذه الرؤية في الوقت الفعلي لنشاط الشبكة قوية بشكل لا يصدق للتعلم واستكشاف الأخطاء."
+          }
+        },
+        {
+          "id": 1772825281414.8777,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/How%20the%20Web%20Works/6-2-Network%20tab%20interface%20with%20annotations.webp"
+        },
+        {
+          "id": 14,
+          "type": "text",
+          "value": {
+            "en": "When you click on any request in the Network tab, a detailed view opens showing comprehensive information about that specific request-response cycle. The Headers section shows both the request headers your browser sent and the response headers the server returned. You can see the exact HTTP method, URL, status code, and all header fields like User-Agent, Content-Type, Set-Cookie, and Cache-Control. The Response or Preview section shows the actual data returned by the server - you can view HTML source, JSON data, image previews, or other content types. The Cookies section lists all cookies sent with the request and received in the response. The Timing section breaks down exactly where time was spent: DNS lookup, connection establishment, waiting for server response, and content download.",
+            "ar": "عندما تنقر على أي طلب في علامة تبويب الشبكة، تفتح عرض تفصيلي يُظهر معلومات شاملة حول دورة الطلب-الاستجابة المحددة تلك. يُظهر قسم الرؤوس كلاً من رؤوس الطلب التي أرسلها متصفحك ورؤوس الاستجابة التي أعادها الخادم. يمكنك رؤية طريقة HTTP الدقيقة، وURL، ورمز الحالة، وجميع حقول الرأس مثل User-Agent وContent-Type وSet-Cookie وCache-Control. يُظهر قسم الاستجابة أو المعاينة البيانات الفعلية المعادة بواسطة الخادم - يمكنك عرض مصدر HTML، وبيانات JSON، ومعاينات الصور، أو أنواع محتوى أخرى. يسرد قسم الكوكيز جميع الكوكيز المرسلة مع الطلب والمستلمة في الاستجابة. يقسم قسم التوقيت بالضبط أين تم قضاء الوقت: بحث DNS، وإنشاء الاتصال، والانتظار لاستجابة الخادم، وتنزيل المحتوى."
+          }
+        },
+        {
+          "id": 15,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Learning by Doing: Open the Network tab and visit different types of websites. Compare a simple text-based news site (maybe 50-100 requests) with a complex social media site (potentially 200-500 requests). Notice how many third-party domains are contacted. Observe which resources take the longest to load. This hands-on exploration teaches you more than reading alone.",
+            "ar": "التعلم بالممارسة: افتح علامة تبويب الشبكة وزر أنواعاً مختلفة من المواقع. قارن موقع أخبار بسيط قائم على النص (ربما 50-100 طلب) مع موقع وسائل التواصل الاجتماعي معقد (ربما 200-500 طلب). لاحظ عدد نطاقات الطرف الثالث التي يتم الاتصال بها. لاحظ أي موارد تستغرق وقتاً أطول للتحميل. يعلمك هذا الاستكشاف العملي أكثر من القراءة وحدها."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 16,
+          "type": "terminal",
+          "label": {
+            "en": "Network Tab: Sample HTTP Request Details",
+            "ar": "علامة تبويب الشبكة: تفاصيل طلب HTTP عينة"
+          },
+          "value": "Request URL: https://www.example.com/api/user/profile\nRequest Method: GET\nStatus Code: 200 OK\nRemote Address: 93.184.216.34:443\n\nRequest Headers:\nGET /api/user/profile HTTP/1.1\nHost: www.example.com\nUser-Agent: Mozilla/5.0 (Windows NT 10.0)\nAccept: application/json\nCookie: session_id=abc123xyz789\n\nResponse Headers:\nHTTP/1.1 200 OK\nContent-Type: application/json\nContent-Length: 256\nSet-Cookie: last_visit=2026-03-04; Max-Age=3600\nCache-Control: private, max-age=300"
+        },
+        {
+          "id": 17,
+          "type": "title",
+          "value": {
+            "en": "Inspecting Cookies and Storage",
+            "ar": "فحص الكوكيز والتخزين"
+          }
+        },
+        {
+          "id": 18,
+          "type": "text",
+          "value": {
+            "en": "The Application tab (Chrome/Edge) or Storage tab (Firefox) gives you complete visibility into data stored by websites in your browser. The Cookies section shows all cookies for the current domain and any third-party cookies. For each cookie, you can see its name, value, domain, path, expiration date, size, and security attributes (HttpOnly, Secure, SameSite). You can manually edit or delete individual cookies to see how the website behaves without them. This is extremely useful for understanding session management and testing how websites handle missing or modified cookies. Be cautious when modifying cookies on live sites as you might break functionality or log yourself out accidentally.",
+            "ar": "تمنحك علامة التبويب التطبيق (Chrome/Edge) أو علامة تبويب التخزين (Firefox) رؤية كاملة للبيانات المخزنة بواسطة المواقع في متصفحك. يُظهر قسم الكوكيز جميع الكوكيز للنطاق الحالي وأي كوكيز طرف ثالث. لكل كوكيز، يمكنك رؤية اسمها وقيمتها ونطاقها ومسارها وتاريخ انتهاء صلاحيتها وحجمها وسمات الأمان (HttpOnly، Secure، SameSite). يمكنك تحرير أو حذف الكوكيز الفردية يدوياً لرؤية كيف يتصرف الموقع بدونها. هذا مفيد للغاية لفهم إدارة الجلسة واختبار كيفية تعامل المواقع مع الكوكيز المفقودة أو المعدلة. كن حذراً عند تعديل الكوكيز على المواقع الحية حيث قد تكسر الوظيفة أو تسجل خروج نفسك عن طريق الخطأ."
+          }
+        },
+        {
+          "id": 19,
+          "type": "text",
+          "value": {
+            "en": "Beyond cookies, browsers offer other storage mechanisms visible in DevTools. Local Storage and Session Storage are key-value stores accessible to JavaScript. Local Storage persists even after closing the browser, while Session Storage clears when you close the tab. Cache Storage shows cached resources from service workers (advanced web apps that work offline). IndexedDB is a database system for storing large amounts of structured data. Examining these storage areas helps you understand how much data websites store, what information they retain, and potential privacy implications. Modern web apps store significant amounts of data locally for performance and offline functionality, making these storage mechanisms increasingly important.",
+            "ar": "بعيداً عن الكوكيز، توفر المتصفحات آليات تخزين أخرى مرئية في DevTools. التخزين المحلي (Local Storage) وتخزين الجلسة (Session Storage) هما مخازن مفتاح-قيمة يمكن الوصول إليها بواسطة JavaScript. يستمر التخزين المحلي حتى بعد إغلاق المتصفح، بينما يتم مسح تخزين الجلسة عند إغلاق علامة التبويب. يُظهر تخزين الكاش موارد مخزنة مؤقتاً من عمال الخدمة (تطبيقات ويب متقدمة تعمل دون اتصال). IndexedDB هو نظام قاعدة بيانات لتخزين كميات كبيرة من البيانات المنظمة. فحص مناطق التخزين هذه يساعدك على فهم كمية البيانات التي تخزنها المواقع، والمعلومات التي تحتفظ بها، والآثار المحتملة على الخصوصية. تخزن تطبيقات الويب الحديثة كميات كبيرة من البيانات محلياً للأداء والوظيفة دون اتصال، مما يجعل آليات التخزين هذه ذات أهمية متزايدة."
+          }
+        },
+        {
+          "id": 20,
+          "type": "list",
+          "title": {
+            "en": "Practical Uses of Developer Tools for Security and Learning",
+            "ar": "الاستخدامات العملية لأدوات المطور للأمان والتعلم"
+          },
+          "items": {
+            "en": [
+              "Verify HTTPS connection: Check Network tab for https:// URLs and look for the padlock icon",
+              "Inspect cookies: See what data websites store, check for Secure and HttpOnly flags",
+              "Identify third-party trackers: Notice domains in Network tab that are not the main site",
+              "Troubleshoot loading issues: Find which resource is slow or failing to load",
+              "Learn HTML and CSS: Inspect elements to see how websites are structured and styled",
+              "Test website behavior: Modify cookies or storage to see how the site responds",
+              "Understand API calls: Watch Network tab for AJAX/fetch requests to backend servers",
+              "Check for mixed content: Ensure no HTTP resources are loaded on HTTPS pages",
+              "Examine security headers: Look for Content-Security-Policy, X-Frame-Options in responses",
+              "Monitor performance: Use timing information to identify bottlenecks",
+              "Clear specific data: Delete individual cookies or cache entries without clearing everything",
+              "Validate form submissions: See exactly what data is sent when you submit a form"
+            ],
+            "ar": [
+              "تحقق من اتصال HTTPS: تحقق من علامة تبويب الشبكة لعناوين URL بـ https:// وابحث عن رمز القفل",
+              "فحص الكوكيز: راجع البيانات التي تخزنها المواقع، تحقق من علامات Secure وHttpOnly",
+              "تحديد متتبعي الطرف الثالث: لاحظ النطاقات في علامة تبويب الشبكة التي ليست الموقع الرئيسي",
+              "استكشاف مشكلات التحميل: اكتشف أي مورد بطيء أو يفشل في التحميل",
+              "تعلم HTML وCSS: فحص العناصر لرؤية كيف يتم تنظيم المواقع وتنسيقها",
+              "اختبار سلوك الموقع: قم بتعديل الكوكيز أو التخزين لرؤية كيف يستجيب الموقع",
+              "فهم استدعاءات API: شاهد علامة تبويب الشبكة لطلبات AJAX/fetch إلى خوادم الخلفية",
+              "التحقق من المحتوى المختلط: تأكد من عدم تحميل موارد HTTP على صفحات HTTPS",
+              "فحص رؤوس الأمان: ابحث عن Content-Security-Policy، X-Frame-Options في الاستجابات",
+              "مراقبة الأداء: استخدم معلومات التوقيت لتحديد الاختناقات",
+              "مسح بيانات محددة: احذف كوكيز فردية أو إدخالات ذاكرة التخزين المؤقت دون مسح كل شيء",
+              "التحقق من إرسال النماذج: راجع بالضبط البيانات المرسلة عند إرسال نموذج"
+            ]
+          }
+        },
+        {
+          "id": 1772825276057.6804,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/How%20the%20Web%20Works/6-3-common%20DevTools%20security%20checks.webp"
+        },
+        {
+          "id": 22,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "Privacy Alert: Be careful when sharing screenshots of DevTools, especially the Network or Application tabs. They may contain sensitive information like session tokens, API keys, personal data in cookies, or private URLs. Always redact sensitive information before sharing for help or demonstration purposes.",
+            "ar": "تنبيه الخصوصية: كن حذراً عند مشاركة لقطات شاشة لـ DevTools، خاصة علامات تبويب الشبكة أو التطبيق. قد تحتوي على معلومات حساسة مثل رموز الجلسة ومفاتيح API والبيانات الشخصية في الكوكيز أو عناوين URL الخاصة. قم دائماً بحذف المعلومات الحساسة قبل المشاركة لأغراض المساعدة أو العرض."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 23,
+          "type": "table",
+          "title": {
+            "en": "DevTools Tabs and Their Primary Uses",
+            "ar": "علامات تبويب DevTools واستخداماتها الأساسية"
+          },
+          "headers": {
+            "en": [
+              "DevTools Tab",
+              "Primary Purpose",
+              "What You Can See",
+              "Security/Learning Value"
+            ],
+            "ar": [
+              "علامة تبويب DevTools",
+              "الغرض الأساسي",
+              "ما يمكنك رؤيته",
+              "قيمة الأمان/التعلم"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "Elements/Inspector",
+                "View and modify HTML/CSS",
+                "Page structure, styles, layout",
+                "Understand how pages are built, learn HTML/CSS"
+              ],
+              "ar": [
+                "العناصر/المفتش",
+                "عرض وتعديل HTML/CSS",
+                "بنية الصفحة، الأنماط، التخطيط",
+                "فهم كيفية بناء الصفحات، تعلم HTML/CSS"
+              ]
+            },
+            {
+              "en": [
+                "Console",
+                "JavaScript debugging and interaction",
+                "Errors, warnings, log messages",
+                "Test JavaScript, troubleshoot script errors"
+              ],
+              "ar": [
+                "وحدة التحكم",
+                "تصحيح أخطاء JavaScript والتفاعل",
+                "الأخطاء، التحذيرات، رسائل السجل",
+                "اختبار JavaScript، استكشاف أخطاء النص البرمجي"
+              ]
+            },
+            {
+              "en": [
+                "Network",
+                "Monitor all HTTP traffic",
+                "Requests, responses, headers, timing",
+                "Verify HTTPS, inspect cookies, find slow resources"
+              ],
+              "ar": [
+                "الشبكة",
+                "مراقبة جميع حركة المرور HTTP",
+                "الطلبات، الاستجابات، الرؤوس، التوقيت",
+                "التحقق من HTTPS، فحص الكوكيز، العثور على موارد بطيئة"
+              ]
+            },
+            {
+              "en": [
+                "Application/Storage",
+                "View stored data",
+                "Cookies, localStorage, cache, databases",
+                "Examine what data sites store, check cookie flags"
+              ],
+              "ar": [
+                "التطبيق/التخزين",
+                "عرض البيانات المخزنة",
+                "الكوكيز، localStorage، الكاش، قواعد البيانات",
+                "فحص البيانات التي تخزنها المواقع، التحقق من علامات الكوكيز"
+              ]
+            },
+            {
+              "en": [
+                "Security",
+                "View security information",
+                "Certificate details, connection security",
+                "Verify HTTPS certificate, check encryption details"
+              ],
+              "ar": [
+                "الأمان",
+                "عرض معلومات الأمان",
+                "تفاصيل الشهادة، أمان الاتصال",
+                "التحقق من شهادة HTTPS، التحقق من تفاصيل التشفير"
+              ]
+            },
+            {
+              "en": [
+                "Performance",
+                "Analyze page load and runtime",
+                "Loading timeline, resource usage",
+                "Identify performance bottlenecks, optimize speed"
+              ],
+              "ar": [
+                "الأداء",
+                "تحليل تحميل الصفحة ووقت التشغيل",
+                "جدول التحميل، استخدام الموارد",
+                "تحديد اختناقات الأداء، تحسين السرعة"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 24,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Next Steps: Now that you have learned how the web works - from DNS to HTTP/HTTPS, request-response cycles, cookies and sessions, to browser developer tools - you have a solid foundation for understanding web security. Practice using DevTools on various websites. Compare secure and insecure sites. Observe how login sessions work. This hands-on experience will deepen your understanding and prepare you for more advanced cybersecurity topics.",
+            "ar": "الخطوات التالية: الآن بعد أن تعلمت كيف يعمل الويب - من DNS إلى HTTP/HTTPS، ودورات الطلب-الاستجابة، والكوكيز والجلسات، إلى أدوات مطور المتصفح - لديك أساس متين لفهم أمان الويب. مارس استخدام DevTools على مواقع ويب مختلفة. قارن المواقع الآمنة وغير الآمنة. لاحظ كيف تعمل جلسات تسجيل الدخول. ستعمق هذه التجربة العملية فهمك وتجهزك لموضوعات أمان سيبراني أكثر تقدماً."
+          },
+          "link": "",
+          "isLab": false
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "createdAt": "2026-03-06T19:34:15.237Z",
+    "totalTopics": 6,
+    "totalElements": 145
+  }
+}
