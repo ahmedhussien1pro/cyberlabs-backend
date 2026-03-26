@@ -88,7 +88,8 @@ const PUBLIC_PROFILE_SELECT = {
       id: true, awardedAt: true, context: true,
       badge: {
         select: {
-          slug: true, title: true, ar_title: true, description: true,
+          // FIX: Badge model uses `code` not `slug`
+          code: true, title: true, ar_title: true, description: true,
           iconUrl: true, type: true, xpReward: true,
         },
       },
@@ -248,33 +249,46 @@ export class UsersService {
   }
 
   // ── Upsert Education ───────────────────────────────────────────────────
+  // FIX: Education schema has `degree String` and `field String` (required, not nullable).
+  // We use empty string '' as fallback instead of null.
   async upsertEducation(userId: string, dto: UpsertEducationDto) {
     const user = await this.prisma.user.findUnique({ where: { id: userId } });
     if (!user) throw new NotFoundException('User not found');
 
-    // Delete removed entries (those not present in dto)
     const incomingIds = dto.education.filter((e) => e.id).map((e) => e.id!);
     await this.prisma.education.deleteMany({
       where: { userId, id: { notIn: incomingIds } },
     });
 
-    // Upsert each entry
     await Promise.all(
       dto.education.map((item) => {
-        const data = {
-          userId,
-          institution: item.institution,
-          ar_institution: item.ar_institution ?? null,
-          degree: item.degree ?? null,
-          field: item.field ?? null,
-          startYear: item.startYear ?? null,
-          endYear: item.endYear ?? null,
-          isCurrent: item.isCurrent ?? false,
-        };
         if (item.id) {
-          return this.prisma.education.update({ where: { id: item.id }, data });
+          return this.prisma.education.update({
+            where: { id: item.id },
+            data: {
+              institution: item.institution,
+              ar_institution: item.ar_institution ?? null,
+              // required String fields → fallback to ''
+              degree: item.degree ?? '',
+              field: item.field ?? '',
+              startYear: item.startYear ?? 0,
+              endYear: item.endYear ?? null,
+              isCurrent: item.isCurrent ?? false,
+            },
+          });
         }
-        return this.prisma.education.create({ data });
+        return this.prisma.education.create({
+          data: {
+            userId,
+            institution: item.institution,
+            ar_institution: item.ar_institution ?? null,
+            degree: item.degree ?? '',
+            field: item.field ?? '',
+            startYear: item.startYear ?? 0,
+            endYear: item.endYear ?? null,
+            isCurrent: item.isCurrent ?? false,
+          },
+        });
       }),
     );
 
