@@ -20,27 +20,28 @@ const MODULE_LABS = [
 
 const LAB_CATEGORIES: string[] = [
   // ─── Existing categories ───────────────────────────────────────────────────
-  'bash-scripting',
-  'sql-injection',
-  'ac-vuln',
-  'business-logic',
-  'jwt',
-  'xss',
-  'idor',
-  'csrf',
-  'broken-auth',
-  'command-injection',
-  'file-inclusion',
-  'file-upload',
-  'ssti',
-  'race-condition',
-  'captcha-bypass',
-  'api-hacking',
-  'cryptography',
-  'obfuscation',
-  'cookies-lab',
-  'linux',
   'wireshark',
+  'cookies-lab',
+  // 'bash-scripting',
+
+  // 'sql-injection',
+  // 'ac-vuln',
+  // 'business-logic',
+  // 'jwt',
+  // 'xss',
+  // 'idor',
+  // 'csrf',
+  // 'broken-auth',
+  // 'command-injection',
+  // 'file-inclusion',
+  // 'file-upload',
+  // 'ssti',
+  // 'race-condition',
+  // 'captcha-bypass',
+  // 'api-hacking',
+  // 'cryptography',
+  // 'obfuscation',
+  // 'linux',
 ];
 
 function toJson(val: unknown): Prisma.InputJsonValue | undefined {
@@ -109,12 +110,12 @@ async function main() {
     // await seedSubscriptionPlans(prisma);
     // await seedLabs(prisma);
     // await seedModuleLabs();
-    await seedCourses(prisma);
-    await seedPaths(prisma);
+    // await seedCourses(prisma);
+    // await seedPaths(prisma);
 
-    // for (const category of LAB_CATEGORIES) {
-    //   await seedCategoryLabs(prisma, category);
-    // }
+    for (const category of LAB_CATEGORIES) {
+      await seedCategoryLabs(prisma, category);
+    }
 
     // ✅ Always seed badges (idempotent — skips existing)
     // await seedBadges(prisma);

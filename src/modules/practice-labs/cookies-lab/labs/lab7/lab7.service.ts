@@ -43,7 +43,7 @@ export class Lab7Service {
       throw new UnauthorizedException('Invalid credentials');
 
     const id = ++sessionCounter;
-    const sessionId = `sess_user_${id}`;  // ❌ Predictable pattern
+    const sessionId = `sess_user_${id}`; // ❌ Predictable pattern
 
     return {
       success: true,
@@ -59,7 +59,7 @@ export class Lab7Service {
   // ── Observe ───────────────────────────────────────────────────────────────
   // Returns several sequential session IDs so the attacker can see the pattern
   observeSessions(userId: string, labId: string) {
-    const samples = [];
+    const samples: string[] = [];
     const base = sessionCounter + 1;
     for (let i = 0; i < 5; i++) {
       samples.push(`sess_user_${base + i}`);
@@ -106,7 +106,8 @@ export class Lab7Service {
       predictedSessionId,
       message: 'You predicted the admin session ID! Full admin access granted.',
       flag: 'FLAG{PREDICTABLE_SESSION_ID_EXPLOITED}',
-      vulnerability: 'Weak session ID generation — sequential counter makes IDs predictable',
+      vulnerability:
+        'Weak session ID generation — sequential counter makes IDs predictable',
       explanation:
         'Session IDs must be generated using a cryptographically secure random number generator ' +
         'with at least 128 bits of entropy. Sequential counters, timestamps, or any predictable ' +
