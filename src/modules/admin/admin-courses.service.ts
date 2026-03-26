@@ -13,7 +13,7 @@ import { UpdateCurriculumDto } from './dto/update-curriculum.dto';
 import { readFileSync, existsSync, readdirSync, writeFileSync } from 'fs';
 import { join } from 'path';
 
-// ─── helpers ─────────────────────────────────────────────────────────────────
+// ─── helpers ───────────────────────────────────────────────────────────────────
 function generateSlug(base: string): string {
   return base
     .toLowerCase()
@@ -22,6 +22,7 @@ function generateSlug(base: string): string {
     .substring(0, 80);
 }
 
+/** Derive isPublished from state to keep both fields in sync */
 function isPublishedFromState(state: string): boolean {
   return state === 'PUBLISHED';
 }
@@ -31,13 +32,17 @@ function safeNumber(val: any, fallback = 0): number {
   return isNaN(n) ? fallback : n;
 }
 
-// ─── JSON curriculum helpers ──────────────────────────────────────────────────
+// ─── JSON curriculum helpers (same logic as courses.service getCurriculum) ─────
 const COURSE_DATA_DIR = join(process.cwd(), 'prisma/seed-data/course-data');
 
 function normalizeName(s: string) {
   return s.toLowerCase().replace(/[-_\s&.,!()'"\+]/g, '');
 }
 
+/**
+ * Try to find the JSON file for a course by slug or title.
+ * Returns parsed JSON or null.
+ */
 function readCourseJson(slug: string, title: string): any | null {
   const exact = [
     join(COURSE_DATA_DIR, `${slug}.json`),
@@ -47,10 +52,13 @@ function readCourseJson(slug: string, title: string): any | null {
     if (existsSync(p)) {
       try {
         return JSON.parse(readFileSync(p, 'utf-8'));
-      } catch {}
+      } catch {
+        /* skip */
+      }
     }
   }
 
+  // fuzzy match
   let files: string[];
   try {
     files = readdirSync(COURSE_DATA_DIR).filter(
@@ -83,18 +91,61 @@ function readCourseJson(slug: string, title: string): any | null {
   return null;
 }
 
+/**
+ * Write (or overwrite) the JSON file for a course.
+ * Writes BOTH slug.json and title.json so readCourseJson always finds it.
+ */
 function writeCourseJson(slug: string, title: string, data: any): void {
   const content = JSON.stringify(data, null, 2);
+  // Write by slug (primary — readCourseJson checks slug first)
   try {
     writeFileSync(join(COURSE_DATA_DIR, `${slug}.json`), content, 'utf-8');
   } catch (e: any) {
     console.warn(`[writeCourseJson] Could not write slug file:`, e?.message);
   }
+  // Write by title as fallback (legacy lookups)
   if (title !== slug) {
     try {
       writeFileSync(join(COURSE_DATA_DIR, `${title}.json`), content, 'utf-8');
-    } catch {}
+    } catch {
+      /* non-critical */
+    }
   }
+}
+
+/**
+ * FIX: Parse full elements array from a lesson's content field.
+ * saveCurriculum stores the entire elements JSON in content.
+ * If content is not a JSON array, return a single legacy element.
+ */
+function parseElementsFromLesson(lesson: any): any[] {
+  if (!lesson.content) return [];
+  try {
+    const parsed = JSON.parse(lesson.content);
+    if (Array.isArray(parsed)) return parsed;
+  } catch {
+    /* not JSON — legacy plain-text content */
+  }
+  // Legacy fallback: reconstruct a minimal element from lesson fields
+  const typeRaw = (lesson.type ?? 'ARTICLE').toString().toUpperCase();
+  if (typeRaw === 'VIDEO') {
+    return [
+      {
+        id: lesson.id,
+        type: 'video',
+        url: lesson.videoUrl ?? '',
+        title: { en: lesson.title ?? '', ar: lesson.ar_title ?? '' },
+        duration: lesson.duration ?? 0,
+        isPreview: lesson.isPreview ?? false,
+      },
+    ];
+  }
+  if (lesson.content) {
+    return [
+      { id: lesson.id, type: 'text', value: { en: lesson.content, ar: '' } },
+    ];
+  }
+  return [];
 }
 
 const COURSE_FULL_SELECT = {
@@ -148,6 +199,7 @@ const COURSE_FULL_SELECT = {
   },
 };
 
+// ─── List select now includes all fields needed by the admin card ─────────────
 const COURSE_LIST_SELECT = {
   id: true,
   title: true,
@@ -172,6 +224,7 @@ const COURSE_LIST_SELECT = {
   ar_topics: true,
   prerequisites: true,
   ar_prerequisites: true,
+  // description fields — needed by admin card
   description: true,
   ar_description: true,
   createdAt: true,
@@ -190,6 +243,7 @@ function normalizeCourse(raw: any): any {
     raw._count?.sections ?? raw.totalTopics ?? raw.sections?.length ?? 0;
 
   const { _count, courseLabs, ...rest } = raw;
+
   const state: string = rest.state ?? 'DRAFT';
 
   return {
@@ -215,7 +269,7 @@ function normalizeCourse(raw: any): any {
 export class AdminCoursesService {
   constructor(private readonly prisma: PrismaService) {}
 
-  // ─── Stats ────────────────────────────────────────────────────────────────
+  // ─── Stats ─────────────────────────────────────────────────────────────
   async getStats() {
     const [total, published, comingSoon, featured] = await Promise.all([
       this.prisma.course.count(),
@@ -225,6 +279,7 @@ export class AdminCoursesService {
     ]);
     const draft = Math.max(0, total - published - comingSoon);
 
+    // Build byState breakdown dynamically from all distinct state values
     const stateGroups = await this.prisma.course.groupBy({
       by: ['state'],
       _count: { _all: true },
@@ -247,7 +302,7 @@ export class AdminCoursesService {
     };
   }
 
-  // ─── List ──────────────────────────────────────────────────────────────────
+  // ─── List ────────────────────────────────────────────────────────────────
   async findAll(query: AdminCourseQueryDto) {
     const page = Math.max(1, query.page ?? 1);
     const limit = Math.min(100, Math.max(1, query.limit ?? 20));
@@ -288,7 +343,7 @@ export class AdminCoursesService {
     };
   }
 
-  // ─── Single ────────────────────────────────────────────────────────────────
+  // ─── Single (id or slug) ───────────────────────────────────────────────────
   async findOne(idOrSlug: string) {
     const isUuid =
       /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
@@ -316,72 +371,11 @@ export class AdminCoursesService {
     return { data: normalizeCourse(raw) };
   }
 
-  // ─── Get Curriculum (FIX: DB first, JSON as fallback) ────────────────────
+  // ─── Get Curriculum ──────────────────────────────────────────────────────
   async getCurriculum(idOrSlug: string) {
     const { data: course } = await this.findOne(idOrSlug);
 
-    // PRIMARY: جيب من الداتابيز مباشرة
-    const dbCourse = await (this.prisma.course as any).findUnique({
-      where: { id: course.id },
-      select: {
-        sections: {
-          orderBy: { order: 'asc' as const },
-          include: {
-            lessons: {
-              where: { order: { gt: 0 } },
-              orderBy: { order: 'asc' as const },
-              select: {
-                id: true,
-                title: true,
-                ar_title: true,
-                order: true,
-                type: true,
-                duration: true,
-                videoUrl: true,
-                isPreview: true,
-                content: true,
-              },
-            },
-          },
-        },
-      },
-    });
-
-    const sections = dbCourse?.sections ?? [];
-
-    if (sections.length > 0) {
-      const topics = sections.map((section: any) => ({
-        id: section.id,
-        title: { en: section.title ?? '', ar: section.ar_title ?? '' },
-        order: section.order,
-        elements: section.lessons.map((lesson: any) => ({
-          id: lesson.id,
-          title: { en: lesson.title ?? '', ar: lesson.ar_title ?? '' },
-          type:
-            (lesson.type ?? 'ARTICLE').toLowerCase() === 'video'
-              ? 'video'
-              : 'text',
-          url: lesson.videoUrl ?? undefined,
-          duration: lesson.duration ?? 0,
-          isPreview: lesson.isPreview ?? false,
-          order: lesson.order,
-        })),
-      }));
-
-      return {
-        data: {
-          topics,
-          totalTopics: topics.length,
-          landingData: null,
-          courseId: course.id,
-          courseSlug: course.slug,
-          courseTitle: course.title,
-          source: 'db' as const,
-        },
-      };
-    }
-
-    // FALLBACK: لو مفيش sections في الداتابيز، جرب الـ JSON file
+    // JSON file takes priority (single source of truth after save)
     const json = readCourseJson(course.slug, course.title);
     if (json) {
       const topics = json.topics ?? [];
@@ -398,20 +392,76 @@ export class AdminCoursesService {
       };
     }
 
+    // FIX: DB fallback — restore full elements from content JSON
+    const dbCourse = await (this.prisma.course as any).findUnique({
+      where: { id: course.id },
+      select: {
+        sections: {
+          orderBy: { order: 'asc' as const },
+          select: {
+            id: true,
+            title: true,
+            ar_title: true,
+            order: true,
+            lessons: {
+              orderBy: { order: 'asc' as const },
+              select: {
+                id: true,
+                title: true,
+                ar_title: true,
+                order: true,
+                type: true,
+                duration: true,
+                videoUrl: true,
+                isPreview: true,
+                // FIX: content stores the full elements JSON array
+                content: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    const topics = ((dbCourse?.sections ?? []) as any[]).map((sec: any) => ({
+      id: sec.id,
+      title: { en: sec.title ?? '', ar: sec.ar_title ?? '' },
+      // FIX: each lesson's content field holds the full elements array for that topic
+      // The first lesson per section stores ALL elements for that topic (sentinel lesson)
+      // For backwards compat we also try per-lesson element reconstruction
+      elements: (() => {
+        const lessons: any[] = sec.lessons ?? [];
+        if (lessons.length === 0) return [];
+        // Try to decode the sentinel lesson (first lesson, index 0)
+        // saveCurriculum stores __elements__ JSON in the first lesson's content
+        const sentinel = lessons[0];
+        if (sentinel?.content) {
+          try {
+            const parsed = JSON.parse(sentinel.content);
+            if (Array.isArray(parsed)) return parsed;
+          } catch {
+            /* not JSON */
+          }
+        }
+        // Fallback: reconstruct from individual lessons
+        return lessons.flatMap((l: any) => parseElementsFromLesson(l));
+      })(),
+    }));
+
     return {
       data: {
-        topics: [],
-        totalTopics: 0,
+        topics,
+        totalTopics: topics.length,
         landingData: null,
         courseId: course.id,
         courseSlug: course.slug,
         courseTitle: course.title,
-        source: 'empty' as const,
+        source: 'db' as const,
       },
     };
   }
 
-  // ─── Save Curriculum ───────────────────────────────────────────────────────
+  // ─── Save Curriculum ─────────────────────────────────────────────────────
   async saveCurriculum(idOrSlug: string, rawTopics: object[]) {
     const { data: existing } = await this.findOne(idOrSlug);
     const courseId = existing.id;
@@ -471,22 +521,35 @@ export class AdminCoursesService {
 
       const elements: any[] = topic.elements ?? [];
 
+      // FIX: Store full elements array as JSON in the sentinel lesson's content.
+      // This preserves ALL rich element data (text, image, table, terminal, note…)
+      // so getCurriculum DB fallback can restore them exactly.
+      const sentinelTitle =
+        typeof topic.title === 'object'
+          ? (topic.title?.en ?? `Section ${order}`)
+          : (topic.title ?? `Section ${order}`);
+
       await this.prisma.lesson.create({
         data: {
           courseId,
           sectionId: section.id,
           moduleId: mod.id,
-          title: sTitle,
+          title: sentinelTitle,
           ...(sTitleAr ? { ar_title: sTitleAr } : {}),
           order: 0,
           type: 'ARTICLE',
           duration: 0,
+          // FIX: serialize full elements array here
           content: JSON.stringify(elements),
         },
       });
 
+      // Also create individual lesson rows for VIDEO elements
+      // so progress tracking / platform lesson list still works
       for (let eIdx = 0; eIdx < elements.length; eIdx++) {
         const el = elements[eIdx];
+        if ((el.type ?? '').toString().toUpperCase() !== 'VIDEO') continue;
+
         const lessonOrder = safeNumber(el.order, eIdx + 1);
         const lTitle =
           typeof el.title === 'object'
@@ -503,19 +566,16 @@ export class AdminCoursesService {
             title: lTitle,
             ...(lTitleAr ? { ar_title: lTitleAr } : {}),
             order: lessonOrder,
-            type:
-              (el.type ?? 'ARTICLE').toUpperCase() === 'VIDEO'
-                ? 'VIDEO'
-                : 'ARTICLE',
+            type: 'VIDEO',
             duration: safeNumber(el.duration, 0),
-            content: el.type !== 'video' ? (el.value?.en ?? '') : '',
+            content: '',
             videoUrl: el.videoUrl ?? el.url ?? el.video_url ?? null,
-            isPreview: el.isPreview ?? false,
           },
         });
       }
     }
 
+    // FIX: write JSON file by BOTH slug and title so readCourseJson always finds it
     const existingJson = readCourseJson(courseSlug, courseTitle);
     const updatedJson = {
       landingData: existingJson?.landingData ?? null,
@@ -532,7 +592,7 @@ export class AdminCoursesService {
     };
   }
 
-  // ─── Create ────────────────────────────────────────────────────────────────
+  // ─── Create ───────────────────────────────────────────────────────────────
   async create(dto: CreateCourseDto) {
     const slug = (dto as any).slug ?? generateSlug(dto.title);
     const existing = await this.prisma.course.findUnique({ where: { slug } });
@@ -548,7 +608,7 @@ export class AdminCoursesService {
     return { data: normalizeCourse(course) };
   }
 
-  // ─── Update ────────────────────────────────────────────────────────────────
+  // ─── Update ───────────────────────────────────────────────────────────────
   async update(idOrSlug: string, dto: UpdateCourseDto) {
     const { data: existing } = await this.findOne(idOrSlug);
 
@@ -571,7 +631,7 @@ export class AdminCoursesService {
     return { data: normalizeCourse(updated) };
   }
 
-  // ─── Update Curriculum (legacy sections model) ─────────────────────────────
+  // ─── Update Curriculum (sections model — legacy) ─────────────────────────
   async updateCurriculum(idOrSlug: string, dto: UpdateCurriculumDto) {
     const { data: existing } = await this.findOne(idOrSlug);
     const id = existing.id;
@@ -608,7 +668,7 @@ export class AdminCoursesService {
     return this.findOne(id);
   }
 
-  // ─── Publish / Unpublish ───────────────────────────────────────────────────
+  // ─── Publish ─────────────────────────────────────────────────────────────
   async publish(idOrSlug: string) {
     const { data: existing } = await this.findOne(idOrSlug);
     const updated = await (this.prisma.course as any).update({
@@ -619,6 +679,7 @@ export class AdminCoursesService {
     return { data: normalizeCourse(updated) };
   }
 
+  // ─── Unpublish ────────────────────────────────────────────────────────────
   async unpublish(idOrSlug: string) {
     const { data: existing } = await this.findOne(idOrSlug);
     const updated = await (this.prisma.course as any).update({
@@ -629,14 +690,14 @@ export class AdminCoursesService {
     return { data: normalizeCourse(updated) };
   }
 
-  // ─── Delete ────────────────────────────────────────────────────────────────
+  // ─── Delete ───────────────────────────────────────────────────────────────
   async remove(idOrSlug: string) {
     const { data: existing } = await this.findOne(idOrSlug);
     await this.prisma.course.delete({ where: { id: existing.id } });
     return { data: { success: true, message: 'Course deleted successfully' } };
   }
 
-  // ─── Duplicate ─────────────────────────────────────────────────────────────
+  // ─── Duplicate ────────────────────────────────────────────────────────────
   async duplicate(idOrSlug: string) {
     const { data: original } = await this.findOne(idOrSlug);
 
@@ -710,7 +771,7 @@ export class AdminCoursesService {
     return { data: normalizeCourse(copy) };
   }
 
-  // ─── Course ↔ Lab ──────────────────────────────────────────────────────────
+  // ─── Course ↔ Lab ─────────────────────────────────────────────────────────
   async getCourseLabs(courseId: string) {
     const course = await this.prisma.course.findUnique({
       where: { id: courseId },
@@ -828,11 +889,16 @@ export class AdminCoursesService {
         await this.saveCurriculum(course.id, parsed.topics);
       } catch (e: any) {
         console.warn(`[ImportJSON] saveCurriculum failed:`, e?.message);
+        // FIX: even if saveCurriculum fails, persist the raw JSON so getCurriculum
+        // can still serve it from the JSON file fallback
         try {
           writeCourseJson(slug, title, parsed);
-        } catch {}
+        } catch {
+          /* ignore */
+        }
       }
     } else {
+      // No topics array — write the full JSON as-is
       try {
         writeCourseJson(slug, title, parsed);
       } catch (e: any) {
