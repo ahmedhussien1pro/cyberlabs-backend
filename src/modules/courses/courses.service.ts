@@ -3,8 +3,6 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../core/database';
 import { CourseFiltersDto } from './dto/course-filters.dto';
 import { Prisma } from '@prisma/client';
-import { readFileSync, existsSync, readdirSync } from 'fs';
-import { join } from 'path';
 import {
   courseCardSelect,
   courseDetailInclude,
@@ -15,78 +13,6 @@ import { CertificatesService } from '../certificates/certificates.service';
 import { NotificationsService } from '../notifications/services/notifications.service';
 import { NotificationEvents } from '../notifications/notifications.events';
 
-// ─── JSON file helpers (mirrors admin-courses.service logic) ────────────────
-const COURSE_DATA_DIR = join(process.cwd(), 'prisma/seed-data/course-data');
-
-function normalizeName(s: string): string {
-  return s.toLowerCase().replace(/[-_\s&.,!()'"\+]/g, '');
-}
-
-function readCourseJson(slug: string, title: string): any | null {
-  // 1. Exact slug match (admin writeCourseJson writes slug.json first)
-  const exactPaths = [
-    join(COURSE_DATA_DIR, `${slug}.json`),
-    join(COURSE_DATA_DIR, `${title}.json`),
-  ];
-  for (const p of exactPaths) {
-    if (existsSync(p)) {
-      try {
-        return JSON.parse(readFileSync(p, 'utf-8'));
-      } catch {
-        /* skip */
-      }
-    }
-  }
-
-  // 2. Fuzzy match
-  let files: string[];
-  try {
-    files = readdirSync(COURSE_DATA_DIR).filter(
-      (f) => f.endsWith('.json') && f !== 'seed-courses.ts',
-    );
-  } catch {
-    return null;
-  }
-
-  const slugNorm = normalizeName(slug);
-  const titleNorm = normalizeName(title);
-
-  for (const file of files) {
-    const fileNorm = normalizeName(file.replace('.json', ''));
-    if (
-      fileNorm === slugNorm ||
-      fileNorm === titleNorm ||
-      fileNorm.includes(slugNorm) ||
-      slugNorm.includes(fileNorm) ||
-      fileNorm.includes(titleNorm) ||
-      titleNorm.includes(fileNorm)
-    ) {
-      try {
-        return JSON.parse(readFileSync(join(COURSE_DATA_DIR, file), 'utf-8'));
-      } catch {
-        return null;
-      }
-    }
-  }
-  return null;
-}
-
-/**
- * FIX: Restore full elements array from a DB lesson's content field.
- * saveCurriculum (admin) stores JSON.stringify(elements) in the sentinel
- * lesson (order=0). If content is not a JSON array, fall back gracefully.
- */
-function parseElementsFromSentinel(lesson: any): any[] | null {
-  if (!lesson?.content) return null;
-  try {
-    const parsed = JSON.parse(lesson.content);
-    if (Array.isArray(parsed)) return parsed;
-  } catch {
-    /* not JSON */
-  }
-  return null;
-}
-
 @Injectable()
 export class CoursesService {
   constructor(
@@ -96,7 +22,7 @@ export class CoursesService {
     private readonly notifications: NotificationsService,
   ) {}
 
-  // ── Curriculum ───────────────────────────────────────────────────────
+  // ── Curriculum — DB is the single source of truth ────────────────────
   async getCurriculum(courseSlug: string) {
     const course = await this.prisma.course.findUnique({
       where: { slug: courseSlug },
@@ -105,21 +31,6 @@ export class CoursesService {
 
     if (!course) throw new NotFoundException('Course not found');
 
-    // 1. JSON file is the single source of truth (written by admin saveCurriculum)
-    const json = readCourseJson(course.slug, course.title);
-    if (json) {
-      const topics = json.topics ?? [];
-      return {
-        success: true,
-        data: {
-          topics,
-          totalTopics: topics.length,
-          landingData: json.landingData ?? null,
-        },
-      };
-    }
-
-    // 2. DB fallback — restore full elements from sentinel lesson content
     const dbCourse = await this.prisma.course.findUnique({
       where: { id: course.id },
       select: {
@@ -132,6 +43,7 @@ export class CoursesService {
             order: true,
             lessons: {
               orderBy: { order: 'asc' as const },
+              where: { order: { gt: 0 } }, // skip sentinel lessons (order=0)
               select: {
                 id: true,
                 title: true,
@@ -152,25 +64,16 @@ export class CoursesService {
     const topics = ((dbCourse?.sections ?? []) as any[]).map((sec: any) => {
       const lessons: any[] = sec.lessons ?? [];
 
-      // Sentinel lesson (order=0) holds the full elements JSON array
-      const sentinel = lessons.find((l: any) => l.order === 0) ?? lessons[0];
-      const elements =
-        parseElementsFromSentinel(sentinel) ??
-        // Legacy fallback: reconstruct minimal elements from VIDEO lessons
-        lessons
-          .filter((l: any) => l.order !== 0)
-          .map((l: any) => ({
-            id: l.id,
-            type:
-              (l.type ?? 'ARTICLE').toLowerCase() === 'video'
-                ? 'video'
-                : 'text',
-            url: l.videoUrl ?? undefined,
-            value: l.videoUrl ? undefined : { en: l.content ?? '', ar: '' },
-            title: { en: l.title ?? '', ar: l.ar_title ?? '' },
-            duration: l.duration ?? 0,
-            isPreview: l.isPreview ?? false,
-          }));
+      const elements = lessons.map((l: any) => ({
+        id: l.id,
+        type:
+          (l.type ?? 'ARTICLE').toLowerCase() === 'video' ? 'video' : 'text',
+        url: l.videoUrl ?? undefined,
+        value: l.videoUrl ? undefined : { en: l.content ?? '', ar: '' },
+        title: { en: l.title ?? '', ar: l.ar_title ?? '' },
+        duration: l.duration ?? 0,
+        isPreview: l.isPreview ?? false,
+      }));
 
       return {
         id: sec.id,
@@ -307,7 +210,7 @@ export class CoursesService {
     return lesson;
   }
 
-  // ── Get rich content from JSON ───────────────────────────────
+  // ── Get rich content from DB ───────────────────────────────
   async getCourseContent(slug: string) {
     const course = await this.prisma.course.findUnique({
       where: { slug },
@@ -317,17 +220,56 @@ export class CoursesService {
     if (!course || !course.isPublished)
       throw new NotFoundException('Course not found');
 
-    const data = readCourseJson(course.slug, course.title);
-    if (data) {
-      return {
-        courseId: course.id,
-        topics: data.topics ?? [],
-        metadata: data.landingData ?? {},
-      };
-    }
+    const dbCourse = await this.prisma.course.findUnique({
+      where: { id: course.id },
+      select: {
+        sections: {
+          orderBy: { order: 'asc' as const },
+          select: {
+            id: true,
+            title: true,
+            ar_title: true,
+            order: true,
+            lessons: {
+              orderBy: { order: 'asc' as const },
+              where: { order: { gt: 0 } },
+              select: {
+                id: true,
+                title: true,
+                ar_title: true,
+                order: true,
+                type: true,
+                duration: true,
+                videoUrl: true,
+                isPreview: true,
+                content: true,
+              },
+            },
+          },
+        },
+      },
+    });
 
-    console.warn(`[CoursesService] JSON not found for slug="${slug}"`);
-    return { courseId: course.id, topics: [], metadata: {} };
+    const topics = ((dbCourse?.sections ?? []) as any[]).map((sec: any) => ({
+      id: sec.id,
+      title: { en: sec.title ?? '', ar: sec.ar_title ?? '' },
+      elements: (sec.lessons ?? []).map((l: any) => ({
+        id: l.id,
+        type:
+          (l.type ?? 'ARTICLE').toLowerCase() === 'video' ? 'video' : 'text',
+        url: l.videoUrl ?? undefined,
+        value: l.videoUrl ? undefined : { en: l.content ?? '', ar: '' },
+        title: { en: l.title ?? '', ar: l.ar_title ?? '' },
+        duration: l.duration ?? 0,
+        isPreview: l.isPreview ?? false,
+      })),
+    }));
+
+    return {
+      courseId: course.id,
+      topics,
+      metadata: {},
+    };
   }
 
   // ── Enroll ──────────────────────────────────────────────────
@@ -564,8 +506,6 @@ export class CoursesService {
   }
 
   // ── Course Labs ─────────────────────────────────────────────
-  // FIX: query the CourseLab junction table (set by admin Link Lab)
-  // instead of lab.courseId which is never populated by the admin panel.
   async getCourseLabs(slug: string) {
     const course = await this.prisma.course.findUnique({
       where: { slug },
