@@ -29,7 +29,7 @@ export class SearchService {
           title: true,
           description: true,
           slug: true,
-          thumbnailUrl: true,
+          thumbnail: true,
           difficulty: true,
         },
       }),
@@ -46,7 +46,7 @@ export class SearchService {
           difficulty: true,
         },
       }),
-      this.prisma.path.findMany({
+      this.prisma.learningPath.findMany({
         where: { isPublished: true, ...textFilter },
         take: perType,
         orderBy: { createdAt: 'desc' },
@@ -55,7 +55,7 @@ export class SearchService {
           title: true,
           description: true,
           slug: true,
-          imageUrl: true,
+          thumbnail: true,
         },
       }),
     ]);
@@ -67,7 +67,7 @@ export class SearchService {
         title: c.title,
         description: c.description ?? undefined,
         slug: c.slug,
-        imageUrl: c.thumbnailUrl ?? undefined,
+        imageUrl: c.thumbnail ?? undefined,
         difficulty: c.difficulty?.toLowerCase() as any,
       })),
       ...labs.map((l) => ({
@@ -85,7 +85,7 @@ export class SearchService {
         title: p.title,
         description: p.description ?? undefined,
         slug: p.slug,
-        imageUrl: p.imageUrl ?? undefined,
+        imageUrl: p.thumbnail ?? undefined,
       })),
     ].slice(0, limit);
 
