@@ -11,121 +11,72 @@ export class JwtTokenService {
     private configService: ConfigService,
   ) {}
 
-  /**
-   * Generate Access Token
-   */
   generateAccessToken(userId: string, email: string, role: UserRole): string {
-    const payload = {
-      sub: userId,
-      email,
-      role,
-      type: 'access',
-    };
-
-    return this.jwtService.sign(payload, {
-      secret:
-        this.configService.get<string>('jwt.accessSecret') || 'access-secret',
-      expiresIn: this.configService.get('jwt.accessExpiry') || '15m',
-    });
+    return this.jwtService.sign(
+      { sub: userId, email, role, type: 'access' },
+      {
+        secret: this.configService.get<string>('jwt.accessSecret') || 'access-secret',
+        // ✅ كان 'jwt.accessExpiry' غلط — الصح 'jwt.accessExpiry' بعد توحيد configuration.ts
+        expiresIn: this.configService.get<string>('jwt.accessExpiry') || '15m',
+      },
+    );
   }
 
-  /**
-   * Generate Refresh Token
-   */
   generateRefreshToken(userId: string): string {
-    const payload = {
-      sub: userId,
-      type: 'refresh',
-    };
-
-    return this.jwtService.sign(payload, {
-      secret:
-        this.configService.get<string>('jwt.refreshSecret') || 'refresh-secret',
-      expiresIn: this.configService.get('jwt.refreshExpiry') || '7d',
-    });
+    return this.jwtService.sign(
+      { sub: userId, type: 'refresh' },
+      {
+        secret: this.configService.get<string>('jwt.refreshSecret') || 'refresh-secret',
+        // ✅ كان 'jwt.refreshExpiry' غلط — الصح 'jwt.refreshExpiry' بعد توحيد configuration.ts
+        expiresIn: this.configService.get<string>('jwt.refreshExpiry') || '7d',
+      },
+    );
   }
 
-  /**
-   * Generate Email Verification Token
-   */
   generateVerificationToken(userId: string, email: string): string {
-    const payload = {
-      sub: userId,
-      email,
-      type: 'verification',
-    };
-
-    return this.jwtService.sign(payload, {
-      secret:
-        this.configService.get<string>('jwt.verificationSecret') ||
-        'verification-secret',
-      expiresIn: '24h',
-    });
+    return this.jwtService.sign(
+      { sub: userId, email, type: 'verification' },
+      {
+        secret: this.configService.get<string>('jwt.verificationSecret') || 'verification-secret',
+        expiresIn: this.configService.get<string>('jwt.verificationExpiry') || '24h',
+      },
+    );
   }
 
-  /**
-   * Generate Password Reset Token
-   */
   generatePasswordResetToken(userId: string, email: string): string {
-    const payload = {
-      sub: userId,
-      email,
-      type: 'reset',
-    };
-
-    return this.jwtService.sign(payload, {
-      secret:
-        this.configService.get<string>('jwt.passwordResetSecret') ||
-        'reset-secret',
-      expiresIn: '1h',
-    });
+    return this.jwtService.sign(
+      { sub: userId, email, type: 'reset' },
+      {
+        secret: this.configService.get<string>('jwt.passwordResetSecret') || 'reset-secret',
+        expiresIn: this.configService.get<string>('jwt.passwordResetExpiry') || '1h',
+      },
+    );
   }
 
-  /**
-   * Verify Access Token
-   */
-  verifyAccessToken(token: string): any {
+  verifyAccessToken(token: string): JwtPayload {
     return this.jwtService.verify(token, {
-      secret:
-        this.configService.get<string>('jwt.accessSecret') || 'access-secret',
+      secret: this.configService.get<string>('jwt.accessSecret') || 'access-secret',
     });
   }
 
-  /**
-   * Verify Refresh Token
-   */
-  verifyRefreshToken(token: string): any {
+  verifyRefreshToken(token: string): JwtPayload {
     return this.jwtService.verify(token, {
-      secret:
-        this.configService.get<string>('jwt.refreshSecret') || 'refresh-secret',
+      secret: this.configService.get<string>('jwt.refreshSecret') || 'refresh-secret',
     });
   }
 
-  /**
-   * Verify Verification Token
-   */
-  verifyVerificationToken(token: string): any {
+  verifyVerificationToken(token: string): JwtPayload {
     return this.jwtService.verify(token, {
-      secret:
-        this.configService.get<string>('jwt.verificationSecret') ||
-        'verification-secret',
+      secret: this.configService.get<string>('jwt.verificationSecret') || 'verification-secret',
     });
   }
 
-  /**
-   * Verify Password Reset Token
-   */
-  verifyPasswordResetToken(token: string): any {
+  verifyPasswordResetToken(token: string): JwtPayload {
     return this.jwtService.verify(token, {
-      secret:
-        this.configService.get<string>('jwt.passwordResetSecret') ||
-        'reset-secret',
+      secret: this.configService.get<string>('jwt.passwordResetSecret') || 'reset-secret',
     });
   }
 
-  /**
-   * Decode token without verification (for debugging)
-   */
   decode(token: string): any {
     return this.jwtService.decode(token);
   }

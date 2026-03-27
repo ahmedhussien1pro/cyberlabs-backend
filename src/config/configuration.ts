@@ -5,8 +5,8 @@ export default () => ({
     port: parseInt(process.env.PORT || '8080', 10),
     apiPrefix: `${process.env.API_PREFIX || 'api'}/${process.env.API_VERSION || 'v1'}`,
     url: process.env.APP_URL,
-    frontendUrl: process.env.FRONTEND_URL, // legacy fallback (optional)
-    corsDomain: process.env.CORS_DOMAIN, // e.g. cyber-labs.tech
+    frontendUrl: process.env.FRONTEND_URL,
+    corsDomain: process.env.CORS_DOMAIN,
     allowLocalhost: process.env.CORS_ALLOW_LOCALHOST,
   },
 
@@ -16,13 +16,15 @@ export default () => ({
 
   jwt: {
     accessSecret: process.env.JWT_ACCESS_SECRET,
-    accessExpiration: process.env.JWT_ACCESS_EXPIRATION || '15m',
+    // ✅ اسم موحد: accessExpiry — يُقرأ من JWT_ACCESS_EXPIRATION في .env
+    accessExpiry: process.env.JWT_ACCESS_EXPIRATION || '15m',
     refreshSecret: process.env.JWT_REFRESH_SECRET,
-    refreshExpiration: process.env.JWT_REFRESH_EXPIRATION || '7d',
+    // ✅ اسم موحد: refreshExpiry — يُقرأ من JWT_REFRESH_EXPIRATION في .env
+    refreshExpiry: process.env.JWT_REFRESH_EXPIRATION || '7d',
     verificationSecret: process.env.JWT_VERIFICATION_SECRET,
-    verificationExpiration: process.env.JWT_VERIFICATION_EXPIRATION || '24h',
+    verificationExpiry: process.env.JWT_VERIFICATION_EXPIRATION || '24h',
     passwordResetSecret: process.env.JWT_PASSWORD_RESET_SECRET,
-    passwordResetExpiration: process.env.JWT_PASSWORD_RESET_EXPIRATION || '1h',
+    passwordResetExpiry: process.env.JWT_PASSWORD_RESET_EXPIRATION || '1h',
   },
 
   oauth: {
@@ -74,17 +76,13 @@ export default () => ({
     pointsToXpRatio: parseInt(process.env.POINTS_TO_XP_RATIO || '10', 10),
   },
 
-  // ── Labs ────────────────────────────────────────────────────────────────────
   labs: {
-    /** How long a launch token stays valid (minutes). Default: 60 */
     launchTokenTTLMinutes: parseInt(
       process.env.LAB_LAUNCH_TOKEN_TTL_MINUTES ?? '60',
       10,
     ),
-    /** HMAC secret used to generate deterministic dynamic flags */
     flagHmacSecret:
       process.env.FLAG_HMAC_SECRET ?? 'cyberlabs_flag_secret_2026',
-    /** Base URL of the frontend-labs app */
     labsUrl:
       process.env.LABS_URL ?? 'https://www.labs.cyber-labs.tech',
   },

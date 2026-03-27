@@ -16,11 +16,9 @@ import { OAuthProfile } from '../../../common/types';
 import { NotificationsService } from '../../notifications/services/notifications.service';
 import { NotificationEvents } from '../../notifications/notifications.events';
 
-/** SHA-256 hash للـ token قبل ما يتحفظ في DB */
 const hashToken = (token: string): string =>
   crypto.createHash('sha256').update(token).digest('hex');
 
-/** 7 أيام بالـ milliseconds */
 const REFRESH_TTL_MS = 7 * 24 * 60 * 60 * 1000;
 
 @Injectable()
@@ -37,6 +35,7 @@ export class AuthService {
     private readonly notifications: NotificationsService,
   ) {
     this.logger.setContext('AuthService');
+    // ✅ يقرأ 'jwt.accessExpiry' — الاسم الموحد بعد تصحيح configuration.ts
     const raw = this.configService.get<string>('jwt.accessExpiry') ?? '15m';
     this.accessExpirySeconds = this.parseExpiryToSeconds(raw);
   }
@@ -50,7 +49,6 @@ export class AuthService {
     return value * (multipliers[unit] ?? 60);
   }
 
-  // ─── احفظ refreshToken في DB ───────────────────────────────────────────────
   private async saveRefreshToken(
     userId: string,
     refreshToken: string,
@@ -59,7 +57,6 @@ export class AuthService {
     const tokenHash = hashToken(refreshToken);
     const expiresAt = new Date(Date.now() + REFRESH_TTL_MS);
 
-    // cleanup: احذف المنتهية والمبطلة للمستخدم ده فقط
     await this.prisma.refreshToken.deleteMany({
       where: {
         userId,
@@ -75,7 +72,6 @@ export class AuthService {
     });
   }
 
-  // ─── تحقق من DB إن الـ token صالح ────────────────────────────────────────
   private async validateRefreshTokenInDb(
     userId: string,
     refreshToken: string,
@@ -89,7 +85,6 @@ export class AuthService {
     return stored;
   }
 
-  // ─── ابطل token واحد (rotation) ──────────────────────────────────────────
   private async revokeRefreshToken(id: string): Promise<void> {
     await this.prisma.refreshToken.update({
       where: { id },
@@ -97,7 +92,6 @@ export class AuthService {
     });
   }
 
-  // ─── ابطل كل tokens المستخدم (logout) ────────────────────────────────────
   private async revokeAllUserTokens(userId: string): Promise<void> {
     await this.prisma.refreshToken.updateMany({
       where: { userId, revokedAt: null },
@@ -105,7 +99,6 @@ export class AuthService {
     });
   }
 
-  // ─────────────────────────────────────────────────────────────────────────
   async register(dto: RegisterDto) {
     const existingUser = await this.prisma.user.findUnique({ where: { email: dto.email } });
     const existingName = await this.prisma.user.findUnique({ where: { name: dto.name } });
@@ -143,7 +136,6 @@ export class AuthService {
     return { user, accessToken, refreshToken, expiresIn: this.accessExpirySeconds };
   }
 
-  // ─────────────────────────────────────────────────────────────────────────
   async login(dto: LoginDto, meta?: { ip?: string; userAgent?: string }): Promise<any> {
     const user = await this.prisma.user.findUnique({
       where: { email: dto.email },
@@ -173,7 +165,6 @@ export class AuthService {
     return { user: userWithoutPassword, accessToken, refreshToken, expiresIn: this.accessExpirySeconds };
   }
 
-  // ─────────────────────────────────────────────────────────────────────────
   async getUserForToken(userId: string, meta?: { ip?: string; userAgent?: string }): Promise<any> {
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
@@ -196,13 +187,12 @@ export class AuthService {
     return { user, accessToken, refreshToken, expiresIn: this.accessExpirySeconds };
   }
 
-  // ─────────────────────────────────────────────────────────────────────────
   async refreshToken(token: string, meta?: { ip?: string; userAgent?: string }) {
     try {
       // 1) تحقق من الـ JWT signature
       const payload = this.jwtService.verifyRefreshToken(token);
 
-      // 2) تحقق من DB إن الـ token صالح وغير مبطل
+      // 2) تحقق من DB — الـ refreshToken لازم يكون موجود وغير مبطل
       const stored = await this.validateRefreshTokenInDb(payload.sub, token);
 
       const user = await this.prisma.user.findUnique({
@@ -216,7 +206,7 @@ export class AuthService {
       // 3) ابطل الـ token القديم (token rotation)
       await this.revokeRefreshToken(stored.id);
 
-      // 4) أنشئ tokens جديدة واحفظها
+      // 4) أنشئ tokens جديدة واحفظ الـ refreshToken الجديد في DB
       const newAccessToken = this.jwtService.generateAccessToken(user.id, user.email, user.role as UserRole);
       const newRefreshToken = this.jwtService.generateRefreshToken(user.id);
       await this.saveRefreshToken(user.id, newRefreshToken, meta);
@@ -228,14 +218,12 @@ export class AuthService {
     }
   }
 
-  // ─────────────────────────────────────────────────────────────────────────
   async logout(userId: string) {
     await this.revokeAllUserTokens(userId);
     this.logger.log(`User logged out + all tokens revoked: ${userId}`);
     return { message: 'Logged out successfully' };
   }
 
-  // ─────────────────────────────────────────────────────────────────────────
   async oauthLogin(profile: OAuthProfile, meta?: { ip?: string; userAgent?: string }) {
     let oauthAccount = await this.prisma.oAuthAccount.findUnique({
       where: { provider_providerId: { provider: profile.provider, providerId: profile.providerId } },
