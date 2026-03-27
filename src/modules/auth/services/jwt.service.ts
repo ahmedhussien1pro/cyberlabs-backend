@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService as NestJwtService } from '@nestjs/jwt';
+import type { StringValue } from 'ms';
 import { JwtPayload } from '../../../common/types';
 import { UserRole } from '../../../common/enums';
 
@@ -16,8 +17,7 @@ export class JwtTokenService {
       { sub: userId, email, role, type: 'access' },
       {
         secret: this.configService.get<string>('jwt.accessSecret') || 'access-secret',
-        // ✅ كان 'jwt.accessExpiry' غلط — الصح 'jwt.accessExpiry' بعد توحيد configuration.ts
-        expiresIn: this.configService.get<string>('jwt.accessExpiry') || '15m',
+        expiresIn: (this.configService.get<string>('jwt.accessExpiry') || '15m') as StringValue,
       },
     );
   }
@@ -27,8 +27,7 @@ export class JwtTokenService {
       { sub: userId, type: 'refresh' },
       {
         secret: this.configService.get<string>('jwt.refreshSecret') || 'refresh-secret',
-        // ✅ كان 'jwt.refreshExpiry' غلط — الصح 'jwt.refreshExpiry' بعد توحيد configuration.ts
-        expiresIn: this.configService.get<string>('jwt.refreshExpiry') || '7d',
+        expiresIn: (this.configService.get<string>('jwt.refreshExpiry') || '7d') as StringValue,
       },
     );
   }
@@ -38,7 +37,7 @@ export class JwtTokenService {
       { sub: userId, email, type: 'verification' },
       {
         secret: this.configService.get<string>('jwt.verificationSecret') || 'verification-secret',
-        expiresIn: this.configService.get<string>('jwt.verificationExpiry') || '24h',
+        expiresIn: (this.configService.get<string>('jwt.verificationExpiry') || '24h') as StringValue,
       },
     );
   }
@@ -48,7 +47,7 @@ export class JwtTokenService {
       { sub: userId, email, type: 'reset' },
       {
         secret: this.configService.get<string>('jwt.passwordResetSecret') || 'reset-secret',
-        expiresIn: this.configService.get<string>('jwt.passwordResetExpiry') || '1h',
+        expiresIn: (this.configService.get<string>('jwt.passwordResetExpiry') || '1h') as StringValue,
       },
     );
   }
