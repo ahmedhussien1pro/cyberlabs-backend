@@ -14,6 +14,8 @@ export class SearchService {
       OR: [
         { title: { contains: query, mode: 'insensitive' as const } },
         { description: { contains: query, mode: 'insensitive' as const } },
+        { ar_title: { contains: query, mode: 'insensitive' as const } },
+        { ar_description: { contains: query, mode: 'insensitive' as const } },
       ],
     };
 
@@ -27,7 +29,9 @@ export class SearchService {
         select: {
           id: true,
           title: true,
+          ar_title: true,
           description: true,
+          ar_description: true,
           slug: true,
           thumbnail: true,
           difficulty: true,
@@ -40,7 +44,9 @@ export class SearchService {
         select: {
           id: true,
           title: true,
+          ar_title: true,
           description: true,
+          ar_description: true,
           slug: true,
           imageUrl: true,
           difficulty: true,
@@ -53,7 +59,9 @@ export class SearchService {
         select: {
           id: true,
           title: true,
+          ar_title: true,
           description: true,
+          ar_description: true,
           slug: true,
           thumbnail: true,
         },
@@ -65,7 +73,9 @@ export class SearchService {
         id: c.id,
         type: 'course' as const,
         title: c.title,
+        ar_title: c.ar_title ?? undefined,
         description: c.description ?? undefined,
+        ar_description: c.ar_description ?? undefined,
         slug: c.slug,
         imageUrl: c.thumbnail ?? undefined,
         difficulty: c.difficulty?.toLowerCase() as any,
@@ -74,7 +84,9 @@ export class SearchService {
         id: l.id,
         type: 'lab' as const,
         title: l.title,
+        ar_title: l.ar_title ?? undefined,
         description: l.description ?? undefined,
+        ar_description: l.ar_description ?? undefined,
         slug: l.slug,
         imageUrl: l.imageUrl ?? undefined,
         difficulty: l.difficulty?.toLowerCase() as any,
@@ -83,7 +95,9 @@ export class SearchService {
         id: p.id,
         type: 'path' as const,
         title: p.title,
+        ar_title: p.ar_title ?? undefined,
         description: p.description ?? undefined,
+        ar_description: p.ar_description ?? undefined,
         slug: p.slug,
         imageUrl: p.thumbnail ?? undefined,
       })),
