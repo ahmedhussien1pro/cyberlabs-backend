@@ -1,0 +1,2028 @@
+{
+  "landingData": {
+    "title": {
+      "en": "Log Analysis & SIEM Basics",
+      "ar": "أساسيات تحليل السجلات ونظام SIEM"
+    },
+    "description": {
+      "en": "Master the fundamentals of security log analysis and SIEM platforms. Learn to collect, parse, correlate logs from multiple sources, build detection rules, create dashboards, and investigate real security incidents using industry-standard tools like Splunk.",
+      "ar": "أتقن أساسيات تحليل سجلات الأمان ومنصات SIEM. تعلّم جمع وتحليل وربط السجلات من مصادر متعددة، وبناء قواعد الكشف، وإنشاء لوحات المعلومات، والتحقيق في حوادث الأمان الحقيقية باستخدام أدوات معيارية مثل Splunk."
+    },
+    "difficulty": {
+      "en": "Beginner to Intermediate",
+      "ar": "من المبتدئ إلى المتوسط"
+    },
+    "duration": {
+      "en": "90 Minutes",
+      "ar": "90 دقيقة"
+    },
+    "instructor": "CyberLabs",
+    "rating": 4.9,
+    "students": 250
+  },
+  "topics": [
+    {
+      "id": "topic-1",
+      "title": {
+        "en": "Foundations of Logging and Log Sources",
+        "ar": "أسس التسجيل ومصادر السجلات"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "Understanding What Logs Are and Why They Exist",
+            "ar": "فهم ماهية السجلات ولماذا تُوجد"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "A log is a timestamped record of an event that happened on a computer system, application, or network device. Every time you log into your email, visit a website, or a file is opened on a server, that action creates a log entry. Logs are like a diary for computers: they record who did what, when, and sometimes why. Without logs, security teams would be blind to attacks happening in their networks.",
+            "ar": "السجل (Log) هو تسجيل مُؤرَّخ زمنياً لحدث وقع على نظام حاسوبي أو تطبيق أو جهاز شبكي. في كل مرة تسجّل دخولك إلى بريدك الإلكتروني، أو تزور موقعاً، أو يُفتَح ملف على خادم، يُنشأ إدخال سجل لهذا الإجراء. السجلات تشبه يوميات الحواسيب: تُسجّل مَن فعل ماذا، ومتى، وأحياناً لماذا. بدون السجلات، تصبح فِرق الأمان عمياء عن الهجمات التي تحدث في شبكاتهم."
+          }
+        },
+        {
+          "id": 1773241151625.3418,
+          "type": "image",
+          "srcKey": "",
+          "size": "small",
+          "imageUrl": "https://cdn.cyber-labs.tech/Log%20Analysis%20%26%20SIEM%20Basics/TIMELINE%20OF%20EVENTS.webp"
+        },
+        {
+          "id": 4,
+          "type": "text",
+          "value": {
+            "en": "Logs serve multiple critical purposes beyond security. They help system administrators troubleshoot technical problems, developers debug application errors, and compliance officers prove that regulations are being followed. For security analysts, logs are the primary evidence source when investigating incidents. If an attacker breaks into a system, the logs show the digital footprints they left behind: which accounts they used, which files they accessed, and which commands they executed.",
+            "ar": "تخدم السجلات أغراضاً حرجة متعددة تتجاوز الأمان. تساعد مسؤولي الأنظمة على استكشاف المشاكل التقنية، وتساعد المطورين على إصلاح أخطاء التطبيقات، ومسؤولي الامتثال على إثبات الالتزام باللوائح. بالنسبة لمحللي الأمان، السجلات هي مصدر الأدلة الأساسي عند التحقيق في الحوادث. إذا اخترق مهاجم نظاماً، تُظهِر السجلات البصمات الرقمية التي تركها: أي حسابات استخدم، وأي ملفات وصل إليها، وأي أوامر نفّذها."
+          }
+        },
+        {
+          "id": 5,
+          "type": "hr"
+        },
+        {
+          "id": 6,
+          "type": "title",
+          "value": {
+            "en": "Log Types by Source: Where Do Logs Come From?",
+            "ar": "أنواع السجلات حسب المصدر: من أين تأتي السجلات؟"
+          }
+        },
+        {
+          "id": 7,
+          "type": "text",
+          "value": {
+            "en": "Different systems and applications generate different types of logs. Understanding where logs come from is the first step in log analysis. Syslog is the standard logging protocol used by Linux and Unix systems. When you log into a Linux server, attempt to change a password, or a service fails to start, these events are recorded in files stored under the /var/log/ directory. Common Syslog files include /var/log/syslog for general system messages and /var/log/auth.log for authentication events like login attempts.",
+            "ar": "تولّد الأنظمة والتطبيقات المختلفة أنواعاً مختلفة من السجلات. فهم من أين تأتي السجلات هو الخطوة الأولى في تحليل السجلات. Syslog هو بروتوكول التسجيل القياسي المستخدَم في أنظمة Linux وUnix. عندما تُسجّل دخولك إلى خادم Linux، أو تحاول تغيير كلمة مرور، أو تفشل خدمة في البدء، تُسجَّل هذه الأحداث في ملفات مخزَّنة ضمن مجلد /var/log/. تتضمن ملفات Syslog الشائعة /var/log/syslog لرسائل النظام العامة و/var/log/auth.log لأحداث المصادقة مثل محاولات تسجيل الدخول."
+          }
+        },
+        {
+          "id": 8,
+          "type": "text",
+          "value": {
+            "en": "Syslog uses severity levels numbered from 0 to 7 to indicate how important each message is. Level 0 means Emergency, the system is unusable. Level 7 means Debug, detailed information for developers. Security analysts focus most on levels 2 through 4: Critical, Error, and Warning, because these often indicate problems or suspicious activity. Syslog follows the RFC 5424 standard, which defines the message format that includes timestamp, hostname, application name, and the actual message text.",
+            "ar": "يستخدم Syslog مستويات خطورة مرقّمة من 0 إلى 7 للإشارة إلى أهمية كل رسالة. المستوى 0 يعني حالة طوارئ، النظام غير قابل للاستخدام. المستوى 7 يعني تصحيح الأخطاء، معلومات مفصّلة للمطورين. يركّز محللو الأمان بشكل أساسي على المستويات من 2 إلى 4: حرج، خطأ، وتحذير، لأن هذه غالباً تشير إلى مشاكل أو نشاط مشبوه. يتبع Syslog معيار RFC 5424 الذي يحدد تنسيق الرسالة الذي يتضمن الطابع الزمني، واسم المضيف، واسم التطبيق، والنص الفعلي للرسالة."
+          }
+        },
+        {
+          "id": 9,
+          "type": "text",
+          "value": {
+            "en": "Windows systems generate Event Logs stored in a special binary format with the .evtx file extension. These logs are organized into channels: Security, System, and Application are the three most important. The Security channel records authentication events, privilege changes, and security policy modifications. Security analysts memorize critical Event IDs: 4624 means a user successfully logged in, 4625 means a login attempt failed, 4688 means a new process was created, 4698 means a scheduled task was created, and 4720 means a new user account was created. These Event IDs are essential for detecting attacks.",
+            "ar": "تولّد أنظمة Windows سجلات أحداث مخزَّنة بتنسيق ثنائي خاص بامتداد ملف .evtx. تُنظَّم هذه السجلات في قنوات: الأمان، والنظام، والتطبيق هي الثلاثة الأهم. تسجّل قناة الأمان أحداث المصادقة، وتغييرات الامتيازات، وتعديلات سياسة الأمان. يحفظ محللو الأمان معرّفات الأحداث الحرجة: 4624 يعني أن مستخدماً سجّل دخوله بنجاح، و4625 يعني فشل محاولة تسجيل دخول، و4688 يعني إنشاء عملية جديدة، و4698 يعني إنشاء مهمة مجدولة، و4720 يعني إنشاء حساب مستخدم جديد. هذه المعرّفات أساسية للكشف عن الهجمات."
+          }
+        },
+        {
+          "id": 10,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Professional Tip: When analyzing Windows logs, always check both Event ID 4624 and 4625 together. Multiple 4625 events followed by a single 4624 from the same source IP is a classic sign of a successful brute-force attack.",
+            "ar": "نصيحة احترافية: عند تحليل سجلات Windows، تحقق دائماً من كل من معرّف الحدث 4624 و4625 معاً. عدة أحداث 4625 متبوعة بحدث 4624 واحد من نفس عنوان IP المصدر هي علامة كلاسيكية على هجوم القوة الغاشمة الناجح."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 11,
+          "type": "text",
+          "value": {
+            "en": "Network devices like firewalls, routers, and intrusion detection systems also generate logs. Firewall logs show every connection attempt through the firewall: source IP address, destination IP address, source port, destination port, protocol used, and whether the connection was allowed or denied. These logs help analysts understand network traffic patterns and detect port scans, denial of service attacks, and unauthorized connection attempts. Modern firewalls can log thousands of events per second in busy networks.",
+            "ar": "تولّد أجهزة الشبكة مثل جدران الحماية والموجهات وأنظمة كشف الاختراق سجلات أيضاً. تُظهِر سجلات جدار الحماية كل محاولة اتصال عبر الجدار: عنوان IP المصدر، وعنوان IP الوجهة، ومنفذ المصدر، ومنفذ الوجهة، والبروتوكول المستخدَم، وما إذا كان الاتصال مسموحاً أو محظوراً. تساعد هذه السجلات المحللين على فهم أنماط حركة الشبكة والكشف عن فحوصات المنافذ، وهجمات حجب الخدمة، ومحاولات الاتصال غير المصرح بها. يمكن لجدران الحماية الحديثة تسجيل آلاف الأحداث في الثانية في الشبكات المزدحمة."
+          }
+        },
+        {
+          "id": 12,
+          "type": "table",
+          "title": {
+            "en": "Comparison of Major Log Sources",
+            "ar": "مقارنة مصادر السجلات الرئيسية"
+          },
+          "headers": {
+            "en": [
+              "Log Source",
+              "What It Records",
+              "Critical Use Case"
+            ],
+            "ar": [
+              "مصدر السجل",
+              "ماذا يسجّل",
+              "الاستخدام الحرج"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "Syslog (Linux)",
+                "System events, authentication, service status",
+                "Detecting unauthorized SSH access"
+              ],
+              "ar": [
+                "Syslog (Linux)",
+                "أحداث النظام، المصادقة، حالة الخدمات",
+                "الكشف عن وصول SSH غير مصرح به"
+              ]
+            },
+            {
+              "en": [
+                "Windows Event Logs",
+                "User logins, process creation, account changes",
+                "Identifying compromised accounts"
+              ],
+              "ar": [
+                "سجلات أحداث Windows",
+                "تسجيلات دخول المستخدمين، إنشاء العمليات، تغييرات الحسابات",
+                "تحديد الحسابات المخترقة"
+              ]
+            },
+            {
+              "en": [
+                "Firewall Logs",
+                "Network connections, blocked traffic, port activity",
+                "Blocking malicious IPs"
+              ],
+              "ar": [
+                "سجلات جدار الحماية",
+                "اتصالات الشبكة، الحركة المحظورة، نشاط المنافذ",
+                "حظر عناوين IP الخبيثة"
+              ]
+            },
+            {
+              "en": [
+                "Application Logs",
+                "User actions, errors, transactions",
+                "Detecting data theft from web apps"
+              ],
+              "ar": [
+                "سجلات التطبيقات",
+                "إجراءات المستخدمين، الأخطاء، المعاملات",
+                "الكشف عن سرقة البيانات من تطبيقات الويب"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 13,
+          "type": "hr"
+        },
+        {
+          "id": 14,
+          "type": "title",
+          "value": {
+            "en": "Log Formats: From Unstructured Text to Structured Data",
+            "ar": "تنسيقات السجلات: من النصوص غير المنظمة إلى البيانات المنظمة"
+          }
+        },
+        {
+          "id": 15,
+          "type": "text",
+          "value": {
+            "en": "Log formats vary widely, which creates challenges for analysis. Unstructured logs are free-form text with no fixed structure, like simple application error messages written by developers. These are difficult to parse automatically because the format changes between messages. Semi-structured logs like Syslog follow a loose template: they always have a timestamp and hostname, but the message part can be freeform. Structured logs use standardized formats like JSON, CEF (Common Event Format), or LEEF (Log Event Extended Format) where every field has a consistent name and position.",
+            "ar": "تختلف تنسيقات السجلات بشكل كبير، مما يخلق تحديات للتحليل. السجلات غير المنظمة هي نصوص حرة بدون بنية ثابتة، مثل رسائل أخطاء التطبيقات البسيطة المكتوبة من قبل المطورين. يصعب تحليلها تلقائياً لأن التنسيق يتغير بين الرسائل. السجلات شبه المنظمة مثل Syslog تتبع قالباً فضفاضاً: دائماً لديها طابع زمني واسم مضيف، لكن جزء الرسالة يمكن أن يكون حراً. السجلات المنظمة تستخدم تنسيقات موحدة مثل JSON أو CEF (تنسيق الحدث المشترك) أو LEEF (تنسيق حدث السجل الموسع) حيث كل حقل له اسم وموضع ثابتان."
+          }
+        },
+        {
+          "id": 16,
+          "type": "code",
+          "language": "json",
+          "value": "{\n  \"timestamp\": \"2026-03-11T16:22:34Z\",\n  \"source_ip\": \"203.0.113.45\",\n  \"user\": \"ahmed.mohamed\",\n  \"action\": \"login_failed\",\n  \"reason\": \"invalid_password\",\n  \"severity\": \"warning\"\n}"
+        },
+        {
+          "id": 17,
+          "type": "text",
+          "value": {
+            "en": "The example above shows a structured JSON log. Every field is clearly labeled: timestamp, source_ip, user, action, reason, and severity. A security tool can easily extract and analyze these fields because they are always in the same format. Compare this to an unstructured log that might say: 'User ahmed.mohamed failed to login from 203.0.113.45 due to bad password at 4:22 PM'. The information is the same, but extracting it requires complex pattern matching. SIEM systems work best with structured or semi-structured logs.",
+            "ar": "يُظهِر المثال أعلاه سجل JSON منظَّم. كل حقل موسوم بوضوح: timestamp (الطابع الزمني)، وsource_ip (عنوان IP المصدر)، وuser (المستخدم)، وaction (الإجراء)، وreason (السبب)، وseverity (الخطورة). يمكن لأداة الأمان استخراج وتحليل هذه الحقول بسهولة لأنها دائماً بنفس التنسيق. قارن هذا بسجل غير منظم قد يقول: 'فشل المستخدم ahmed.mohamed في تسجيل الدخول من 203.0.113.45 بسبب كلمة مرور خاطئة في الساعة 4:22 مساءً'. المعلومات نفسها، لكن استخراجها يتطلب مطابقة نمط معقدة. أنظمة SIEM تعمل بشكل أفضل مع السجلات المنظمة أو شبه المنظمة."
+          }
+        },
+        {
+          "id": 18,
+          "type": "title",
+          "value": {
+            "en": "Log Retention Policies and Compliance Requirements",
+            "ar": "سياسات الاحتفاظ بالسجلات ومتطلبات الامتثال"
+          }
+        },
+        {
+          "id": 19,
+          "type": "text",
+          "value": {
+            "en": "Organizations must keep logs for specific time periods to comply with legal and regulatory requirements. PCI-DSS, the payment card industry standard, requires at least one year of log retention with three months immediately available for analysis. HIPAA, the healthcare privacy law, requires six years of audit log retention. These requirements exist because logs are legal evidence: if a data breach occurs, investigators need historical logs to understand what happened and when. Organizations that delete logs too early may face legal penalties and be unable to investigate incidents properly.",
+            "ar": "يجب على المؤسسات الاحتفاظ بالسجلات لفترات زمنية محددة للامتثال للمتطلبات القانونية والتنظيمية. معيار PCI-DSS، معيار صناعة بطاقات الدفع، يتطلب الاحتفاظ بالسجلات لمدة سنة واحدة على الأقل مع توفر ثلاثة أشهر فوراً للتحليل. قانون HIPAA، قانون خصوصية الرعاية الصحية، يتطلب الاحتفاظ بسجلات التدقيق لمدة ست سنوات. توجد هذه المتطلبات لأن السجلات أدلة قانونية: إذا حدث اختراق للبيانات، يحتاج المحققون إلى السجلات التاريخية لفهم ما حدث ومتى. المؤسسات التي تحذف السجلات مبكراً قد تواجه عقوبات قانونية وتصبح غير قادرة على التحقيق في الحوادث بشكل صحيح."
+          }
+        },
+        {
+          "id": 20,
+          "type": "text",
+          "value": {
+            "en": "Centralized log storage is critical for both compliance and security. When logs are stored only on the local system that generated them, attackers can delete those logs to cover their tracks. This is one of the first actions skilled attackers take after compromising a system. By forwarding logs immediately to a central SIEM system, organizations ensure that even if an attacker deletes local logs, the evidence remains safe in the SIEM. Centralized storage also makes it possible to correlate events across multiple systems, which is essential for detecting sophisticated attacks.",
+            "ar": "التخزين المركزي للسجلات حاسم للامتثال والأمان معاً. عندما تُخزَّن السجلات فقط على النظام المحلي الذي ولّدها، يستطيع المهاجمون حذف تلك السجلات لطمس آثارهم. هذا أحد الإجراءات الأولى التي يتخذها المهاجمون المهرة بعد اختراق نظام. من خلال إعادة توجيه السجلات فوراً إلى نظام SIEM مركزي، تضمن المؤسسات أنه حتى إذا حذف مهاجم السجلات المحلية، تبقى الأدلة آمنة في SIEM. التخزين المركزي يجعل من الممكن أيضاً ربط الأحداث عبر أنظمة متعددة، وهو أمر أساسي للكشف عن الهجمات المتطورة."
+          }
+        },
+        {
+          "id": 21,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "Warning: Never rely solely on logs stored on endpoint systems. Attackers with administrative access will delete logs. Always forward security-critical logs to a write-protected central repository within seconds of generation.",
+            "ar": "تحذير: لا تعتمد أبداً فقط على السجلات المخزَّنة على أنظمة نقطة النهاية. المهاجمون الذين لديهم وصول إداري سيحذفون السجلات. أعد دائماً توجيه السجلات الحرجة للأمان إلى مستودع مركزي محمي ضد الكتابة في غضون ثوانٍ من توليدها."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 22,
+          "type": "text",
+          "value": {
+            "en": "Log integrity mechanisms ensure that logs cannot be tampered with after creation. Write-once storage prevents modification or deletion of log files once written. Cryptographic hashing creates a unique fingerprint for each log entry; if an attacker tries to modify a log, the hash changes and the tampering is detected. Digital signatures provide even stronger proof that logs came from a legitimate source and have not been altered. These integrity mechanisms are especially important for logs that will be used as legal evidence in court cases or regulatory audits.",
+            "ar": "آليات سلامة السجلات تضمن عدم إمكانية العبث بالسجلات بعد إنشائها. التخزين بالكتابة مرة واحدة يمنع التعديل أو الحذف لملفات السجلات بمجرد كتابتها. التجزئة التشفيرية تنشئ بصمة فريدة لكل إدخال سجل؛ إذا حاول مهاجم تعديل سجل، يتغير التجزئة ويُكتَشَف العبث. التوقيعات الرقمية توفر دليلاً أقوى على أن السجلات جاءت من مصدر شرعي ولم يتم تعديلها. هذه الآليات مهمة بشكل خاص للسجلات التي ستُستخدَم كأدلة قانونية في قضايا المحاكم أو عمليات التدقيق التنظيمية."
+          }
+        }
+      ]
+    },
+    {
+      "id": "topic-2",
+      "title": {
+        "en": "Log Parsing, Normalization and Correlation",
+        "ar": "تحليل السجلات، التوحيد، والربط"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "The Challenge: Turning Raw Log Strings Into Actionable Data",
+            "ar": "التحدي: تحويل نصوص السجلات الخام إلى بيانات قابلة للتنفيذ"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "When logs arrive at a SIEM system, they are often messy strings of text that humans can read but computers struggle to analyze. A raw Syslog message might look like: 'Mar 11 16:22:34 webserver sshd[12345]: Failed password for admin from 203.0.113.45 port 54321 ssh2'. This single line contains valuable security information, but it is buried in text. Parsing is the process of breaking this string into separate, labeled fields that a computer can search, filter, and correlate.",
+            "ar": "عندما تصل السجلات إلى نظام SIEM، غالباً ما تكون نصوصاً فوضوية يستطيع البشر قراءتها لكن الحواسيب تجد صعوبة في تحليلها. رسالة Syslog خام قد تبدو مثل: 'Mar 11 16:22:34 webserver sshd[12345]: Failed password for admin from 203.0.113.45 port 54321 ssh2'. هذا السطر الواحد يحتوي على معلومات أمنية قيّمة، لكنها مدفونة في النص. التحليل (Parsing) هو عملية تقسيم هذا النص إلى حقول منفصلة موسومة يمكن للحاسوب البحث فيها، وتصفيتها، وربطها."
+          }
+        },
+        {
+          "id": 3,
+          "type": "text",
+          "value": {
+            "en": "After parsing the example above, a SIEM extracts these fields: timestamp = 'Mar 11 16:22:34', hostname = 'webserver', process = 'sshd', action = 'Failed password', username = 'admin', source_ip = '203.0.113.45', port = '54321'. Now instead of searching for the word 'failed' somewhere in a text string, the analyst can search specifically for action equals 'Failed password' and source_ip equals '203.0.113.45'. This precision is what makes security analysis possible at scale across millions of log messages.",
+            "ar": "بعد تحليل المثال أعلاه، يستخرج نظام SIEM هذه الحقول: timestamp (الطابع الزمني) = 'Mar 11 16:22:34'، وhostname (اسم المضيف) = 'webserver'، وprocess (العملية) = 'sshd'، وaction (الإجراء) = 'Failed password'، وusername (اسم المستخدم) = 'admin'، وsource_ip (عنوان IP المصدر) = '203.0.113.45'، وport (المنفذ) = '54321'. الآن بدلاً من البحث عن كلمة 'failed' في مكان ما في نص، يستطيع المحلل البحث تحديداً عن action يساوي 'Failed password' وsource_ip يساوي '203.0.113.45'. هذه الدقة هي ما يجعل التحليل الأمني ممكناً على نطاق واسع عبر ملايين رسائل السجلات."
+          }
+        },
+        {
+          "id": 1773241173563.4116,
+          "type": "image",
+          "srcKey": "",
+          "size": "small",
+          "imageUrl": "https://cdn.cyber-labs.tech/Log%20Analysis%20%26%20SIEM%20Basics/DATA%20TRANSFORMATION.webp"
+        },
+        {
+          "id": 5,
+          "type": "title",
+          "value": {
+            "en": "Parsing Techniques: Regular Expressions and Grok Patterns",
+            "ar": "تقنيات التحليل: التعبيرات النمطية وأنماط Grok"
+          }
+        },
+        {
+          "id": 6,
+          "type": "text",
+          "value": {
+            "en": "Regular expressions (regex) are powerful pattern-matching tools used to extract specific information from text. A regex pattern can match an IP address format, a date format, or a specific sequence of words. For example, the regex pattern for an IPv4 address looks like this: a number from 0 to 255, followed by a dot, repeated four times. SIEM systems use regex extensively during parsing, but writing regex patterns requires expertise because the syntax is complex and errors are easy to make.",
+            "ar": "التعبيرات النمطية (regex) هي أدوات مطابقة أنماط قوية تُستخدَم لاستخراج معلومات محددة من النص. نمط regex يمكن أن يطابق تنسيق عنوان IP، أو تنسيق تاريخ، أو تسلسل محدد من الكلمات. على سبيل المثال، نمط regex لعنوان IPv4 يبدو كالتالي: رقم من 0 إلى 255، متبوعاً بنقطة، مكرراً أربع مرات. تستخدم أنظمة SIEM regex بشكل مكثف أثناء التحليل، لكن كتابة أنماط regex تتطلب خبرة لأن البنية معقدة والأخطاء سهلة الوقوع."
+          }
+        },
+        {
+          "id": 7,
+          "type": "text",
+          "value": {
+            "en": "Grok patterns are pre-built regex templates that make parsing easier. Instead of writing complex regex, analysts can use named patterns like GROK_IP for IP addresses, GROK_TIMESTAMP for dates and times, or GROK_USERNAME for user names. Grok was developed for Logstash, part of the Elastic Stack SIEM, but the concept is now used in many systems. Vendor-specific parsers are also common: Splunk has built-in parsers for Windows Event Logs, Cisco firewalls, Apache web servers, and hundreds of other common log sources, so analysts do not need to write parsing rules from scratch.",
+            "ar": "أنماط Grok هي قوالب regex مُعدّة مسبقاً تجعل التحليل أسهل. بدلاً من كتابة regex معقدة، يستطيع المحللون استخدام أنماط مسماة مثل GROK_IP لعناوين IP، وGROK_TIMESTAMP للتواريخ والأوقات، أوGROK_USERNAME لأسماء المستخدمين. طُوِّر Grok لـ Logstash، جزء من نظام Elastic Stack SIEM، لكن المفهوم الآن يُستخدَم في أنظمة كثيرة. محللات خاصة بالموردين شائعة أيضاً: لدى Splunk محللات مدمجة لسجلات أحداث Windows، وجدران حماية Cisco، وخوادم ويب Apache، ومئات من مصادر السجلات الشائعة الأخرى، لذا لا يحتاج المحللون لكتابة قواعد تحليل من الصفر."
+          }
+        },
+        {
+          "id": 8,
+          "type": "hr"
+        },
+        {
+          "id": 9,
+          "type": "title",
+          "value": {
+            "en": "Normalization: Creating a Common Schema Across Different Sources",
+            "ar": "التوحيد: إنشاء مخطط مشترك عبر المصادر المختلفة"
+          }
+        },
+        {
+          "id": 10,
+          "type": "text",
+          "value": {
+            "en": "After parsing, different log sources still use different field names for the same information. A Windows log calls the attacker's address 'IpAddress', a Linux Syslog calls it 'src', a Palo Alto firewall calls it 'src_ip', and a Cisco firewall calls it 'source_address'. This inconsistency makes correlation impossible because the SIEM cannot recognize that all four fields mean the same thing. Normalization solves this by mapping all these different names to a single common field name in a unified schema.",
+            "ar": "بعد التحليل، مصادر السجلات المختلفة لا تزال تستخدم أسماء حقول مختلفة لنفس المعلومات. سجل Windows يسمّي عنوان المهاجم 'IpAddress'، وSyslog لـ Linux يسمّيه 'src'، وجدار حماية Palo Alto يسمّيه 'src_ip'، وجدار حماية Cisco يسمّيه 'source_address'. هذا التناقض يجعل الربط مستحيلاً لأن نظام SIEM لا يستطيع التعرف على أن الحقول الأربعة جميعها تعني نفس الشيء. التوحيد (Normalization) يحل هذا بتخطيط كل هذه الأسماء المختلفة إلى اسم حقل مشترك واحد في مخطط موحد."
+          }
+        },
+        {
+          "id": 11,
+          "type": "text",
+          "value": {
+            "en": "A common schema might define 'source.ip' as the universal field name for the originating IP address. During ingestion, the SIEM's normalization engine takes the 'IpAddress' value from Windows, the 'src' value from Linux, the 'src_ip' value from Palo Alto, and the 'source_address' value from Cisco, and maps them all to 'source.ip'. Now an analyst can write a single query that searches for 'source.ip equals 203.0.113.45' and it will find matching events from all four systems. This is the power of normalization.",
+            "ar": "مخطط مشترك قد يحدد 'source.ip' كاسم الحقل العالمي لعنوان IP الأصلي. أثناء الاستيعاب، محرك التوحيد في SIEM يأخذ قيمة 'IpAddress' من Windows، وقيمة 'src' من Linux، وقيمة 'src_ip' من Palo Alto، وقيمة 'source_address' من Cisco، ويخطّطها جميعاً إلى 'source.ip'. الآن يستطيع المحلل كتابة استعلام واحد يبحث عن 'source.ip يساوي 203.0.113.45' وسيجد الأحداث المطابقة من الأنظمة الأربعة جميعها. هذه هي قوة التوحيد."
+          }
+        },
+        {
+          "id": 12,
+          "type": "table",
+          "title": {
+            "en": "Normalization Example: Same Information, Different Names",
+            "ar": "مثال التوحيد: نفس المعلومات، أسماء مختلفة"
+          },
+          "headers": {
+            "en": [
+              "Original System",
+              "Original Field Name",
+              "Normalized Field Name"
+            ],
+            "ar": [
+              "النظام الأصلي",
+              "اسم الحقل الأصلي",
+              "اسم الحقل الموحد"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "Windows Event Log",
+                "IpAddress",
+                "source.ip"
+              ],
+              "ar": [
+                "سجل أحداث Windows",
+                "IpAddress",
+                "source.ip"
+              ]
+            },
+            {
+              "en": [
+                "Linux Syslog",
+                "src",
+                "source.ip"
+              ],
+              "ar": [
+                "Syslog لـ Linux",
+                "src",
+                "source.ip"
+              ]
+            },
+            {
+              "en": [
+                "Palo Alto Firewall",
+                "src_ip",
+                "source.ip"
+              ],
+              "ar": [
+                "جدار حماية Palo Alto",
+                "src_ip",
+                "source.ip"
+              ]
+            },
+            {
+              "en": [
+                "Cisco ASA Firewall",
+                "source_address",
+                "source.ip"
+              ],
+              "ar": [
+                "جدار حماية Cisco ASA",
+                "source_address",
+                "source.ip"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 13,
+          "type": "title",
+          "value": {
+            "en": "Enrichment: Adding Context to Make Logs More Meaningful",
+            "ar": "الإثراء: إضافة السياق لجعل السجلات أكثر معنى"
+          }
+        },
+        {
+          "id": 14,
+          "type": "text",
+          "value": {
+            "en": "Even after parsing and normalization, an IP address like 203.0.113.45 is just a number. Enrichment adds context that helps analysts understand the significance of the data. GeoIP lookup takes an IP address and adds the country, city, and geographic coordinates where that IP is registered. If a user normally logs in from Cairo, Egypt, but suddenly there is a login from Moscow, Russia, the GeoIP information immediately flags this as suspicious geographic anomaly that requires investigation.",
+            "ar": "حتى بعد التحليل والتوحيد، عنوان IP مثل 203.0.113.45 هو مجرد رقم. الإثراء (Enrichment) يضيف سياقاً يساعد المحللين على فهم أهمية البيانات. بحث GeoIP يأخذ عنوان IP ويضيف البلد، والمدينة، والإحداثيات الجغرافية حيث سُجِّل ذلك العنوان. إذا سجّل مستخدم دخوله عادةً من القاهرة، مصر، لكن فجأة هناك تسجيل دخول من موسكو، روسيا، معلومات GeoIP تُعلِّم هذا فوراً على أنه شذوذ جغرافي مشبوه يتطلب التحقيق."
+          }
+        },
+        {
+          "id": 15,
+          "type": "text",
+          "value": {
+            "en": "Threat intelligence feeds provide lists of known malicious IP addresses, domains, file hashes, and URLs that have been observed in attacks. During enrichment, the SIEM checks every IP address and domain against these threat feeds. If a log shows communication with an IP that appears on a threat intelligence list, the SIEM automatically tags that event as high-risk. Asset inventory enrichment adds information about the target: is this a critical database server, a regular employee workstation, or a guest WiFi access point? This priority information helps analysts focus on the most important alerts first.",
+            "ar": "موجزات معلومات التهديدات توفر قوائم بعناوين IP الخبيثة المعروفة، والنطاقات، وتجزئات الملفات، وعناوين URL التي لُوحِظَت في الهجمات. أثناء الإثراء، يفحص نظام SIEM كل عنوان IP ونطاق مقابل موجزات التهديدات هذه. إذا أظهر سجل اتصالاً بعنوان IP يظهر في قائمة معلومات التهديدات، يُعلِّم SIEM ذلك الحدث تلقائياً على أنه عالي الخطورة. إثراء جرد الأصول يضيف معلومات عن الهدف: هل هذا خادم قاعدة بيانات حرجة، أو محطة عمل موظف عادية، أو نقطة وصول WiFi للضيوف؟ معلومات الأولوية هذه تساعد المحللين على التركيز على التنبيهات الأكثر أهمية أولاً."
+          }
+        },
+        {
+          "id": 16,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Professional Tip: Enrichment dramatically reduces investigation time. Instead of manually looking up each IP address in separate tools, the SIEM presents all context in one view: country, threat reputation, asset criticality, and user identity.",
+            "ar": "نصيحة احترافية: الإثراء يقلل وقت التحقيق بشكل كبير. بدلاً من البحث اليدوي عن كل عنوان IP في أدوات منفصلة، يعرض SIEM كل السياق في عرض واحد: البلد، وسمعة التهديد، وحرجية الأصل، وهوية المستخدم."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 17,
+          "type": "hr"
+        },
+        {
+          "id": 18,
+          "type": "title",
+          "value": {
+            "en": "Event Correlation: Connecting the Dots Across Time and Systems",
+            "ar": "ربط الأحداث: توصيل النقاط عبر الزمن والأنظمة"
+          }
+        },
+        {
+          "id": 19,
+          "type": "text",
+          "value": {
+            "en": "Individual log events rarely tell the complete security story. A single failed login is normal; people mistype passwords every day. But five failed logins followed by one successful login from the same IP address within two minutes is a brute-force attack. Correlation is the process of linking related events across different systems and time periods to identify attack patterns. This is what transforms a SIEM from a simple log storage system into an intelligent threat detection platform.",
+            "ar": "أحداث السجلات الفردية نادراً ما تروي القصة الأمنية الكاملة. تسجيل دخول فاشل واحد عادي؛ الناس يخطئون في كتابة كلمات المرور كل يوم. لكن خمسة تسجيلات دخول فاشلة متبوعة بتسجيل دخول ناجح واحد من نفس عنوان IP في غضون دقيقتين هو هجوم القوة الغاشمة. الربط (Correlation) هو عملية ربط الأحداث ذات الصلة عبر أنظمة وفترات زمنية مختلفة لتحديد أنماط الهجوم. هذا ما يحوّل SIEM من نظام تخزين سجلات بسيط إلى منصة كشف تهديدات ذكية."
+          }
+        },
+        {
+          "id": 20,
+          "type": "text",
+          "value": {
+            "en": "Rule-based correlation uses logic statements: IF event X happens, AND event Y happens within N seconds from the same source, THEN trigger an alert. For example: IF five Windows Event ID 4625 (failed login) occur, AND one Event ID 4624 (successful login) follows from the same source IP, AND all events happen within 120 seconds, THEN create a high-severity alert labeled 'Brute Force Attack - Account Compromised'. These rules encode security expertise so the SIEM can automatically detect known attack patterns without human review of every event.",
+            "ar": "الربط القائم على القواعد يستخدم بيانات منطقية: إذا حدث الحدث X، والحدث Y يحدث في غضون N ثانية من نفس المصدر، إذن أطلق تنبيهاً. على سبيل المثال: إذا حدثت خمسة من معرّف حدث Windows 4625 (تسجيل دخول فاشل)، وأعقبه معرّف حدث 4624 واحد (تسجيل دخول ناجح) من نفس عنوان IP المصدر، وحدثت كل الأحداث في غضون 120 ثانية، إذن أنشئ تنبيهاً عالي الخطورة موسوماً 'هجوم القوة الغاشمة - حساب مخترق'. هذه القواعد تُرمِّز الخبرة الأمنية بحيث يستطيع SIEM الكشف تلقائياً عن أنماط الهجوم المعروفة بدون مراجعة بشرية لكل حدث."
+          }
+        },
+        {
+          "id": 21,
+          "type": "text",
+          "value": {
+            "en": "Statistical correlation detects deviations from normal behavior. The SIEM builds a baseline of normal activity: user Ahmed normally logs in Monday through Friday between 8 AM and 5 PM from Cairo. If Ahmed's account logs in at 3 AM on Sunday from Brazil, statistical correlation flags this as anomalous even if there are no failed login attempts. This type of correlation catches attacks that do not follow known patterns because attackers are using stolen credentials correctly, but at unusual times or locations.",
+            "ar": "الربط الإحصائي يكشف الانحرافات عن السلوك العادي. يبني SIEM خط أساس للنشاط العادي: المستخدم أحمد يسجل دخوله عادةً من الاثنين إلى الجمعة بين الساعة 8 صباحاً و5 مساءً من القاهرة. إذا سجّل حساب أحمد دخوله في الساعة 3 صباحاً يوم الأحد من البرازيل، الربط الإحصائي يُعلِّم هذا على أنه شاذ حتى لو لم تكن هناك محاولات تسجيل دخول فاشلة. هذا النوع من الربط يلتقط هجمات لا تتبع أنماطاً معروفة لأن المهاجمين يستخدمون بيانات اعتماد مسروقة بشكل صحيح، لكن في أوقات أو مواقع غير عادية."
+          }
+        },
+        {
+          "id": 22,
+          "type": "text",
+          "value": {
+            "en": "User and Entity Behavior Analytics (UEBA) uses machine learning to detect anomalous behavior. Instead of writing specific rules, UEBA systems learn what is normal for each user and each system over time. If a user who normally accesses three files per day suddenly downloads 500 files, UEBA detects this abnormal spike. If a server that normally sends 100 MB per day suddenly transfers 50 GB to an external IP, UEBA flags potential data exfiltration. UEBA is especially valuable for detecting insider threats and account takeovers where attackers behave differently than the legitimate user.",
+            "ar": "تحليلات سلوك المستخدم والكيان (UEBA) تستخدم التعلم الآلي للكشف عن السلوك الشاذ. بدلاً من كتابة قواعد محددة، أنظمة UEBA تتعلم ما هو عادي لكل مستخدم وكل نظام مع مرور الوقت. إذا قام مستخدم يصل عادةً إلى ثلاثة ملفات في اليوم فجأة بتنزيل 500 ملف، يكتشف UEBA هذه الزيادة غير الطبيعية. إذا أرسل خادم يرسل عادةً 100 ميغابايت في اليوم فجأة 50 غيغابايت إلى عنوان IP خارجي، يُعلِّم UEBA احتمال تسرب البيانات. UEBA قيّم بشكل خاص للكشف عن تهديدات المطلعين واستيلاءات الحسابات حيث يتصرف المهاجمون بشكل مختلف عن المستخدم الشرعي."
+          }
+        },
+        {
+          "id": 23,
+          "type": "orderedList",
+          "title": {
+            "en": "Complete Attack Pattern: Brute Force to Lateral Movement",
+            "ar": "نمط الهجوم الكامل: من القوة الغاشمة إلى الحركة الجانبية"
+          },
+          "items": [
+            {
+              "subtitle": {
+                "en": "Event 1: Multiple Failed Logins",
+                "ar": "الحدث 1: تسجيلات دخول فاشلة متعددة"
+              },
+              "text": {
+                "en": "Windows Event ID 4625 occurs five times from IP 203.0.113.45 targeting account 'ahmed.mohamed' on server HOST-A between 16:20 and 16:22.",
+                "ar": "معرّف حدث Windows 4625 يحدث خمس مرات من عنوان IP 203.0.113.45 يستهدف الحساب 'ahmed.mohamed' على الخادم HOST-A بين 16:20 و16:22."
+              },
+              "example": {
+                "en": "Attacker is guessing passwords",
+                "ar": "المهاجم يخمن كلمات المرور"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Event 2: Successful Login",
+                "ar": "الحدث 2: تسجيل دخول ناجح"
+              },
+              "text": {
+                "en": "Windows Event ID 4624 occurs at 16:23 from same IP 203.0.113.45 for account 'ahmed.mohamed' on HOST-A. The attacker guessed the correct password.",
+                "ar": "معرّف حدث Windows 4624 يحدث في 16:23 من نفس عنوان IP 203.0.113.45 للحساب 'ahmed.mohamed' على HOST-A. خمّن المهاجم كلمة المرور الصحيحة."
+              },
+              "example": {
+                "en": "Account is now compromised",
+                "ar": "الحساب الآن مخترق"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Event 3: Lateral Movement",
+                "ar": "الحدث 3: الحركة الجانبية"
+              },
+              "text": {
+                "en": "At 16:25, Linux Syslog on HOST-B shows SSH login from ahmed.mohamed originating from HOST-A. The attacker is using the compromised account to move to another system.",
+                "ar": "في 16:25، Syslog لـ Linux على HOST-B يُظهِر تسجيل دخول SSH من ahmed.mohamed منشؤه HOST-A. يستخدم المهاجم الحساب المخترق للانتقال إلى نظام آخر."
+              },
+              "example": {
+                "en": "Attack is spreading across the network",
+                "ar": "الهجوم ينتشر عبر الشبكة"
+              }
+            }
+          ]
+        },
+        {
+          "id": 24,
+          "type": "title",
+          "value": {
+            "en": "MITRE ATT&CK Mapping: Adding Tactical Context to Alerts",
+            "ar": "تخطيط MITRE ATT&CK: إضافة السياق التكتيكي للتنبيهات"
+          }
+        },
+        {
+          "id": 25,
+          "type": "text",
+          "value": {
+            "en": "Every correlated alert should reference the MITRE ATT&CK framework, a knowledge base of adversary tactics and techniques. When the SIEM detects a brute-force attack, it should label it with technique ID T1110 (Brute Force) under tactic TA0006 (Credential Access). When lateral movement is detected via SSH, it should be tagged T1021.004 (Remote Services: SSH) under tactic TA0008 (Lateral Movement). This standardized labeling helps security teams understand what stage of an attack is occurring and what defensive actions to take.",
+            "ar": "كل تنبيه مرتبط يجب أن يشير إلى إطار MITRE ATT&CK، قاعدة معرفة تكتيكات وتقنيات الخصوم. عندما يكتشف SIEM هجوم القوة الغاشمة، يجب أن يوسمه بمعرّف التقنية T1110 (القوة الغاشمة) تحت التكتيك TA0006 (الوصول إلى بيانات الاعتماد). عندما تُكتشَف الحركة الجانبية عبر SSH، يجب وسمها T1021.004 (الخدمات البعيدة: SSH) تحت التكتيك TA0008 (الحركة الجانبية). هذا الوسم الموحد يساعد فرق الأمان على فهم أي مرحلة من الهجوم تحدث وما الإجراءات الدفاعية التي يجب اتخاذها."
+          }
+        },
+        {
+          "id": 26,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "Critical Understanding: Without normalization and correlation, a SIEM is just expensive log storage. The value comes from connecting events across systems to reveal attack chains that individual logs cannot show.",
+            "ar": "فهم حرج: بدون التوحيد والربط، SIEM هو مجرد تخزين سجلات مُكلِف. القيمة تأتي من ربط الأحداث عبر الأنظمة للكشف عن سلاسل الهجمات التي لا تستطيع السجلات الفردية إظهارها."
+          },
+          "link": "",
+          "isLab": false
+        }
+      ]
+    },
+    {
+      "id": "topic-3",
+      "title": {
+        "en": "SIEM Architecture and Splunk Fundamentals",
+        "ar": "بنية SIEM وأساسيات Splunk"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "Understanding SIEM: More Than Just Log Management",
+            "ar": "فهم SIEM: أكثر من مجرد إدارة السجلات"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "Security Information and Event Management (SIEM) is a comprehensive platform that collects, stores, analyzes, and visualizes security data from across an entire organization. The core functions follow a logical pipeline: log collection brings data from hundreds or thousands of sources into a central system, parsing breaks raw logs into searchable fields, normalization creates consistency across different log formats, storage indexes the parsed data for fast retrieval, correlation links related events to detect attack patterns, alerting notifies analysts of suspicious activity, and reporting provides compliance documentation and metrics.",
+            "ar": "إدارة معلومات وأحداث الأمان (SIEM) هي منصة شاملة تجمع، وتخزّن، وتحلل، وتصوّر بيانات الأمان من عبر مؤسسة بأكملها. الوظائف الأساسية تتبع خط أنابيب منطقي: جمع السجلات يجلب البيانات من مئات أو آلاف المصادر إلى نظام مركزي، والتحليل يقسّم السجلات الخام إلى حقول قابلة للبحث، والتوحيد يخلق التناسق عبر تنسيقات السجلات المختلفة، والتخزين يُفهرس البيانات المحللة للاسترجاع السريع، والربط يصل الأحداث ذات الصلة للكشف عن أنماط الهجمات، والتنبيه يُعلِم المحللين بالنشاط المشبوه، والإبلاغ يوفر وثائق الامتثال والمقاييس."
+          }
+        },
+        {
+          "id": 1773241191539.8108,
+          "type": "image",
+          "srcKey": "",
+          "size": "small",
+          "imageUrl": "https://cdn.cyber-labs.tech/Log%20Analysis%20%26%20SIEM%20Basics/the%20SIEM%20pipeline%20.webp"
+        },
+        {
+          "id": 4,
+          "type": "text",
+          "value": {
+            "en": "The SIEM sits at the center of a Security Operations Center (SOC). Without a SIEM, security analysts would need to manually log into dozens of different systems, search through individual log files, and try to mentally connect related events. This manual process is impossible at the scale of modern networks that generate millions of log events per day. The SIEM automates this data aggregation and analysis, allowing a small team of analysts to monitor the security of thousands of systems and detect threats in real time.",
+            "ar": "يجلس SIEM في مركز مركز عمليات الأمان (SOC). بدون SIEM، سيحتاج محللو الأمان إلى تسجيل الدخول يدوياً إلى عشرات الأنظمة المختلفة، والبحث في ملفات السجلات الفردية، ومحاولة ربط الأحداث ذات الصلة ذهنياً. هذه العملية اليدوية مستحيلة على نطاق الشبكات الحديثة التي تولّد ملايين أحداث السجلات في اليوم. يؤتمت SIEM تجميع وتحليل البيانات هذا، مما يسمح لفريق صغير من المحللين بمراقبة أمان آلاف الأنظمة والكشف عن التهديدات في الوقت الفعلي."
+          }
+        },
+        {
+          "id": 5,
+          "type": "hr"
+        },
+        {
+          "id": 6,
+          "type": "title",
+          "value": {
+            "en": "Splunk Architecture: Components and Data Flow",
+            "ar": "بنية Splunk: المكونات وتدفق البيانات"
+          }
+        },
+        {
+          "id": 7,
+          "type": "text",
+          "value": {
+            "en": "Splunk is the most widely deployed commercial SIEM platform in the world. Understanding its architecture is essential for security analysts. Splunk uses a distributed architecture with four main component types. The Forwarder is a lightweight agent installed on source systems like servers, workstations, and network devices. Forwarders read local log files and send the data securely to indexers. There are two types: Universal Forwarders are very small and consume minimal resources, making them suitable for endpoints. Heavy Forwarders can parse and filter data before forwarding, reducing network bandwidth usage.",
+            "ar": "Splunk هي منصة SIEM التجارية الأكثر نشراً في العالم. فهم بنيتها أساسي لمحللي الأمان. تستخدم Splunk بنية موزعة بأربعة أنواع مكونات رئيسية. الموجِّه (Forwarder) هو وكيل خفيف الوزن مثبت على الأنظمة المصدرية مثل الخوادم، ومحطات العمل، وأجهزة الشبكة. الموجهات تقرأ ملفات السجلات المحلية وترسل البيانات بشكل آمن إلى المفهرسات. هناك نوعان: الموجهات العامة خفيفة جداً وتستهلك موارد قليلة، مما يجعلها مناسبة لنقاط النهاية. الموجهات الثقيلة يمكنها تحليل وتصفية البيانات قبل التوجيه، مما يقلل استخدام عرض النطاق الترددي للشبكة."
+          }
+        },
+        {
+          "id": 8,
+          "type": "text",
+          "value": {
+            "en": "The Indexer receives data from forwarders, parses it into events, extracts fields, and stores it in indexes optimized for fast searching. Indexes are like databases that organize events by time and make them instantly searchable. A large organization might have multiple indexers working together in a cluster to handle high data volumes. Each indexer can process gigabytes of log data per second. The Search Head is the user interface where security analysts log in, write search queries, create dashboards, and manage alerts. Search heads distribute queries across all indexers and combine the results.",
+            "ar": "المُفهرس (Indexer) يستقبل البيانات من الموجهات، ويحللها إلى أحداث، ويستخرج الحقول، ويخزّنها في فهارس محسّنة للبحث السريع. الفهارس تشبه قواعد البيانات التي تنظم الأحداث حسب الوقت وتجعلها قابلة للبحث فوراً. قد يكون لدى مؤسسة كبيرة عدة مفهرسات تعمل معاً في عنقود للتعامل مع أحجام بيانات عالية. كل مفهرس يمكنه معالجة غيغابايتات من بيانات السجلات في الثانية. رأس البحث (Search Head) هو واجهة المستخدم حيث يسجل محللو الأمان دخولهم، ويكتبون استعلامات البحث، وينشئون لوحات المعلومات، ويديرون التنبيهات. رؤوس البحث توزّع الاستعلامات عبر كل المفهرسات وتجمع النتائج."
+          }
+        },
+        {
+          "id": 9,
+          "type": "text",
+          "value": {
+            "en": "The Deployment Server centrally manages forwarder configurations across thousands of systems. When a security team needs to change which logs are collected or how they are filtered, they update the configuration on the deployment server, which automatically pushes the changes to all forwarders. This centralized management makes it possible to maintain consistency across a large distributed environment. In small installations, all four components might run on a single server, but enterprises typically separate them for performance and reliability.",
+            "ar": "خادم النشر (Deployment Server) يدير مركزياً تكوينات الموجهات عبر آلاف الأنظمة. عندما يحتاج فريق الأمان إلى تغيير أي السجلات تُجمَع أو كيف تُرشَّح، يحدّثون التكوين على خادم النشر، الذي يدفع التغييرات تلقائياً إلى كل الموجهات. هذه الإدارة المركزية تجعل من الممكن الحفاظ على الاتساق عبر بيئة موزعة كبيرة. في التثبيتات الصغيرة، قد تعمل المكونات الأربعة جميعها على خادم واحد، لكن المؤسسات عادةً تفصلها للأداء والموثوقية."
+          }
+        },
+        {
+          "id": 10,
+          "type": "table",
+          "title": {
+            "en": "Splunk Components: Roles and Responsibilities",
+            "ar": "مكونات Splunk: الأدوار والمسؤوليات"
+          },
+          "headers": {
+            "en": [
+              "Component",
+              "Location",
+              "Primary Function"
+            ],
+            "ar": [
+              "المكون",
+              "الموقع",
+              "الوظيفة الأساسية"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "Universal Forwarder",
+                "On every monitored system",
+                "Collect and send log data"
+              ],
+              "ar": [
+                "الموجه العام",
+                "على كل نظام مُراقب",
+                "جمع وإرسال بيانات السجلات"
+              ]
+            },
+            {
+              "en": [
+                "Indexer",
+                "Central data center",
+                "Parse, store, and search events"
+              ],
+              "ar": [
+                "المفهرس",
+                "مركز البيانات المركزي",
+                "تحليل، تخزين، والبحث في الأحداث"
+              ]
+            },
+            {
+              "en": [
+                "Search Head",
+                "Analyst workstations",
+                "Query interface and dashboards"
+              ],
+              "ar": [
+                "رأس البحث",
+                "محطات عمل المحللين",
+                "واجهة الاستعلام ولوحات المعلومات"
+              ]
+            },
+            {
+              "en": [
+                "Deployment Server",
+                "Central management",
+                "Distribute forwarder configurations"
+              ],
+              "ar": [
+                "خادم النشر",
+                "الإدارة المركزية",
+                "توزيع تكوينات الموجهات"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 11,
+          "type": "hr"
+        },
+        {
+          "id": 12,
+          "type": "title",
+          "value": {
+            "en": "SPL: Search Processing Language - The Core Analyst Skill",
+            "ar": "SPL: لغة معالجة البحث - المهارة الأساسية للمحلل"
+          }
+        },
+        {
+          "id": 13,
+          "type": "text",
+          "value": {
+            "en": "Search Processing Language (SPL) is Splunk's query language and the most important technical skill for a Splunk analyst. SPL queries follow a pipeline structure where each command processes the output of the previous command, similar to how water flows through connected pipes. A basic search starts with specifying the index and sourcetype, followed by optional filters and transformations. Every SPL query begins with an implicit search command that retrieves events matching the specified criteria.",
+            "ar": "لغة معالجة البحث (SPL) هي لغة استعلام Splunk والمهارة التقنية الأهم لمحلل Splunk. استعلامات SPL تتبع بنية خط أنابيب حيث كل أمر يعالج ناتج الأمر السابق، مشابه لكيفية تدفق الماء عبر أنابيب متصلة. البحث الأساسي يبدأ بتحديد الفهرس ونوع المصدر، متبوعاً بمرشحات وتحويلات اختيارية. كل استعلام SPL يبدأ بأمر بحث ضمني يسترجع الأحداث المطابقة للمعايير المحددة."
+          }
+        },
+        {
+          "id": 14,
+          "type": "terminal",
+          "label": {
+            "en": "Splunk Search Bar",
+            "ar": "شريط بحث Splunk"
+          },
+          "value": "index=main sourcetype=WinEventLog:Security EventCode=4625"
+        },
+        {
+          "id": 15,
+          "type": "text",
+          "value": {
+            "en": "The example above searches the 'main' index for Windows Security Event Logs with Event Code 4625, which represents failed login attempts. This simple query would return every failed login event stored in Splunk. To make this more useful, analysts add pipeline commands using the vertical bar character. The 'where' command filters events based on field values, 'stats' performs statistical calculations, and time modifiers like 'earliest' and 'latest' restrict the search to a specific time window.",
+            "ar": "المثال أعلاه يبحث في الفهرس 'main' عن سجلات أحداث أمان Windows بمعرّف الحدث 4625، الذي يمثل محاولات تسجيل دخول فاشلة. هذا الاستعلام البسيط سيُرجع كل حدث تسجيل دخول فاشل مخزّن في Splunk. لجعل هذا أكثر فائدة، يضيف المحللون أوامر خط أنابيب باستخدام حرف الشريط العمودي. أمر 'where' يرشّح الأحداث بناءً على قيم الحقول، و'stats' يجري حسابات إحصائية، ومعدّلات الوقت مثل 'earliest' و'latest' تحصر البحث في نافذة زمنية محددة."
+          }
+        },
+        {
+          "id": 16,
+          "type": "terminal",
+          "label": {
+            "en": "Splunk Search Bar",
+            "ar": "شريط بحث Splunk"
+          },
+          "value": "index=main sourcetype=WinEventLog:Security EventCode=4625 \n| where src_ip != \"192.168.1.1\" \n| stats count by AccountName, src_ip \n| where count > 5 \n| sort -count"
+        },
+        {
+          "id": 17,
+          "type": "text",
+          "value": {
+            "en": "This enhanced query finds failed logins, excludes a known legitimate IP address (192.168.1.1), counts how many failures occurred for each combination of account name and source IP, filters to show only accounts with more than five failures, and sorts the results by count in descending order. This query would immediately highlight accounts under brute-force attack. The ability to write effective SPL queries is what separates junior analysts from senior analysts, because complex investigations require chaining together multiple commands to extract meaningful patterns from millions of events.",
+            "ar": "هذا الاستعلام المحسّن يجد تسجيلات الدخول الفاشلة، ويستثني عنوان IP شرعي معروف (192.168.1.1)، ويعد كم عدد الإخفاقات حدثت لكل مجموعة من اسم الحساب وعنوان IP المصدر، ويرشح لإظهار الحسابات التي بها أكثر من خمسة إخفاقات فقط، ويرتب النتائج حسب العدد بترتيب تنازلي. هذا الاستعلام سيسلّط الضوء فوراً على الحسابات تحت هجوم القوة الغاشمة. القدرة على كتابة استعلامات SPL فعالة هي ما يفصل المحللين المبتدئين عن المحللين الكبار، لأن التحقيقات المعقدة تتطلب ربط عدة أوامر معاً لاستخراج أنماط ذات معنى من ملايين الأحداث."
+          }
+        },
+        {
+          "id": 18,
+          "type": "text",
+          "value": {
+            "en": "Time-based searching is critical in incident investigation because attacks happen within specific time windows. The 'earliest' and 'latest' keywords define the time range. For example, 'earliest=-24h latest=now' searches the last 24 hours. 'earliest=\"2026-03-11:00:00:00\" latest=\"2026-03-11:23:59:59\"' searches a specific date. Relative time modifiers like '-7d' (seven days ago), '-1h@h' (one hour ago, snapped to the hour boundary), and '@d' (beginning of the current day) make it easy to create rolling time windows for scheduled searches and reports.",
+            "ar": "البحث القائم على الوقت حاسم في التحقيق في الحوادث لأن الهجمات تحدث ضمن نوافذ زمنية محددة. الكلمات المفتاحية 'earliest' و'latest' تحدد النطاق الزمني. على سبيل المثال، 'earliest=-24h latest=now' يبحث في آخر 24 ساعة. 'earliest=\"2026-03-11:00:00:00\" latest=\"2026-03-11:23:59:59\"' يبحث في تاريخ محدد. معدّلات الوقت النسبية مثل '-7d' (قبل سبعة أيام)، و'-1h@h' (قبل ساعة واحدة، مثبتة على حد الساعة)، و'@d' (بداية اليوم الحالي) تجعل من السهل إنشاء نوافذ زمنية متحركة للبحوث والتقارير المجدولة."
+          }
+        },
+        {
+          "id": 19,
+          "type": "title",
+          "value": {
+            "en": "Key Splunk Concepts: Index, Sourcetype, Host, and Source",
+            "ar": "مفاهيم Splunk الأساسية: الفهرس، نوع المصدر، المضيف، والمصدر"
+          }
+        },
+        {
+          "id": 20,
+          "type": "text",
+          "value": {
+            "en": "Understanding Splunk's data organization is essential for writing efficient queries. An Index is a named repository where events are stored, similar to a database table. Organizations typically create separate indexes for different types of data: 'windows_logs', 'linux_logs', 'firewall_logs', 'web_logs'. This separation improves search performance because Splunk only searches the indexes you specify. Searching one index with one million events is much faster than searching the default index with one billion events from all sources combined.",
+            "ar": "فهم تنظيم بيانات Splunk أساسي لكتابة استعلامات فعالة. الفهرس (Index) هو مستودع مسمى حيث تُخزَّن الأحداث، مشابه لجدول قاعدة بيانات. عادةً تُنشئ المؤسسات فهارس منفصلة لأنواع مختلفة من البيانات: 'windows_logs'، و'linux_logs'، و'firewall_logs'، و'web_logs'. هذا الفصل يحسّن أداء البحث لأن Splunk يبحث فقط في الفهارس التي تحددها. البحث في فهرس واحد به مليون حدث أسرع بكثير من البحث في الفهرس الافتراضي به مليار حدث من كل المصادر مجتمعة."
+          }
+        },
+        {
+          "id": 21,
+          "type": "text",
+          "value": {
+            "en": "Sourcetype tells Splunk how to parse incoming data. When data arrives, Splunk looks at the sourcetype to determine which parsing rules to apply. Common sourcetypes include 'WinEventLog:Security' for Windows Security logs, 'linux_secure' for Linux authentication logs, 'access_combined' for Apache web server logs, and 'cisco:asa' for Cisco firewall logs. Splunk includes hundreds of pre-built sourcetype parsers, and administrators can create custom parsers for proprietary application logs. Specifying the correct sourcetype ensures fields are extracted properly.",
+            "ar": "نوع المصدر (Sourcetype) يخبر Splunk كيف يحلل البيانات الواردة. عندما تصل البيانات، ينظر Splunk إلى نوع المصدر لتحديد أي قواعد تحليل تُطبَّق. أنواع المصادر الشائعة تتضمن 'WinEventLog:Security' لسجلات أمان Windows، و'linux_secure' لسجلات مصادقة Linux، و'access_combined' لسجلات خادم ويب Apache، و'cisco:asa' لسجلات جدار حماية Cisco. يتضمن Splunk مئات محللات أنواع المصادر المُعدّة مسبقاً، ويمكن للمسؤولين إنشاء محللات مخصصة لسجلات التطبيقات الخاصة. تحديد نوع المصدر الصحيح يضمن استخراج الحقول بشكل صحيح."
+          }
+        },
+        {
+          "id": 22,
+          "type": "text",
+          "value": {
+            "en": "Host and Source are metadata fields automatically added to every event by the forwarder. Host identifies which system generated the log, typically the hostname or IP address. Source identifies which file or input the data came from, such as '/var/log/auth.log' or 'udp:514' for Syslog received on UDP port 514. These fields are critical for correlation: when investigating a compromised server, analysts search for all events where 'host equals SERVER-NAME' to see the complete timeline of what happened on that specific system regardless of which logs recorded the activity.",
+            "ar": "المضيف (Host) والمصدر (Source) حقول بيانات وصفية تُضاف تلقائياً لكل حدث بواسطة الموجه. المضيف يحدد أي نظام ولّد السجل، عادةً اسم المضيف أو عنوان IP. المصدر يحدد من أي ملف أو إدخال جاءت البيانات، مثل '/var/log/auth.log' أو 'udp:514' لـ Syslog المستقبل على منفذ UDP 514. هذه الحقول حرجة للربط: عند التحقيق في خادم مخترق، يبحث المحللون عن كل الأحداث حيث 'host يساوي SERVER-NAME' لرؤية الجدول الزمني الكامل لما حدث على ذلك النظام المحدد بغض النظر عن أي السجلات سجّلت النشاط."
+          }
+        },
+        {
+          "id": 23,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Best Practice: Always specify index and sourcetype in your searches. Starting with 'index=windows_logs sourcetype=WinEventLog:Security' searches 100 times faster than searching all indexes with no sourcetype specified.",
+            "ar": "ممارسة مثلى: حدد دائماً الفهرس ونوع المصدر في بحوثك. البداية بـ 'index=windows_logs sourcetype=WinEventLog:Security' يبحث 100 مرة أسرع من البحث في كل الفهارس بدون تحديد نوع المصدر."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 24,
+          "type": "hr"
+        },
+        {
+          "id": 25,
+          "type": "title",
+          "value": {
+            "en": "Splunk Enterprise Security and SIEM Alternatives",
+            "ar": "Splunk Enterprise Security وبدائل SIEM"
+          }
+        },
+        {
+          "id": 26,
+          "type": "text",
+          "value": {
+            "en": "Splunk Enterprise Security (ES) is an add-on application that transforms core Splunk into a complete security operations platform. ES adds pre-built security dashboards, over 1,500 correlation rules mapped to MITRE ATT&CK techniques, a Notable Events queue where analysts triage alerts, Risk-Based Alerting that scores entities based on suspicious behavior patterns, and investigation timelines that automatically visualize attack sequences. ES dramatically reduces the time required to build a functional SOC because most detection logic is included out-of-the-box and can be customized for specific environments.",
+            "ar": "Splunk Enterprise Security (ES) هو تطبيق إضافي يحوّل Splunk الأساسي إلى منصة عمليات أمان كاملة. يضيف ES لوحات معلومات أمنية مُعدّة مسبقاً، وأكثر من 1,500 قاعدة ربط مخطّطة لتقنيات MITRE ATT&CK، وطابور أحداث ملحوظة حيث يفرز المحللون التنبيهات، وتنبيه قائم على المخاطر يسجّل الكيانات بناءً على أنماط السلوك المشبوهة، وجداول زمنية للتحقيق تصوّر تلقائياً تسلسلات الهجمات. يقلل ES بشكل كبير الوقت المطلوب لبناء SOC وظيفي لأن معظم منطق الكشف مضمّن جاهزاً ويمكن تخصيصه لبيئات محددة."
+          }
+        },
+        {
+          "id": 27,
+          "type": "text",
+          "value": {
+            "en": "Security analysts should be aware of alternative SIEM platforms. IBM QRadar uses a similar architecture but different query language called AQL (Ariel Query Language). Microsoft Sentinel is a cloud-native SIEM built on Azure that uses KQL (Kusto Query Language). Elastic SIEM, based on the ELK Stack (Elasticsearch, Logstash, Kibana), is open-source and uses a combination of Elasticsearch queries and Kibana visualizations. Wazuh is a completely free and open-source SIEM popular in small organizations and for learning. The core concepts of log collection, parsing, correlation, and alerting are identical across all platforms; only the query syntax and user interface differ.",
+            "ar": "يجب أن يكون محللو الأمان على دراية بمنصات SIEM البديلة. IBM QRadar تستخدم بنية مشابهة لكن لغة استعلام مختلفة تسمى AQL (لغة استعلام Ariel). Microsoft Sentinel هي SIEM أصلية سحابية مبنية على Azure تستخدم KQL (لغة استعلام Kusto). Elastic SIEM، المبنية على حزمة ELK (Elasticsearch، Logstash، Kibana)، مفتوحة المصدر وتستخدم مزيجاً من استعلامات Elasticsearch وتصويرات Kibana. Wazuh هي SIEM مجانية تماماً ومفتوحة المصدر شائعة في المؤسسات الصغيرة وللتعلم. المفاهيم الأساسية لجمع السجلات، والتحليل، والربط، والتنبيه متطابقة عبر كل المنصات؛ فقط بنية الاستعلام وواجهة المستخدم تختلفان."
+          }
+        }
+      ]
+    },
+    {
+      "id": "topic-4",
+      "title": {
+        "en": "Creating Alerts, Use Cases and Detection Rules",
+        "ar": "إنشاء التنبيهات، حالات الاستخدام، وقواعد الكشف"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "Transforming SIEM From Passive Monitor to Active Detector",
+            "ar": "تحويل SIEM من مراقب سلبي إلى كاشف نشط"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "A SIEM without alerts is like a security camera that records but never notifies anyone when an intruder appears. Alerts are automated detection rules that continuously monitor incoming logs and trigger notifications when suspicious patterns are identified. The goal is to detect threats in minutes or hours instead of weeks or months. Without alerts, security teams would need to manually search logs hoping to stumble upon evidence of attacks. This reactive approach fails because by the time an attack is manually discovered, attackers have already stolen data, installed backdoors, or moved laterally through the network.",
+            "ar": "SIEM بدون تنبيهات يشبه كاميرا أمان تسجّل لكن لا تُعلِم أحداً عندما يظهر متسلل. التنبيهات هي قواعد كشف آلية تراقب باستمرار السجلات الواردة وتطلق إشعارات عندما تُحدَّد أنماط مشبوهة. الهدف هو كشف التهديدات في دقائق أو ساعات بدلاً من أسابيع أو أشهر. بدون تنبيهات، سيحتاج فِرق الأمان إلى البحث يدوياً في السجلات آملين العثور على أدلة الهجمات. هذا النهج التفاعلي يفشل لأنه بحلول وقت اكتشاف الهجوم يدوياً، يكون المهاجمون قد سرقوا البيانات بالفعل، أو ثبّتوا أبواباً خلفية، أو تحركوا جانبياً عبر الشبكة."
+          }
+        },
+        {
+          "id": 3,
+          "type": "text",
+          "value": {
+            "en": "Creating effective alerts requires understanding both the technical mechanisms of detection and the business context of the organization. A perfectly written alert that fires constantly for harmless activity becomes noise that analysts ignore. An alert that never fires because it is too restrictive provides no security value. The art of alert engineering is finding the balance: detecting real threats while minimizing false positives. This balance determines whether a SOC team spends their time investigating real incidents or drowning in false alarms.",
+            "ar": "إنشاء تنبيهات فعالة يتطلب فهم كل من الآليات التقنية للكشف والسياق التجاري للمؤسسة. تنبيه مكتوب بشكل مثالي يُطلَق باستمرار لنشاط غير ضار يصبح ضجيجاً يتجاهله المحللون. تنبيه لا يُطلَق أبداً لأنه مقيّد جداً لا يوفر قيمة أمنية. فن هندسة التنبيهات هو إيجاد التوازن: كشف التهديدات الحقيقية مع تقليل الإيجابيات الخاطئة. هذا التوازن يحدد ما إذا كان فريق SOC يقضي وقته في التحقيق في حوادث حقيقية أو يغرق في إنذارات خاطئة."
+          }
+        },
+        {
+          "id": 1773241209208.9033,
+          "type": "image",
+          "srcKey": "",
+          "size": "small",
+          "imageUrl": "https://cdn.cyber-labs.tech/Log%20Analysis%20%26%20SIEM%20Basics/alert%20anatomy.webp"
+        },
+        {
+          "id": 5,
+          "type": "hr"
+        },
+        {
+          "id": 6,
+          "type": "title",
+          "value": {
+            "en": "Alert Anatomy: The Essential Components",
+            "ar": "تشريح التنبيه: المكونات الأساسية"
+          }
+        },
+        {
+          "id": 7,
+          "type": "text",
+          "value": {
+            "en": "Every security alert has six essential components that determine how it behaves. The Trigger Condition is the SPL query or correlation rule that defines what pattern to look for. This is the detection logic that examines logs searching for specific indicators of compromise or attack behaviors. The Severity Level classifies how serious the threat is: Low severity might be policy violations, Medium could be suspicious but not confirmed threats, High indicates likely active attacks, and Critical means confirmed compromise requiring immediate response. Severity helps analysts prioritize which alerts to investigate first.",
+            "ar": "كل تنبيه أمني له ستة مكونات أساسية تحدد كيف يتصرف. شرط الإطلاق (Trigger Condition) هو استعلام SPL أو قاعدة ربط تحدد أي نمط يُبحَث عنه. هذا هو منطق الكشف الذي يفحص السجلات بحثاً عن مؤشرات اختراق أو سلوكيات هجوم محددة. مستوى الخطورة (Severity Level) يصنّف مدى خطورة التهديد: الخطورة المنخفضة قد تكون انتهاكات للسياسات، والمتوسطة قد تكون مشبوهة لكن ليست تهديدات مؤكدة، والعالية تشير إلى هجمات نشطة محتملة، والحرجة تعني اختراق مؤكد يتطلب استجابة فورية. الخطورة تساعد المحللين على تحديد أولويات أي التنبيهات يُحقَّق فيها أولاً."
+          }
+        },
+        {
+          "id": 8,
+          "type": "text",
+          "value": {
+            "en": "The Time Window specifies how far back in time the search looks for matching events. A five-minute window means the alert runs the search query every five minutes and only examines events from the last five minutes. Shorter windows provide faster detection but may miss slow attacks that occur over hours. Longer windows catch slow attacks but increase processing load. The Throttle setting prevents duplicate alerts for the same condition. If an attacker is continuously trying to brute-force a system, without throttling the alert would fire hundreds of times. Throttling suppresses duplicate alerts for a specified period, such as 'only alert once per hour for the same source IP and target account'.",
+            "ar": "نافذة الوقت (Time Window) تحدد إلى أي مدى في الوقت الماضي يبحث الاستعلام عن الأحداث المطابقة. نافذة خمس دقائق تعني أن التنبيه يُشغِّل استعلام البحث كل خمس دقائق ويفحص فقط الأحداث من آخر خمس دقائق. النوافذ الأقصر توفر كشفاً أسرع لكن قد تفوّت هجمات بطيئة تحدث على مدى ساعات. النوافذ الأطول تلتقط الهجمات البطيئة لكن تزيد عبء المعالجة. إعداد الخنق (Throttle) يمنع التنبيهات المكررة لنفس الحالة. إذا كان مهاجم يحاول باستمرار هجوم القوة الغاشمة على نظام، بدون خنق سيُطلَق التنبيه مئات المرات. الخنق يقمع التنبيهات المكررة لفترة محددة، مثل 'تنبيه مرة واحدة فقط في الساعة لنفس عنوان IP المصدر والحساب المستهدف'."
+          }
+        },
+        {
+          "id": 9,
+          "type": "text",
+          "value": {
+            "en": "The Action defines what happens when the alert triggers. Common actions include sending email notifications to the SOC team, creating tickets in incident management systems like ServiceNow or JIRA, sending webhook notifications to orchestration platforms that can automatically block malicious IPs, or adding entries to a Notable Events dashboard for manual review. Multiple actions can be configured: send email immediately for critical alerts, create a ticket for medium severity, and only log low severity events. The action determines how quickly humans become aware of and respond to the threat.",
+            "ar": "الإجراء (Action) يحدد ما يحدث عندما يُطلَق التنبيه. الإجراءات الشائعة تتضمن إرسال إشعارات بريد إلكتروني إلى فريق SOC، وإنشاء تذاكر في أنظمة إدارة الحوادث مثل ServiceNow أو JIRA، وإرسال إشعارات webhook إلى منصات تنسيق يمكنها حظر عناوين IP الخبيثة تلقائياً، أو إضافة إدخالات إلى لوحة معلومات الأحداث الملحوظة للمراجعة اليدوية. يمكن تكوين عدة إجراءات: إرسال بريد إلكتروني فوراً للتنبيهات الحرجة، وإنشاء تذكرة للخطورة المتوسطة، وتسجيل الأحداث منخفضة الخطورة فقط. الإجراء يحدد مدى سرعة توعية البشر والاستجابة للتهديد."
+          }
+        },
+        {
+          "id": 10,
+          "type": "table",
+          "title": {
+            "en": "Alert Severity Guidelines",
+            "ar": "إرشادات خطورة التنبيهات"
+          },
+          "headers": {
+            "en": [
+              "Severity",
+              "Meaning",
+              "Response Time",
+              "Example"
+            ],
+            "ar": [
+              "الخطورة",
+              "المعنى",
+              "وقت الاستجابة",
+              "مثال"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "Critical",
+                "Confirmed active compromise",
+                "Immediate (< 15 min)",
+                "Ransomware detected encrypting files"
+              ],
+              "ar": [
+                "حرجة",
+                "اختراق نشط مؤكد",
+                "فوري (< 15 دقيقة)",
+                "كُشِف برنامج فدية يشفّر ملفات"
+              ]
+            },
+            {
+              "en": [
+                "High",
+                "Likely attack in progress",
+                "< 1 hour",
+                "Multiple failed logins then success"
+              ],
+              "ar": [
+                "عالية",
+                "هجوم محتمل قيد التقدم",
+                "< ساعة واحدة",
+                "تسجيلات دخول فاشلة متعددة ثم نجاح"
+              ]
+            },
+            {
+              "en": [
+                "Medium",
+                "Suspicious activity",
+                "< 4 hours",
+                "Login from unusual country"
+              ],
+              "ar": [
+                "متوسطة",
+                "نشاط مشبوه",
+                "< 4 ساعات",
+                "تسجيل دخول من بلد غير عادي"
+              ]
+            },
+            {
+              "en": [
+                "Low",
+                "Policy violation or anomaly",
+                "< 24 hours",
+                "User accessed file outside work hours"
+              ],
+              "ar": [
+                "منخفضة",
+                "انتهاك سياسة أو شذوذ",
+                "< 24 ساعة",
+                "مستخدم وصل إلى ملف خارج ساعات العمل"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 11,
+          "type": "hr"
+        },
+        {
+          "id": 12,
+          "type": "title",
+          "value": {
+            "en": "Alert Types in Splunk: Scheduled vs Real-Time",
+            "ar": "أنواع التنبيهات في Splunk: المجدولة مقابل الوقت الفعلي"
+          }
+        },
+        {
+          "id": 13,
+          "type": "text",
+          "value": {
+            "en": "Splunk supports two fundamentally different alert execution models. Scheduled Alerts run a saved search at regular intervals: every 5 minutes, every hour, every day. The SIEM executes the search query, examines the results, and if the trigger condition is met (for example, result count is greater than zero), the alert fires. Scheduled alerts are efficient because they run periodically rather than continuously. Most SOC alerts are scheduled: checking for brute-force attacks every 5 minutes, checking for new admin accounts every hour, generating compliance reports every day.",
+            "ar": "يدعم Splunk نموذجين مختلفين جوهرياً لتنفيذ التنبيهات. التنبيهات المجدولة (Scheduled Alerts) تُشغِّل بحثاً محفوظاً على فترات منتظمة: كل 5 دقائق، كل ساعة، كل يوم. ينفّذ SIEM استعلام البحث، ويفحص النتائج، وإذا تحقق شرط الإطلاق (على سبيل المثال، عدد النتائج أكبر من صفر)، يُطلَق التنبيه. التنبيهات المجدولة فعالة لأنها تعمل بشكل دوري بدلاً من مستمر. معظم تنبيهات SOC مجدولة: التحقق من هجمات القوة الغاشمة كل 5 دقائق، والتحقق من حسابات إدارية جديدة كل ساعة، وتوليد تقارير الامتثال كل يوم."
+          }
+        },
+        {
+          "id": 14,
+          "type": "text",
+          "value": {
+            "en": "Real-Time Alerts continuously monitor incoming data and fire immediately when a matching event appears. The search runs constantly in the background, processing events as they arrive. Real-time alerts provide the fastest possible detection, often within seconds of the attack occurring. However, they consume significantly more system resources because they never stop running. Real-time alerts are reserved for the most critical threats where seconds matter: detecting ransomware execution, unauthorized access to crown jewel systems, or data exfiltration to untrusted destinations. Most organizations use scheduled alerts for 95% of detections and reserve real-time for the critical 5%.",
+            "ar": "التنبيهات في الوقت الفعلي (Real-Time Alerts) تراقب باستمرار البيانات الواردة وتُطلَق فوراً عندما يظهر حدث مطابق. يعمل البحث باستمرار في الخلفية، معالجاً الأحداث عند وصولها. تنبيهات الوقت الفعلي توفر أسرع كشف ممكن، غالباً في غضون ثوانٍ من حدوث الهجوم. ومع ذلك، تستهلك موارد نظام أكثر بكثير لأنها لا تتوقف عن العمل أبداً. تنبيهات الوقت الفعلي محجوزة للتهديدات الأكثر حرجية حيث الثواني مهمة: كشف تنفيذ برنامج الفدية، والوصول غير المصرح به إلى أنظمة الجواهر التاجية، أو تسرب البيانات إلى وجهات غير موثوقة. معظم المؤسسات تستخدم التنبيهات المجدولة لـ 95% من الكشوفات وتحتفظ بالوقت الفعلي لـ 5% الحرجة."
+          }
+        },
+        {
+          "id": 15,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "Warning: Real-time alerts can overload SIEM systems if overused. Each real-time alert consumes CPU and memory continuously. Start with scheduled alerts and only convert to real-time if investigation shows the detection delay is unacceptable.",
+            "ar": "تحذير: تنبيهات الوقت الفعلي يمكن أن تُحمِّل أنظمة SIEM بشكل زائد إذا استُخدِمَت بإفراط. كل تنبيه في الوقت الفعلي يستهلك معالج وذاكرة باستمرار. ابدأ بالتنبيهات المجدولة وحوّل فقط إلى الوقت الفعلي إذا أظهر التحقيق أن تأخير الكشف غير مقبول."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 16,
+          "type": "hr"
+        },
+        {
+          "id": 17,
+          "type": "title",
+          "value": {
+            "en": "Building a Detection Use Case: Complete Workflow",
+            "ar": "بناء حالة استخدام الكشف: سير العمل الكامل"
+          }
+        },
+        {
+          "id": 18,
+          "type": "text",
+          "value": {
+            "en": "Creating an effective detection rule follows a structured methodology that ensures the alert detects real threats while minimizing noise. The process begins with defining the threat scenario in plain language: what specific attack or malicious behavior are we trying to detect? For example, 'Detect SSH brute-force attacks where an attacker tries many passwords against Linux servers'. This threat scenario comes from threat intelligence reports, penetration test findings, or analysis of previous incidents in the organization or industry.",
+            "ar": "إنشاء قاعدة كشف فعالة يتبع منهجية منظمة تضمن أن التنبيه يكشف التهديدات الحقيقية مع تقليل الضجيج. تبدأ العملية بتحديد سيناريو التهديد بلغة واضحة: أي هجوم أو سلوك خبيث محدد نحاول كشفه؟ على سبيل المثال، 'كشف هجمات القوة الغاشمة على SSH حيث يحاول مهاجم كلمات مرور كثيرة ضد خوادم Linux'. سيناريو التهديد هذا يأتي من تقارير معلومات التهديدات، أو نتائج اختبار الاختراق، أو تحليل حوادث سابقة في المؤسسة أو الصناعة."
+          }
+        },
+        {
+          "id": 19,
+          "type": "orderedList",
+          "title": {
+            "en": "Seven Steps to Build a Detection Use Case",
+            "ar": "سبع خطوات لبناء حالة استخدام الكشف"
+          },
+          "items": [
+            {
+              "subtitle": {
+                "en": "Step 1: Define the Threat Scenario",
+                "ar": "الخطوة 1: حدد سيناريو التهديد"
+              },
+              "text": {
+                "en": "Write a clear description of the attack behavior you want to detect. Be specific about the actions, systems, and indicators involved. Example: Detect brute-force SSH attacks with more than 10 failed authentication attempts within 5 minutes from a single source IP.",
+                "ar": "اكتب وصفاً واضحاً لسلوك الهجوم الذي تريد كشفه. كن محدداً حول الإجراءات، والأنظمة، والمؤشرات المتضمنة. مثال: كشف هجمات القوة الغاشمة على SSH بأكثر من 10 محاولات مصادقة فاشلة في غضون 5 دقائق من عنوان IP مصدر واحد."
+              },
+              "example": {
+                "en": "Document real-world examples from threat reports",
+                "ar": "وثّق أمثلة من العالم الحقيقي من تقارير التهديدات"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Step 2: Identify Relevant Log Sources",
+                "ar": "الخطوة 2: حدد مصادر السجلات ذات الصلة"
+              },
+              "text": {
+                "en": "Determine which systems generate logs that contain evidence of this attack. For SSH brute-force, the relevant logs are Linux authentication logs stored in /var/log/auth.log or /var/log/secure. Verify these logs are being collected by the SIEM.",
+                "ar": "حدد أي الأنظمة تولّد سجلات تحتوي على أدلة لهذا الهجوم. بالنسبة لهجوم القوة الغاشمة على SSH، السجلات ذات الصلة هي سجلات المصادقة في Linux المخزّنة في /var/log/auth.log أو /var/log/secure. تحقق من أن هذه السجلات تُجمَع بواسطة SIEM."
+              },
+              "example": {
+                "en": "index=linux_logs sourcetype=linux_secure",
+                "ar": "index=linux_logs sourcetype=linux_secure"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Step 3: Write the Detection Query",
+                "ar": "الخطوة 3: اكتب استعلام الكشف"
+              },
+              "text": {
+                "en": "Create the SPL query that identifies the attack pattern. Search for authentication failure messages, count by source IP, and filter for IPs with more than 10 failures. Test the query on historical data to verify it finds known attack examples.",
+                "ar": "أنشئ استعلام SPL الذي يحدد نمط الهجوم. ابحث عن رسائل فشل المصادقة، وعد حسب عنوان IP المصدر، ورشّح لعناوين IP بأكثر من 10 إخفاقات. اختبر الاستعلام على البيانات التاريخية للتحقق من أنه يجد أمثلة هجوم معروفة."
+              },
+              "example": {
+                "en": "index=linux_logs 'authentication failure' | stats count by src_ip | where count > 10",
+                "ar": "index=linux_logs 'authentication failure' | stats count by src_ip | where count > 10"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Step 4: Set Time Window",
+                "ar": "الخطوة 4: عيّن نافذة الوقت"
+              },
+              "text": {
+                "en": "Define how far back the search looks. For brute-force detection, a 5-minute window is appropriate because attacks happen quickly. Run the search every 5 minutes to check the last 5 minutes of data for attack patterns.",
+                "ar": "حدد إلى أي مدى في الوقت الماضي يبحث الاستعلام. لكشف القوة الغاشمة، نافذة 5 دقائق مناسبة لأن الهجمات تحدث بسرعة. شغّل البحث كل 5 دقائق للتحقق من آخر 5 دقائق من البيانات لأنماط الهجوم."
+              },
+              "example": {
+                "en": "Schedule: Every 5 minutes | Time range: Last 5 minutes",
+                "ar": "الجدولة: كل 5 دقائق | النطاق الزمني: آخر 5 دقائق"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Step 5: Assign Severity Level",
+                "ar": "الخطوة 5: عيّن مستوى الخطورة"
+              },
+              "text": {
+                "en": "Classify the threat based on potential impact. Brute-force attacks that might lead to account compromise are High severity. Failed attempts with no success would be Medium. Successful compromise confirmed by follow-on lateral movement would be Critical.",
+                "ar": "صنّف التهديد بناءً على التأثير المحتمل. هجمات القوة الغاشمة التي قد تؤدي إلى اختراق حساب هي خطورة عالية. المحاولات الفاشلة بدون نجاح ستكون متوسطة. الاختراق الناجح المؤكد بحركة جانبية لاحقة سيكون حرجاً."
+              },
+              "example": {
+                "en": "Severity: High | CVSS Score: 7.5",
+                "ar": "الخطورة: عالية | نقاط CVSS: 7.5"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Step 6: Map to MITRE ATT&CK",
+                "ar": "الخطوة 6: خطّط إلى MITRE ATT&CK"
+              },
+              "text": {
+                "en": "Tag the alert with the relevant MITRE technique ID. Brute-force attacks map to T1110 (Brute Force) under tactic TA0006 (Credential Access). This standardized labeling helps analysts understand the attack stage and select appropriate response actions.",
+                "ar": "وسم التنبيه بمعرّف تقنية MITRE ذات الصلة. هجمات القوة الغاشمة تخطّط إلى T1110 (القوة الغاشمة) تحت التكتيك TA0006 (الوصول إلى بيانات الاعتماد). هذا الوسم الموحد يساعد المحللين على فهم مرحلة الهجوم واختيار إجراءات استجابة مناسبة."
+              },
+              "example": {
+                "en": "Technique: T1110 | Tactic: Credential Access",
+                "ar": "التقنية: T1110 | التكتيك: الوصول إلى بيانات الاعتماد"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Step 7: Define Response Action",
+                "ar": "الخطوة 7: حدد إجراء الاستجابة"
+              },
+              "text": {
+                "en": "Specify what happens when the alert fires. For high-severity brute-force alerts: send immediate email to SOC analysts, create a ticket in the incident management system, optionally trigger automated response to temporarily block the source IP at the firewall.",
+                "ar": "حدد ما يحدث عندما يُطلَق التنبيه. لتنبيهات القوة الغاشمة عالية الخطورة: أرسل بريداً إلكترونياً فورياً لمحللي SOC، وأنشئ تذكرة في نظام إدارة الحوادث، واختيارياً أطلق استجابة آلية لحظر عنوان IP المصدر مؤقتاً في جدار الحماية."
+              },
+              "example": {
+                "en": "Action: Email + Ticket + Firewall Block (optional)",
+                "ar": "الإجراء: بريد إلكتروني + تذكرة + حظر جدار الحماية (اختياري)"
+              }
+            }
+          ]
+        },
+        {
+          "id": 20,
+          "type": "hr"
+        },
+        {
+          "id": 21,
+          "type": "title",
+          "value": {
+            "en": "High-Value Detection Use Cases Every SOC Needs",
+            "ar": "حالات استخدام الكشف عالية القيمة التي يحتاجها كل SOC"
+          }
+        },
+        {
+          "id": 22,
+          "type": "text",
+          "value": {
+            "en": "Security teams should prioritize detection use cases that catch the most common and damaging attacks. Multiple failed logins followed by success is the signature of credential stuffing or brute-force attacks. The detection logic is simple but extremely effective: count failed login attempts (Event ID 4625 on Windows, 'authentication failure' in Linux logs) by source IP and target account, then look for a successful login (Event ID 4624 or 'Accepted password') from the same source within a short time window. This pattern appears in almost every network compromise case.",
+            "ar": "يجب على فِرق الأمان تحديد أولويات حالات استخدام الكشف التي تلتقط الهجمات الأكثر شيوعاً وضرراً. تسجيلات دخول فاشلة متعددة متبوعة بنجاح هي توقيع حشو بيانات الاعتماد أو هجمات القوة الغاشمة. منطق الكشف بسيط لكن فعال للغاية: عد محاولات تسجيل الدخول الفاشلة (معرّف الحدث 4625 على Windows، أو 'authentication failure' في سجلات Linux) حسب عنوان IP المصدر والحساب المستهدف، ثم ابحث عن تسجيل دخول ناجح (معرّف الحدث 4624 أو 'Accepted password') من نفس المصدر في نافذة زمنية قصيرة. هذا النمط يظهر في تقريباً كل حالة اختراق شبكة."
+          }
+        },
+        {
+          "id": 23,
+          "type": "text",
+          "value": {
+            "en": "Login at unusual hours from unusual countries detects account takeover. Build a baseline of normal behavior for each user: when do they typically log in, from which countries, using which devices. Use GeoIP enrichment to map login source IPs to countries. Alert when a user logs in from a country they have never accessed from before, especially if the login happens outside their normal work hours. This catches attacks where credentials were stolen through phishing and are being used by attackers in different time zones.",
+            "ar": "تسجيل الدخول في ساعات غير عادية من بلدان غير عادية يكشف استيلاء على الحساب. ابنِ خط أساس للسلوك العادي لكل مستخدم: متى يسجلون دخولهم عادةً، من أي بلدان، باستخدام أي أجهزة. استخدم إثراء GeoIP لتخطيط عناوين IP المصدر لتسجيل الدخول إلى البلدان. أطلق تنبيهاً عندما يسجل مستخدم دخوله من بلد لم يسبق له الوصول منه، خاصة إذا حدث تسجيل الدخول خارج ساعات عمله العادية. هذا يلتقط الهجمات حيث سُرِقَت بيانات الاعتماد عبر التصيد الاحتيالي وتُستخدَم من قبل مهاجمين في مناطق زمنية مختلفة."
+          }
+        },
+        {
+          "id": 24,
+          "type": "text",
+          "value": {
+            "en": "New admin account created outside business hours is a critical indicator. Most organizations create new accounts during normal business hours through formal processes. A new administrator account created at 2 AM on Sunday is highly suspicious. Detect Windows Event ID 4720 (user account created) combined with Event ID 4732 (user added to privileged group) occurring outside of 8 AM to 6 PM Monday through Friday. This catches attackers who compromise a system and create backdoor accounts for persistent access.",
+            "ar": "حساب إداري جديد أُنشِئ خارج ساعات العمل هو مؤشر حرج. معظم المؤسسات تُنشئ حسابات جديدة خلال ساعات العمل العادية عبر عمليات رسمية. حساب مدير جديد أُنشِئ في الساعة 2 صباحاً يوم الأحد مشبوه للغاية. اكشف معرّف حدث Windows 4720 (أُنشِئ حساب مستخدم) مدمجاً مع معرّف الحدث 4732 (أُضيف مستخدم إلى مجموعة مميزة) يحدثان خارج الساعة 8 صباحاً إلى 6 مساءً من الاثنين إلى الجمعة. هذا يلتقط المهاجمين الذين يخترقون نظاماً وينشئون حسابات باب خلفي للوصول المستمر."
+          }
+        },
+        {
+          "id": 25,
+          "type": "terminal",
+          "label": {
+            "en": "Splunk Detection Query: PowerShell Spawned by Office Application",
+            "ar": "استعلام كشف Splunk: PowerShell منبثق من تطبيق Office"
+          },
+          "value": "index=windows_logs sourcetype=WinEventLog:Security EventCode=4688\n| search ParentImage=\"*winword.exe\" OR ParentImage=\"*excel.exe\" \n| search Image=\"*powershell.exe\"\n| stats count by ComputerName, User, CommandLine\n| where count > 0"
+        },
+        {
+          "id": 26,
+          "type": "text",
+          "value": {
+            "en": "The query above detects PowerShell spawned by Microsoft Word or Excel, one of the most reliable indicators of macro malware. Legitimate users almost never have a reason for Office applications to launch PowerShell. When this happens, it usually means a malicious macro in an email attachment executed and is downloading additional malware. This single detection rule catches a significant percentage of phishing-based compromises. The query searches for process creation events (4688) where the parent process is Word or Excel and the child process is PowerShell.",
+            "ar": "الاستعلام أعلاه يكشف PowerShell المنبثق من Microsoft Word أو Excel، أحد أكثر المؤشرات موثوقية لبرامج الماكرو الخبيثة. المستخدمون الشرعيون تقريباً لا يكون لديهم سبب أبداً لتطبيقات Office لإطلاق PowerShell. عندما يحدث هذا، عادةً يعني أن ماكرو خبيث في مرفق بريد إلكتروني نُفِّذَ ويُنزِّل برامج خبيثة إضافية. قاعدة الكشف الواحدة هذه تلتقط نسبة كبيرة من اختراقات قائمة على التصيد الاحتيالي. يبحث الاستعلام عن أحداث إنشاء عملية (4688) حيث العملية الأم هي Word أو Excel والعملية الابنة هي PowerShell."
+          }
+        },
+        {
+          "id": 27,
+          "type": "hr"
+        },
+        {
+          "id": 28,
+          "type": "title",
+          "value": {
+            "en": "Alert Fatigue: The Enemy of Effective Detection",
+            "ar": "إرهاق التنبيهات: عدو الكشف الفعال"
+          }
+        },
+        {
+          "id": 29,
+          "type": "text",
+          "value": {
+            "en": "Alert fatigue occurs when security analysts receive so many alerts that they cannot investigate them all, leading to important alerts being ignored. Studies show that SOC teams often face 10,000 or more alerts per day, with false positive rates exceeding 90% in poorly tuned systems. When analysts are overwhelmed, they develop alert blindness: automatically dismissing alerts without proper investigation. This is exactly what attackers count on. A real attack notification gets lost in a flood of false alarms, and the breach goes undetected for months.",
+            "ar": "إرهاق التنبيهات يحدث عندما يستقبل محللو الأمان تنبيهات كثيرة جداً بحيث لا يستطيعون التحقيق فيها جميعاً، مما يؤدي إلى تجاهل التنبيهات المهمة. تُظهِر الدراسات أن فِرق SOC غالباً تواجه 10,000 تنبيه أو أكثر في اليوم، بمعدلات إيجابيات خاطئة تتجاوز 90% في الأنظمة المضبوطة بشكل سيئ. عندما يُغرَق المحللون، يطورون عمى التنبيهات: رفض التنبيهات تلقائياً بدون تحقيق مناسب. هذا بالضبط ما يعتمد عليه المهاجمون. إشعار هجوم حقيقي يضيع في فيضان من الإنذارات الخاطئة، والاختراق يمر دون كشف لأشهر."
+          }
+        },
+        {
+          "id": 30,
+          "type": "text",
+          "value": {
+            "en": "Combating alert fatigue requires disciplined tuning. Whitelisting excludes known-good activity from triggering alerts: if the company's monitoring system legitimately logs in from 50 different IPs, add those IPs to an exception list so they do not trigger the geographic anomaly alert. Context enrichment reduces false positives by adding information that helps analysts quickly determine legitimacy: enriching alerts with user department, asset criticality, and threat intelligence reputation makes it obvious when an alert is harmless versus dangerous.",
+            "ar": "مكافحة إرهاق التنبيهات تتطلب ضبطاً منضبطاً. القائمة البيضاء تستثني النشاط الجيد المعروف من إطلاق التنبيهات: إذا كان نظام المراقبة الخاص بالشركة يسجل دخوله بشكل شرعي من 50 عنوان IP مختلف، أضف تلك العناوين إلى قائمة استثناءات بحيث لا تطلق تنبيه الشذوذ الجغرافي. إثراء السياق يقلل الإيجابيات الخاطئة بإضافة معلومات تساعد المحللين على تحديد الشرعية بسرعة: إثراء التنبيهات بقسم المستخدم، وحرجية الأصل، وسمعة معلومات التهديدات يجعل من الواضح متى يكون التنبيه غير ضار مقابل خطير."
+          }
+        },
+        {
+          "id": 31,
+          "type": "text",
+          "value": {
+            "en": "Requiring multiple conditions before firing reduces noise. Instead of alerting on any failed login, require five failed logins within five minutes. Instead of alerting on any PowerShell execution, only alert when PowerShell is spawned by an Office application. Risk scoring aggregates multiple suspicious behaviors: one failed login adds 10 risk points, login from new country adds 20 points, large file download adds 30 points. Only trigger an alert when a user accumulates more than 50 risk points in a day. This approach catches sophisticated attacks while ignoring isolated benign anomalies.",
+            "ar": "طلب شروط متعددة قبل الإطلاق يقلل الضجيج. بدلاً من التنبيه على أي تسجيل دخول فاشل، اطلب خمسة تسجيلات دخول فاشلة في غضون خمس دقائق. بدلاً من التنبيه على أي تنفيذ PowerShell، أطلق تنبيهاً فقط عندما ينبثق PowerShell من تطبيق Office. تسجيل المخاطر يجمّع سلوكيات مشبوهة متعددة: تسجيل دخول فاشل واحد يضيف 10 نقاط مخاطر، وتسجيل دخول من بلد جديد يضيف 20 نقطة، وتنزيل ملف كبير يضيف 30 نقطة. أطلق تنبيهاً فقط عندما يجمع مستخدم أكثر من 50 نقطة مخاطر في يوم. هذا النهج يلتقط هجمات متطورة مع تجاهل شذوذات حميدة معزولة."
+          }
+        },
+        {
+          "id": 32,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Tuning Cycle Best Practice: Deploy alert → Monitor for 1 week → Calculate false positive rate → Add exceptions for known-good activity → Re-test for 1 week → Validate true positive detection → Document and promote to production.",
+            "ar": "ممارسة مثلى لدورة الضبط: انشر التنبيه → راقب لمدة أسبوع واحد → احسب معدل الإيجابيات الخاطئة → أضف استثناءات للنشاط الجيد المعروف → أعد الاختبار لمدة أسبوع واحد → تحقق من كشف الإيجابيات الحقيقية → وثّق وروّج للإنتاج."
+          },
+          "link": "",
+          "isLab": false
+        }
+      ]
+    },
+    {
+      "id": "topic-5",
+      "title": {
+        "en": "Dashboards, Reporting and SOC Visibility",
+        "ar": "لوحات المعلومات، الإبلاغ، ورؤية SOC"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "Visual Intelligence: Why Dashboards Matter in Security Operations",
+            "ar": "الذكاء البصري: لماذا تهم لوحات المعلومات في عمليات الأمان"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "Human brains process visual information 60,000 times faster than text. A security analyst looking at a well-designed dashboard can spot anomalies in seconds that would take minutes or hours to find by reading raw log files. Dashboards transform millions of security events into visual patterns: line charts show trends over time, bar charts compare volumes across categories, heat maps highlight concentrations of activity, and geo maps reveal geographic attack patterns. This visual compression allows analysts to monitor the security posture of an entire organization from a single screen.",
+            "ar": "تعالج أدمغة البشر المعلومات البصرية أسرع بـ 60,000 مرة من النص. محلل أمان ينظر إلى لوحة معلومات مصممة جيداً يستطيع اكتشاف الشذوذات في ثوانٍ كانت ستستغرق دقائق أو ساعات للعثور عليها بقراءة ملفات السجلات الخام. لوحات المعلومات تحوّل ملايين أحداث الأمان إلى أنماط بصرية: مخططات خطية تُظهر الاتجاهات مع الوقت، ومخططات شريطية تقارن الأحجام عبر الفئات، وخرائط حرارية تبرز تركيزات النشاط، وخرائط جغرافية تكشف أنماط الهجوم الجغرافية. هذا الضغط البصري يسمح للمحللين بمراقبة الوضع الأمني لمؤسسة بأكملها من شاشة واحدة."
+          }
+        },
+        {
+          "id": 3,
+          "type": "text",
+          "value": {
+            "en": "Dashboards serve different audiences with different needs. Security analysts need operational dashboards that show current alerts, failed authentications, and suspicious network connections updated every few minutes. These dashboards help analysts triage incidents and decide what to investigate first. Security managers need tactical dashboards that show weekly trends, alert volumes by category, mean time to detect and respond, and team workload. These dashboards help managers allocate resources and identify process improvements. Executives need strategic dashboards that show overall risk posture, compliance status, and comparison to industry benchmarks updated monthly.",
+            "ar": "لوحات المعلومات تخدم جماهير مختلفة باحتياجات مختلفة. محللو الأمان يحتاجون لوحات معلومات تشغيلية تُظهر التنبيهات الحالية، والمصادقات الفاشلة، والاتصالات الشبكية المشبوهة المحدثة كل بضع دقائق. هذه اللوحات تساعد المحللين على فرز الحوادث وتقرير ما يُحقَّق فيه أولاً. مديرو الأمان يحتاجون لوحات معلومات تكتيكية تُظهر الاتجاهات الأسبوعية، وأحجام التنبيهات حسب الفئة، ومتوسط الوقت للكشف والاستجابة، وعبء عمل الفريق. هذه اللوحات تساعد المديرين على تخصيص الموارد وتحديد تحسينات العملية. التنفيذيون يحتاجون لوحات معلومات استراتيجية تُظهر الوضع العام للمخاطر، وحالة الامتثال، والمقارنة بمعايير الصناعة المحدثة شهرياً."
+          }
+        },
+        {
+          "id": 1773241226729.9902,
+          "type": "image",
+          "srcKey": "",
+          "size": "small",
+          "imageUrl": "https://cdn.cyber-labs.tech/Log%20Analysis%20%26%20SIEM%20Basics/Analyst%20Dashboard.webp"
+        },
+        {
+          "id": 5,
+          "type": "hr"
+        },
+        {
+          "id": 6,
+          "type": "title",
+          "value": {
+            "en": "Splunk Dashboard Components: Building Blocks of Visualization",
+            "ar": "مكونات لوحة معلومات Splunk: اللبنات الأساسية للتصوير"
+          }
+        },
+        {
+          "id": 7,
+          "type": "text",
+          "value": {
+            "en": "Splunk dashboards are built from panels, each containing a visualization powered by an SPL query. Panels are individual boxes on the dashboard that display a chart, table, or single value metric. The most common panel types include: Time Charts show trends over time with the x-axis as time and y-axis as count or other metrics, perfect for showing how alert volume changes throughout the day. Bar Charts compare discrete categories like top source IPs, most targeted accounts, or alerts by severity. Single Value panels display one important number prominently, such as total alerts today, systems offline, or mean time to respond.",
+            "ar": "لوحات معلومات Splunk مبنية من لوحات، كل منها يحتوي على تصوير مدعوم باستعلام SPL. اللوحات صناديق فردية على لوحة المعلومات تعرض مخططاً، أو جدولاً، أو مقياس قيمة واحدة. أكثر أنواع اللوحات شيوعاً تتضمن: مخططات الوقت تُظهر الاتجاهات مع الوقت بالمحور x كوقت والمحور y كعدد أو مقاييس أخرى، مثالية لإظهار كيف يتغير حجم التنبيهات طوال اليوم. المخططات الشريطية تقارن الفئات المنفصلة مثل أعلى عناوين IP المصدر، أو الحسابات الأكثر استهدافاً، أو التنبيهات حسب الخطورة. لوحات القيمة الواحدة تعرض رقماً واحداً مهماً بشكل بارز، مثل إجمالي التنبيهات اليوم، أو الأنظمة غير المتصلة، أو متوسط الوقت للاستجابة."
+          }
+        },
+        {
+          "id": 8,
+          "type": "text",
+          "value": {
+            "en": "Tables display detailed event data in rows and columns, useful when analysts need to drill down into specific events from a chart. Geo Maps plot events on a world map based on IP address GeoIP data, instantly showing which countries attacks originate from. Heat Maps use color intensity to show concentrations, such as which hours of the day have the most failed logins. Each panel is driven by an SPL query that runs automatically when the dashboard loads and can be scheduled to refresh at intervals like every 5 minutes for operational dashboards or every hour for tactical dashboards.",
+            "ar": "الجداول تعرض بيانات الأحداث التفصيلية في صفوف وأعمدة، مفيدة عندما يحتاج المحللون للتعمق في أحداث محددة من مخطط. الخرائط الجغرافية تخطط الأحداث على خريطة عالمية بناءً على بيانات GeoIP لعنوان IP، تُظهر فوراً من أي البلدان تنشأ الهجمات. الخرائط الحرارية تستخدم كثافة اللون لإظهار التركيزات، مثل أي ساعات من اليوم بها أكثر تسجيلات دخول فاشلة. كل لوحة مدفوعة باستعلام SPL يعمل تلقائياً عندما تُحمَّل لوحة المعلومات ويمكن جدولته للتحديث على فترات مثل كل 5 دقائق للوحات معلومات تشغيلية أو كل ساعة للوحات معلومات تكتيكية."
+          }
+        },
+        {
+          "id": 9,
+          "type": "text",
+          "value": {
+            "en": "Dashboard inputs make dashboards interactive and reusable. A Time Picker input allows users to change the time range displayed on all panels from last hour to last 7 days without editing queries. Dropdown inputs let users filter the entire dashboard by specific values: select a specific user to see all their activity, or select a specific system to see all events from that host. Text Input boxes allow free-form searches. Tokens are variables that capture user selections from inputs and pass them into SPL queries dynamically. When a user selects 'Last 24 Hours' from the time picker, the token earliest is set to '-24h' and all panel queries use that value.",
+            "ar": "مدخلات لوحة المعلومات تجعل لوحات المعلومات تفاعلية وقابلة لإعادة الاستخدام. مدخل منتقي الوقت يسمح للمستخدمين بتغيير النطاق الزمني المعروض على كل اللوحات من آخر ساعة إلى آخر 7 أيام بدون تحرير الاستعلامات. مدخلات القائمة المنسدلة تتيح للمستخدمين تصفية لوحة المعلومات بأكملها حسب قيم محددة: اختر مستخدماً محدداً لرؤية كل نشاطه، أو اختر نظاماً محدداً لرؤية كل الأحداث من ذلك المضيف. مربعات إدخال النص تسمح ببحوث حرة الشكل. الرموز المميزة متغيرات تلتقط اختيارات المستخدمين من المدخلات وتمررها إلى استعلامات SPL ديناميكياً. عندما يختار مستخدم 'آخر 24 ساعة' من منتقي الوقت، يُعيَّن الرمز المميز earliest إلى '-24h' وكل استعلامات اللوحة تستخدم تلك القيمة."
+          }
+        },
+        {
+          "id": 10,
+          "type": "hr"
+        },
+        {
+          "id": 11,
+          "type": "title",
+          "value": {
+            "en": "Essential SOC Dashboards: What Every Security Team Needs",
+            "ar": "لوحات معلومات SOC الأساسية: ما يحتاجه كل فريق أمان"
+          }
+        },
+        {
+          "id": 12,
+          "type": "text",
+          "value": {
+            "en": "The Authentication Overview dashboard is fundamental for every SOC. This dashboard answers critical questions: How many login attempts occurred in the last hour? How many failed versus succeeded? Which accounts are experiencing the most failures? Which source IPs are attempting the most logins? Which countries are login attempts coming from? A typical authentication dashboard includes a time chart showing failed and successful logins over the last 24 hours, a table of top 10 accounts with failed logins sorted by count, a geo map showing source countries of failed logins color-coded by volume, and single value panels showing total authentications and current failure rate percentage.",
+            "ar": "لوحة معلومات نظرة عامة على المصادقة أساسية لكل SOC. هذه اللوحة تجيب على أسئلة حرجة: كم عدد محاولات تسجيل الدخول حدثت في آخر ساعة؟ كم عدد الفاشلة مقابل الناجحة؟ أي الحسابات تعاني من أكثر الإخفاقات؟ أي عناوين IP المصدر تحاول أكثر تسجيلات الدخول؟ من أي البلدان تأتي محاولات تسجيل الدخول؟ لوحة معلومات المصادقة النموذجية تتضمن مخطط وقت يُظهر تسجيلات دخول فاشلة وناجحة على مدى آخر 24 ساعة، وجدول بأعلى 10 حسابات بتسجيلات دخول فاشلة مرتبة حسب العدد، وخريطة جغرافية تُظهر بلدان المصدر لتسجيلات الدخول الفاشلة مرمزة لونياً حسب الحجم، ولوحات قيمة واحدة تُظهر إجمالي المصادقات ونسبة معدل الفشل الحالية."
+          }
+        },
+        {
+          "id": 13,
+          "type": "text",
+          "value": {
+            "en": "The Endpoint Activity dashboard monitors what is happening on workstations and servers. This dashboard detects malicious software execution, unauthorized process creation, and system changes. Key panels include: top processes executed across all systems showing if unfamiliar executables suddenly appear, new services installed with timestamps to catch backdoor service creation, scheduled tasks created which attackers use for persistence, USB device connections to detect potential data theft via removable media, and software installation events to catch unauthorized application deployments. Each panel should allow click-through to see the full event details including which user and which system.",
+            "ar": "لوحة معلومات نشاط نقطة النهاية تراقب ما يحدث على محطات العمل والخوادم. هذه اللوحة تكشف تنفيذ البرامج الخبيثة، وإنشاء العمليات غير المصرح به، والتغييرات في النظام. اللوحات الرئيسية تتضمن: أعلى العمليات المنفذة عبر كل الأنظمة تُظهر إذا ظهرت ملفات تنفيذية غير مألوفة فجأة، والخدمات الجديدة المثبتة بطوابع زمنية للقبض على إنشاء خدمة باب خلفي، والمهام المجدولة المُنشأة التي يستخدمها المهاجمون للاستمرارية، واتصالات جهاز USB لكشف سرقة بيانات محتملة عبر وسائط قابلة للإزالة، وأحداث تثبيت البرامج للقبض على عمليات نشر تطبيقات غير مصرح بها. كل لوحة يجب أن تسمح بالنقر للوصول لرؤية تفاصيل الحدث الكاملة بما في ذلك أي مستخدم وأي نظام."
+          }
+        },
+        {
+          "id": 14,
+          "type": "text",
+          "value": {
+            "en": "The Network Activity dashboard provides visibility into traffic patterns and connection anomalies. Essential panels include: top source and destination IPs by traffic volume to identify systems generating unusual amounts of data, connections to unusual ports that might indicate command and control traffic, DNS query volume over time with spikes potentially indicating malware beaconing, outbound connections to countries the organization does not do business with, and data transfer volumes showing if any system is exfiltrating large amounts of information. Color-coding helps: green for internal trusted networks, yellow for partner networks, red for external untrusted internet.",
+            "ar": "لوحة معلومات نشاط الشبكة توفر رؤية لأنماط الحركة وشذوذات الاتصال. اللوحات الأساسية تتضمن: أعلى عناوين IP المصدر والوجهة حسب حجم الحركة لتحديد الأنظمة التي تولد كميات بيانات غير عادية، والاتصالات بمنافذ غير عادية قد تشير إلى حركة القيادة والتحكم، وحجم استعلام DNS مع الوقت بارتفاعات محتملة تشير إلى منارة برامج خبيثة، واتصالات صادرة إلى بلدان لا تتعامل المؤسسة معها، وأحجام نقل البيانات تُظهر إذا كان أي نظام يسرّب كميات كبيرة من المعلومات. الترميز اللوني يساعد: الأخضر للشبكات الداخلية الموثوقة، والأصفر لشبكات الشركاء، والأحمر للإنترنت الخارجي غير الموثوق."
+          }
+        },
+        {
+          "id": 15,
+          "type": "table",
+          "title": {
+            "en": "Key SOC Dashboard Panels and Their Purpose",
+            "ar": "لوحات لوحة معلومات SOC الرئيسية وغرضها"
+          },
+          "headers": {
+            "en": [
+              "Dashboard Panel",
+              "Visualization Type",
+              "Detection Purpose"
+            ],
+            "ar": [
+              "لوحة لوحة المعلومات",
+              "نوع التصوير",
+              "غرض الكشف"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "Failed Logins Over Time",
+                "Time Chart",
+                "Identify brute-force attack timing patterns"
+              ],
+              "ar": [
+                "تسجيلات الدخول الفاشلة مع الوقت",
+                "مخطط وقت",
+                "تحديد أنماط توقيت هجوم القوة الغاشمة"
+              ]
+            },
+            {
+              "en": [
+                "Top Failed Accounts",
+                "Bar Chart",
+                "Find which accounts are being targeted"
+              ],
+              "ar": [
+                "أعلى الحسابات الفاشلة",
+                "مخطط شريطي",
+                "العثور على أي الحسابات تُستهدَف"
+              ]
+            },
+            {
+              "en": [
+                "Login Source Countries",
+                "Geo Map",
+                "Detect logins from suspicious locations"
+              ],
+              "ar": [
+                "بلدان مصدر تسجيل الدخول",
+                "خريطة جغرافية",
+                "كشف تسجيلات دخول من مواقع مشبوهة"
+              ]
+            },
+            {
+              "en": [
+                "Current Alert Count",
+                "Single Value",
+                "Monitor SOC workload and alert volume"
+              ],
+              "ar": [
+                "عدد التنبيهات الحالي",
+                "قيمة واحدة",
+                "مراقبة عبء عمل SOC وحجم التنبيهات"
+              ]
+            },
+            {
+              "en": [
+                "Unusual Process Executions",
+                "Table",
+                "Catch malware and unauthorized software"
+              ],
+              "ar": [
+                "تنفيذات عمليات غير عادية",
+                "جدول",
+                "القبض على برامج خبيثة وبرامج غير مصرح بها"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 16,
+          "type": "hr"
+        },
+        {
+          "id": 17,
+          "type": "title",
+          "value": {
+            "en": "Alert Summary Dashboard and SOC Performance Metrics",
+            "ar": "لوحة معلومات ملخص التنبيهات ومقاييس أداء SOC"
+          }
+        },
+        {
+          "id": 18,
+          "type": "text",
+          "value": {
+            "en": "The Alert Summary dashboard is where SOC managers track team performance and identify process improvements. This dashboard shows how the SOC is functioning as a system. Key metrics include: alerts by severity over time to see if high-severity alerts are increasing, alerts by status showing how many are open versus closed versus in-progress, mean time to detect (MTTD) measuring average time from attack occurrence to alert firing, mean time to respond (MTTR) measuring average time from alert to containment action, and false positive rate showing what percentage of alerts turn out to be harmless after investigation.",
+            "ar": "لوحة معلومات ملخص التنبيهات هي حيث يتتبع مديرو SOC أداء الفريق ويحددون تحسينات العملية. هذه اللوحة تُظهر كيف يعمل SOC كنظام. المقاييس الرئيسية تتضمن: التنبيهات حسب الخطورة مع الوقت لمعرفة إذا كانت التنبيهات عالية الخطورة تزداد، والتنبيهات حسب الحالة تُظهر كم عدد المفتوحة مقابل المغلقة مقابل قيد التقدم، ومتوسط الوقت للكشف (MTTD) يقيس متوسط الوقت من حدوث الهجوم إلى إطلاق التنبيه، ومتوسط الوقت للاستجابة (MTTR) يقيس متوسط الوقت من التنبيه إلى إجراء الاحتواء، ومعدل الإيجابيات الخاطئة يُظهر أي نسبة من التنبيهات تبيّن أنها غير ضارة بعد التحقيق."
+          }
+        },
+        {
+          "id": 19,
+          "type": "text",
+          "value": {
+            "en": "The Threat Intelligence Hits dashboard shows events matching known indicators of compromise. This dashboard enriches event data with threat intelligence feeds and displays matches. Panels include: events matching known malicious IP addresses showing communication with command and control servers, file hashes matching malware signatures indicating infected systems, domains matching known phishing sites showing users who may have been targeted, and SSL certificate fingerprints matching attacker infrastructure. Each hit should link to the threat intelligence source providing context about the threat actor and campaign.",
+            "ar": "لوحة معلومات إصابات معلومات التهديدات تُظهر الأحداث المطابقة لمؤشرات اختراق معروفة. هذه اللوحة تُثري بيانات الأحداث بموجزات معلومات التهديدات وتعرض المطابقات. اللوحات تتضمن: أحداث مطابقة لعناوين IP خبيثة معروفة تُظهر الاتصال بخوادم القيادة والتحكم، وتجزئات ملفات مطابقة لتوقيعات البرامج الخبيثة تشير إلى أنظمة مصابة، ونطاقات مطابقة لمواقع تصيد معروفة تُظهر المستخدمين الذين قد استُهدِفوا، وبصمات شهادة SSL مطابقة لبنية تحتية للمهاجمين. كل إصابة يجب أن ترتبط بمصدر معلومات التهديدات الذي يوفر سياقاً عن الجهة الفاعلة للتهديد والحملة."
+          }
+        },
+        {
+          "id": 20,
+          "type": "text",
+          "value": {
+            "en": "Dashboard best practices ensure effectiveness and usability. Every panel must answer a specific security question, not just display data for decoration. Use color coding consistently: green for good/normal, yellow for warning/suspicious, red for critical/confirmed threats. Avoid vanity metrics that look impressive but provide no actionable insight: 'Total Events Processed' is meaningless; 'Events Matching Threat Intelligence' is actionable. Update frequency should match the dashboard purpose: operational dashboards refresh every 5 minutes, tactical dashboards every hour, strategic dashboards daily or weekly. Include timestamp showing when dashboard was last updated so analysts know if data is current.",
+            "ar": "ممارسات لوحة المعلومات المثلى تضمن الفعالية والقابلية للاستخدام. كل لوحة يجب أن تجيب على سؤال أمني محدد، وليس فقط عرض بيانات للزينة. استخدم الترميز اللوني بشكل متسق: الأخضر للجيد/العادي، والأصفر للتحذير/المشبوه، والأحمر للحرج/التهديدات المؤكدة. تجنب مقاييس الغرور التي تبدو مثيرة للإعجاب لكن لا توفر رؤية قابلة للتنفيذ: 'إجمالي الأحداث المعالجة' لا معنى له؛ 'الأحداث المطابقة لمعلومات التهديدات' قابل للتنفيذ. يجب أن يطابق تكرار التحديث غرض لوحة المعلومات: لوحات المعلومات التشغيلية تُحدَّث كل 5 دقائق، ولوحات المعلومات التكتيكية كل ساعة، ولوحات المعلومات الاستراتيجية يومياً أو أسبوعياً. ضمّن طابعاً زمنياً يُظهر متى حُدِّثَت لوحة المعلومات آخر مرة بحيث يعرف المحللون إذا كانت البيانات حالية."
+          }
+        },
+        {
+          "id": 21,
+          "type": "hr"
+        },
+        {
+          "id": 22,
+          "type": "title",
+          "value": {
+            "en": "Reporting for Compliance and Evidence Documentation",
+            "ar": "الإبلاغ للامتثال وتوثيق الأدلة"
+          }
+        },
+        {
+          "id": 23,
+          "type": "text",
+          "value": {
+            "en": "While dashboards provide real-time visibility, scheduled reports provide historical documentation required for compliance audits and legal proceedings. Compliance frameworks like PCI-DSS, SOC 2, ISO 27001, and HIPAA all require regular security monitoring reports proving that the organization is actively detecting and responding to threats. These reports must be generated automatically on a schedule, delivered in formats auditors can review (PDF, CSV, Excel), and stored securely with tamper-evident logging showing they have not been modified after creation.",
+            "ar": "بينما توفر لوحات المعلومات الرؤية في الوقت الفعلي، التقارير المجدولة توفر التوثيق التاريخي المطلوب لعمليات تدقيق الامتثال والإجراءات القانونية. أطر الامتثال مثل PCI-DSS، وSOC 2، وISO 27001، وHIPAA جميعها تتطلب تقارير مراقبة أمنية منتظمة تثبت أن المؤسسة تكشف بنشاط وتستجيب للتهديدات. يجب توليد هذه التقارير تلقائياً على جدول، وتسليمها بتنسيقات يمكن للمدققين مراجعتها (PDF، CSV، Excel)، وتخزينها بشكل آمن مع تسجيل واضح للعبث يُظهر أنها لم تُعدَّل بعد الإنشاء."
+          }
+        },
+        {
+          "id": 24,
+          "type": "text",
+          "value": {
+            "en": "A typical compliance report for PCI-DSS might be scheduled to run monthly and include: all privileged account access showing who used administrator rights and when, all authentication failures and successes for systems handling cardholder data, all changes to security configurations such as firewall rules or user permissions, all security alerts triggered during the period with resolution status, and summary statistics showing mean detection time and response time. The report is automatically emailed to the compliance officer and security management team on the first day of each month covering the previous month's activity.",
+            "ar": "تقرير امتثال نموذجي لـ PCI-DSS قد يُجدوَل ليعمل شهرياً ويتضمن: كل وصول للحسابات المميزة يُظهر من استخدم حقوق المدير ومتى، وكل إخفاقات ونجاحات المصادقة لأنظمة التعامل مع بيانات حامل البطاقة، وكل التغييرات على تكوينات الأمان مثل قواعد جدار الحماية أو أذونات المستخدمين، وكل التنبيهات الأمنية المُطلقة خلال الفترة مع حالة الحل، وإحصائيات ملخصة تُظهر متوسط وقت الكشف ووقت الاستجابة. يُرسَل التقرير تلقائياً بالبريد الإلكتروني إلى مسؤول الامتثال وفريق إدارة الأمان في اليوم الأول من كل شهر يغطي نشاط الشهر السابق."
+          }
+        },
+        {
+          "id": 25,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Professional Tip: Design compliance reports with auditors in mind. Include executive summary at the top, detailed evidence in the middle, and attestation signature at the bottom. Make it easy for auditors to find what they need without having to ask questions.",
+            "ar": "نصيحة احترافية: صمّم تقارير الامتثال مع وضع المدققين في الاعتبار. ضمّن ملخصاً تنفيذياً في الأعلى، وأدلة تفصيلية في الوسط، وتوقيع إقرار في الأسفل. اجعل من السهل على المدققين العثور على ما يحتاجونه بدون الحاجة لطرح أسئلة."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 26,
+          "type": "text",
+          "value": {
+            "en": "KPIs tracked on dashboards drive continuous improvement. Mean Time to Detect (MTTD) measures how quickly threats are identified from the moment they occur. Industry average is around 200 days for sophisticated attacks, but best-in-class SOCs achieve MTTD under 24 hours through effective alerting and monitoring. Mean Time to Respond (MTTR) measures how quickly threats are contained after detection. Target MTTR varies by severity: critical alerts should be responded to in under 15 minutes, high severity in under 1 hour, medium in under 4 hours. False positive rate shows alert quality: rates above 50% indicate poor tuning, rates under 20% indicate effective detection engineering.",
+            "ar": "مؤشرات الأداء الرئيسية (KPIs) المتتبعة على لوحات المعلومات تدفع التحسين المستمر. متوسط الوقت للكشف (MTTD) يقيس مدى سرعة تحديد التهديدات من لحظة حدوثها. متوسط الصناعة حوالي 200 يوم للهجمات المتطورة، لكن مراكز SOC الأفضل في فئتها تحقق MTTD تحت 24 ساعة من خلال التنبيه والمراقبة الفعالين. متوسط الوقت للاستجابة (MTTR) يقيس مدى سرعة احتواء التهديدات بعد الكشف. MTTR المستهدف يختلف حسب الخطورة: يجب الاستجابة للتنبيهات الحرجة في أقل من 15 دقيقة، والخطورة العالية في أقل من ساعة، والمتوسطة في أقل من 4 ساعات. معدل الإيجابيات الخاطئة يُظهر جودة التنبيهات: المعدلات فوق 50% تشير إلى ضبط ضعيف، والمعدلات تحت 20% تشير إلى هندسة كشف فعالة."
+          }
+        }
+      ]
+    },
+    {
+      "id": "topic-6",
+      "title": {
+        "en": "Lab: Detect Real Incidents from Logs",
+        "ar": "المختبر: كشف حوادث حقيقية من السجلات"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "Bringing It All Together: Hands-On Incident Detection",
+            "ar": "جمع كل شيء معاً: كشف الحوادث العملي"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "This lab brings together all the concepts from previous topics into practical incident detection scenarios. You will work with real log data, write SPL queries to find evidence of attacks, correlate events across multiple systems, and make incident classification decisions just like a professional SOC analyst. The scenarios are based on actual attack patterns seen in the wild, not theoretical examples. Successfully completing this lab demonstrates that you understand not just the theory of SIEM and log analysis, but can apply that knowledge to detect real security threats.",
+            "ar": "هذا المختبر يجمع كل المفاهيم من المواضيع السابقة في سيناريوهات كشف حوادث عملية. ستعمل مع بيانات سجلات حقيقية، وتكتب استعلامات SPL للعثور على أدلة الهجمات، وتربط الأحداث عبر أنظمة متعددة، وتتخذ قرارات تصنيف الحوادث تماماً مثل محلل SOC محترف. السيناريوهات مبنية على أنماط هجوم فعلية شُوهِدَت في العالم الحقيقي، وليست أمثلة نظرية. إكمال هذا المختبر بنجاح يثبت أنك تفهم ليس فقط نظرية SIEM وتحليل السجلات، لكن يمكنك تطبيق تلك المعرفة للكشف عن تهديدات أمنية حقيقية."
+          }
+        },
+        {
+          "id": 3,
+          "type": "text",
+          "value": {
+            "en": "The lab environment can be set up using several free options. Splunk Free allows ingestion of up to 500 MB of log data per day at no cost, sufficient for learning and practice. Splunk provides pre-built datasets called Boss of the SOC (BOTSv1, BOTSv2, BOTSv3) that contain realistic attack scenarios with complete logs from compromised environments. These datasets simulate real-world breaches including ransomware attacks, data exfiltration, and APT campaigns. For hands-on practice, you can also collect logs from your own Windows virtual machine by enabling Security Event logging and generating test events, or set up a small homelab with multiple systems generating authentication, network, and application logs.",
+            "ar": "يمكن إعداد بيئة المختبر باستخدام عدة خيارات مجانية. Splunk Free يسمح باستيعاب حتى 500 ميغابايت من بيانات السجلات في اليوم بدون تكلفة، كافٍ للتعلم والممارسة. توفر Splunk مجموعات بيانات مُعدّة مسبقاً تسمى Boss of the SOC (BOTSv1، BOTSv2، BOTSv3) تحتوي على سيناريوهات هجوم واقعية بسجلات كاملة من بيئات مخترقة. مجموعات البيانات هذه تحاكي اختراقات من العالم الحقيقي تتضمن هجمات برامج الفدية، وتسرب البيانات، وحملات APT. للممارسة العملية، يمكنك أيضاً جمع السجلات من جهازك الافتراضي Windows الخاص بك بتمكين تسجيل أحداث الأمان وتوليد أحداث اختبار، أو إعداد مختبر منزلي صغير بأنظمة متعددة تولّد سجلات المصادقة والشبكة والتطبيقات."
+          }
+        },
+        {
+          "id": 4,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Lab Setup: Download Splunk Free from splunk.com, install on Windows/Linux/Mac, import BOTS dataset or your own Windows Event Logs. Allocate at least 8GB RAM and 50GB disk space for smooth performance.",
+            "ar": "إعداد المختبر: نزّل Splunk Free من splunk.com، وثبّته على Windows/Linux/Mac، واستورد مجموعة بيانات BOTS أو سجلات أحداث Windows الخاصة بك. خصص على الأقل 8 غيغابايت رام و50 غيغابايت مساحة قرص للأداء السلس."
+          },
+          "link": "",
+          "isLab": true
+        },
+        {
+          "id": 5,
+          "type": "hr"
+        },
+        {
+          "id": 6,
+          "type": "title",
+          "value": {
+            "en": "Incident Scenario 1: Brute Force Attack Leading to Compromise",
+            "ar": "سيناريو الحادث 1: هجوم القوة الغاشمة يؤدي إلى الاختراق"
+          }
+        },
+        {
+          "id": 7,
+          "type": "text",
+          "value": {
+            "en": "In this scenario, an external attacker is attempting to guess passwords for user accounts by trying common passwords and leaked credentials. Your goal is to detect the attack, identify which account was compromised, determine the attacker's IP address, and establish a timeline of the compromise. This is one of the most common attack patterns: attackers obtain lists of usernames from social media or data breaches, then use automated tools to try thousands of password guesses per minute until they find a valid combination.",
+            "ar": "في هذا السيناريو، مهاجم خارجي يحاول تخمين كلمات مرور لحسابات المستخدمين بتجربة كلمات مرور شائعة وبيانات اعتماد مُسرَّبة. هدفك هو كشف الهجوم، وتحديد أي حساب اختُرِق، وتحديد عنوان IP للمهاجم، وإنشاء جدول زمني للاختراق. هذا أحد أكثر أنماط الهجوم شيوعاً: يحصل المهاجمون على قوائم بأسماء المستخدمين من وسائل التواصل الاجتماعي أو اختراقات البيانات، ثم يستخدمون أدوات آلية لتجربة آلاف تخمينات كلمات المرور في الدقيقة حتى يجدوا مجموعة صالحة."
+          }
+        },
+        {
+          "id": 8,
+          "type": "orderedList",
+          "title": {
+            "en": "Step-by-Step Investigation: Brute Force Detection",
+            "ar": "التحقيق خطوة بخطوة: كشف القوة الغاشمة"
+          },
+          "items": [
+            {
+              "subtitle": {
+                "en": "Step 1: Search for Failed Login Attempts",
+                "ar": "الخطوة 1: ابحث عن محاولات تسجيل دخول فاشلة"
+              },
+              "text": {
+                "en": "Start by querying Windows Security logs for Event ID 4625, which records failed authentication attempts. Sort the results by source IP address and target account name to identify patterns. Look for the same IP attempting to log into multiple accounts, or many attempts against a single high-value account.",
+                "ar": "ابدأ بالاستعلام عن سجلات أمان Windows لمعرّف الحدث 4625، الذي يسجّل محاولات المصادقة الفاشلة. رتّب النتائج حسب عنوان IP المصدر واسم الحساب المستهدف لتحديد الأنماط. ابحث عن نفس عنوان IP يحاول تسجيل الدخول إلى حسابات متعددة، أو محاولات كثيرة ضد حساب واحد عالي القيمة."
+              },
+              "example": {
+                "en": "SPL: index=win_events EventCode=4625 | stats count by src_ip, AccountName | sort -count",
+                "ar": "SPL: index=win_events EventCode=4625 | stats count by src_ip, AccountName | sort -count"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Step 2: Identify High-Volume Attack Sources",
+                "ar": "الخطوة 2: حدد مصادر الهجوم عالية الحجم"
+              },
+              "text": {
+                "en": "From the results, identify which source IPs have the highest failure counts. A legitimate user might fail to login 2-3 times if they forgot their password. An attacker will fail 50, 100, or more times as they iterate through password lists. Filter for IPs with more than 10 failures as your initial threshold.",
+                "ar": "من النتائج، حدد أي عناوين IP المصدر لديها أعلى أعداد إخفاقات. مستخدم شرعي قد يفشل في تسجيل الدخول 2-3 مرات إذا نسي كلمة مروره. مهاجم سيفشل 50، 100، أو أكثر حيث يتكرر عبر قوائم كلمات المرور. رشّح لعناوين IP بأكثر من 10 إخفاقات كعتبتك الأولية."
+              },
+              "example": {
+                "en": "Filter: | where count > 10",
+                "ar": "المرشح: | where count > 10"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Step 3: Check for Successful Login After Failures",
+                "ar": "الخطوة 3: تحقق من تسجيل دخول ناجح بعد الإخفاقات"
+              },
+              "text": {
+                "en": "Now search for Event ID 4624 (successful login) from the same suspicious IP addresses identified in step 2. If you find a 4624 event from an IP that also had many 4625 events, the attacker successfully guessed the password. Note the exact time of the successful login and the compromised account name.",
+                "ar": "الآن ابحث عن معرّف الحدث 4624 (تسجيل دخول ناجح) من نفس عناوين IP المشبوهة المحددة في الخطوة 2. إذا وجدت حدث 4624 من عنوان IP كان لديه أيضاً أحداث 4625 كثيرة، خمّن المهاجم كلمة المرور بنجاح. لاحظ الوقت الدقيق لتسجيل الدخول الناجح واسم الحساب المخترق."
+              },
+              "example": {
+                "en": "SPL: index=win_events EventCode=4624 src_ip=\"203.0.113.45\" | table _time, AccountName, ComputerName",
+                "ar": "SPL: index=win_events EventCode=4624 src_ip=\"203.0.113.45\" | table _time, AccountName, ComputerName"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Step 4: Establish Attack Timeline",
+                "ar": "الخطوة 4: أنشئ جدولاً زمنياً للهجوم"
+              },
+              "text": {
+                "en": "Create a timeline showing: when did the failures start, how many failures occurred, when did the successful login happen, and what was the time gap between first failure and successful compromise. This timeline becomes part of your incident report and helps determine if the attack is still ongoing or has ended.",
+                "ar": "أنشئ جدولاً زمنياً يُظهر: متى بدأت الإخفاقات، وكم عدد الإخفاقات حدثت، ومتى حدث تسجيل الدخول الناجح، وما كانت الفجوة الزمنية بين الفشل الأول والاختراق الناجح. هذا الجدول الزمني يصبح جزءاً من تقرير حادثك ويساعد على تحديد إذا كان الهجوم لا يزال مستمراً أو انتهى."
+              },
+              "example": {
+                "en": "Timeline: 16:15 - First failure | 16:22 - 50+ failures | 16:23 - Successful compromise",
+                "ar": "الجدول الزمني: 16:15 - الفشل الأول | 16:22 - 50+ إخفاقات | 16:23 - اختراق ناجح"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Step 5: Determine Response Actions",
+                "ar": "الخطوة 5: حدد إجراءات الاستجابة"
+              },
+              "text": {
+                "en": "Based on confirmed compromise, recommend immediate response: disable the compromised account to prevent further attacker access, block the attacker's IP address at the firewall, force password reset for the affected user, search for any actions the attacker took after successful login such as file access or lateral movement attempts.",
+                "ar": "بناءً على الاختراق المؤكد، أوصِ باستجابة فورية: عطّل الحساب المخترق لمنع وصول مهاجم إضافي، واحظر عنوان IP للمهاجم في جدار الحماية، وأجبر إعادة تعيين كلمة المرور للمستخدم المتأثر، وابحث عن أي إجراءات اتخذها المهاجم بعد تسجيل الدخول الناجح مثل الوصول إلى الملفات أو محاولات الحركة الجانبية."
+              },
+              "example": {
+                "en": "Actions: Disable account + Block IP + Reset password + Investigate post-compromise activity",
+                "ar": "الإجراءات: عطّل الحساب + احظر IP + أعد تعيين كلمة المرور + حقق في النشاط بعد الاختراق"
+              }
+            }
+          ]
+        },
+        {
+          "id": 9,
+          "type": "terminal",
+          "label": {
+            "en": "Complete Detection Query: Brute Force Pattern",
+            "ar": "استعلام كشف كامل: نمط القوة الغاشمة"
+          },
+          "value": "index=win_events (EventCode=4625 OR EventCode=4624)\n| eval status=if(EventCode=4625,\"Failed\",\"Success\")\n| stats count(eval(status=\"Failed\")) as failures, \n        count(eval(status=\"Success\")) as successes \n        by src_ip, AccountName\n| where failures > 10 AND successes > 0\n| sort -failures"
+        },
+        {
+          "id": 10,
+          "type": "text",
+          "value": {
+            "en": "The query above is a production-ready detection rule that finds successful brute-force compromises. It searches for both failed and successful logins, counts them separately by source IP and account, and only shows results where there were more than 10 failures followed by at least one success. This pattern indicates an attacker successfully guessed credentials after multiple attempts. Deploy this as a scheduled alert running every 5 minutes to detect brute-force attacks in real-time.",
+            "ar": "الاستعلام أعلاه قاعدة كشف جاهزة للإنتاج تجد اختراقات القوة الغاشمة الناجحة. يبحث عن تسجيلات دخول فاشلة وناجحة، ويعدّها بشكل منفصل حسب عنوان IP المصدر والحساب، ويُظهر فقط النتائج حيث كانت هناك أكثر من 10 إخفاقات متبوعة بنجاح واحد على الأقل. هذا النمط يشير إلى أن مهاجماً خمّن بيانات الاعتماد بنجاح بعد محاولات متعددة. انشر هذا كتنبيه مجدول يعمل كل 5 دقائق لكشف هجمات القوة الغاشمة في الوقت الفعلي."
+          }
+        },
+        {
+          "id": 11,
+          "type": "hr"
+        },
+        {
+          "id": 12,
+          "type": "title",
+          "value": {
+            "en": "Incident Scenario 2: Malware Execution via Malicious Macro",
+            "ar": "سيناريو الحادث 2: تنفيذ البرامج الخبيثة عبر ماكرو خبيث"
+          }
+        },
+        {
+          "id": 13,
+          "type": "text",
+          "value": {
+            "en": "This scenario simulates a phishing email attack where a user opens a malicious Word document attachment containing a macro that executes PowerShell to download additional malware. Your goal is to detect the malicious process execution, identify which user and system were affected, determine if the attack successfully downloaded malware, and map the attack to MITRE ATT&CK framework. This is the most common initial access vector for ransomware and targeted attacks.",
+            "ar": "هذا السيناريو يحاكي هجوم بريد إلكتروني تصيدي حيث يفتح مستخدم مستند Word خبيث مرفق يحتوي على ماكرو ينفّذ PowerShell لتنزيل برامج خبيثة إضافية. هدفك هو كشف تنفيذ العملية الخبيثة، وتحديد أي مستخدم ونظام تأثرا، وتحديد إذا كان الهجوم نزّل برامج خبيثة بنجاح، وتخطيط الهجوم إلى إطار MITRE ATT&CK. هذا ناقل الوصول الأولي الأكثر شيوعاً لبرامج الفدية والهجمات المستهدفة."
+          }
+        },
+        {
+          "id": 14,
+          "type": "text",
+          "value": {
+            "en": "The detection relies on Windows Event ID 4688 which records process creation including parent-child process relationships. When a user double-clicks a Word document, winword.exe launches. If that document contains a malicious macro, the macro instructs Word to spawn a child process: powershell.exe. Legitimate users almost never have a reason for Office applications to launch PowerShell. This parent-child relationship is a high-confidence indicator of macro malware and should trigger an immediate high-severity alert.",
+            "ar": "يعتمد الكشف على معرّف حدث Windows 4688 الذي يسجّل إنشاء العملية بما في ذلك علاقات العملية الأم-الابن. عندما ينقر مستخدم نقراً مزدوجاً على مستند Word، يُطلَق winword.exe. إذا احتوى ذلك المستند على ماكرو خبيث، يوجّه الماكرو Word لإنشاء عملية ابن: powershell.exe. المستخدمون الشرعيون تقريباً لا يكون لديهم سبب أبداً لتطبيقات Office لإطلاق PowerShell. علاقة الأم-الابن هذه مؤشر ثقة عالية لبرامج ماكرو خبيثة ويجب أن تطلق تنبيهاً عالي الخطورة فوراً."
+          }
+        },
+        {
+          "id": 15,
+          "type": "terminal",
+          "label": {
+            "en": "Detection Query: Office Application Spawning PowerShell",
+            "ar": "استعلام الكشف: تطبيق Office ينشئ PowerShell"
+          },
+          "value": "index=sysmon EventCode=1 \n| search ParentImage=\"*\\\\winword.exe\" OR ParentImage=\"*\\\\excel.exe\" OR ParentImage=\"*\\\\powerpnt.exe\"\n| search Image=\"*\\\\powershell.exe\" OR Image=\"*\\\\cmd.exe\"\n| table _time, ComputerName, User, ParentImage, Image, CommandLine\n| sort -_time"
+        },
+        {
+          "id": 16,
+          "type": "text",
+          "value": {
+            "en": "After detecting the suspicious process creation, pivot to network logs to see if PowerShell made outbound connections. Malicious macros typically download a second-stage payload from an attacker-controlled server. Search for network connections originating from the compromised system within 60 seconds after the PowerShell execution. If you find an outbound connection to an unknown external IP immediately after PowerShell spawned, this confirms the malware downloaded successfully and the system is fully compromised. This connection represents command and control (C2) communication.",
+            "ar": "بعد كشف إنشاء العملية المشبوهة، انتقل إلى سجلات الشبكة لمعرفة إذا كان PowerShell أجرى اتصالات صادرة. الماكرو الخبيثة عادةً تنزّل حمولة مرحلة ثانية من خادم يتحكم فيه مهاجم. ابحث عن اتصالات شبكة منشؤها النظام المخترق في غضون 60 ثانية بعد تنفيذ PowerShell. إذا وجدت اتصالاً صادراً بعنوان IP خارجي غير معروف فوراً بعد أن انبثق PowerShell، هذا يؤكد أن البرنامج الخبيث نُزِّل بنجاح والنظام مخترق بالكامل. هذا الاتصال يمثل اتصال القيادة والتحكم (C2)."
+          }
+        },
+        {
+          "id": 17,
+          "type": "table",
+          "title": {
+            "en": "MITRE ATT&CK Mapping: Malicious Macro Attack Chain",
+            "ar": "تخطيط MITRE ATT&CK: سلسلة هجوم الماكرو الخبيث"
+          },
+          "headers": {
+            "en": [
+              "Attack Stage",
+              "MITRE Technique",
+              "Evidence in Logs"
+            ],
+            "ar": [
+              "مرحلة الهجوم",
+              "تقنية MITRE",
+              "الأدلة في السجلات"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "Initial Access",
+                "T1566.001 - Phishing: Spearphishing Attachment",
+                "User opened malicious Word document"
+              ],
+              "ar": [
+                "الوصول الأولي",
+                "T1566.001 - التصيد: مرفق تصيد رمح",
+                "فتح المستخدم مستند Word خبيث"
+              ]
+            },
+            {
+              "en": [
+                "Execution",
+                "T1059.001 - Command and Scripting Interpreter: PowerShell",
+                "winword.exe spawned powershell.exe"
+              ],
+              "ar": [
+                "التنفيذ",
+                "T1059.001 - مفسّر الأوامر والسكريبت: PowerShell",
+                "أنشأ winword.exe powershell.exe"
+              ]
+            },
+            {
+              "en": [
+                "Command & Control",
+                "T1071.001 - Application Layer Protocol: Web",
+                "PowerShell connected to external IP"
+              ],
+              "ar": [
+                "القيادة والتحكم",
+                "T1071.001 - بروتوكول طبقة التطبيق: الويب",
+                "اتصل PowerShell بعنوان IP خارجي"
+              ]
+            },
+            {
+              "en": [
+                "Defense Evasion",
+                "T1027 - Obfuscated Files or Information",
+                "PowerShell command encoded in Base64"
+              ],
+              "ar": [
+                "التهرب الدفاعي",
+                "T1027 - ملفات أو معلومات مموهة",
+                "أمر PowerShell مرمّز في Base64"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 18,
+          "type": "hr"
+        },
+        {
+          "id": 19,
+          "type": "title",
+          "value": {
+            "en": "Incident Scenario 3: Lateral Movement via SSH",
+            "ar": "سيناريو الحادث 3: الحركة الجانبية عبر SSH"
+          }
+        },
+        {
+          "id": 20,
+          "type": "text",
+          "value": {
+            "en": "In this scenario, an attacker has already compromised one Linux server and is using SSH to move laterally to other systems in the network. Lateral movement is a critical post-compromise activity where attackers spread from the initial compromised system to other valuable targets like database servers, domain controllers, or systems with sensitive data. Your goal is to detect the unusual SSH access pattern, identify which systems are affected, and determine the scope of the compromise.",
+            "ar": "في هذا السيناريو، مهاجم اخترق بالفعل خادم Linux واحد ويستخدم SSH للتحرك جانبياً إلى أنظمة أخرى في الشبكة. الحركة الجانبية نشاط حرج بعد الاختراق حيث ينتشر المهاجمون من النظام المخترق الأولي إلى أهداف قيّمة أخرى مثل خوادم قواعد البيانات، أو متحكمات النطاق، أو أنظمة ببيانات حساسة. هدفك هو كشف نمط وصول SSH غير العادي، وتحديد أي الأنظمة متأثرة، وتحديد نطاق الاختراق."
+          }
+        },
+        {
+          "id": 21,
+          "type": "text",
+          "value": {
+            "en": "The key indicator is a single source system successfully SSH connecting to multiple different destination systems within a short time period. Legitimate administrators occasionally SSH between systems, but they typically connect to one or two specific servers they manage. An attacker performing reconnaissance connects to many systems rapidly as they search for valuable data. Detect this by counting the number of unique destination hosts each source connects to via SSH within a rolling time window.",
+            "ar": "المؤشر الرئيسي هو نظام مصدر واحد يتصل عبر SSH بنجاح بعدة أنظمة وجهة مختلفة في فترة زمنية قصيرة. المسؤولون الشرعيون يتصلون أحياناً عبر SSH بين الأنظمة، لكنهم عادةً يتصلون بخادم أو اثنين محددين يديرونهم. مهاجم يجري استطلاعاً يتصل بأنظمة كثيرة بسرعة حيث يبحثون عن بيانات قيّمة. اكشف هذا بعد عدد مضيفات الوجهة الفريدة التي يتصل بها كل مصدر عبر SSH في نافذة زمنية متحركة."
+          }
+        },
+        {
+          "id": 22,
+          "type": "terminal",
+          "label": {
+            "en": "Detection Query: SSH Lateral Movement Pattern",
+            "ar": "استعلام الكشف: نمط الحركة الجانبية SSH"
+          },
+          "value": "index=linux_logs sourcetype=linux_secure \"Accepted password\" OR \"Accepted publickey\"\n| rex field=_raw \"from (?<src_ip>\\d+\\.\\d+\\.\\d+\\.\\d+)\"\n| stats dc(host) as unique_hosts, values(host) as target_systems by src_ip, user\n| where unique_hosts > 3\n| sort -unique_hosts"
+        },
+        {
+          "id": 23,
+          "type": "text",
+          "value": {
+            "en": "The query identifies source IPs that successfully authenticated via SSH to more than 3 different systems. The 'dc(host)' function counts distinct (unique) destination hostnames. If a source connects to 5, 10, or more different systems, this is highly suspicious lateral movement behavior. Once you identify the suspicious source, trace backwards to find the initial compromised system: which was the first system that source IP logged into? That is patient zero, the initial breach point that must be isolated and forensically analyzed.",
+            "ar": "يحدد الاستعلام عناوين IP المصدر التي صادقت بنجاح عبر SSH إلى أكثر من 3 أنظمة مختلفة. دالة 'dc(host)' تعد أسماء مضيفات الوجهة المميزة (الفريدة). إذا اتصل مصدر بـ 5، 10، أو أكثر من الأنظمة المختلفة، هذا سلوك حركة جانبية مشبوه للغاية. بمجرد تحديد المصدر المشبوه، تتبع للخلف للعثور على النظام المخترق الأولي: أي كان أول نظام سجّل عنوان IP المصدر دخوله؟ هذا هو المريض صفر، نقطة الاختراق الأولية التي يجب عزلها وتحليلها جنائياً."
+          }
+        },
+        {
+          "id": 24,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "Critical Analyst Mindset: Never investigate a single event in isolation. Ten failed SSH attempts from one IP is noise. Ten failed attempts followed by success, followed by logins to five other servers within 10 minutes is a confirmed incident requiring immediate escalation.",
+            "ar": "عقلية المحلل الحرجة: لا تحقق أبداً في حدث واحد بمعزل عن غيره. عشر محاولات SSH فاشلة من عنوان IP واحد ضجيج. عشر محاولات فاشلة متبوعة بنجاح، متبوعة بتسجيلات دخول إلى خمسة خوادم أخرى في غضون 10 دقائق حادث مؤكد يتطلب تصعيداً فورياً."
+          },
+          "link": "",
+          "isLab": true
+        },
+        {
+          "id": 25,
+          "type": "hr"
+        },
+        {
+          "id": 26,
+          "type": "title",
+          "value": {
+            "en": "Complete Incident Investigation Workflow",
+            "ar": "سير عمل التحقيق في الحوادث الكامل"
+          }
+        },
+        {
+          "id": 27,
+          "type": "text",
+          "value": {
+            "en": "Every security incident investigation follows a structured methodology regardless of the attack type. When an alert fires, the analyst must first review the raw events that triggered the alert to understand exactly what happened. Next, identify the five W's: Who (which user account or attacker IP), What (which actions were taken or attempted), When (exact timestamps showing the attack timeline), Where (which systems and networks were involved), and How (which attack techniques and tools were used). This systematic approach ensures no critical details are missed.",
+            "ar": "كل تحقيق حادث أمني يتبع منهجية منظمة بغض النظر عن نوع الهجوم. عندما يُطلَق تنبيه، يجب على المحلل أولاً مراجعة الأحداث الخام التي أطلقت التنبيه لفهم بالضبط ما حدث. بعد ذلك، حدد الأسئلة الخمسة: من (أي حساب مستخدم أو عنوان IP مهاجم)، وماذا (أي الإجراءات اتُخِذَت أو حُوولِت)، ومتى (طوابع زمنية دقيقة تُظهر الجدول الزمني للهجوم)، وأين (أي الأنظمة والشبكات تضمنت)، وكيف (أي تقنيات وأدوات الهجوم استُخدِمَت). هذا النهج المنظم يضمن عدم تفويت تفاصيل حرجة."
+          }
+        },
+        {
+          "id": 28,
+          "type": "text",
+          "value": {
+            "en": "Correlation across log sources is essential for understanding the full attack scope. An alert might fire based on Windows authentication logs, but you must also check network firewall logs to see if the attacker made outbound connections, endpoint logs to see if files were accessed or modified, and application logs to see if databases were queried. Each log source provides a different piece of the puzzle. Only by correlating across all sources can you determine whether this is an isolated failed attempt or a successful multi-stage compromise.",
+            "ar": "الربط عبر مصادر السجلات أساسي لفهم نطاق الهجوم الكامل. قد يُطلَق تنبيه بناءً على سجلات مصادقة Windows، لكن يجب عليك أيضاً التحقق من سجلات جدار حماية الشبكة لمعرفة إذا كان المهاجم أجرى اتصالات صادرة، وسجلات نقطة النهاية لمعرفة إذا وُصِلَ إلى ملفات أو عُدِّلَت، وسجلات التطبيقات لمعرفة إذا استُعلِمَت قواعد البيانات. كل مصدر سجل يوفر قطعة مختلفة من اللغز. فقط بالربط عبر كل المصادر يمكنك تحديد ما إذا كانت هذه محاولة فاشلة معزولة أو اختراق متعدد المراحل ناجح."
+          }
+        },
+        {
+          "id": 29,
+          "type": "text",
+          "value": {
+            "en": "The final step is classification: True Positive or False Positive. A True Positive means real malicious activity occurred and response actions are required: contain the threat by disabling accounts or blocking IPs, eradicate the malware or attacker access, recover affected systems, and document everything in an incident report with timeline, indicators of compromise, affected systems, and remediation steps taken. A False Positive means the alert fired on benign activity: document why it was false positive, update the detection rule to exclude this scenario in the future, and close the alert. Never just dismiss an alert without investigation and documentation.",
+            "ar": "الخطوة الأخيرة هي التصنيف: إيجابي حقيقي أو إيجابي خاطئ. إيجابي حقيقي يعني حدث نشاط خبيث حقيقي ومطلوبة إجراءات استجابة: احتو التهديد بتعطيل الحسابات أو حظر عناوين IP، واستأصل البرنامج الخبيث أو وصول المهاجم، واستعد الأنظمة المتأثرة، ووثّق كل شيء في تقرير حادث بالجدول الزمني، ومؤشرات الاختراق، والأنظمة المتأثرة، وخطوات المعالجة المتخذة. إيجابي خاطئ يعني أن التنبيه أُطلِقَ على نشاط حميد: وثّق لماذا كان إيجابياً خاطئاً، وحدّث قاعدة الكشف لاستثناء هذا السيناريو في المستقبل، وأغلق التنبيه. لا ترفض أبداً تنبيهاً بدون تحقيق وتوثيق."
+          }
+        },
+        {
+          "id": 30,
+          "type": "orderedList",
+          "title": {
+            "en": "Standard Incident Response Workflow",
+            "ar": "سير عمل الاستجابة للحوادث القياسي"
+          },
+          "items": [
+            {
+              "subtitle": {
+                "en": "Detection",
+                "ar": "الكشف"
+              },
+              "text": {
+                "en": "Alert fires in SIEM based on correlation rule or threshold. Analyst receives notification via email, SMS, or SOC dashboard. Time from attack occurrence to alert generation is MTTD (Mean Time to Detect).",
+                "ar": "يُطلَق التنبيه في SIEM بناءً على قاعدة ربط أو عتبة. يستقبل المحلل إشعاراً عبر البريد الإلكتروني، أو الرسائل القصيرة، أو لوحة معلومات SOC. الوقت من حدوث الهجوم إلى توليد التنبيه هو MTTD (متوسط الوقت للكشف)."
+              },
+              "example": {
+                "en": "High severity alert: Brute force attack detected on SERVER-PROD-01",
+                "ar": "تنبيه عالي الخطورة: كُشِف هجوم القوة الغاشمة على SERVER-PROD-01"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Analysis",
+                "ar": "التحليل"
+              },
+              "text": {
+                "en": "Analyst reviews alert details, examines raw log events, identifies the five W's (Who/What/When/Where/How), correlates across multiple log sources, enriches with threat intelligence, and determines True Positive or False Positive.",
+                "ar": "يراجع المحلل تفاصيل التنبيه، ويفحص أحداث السجل الخام، ويحدد الأسئلة الخمسة (من/ماذا/متى/أين/كيف)، ويربط عبر مصادر سجلات متعددة، ويُثري بمعلومات التهديدات، ويحدد إيجابي حقيقي أو إيجابي خاطئ."
+              },
+              "example": {
+                "en": "Confirmed: 50 failed logins followed by success from 203.0.113.45 targeting admin account",
+                "ar": "مؤكد: 50 تسجيل دخول فاشل متبوعاً بنجاح من 203.0.113.45 يستهدف حساب إداري"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Containment",
+                "ar": "الاحتواء"
+              },
+              "text": {
+                "en": "If True Positive, take immediate actions to stop the attack from spreading: disable compromised accounts, block attacker IPs at firewall, isolate affected systems from network, preserve evidence for forensics.",
+                "ar": "إذا إيجابي حقيقي، اتخذ إجراءات فورية لإيقاف انتشار الهجوم: عطّل الحسابات المخترقة، واحظر عناوين IP المهاجمة في جدار الحماية، وعزل الأنظمة المتأثرة عن الشبكة، واحفظ الأدلة للطب الشرعي."
+              },
+              "example": {
+                "en": "Actions: Disabled 'admin' account, blocked 203.0.113.45, isolated SERVER-PROD-01",
+                "ar": "الإجراءات: عُطِّل حساب 'admin'، وحُظِرَ 203.0.113.45، وعُزِلَ SERVER-PROD-01"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Eradication",
+                "ar": "الاستئصال"
+              },
+              "text": {
+                "en": "Remove attacker presence completely: remove malware, close backdoors, patch vulnerabilities exploited, reset credentials for all affected accounts, verify no persistence mechanisms remain.",
+                "ar": "أزِل وجود المهاجم تماماً: أزِل البرنامج الخبيث، وأغلق الأبواب الخلفية، ورقّع الثغرات المستغلة، وأعد تعيين بيانات الاعتماد لكل الحسابات المتأثرة، وتحقق من عدم بقاء آليات استمرارية."
+              },
+              "example": {
+                "en": "Removed backdoor service, patched SSH vulnerability, reset all admin passwords",
+                "ar": "أُزيلَت خدمة الباب الخلفي، ورُقِّعَت ثغرة SSH، وأُعيدَت تعيين كل كلمات مرور الإداريين"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Recovery",
+                "ar": "الاستعادة"
+              },
+              "text": {
+                "en": "Restore affected systems to normal operation: rebuild compromised systems from clean backups, restore network connectivity, re-enable accounts with strong passwords, monitor closely for signs of reinfection.",
+                "ar": "أعِد الأنظمة المتأثرة للعمل العادي: أعِد بناء الأنظمة المخترقة من نسخ احتياطية نظيفة، وأعِد اتصال الشبكة، وأعِد تمكين الحسابات بكلمات مرور قوية، وراقب عن كثب لعلامات إعادة الإصابة."
+              },
+              "example": {
+                "en": "SERVER-PROD-01 rebuilt from 2026-03-10 backup, returned to production",
+                "ar": "أُعيدَ بناء SERVER-PROD-01 من نسخة احتياطية 2026-03-10، وعاد للإنتاج"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Documentation",
+                "ar": "التوثيق"
+              },
+              "text": {
+                "en": "Write complete incident report including: timeline of events, indicators of compromise (IPs, hashes, domains), affected systems and accounts, root cause analysis, remediation actions taken, lessons learned, recommendations to prevent recurrence.",
+                "ar": "اكتب تقرير حادث كامل يتضمن: الجدول الزمني للأحداث، ومؤشرات الاختراق (عناوين IP، والتجزئات، والنطاقات)، والأنظمة والحسابات المتأثرة، وتحليل السبب الجذري، وإجراءات المعالجة المتخذة، والدروس المستفادة، والتوصيات لمنع التكرار."
+              },
+              "example": {
+                "en": "Incident #2026-0311-001 documented, IOCs shared with threat intelligence team",
+                "ar": "وُثِّقَ الحادث #2026-0311-001، وشُورِكَت مؤشرات الاختراق مع فريق معلومات التهديدات"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

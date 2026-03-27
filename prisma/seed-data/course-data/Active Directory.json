@@ -1,0 +1,2081 @@
+{
+  "landingData": {
+    "title": {
+      "en": "Active Directory: From Networks to Enterprise Security",
+      "ar": "الدليل النشط: من الشبكات إلى أمن المؤسسات"
+    },
+    "description": {
+      "en": "Master Active Directory from the ground up: understand network fundamentals, directory services, AD architecture, security attacks, and defense strategies used in enterprise environments.",
+      "ar": "أتقن الدليل النشط من الأساس: افهم أساسيات الشبكات، خدمات الدليل، بنية AD، هجمات الأمان، واستراتيجيات الدفاع المستخدمة في بيئات المؤسسات."
+    },
+    "difficulty": {
+      "en": "Beginner to Intermediate",
+      "ar": "من المبتدئ إلى المتوسط"
+    },
+    "duration": {
+      "en": "180 Minutes",
+      "ar": "180 دقيقة"
+    },
+    "instructor": "CyberLab",
+    "rating": 4.9,
+    "students": 250
+  },
+  "topics": [
+    {
+      "id": "topic-1",
+      "title": {
+        "en": "Understanding Network Models: Workgroups, Peers, and Domains",
+        "ar": "فهم نماذج الشبكات: مجموعات العمل والند للند والنطاقات"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "Network Models: The Foundation of Collaboration",
+            "ar": "نماذج الشبكات: أساس التعاون"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "Before understanding Active Directory, we must first understand how computers connect and share resources. When multiple computers need to work together, they form a network. The way these computers are organized and managed determines the network model. Three primary models exist: Workgroups, Peer-to-Peer networks, and Domain networks. Each model serves different needs and scales differently as organizations grow.",
+            "ar": "قبل فهم الدليل النشط، يجب أن نفهم أولاً كيف تتصل أجهزة الكمبيوتر وتشارك الموارد. عندما تحتاج عدة أجهزة كمبيوتر للعمل معاً، فإنها تشكل شبكة. الطريقة التي يتم بها تنظيم وإدارة هذه الأجهزة تحدد نموذج الشبكة. توجد ثلاثة نماذج أساسية: مجموعات العمل، والشبكات من الند للند، وشبكات النطاق. كل نموذج يخدم احتياجات مختلفة ويتوسع بشكل مختلف مع نمو المؤسسات."
+          }
+        },
+        {
+          "id": 1771986478817.6792,
+          "type": "image",
+          "srcKey": "",
+          "size": "small",
+          "imageUrl": "https://pub-cb38e65ea6bd411eb827a8641fdcc72d.r2.dev/Active%20Directory/three%20distinct%20sections.webp"
+        },
+        {
+          "id": 4,
+          "type": "title",
+          "value": {
+            "en": "Workgroup Networks: Simple but Limited",
+            "ar": "شبكات مجموعات العمل: بسيطة لكن محدودة"
+          }
+        },
+        {
+          "id": 5,
+          "type": "text",
+          "value": {
+            "en": "A Workgroup is the simplest network model where each computer is independent and equal. There is no central authority or server controlling access. Each computer maintains its own list of user accounts and passwords. When you want to access a shared folder on another computer, you must have a valid account on that specific computer. This works well for very small networks, typically 5 to 10 computers maximum.",
+            "ar": "مجموعة العمل هي أبسط نموذج شبكة حيث يكون كل جهاز كمبيوتر مستقلاً ومتساوياً. لا توجد سلطة مركزية أو خادم يتحكم في الوصول. كل جهاز كمبيوتر يحتفظ بقائمته الخاصة من حسابات المستخدمين وكلمات المرور. عندما تريد الوصول إلى مجلد مشترك على جهاز كمبيوتر آخر، يجب أن يكون لديك حساب صالح على ذلك الجهاز المحدد. هذا يعمل بشكل جيد للشبكات الصغيرة جداً، عادة 5 إلى 10 أجهزة كمبيوتر كحد أقصى."
+          }
+        },
+        {
+          "id": 6,
+          "type": "text",
+          "value": {
+            "en": "The main limitation of Workgroups appears when the network grows. Imagine managing passwords for 50 users across 50 computers. If one user needs access to 10 different computers, someone must create that user account 10 times on 10 different machines. When that user wants to change their password, they must change it on all 10 computers separately. This becomes unmanageable very quickly and creates significant security risks.",
+            "ar": "القيد الرئيسي لمجموعات العمل يظهر عندما تنمو الشبكة. تخيل إدارة كلمات المرور لـ 50 مستخدماً عبر 50 جهاز كمبيوتر. إذا احتاج مستخدم واحد للوصول إلى 10 أجهزة كمبيوتر مختلفة، يجب على شخص ما إنشاء حساب ذلك المستخدم 10 مرات على 10 أجهزة مختلفة. عندما يريد ذلك المستخدم تغيير كلمة المرور الخاصة به، يجب عليه تغييرها على جميع الأجهزة العشرة بشكل منفصل. هذا يصبح غير قابل للإدارة بسرعة كبيرة ويخلق مخاطر أمنية كبيرة."
+          }
+        },
+        {
+          "id": 7,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "Workgroups do not scale beyond small offices. Each computer acts as its own security boundary, making centralized management impossible.",
+            "ar": "مجموعات العمل لا تتوسع بما يتجاوز المكاتب الصغيرة. كل جهاز كمبيوتر يعمل كحدود أمان خاصة به، مما يجعل الإدارة المركزية مستحيلة."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 8,
+          "type": "title",
+          "value": {
+            "en": "Peer-to-Peer Networks: Decentralized Sharing",
+            "ar": "شبكات الند للند: مشاركة لا مركزية"
+          }
+        },
+        {
+          "id": 9,
+          "type": "text",
+          "value": {
+            "en": "Peer-to-Peer networks are similar to Workgroups but emphasize the concept of equality among all computers. In a P2P network, every computer can act as both a client requesting resources and a server providing resources. No single machine has special authority. Each computer manages its own security and decides what to share. This model is commonly seen in home networks where family members share files and printers directly between their personal computers.",
+            "ar": "شبكات الند للند تشبه مجموعات العمل لكنها تؤكد على مفهوم المساواة بين جميع أجهزة الكمبيوتر. في شبكة P2P، يمكن لكل جهاز كمبيوتر أن يعمل كعميل يطلب الموارد وكخادم يوفر الموارد. لا يوجد جهاز واحد له سلطة خاصة. كل جهاز كمبيوتر يدير أمنه الخاص ويقرر ما يشاركه. يُشاهد هذا النموذج بشكل شائع في الشبكات المنزلية حيث يشارك أفراد العائلة الملفات والطابعات مباشرة بين أجهزة الكمبيوتر الشخصية الخاصة بهم."
+          }
+        },
+        {
+          "id": 10,
+          "type": "text",
+          "value": {
+            "en": "The P2P model faces the same scalability challenges as Workgroups. Additionally, because each computer independently decides security settings, maintaining consistent security policies is nearly impossible. If one computer in the network has weak security, it can become an entry point for attackers to reach other machines. There is no central point to enforce password complexity, update policies, or monitor suspicious activity across all devices.",
+            "ar": "نموذج P2P يواجه نفس تحديات التوسع مثل مجموعات العمل. بالإضافة إلى ذلك، لأن كل جهاز كمبيوتر يقرر إعدادات الأمان بشكل مستقل، فإن الحفاظ على سياسات أمان متسقة يكاد يكون مستحيلاً. إذا كان أحد أجهزة الكمبيوتر في الشبكة يحتوي على أمان ضعيف، يمكن أن يصبح نقطة دخول للمهاجمين للوصول إلى أجهزة أخرى. لا توجد نقطة مركزية لفرض تعقيد كلمة المرور، أو تحديث السياسات، أو مراقبة النشاط المشبوه عبر جميع الأجهزة."
+          }
+        },
+        {
+          "id": 11,
+          "type": "hr"
+        },
+        {
+          "id": 12,
+          "type": "title",
+          "value": {
+            "en": "Domain Networks: Centralized Control",
+            "ar": "شبكات النطاق: التحكم المركزي"
+          }
+        },
+        {
+          "id": 13,
+          "type": "text",
+          "value": {
+            "en": "A Domain network introduces a fundamentally different architecture. In this model, one or more powerful servers called Domain Controllers manage authentication and authorization for all computers and users in the network. User accounts are stored centrally, not on individual machines. When a user logs in from any computer in the domain, the Domain Controller verifies their identity. This centralization solves the management nightmare of Workgroups and P2P networks.",
+            "ar": "شبكة النطاق تقدم بنية مختلفة بشكل أساسي. في هذا النموذج، يدير خادم قوي واحد أو أكثر يُسمى متحكمات النطاق المصادقة والتفويض لجميع أجهزة الكمبيوتر والمستخدمين في الشبكة. يتم تخزين حسابات المستخدمين بشكل مركزي، وليس على أجهزة فردية. عندما يقوم مستخدم بتسجيل الدخول من أي جهاز كمبيوتر في النطاق، يتحقق متحكم النطاق من هويته. هذا المركزية تحل كابوس إدارة مجموعات العمل وشبكات P2P."
+          }
+        },
+        {
+          "id": 14,
+          "type": "text",
+          "value": {
+            "en": "Domain networks scale efficiently to thousands of users and computers. Administrators can enforce security policies from a central location. Password requirements, software restrictions, and access permissions are defined once and applied automatically across the entire network. When an employee leaves the company, disabling one account instantly removes their access from all resources. This is the model that Active Directory implements.",
+            "ar": "شبكات النطاق تتوسع بكفاءة لتشمل آلاف المستخدمين وأجهزة الكمبيوتر. يمكن للمسؤولين فرض سياسات الأمان من موقع مركزي. متطلبات كلمة المرور، وقيود البرامج، وأذونات الوصول يتم تعريفها مرة واحدة وتطبيقها تلقائياً عبر الشبكة بأكملها. عندما يترك موظف الشركة، فإن تعطيل حساب واحد يزيل وصولهم فوراً من جميع الموارد. هذا هو النموذج الذي ينفذه الدليل النشط."
+          }
+        },
+        {
+          "id": 15,
+          "type": "table",
+          "title": {
+            "en": "Comparing Network Models",
+            "ar": "مقارنة نماذج الشبكات"
+          },
+          "headers": {
+            "en": [
+              "Feature",
+              "Workgroup",
+              "Peer-to-Peer",
+              "Domain"
+            ],
+            "ar": [
+              "الميزة",
+              "مجموعة العمل",
+              "الند للند",
+              "النطاق"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "Central Management",
+                "No",
+                "No",
+                "Yes"
+              ],
+              "ar": [
+                "الإدارة المركزية",
+                "لا",
+                "لا",
+                "نعم"
+              ]
+            },
+            {
+              "en": [
+                "Scalability",
+                "5-10 computers",
+                "5-15 computers",
+                "Unlimited"
+              ],
+              "ar": [
+                "قابلية التوسع",
+                "5-10 أجهزة كمبيوتر",
+                "5-15 جهاز كمبيوتر",
+                "غير محدود"
+              ]
+            },
+            {
+              "en": [
+                "User Account Storage",
+                "Each computer",
+                "Each computer",
+                "Domain Controller"
+              ],
+              "ar": [
+                "تخزين حساب المستخدم",
+                "كل جهاز كمبيوتر",
+                "كل جهاز كمبيوتر",
+                "متحكم النطاق"
+              ]
+            },
+            {
+              "en": [
+                "Security Policy Enforcement",
+                "Manual per machine",
+                "Manual per machine",
+                "Centralized automatic"
+              ],
+              "ar": [
+                "فرض سياسة الأمان",
+                "يدوي لكل جهاز",
+                "يدوي لكل جهاز",
+                "تلقائي مركزي"
+              ]
+            },
+            {
+              "en": [
+                "Best Use Case",
+                "Home, tiny office",
+                "Small teams",
+                "Business, enterprise"
+              ],
+              "ar": [
+                "أفضل حالة استخدام",
+                "منزل، مكتب صغير جداً",
+                "فرق صغيرة",
+                "الأعمال، المؤسسات"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 16,
+          "type": "title",
+          "value": {
+            "en": "Real-World Scenario: Growing from 5 to 500 Users",
+            "ar": "سيناريو واقعي: النمو من 5 إلى 500 مستخدم"
+          }
+        },
+        {
+          "id": 17,
+          "type": "text",
+          "value": {
+            "en": "Consider a startup company that begins with 5 employees sharing files through a Workgroup network. Each person has their own computer, and they occasionally share documents. Managing 5 accounts across 5 computers is simple. But as the company grows to 50 employees, problems emerge. The IT person spends hours creating accounts, resetting passwords, and troubleshooting access issues. Users forget which password works on which computer. Some share passwords to make things easier, creating security holes.",
+            "ar": "تخيل شركة ناشئة تبدأ بـ 5 موظفين يشاركون الملفات من خلال شبكة مجموعة عمل. كل شخص لديه جهاز الكمبيوتر الخاص به، وأحياناً يشاركون المستندات. إدارة 5 حسابات عبر 5 أجهزة كمبيوتر أمر بسيط. لكن مع نمو الشركة إلى 50 موظفاً، تظهر المشاكل. يقضي مسؤول تكنولوجيا المعلومات ساعات في إنشاء الحسابات، وإعادة تعيين كلمات المرور، واستكشاف مشاكل الوصول. ينسى المستخدمون أي كلمة مرور تعمل على أي جهاز كمبيوتر. يشارك البعض كلمات المرور لجعل الأمور أسهل، مما يخلق ثغرات أمنية."
+          }
+        },
+        {
+          "id": 18,
+          "type": "text",
+          "value": {
+            "en": "When the company reaches 500 employees across multiple office locations, the Workgroup model completely breaks down. At this point, implementing Active Directory with a Domain model becomes essential. Now users have one account that works everywhere. The IT team can instantly disable accounts, enforce strong password policies, and deploy security updates to all computers simultaneously. What took days in a Workgroup environment now takes minutes in a Domain. This is why Active Directory exists and why it dominates enterprise networks.",
+            "ar": "عندما تصل الشركة إلى 500 موظف عبر مواقع مكاتب متعددة، ينهار نموذج مجموعة العمل بالكامل. في هذه المرحلة، يصبح تنفيذ الدليل النشط مع نموذج النطاق أمراً أساسياً. الآن المستخدمون لديهم حساب واحد يعمل في كل مكان. يمكن لفريق تكنولوجيا المعلومات تعطيل الحسابات فوراً، وفرض سياسات كلمات مرور قوية، ونشر تحديثات الأمان على جميع أجهزة الكمبيوتر في وقت واحد. ما كان يستغرق أياماً في بيئة مجموعة العمل يستغرق الآن دقائق في النطاق. هذا هو سبب وجود الدليل النشط ولماذا يهيمن على شبكات المؤسسات."
+          }
+        },
+        {
+          "id": 19,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Active Directory solves the fundamental problem of identity and access management at scale. It transforms chaos into order as networks grow.",
+            "ar": "الدليل النشط يحل المشكلة الأساسية لإدارة الهوية والوصول على نطاق واسع. إنه يحول الفوضى إلى نظام مع نمو الشبكات."
+          },
+          "link": "",
+          "isLab": false
+        }
+      ]
+    },
+    {
+      "id": "topic-2",
+      "title": {
+        "en": "What is a Directory Service? From LDAP to Active Directory",
+        "ar": "ما هي خدمة الدليل؟ من LDAP إلى الدليل النشط"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "The Concept of Directory Services",
+            "ar": "مفهوم خدمات الدليل"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "A Directory Service is a specialized database designed to store, organize, and provide access to information about network resources. Think of it like a phone book for computers, but much more powerful. Instead of just names and numbers, it stores user accounts, computer accounts, printers, shared folders, security groups, and their relationships. The key difference from regular databases is that Directory Services are optimized for reading information quickly rather than frequent updates.",
+            "ar": "خدمة الدليل هي قاعدة بيانات متخصصة مصممة لتخزين وتنظيم وتوفير الوصول إلى المعلومات حول موارد الشبكة. فكر فيها مثل دليل الهاتف لأجهزة الكمبيوتر، لكنها أقوى بكثير. بدلاً من مجرد الأسماء والأرقام، تخزن حسابات المستخدمين، وحسابات الكمبيوتر، والطابعات، والمجلدات المشتركة، ومجموعات الأمان، وعلاقاتها. الفرق الرئيسي عن قواعد البيانات العادية هو أن خدمات الدليل محسّنة لقراءة المعلومات بسرعة بدلاً من التحديثات المتكررة."
+          }
+        },
+        {
+          "id": 3,
+          "type": "text",
+          "value": {
+            "en": "Directory Services answer questions like 'Who is this user?', 'What groups does this user belong to?', 'Which computers can this user access?', and 'What is the email address for this employee?'. Applications across the network query the Directory Service to make authentication and authorization decisions. This centralization ensures consistency. Without a Directory Service, each application would need its own user database, creating duplicate accounts and management chaos.",
+            "ar": "خدمات الدليل تجيب على أسئلة مثل 'من هو هذا المستخدم؟'، 'ما هي المجموعات التي ينتمي إليها هذا المستخدم؟'، 'ما هي أجهزة الكمبيوتر التي يمكن لهذا المستخدم الوصول إليها؟'، و'ما هو عنوان البريد الإلكتروني لهذا الموظف؟'. تستعلم التطبيقات عبر الشبكة عن خدمة الدليل لاتخاذ قرارات المصادقة والتفويض. هذه المركزية تضمن الاتساق. بدون خدمة الدليل، سيحتاج كل تطبيق إلى قاعدة بيانات المستخدمين الخاصة به، مما يخلق حسابات مكررة وفوضى إدارية."
+          }
+        },
+        {
+          "id": 1771986494622.1697,
+          "type": "image",
+          "srcKey": "",
+          "size": "small",
+          "imageUrl": "https://pub-cb38e65ea6bd411eb827a8641fdcc72d.r2.dev/Active%20Directory/central%20database%20icon.webp"
+        },
+        {
+          "id": 5,
+          "type": "title",
+          "value": {
+            "en": "LDAP: The Standard Protocol",
+            "ar": "LDAP: البروتوكول القياسي"
+          }
+        },
+        {
+          "id": 6,
+          "type": "text",
+          "value": {
+            "en": "LDAP stands for Lightweight Directory Access Protocol. It is not a directory service itself, but rather the standardized language that applications use to communicate with directory services. Think of LDAP as the common language that allows different systems to ask questions and receive answers from a directory. LDAP defines how to connect to a directory, how to search for information, how to read entries, and how to modify them when needed.",
+            "ar": "LDAP تعني بروتوكول الوصول إلى الدليل الخفيف. إنه ليس خدمة دليل بحد ذاته، بل هو اللغة الموحدة التي تستخدمها التطبيقات للتواصل مع خدمات الدليل. فكر في LDAP كلغة مشتركة تسمح لأنظمة مختلفة بطرح الأسئلة وتلقي الإجابات من الدليل. يحدد LDAP كيفية الاتصال بالدليل، وكيفية البحث عن المعلومات، وكيفية قراءة الإدخالات، وكيفية تعديلها عند الحاجة."
+          }
+        },
+        {
+          "id": 7,
+          "type": "text",
+          "value": {
+            "en": "LDAP organizes information in a hierarchical tree structure, similar to how files are organized in folders. At the top is the root, below that are branches representing organizations or divisions, and at the leaves are individual entries like users and computers. Each entry in an LDAP directory has a unique name called a Distinguished Name, or DN. The DN describes the full path to that entry in the tree, making it possible to locate any object precisely.",
+            "ar": "ينظم LDAP المعلومات في بنية شجرة هرمية، مشابهة لكيفية تنظيم الملفات في المجلدات. في الأعلى يوجد الجذر، وأسفل ذلك توجد فروع تمثل المنظمات أو الأقسام، وفي الأوراق توجد إدخالات فردية مثل المستخدمين وأجهزة الكمبيوتر. كل إدخال في دليل LDAP له اسم فريد يُسمى الاسم المميز، أو DN. يصف DN المسار الكامل إلى ذلك الإدخال في الشجرة، مما يجعل من الممكن تحديد موقع أي كائن بدقة."
+          }
+        },
+        {
+          "id": 8,
+          "type": "hr"
+        },
+        {
+          "id": 9,
+          "type": "title",
+          "value": {
+            "en": "LDAP Terminology Explained",
+            "ar": "شرح مصطلحات LDAP"
+          }
+        },
+        {
+          "id": 10,
+          "type": "text",
+          "value": {
+            "en": "Understanding LDAP requires knowing key terms. DN stands for Distinguished Name, which is the complete unique path to an entry. CN means Common Name, typically the actual name of the object like a username. OU stands for Organizational Unit, which is like a folder that groups related objects together. DC means Domain Component, representing parts of the domain name. For example, a user named John Smith in the IT department of the company example.com might have the DN: cn=John Smith,ou=IT,dc=example,dc=com.",
+            "ar": "فهم LDAP يتطلب معرفة المصطلحات الرئيسية. DN تعني الاسم المميز، وهو المسار الفريد الكامل إلى الإدخال. CN تعني الاسم الشائع، عادة الاسم الفعلي للكائن مثل اسم المستخدم. OU تعني الوحدة التنظيمية، والتي تشبه المجلد الذي يجمع الكائنات ذات الصلة معاً. DC تعني مكون النطاق، تمثل أجزاء من اسم النطاق. على سبيل المثال، قد يكون لمستخدم يُدعى John Smith في قسم تكنولوجيا المعلومات في الشركة example.com الاسم المميز: cn=John Smith,ou=IT,dc=example,dc=com."
+          }
+        },
+        {
+          "id": 11,
+          "type": "orderedList",
+          "title": {
+            "en": "Key LDAP Components with Examples",
+            "ar": "مكونات LDAP الرئيسية مع أمثلة"
+          },
+          "items": [
+            {
+              "subtitle": {
+                "en": "Distinguished Name (DN)",
+                "ar": "الاسم المميز (DN)"
+              },
+              "text": {
+                "en": "The complete unique identifier for an entry, showing its full path in the directory tree from the object up to the root.",
+                "ar": "المعرّف الفريد الكامل للإدخال، يظهر مساره الكامل في شجرة الدليل من الكائن حتى الجذر."
+              },
+              "example": {
+                "en": "cn=Ahmed Ali,ou=Sales,dc=cyberlab,dc=com",
+                "ar": "cn=Ahmed Ali,ou=Sales,dc=cyberlab,dc=com"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Common Name (CN)",
+                "ar": "الاسم الشائع (CN)"
+              },
+              "text": {
+                "en": "The human-readable name of the object itself, such as a person's full name or a computer's hostname.",
+                "ar": "الاسم القابل للقراءة للكائن نفسه، مثل الاسم الكامل للشخص أو اسم مضيف الكمبيوتر."
+              },
+              "example": {
+                "en": "cn=Ahmed Ali or cn=DESKTOP-PC01",
+                "ar": "cn=Ahmed Ali أو cn=DESKTOP-PC01"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Organizational Unit (OU)",
+                "ar": "الوحدة التنظيمية (OU)"
+              },
+              "text": {
+                "en": "A container that groups objects logically, like departments within a company. OUs help organize the directory and apply policies.",
+                "ar": "حاوية تجمع الكائنات منطقياً، مثل الأقسام داخل الشركة. تساعد الوحدات التنظيمية في تنظيم الدليل وتطبيق السياسات."
+              },
+              "example": {
+                "en": "ou=Sales, ou=Engineering, ou=HR",
+                "ar": "ou=Sales، ou=Engineering، ou=HR"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Domain Component (DC)",
+                "ar": "مكون النطاق (DC)"
+              },
+              "text": {
+                "en": "Parts of the domain name broken down into components. Used to build the root of the directory tree based on DNS naming.",
+                "ar": "أجزاء من اسم النطاق مقسمة إلى مكونات. تُستخدم لبناء جذر شجرة الدليل بناءً على تسمية DNS."
+              },
+              "example": {
+                "en": "dc=cyberlab,dc=com represents cyberlab.com",
+                "ar": "dc=cyberlab,dc=com تمثل cyberlab.com"
+              }
+            }
+          ]
+        },
+        {
+          "id": 12,
+          "type": "title",
+          "value": {
+            "en": "How Active Directory Extends LDAP",
+            "ar": "كيف يوسّع الدليل النشط LDAP"
+          }
+        },
+        {
+          "id": 13,
+          "type": "text",
+          "value": {
+            "en": "Active Directory is Microsoft's implementation of a directory service that uses LDAP as one of its access protocols. While LDAP is just a protocol for accessing directory information, Active Directory is a complete directory service with additional features. AD includes advanced authentication using Kerberos, Group Policy for centralized configuration management, replication between multiple domain controllers for redundancy, and tight integration with Windows operating systems.",
+            "ar": "الدليل النشط هو تنفيذ Microsoft لخدمة دليل تستخدم LDAP كأحد بروتوكولات الوصول الخاصة بها. بينما LDAP هو مجرد بروتوكول للوصول إلى معلومات الدليل، فإن الدليل النشط هو خدمة دليل كاملة مع ميزات إضافية. يتضمن AD مصادقة متقدمة باستخدام Kerberos، ونهج المجموعة لإدارة التكوين المركزية، والنسخ المتماثل بين متحكمات نطاق متعددة للتكرار، والتكامل الوثيق مع أنظمة تشغيل Windows."
+          }
+        },
+        {
+          "id": 14,
+          "type": "text",
+          "value": {
+            "en": "Think of the relationship this way: LDAP is the language you use to ask questions. Active Directory is the comprehensive system that stores the answers and provides many additional management tools. You can use LDAP queries to search Active Directory, but AD does far more than just respond to LDAP queries. It actively manages the network, enforces policies, handles authentication through Kerberos, and keeps multiple copies of the directory synchronized across domain controllers.",
+            "ar": "فكر في العلاقة بهذه الطريقة: LDAP هي اللغة التي تستخدمها لطرح الأسئلة. الدليل النشط هو النظام الشامل الذي يخزن الإجابات ويوفر العديد من أدوات الإدارة الإضافية. يمكنك استخدام استعلامات LDAP للبحث في الدليل النشط، لكن AD يفعل أكثر بكثير من مجرد الرد على استعلامات LDAP. إنه يدير الشبكة بنشاط، ويفرض السياسات، ويتعامل مع المصادقة من خلال Kerberos، ويحافظ على نسخ متعددة من الدليل متزامنة عبر متحكمات النطاق."
+          }
+        },
+        {
+          "id": 15,
+          "type": "table",
+          "title": {
+            "en": "LDAP vs Active Directory",
+            "ar": "LDAP مقابل الدليل النشط"
+          },
+          "headers": {
+            "en": [
+              "Aspect",
+              "LDAP",
+              "Active Directory"
+            ],
+            "ar": [
+              "الجانب",
+              "LDAP",
+              "الدليل النشط"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "Nature",
+                "Protocol for accessing directories",
+                "Complete directory service system"
+              ],
+              "ar": [
+                "الطبيعة",
+                "بروتوكول للوصول إلى الأدلة",
+                "نظام خدمة دليل كامل"
+              ]
+            },
+            {
+              "en": [
+                "Authentication",
+                "Basic bind authentication",
+                "Kerberos and NTLM protocols"
+              ],
+              "ar": [
+                "المصادقة",
+                "مصادقة ربط أساسية",
+                "بروتوكولات Kerberos و NTLM"
+              ]
+            },
+            {
+              "en": [
+                "Policy Management",
+                "None",
+                "Group Policy Objects (GPOs)"
+              ],
+              "ar": [
+                "إدارة السياسة",
+                "لا شيء",
+                "كائنات نهج المجموعة (GPOs)"
+              ]
+            },
+            {
+              "en": [
+                "Replication",
+                "Not defined by protocol",
+                "Multi-master replication built-in"
+              ],
+              "ar": [
+                "النسخ المتماثل",
+                "غير محدد بواسطة البروتوكول",
+                "نسخ متماثل متعدد الأساتذة مدمج"
+              ]
+            },
+            {
+              "en": [
+                "Platform",
+                "Cross-platform standard",
+                "Microsoft Windows focused"
+              ],
+              "ar": [
+                "المنصة",
+                "معيار عبر الأنظمة الأساسية",
+                "يركز على Microsoft Windows"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 16,
+          "type": "title",
+          "value": {
+            "en": "Kerberos vs LDAP: Authentication vs Directory Lookup",
+            "ar": "Kerberos مقابل LDAP: المصادقة مقابل البحث في الدليل"
+          }
+        },
+        {
+          "id": 17,
+          "type": "text",
+          "value": {
+            "en": "A common confusion is mixing up LDAP and Kerberos. LDAP is used to query and read information from the directory. It answers questions like 'what groups is this user in?' or 'what is this user's email address?'. Kerberos, on the other hand, is the authentication protocol that proves a user's identity. When you log in, Kerberos verifies your password and issues tickets that prove you are who you claim to be. LDAP then uses that authenticated identity to look up your permissions and group memberships.",
+            "ar": "ارتباك شائع هو الخلط بين LDAP و Kerberos. يُستخدم LDAP للاستعلام وقراءة المعلومات من الدليل. إنه يجيب على أسئلة مثل 'ما هي المجموعات التي ينتمي إليها هذا المستخدم؟' أو 'ما هو عنوان البريد الإلكتروني لهذا المستخدم؟'. Kerberos، من ناحية أخرى، هو بروتوكول المصادقة الذي يثبت هوية المستخدم. عندما تسجل الدخول، يتحقق Kerberos من كلمة المرور الخاصة بك ويصدر تذاكر تثبت أنك من تدعي أنك. ثم يستخدم LDAP تلك الهوية المصادقة للبحث عن أذوناتك وعضويات مجموعتك."
+          }
+        },
+        {
+          "id": 18,
+          "type": "text",
+          "value": {
+            "en": "Here is the typical flow: First, Kerberos authenticates you by checking your password against the domain controller. Once authenticated, you receive Kerberos tickets. Second, when you try to access a resource like a shared folder, the application queries LDAP to check if you have permission. LDAP looks up your user object, finds which groups you belong to, and returns that information. The application then makes an access decision based on the LDAP results. Kerberos proves who you are, LDAP tells what you can do.",
+            "ar": "إليك التدفق النموذجي: أولاً، يصادق Kerberos عليك عن طريق التحقق من كلمة المرور الخاصة بك مقابل متحكم النطاق. بمجرد المصادقة، تتلقى تذاكر Kerberos. ثانياً، عندما تحاول الوصول إلى مورد مثل مجلد مشترك، يستعلم التطبيق عن LDAP للتحقق مما إذا كان لديك إذن. يبحث LDAP عن كائن المستخدم الخاص بك، ويجد المجموعات التي تنتمي إليها، ويعيد تلك المعلومات. ثم يتخذ التطبيق قرار وصول بناءً على نتائج LDAP. Kerberos يثبت من أنت، LDAP يخبر بما يمكنك فعله."
+          }
+        },
+        {
+          "id": 19,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Remember: Kerberos = Who you are (authentication). LDAP = What you can access (directory information). Both work together in Active Directory.",
+            "ar": "تذكر: Kerberos = من أنت (المصادقة). LDAP = ما يمكنك الوصول إليه (معلومات الدليل). كلاهما يعملان معاً في الدليل النشط."
+          },
+          "link": "",
+          "isLab": false
+        }
+      ]
+    },
+    {
+      "id": "topic-3",
+      "title": {
+        "en": "Building Blocks of AD: Forests, Domains, Trees and OUs",
+        "ar": "كتل بناء AD: الغابات والنطاقات والأشجار والوحدات التنظيمية"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "Active Directory Domain Services Overview",
+            "ar": "نظرة عامة على خدمات نطاق الدليل النشط"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "Active Directory Domain Services, abbreviated as AD DS, is the core component of Active Directory. It is the service that runs on Windows Server machines and provides authentication, authorization, and directory services to the network. When people say 'Active Directory', they usually mean AD DS specifically. This service maintains the database of users, computers, groups, and other objects. It processes login requests, enforces security policies, and replicates information between domain controllers to ensure consistency.",
+            "ar": "خدمات نطاق الدليل النشط، المختصرة بـ AD DS، هي المكون الأساسي للدليل النشط. إنها الخدمة التي تعمل على أجهزة Windows Server وتوفر المصادقة والتفويض وخدمات الدليل للشبكة. عندما يقول الناس 'الدليل النشط'، فإنهم عادة يعنون AD DS على وجه التحديد. هذه الخدمة تحتفظ بقاعدة بيانات المستخدمين، وأجهزة الكمبيوتر، والمجموعات، والكائنات الأخرى. إنها تعالج طلبات تسجيل الدخول، وتفرض سياسات الأمان، وتنسخ المعلومات بين متحكمات النطاق لضمان الاتساق."
+          }
+        },
+        {
+          "id": 1771986506509.4062,
+          "type": "image",
+          "srcKey": "",
+          "size": "small",
+          "imageUrl": "https://pub-cb38e65ea6bd411eb827a8641fdcc72d.r2.dev/Active%20Directory/AD%20hierarchy.webp"
+        },
+        {
+          "id": 4,
+          "type": "title",
+          "value": {
+            "en": "AD Forests: The Top-Level Container",
+            "ar": "غابات AD: الحاوية من المستوى الأعلى"
+          }
+        },
+        {
+          "id": 5,
+          "type": "text",
+          "value": {
+            "en": "An AD Forest is the highest level of organization in Active Directory. It represents the outermost security and administrative boundary. Everything inside a forest shares a common schema, configuration, and global catalog. The schema defines what types of objects can exist and what attributes they have. Once you create a forest, all domains within it must follow the same schema rules. The forest also establishes the ultimate trust boundary: domains in the same forest automatically trust each other fully.",
+            "ar": "غابة AD هي أعلى مستوى من التنظيم في الدليل النشط. إنها تمثل حدود الأمان والإدارة الخارجية. كل شيء داخل الغابة يشترك في مخطط مشترك، وتكوين، وكتالوج عام. يحدد المخطط أنواع الكائنات التي يمكن أن توجد والسمات التي تمتلكها. بمجرد إنشاء غابة، يجب على جميع النطاقات داخلها اتباع نفس قواعد المخطط. تنشئ الغابة أيضاً حدود الثقة النهائية: النطاقات في نفس الغابة تثق ببعضها البعض تلقائياً بشكل كامل."
+          }
+        },
+        {
+          "id": 6,
+          "type": "text",
+          "value": {
+            "en": "Most organizations operate with a single forest. Creating multiple forests is a significant decision because forests do not automatically trust each other. Communication between forests requires explicit trust relationships to be configured. A company might create separate forests for security isolation, for example keeping a production forest completely separate from a development forest, or when two companies merge but want to maintain independent IT infrastructures initially.",
+            "ar": "تعمل معظم المؤسسات بغابة واحدة. إنشاء غابات متعددة هو قرار مهم لأن الغابات لا تثق ببعضها البعض تلقائياً. التواصل بين الغابات يتطلب تكوين علاقات ثقة صريحة. قد تنشئ شركة غابات منفصلة لعزل الأمان، على سبيل المثال الحفاظ على غابة إنتاج منفصلة تماماً عن غابة تطوير، أو عندما تندمج شركتان لكنهما تريدان الحفاظ على بنية تحتية لتكنولوجيا المعلومات مستقلة في البداية."
+          }
+        },
+        {
+          "id": 7,
+          "type": "hr"
+        },
+        {
+          "id": 8,
+          "type": "title",
+          "value": {
+            "en": "AD Domains: Administrative Units",
+            "ar": "نطاقات AD: الوحدات الإدارية"
+          }
+        },
+        {
+          "id": 9,
+          "type": "text",
+          "value": {
+            "en": "A Domain is the fundamental administrative unit within a forest. It contains users, computers, groups, and other objects that are managed together. Each domain has its own domain controllers that store a replica of the domain's directory database. Domains provide administrative boundaries, allowing different teams to manage different parts of the organization independently. For example, the IT department might have full control over the corporate domain, while a subsidiary company has a separate child domain they manage themselves.",
+            "ar": "النطاق هو الوحدة الإدارية الأساسية داخل الغابة. يحتوي على مستخدمين، وأجهزة كمبيوتر، ومجموعات، وكائنات أخرى تُدار معاً. كل نطاق لديه متحكمات نطاق خاصة به تخزن نسخة من قاعدة بيانات دليل النطاق. توفر النطاقات حدود إدارية، مما يسمح لفرق مختلفة بإدارة أجزاء مختلفة من المؤسسة بشكل مستقل. على سبيل المثال، قد يكون لقسم تكنولوجيا المعلومات السيطرة الكاملة على نطاق الشركة، بينما شركة تابعة لديها نطاق فرعي منفصل يديرونه بأنفسهم."
+          }
+        },
+        {
+          "id": 10,
+          "type": "text",
+          "value": {
+            "en": "Domains are identified by DNS names. The first domain created in a forest is called the forest root domain and establishes the naming structure for the entire forest. Additional domains can be created as children of the root domain or as separate trees within the forest. Each domain has its own security policies and can be managed independently, but all domains in the forest share the same schema and automatically trust each other through transitive trust relationships.",
+            "ar": "يتم تحديد النطاقات بواسطة أسماء DNS. يُسمى النطاق الأول الذي تم إنشاؤه في الغابة نطاق جذر الغابة ويؤسس بنية التسمية للغابة بأكملها. يمكن إنشاء نطاقات إضافية كأطفال لنطاق الجذر أو كأشجار منفصلة داخل الغابة. كل نطاق لديه سياسات أمان خاصة به ويمكن إدارته بشكل مستقل، لكن جميع النطاقات في الغابة تشترك في نفس المخطط وتثق ببعضها البعض تلقائياً من خلال علاقات ثقة انتقالية."
+          }
+        },
+        {
+          "id": 11,
+          "type": "title",
+          "value": {
+            "en": "Domain Trees: Parent-Child Relationships",
+            "ar": "أشجار النطاق: علاقات الأبوين والأطفال"
+          }
+        },
+        {
+          "id": 12,
+          "type": "text",
+          "value": {
+            "en": "A Domain Tree is formed when you create child domains under a parent domain, creating a hierarchical DNS namespace. For example, if your forest root domain is company.com, you might create child domains like sales.company.com and engineering.company.com. These child domains form a tree because they share a contiguous DNS namespace with their parent. The tree structure reflects organizational hierarchy and helps with delegation of administration.",
+            "ar": "يتم تشكيل شجرة النطاق عندما تنشئ نطاقات فرعية تحت نطاق أصلي، مما يخلق مساحة اسم DNS هرمية. على سبيل المثال، إذا كان نطاق جذر الغابة الخاص بك هو company.com، فقد تنشئ نطاقات فرعية مثل sales.company.com و engineering.company.com. هذه النطاقات الفرعية تشكل شجرة لأنها تشترك في مساحة اسم DNS متجاورة مع أصلها. تعكس بنية الشجرة التسلسل الهرمي التنظيمي وتساعد في تفويض الإدارة."
+          }
+        },
+        {
+          "id": 13,
+          "type": "text",
+          "value": {
+            "en": "Trust relationships automatically flow both up and down the tree. A child domain trusts its parent, and the parent trusts the child. These trusts are transitive, meaning if Domain A trusts Domain B, and Domain B trusts Domain C, then Domain A also trusts Domain C. This automatic trust structure eliminates the need to manually configure trust relationships between domains in the same tree, simplifying user access across the organization.",
+            "ar": "تتدفق علاقات الثقة تلقائياً لأعلى ولأسفل الشجرة. النطاق الفرعي يثق بأصله، والأصل يثق بالفرع. هذه الثقة انتقالية، مما يعني أنه إذا كان النطاق A يثق بالنطاق B، والنطاق B يثق بالنطاق C، فإن النطاق A يثق أيضاً بالنطاق C. هذا الهيكل التلقائي للثقة يلغي الحاجة إلى تكوين علاقات الثقة يدوياً بين النطاقات في نفس الشجرة، مما يبسط وصول المستخدم عبر المؤسسة."
+          }
+        },
+        {
+          "id": 14,
+          "type": "title",
+          "value": {
+            "en": "Organizational Units: Logical Grouping Inside Domains",
+            "ar": "الوحدات التنظيمية: التجميع المنطقي داخل النطاقات"
+          }
+        },
+        {
+          "id": 15,
+          "type": "text",
+          "value": {
+            "en": "Organizational Units, or OUs, are containers within a domain that help organize objects logically. Think of OUs as folders that hold users, computers, groups, and even other OUs. Unlike domains, OUs are not separate security boundaries and do not require their own domain controllers. They exist purely for organizational purposes and to provide targets for Group Policy application. You might create OUs for different departments, office locations, or device types.",
+            "ar": "الوحدات التنظيمية، أو OUs، هي حاويات داخل نطاق تساعد في تنظيم الكائنات منطقياً. فكر في OUs كمجلدات تحتوي على مستخدمين، وأجهزة كمبيوتر، ومجموعات، وحتى OUs أخرى. على عكس النطاقات، فإن OUs ليست حدود أمان منفصلة ولا تتطلب متحكمات نطاق خاصة بها. إنها موجودة فقط لأغراض تنظيمية ولتوفير أهداف لتطبيق نهج المجموعة. قد تنشئ OUs لأقسام مختلفة، أو مواقع مكتبية، أو أنواع أجهزة."
+          }
+        },
+        {
+          "id": 16,
+          "type": "text",
+          "value": {
+            "en": "The power of OUs comes from their role in Group Policy application. Group Policy Objects (GPOs) can be linked to OUs, and the policies automatically apply to all objects within that OU. For example, you might link a GPO to the 'Accounting' OU that enforces screen lock after 5 minutes of inactivity. All users and computers in the Accounting OU inherit this policy automatically. This makes OUs essential for scalable security and configuration management.",
+            "ar": "قوة OUs تأتي من دورها في تطبيق نهج المجموعة. يمكن ربط كائنات نهج المجموعة (GPOs) بـ OUs، وتُطبق السياسات تلقائياً على جميع الكائنات داخل تلك الوحدة التنظيمية. على سبيل المثال، قد تربط GPO بـ 'المحاسبة' OU الذي يفرض قفل الشاشة بعد 5 دقائق من عدم النشاط. جميع المستخدمين وأجهزة الكمبيوتر في وحدة المحاسبة ترث هذه السياسة تلقائياً. هذا يجعل OUs أساسية لإدارة الأمان والتكوين القابلة للتوسع."
+          }
+        },
+        {
+          "id": 17,
+          "type": "orderedList",
+          "title": {
+            "en": "Common OU Structure Patterns",
+            "ar": "أنماط بنية OU الشائعة"
+          },
+          "items": [
+            {
+              "subtitle": {
+                "en": "By Department",
+                "ar": "حسب القسم"
+              },
+              "text": {
+                "en": "Create OUs for each department like Sales, Marketing, IT, HR. This mirrors organizational structure and allows department-specific policies.",
+                "ar": "إنشاء OUs لكل قسم مثل المبيعات، والتسويق، وتكنولوجيا المعلومات، والموارد البشرية. هذا يعكس الهيكل التنظيمي ويسمح بسياسات خاصة بالقسم."
+              },
+              "example": {
+                "en": "OU=Sales, OU=Marketing, OU=IT",
+                "ar": "OU=Sales، OU=Marketing، OU=IT"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "By Location",
+                "ar": "حسب الموقع"
+              },
+              "text": {
+                "en": "Organize by office location or geographic region. Useful for applying location-specific settings like timezone, printers, or local servers.",
+                "ar": "التنظيم حسب موقع المكتب أو المنطقة الجغرافية. مفيد لتطبيق إعدادات خاصة بالموقع مثل المنطقة الزمنية، أو الطابعات، أو الخوادم المحلية."
+              },
+              "example": {
+                "en": "OU=Cairo, OU=Alexandria, OU=Dubai",
+                "ar": "OU=Cairo، OU=Alexandria، OU=Dubai"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "By Object Type",
+                "ar": "حسب نوع الكائن"
+              },
+              "text": {
+                "en": "Separate users from computers from servers. This allows different management policies for different types of objects.",
+                "ar": "فصل المستخدمين عن أجهزة الكمبيوتر عن الخوادم. هذا يسمح بسياسات إدارة مختلفة لأنواع مختلفة من الكائنات."
+              },
+              "example": {
+                "en": "OU=Users, OU=Computers, OU=Servers",
+                "ar": "OU=Users، OU=Computers، OU=Servers"
+              }
+            }
+          ]
+        },
+        {
+          "id": 18,
+          "type": "title",
+          "value": {
+            "en": "Domain Controllers: The Heart of AD",
+            "ar": "متحكمات النطاق: قلب AD"
+          }
+        },
+        {
+          "id": 19,
+          "type": "text",
+          "value": {
+            "en": "Domain Controllers, abbreviated DCs, are Windows Server machines that host the Active Directory Domain Services role. They store a writable copy of the directory database and handle authentication requests. Every domain must have at least one DC, but organizations typically deploy multiple DCs for redundancy and load balancing. If your single DC fails and you have no backup, you lose access to the entire domain. Multiple DCs ensure that if one fails, others continue to provide services without interruption.",
+            "ar": "متحكمات النطاق، المختصرة بـ DCs، هي أجهزة Windows Server التي تستضيف دور خدمات نطاق الدليل النشط. إنها تخزن نسخة قابلة للكتابة من قاعدة بيانات الدليل وتتعامل مع طلبات المصادقة. يجب أن يكون لكل نطاق متحكم نطاق واحد على الأقل، لكن المؤسسات عادة تنشر متحكمات نطاق متعددة للتكرار وتوازن الحمل. إذا فشل متحكم النطاق الوحيد الخاص بك وليس لديك نسخة احتياطية، فإنك تفقد الوصول إلى النطاق بأكمله. تضمن متحكمات النطاق المتعددة أنه إذا فشل أحدها، فإن الآخرين يستمرون في تقديم الخدمات دون انقطاع."
+          }
+        },
+        {
+          "id": 20,
+          "type": "text",
+          "value": {
+            "en": "All domain controllers in a domain are equal peers in a multi-master replication system. Changes made on one DC automatically replicate to all other DCs in the domain. This means you can make a change on any DC, and it will eventually propagate everywhere. However, certain special operations, called FSMO roles, can only be performed by specific DCs to prevent conflicts. These roles will be discussed in detail in a later topic.",
+            "ar": "جميع متحكمات النطاق في النطاق هي أقران متساوية في نظام نسخ متماثل متعدد الأساتذة. التغييرات المجراة على متحكم نطاق واحد تُنسخ تلقائياً إلى جميع متحكمات النطاق الأخرى في النطاق. هذا يعني أنه يمكنك إجراء تغيير على أي متحكم نطاق، وسوف ينتشر في النهاية في كل مكان. ومع ذلك، فإن عمليات خاصة معينة، تسمى أدوار FSMO، يمكن إجراؤها فقط بواسطة متحكمات نطاق محددة لمنع الصراعات. ستتم مناقشة هذه الأدوار بالتفصيل في موضوع لاحق."
+          }
+        },
+        {
+          "id": 21,
+          "type": "title",
+          "value": {
+            "en": "Read-Only Domain Controllers for Branch Offices",
+            "ar": "متحكمات النطاق للقراءة فقط لمكاتب الفروع"
+          }
+        },
+        {
+          "id": 22,
+          "type": "text",
+          "value": {
+            "en": "A Read-Only Domain Controller, or RODC, is a special type of DC designed for locations with lower physical security, such as remote branch offices. An RODC holds a read-only copy of the directory database. Users can authenticate against it, but no changes can be written directly to an RODC. All changes must be made on a writable DC and then replicate to the RODC. This protects the domain from compromise if the RODC is stolen or physically accessed by unauthorized people.",
+            "ar": "متحكم النطاق للقراءة فقط، أو RODC، هو نوع خاص من متحكم النطاق مصمم للمواقع ذات الأمان المادي المنخفض، مثل مكاتب الفروع البعيدة. يحتفظ RODC بنسخة للقراءة فقط من قاعدة بيانات الدليل. يمكن للمستخدمين المصادقة عليه، لكن لا يمكن كتابة أي تغييرات مباشرة على RODC. يجب إجراء جميع التغييرات على متحكم نطاق قابل للكتابة ثم النسخ المتماثل إلى RODC. هذا يحمي النطاق من الاختراق إذا تم سرقة RODC أو الوصول إليه فعلياً من قبل أشخاص غير مصرح لهم."
+          }
+        },
+        {
+          "id": 23,
+          "type": "text",
+          "value": {
+            "en": "RODCs also implement credential caching carefully. By default, an RODC does not cache passwords for all users. Administrators explicitly configure which user accounts can have their passwords cached on the RODC. This limits the damage if the RODC is compromised. An attacker who gains access to an RODC database only obtains passwords for the small subset of users configured for caching, not the entire organization's credentials.",
+            "ar": "تنفذ RODCs أيضاً التخزين المؤقت لبيانات الاعتماد بعناية. بشكل افتراضي، لا يقوم RODC بالتخزين المؤقت لكلمات المرور لجميع المستخدمين. يقوم المسؤولون بتكوين حسابات المستخدمين التي يمكن أن يتم التخزين المؤقت لكلمات المرور الخاصة بها على RODC بشكل صريح. هذا يحد من الضرر إذا تم اختراق RODC. المهاجم الذي يحصل على وصول إلى قاعدة بيانات RODC يحصل فقط على كلمات المرور للمجموعة الفرعية الصغيرة من المستخدمين المكونة للتخزين المؤقت، وليس بيانات الاعتماد للمؤسسة بأكملها."
+          }
+        },
+        {
+          "id": 24,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "Never place writable domain controllers in locations with weak physical security. Use RODCs for branch offices where servers might be in unlocked rooms.",
+            "ar": "لا تضع أبداً متحكمات نطاق قابلة للكتابة في مواقع ذات أمان مادي ضعيف. استخدم RODCs لمكاتب الفروع حيث قد تكون الخوادم في غرف غير مقفلة."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 25,
+          "type": "title",
+          "value": {
+            "en": "AD DS vs Azure AD (Entra ID)",
+            "ar": "AD DS مقابل Azure AD (Entra ID)"
+          }
+        },
+        {
+          "id": 26,
+          "type": "text",
+          "value": {
+            "en": "It is important to understand that traditional on-premises Active Directory Domain Services (AD DS) is different from Azure Active Directory, now called Microsoft Entra ID. AD DS runs on Windows Servers within your own data center or office. It uses protocols like Kerberos, LDAP, and NTLM. Azure AD is a cloud-based identity service that runs in Microsoft's cloud infrastructure. It uses modern protocols like OAuth 2.0, OpenID Connect, and SAML. They serve similar purposes but are architected differently.",
+            "ar": "من المهم أن نفهم أن خدمات نطاق الدليل النشط التقليدية (AD DS) في الموقع تختلف عن Azure Active Directory، الذي يُسمى الآن Microsoft Entra ID. يعمل AD DS على خوادم Windows داخل مركز البيانات أو المكتب الخاص بك. إنه يستخدم بروتوكولات مثل Kerberos و LDAP و NTLM. Azure AD هي خدمة هوية قائمة على السحابة تعمل في البنية التحتية السحابية لـ Microsoft. إنها تستخدم بروتوكولات حديثة مثل OAuth 2.0 و OpenID Connect و SAML. إنها تخدم أغراضاً مماثلة لكنها مصممة بشكل مختلف."
+          }
+        },
+        {
+          "id": 27,
+          "type": "table",
+          "title": {
+            "en": "AD DS vs Azure AD Comparison",
+            "ar": "مقارنة AD DS مقابل Azure AD"
+          },
+          "headers": {
+            "en": [
+              "Feature",
+              "AD DS (On-Premises)",
+              "Azure AD (Entra ID)"
+            ],
+            "ar": [
+              "الميزة",
+              "AD DS (في الموقع)",
+              "Azure AD (Entra ID)"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "Location",
+                "Your servers",
+                "Microsoft cloud"
+              ],
+              "ar": [
+                "الموقع",
+                "خوادمك",
+                "سحابة Microsoft"
+              ]
+            },
+            {
+              "en": [
+                "Protocols",
+                "Kerberos, LDAP, NTLM",
+                "OAuth, SAML, OpenID Connect"
+              ],
+              "ar": [
+                "البروتوكولات",
+                "Kerberos، LDAP، NTLM",
+                "OAuth، SAML، OpenID Connect"
+              ]
+            },
+            {
+              "en": [
+                "Structure",
+                "Hierarchical (Forest/Domain/OU)",
+                "Flat tenant structure"
+              ],
+              "ar": [
+                "البنية",
+                "هرمية (الغابة/النطاق/OU)",
+                "بنية مستأجر مسطحة"
+              ]
+            },
+            {
+              "en": [
+                "Primary Use",
+                "On-premises Windows networks",
+                "Cloud apps and services"
+              ],
+              "ar": [
+                "الاستخدام الأساسي",
+                "شبكات Windows في الموقع",
+                "تطبيقات وخدمات السحابة"
+              ]
+            },
+            {
+              "en": [
+                "Management",
+                "Group Policy, local tools",
+                "Azure portal, modern APIs"
+              ],
+              "ar": [
+                "الإدارة",
+                "نهج المجموعة، أدوات محلية",
+                "بوابة Azure، واجهات برمجة التطبيقات الحديثة"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "topic-4",
+      "title": {
+        "en": "Managing AD: Users, Groups, and Delegated Control",
+        "ar": "إدارة AD: المستخدمون والمجموعات والتحكم المفوض"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "AD Objects: The Building Blocks",
+            "ar": "كائنات AD: اللبنات الأساسية"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "Everything in Active Directory is represented as an object. An object is a distinct entity with attributes that describe it. Users are objects. Computers are objects. Printers, shared folders, and groups are all objects. Each object has a unique identifier and a set of properties that define what it is and what it can do. Understanding objects is fundamental because all AD management involves creating, modifying, or deleting these objects.",
+            "ar": "كل شيء في الدليل النشط يتم تمثيله ككائن. الكائن هو كيان متميز مع سمات تصفه. المستخدمون هم كائنات. أجهزة الكمبيوتر هي كائنات. الطابعات، والمجلدات المشتركة، والمجموعات كلها كائنات. كل كائن له معرّف فريد ومجموعة من الخصائص التي تحدد ماهيته وما يمكنه فعله. فهم الكائنات أمر أساسي لأن جميع إدارة AD تتضمن إنشاء أو تعديل أو حذف هذه الكائنات."
+          }
+        },
+        {
+          "id": 3,
+          "type": "text",
+          "value": {
+            "en": "User objects represent people who need to access network resources. Computer objects represent physical or virtual machines that are members of the domain. Contact objects store information about external people who do not have accounts in your domain, useful for email address books. Printer objects make network printers discoverable and manageable through AD. Each object type has specific attributes relevant to its purpose.",
+            "ar": "كائنات المستخدم تمثل الأشخاص الذين يحتاجون للوصول إلى موارد الشبكة. كائنات الكمبيوتر تمثل الأجهزة الفعلية أو الافتراضية التي تكون أعضاء في النطاق. كائنات الاتصال تخزن معلومات حول الأشخاص الخارجيين الذين ليس لديهم حسابات في نطاقك، مفيدة لدفاتر عناوين البريد الإلكتروني. كائنات الطابعة تجعل طابعات الشبكة قابلة للاكتشاف والإدارة من خلال AD. كل نوع كائن له سمات محددة ذات صلة بغرضه."
+          }
+        },
+        {
+          "id": 1771986525725.327,
+          "type": "image",
+          "srcKey": "",
+          "size": "small",
+          "imageUrl": "https://pub-cb38e65ea6bd411eb827a8641fdcc72d.r2.dev/Active%20Directory/object%20types.webp"
+        },
+        {
+          "id": 5,
+          "type": "title",
+          "value": {
+            "en": "User Account Attributes and Identifiers",
+            "ar": "سمات حساب المستخدم والمعرّفات"
+          }
+        },
+        {
+          "id": 6,
+          "type": "text",
+          "value": {
+            "en": "Every user account has critical attributes that uniquely identify it and control how it functions. The SAMAccountName is the legacy Windows login name, limited to 20 characters, used for backward compatibility with older systems. The User Principal Name (UPN) looks like an email address and is the modern way users log in, for example john.smith@company.com. The Security Identifier (SID) is a unique string that Windows uses internally to identify the user, and it never changes even if you rename the account.",
+            "ar": "كل حساب مستخدم لديه سمات حرجة تعرّفه بشكل فريد وتتحكم في كيفية عمله. SAMAccountName هو اسم تسجيل الدخول القديم لـ Windows، محدود بـ 20 حرفاً، يُستخدم للتوافق مع الأنظمة القديمة. اسم المستخدم الرئيسي (UPN) يبدو مثل عنوان بريد إلكتروني وهو الطريقة الحديثة لتسجيل دخول المستخدمين، على سبيل المثال john.smith@company.com. معرّف الأمان (SID) هو سلسلة فريدة يستخدمها Windows داخلياً لتحديد المستخدم، ولا يتغير أبداً حتى لو قمت بإعادة تسمية الحساب."
+          }
+        },
+        {
+          "id": 7,
+          "type": "text",
+          "value": {
+            "en": "The SID is particularly important for security. When you assign permissions to a file or folder, Windows stores the SID, not the username. This is why you can rename a user account and all their permissions remain intact. However, if you delete a user and create a new one with the same name, the new user gets a different SID and has no access to the old user's resources. SIDs ensure that identity is tracked accurately regardless of name changes.",
+            "ar": "SID مهم بشكل خاص للأمان. عندما تعين أذونات لملف أو مجلد، يخزّن Windows الـ SID، وليس اسم المستخدم. لهذا السبب يمكنك إعادة تسمية حساب مستخدم وتبقى جميع أذوناته سليمة. ومع ذلك، إذا حذفت مستخدماً وأنشأت واحداً جديداً بنفس الاسم، يحصل المستخدم الجديد على SID مختلف وليس لديه وصول إلى موارد المستخدم القديم. تضمن SIDs تتبع الهوية بدقة بغض النظر عن تغييرات الاسم."
+          }
+        },
+        {
+          "id": 8,
+          "type": "list",
+          "title": {
+            "en": "Essential User Account Attributes",
+            "ar": "سمات حساب المستخدم الأساسية"
+          },
+          "items": {
+            "en": [
+              "SAMAccountName: Legacy login name, max 20 characters, must be unique in domain",
+              "User Principal Name (UPN): Modern login format like email, username@domain.com",
+              "Security Identifier (SID): Unique permanent identifier never reused",
+              "Display Name: Full name shown in address lists and applications",
+              "Email Address: SMTP address for email communication",
+              "Member Of: Lists all groups the user belongs to",
+              "Account Expiration: Date when account automatically disables, useful for contractors"
+            ],
+            "ar": [
+              "SAMAccountName: اسم تسجيل دخول قديم، بحد أقصى 20 حرفاً، يجب أن يكون فريداً في النطاق",
+              "اسم المستخدم الرئيسي (UPN): تنسيق تسجيل دخول حديث مثل البريد الإلكتروني، username@domain.com",
+              "معرّف الأمان (SID): معرّف دائم فريد لا يُعاد استخدامه أبداً",
+              "اسم العرض: الاسم الكامل المعروض في قوائم العناوين والتطبيقات",
+              "عنوان البريد الإلكتروني: عنوان SMTP للتواصل عبر البريد الإلكتروني",
+              "عضو في: يسرد جميع المجموعات التي ينتمي إليها المستخدم",
+              "انتهاء الحساب: التاريخ الذي يتم فيه تعطيل الحساب تلقائياً، مفيد للمقاولين"
+            ]
+          }
+        },
+        {
+          "id": 9,
+          "type": "hr"
+        },
+        {
+          "id": 10,
+          "type": "title",
+          "value": {
+            "en": "AD Groups: Security vs Distribution",
+            "ar": "مجموعات AD: الأمان مقابل التوزيع"
+          }
+        },
+        {
+          "id": 11,
+          "type": "text",
+          "value": {
+            "en": "Active Directory has two fundamental group types serving different purposes. Security groups are used to assign permissions to resources. When you grant access to a folder or application, you typically assign permissions to a security group, and anyone in that group inherits those permissions. Distribution groups are used only for email distribution lists and cannot be used to grant permissions. Email applications like Microsoft Exchange use distribution groups to send messages to multiple recipients at once.",
+            "ar": "الدليل النشط لديه نوعان أساسيان من المجموعات تخدم أغراضاً مختلفة. مجموعات الأمان تُستخدم لتعيين الأذونات للموارد. عندما تمنح وصولاً إلى مجلد أو تطبيق، فإنك عادة تعين الأذونات لمجموعة أمان، وأي شخص في تلك المجموعة يرث تلك الأذونات. مجموعات التوزيع تُستخدم فقط لقوائم توزيع البريد الإلكتروني ولا يمكن استخدامها لمنح الأذونات. تستخدم تطبيقات البريد الإلكتروني مثل Microsoft Exchange مجموعات التوزيع لإرسال رسائل إلى مستلمين متعددين في وقت واحد."
+          }
+        },
+        {
+          "id": 12,
+          "type": "text",
+          "value": {
+            "en": "The distinction matters because security groups require more overhead for Windows to track permissions. In large environments, converting a distribution group to a security group or vice versa has implications. Best practice is to create security groups for access control needs and distribution groups purely for email. Some organizations use security groups for both purposes when the membership overlaps, since security groups can also be mail-enabled in Exchange.",
+            "ar": "التمييز مهم لأن مجموعات الأمان تتطلب مزيداً من النفقات العامة لـ Windows لتتبع الأذونات. في البيئات الكبيرة، تحويل مجموعة توزيع إلى مجموعة أمان أو العكس له آثار. أفضل ممارسة هي إنشاء مجموعات أمان لاحتياجات التحكم في الوصول ومجموعات توزيع فقط للبريد الإلكتروني. تستخدم بعض المؤسسات مجموعات الأمان لكلا الغرضين عندما تتداخل العضوية، حيث يمكن أيضاً تمكين البريد في مجموعات الأمان في Exchange."
+          }
+        },
+        {
+          "id": 13,
+          "type": "title",
+          "value": {
+            "en": "Group Scopes: Domain Local, Global, Universal",
+            "ar": "نطاقات المجموعة: المحلي للنطاق، العالمي، العام"
+          }
+        },
+        {
+          "id": 14,
+          "type": "text",
+          "value": {
+            "en": "Group scope determines where a group can be used and what members it can contain. Domain Local groups can contain members from any domain but can only be used to grant permissions within their own domain. Global groups can only contain members from their own domain but can be used to grant permissions in any domain that trusts them. Universal groups can contain members from any domain in the forest and can be used to grant permissions anywhere in the forest.",
+            "ar": "نطاق المجموعة يحدد أين يمكن استخدام المجموعة وما هي الأعضاء التي يمكن أن تحتوي عليها. المجموعات المحلية للنطاق يمكن أن تحتوي على أعضاء من أي نطاق لكن يمكن استخدامها فقط لمنح الأذونات داخل نطاقها الخاص. المجموعات العالمية يمكن أن تحتوي فقط على أعضاء من نطاقها الخاص لكن يمكن استخدامها لمنح الأذونات في أي نطاق يثق بها. المجموعات العامة يمكن أن تحتوي على أعضاء من أي نطاق في الغابة ويمكن استخدامها لمنح الأذونات في أي مكان في الغابة."
+          }
+        },
+        {
+          "id": 15,
+          "type": "text",
+          "value": {
+            "en": "The choice of scope affects replication and performance. Universal group memberships are stored in the Global Catalog, which replicates to all Global Catalog servers forest-wide. Changing membership of a large Universal group triggers significant replication traffic. Global groups are more efficient because their membership only replicates within their domain. Domain Local groups are most efficient for resource permissions because they are evaluated locally at the resource.",
+            "ar": "اختيار النطاق يؤثر على النسخ المتماثل والأداء. يتم تخزين عضويات المجموعة العامة في الكتالوج العام، والذي يُنسخ إلى جميع خوادم الكتالوج العام على مستوى الغابة. تغيير عضوية مجموعة عامة كبيرة يؤدي إلى حركة نسخ متماثل كبيرة. المجموعات العالمية أكثر كفاءة لأن عضويتها تُنسخ فقط داخل نطاقها. المجموعات المحلية للنطاق هي الأكثر كفاءة لأذونات الموارد لأنها تُقيّم محلياً عند المورد."
+          }
+        },
+        {
+          "id": 16,
+          "type": "table",
+          "title": {
+            "en": "Group Scope Comparison",
+            "ar": "مقارنة نطاق المجموعة"
+          },
+          "headers": {
+            "en": [
+              "Scope",
+              "Can Contain Members From",
+              "Can Grant Permissions In",
+              "Best Use"
+            ],
+            "ar": [
+              "النطاق",
+              "يمكن أن يحتوي على أعضاء من",
+              "يمكن منح الأذونات في",
+              "أفضل استخدام"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "Domain Local",
+                "Any domain in forest",
+                "Same domain only",
+                "Resource access permissions"
+              ],
+              "ar": [
+                "المحلي للنطاق",
+                "أي نطاق في الغابة",
+                "نفس النطاق فقط",
+                "أذونات وصول الموارد"
+              ]
+            },
+            {
+              "en": [
+                "Global",
+                "Same domain only",
+                "Any trusted domain",
+                "Organizing users by role"
+              ],
+              "ar": [
+                "العالمي",
+                "نفس النطاق فقط",
+                "أي نطاق موثوق",
+                "تنظيم المستخدمين حسب الدور"
+              ]
+            },
+            {
+              "en": [
+                "Universal",
+                "Any domain in forest",
+                "Any domain in forest",
+                "Forest-wide groups spanning domains"
+              ],
+              "ar": [
+                "العام",
+                "أي نطاق في الغابة",
+                "أي نطاق في الغابة",
+                "مجموعات على مستوى الغابة تمتد عبر النطاقات"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 17,
+          "type": "title",
+          "value": {
+            "en": "Group Nesting Strategy: AGDLP and AGUDLP",
+            "ar": "استراتيجية تداخل المجموعات: AGDLP و AGUDLP"
+          }
+        },
+        {
+          "id": 18,
+          "type": "text",
+          "value": {
+            "en": "Group nesting best practices follow the AGDLP or AGUDLP strategy, acronyms that describe the recommended hierarchy. AGDLP stands for Accounts go into Global groups, Global groups go into Domain Local groups, and Domain Local groups get Permissions. This pattern ensures efficient replication and clear role separation. You put user accounts into Global groups based on their role or department. You then add those Global groups to Domain Local groups that represent resource access. Finally, you assign permissions to the Domain Local groups.",
+            "ar": "أفضل ممارسات تداخل المجموعات تتبع استراتيجية AGDLP أو AGUDLP، اختصارات تصف التسلسل الهرمي الموصى به. AGDLP تعني الحسابات تذهب إلى المجموعات العالمية، المجموعات العالمية تذهب إلى المجموعات المحلية للنطاق، والمجموعات المحلية للنطاق تحصل على الأذونات. هذا النمط يضمن النسخ المتماثل الفعال والفصل الواضح للأدوار. تضع حسابات المستخدمين في المجموعات العالمية بناءً على دورهم أو قسمهم. ثم تضيف تلك المجموعات العالمية إلى المجموعات المحلية للنطاق التي تمثل وصول الموارد. أخيراً، تعيّن الأذونات للمجموعات المحلية للنطاق."
+          }
+        },
+        {
+          "id": 19,
+          "type": "text",
+          "value": {
+            "en": "In multi-domain forests, AGUDLP extends this pattern by adding Universal groups in the middle. The pattern becomes: Accounts go into Global groups, Global groups go into Universal groups, Universal groups go into Domain Local groups, and Domain Local groups get Permissions. The Universal groups allow you to combine users from different domains into a single forest-wide group, which then gets added to Domain Local groups at each resource location. This adds one level of indirection but provides flexibility in complex forests.",
+            "ar": "في الغابات متعددة النطاقات، AGUDLP تمدد هذا النمط بإضافة مجموعات عامة في المنتصف. يصبح النمط: الحسابات تذهب إلى المجموعات العالمية، المجموعات العالمية تذهب إلى المجموعات العامة، المجموعات العامة تذهب إلى المجموعات المحلية للنطاق، والمجموعات المحلية للنطاق تحصل على الأذونات. المجموعات العامة تسمح لك بدمج المستخدمين من نطاقات مختلفة في مجموعة واحدة على مستوى الغابة، والتي تُضاف بعد ذلك إلى المجموعات المحلية للنطاق في كل موقع مورد. هذا يضيف مستوى واحداً من التوجيه غير المباشر لكنه يوفر مرونة في الغابات المعقدة."
+          }
+        },
+        {
+          "id": 20,
+          "type": "orderedList",
+          "title": {
+            "en": "AGDLP Strategy Example",
+            "ar": "مثال استراتيجية AGDLP"
+          },
+          "items": [
+            {
+              "subtitle": {
+                "en": "Create Global Group for Roles",
+                "ar": "إنشاء مجموعة عالمية للأدوار"
+              },
+              "text": {
+                "en": "Create a Global group called 'Accounting-Users' and add all accounting department employees to it.",
+                "ar": "أنشئ مجموعة عالمية تسمى 'Accounting-Users' وأضف جميع موظفي قسم المحاسبة إليها."
+              },
+              "example": {
+                "en": "Global Group: Accounting-Users (contains user accounts)",
+                "ar": "مجموعة عالمية: Accounting-Users (تحتوي على حسابات المستخدمين)"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Create Domain Local Group for Resource",
+                "ar": "إنشاء مجموعة محلية للنطاق للمورد"
+              },
+              "text": {
+                "en": "Create a Domain Local group called 'Finance-Share-ReadWrite' representing access to a specific shared folder.",
+                "ar": "أنشئ مجموعة محلية للنطاق تسمى 'Finance-Share-ReadWrite' تمثل الوصول إلى مجلد مشترك محدد."
+              },
+              "example": {
+                "en": "Domain Local Group: Finance-Share-ReadWrite",
+                "ar": "مجموعة محلية للنطاق: Finance-Share-ReadWrite"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Nest Global into Domain Local",
+                "ar": "دمج العالمي في المحلي للنطاق"
+              },
+              "text": {
+                "en": "Add the 'Accounting-Users' Global group as a member of the 'Finance-Share-ReadWrite' Domain Local group.",
+                "ar": "أضف المجموعة العالمية 'Accounting-Users' كعضو في المجموعة المحلية للنطاق 'Finance-Share-ReadWrite'."
+              },
+              "example": {
+                "en": "Finance-Share-ReadWrite contains Accounting-Users",
+                "ar": "Finance-Share-ReadWrite تحتوي على Accounting-Users"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Assign Permissions to Domain Local",
+                "ar": "تعيين الأذونات للمحلي للنطاق"
+              },
+              "text": {
+                "en": "Grant Read and Write permissions on the shared folder to the 'Finance-Share-ReadWrite' Domain Local group.",
+                "ar": "امنح أذونات القراءة والكتابة على المجلد المشترك للمجموعة المحلية للنطاق 'Finance-Share-ReadWrite'."
+              },
+              "example": {
+                "en": "Folder permissions: Finance-Share-ReadWrite = Read/Write",
+                "ar": "أذونات المجلد: Finance-Share-ReadWrite = قراءة/كتابة"
+              }
+            }
+          ]
+        },
+        {
+          "id": 21,
+          "type": "hr"
+        },
+        {
+          "id": 22,
+          "type": "title",
+          "value": {
+            "en": "Service Accounts and Managed Service Accounts",
+            "ar": "حسابات الخدمة وحسابات الخدمة المُدارة"
+          }
+        },
+        {
+          "id": 23,
+          "type": "text",
+          "value": {
+            "en": "Service accounts are special user accounts that run applications and services rather than representing real people. When you install a database server or web application, it often needs to run under a specific account to access files and network resources. Traditionally, administrators created regular user accounts, set a password that never expires, and configured the service to use that account. This creates security problems because these passwords are rarely changed and are often overly privileged.",
+            "ar": "حسابات الخدمة هي حسابات مستخدم خاصة تشغّل التطبيقات والخدمات بدلاً من تمثيل أشخاص حقيقيين. عندما تثبّت خادم قاعدة بيانات أو تطبيق ويب، غالباً ما يحتاج إلى العمل تحت حساب محدد للوصول إلى الملفات وموارد الشبكة. تقليدياً، كان المسؤولون ينشئون حسابات مستخدم عادية، ويضعون كلمة مرور لا تنتهي صلاحيتها أبداً، ويكوّنون الخدمة لاستخدام ذلك الحساب. هذا يخلق مشاكل أمنية لأن كلمات المرور هذه نادراً ما تتغير وغالباً ما تكون ذات امتيازات مفرطة."
+          }
+        },
+        {
+          "id": 24,
+          "type": "text",
+          "value": {
+            "en": "Managed Service Accounts (MSAs) and Group Managed Service Accounts (gMSAs) solve these problems. An MSA is a special account type where Active Directory automatically manages the password. The password is complex, changes automatically on a schedule, and cannot be used for interactive login. A gMSA extends this to allow the same service account to be used on multiple servers, perfect for load-balanced applications or clustered services. The gMSA password is synchronized automatically across all servers that use it.",
+            "ar": "حسابات الخدمة المُدارة (MSAs) وحسابات الخدمة المُدارة للمجموعة (gMSAs) تحل هذه المشاكل. MSA هو نوع حساب خاص حيث يدير الدليل النشط كلمة المرور تلقائياً. كلمة المرور معقدة، وتتغير تلقائياً وفق جدول زمني، ولا يمكن استخدامها لتسجيل الدخول التفاعلي. gMSA يمدد هذا للسماح باستخدام نفس حساب الخدمة على خوادم متعددة، مثالي للتطبيقات الموزونة الحمل أو الخدمات المجمعة. يتم مزامنة كلمة مرور gMSA تلقائياً عبر جميع الخوادم التي تستخدمها."
+          }
+        },
+        {
+          "id": 25,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Always use gMSAs for service accounts in modern environments. They eliminate password management overhead and significantly improve security posture.",
+            "ar": "استخدم دائماً gMSAs لحسابات الخدمة في البيئات الحديثة. إنها تقضي على النفقات العامة لإدارة كلمات المرور وتحسّن بشكل كبير وضع الأمان."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 26,
+          "type": "title",
+          "value": {
+            "en": "Delegation of Control: Granting Granular Admin Rights",
+            "ar": "تفويض التحكم: منح حقوق إدارة دقيقة"
+          }
+        },
+        {
+          "id": 27,
+          "type": "text",
+          "value": {
+            "en": "Delegation of Control allows you to grant specific administrative permissions to users or groups without making them full Domain Admins. This follows the principle of least privilege. For example, you might want help desk staff to be able to reset user passwords but not create new user accounts or modify group memberships. Delegation makes this possible by assigning precise permissions at the OU level.",
+            "ar": "تفويض التحكم يسمح لك بمنح أذونات إدارية محددة للمستخدمين أو المجموعات دون جعلهم مسؤولي نطاق كاملين. هذا يتبع مبدأ أقل امتياز. على سبيل المثال، قد تريد أن يتمكن موظفو مكتب المساعدة من إعادة تعيين كلمات مرور المستخدمين لكن ليس إنشاء حسابات مستخدم جديدة أو تعديل عضويات المجموعة. التفويض يجعل هذا ممكناً عن طريق تعيين أذونات دقيقة على مستوى الوحدة التنظيمية."
+          }
+        },
+        {
+          "id": 28,
+          "type": "text",
+          "value": {
+            "en": "Delegation is configured on Organizational Units using the Delegation of Control Wizard or by manually setting Access Control Lists (ACLs). Common delegation scenarios include allowing help desk to reset passwords, allowing department managers to manage users in their department's OU, or allowing application administrators to manage service accounts and computer objects for their applications. Each delegation grants only the minimum permissions needed for that specific task.",
+            "ar": "يتم تكوين التفويض على الوحدات التنظيمية باستخدام معالج تفويض التحكم أو عن طريق تعيين قوائم التحكم في الوصول (ACLs) يدوياً. سيناريوهات التفويض الشائعة تشمل السماح لمكتب المساعدة بإعادة تعيين كلمات المرور، والسماح لمديري الأقسام بإدارة المستخدمين في الوحدة التنظيمية الخاصة بقسمهم، أو السماح لمسؤولي التطبيقات بإدارة حسابات الخدمة وكائنات الكمبيوتر لتطبيقاتهم. كل تفويض يمنح فقط الحد الأدنى من الأذونات المطلوبة لتلك المهمة المحددة."
+          }
+        },
+        {
+          "id": 29,
+          "type": "title",
+          "value": {
+            "en": "Group Policy Objects: Linking and Inheritance",
+            "ar": "كائنات نهج المجموعة: الربط والوراثة"
+          }
+        },
+        {
+          "id": 30,
+          "type": "text",
+          "value": {
+            "en": "Group Policy Objects (GPOs) are the primary tool for managing configuration across Windows computers and users at scale. A GPO is a collection of settings that can control everything from password policies to desktop wallpaper to software installation. GPOs are created centrally and then linked to domains, sites, or OUs. When a computer starts up or a user logs in, the system applies all GPOs that are linked to the containers where that computer or user object exists.",
+            "ar": "كائنات نهج المجموعة (GPOs) هي الأداة الأساسية لإدارة التكوين عبر أجهزة كمبيوتر Windows والمستخدمين على نطاق واسع. GPO هو مجموعة من الإعدادات التي يمكن أن تتحكم في كل شيء من سياسات كلمة المرور إلى خلفية سطح المكتب إلى تثبيت البرامج. يتم إنشاء GPOs بشكل مركزي ثم ربطها بالنطاقات أو المواقع أو الوحدات التنظيمية. عندما يبدأ جهاز الكمبيوتر أو يسجل مستخدم الدخول، يطبق النظام جميع GPOs المرتبطة بالحاويات حيث يوجد كائن الكمبيوتر أو المستخدم."
+          }
+        },
+        {
+          "id": 31,
+          "type": "text",
+          "value": {
+            "en": "GPO inheritance follows a specific order. Policies applied at the site level are processed first, then domain-level GPOs, then OU-level GPOs from parent to child. If multiple GPOs configure the same setting, the last applied GPO wins unless specific enforcement rules are configured. Administrators can block inheritance at an OU to prevent parent policies from applying, or enforce a GPO so that child containers cannot override its settings. This flexibility allows complex policy hierarchies that match organizational needs.",
+            "ar": "وراثة GPO تتبع ترتيباً محدداً. يتم معالجة السياسات المطبقة على مستوى الموقع أولاً، ثم GPOs على مستوى النطاق، ثم GPOs على مستوى الوحدة التنظيمية من الأصل إلى الفرع. إذا قامت GPOs متعددة بتكوين نفس الإعداد، فإن آخر GPO مطبق يفوز ما لم يتم تكوين قواعد فرض محددة. يمكن للمسؤولين حظر الوراثة في وحدة تنظيمية لمنع تطبيق سياسات الأصل، أو فرض GPO بحيث لا يمكن للحاويات الفرعية تجاوز إعداداته. هذه المرونة تسمح بتسلسلات هرمية معقدة للسياسات تتناسب مع احتياجات المؤسسة."
+          }
+        },
+        {
+          "id": 32,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "Test all GPO changes in a non-production OU first. Misconfigured policies can lock users out or break applications across the entire domain.",
+            "ar": "اختبر جميع تغييرات GPO في وحدة تنظيمية غير إنتاجية أولاً. السياسات المكونة بشكل خاطئ يمكن أن تمنع المستخدمين من الدخول أو تعطل التطبيقات عبر النطاق بأكمله."
+          },
+          "link": "",
+          "isLab": false
+        }
+      ]
+    },
+    {
+      "id": "topic-5",
+      "title": {
+        "en": "How AD Shares Data: Trusts, Partitions, Schema and Replication",
+        "ar": "كيف يشارك AD البيانات: الثقة والأقسام والمخطط والنسخ المتماثل"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "AD Trust Relationships Between Domains",
+            "ar": "علاقات الثقة في AD بين النطاقات"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "Trust relationships define how domains recognize and accept authentication from each other. When a trust exists between two domains, users from one domain can access resources in the other domain without needing separate accounts. Trusts enable resource sharing across administrative boundaries. Understanding trusts is crucial because they determine the scope of access and security boundaries in multi-domain environments.",
+            "ar": "علاقات الثقة تحدد كيف تتعرف النطاقات وتقبل المصادقة من بعضها البعض. عندما توجد ثقة بين نطاقين، يمكن للمستخدمين من نطاق واحد الوصول إلى الموارد في النطاق الآخر دون الحاجة إلى حسابات منفصلة. تمكّن الثقة من مشاركة الموارد عبر الحدود الإدارية. فهم الثقة أمر حاسم لأنها تحدد نطاق الوصول وحدود الأمان في البيئات متعددة النطاقات."
+          }
+        },
+        {
+          "id": 1771986545025.0483,
+          "type": "image",
+          "srcKey": "",
+          "size": "small",
+          "imageUrl": "https://pub-cb38e65ea6bd411eb827a8641fdcc72d.r2.dev/Active%20Directory/AD%20Trust%20Relationships%20Between%20Domains.webp"
+        },
+        {
+          "id": 4,
+          "type": "text",
+          "value": {
+            "en": "Trusts come in different types based on direction and transitivity. A one-way trust means users from Domain A can access resources in Domain B, but not the reverse. A two-way trust allows users from both domains to access resources in both directions. Within a forest, all domains automatically have two-way transitive trusts with each other. Outside the forest, trusts must be explicitly configured.",
+            "ar": "تأتي الثقة في أنواع مختلفة بناءً على الاتجاه والانتقالية. الثقة أحادية الاتجاه تعني أن المستخدمين من النطاق A يمكنهم الوصول إلى الموارد في النطاق B، لكن ليس العكس. الثقة ثنائية الاتجاه تسمح للمستخدمين من كلا النطاقين بالوصول إلى الموارد في كلا الاتجاهين. داخل الغابة، جميع النطاقات لديها تلقائياً ثقة انتقالية ثنائية الاتجاه مع بعضها البعض. خارج الغابة، يجب تكوين الثقة بشكل صريح."
+          }
+        },
+        {
+          "id": 5,
+          "type": "text",
+          "value": {
+            "en": "Transitive trusts extend trust across multiple domains. If Domain A trusts Domain B, and Domain B trusts Domain C, then Domain A automatically trusts Domain C in a transitive relationship. Non-transitive trusts do not extend beyond the two specific domains involved. Forest trusts between separate AD forests are typically transitive, allowing all domains in Forest A to trust all domains in Forest B through a single trust configuration.",
+            "ar": "الثقة الانتقالية تمدد الثقة عبر نطاقات متعددة. إذا كان النطاق A يثق بالنطاق B، والنطاق B يثق بالنطاق C، فإن النطاق A يثق تلقائياً بالنطاق C في علاقة انتقالية. الثقة غير الانتقالية لا تمتد إلى ما بعد النطاقين المحددين المعنيين. ثقة الغابة بين غابات AD منفصلة عادة ما تكون انتقالية، مما يسمح لجميع النطاقات في الغابة A بالثقة في جميع النطاقات في الغابة B من خلال تكوين ثقة واحد."
+          }
+        },
+        {
+          "id": 6,
+          "type": "hr"
+        },
+        {
+          "id": 7,
+          "type": "title",
+          "value": {
+            "en": "AD Partitions: How Directory Data is Organized",
+            "ar": "أقسام AD: كيف يتم تنظيم بيانات الدليل"
+          }
+        },
+        {
+          "id": 8,
+          "type": "text",
+          "value": {
+            "en": "Active Directory divides its database into logical sections called partitions, also known as naming contexts. Each partition contains different types of information and replicates to different sets of domain controllers. Understanding partitions is essential because they determine what information is available where and how replication traffic flows across the network.",
+            "ar": "يقسم الدليل النشط قاعدة بياناته إلى أقسام منطقية تسمى الأقسام، والمعروفة أيضاً بسياقات التسمية. كل قسم يحتوي على أنواع مختلفة من المعلومات ويُنسخ إلى مجموعات مختلفة من متحكمات النطاق. فهم الأقسام أمر ضروري لأنها تحدد المعلومات المتاحة وأين وكيف تتدفق حركة النسخ المتماثل عبر الشبكة."
+          }
+        },
+        {
+          "id": 9,
+          "type": "text",
+          "value": {
+            "en": "The Domain Partition contains all objects specific to a single domain: users, computers, groups, and OUs within that domain. This partition only replicates to domain controllers within the same domain. The Configuration Partition stores forest-wide configuration data like site topology, services, and partitions structure itself. It replicates to all domain controllers in the entire forest. The Schema Partition defines object classes and attributes for the entire forest and also replicates to all DCs forest-wide.",
+            "ar": "قسم النطاق يحتوي على جميع الكائنات الخاصة بنطاق واحد: المستخدمين، وأجهزة الكمبيوتر، والمجموعات، والوحدات التنظيمية داخل ذلك النطاق. هذا القسم يُنسخ فقط إلى متحكمات النطاق داخل نفس النطاق. قسم التكوين يخزن بيانات التكوين على مستوى الغابة مثل طوبولوجيا الموقع، والخدمات، وبنية الأقسام نفسها. إنه يُنسخ إلى جميع متحكمات النطاق في الغابة بأكملها. قسم المخطط يحدد فئات الكائنات والسمات للغابة بأكملها ويُنسخ أيضاً إلى جميع متحكمات النطاق على مستوى الغابة."
+          }
+        },
+        {
+          "id": 10,
+          "type": "text",
+          "value": {
+            "en": "Application Partitions are optional custom partitions that administrators can create to store application-specific data. For example, DNS zones integrated with Active Directory are stored in application partitions. The key benefit is that you can control replication scope precisely. You might create an application partition that only replicates to specific domain controllers in certain sites, reducing unnecessary replication traffic for data that is only needed in specific locations.",
+            "ar": "أقسام التطبيق هي أقسام مخصصة اختيارية يمكن للمسؤولين إنشاؤها لتخزين البيانات الخاصة بالتطبيق. على سبيل المثال، مناطق DNS المتكاملة مع الدليل النشط يتم تخزينها في أقسام التطبيق. الفائدة الرئيسية هي أنه يمكنك التحكم في نطاق النسخ المتماثل بدقة. قد تنشئ قسم تطبيق يُنسخ فقط إلى متحكمات نطاق محددة في مواقع معينة، مما يقلل من حركة النسخ المتماثل غير الضرورية للبيانات المطلوبة فقط في مواقع محددة."
+          }
+        },
+        {
+          "id": 11,
+          "type": "table",
+          "title": {
+            "en": "AD Partition Types and Replication Scope",
+            "ar": "أنواع أقسام AD ونطاق النسخ المتماثل"
+          },
+          "headers": {
+            "en": [
+              "Partition",
+              "Contains",
+              "Replicates To",
+              "Purpose"
+            ],
+            "ar": [
+              "القسم",
+              "يحتوي على",
+              "يُنسخ إلى",
+              "الغرض"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "Domain",
+                "Users, Computers, Groups, OUs",
+                "DCs in same domain only",
+                "Domain-specific objects"
+              ],
+              "ar": [
+                "النطاق",
+                "المستخدمون، أجهزة الكمبيوتر، المجموعات، الوحدات التنظيمية",
+                "متحكمات النطاق في نفس النطاق فقط",
+                "كائنات خاصة بالنطاق"
+              ]
+            },
+            {
+              "en": [
+                "Configuration",
+                "Sites, Services, Partition info",
+                "All DCs in forest",
+                "Forest-wide configuration"
+              ],
+              "ar": [
+                "التكوين",
+                "المواقع، الخدمات، معلومات الأقسام",
+                "جميع متحكمات النطاق في الغابة",
+                "تكوين على مستوى الغابة"
+              ]
+            },
+            {
+              "en": [
+                "Schema",
+                "Object class and attribute definitions",
+                "All DCs in forest",
+                "Directory structure rules"
+              ],
+              "ar": [
+                "المخطط",
+                "تعريفات فئات الكائنات والسمات",
+                "جميع متحكمات النطاق في الغابة",
+                "قواعد بنية الدليل"
+              ]
+            },
+            {
+              "en": [
+                "Application",
+                "Application-specific data (e.g. DNS)",
+                "Selected DCs (configurable)",
+                "Custom replication scope"
+              ],
+              "ar": [
+                "التطبيق",
+                "بيانات خاصة بالتطبيق (مثل DNS)",
+                "متحكمات نطاق محددة (قابلة للتكوين)",
+                "نطاق نسخ متماثل مخصص"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 12,
+          "type": "title",
+          "value": {
+            "en": "AD Schema: Defining the Directory Structure",
+            "ar": "مخطط AD: تحديد بنية الدليل"
+          }
+        },
+        {
+          "id": 13,
+          "type": "text",
+          "value": {
+            "en": "The Active Directory Schema is the blueprint that defines what types of objects can exist in the directory and what attributes those objects can have. Think of it as the database schema in traditional database terms. The schema defines that a User object must have a SAMAccountName and can optionally have attributes like telephone number and office location. Every object created in AD must conform to the schema rules.",
+            "ar": "مخطط الدليل النشط هو المخطط الذي يحدد أنواع الكائنات التي يمكن أن توجد في الدليل والسمات التي يمكن أن تمتلكها تلك الكائنات. فكر فيه كمخطط قاعدة البيانات في مصطلحات قاعدة البيانات التقليدية. يحدد المخطط أن كائن المستخدم يجب أن يكون لديه SAMAccountName ويمكن أن يكون لديه اختيارياً سمات مثل رقم الهاتف وموقع المكتب. يجب أن يتوافق كل كائن تم إنشاؤه في AD مع قواعد المخطط."
+          }
+        },
+        {
+          "id": 14,
+          "type": "text",
+          "value": {
+            "en": "The schema consists of two types of definitions: class objects and attribute objects. A class object defines a type of directory object, such as User, Computer, or Group. An attribute object defines a property that can be assigned to classes, such as displayName, telephoneNumber, or memberOf. Classes can inherit from other classes. For example, the User class inherits from the Person class, which inherits from the Top class, gaining attributes from each parent class.",
+            "ar": "يتكون المخطط من نوعين من التعريفات: كائنات الفئة وكائنات السمة. كائن الفئة يحدد نوعاً من كائن الدليل، مثل المستخدم، أو الكمبيوتر، أو المجموعة. كائن السمة يحدد خاصية يمكن تعيينها للفئات، مثل displayName أو telephoneNumber أو memberOf. يمكن للفئات أن ترث من فئات أخرى. على سبيل المثال، فئة المستخدم ترث من فئة الشخص، والتي ترث من فئة Top، وتكتسب سمات من كل فئة أصلية."
+          }
+        },
+        {
+          "id": 15,
+          "type": "text",
+          "value": {
+            "en": "Modifying the schema is a powerful but dangerous operation. Schema changes replicate to all domain controllers in the forest and cannot easily be undone. If you extend the schema incorrectly, you could break applications or make objects unusable. The Schema Master FSMO role holder is the only DC that can write changes to the schema. This single-master design prevents conflicting schema modifications from different administrators.",
+            "ar": "تعديل المخطط هو عملية قوية لكن خطيرة. تغييرات المخطط تُنسخ إلى جميع متحكمات النطاق في الغابة ولا يمكن التراجع عنها بسهولة. إذا قمت بتوسيع المخطط بشكل غير صحيح، يمكن أن تعطل التطبيقات أو تجعل الكائنات غير قابلة للاستخدام. حامل دور FSMO للمخطط الرئيسي هو متحكم النطاق الوحيد الذي يمكنه كتابة التغييرات على المخطط. هذا التصميم أحادي الرئيسي يمنع تعديلات المخطط المتضاربة من مسؤولين مختلفين."
+          }
+        },
+        {
+          "id": 16,
+          "type": "hr"
+        },
+        {
+          "id": 17,
+          "type": "title",
+          "value": {
+            "en": "Global Catalog: Forest-Wide Search and Universal Group Membership",
+            "ar": "الكتالوج العام: البحث على مستوى الغابة وعضوية المجموعة العامة"
+          }
+        },
+        {
+          "id": 18,
+          "type": "text",
+          "value": {
+            "en": "The Global Catalog (GC) is a special domain controller role that stores a partial copy of every object in the entire forest. While regular DCs only hold complete information about objects in their own domain, a GC server holds selected attributes of all objects across all domains. This enables forest-wide searches and fast authentication. When a user logs in with their UPN, the GC is queried to locate which domain the user belongs to.",
+            "ar": "الكتالوج العام (GC) هو دور خاص لمتحكم النطاق يخزن نسخة جزئية من كل كائن في الغابة بأكملها. بينما تحتفظ متحكمات النطاق العادية فقط بمعلومات كاملة حول الكائنات في نطاقها الخاص، يحتفظ خادم GC بسمات مختارة لجميع الكائنات عبر جميع النطاقات. هذا يمكّن من البحث على مستوى الغابة والمصادقة السريعة. عندما يسجل مستخدم الدخول باستخدام UPN الخاص به، يتم الاستعلام عن GC لتحديد النطاق الذي ينتمي إليه المستخدم."
+          }
+        },
+        {
+          "id": 19,
+          "type": "text",
+          "value": {
+            "en": "The GC stores the complete Universal group membership information for all users in the forest. This is critical because Universal groups can contain members from any domain. When evaluating permissions, the system needs to know all Universal groups a user belongs to. The GC caches this information, making access control decisions fast without querying every domain. Each site should have at least one GC server to ensure local authentication performance.",
+            "ar": "يخزّن GC معلومات عضوية المجموعة العامة الكاملة لجميع المستخدمين في الغابة. هذا أمر حاسم لأن المجموعات العامة يمكن أن تحتوي على أعضاء من أي نطاق. عند تقييم الأذونات، يحتاج النظام لمعرفة جميع المجموعات العامة التي ينتمي إليها المستخدم. يخزّن GC هذه المعلومات مؤقتاً، مما يجعل قرارات التحكم في الوصول سريعة دون الاستعلام عن كل نطاق. يجب أن يكون لكل موقع خادم GC واحد على الأقل لضمان أداء المصادقة المحلية."
+          }
+        },
+        {
+          "id": 20,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Universal Group Membership Caching can be enabled at sites without a GC server to cache the information locally and reduce WAN dependencies during login.",
+            "ar": "يمكن تمكين التخزين المؤقت لعضوية المجموعة العامة في المواقع التي لا تحتوي على خادم GC للتخزين المؤقت للمعلومات محلياً وتقليل تبعيات WAN أثناء تسجيل الدخول."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 21,
+          "type": "title",
+          "value": {
+            "en": "FSMO Roles: Single-Master Operations",
+            "ar": "أدوار FSMO: عمليات الرئيسي الواحد"
+          }
+        },
+        {
+          "id": 22,
+          "type": "text",
+          "value": {
+            "en": "Flexible Single Master Operations (FSMO) roles are five special responsibilities that cannot be performed by multiple domain controllers simultaneously. While AD generally uses multi-master replication where any DC can make changes, certain operations require a single authority to prevent conflicts. These roles are distributed across domain controllers, and understanding them is essential for AD health and disaster recovery planning.",
+            "ar": "أدوار العمليات الرئيسية المرنة الواحدة (FSMO) هي خمس مسؤوليات خاصة لا يمكن أن تؤديها متحكمات نطاق متعددة في وقت واحد. بينما يستخدم AD عموماً النسخ المتماثل متعدد الأساتذة حيث يمكن لأي متحكم نطاق إجراء تغييرات، فإن عمليات معينة تتطلب سلطة واحدة لمنع الصراعات. يتم توزيع هذه الأدوار عبر متحكمات النطاق، وفهمها أمر أساسي لصحة AD وتخطيط استرداد الكوارث."
+          }
+        },
+        {
+          "id": 23,
+          "type": "orderedList",
+          "title": {
+            "en": "The Five FSMO Roles Explained",
+            "ar": "شرح أدوار FSMO الخمسة"
+          },
+          "items": [
+            {
+              "subtitle": {
+                "en": "Schema Master (Forest-Wide)",
+                "ar": "رئيسي المخطط (على مستوى الغابة)"
+              },
+              "text": {
+                "en": "The only DC that can make changes to the Active Directory schema. Schema modifications like adding new object classes or attributes must be processed here.",
+                "ar": "متحكم النطاق الوحيد الذي يمكنه إجراء تغييرات على مخطط الدليل النشط. يجب معالجة تعديلات المخطط مثل إضافة فئات كائنات أو سمات جديدة هنا."
+              },
+              "example": {
+                "en": "Installing Exchange Server extends the schema through this role",
+                "ar": "تثبيت Exchange Server يمدد المخطط من خلال هذا الدور"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Domain Naming Master (Forest-Wide)",
+                "ar": "رئيسي تسمية النطاق (على مستوى الغابة)"
+              },
+              "text": {
+                "en": "Controls adding or removing domains from the forest. Prevents duplicate domain names and manages the forest structure.",
+                "ar": "يتحكم في إضافة أو إزالة النطاقات من الغابة. يمنع أسماء النطاقات المكررة ويدير بنية الغابة."
+              },
+              "example": {
+                "en": "Creating a new child domain requires this role to be available",
+                "ar": "إنشاء نطاق فرعي جديد يتطلب أن يكون هذا الدور متاحاً"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "PDC Emulator (Domain-Wide)",
+                "ar": "محاكي PDC (على مستوى النطاق)"
+              },
+              "text": {
+                "en": "Handles password changes, account lockouts, and time synchronization for the domain. Most critical FSMO role for daily operations.",
+                "ar": "يتعامل مع تغييرات كلمة المرور، وقفل الحسابات، ومزامنة الوقت للنطاق. أكثر دور FSMO حساسية للعمليات اليومية."
+              },
+              "example": {
+                "en": "All password changes are immediately replicated to PDC Emulator",
+                "ar": "يتم نسخ جميع تغييرات كلمة المرور فوراً إلى محاكي PDC"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "RID Master (Domain-Wide)",
+                "ar": "رئيسي RID (على مستوى النطاق)"
+              },
+              "text": {
+                "en": "Allocates pools of Relative Identifiers to each DC. RIDs are used to create unique SIDs for new objects. Without this role, DCs cannot create new objects once their RID pool is exhausted.",
+                "ar": "يخصص مجمعات معرّفات نسبية لكل متحكم نطاق. تُستخدم RIDs لإنشاء SIDs فريدة للكائنات الجديدة. بدون هذا الدور، لا يمكن لمتحكمات النطاق إنشاء كائنات جديدة بمجرد استنفاد مجمع RID الخاص بها."
+              },
+              "example": {
+                "en": "Each DC gets a pool of 500 RIDs to create users and groups",
+                "ar": "كل متحكم نطاق يحصل على مجمع من 500 RID لإنشاء المستخدمين والمجموعات"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Infrastructure Master (Domain-Wide)",
+                "ar": "رئيسي البنية التحتية (على مستوى النطاق)"
+              },
+              "text": {
+                "en": "Updates cross-domain object references. When a user from Domain A is added to a group in Domain B, this role ensures the reference stays current if the user is moved or renamed.",
+                "ar": "يحدّث مراجع الكائنات عبر النطاقات. عندما يتم إضافة مستخدم من النطاق A إلى مجموعة في النطاق B، يضمن هذا الدور أن تبقى المرجعية حالية إذا تم نقل المستخدم أو إعادة تسميته."
+              },
+              "example": {
+                "en": "Should not be placed on a Global Catalog server in multi-domain forests",
+                "ar": "لا يجب وضعه على خادم الكتالوج العام في الغابات متعددة النطاقات"
+              }
+            }
+          ]
+        },
+        {
+          "id": 24,
+          "type": "title",
+          "value": {
+            "en": "AD Sites and Replication Topology",
+            "ar": "مواقع AD وطوبولوجيا النسخ المتماثل"
+          }
+        },
+        {
+          "id": 25,
+          "type": "text",
+          "value": {
+            "en": "AD Sites represent physical network locations and control how replication traffic flows. A site is typically a location with good network connectivity, like a single office building or data center. Sites are important because they allow AD to optimize replication schedules and client connections. Domain controllers within the same site replicate changes frequently, assuming fast network links. Replication between sites can be scheduled to occur during off-peak hours to conserve bandwidth.",
+            "ar": "مواقع AD تمثل مواقع الشبكة الفعلية وتتحكم في كيفية تدفق حركة النسخ المتماثل. الموقع عادة هو موقع مع اتصال شبكة جيد، مثل مبنى مكتب واحد أو مركز بيانات. المواقع مهمة لأنها تسمح لـ AD بتحسين جداول النسخ المتماثل واتصالات العميل. تنسخ متحكمات النطاق داخل نفس الموقع التغييرات بشكل متكرر، بافتراض روابط شبكة سريعة. يمكن جدولة النسخ المتماثل بين المواقع للحدوث خلال ساعات خارج الذروة للحفاظ على النطاق الترددي."
+          }
+        },
+        {
+          "id": 26,
+          "type": "text",
+          "value": {
+            "en": "Site Links connect sites and define the cost and schedule for replication. Cost is a relative number that tells AD which path is preferred. Lower cost links are used first. For example, a direct fiber connection between two offices might have cost 100, while a slower satellite link has cost 500. AD automatically calculates the most efficient replication topology. The Knowledge Consistency Checker (KCC) runs on each DC and creates connection objects that define the replication partners.",
+            "ar": "روابط الموقع تربط المواقع وتحدد التكلفة والجدول الزمني للنسخ المتماثل. التكلفة هي رقم نسبي يخبر AD أي مسار مفضل. يتم استخدام الروابط ذات التكلفة المنخفضة أولاً. على سبيل المثال، قد يكون لاتصال ألياف مباشر بين مكتبين تكلفة 100، بينما رابط القمر الصناعي الأبطأ له تكلفة 500. يحسب AD تلقائياً طوبولوجيا النسخ المتماثل الأكثر كفاءة. يعمل فاحص اتساق المعرفة (KCC) على كل متحكم نطاق وينشئ كائنات اتصال تحدد شركاء النسخ المتماثل."
+          }
+        },
+        {
+          "id": 27,
+          "type": "title",
+          "value": {
+            "en": "AD Replication Mechanics: USN and Conflict Resolution",
+            "ar": "آليات النسخ المتماثل لـ AD: USN وحل الصراعات"
+          }
+        },
+        {
+          "id": 28,
+          "type": "text",
+          "value": {
+            "en": "Active Directory tracks changes using Update Sequence Numbers (USNs). Each DC maintains its own local USN counter that increments with every write operation. When a DC replicates with a partner, it requests all changes since the last USN it received. This efficient mechanism ensures that only new changes are transferred, not the entire database. DCs also maintain a table of the highest USN received from each replication partner.",
+            "ar": "يتتبع الدليل النشط التغييرات باستخدام أرقام تسلسل التحديث (USNs). يحتفظ كل متحكم نطاق بعداد USN المحلي الخاص به الذي يزداد مع كل عملية كتابة. عندما يُنسخ متحكم نطاق مع شريك، فإنه يطلب جميع التغييرات منذ آخر USN تلقاه. هذه الآلية الفعالة تضمن نقل التغييرات الجديدة فقط، وليس قاعدة البيانات بأكملها. تحتفظ متحكمات النطاق أيضاً بجدول لأعلى USN تم تلقيه من كل شريك نسخ متماثل."
+          }
+        },
+        {
+          "id": 29,
+          "type": "text",
+          "value": {
+            "en": "Replication conflicts can occur when the same attribute of an object is modified on different DCs before replication happens. AD uses version numbers and timestamps to resolve conflicts. The change with the higher version number wins. If version numbers are equal, the timestamp is used. If timestamps are also equal, a tiebreaker uses a comparison of the originating DC GUIDs. This deterministic conflict resolution ensures consistency across all DCs eventually.",
+            "ar": "يمكن أن تحدث صراعات النسخ المتماثل عندما يتم تعديل نفس سمة الكائن على متحكمات نطاق مختلفة قبل حدوث النسخ المتماثل. يستخدم AD أرقام الإصدارات والطوابع الزمنية لحل الصراعات. التغيير برقم الإصدار الأعلى يفوز. إذا كانت أرقام الإصدارات متساوية، يتم استخدام الطابع الزمني. إذا كانت الطوابع الزمنية متساوية أيضاً، يستخدم فاصل التعادل مقارنة بين GUIDs لمتحكم النطاق الأصلي. حل الصراع الحتمي هذا يضمن الاتساق عبر جميع متحكمات النطاق في النهاية."
+          }
+        },
+        {
+          "id": 30,
+          "type": "title",
+          "value": {
+            "en": "DNS Integration with Active Directory",
+            "ar": "تكامل DNS مع الدليل النشط"
+          }
+        },
+        {
+          "id": 31,
+          "type": "text",
+          "value": {
+            "en": "Active Directory is completely dependent on DNS functioning correctly. DNS is not just important, it is absolutely critical. AD uses DNS to locate domain controllers, services, and resources. When a client computer wants to authenticate, it queries DNS for SRV records that list available domain controllers. Without working DNS, clients cannot find DCs, users cannot log in, and replication cannot function.",
+            "ar": "الدليل النشط يعتمد بشكل كامل على عمل DNS بشكل صحيح. DNS ليس مهماً فقط، إنه حاسم تماماً. يستخدم AD نظام DNS لتحديد موقع متحكمات النطاق، والخدمات، والموارد. عندما يريد جهاز كمبيوتر عميل المصادقة، فإنه يستعلم عن DNS عن سجلات SRV التي تسرد متحكمات النطاق المتاحة. بدون DNS يعمل، لا يمكن للعملاء العثور على متحكمات النطاق، ولا يمكن للمستخدمين تسجيل الدخول، ولا يمكن أن يعمل النسخ المتماثل."
+          }
+        },
+        {
+          "id": 32,
+          "type": "text",
+          "value": {
+            "en": "AD-integrated DNS zones store DNS records directly in Active Directory partitions and replicate through normal AD replication. This provides automatic redundancy and security. Each DC that is also a DNS server can answer DNS queries and update records. Dynamic DNS allows domain-joined computers to automatically register their IP addresses. When a DC restarts or changes IP, it updates DNS automatically, ensuring clients always have current location information.",
+            "ar": "مناطق DNS المتكاملة مع AD تخزّن سجلات DNS مباشرة في أقسام الدليل النشط وتُنسخ من خلال النسخ المتماثل العادي لـ AD. هذا يوفر التكرار التلقائي والأمان. كل متحكم نطاق هو أيضاً خادم DNS يمكنه الإجابة على استعلامات DNS وتحديث السجلات. يسمح DNS الديناميكي لأجهزة الكمبيوتر المنضمة للنطاق بتسجيل عناوين IP الخاصة بها تلقائياً. عندما يعيد متحكم نطاق التشغيل أو يغير IP، فإنه يحدّث DNS تلقائياً، مما يضمن أن العملاء لديهم دائماً معلومات الموقع الحالية."
+          }
+        },
+        {
+          "id": 33,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "Never point domain controllers to external DNS servers as primary DNS. DCs must be able to resolve AD-specific DNS records that only exist in your internal DNS zones.",
+            "ar": "لا تشير أبداً متحكمات النطاق إلى خوادم DNS خارجية كـ DNS أساسي. يجب أن تكون متحكمات النطاق قادرة على حل سجلات DNS الخاصة بـ AD والتي توجد فقط في مناطق DNS الداخلية الخاصة بك."
+          },
+          "link": "",
+          "isLab": false
+        }
+      ]
+    },
+    {
+      "id": "topic-6",
+      "title": {
+        "en": "Securing Active Directory: Common Attacks and How to Defend Against Them",
+        "ar": "تأمين الدليل النشط: الهجمات الشائعة وكيفية الدفاع ضدها"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "Authentication Protocols: Kerberos and NTLM",
+            "ar": "بروتوكولات المصادقة: Kerberos و NTLM"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "Active Directory uses two primary authentication protocols: Kerberos and NTLM. Kerberos is the modern, preferred protocol that uses tickets to prove identity. When you log in, the domain controller issues you a Ticket Granting Ticket (TGT) that proves you have been authenticated. When you need to access a service like a file server, you present your TGT to get a Service Ticket (TGS) for that specific resource. This ticket-based system is efficient and supports mutual authentication where both client and server verify each other.",
+            "ar": "يستخدم الدليل النشط بروتوكولين أساسيين للمصادقة: Kerberos و NTLM. Kerberos هو البروتوكول الحديث المفضل الذي يستخدم تذاكر لإثبات الهوية. عندما تسجل الدخول، يصدر لك متحكم النطاق تذكرة منح التذكرة (TGT) التي تثبت أنك تمت مصادقتك. عندما تحتاج للوصول إلى خدمة مثل خادم ملفات، تقدم TGT الخاص بك للحصول على تذكرة خدمة (TGS) لذلك المورد المحدد. نظام التذاكر هذا فعال ويدعم المصادقة المتبادلة حيث يتحقق كل من العميل والخادم من بعضهما البعض."
+          }
+        },
+        {
+          "id": 1771986575198.0098,
+          "type": "image",
+          "srcKey": "",
+          "size": "small",
+          "imageUrl": "https://pub-cb38e65ea6bd411eb827a8641fdcc72d.r2.dev/Active%20Directory/Kerberos%20authentication_.webp"
+        },
+        {
+          "id": 4,
+          "type": "text",
+          "value": {
+            "en": "NTLM is the older, legacy protocol that is less secure but still supported for backward compatibility. NTLM uses a challenge-response mechanism where the server sends a random challenge, the client encrypts it with their password hash, and sends it back. NTLM has significant weaknesses: it does not support mutual authentication, is vulnerable to relay attacks, and is susceptible to brute force cracking. Modern environments should disable NTLM wherever possible and rely solely on Kerberos.",
+            "ar": "NTLM هو البروتوكول القديم الأقل أماناً لكنه لا يزال مدعوماً للتوافق مع الإصدارات السابقة. يستخدم NTLM آلية التحدي والاستجابة حيث يرسل الخادم تحدياً عشوائياً، يشفّر العميل بتجزئة كلمة المرور الخاصة به، ويرسله مرة أخرى. لدى NTLM نقاط ضعف كبيرة: لا يدعم المصادقة المتبادلة، وهو عرضة لهجمات الترحيل، ومعرض للتكسير بالقوة الغاشمة. يجب على البيئات الحديثة تعطيل NTLM حيثما أمكن والاعتماد فقط على Kerberos."
+          }
+        },
+        {
+          "id": 5,
+          "type": "hr"
+        },
+        {
+          "id": 6,
+          "type": "title",
+          "value": {
+            "en": "Common Active Directory Attacks",
+            "ar": "هجمات الدليل النشط الشائعة"
+          }
+        },
+        {
+          "id": 7,
+          "type": "text",
+          "value": {
+            "en": "Kerberoasting is an attack that exploits how service accounts are configured. Attackers request Kerberos service tickets for accounts with Service Principal Names (SPNs), and these tickets contain encrypted portions that use the service account's password. The attacker can then take these tickets offline and attempt to crack the password through brute force. Weak service account passwords are particularly vulnerable. This attack is powerful because it requires no special privileges, any authenticated user can request service tickets.",
+            "ar": "Kerberoasting هو هجوم يستغل كيفية تكوين حسابات الخدمة. يطلب المهاجمون تذاكر خدمة Kerberos لحسابات بأسماء أساسية للخدمة (SPNs)، وهذه التذاكر تحتوي على أجزاء مشفرة تستخدم كلمة مرور حساب الخدمة. يمكن للمهاجم بعد ذلك أخذ هذه التذاكر دون اتصال ومحاولة تكسير كلمة المرور من خلال القوة الغاشمة. كلمات مرور حساب الخدمة الضعيفة معرضة بشكل خاص. هذا الهجوم قوي لأنه لا يتطلب امتيازات خاصة، يمكن لأي مستخدم مصادق طلب تذاكر الخدمة."
+          }
+        },
+        {
+          "id": 8,
+          "type": "text",
+          "value": {
+            "en": "AS-REP Roasting targets user accounts that have the setting 'Do not require Kerberos preauthentication' enabled. Normally, Kerberos preauthentication requires the user to prove they know their password before receiving a TGT. Accounts with this setting disabled allow attackers to request authentication data without proving identity first. The response contains encrypted material that can be cracked offline to reveal the password. This attack is easily prevented by ensuring all user accounts require preauthentication.",
+            "ar": "AS-REP Roasting يستهدف حسابات المستخدمين التي لديها إعداد 'لا تتطلب المصادقة المسبقة لـ Kerberos' ممكّناً. عادةً، تتطلب المصادقة المسبقة لـ Kerberos من المستخدم إثبات أنه يعرف كلمة المرور الخاصة به قبل تلقي TGT. الحسابات التي تم تعطيل هذا الإعداد فيها تسمح للمهاجمين بطلب بيانات المصادقة دون إثبات الهوية أولاً. تحتوي الاستجابة على مواد مشفرة يمكن تكسيرها دون اتصال للكشف عن كلمة المرور. يمكن منع هذا الهجوم بسهولة من خلال ضمان أن جميع حسابات المستخدمين تتطلب المصادقة المسبقة."
+          }
+        },
+        {
+          "id": 9,
+          "type": "text",
+          "value": {
+            "en": "Pass-the-Hash and Pass-the-Ticket attacks allow attackers to authenticate without knowing the actual password. Pass-the-Hash uses captured NTLM password hashes to authenticate as that user. Pass-the-Ticket uses stolen Kerberos tickets to impersonate users. These attacks are effective because Windows stores password hashes and tickets in memory for legitimate reasons. If an attacker gains administrative access to a workstation and dumps memory, they can extract these credentials and reuse them to move laterally through the network.",
+            "ar": "هجمات Pass-the-Hash و Pass-the-Ticket تسمح للمهاجمين بالمصادقة دون معرفة كلمة المرور الفعلية. يستخدم Pass-the-Hash تجزئات كلمة مرور NTLM الملتقطة للمصادقة كذلك المستخدم. يستخدم Pass-the-Ticket تذاكر Kerberos المسروقة لانتحال هوية المستخدمين. هذه الهجمات فعالة لأن Windows يخزن تجزئات كلمة المرور والتذاكر في الذاكرة لأسباب مشروعة. إذا حصل مهاجم على وصول إداري إلى محطة عمل وأفرغ الذاكرة، يمكنه استخراج بيانات الاعتماد هذه وإعادة استخدامها للتحرك جانبياً عبر الشبكة."
+          }
+        },
+        {
+          "id": 10,
+          "type": "text",
+          "value": {
+            "en": "DCSync is a devastating attack that mimics domain controller replication. An attacker with sufficient privileges can use the replication protocol to request password hashes for all users in the domain, including administrators. This requires replication permissions, which Domain Admins have by default. Once successful, the attacker has complete password database access without ever touching the actual domain controller servers. This attack is often the final step before complete domain compromise.",
+            "ar": "DCSync هو هجوم مدمر يحاكي النسخ المتماثل لمتحكم النطاق. يمكن للمهاجم بامتيازات كافية استخدام بروتوكول النسخ المتماثل لطلب تجزئات كلمة المرور لجميع المستخدمين في النطاق، بما في ذلك المسؤولين. هذا يتطلب أذونات النسخ المتماثل، والتي يمتلكها مسؤولو النطاق افتراضياً. بمجرد النجاح، يكون لدى المهاجم وصول كامل إلى قاعدة بيانات كلمات المرور دون لمس خوادم متحكم النطاق الفعلية أبداً. هذا الهجوم غالباً ما يكون الخطوة النهائية قبل اختراق النطاق الكامل."
+          }
+        },
+        {
+          "id": 11,
+          "type": "orderedList",
+          "title": {
+            "en": "Advanced Ticket Attacks",
+            "ar": "هجمات التذاكر المتقدمة"
+          },
+          "items": [
+            {
+              "subtitle": {
+                "en": "Golden Ticket Attack",
+                "ar": "هجوم التذكرة الذهبية"
+              },
+              "text": {
+                "en": "Creates forged Kerberos TGTs using the KRBTGT account hash. This grants unlimited access to the domain for years because tickets can be created with any expiration time. Changing the KRBTGT password twice invalidates all golden tickets.",
+                "ar": "ينشئ TGTs مزورة لـ Kerberos باستخدام تجزئة حساب KRBTGT. هذا يمنح وصولاً غير محدود للنطاق لسنوات لأن التذاكر يمكن إنشاؤها بأي وقت انتهاء صلاحية. تغيير كلمة مرور KRBTGT مرتين يبطل جميع التذاكر الذهبية."
+              },
+              "example": {
+                "en": "Attacker creates ticket valid for 10 years with Domain Admin privileges",
+                "ar": "المهاجم ينشئ تذكرة صالحة لمدة 10 سنوات بامتيازات مسؤول النطاق"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Silver Ticket Attack",
+                "ar": "هجوم التذكرة الفضية"
+              },
+              "text": {
+                "en": "Creates forged service tickets for specific services using that service account's password hash. More targeted than Golden Ticket but harder to detect because it does not involve the domain controller in the authentication process.",
+                "ar": "ينشئ تذاكر خدمة مزورة لخدمات محددة باستخدام تجزئة كلمة مرور حساب الخدمة. أكثر استهدافاً من التذكرة الذهبية لكن أصعب في الاكتشاف لأنه لا يتضمن متحكم النطاق في عملية المصادقة."
+              },
+              "example": {
+                "en": "Forged ticket for CIFS service grants file share access without DC contact",
+                "ar": "تذكرة مزورة لخدمة CIFS تمنح الوصول لمشاركة الملفات دون اتصال بمتحكم النطاق"
+              }
+            }
+          ]
+        },
+        {
+          "id": 12,
+          "type": "text",
+          "value": {
+            "en": "LDAP Enumeration is reconnaissance where attackers query Active Directory to map out the network structure, identify privileged accounts, find group memberships, and discover potential targets. Because authenticated users can read most AD information by default, attackers with basic user credentials can build a complete picture of the organization. Tools like BloodHound automate this process and visualize attack paths from compromised accounts to high-value targets like Domain Admins.",
+            "ar": "تعداد LDAP هو استطلاع حيث يستعلم المهاجمون عن الدليل النشط لرسم خريطة بنية الشبكة، وتحديد الحسابات ذات الامتيازات، والعثور على عضويات المجموعة، واكتشاف الأهداف المحتملة. لأن المستخدمين المصادقين يمكنهم قراءة معظم معلومات AD بشكل افتراضي، يمكن للمهاجمين ببيانات اعتماد مستخدم أساسية بناء صورة كاملة للمؤسسة. أدوات مثل BloodHound تؤتمت هذه العملية وتصوّر مسارات الهجوم من الحسابات المخترقة إلى الأهداف ذات القيمة العالية مثل مسؤولي النطاق."
+          }
+        },
+        {
+          "id": 13,
+          "type": "hr"
+        },
+        {
+          "id": 14,
+          "type": "title",
+          "value": {
+            "en": "Active Directory Hardening Essentials",
+            "ar": "أساسيات تقوية الدليل النشط"
+          }
+        },
+        {
+          "id": 15,
+          "type": "text",
+          "value": {
+            "en": "The Tiered Administration Model separates administrative access into layers to prevent credential theft from escalating. Tier 0 includes domain controllers and accounts that manage them. Tier 1 covers servers and server administrators. Tier 2 includes workstations and help desk accounts. The critical rule is that credentials from higher tiers never touch lower tiers. A Domain Admin account should never log into a regular workstation where malware could steal credentials. This isolation limits the impact of compromises.",
+            "ar": "نموذج الإدارة المتدرجة يفصل الوصول الإداري إلى طبقات لمنع سرقة بيانات الاعتماد من التصعيد. المستوى 0 يشمل متحكمات النطاق والحسابات التي تديرها. المستوى 1 يغطي الخوادم ومسؤولي الخوادم. المستوى 2 يشمل محطات العمل وحسابات مكتب المساعدة. القاعدة الحاسمة هي أن بيانات الاعتماد من المستويات الأعلى لا تلمس أبداً المستويات الأدنى. يجب ألا يسجل حساب مسؤول النطاق الدخول أبداً إلى محطة عمل عادية حيث يمكن للبرامج الضارة سرقة بيانات الاعتماد. هذا العزل يحد من تأثير الاختراقات."
+          }
+        },
+        {
+          "id": 16,
+          "type": "text",
+          "value": {
+            "en": "The Protected Users security group provides enhanced protection for high-privilege accounts. Members of this group cannot use NTLM, DES, or RC4 encryption, forcing the use of stronger Kerberos encryption. Their credentials are not cached on computers, reducing the risk of credential theft from memory. TGT lifetime is limited to 4 hours instead of 10. Delegation is disabled, preventing the account from being impersonated. All Domain Admin accounts should be members of Protected Users.",
+            "ar": "مجموعة أمان المستخدمين المحميين توفر حماية محسّنة للحسابات ذات الامتيازات العالية. لا يمكن لأعضاء هذه المجموعة استخدام NTLM أو DES أو تشفير RC4، مما يفرض استخدام تشفير Kerberos الأقوى. لا يتم تخزين بيانات الاعتماد الخاصة بهم مؤقتاً على أجهزة الكمبيوتر، مما يقلل من خطر سرقة بيانات الاعتماد من الذاكرة. عمر TGT محدود بـ 4 ساعات بدلاً من 10. تم تعطيل التفويض، مما يمنع انتحال الحساب. يجب أن تكون جميع حسابات مسؤول النطاق أعضاء في المستخدمين المحميين."
+          }
+        },
+        {
+          "id": 17,
+          "type": "text",
+          "value": {
+            "en": "Windows Defender Credential Guard uses virtualization-based security to isolate credentials in a protected area that even administrators cannot access. This prevents Pass-the-Hash and Pass-the-Ticket attacks because credentials are stored in a secure enclave that malware cannot reach. Credential Guard requires modern hardware with TPM 2.0 and virtualization extensions. When enabled, even if an attacker compromises the operating system with admin rights, they cannot extract credentials from memory.",
+            "ar": "يستخدم Windows Defender Credential Guard أمان قائم على المحاكاة الافتراضية لعزل بيانات الاعتماد في منطقة محمية لا يمكن حتى للمسؤولين الوصول إليها. هذا يمنع هجمات Pass-the-Hash و Pass-the-Ticket لأن بيانات الاعتماد يتم تخزينها في مكان آمن لا يمكن للبرامج الضارة الوصول إليه. يتطلب Credential Guard أجهزة حديثة مع TPM 2.0 وملحقات المحاكاة الافتراضية. عند تمكينه، حتى لو اخترق مهاجم نظام التشغيل بحقوق المسؤول، فإنه لا يمكنه استخراج بيانات الاعتماد من الذاكرة."
+          }
+        },
+        {
+          "id": 18,
+          "type": "list",
+          "title": {
+            "en": "Essential AD Security Controls",
+            "ar": "ضوابط أمان AD الأساسية"
+          },
+          "items": {
+            "en": [
+              "Disable NTLM authentication entirely where possible, audit where required",
+              "Enforce strong passwords for service accounts or migrate to gMSAs",
+              "Ensure all accounts require Kerberos preauthentication",
+              "Implement least privilege: minimize Domain Admin and Enterprise Admin membership",
+              "Enable audit logging for authentication events and privileged operations",
+              "Regularly rotate KRBTGT password to invalidate potential golden tickets",
+              "Deploy LAPS for local administrator password management on workstations"
+            ],
+            "ar": [
+              "تعطيل مصادقة NTLM بالكامل حيثما أمكن، والمراجعة حيث مطلوب",
+              "فرض كلمات مرور قوية لحسابات الخدمة أو الترحيل إلى gMSAs",
+              "التأكد من أن جميع الحسابات تتطلب المصادقة المسبقة لـ Kerberos",
+              "تطبيق أقل امتياز: تقليل عضوية مسؤول النطاق ومسؤول المؤسسة",
+              "تمكين تسجيل المراجعة لأحداث المصادقة والعمليات ذات الامتيازات",
+              "تدوير كلمة مرور KRBTGT بانتظام لإبطال التذاكر الذهبية المحتملة",
+              "نشر LAPS لإدارة كلمة مرور المسؤول المحلي على محطات العمل"
+            ]
+          }
+        },
+        {
+          "id": 19,
+          "type": "title",
+          "value": {
+            "en": "Monitoring and Detection: Key Event IDs",
+            "ar": "المراقبة والكشف: معرّفات الأحداث الرئيسية"
+          }
+        },
+        {
+          "id": 20,
+          "type": "text",
+          "value": {
+            "en": "Effective Active Directory security requires monitoring authentication and administrative events through Windows Event Logs. Domain controllers generate security event logs that record every authentication attempt, privilege use, and administrative change. Security teams should collect these logs centrally and create alerts for suspicious patterns. The challenge is distinguishing normal activity from malicious behavior among millions of daily events.",
+            "ar": "أمان الدليل النشط الفعال يتطلب مراقبة أحداث المصادقة والإدارة من خلال سجلات أحداث Windows. تولّد متحكمات النطاق سجلات أحداث الأمان التي تسجل كل محاولة مصادقة، واستخدام الامتيازات، والتغيير الإداري. يجب على فرق الأمان جمع هذه السجلات بشكل مركزي وإنشاء تنبيهات لأنماط مشبوهة. التحدي هو التمييز بين النشاط العادي والسلوك الضار بين ملايين الأحداث اليومية."
+          }
+        },
+        {
+          "id": 21,
+          "type": "table",
+          "title": {
+            "en": "Critical Security Event IDs to Monitor",
+            "ar": "معرّفات أحداث الأمان الحرجة للمراقبة"
+          },
+          "headers": {
+            "en": [
+              "Event ID",
+              "Description",
+              "What to Watch For"
+            ],
+            "ar": [
+              "معرّف الحدث",
+              "الوصف",
+              "ما الذي يجب مراقبته"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "4624",
+                "Successful logon",
+                "Unusual times, unexpected accounts, lateral movement"
+              ],
+              "ar": [
+                "4624",
+                "تسجيل دخول ناجح",
+                "أوقات غير عادية، حسابات غير متوقعة، حركة جانبية"
+              ]
+            },
+            {
+              "en": [
+                "4625",
+                "Failed logon",
+                "Brute force attempts, password spraying patterns"
+              ],
+              "ar": [
+                "4625",
+                "فشل تسجيل الدخول",
+                "محاولات القوة الغاشمة، أنماط رش كلمة المرور"
+              ]
+            },
+            {
+              "en": [
+                "4768",
+                "Kerberos TGT requested",
+                "Unusual account requesting tickets, AS-REP roasting"
+              ],
+              "ar": [
+                "4768",
+                "طلب TGT لـ Kerberos",
+                "حساب غير عادي يطلب تذاكر، AS-REP roasting"
+              ]
+            },
+            {
+              "en": [
+                "4769",
+                "Kerberos service ticket requested",
+                "Kerberoasting attempts, unusual SPN requests"
+              ],
+              "ar": [
+                "4769",
+                "طلب تذكرة خدمة Kerberos",
+                "محاولات Kerberoasting، طلبات SPN غير عادية"
+              ]
+            },
+            {
+              "en": [
+                "4776",
+                "NTLM authentication",
+                "NTLM use when Kerberos should be used, downgrade attacks"
+              ],
+              "ar": [
+                "4776",
+                "مصادقة NTLM",
+                "استخدام NTLM عندما يجب استخدام Kerberos، هجمات التخفيض"
+              ]
+            },
+            {
+              "en": [
+                "4672",
+                "Special privileges assigned",
+                "Administrative privilege use, lateral movement with admin rights"
+              ],
+              "ar": [
+                "4672",
+                "تعيين امتيازات خاصة",
+                "استخدام امتياز إداري، حركة جانبية بحقوق المسؤول"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 22,
+          "type": "title",
+          "value": {
+            "en": "Defensive Tools: BloodHound and PingCastle",
+            "ar": "أدوات الدفاع: BloodHound و PingCastle"
+          }
+        },
+        {
+          "id": 23,
+          "type": "text",
+          "value": {
+            "en": "BloodHound is a powerful tool that maps Active Directory relationships and identifies attack paths. It collects data about users, groups, computers, sessions, and permissions, then builds a graph database showing how these objects connect. Security teams use BloodHound defensively to find and eliminate dangerous privilege escalation paths before attackers exploit them. For example, it might reveal that a help desk account can reset the password of an account that is a member of Domain Admins, creating an unintended path to full domain compromise.",
+            "ar": "BloodHound هي أداة قوية ترسم خريطة علاقات الدليل النشط وتحدد مسارات الهجوم. إنها تجمع بيانات حول المستخدمين، والمجموعات، وأجهزة الكمبيوتر، والجلسات، والأذونات، ثم تبني قاعدة بيانات رسومية تظهر كيف تتصل هذه الكائنات. تستخدم فرق الأمان BloodHound بشكل دفاعي للعثور على مسارات تصعيد الامتيازات الخطيرة والقضاء عليها قبل أن يستغلها المهاجمون. على سبيل المثال، قد تكشف أن حساب مكتب المساعدة يمكنه إعادة تعيين كلمة مرور حساب عضو في مسؤولي النطاق، مما يخلق مساراً غير مقصود لاختراق النطاق الكامل."
+          }
+        },
+        {
+          "id": 24,
+          "type": "text",
+          "value": {
+            "en": "PingCastle is an Active Directory security audit tool that generates comprehensive health reports. It scans the domain for common misconfigurations, weak security settings, and known vulnerabilities. PingCastle assigns a risk score and provides detailed remediation guidance. It checks for issues like weak password policies, excessive administrative accounts, outdated operating systems on domain controllers, and missing security patches. Running PingCastle regularly helps organizations maintain AD security hygiene and track improvements over time.",
+            "ar": "PingCastle هي أداة مراجعة أمان الدليل النشط التي تولّد تقارير صحة شاملة. إنها تفحص النطاق بحثاً عن أخطاء التكوين الشائعة، وإعدادات الأمان الضعيفة، والثغرات المعروفة. تعيّن PingCastle درجة مخاطر وتوفر إرشادات معالجة مفصلة. إنها تتحقق من مشاكل مثل سياسات كلمة المرور الضعيفة، والحسابات الإدارية المفرطة، وأنظمة التشغيل القديمة على متحكمات النطاق، والتصحيحات الأمنية المفقودة. تشغيل PingCastle بانتظام يساعد المؤسسات في الحفاظ على نظافة أمان AD وتتبع التحسينات مع مرور الوقت."
+          }
+        },
+        {
+          "id": 25,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Use attacker tools defensively. Run BloodHound and PingCastle regularly to find weaknesses before attackers do. Fix identified issues promptly.",
+            "ar": "استخدم أدوات المهاجم بشكل دفاعي. قم بتشغيل BloodHound و PingCastle بانتظام للعثور على نقاط الضعف قبل أن يفعل المهاجمون. أصلح المشاكل المحددة بسرعة."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 26,
+          "type": "terminal",
+          "label": {
+            "en": "PowerShell: Check for Accounts Not Requiring Preauthentication",
+            "ar": "PowerShell: التحقق من الحسابات التي لا تتطلب المصادقة المسبقة"
+          },
+          "value": "PS C:\\> Get-ADUser -Filter {DoesNotRequirePreAuth -eq $true} | Select Name,SamAccountName\n\nName            SamAccountName\n----            --------------\nTest Service    testsvc\n\n# These accounts are vulnerable to AS-REP Roasting\n# Ensure preauthentication is required for all accounts"
+        },
+        {
+          "id": 27,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "Active Directory security is foundational to enterprise security. A compromised AD means complete network compromise. Invest in proper hardening, monitoring, and regular security audits.",
+            "ar": "أمان الدليل النشط هو أساس أمان المؤسسة. اختراق AD يعني اختراق الشبكة بالكامل. استثمر في التقوية المناسبة، والمراقبة، والمراجعات الأمنية المنتظمة."
+          },
+          "link": "",
+          "isLab": false
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "createdAt": "2026-02-25T04:04:19.499Z",
+    "totalTopics": 6,
+    "totalElements": 157
+  }
+}

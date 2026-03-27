@@ -1,0 +1,1417 @@
+{
+  "landingData": {
+    "title": {
+      "en": "VPN & Secure Communications",
+      "ar": "الشبكات الافتراضية الخاصة والاتصالات الآمنة"
+    },
+    "description": {
+      "en": "Learn how VPN technologies, proxy servers, and Zero Trust Architecture protect your communications across the internet. Understand different VPN types, encryption protocols, and modern security frameworks.",
+      "ar": "تعلم كيف تحمي تقنيات الشبكات الافتراضية الخاصة وخوادم البروكسي ومعمارية الثقة المعدومة اتصالاتك عبر الإنترنت. افهم أنواع الشبكات الافتراضية المختلفة وبروتوكولات التشفير والأطر الأمنية الحديثة."
+    },
+    "difficulty": {
+      "en": "Beginner",
+      "ar": "مبتدئ"
+    },
+    "duration": {
+      "en": "75 Minutes",
+      "ar": "75 دقيقة"
+    },
+    "instructor": "CyberLab",
+    "rating": 4.9,
+    "students": 250
+  },
+  "topics": [
+    {
+      "id": "topic-1",
+      "title": {
+        "en": "Understanding VPN: Your Private Tunnel Through the Internet",
+        "ar": "فهم الشبكات الافتراضية الخاصة: نفقك الخاص عبر الإنترنت"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "What is a VPN and Why Do We Need It?",
+            "ar": "ما هي الشبكة الافتراضية الخاصة ولماذا نحتاجها؟"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "VPN stands for Virtual Private Network. It creates a secure, encrypted connection between your device and another network over the internet. Think of the internet as a busy highway where everyone can see what you are carrying. A VPN builds a private tunnel through that highway so no one can peek inside your vehicle. When you use a VPN, your internet traffic travels through this encrypted tunnel, hiding your data from hackers, internet service providers, and anyone else trying to spy on your online activities.",
+            "ar": "VPN تعني الشبكة الافتراضية الخاصة (Virtual Private Network). تنشئ اتصالاً آمناً ومشفراً بين جهازك وشبكة أخرى عبر الإنترنت. تخيل الإنترنت كطريق سريع مزدحم حيث يمكن للجميع رؤية ما تحمله. الشبكة الافتراضية الخاصة تبني نفقاً خاصاً عبر هذا الطريق بحيث لا يستطيع أحد النظر داخل سيارتك. عندما تستخدم VPN، تنتقل حركة الإنترنت الخاصة بك عبر هذا النفق المشفر، مما يخفي بياناتك عن المخترقين ومزودي خدمة الإنترنت وأي شخص آخر يحاول التجسس على أنشطتك عبر الإنترنت."
+          }
+        },
+        {
+          "id": 1772371519586.4395,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://pub-cb38e65ea6bd411eb827a8641fdcc72d.r2.dev/VPN%20%26%20Secure%20Communications/1-1-What%20is%20a%20VPN.jpg"
+        },
+        {
+          "id": 4,
+          "type": "text",
+          "value": {
+            "en": "VPNs serve multiple critical purposes. They protect your privacy by masking your real IP address, making it difficult for websites and services to track your location and identity. They secure your data on public Wi-Fi networks, where attackers often lurk to steal passwords and personal information. VPNs also allow remote workers to safely access their company's internal network as if they were sitting in the office. Finally, they help bypass geographic restrictions, allowing access to content that might be blocked in certain regions.",
+            "ar": "تخدم الشبكات الافتراضية الخاصة أغراضاً حاسمة متعددة. تحمي خصوصيتك بإخفاء عنوان IP الحقيقي الخاص بك، مما يجعل من الصعب على المواقع والخدمات تتبع موقعك وهويتك. تؤمن بياناتك على شبكات الواي فاي العامة، حيث يكمن المهاجمون غالباً لسرقة كلمات المرور والمعلومات الشخصية. تسمح الشبكات الافتراضية الخاصة أيضاً للعاملين عن بعد بالوصول بأمان إلى الشبكة الداخلية لشركتهم كما لو كانوا جالسين في المكتب. وأخيراً، تساعد في تجاوز القيود الجغرافية، مما يتيح الوصول إلى المحتوى الذي قد يكون محظوراً في مناطق معينة."
+          }
+        },
+        {
+          "id": 5,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "Warning: Free VPN services may log your data and sell it to third parties. Always research a VPN provider's privacy policy before trusting them with your internet traffic. A trustworthy VPN should have a strict no-logs policy.",
+            "ar": "تحذير: قد تسجل خدمات VPN المجانية بياناتك وتبيعها لأطراف ثالثة. ابحث دائماً عن سياسة الخصوصية لمزود VPN قبل أن تثق به مع حركة الإنترنت الخاصة بك. يجب أن يكون لدى VPN الموثوق سياسة صارمة بعدم الاحتفاظ بالسجلات."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 6,
+          "type": "title",
+          "value": {
+            "en": "How VPN Works: The Technical Journey",
+            "ar": "كيف تعمل الشبكة الافتراضية الخاصة: الرحلة التقنية"
+          }
+        },
+        {
+          "id": 7,
+          "type": "text",
+          "value": {
+            "en": "When you connect to a VPN, several technical steps happen in the background. First, your device establishes a connection with a VPN server using special protocols. This connection is authenticated to ensure both sides are legitimate. Then, encryption is applied to all data passing through this connection. Encryption scrambles your data into unreadable code that only the VPN server can decrypt. Your internet traffic is routed through the VPN server before reaching its final destination, so websites see the VPN server's IP address instead of yours.",
+            "ar": "عندما تتصل بشبكة افتراضية خاصة، تحدث عدة خطوات تقنية في الخلفية. أولاً، ينشئ جهازك اتصالاً مع خادم VPN باستخدام بروتوكولات خاصة. يتم مصادقة هذا الاتصال للتأكد من أن كلا الطرفين شرعيان. ثم، يتم تطبيق التشفير على جميع البيانات التي تمر عبر هذا الاتصال. يحول التشفير بياناتك إلى رمز غير قابل للقراءة  يمكن لخادم VPN فقط فك تشفيره. يتم توجيه حركة الإنترنت الخاصة بك عبر خادم VPN قبل الوصول إلى وجهتها النهائية، لذلك ترى المواقع عنوان IP الخاص بخادم VPN بدلاً من عنوانك."
+          }
+        },
+        {
+          "id": 1772371531581.778,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://pub-cb38e65ea6bd411eb827a8641fdcc72d.r2.dev/VPN%20%26%20Secure%20Communications/1-2-How%20VPN%20Works.webp"
+        },
+        {
+          "id": 9,
+          "type": "text",
+          "value": {
+            "en": "The encryption strength determines how secure your VPN connection is. Modern VPNs use strong encryption standards like AES-256, which is the same level used by governments and militaries. AES-256 means the encryption key is 256 bits long, creating trillions upon trillions of possible combinations. Even with powerful computers, breaking this encryption would take billions of years. This level of security ensures that your data remains private even if someone intercepts the encrypted traffic.",
+            "ar": "تحدد قوة التشفير مدى أمان اتصال VPN الخاص بك. تستخدم الشبكات الافتراضية الخاصة الحديثة معايير تشفير قوية مثل AES-256، وهو نفس المستوى المستخدم من قبل الحكومات والجيوش. AES-256 يعني أن مفتاح التشفير طوله 256 بت، مما ينشئ تريليونات فوق تريليونات من المجموعات المحتملة. حتى مع أجهزة الكمبيوتر القوية، فإن كسر هذا التشفير سيستغرق مليارات السنين. يضمن هذا المستوى من الأمان بقاء بياناتك خاصة حتى لو اعترض شخص ما حركة المرور المشفرة."
+          }
+        },
+        {
+          "id": 10,
+          "type": "table",
+          "title": {
+            "en": "VPN Connection: Before and After",
+            "ar": "اتصال VPN: قبل وبعد"
+          },
+          "headers": {
+            "en": [
+              "Aspect",
+              "Without VPN",
+              "With VPN"
+            ],
+            "ar": [
+              "الجانب",
+              "بدون VPN",
+              "مع VPN"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "IP Address Visibility",
+                "Your real IP is exposed",
+                "VPN server IP is shown"
+              ],
+              "ar": [
+                "ظهور عنوان IP",
+                "عنوان IP الحقيقي مكشوف",
+                "يظهر عنوان IP لخادم VPN"
+              ]
+            },
+            {
+              "en": [
+                "Data Encryption",
+                "Unencrypted (readable)",
+                "Encrypted (unreadable)"
+              ],
+              "ar": [
+                "تشفير البيانات",
+                "غير مشفر (قابل للقراءة)",
+                "مشفر (غير قابل للقراءة)"
+              ]
+            },
+            {
+              "en": [
+                "Location Privacy",
+                "True location visible",
+                "VPN server location shown"
+              ],
+              "ar": [
+                "خصوصية الموقع",
+                "الموقع الحقيقي ظاهر",
+                "يظهر موقع خادم VPN"
+              ]
+            },
+            {
+              "en": [
+                "ISP Monitoring",
+                "Can see all activity",
+                "Can only see VPN connection"
+              ],
+              "ar": [
+                "مراقبة مزود الخدمة",
+                "يمكنه رؤية كل النشاط",
+                "يمكنه رؤية اتصال VPN فقط"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 11,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Professional Tip: VPN does not make you completely anonymous. Your VPN provider can still see your traffic. Choose providers based in privacy-friendly countries with strong data protection laws.",
+            "ar": "نصيحة احترافية: VPN لا يجعلك مجهول الهوية تماماً. لا يزال بإمكان مزود VPN الخاص بك رؤية حركة المرور الخاصة بك. اختر مزودين مقرهم في دول صديقة للخصوصية مع قوانين حماية بيانات قوية."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 12,
+          "type": "text",
+          "value": {
+            "en": "VPN protocols are the set of rules that determine how the VPN tunnel is created and maintained. Common protocols include OpenVPN, which is open-source and highly secure, WireGuard, which is newer and faster, and IKEv2, which is excellent for mobile devices because it handles network changes smoothly. Each protocol has different strengths in terms of speed, security, and compatibility. Understanding these protocols helps you choose the right VPN configuration for your needs.",
+            "ar": "بروتوكولات VPN هي مجموعة القواعد التي تحدد كيفية إنشاء نفق VPN والحفاظ عليه. تتضمن البروتوكولات الشائعة OpenVPN، وهو مفتوح المصدر وآمن للغاية، وWireGuard، وهو أحدث وأسرع، وIKEv2، وهو ممتاز للأجهزة المحمولة لأنه يتعامل مع تغييرات الشبكة بسلاسة. لكل بروتوكول نقاط قوة مختلفة من حيث السرعة والأمان والتوافق. فهم هذه البروتوكولات يساعدك على اختيار تكوين VPN المناسب لاحتياجاتك."
+          }
+        },
+        {
+          "id": 1772371526911.1665,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://pub-cb38e65ea6bd411eb827a8641fdcc72d.r2.dev/VPN%20%26%20Secure%20Communications/1-3-VPN%20Connection%20Before%20and%20After.webp"
+        }
+      ]
+    },
+    {
+      "id": "topic-2",
+      "title": {
+        "en": "VPN Types: Site-to-Site and Remote Access Architectures",
+        "ar": "أنواع الشبكات الافتراضية الخاصة: معماريات موقع إلى موقع والوصول عن بعد"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "Remote Access VPN: Connecting Individual Users",
+            "ar": "VPN الوصول عن بعد: ربط المستخدمين الأفراد"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "Remote Access VPN is designed for individual users who need to connect to a private network from different locations. This is the most common type you encounter as a personal user or remote employee. When you work from home and need to access your company's files, email server, or internal applications, you use Remote Access VPN. Your laptop or mobile device becomes the VPN client that connects to the company's VPN server. The connection is secured with encryption, and once established, your device acts as if it is physically connected to the office network.",
+            "ar": "VPN الوصول عن بعد مصمم للمستخدمين الأفراد الذين يحتاجون إلى الاتصال بشبكة خاصة من مواقع مختلفة. هذا هو النوع الأكثر شيوعاً الذي تواجهه كمستخدم شخصي أو موظف عن بعد. عندما تعمل من المنزل وتحتاج إلى الوصول إلى ملفات شركتك أو خادم البريد الإلكتروني أو التطبيقات الداخلية، تستخدم VPN الوصول عن بعد. يصبح جهازك المحمول أو الكمبيوتر المحمول الخاص بك عميل VPN الذي يتصل بخادم VPN الخاص بالشركة. يتم تأمين الاتصال بالتشفير، وبمجرد إنشائه، يعمل جهازك كما لو كان متصلاً فعلياً بشبكة المكتب."
+          }
+        },
+        {
+          "id": 1772371587918.7898,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://pub-cb38e65ea6bd411eb827a8641fdcc72d.r2.dev/VPN%20%26%20Secure%20Communications/2-1-Remote%20Access%20VPN.webp"
+        },
+        {
+          "id": 4,
+          "type": "text",
+          "value": {
+            "en": "Remote Access VPN typically requires client software installed on the user's device. This software handles authentication, encryption, and connection management. The user provides credentials such as username, password, and sometimes a second factor like a code from an authentication app. Once authenticated, the VPN client establishes the secure tunnel. The advantage is flexibility: employees can work securely from anywhere with internet access. The challenge is that each device must be properly configured and maintained with updated VPN client software.",
+            "ar": "عادةً ما يتطلب VPN الوصول عن بعد برنامج عميل مثبت على جهاز المستخدم. يتعامل هذا البرنامج مع المصادقة والتشفير وإدارة الاتصال. يقدم المستخدم بيانات اعتماد مثل اسم المستخدم وكلمة المرور وأحياناً عامل ثانٍ مثل رمز من تطبيق مصادقة. بمجرد المصادقة، ينشئ عميل VPN النفق الآمن. الميزة هي المرونة: يمكن للموظفين العمل بأمان من أي مكان مع اتصال بالإنترنت. التحدي هو أن كل جهاز يجب أن يكون مكوناً ومصاناً بشكل صحيح مع برنامج عميل VPN محدث."
+          }
+        },
+        {
+          "id": 5,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Professional Tip: Always enable automatic updates for your VPN client software. Security vulnerabilities are regularly discovered and patched. Outdated VPN clients can expose your connection to attacks.",
+            "ar": "نصيحة احترافية: قم دائماً بتمكين التحديثات التلقائية لبرنامج عميل VPN الخاص بك. يتم اكتشاف ثغرات أمنية بانتظام وإصلاحها. عملاء VPN القدامى يمكن أن يعرضوا اتصالك للهجمات."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 6,
+          "type": "hr"
+        },
+        {
+          "id": 7,
+          "type": "title",
+          "value": {
+            "en": "Site-to-Site VPN: Connecting Entire Networks",
+            "ar": "VPN موقع إلى موقع: ربط شبكات كاملة"
+          }
+        },
+        {
+          "id": 8,
+          "type": "text",
+          "value": {
+            "en": "Site-to-Site VPN connects entire networks to each other, not just individual users. Imagine a company with offices in three different cities. Each office has its own local network with computers, servers, and printers. Site-to-Site VPN creates a permanent encrypted tunnel between the networks at each location. This allows all devices in one office to communicate securely with devices in other offices as if they were on the same local network. Employees do not need to manually connect to a VPN; the connection is always active at the network level.",
+            "ar": "VPN موقع إلى موقع يربط شبكات كاملة ببعضها البعض، وليس فقط المستخدمين الأفراد. تخيل شركة لديها مكاتب في ثلاث مدن مختلفة. كل مكتب لديه شبكته المحلية الخاصة مع أجهزة كمبيوتر وخوادم وطابعات. VPN موقع إلى موقع ينشئ نفقاً مشفراً دائماً بين الشبكات في كل موقع. هذا يسمح لجميع الأجهزة في مكتب واحد بالتواصل بأمان مع الأجهزة في المكاتب الأخرى كما لو كانت على نفس الشبكة المحلية. الموظفون لا يحتاجون إلى الاتصال يدوياً بـ VPN؛ الاتصال نشط دائماً على مستوى الشبكة."
+          }
+        },
+        {
+          "id": 9,
+          "type": "text",
+          "value": {
+            "en": "In Site-to-Site VPN, special devices called VPN gateways or VPN routers handle the connection. These gateways sit at the edge of each network and manage all encryption and routing automatically. When a computer in Office A wants to send data to a server in Office B, the data passes through Office A's VPN gateway, travels encrypted through the internet, and arrives at Office B's VPN gateway, which decrypts it and delivers it to the server. The process is transparent to end users. They simply access resources by their network address without knowing the VPN is working behind the scenes.",
+            "ar": "في VPN موقع إلى موقع، تتعامل أجهزة خاصة تسمى بوابات VPN أو أجهزة توجيه VPN مع الاتصال. تجلس هذه البوابات على حافة كل شبكة وتدير كل التشفير والتوجيه تلقائياً. عندما يريد جهاز كمبيوتر في المكتب A إرسال بيانات إلى خادم في المكتب B، تمر البيانات عبر بوابة VPN للمكتب A، تنتقل مشفرة عبر الإنترنت، وتصل إلى بوابة VPN للمكتب B، التي تفك تشفيرها وتسلمها إلى الخادم. العملية شفافة للمستخدمين النهائيين. إنهم ببساطة يصلون إلى الموارد بواسطة عنوان شبكتها دون معرفة أن VPN يعمل خلف الكواليس."
+          }
+        },
+        {
+          "id": 1772371596891.9668,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageUrl": "https://pub-cb38e65ea6bd411eb827a8641fdcc72d.r2.dev/VPN%20%26%20Secure%20Communications/2-2-Site-to-Site%20VPN.webp"
+        },
+        {
+          "id": 11,
+          "type": "table",
+          "title": {
+            "en": "Remote Access VPN vs Site-to-Site VPN",
+            "ar": "VPN الوصول عن بعد مقابل VPN موقع إلى موقع"
+          },
+          "headers": {
+            "en": [
+              "Feature",
+              "Remote Access VPN",
+              "Site-to-Site VPN"
+            ],
+            "ar": [
+              "الميزة",
+              "VPN الوصول عن بعد",
+              "VPN موقع إلى موقع"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "Connection Type",
+                "User-to-Network",
+                "Network-to-Network"
+              ],
+              "ar": [
+                "نوع الاتصال",
+                "مستخدم إلى شبكة",
+                "شبكة إلى شبكة"
+              ]
+            },
+            {
+              "en": [
+                "User Involvement",
+                "Manual connection required",
+                "Automatic and transparent"
+              ],
+              "ar": [
+                "مشاركة المستخدم",
+                "اتصال يدوي مطلوب",
+                "تلقائي وشفاف"
+              ]
+            },
+            {
+              "en": [
+                "Client Software",
+                "Required on each device",
+                "No client needed for end users"
+              ],
+              "ar": [
+                "برنامج العميل",
+                "مطلوب على كل جهاز",
+                "لا حاجة لعميل للمستخدمين النهائيين"
+              ]
+            },
+            {
+              "en": [
+                "Use Case",
+                "Remote workers, travelers",
+                "Connecting branch offices"
+              ],
+              "ar": [
+                "حالة الاستخدام",
+                "عمال عن بعد، مسافرون",
+                "ربط المكاتب الفرعية"
+              ]
+            },
+            {
+              "en": [
+                "Scalability",
+                "Easy to add users",
+                "More complex infrastructure"
+              ],
+              "ar": [
+                "قابلية التوسع",
+                "سهل إضافة مستخدمين",
+                "بنية تحتية أكثر تعقيداً"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 12,
+          "type": "text",
+          "value": {
+            "en": "Choosing between Remote Access and Site-to-Site VPN depends on your specific needs. Remote Access VPN is ideal when you have individuals working from various locations who need occasional or frequent access to the company network. It provides flexibility and is relatively easy to set up and manage. Site-to-Site VPN is the better choice when you need permanent connectivity between fixed locations, such as headquarters and branch offices. It offers better performance for constant network traffic and requires less user management since the connection is always on.",
+            "ar": "يعتمد الاختيار بين VPN الوصول عن بعد وVPN موقع إلى موقع على احتياجاتك المحددة. VPN الوصول عن بعد مثالي عندما يكون لديك أفراد يعملون من مواقع مختلفة يحتاجون إلى وصول عرضي أو متكرر إلى شبكة الشركة. يوفر المرونة وسهل نسبياً في الإعداد والإدارة. VPN موقع إلى موقع هو الخيار الأفضل عندما تحتاج إلى اتصال دائم بين مواقع ثابتة، مثل المقر الرئيسي والمكاتب الفرعية. يوفر أداء أفضل لحركة الشبكة الثابتة ويتطلب إدارة مستخدم أقل حيث أن الاتصال نشط دائماً."
+          }
+        },
+        {
+          "id": 13,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Real-World Example: A bank with 50 branches might use Site-to-Site VPN to connect all branches to the central data center. Meanwhile, bank executives who travel use Remote Access VPN on their laptops to securely check reports from hotels or airports.",
+            "ar": "مثال من الحياة الواقعية: قد يستخدم بنك به 50 فرعاً VPN موقع إلى موقع لربط جميع الفروع بمركز البيانات المركزي. في الوقت نفسه، يستخدم مديرو البنك الذين يسافرون VPN الوصول عن بعد على أجهزتهم المحمولة للتحقق بأمان من التقارير من الفنادق أو المطارات."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 1772371591969.892,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://pub-cb38e65ea6bd411eb827a8641fdcc72d.r2.dev/VPN%20%26%20Secure%20Communications/2-3-VPN%20type.webp"
+        }
+      ]
+    },
+    {
+      "id": "topic-3",
+      "title": {
+        "en": "IPSec vs SSL VPN: Technical Differences and Use Cases",
+        "ar": "IPSec مقابل SSL VPN: الفروقات التقنية وحالات الاستخدام"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "Understanding IPSec VPN: Network Layer Security",
+            "ar": "فهم IPSec VPN: أمان طبقة الشبكة"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "IPSec stands for Internet Protocol Security. It is a protocol suite that operates at the network layer of the communication model. This means IPSec encrypts and secures all IP traffic, regardless of which application is being used. When you establish an IPSec VPN connection, everything your device sends over the network is automatically protected. IPSec works by wrapping each data packet in an encrypted envelope before sending it across the internet. The receiving end unwraps the envelope and delivers the original packet to its destination.",
+            "ar": "IPSec تعني أمان بروتوكول الإنترنت (Internet Protocol Security). هي مجموعة بروتوكولات تعمل في طبقة الشبكة من نموذج الاتصال. هذا يعني أن IPSec يشفر ويؤمن جميع حركة IP، بغض النظر عن التطبيق المستخدم. عندما تنشئ اتصال IPSec VPN، كل شيء يرسله جهازك عبر الشبكة محمي تلقائياً. يعمل IPSec بتغليف كل حزمة بيانات في مغلف مشفر قبل إرسالها عبر الإنترنت. يقوم الطرف المستقبل بفتح المغلف وتسليم الحزمة الأصلية إلى وجهتها."
+          }
+        },
+        {
+          "id": 1772371658712.0273,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://pub-cb38e65ea6bd411eb827a8641fdcc72d.r2.dev/VPN%20%26%20Secure%20Communications/3-1-Understanding%20IPSec%20VPN.webp"
+        },
+        {
+          "id": 4,
+          "type": "text",
+          "value": {
+            "en": "IPSec has two main modes of operation: Transport Mode and Tunnel Mode. Transport Mode encrypts only the data portion of each packet, leaving the header visible. This is more efficient but less secure. Tunnel Mode encrypts the entire original packet, including the header, and then adds a new header for routing. This provides maximum security and is commonly used in Site-to-Site VPNs. IPSec also uses two protocols: AH (Authentication Header) verifies data integrity and authenticity, while ESP (Encapsulating Security Payload) provides encryption, authentication, and integrity together.",
+            "ar": "IPSec لديه وضعان رئيسيان للتشغيل: وضع النقل ووضع النفق. وضع النقل يشفر فقط جزء البيانات من كل حزمة، تاركاً الرأس مرئياً. هذا أكثر كفاءة ولكن أقل أماناً. وضع النفق يشفر الحزمة الأصلية بأكملها، بما في ذلك الرأس، ثم يضيف رأساً جديداً للتوجيه. هذا يوفر أقصى أمان ويستخدم عادة في VPN موقع إلى موقع. يستخدم IPSec أيضاً بروتوكولين: AH (رأس المصادقة) يتحقق من سلامة البيانات وصحتها، بينما ESP (حمولة الأمان المغلفة) يوفر التشفير والمصادقة والسلامة معاً."
+          }
+        },
+        {
+          "id": 5,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Technical Detail: IPSec VPN requires client software to be installed on devices. This software configures the network layer to route all traffic through the VPN. Installation usually requires administrator privileges on the device.",
+            "ar": "تفصيل تقني: يتطلب IPSec VPN تثبيت برنامج عميل على الأجهزة. يقوم هذا البرنامج بتكوين طبقة الشبكة لتوجيه جميع حركة المرور عبر VPN. عادة ما يتطلب التثبيت صلاحيات المسؤول على الجهاز."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 6,
+          "type": "hr"
+        },
+        {
+          "id": 7,
+          "type": "title",
+          "value": {
+            "en": "Understanding SSL VPN: Application Layer Flexibility",
+            "ar": "فهم SSL VPN: مرونة طبقة التطبيقات"
+          }
+        },
+        {
+          "id": 8,
+          "type": "text",
+          "value": {
+            "en": "SSL VPN (also called TLS VPN in modern implementations) operates at a higher layer than IPSec. It uses the same encryption technology that secures your web browser connections when you see the padlock icon in the address bar. SSL VPN works through standard HTTPS protocol on port 443, which means it can pass through most firewalls and network restrictions without problems. The major advantage of SSL VPN is that it often works directly through a web browser without requiring special client software to be installed on the user's device.",
+            "ar": "SSL VPN (يسمى أيضاً TLS VPN في التنفيذات الحديثة) يعمل في طبقة أعلى من IPSec. يستخدم نفس تكنولوجيا التشفير التي تؤمن اتصالات متصفح الويب الخاص بك عندما ترى أيقونة القفل في شريط العنوان. يعمل SSL VPN من خلال بروتوكول HTTPS القياسي على المنفذ 443، مما يعني أنه يمكن أن يمر عبر معظم جدران الحماية وقيود الشبكة دون مشاكل. الميزة الرئيسية لـ SSL VPN هي أنه غالباً ما يعمل مباشرة من خلال متصفح الويب دون الحاجة إلى تثبيت برنامج عميل خاص على جهاز المستخدم."
+          }
+        },
+        {
+          "id": 9,
+          "type": "text",
+          "value": {
+            "en": "There are two main types of SSL VPN access: Portal-based and Tunnel-based. Portal-based SSL VPN provides access through a web page where users log in and see links to allowed resources like email, file shares, and internal websites. Users click these links and access resources through their browser without installing anything. Tunnel-based SSL VPN creates a network tunnel similar to IPSec but uses SSL/TLS encryption. This usually requires a small browser plugin or lightweight client but still offers more flexibility than traditional IPSec clients.",
+            "ar": "هناك نوعان رئيسيان من وصول SSL VPN: على أساس البوابة وعلى أساس النفق. SSL VPN على أساس البوابة يوفر الوصول من خلال صفحة ويب حيث يقوم المستخدمون بتسجيل الدخول ويرون روابط للموارد المسموح بها مثل البريد الإلكتروني ومشاركات الملفات والمواقع الداخلية. ينقر المستخدمون على هذه الروابط ويصلون إلى الموارد من خلال متصفحهم دون تثبيت أي شيء. SSL VPN على أساس النفق ينشئ نفق شبكة مشابه لـ IPSec ولكن يستخدم تشفير SSL/TLS. هذا عادة ما يتطلب مكوناً إضافياً صغيراً للمتصفح أو عميلاً خفيفاً ولكن لا يزال يوفر مرونة أكثر من عملاء IPSec التقليديين."
+          }
+        },
+        {
+          "id": 1772371666791.3335,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://pub-cb38e65ea6bd411eb827a8641fdcc72d.r2.dev/VPN%20%26%20Secure%20Communications/3-2-Understanding%20SSL%20VPN.webp"
+        },
+        {
+          "id": 11,
+          "type": "table",
+          "title": {
+            "en": "IPSec VPN vs SSL VPN: Key Differences",
+            "ar": "IPSec VPN مقابل SSL VPN: الفروقات الرئيسية"
+          },
+          "headers": {
+            "en": [
+              "Feature",
+              "IPSec VPN",
+              "SSL VPN"
+            ],
+            "ar": [
+              "الميزة",
+              "IPSec VPN",
+              "SSL VPN"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "Operating Layer",
+                "Network Layer (Layer 3)",
+                "Application Layer (Layer 7)"
+              ],
+              "ar": [
+                "طبقة التشغيل",
+                "طبقة الشبكة (الطبقة 3)",
+                "طبقة التطبيقات (الطبقة 7)"
+              ]
+            },
+            {
+              "en": [
+                "Client Software",
+                "Full VPN client required",
+                "Often browser-based, minimal software"
+              ],
+              "ar": [
+                "برنامج العميل",
+                "عميل VPN كامل مطلوب",
+                "غالباً على أساس المتصفح، برنامج أقل"
+              ]
+            },
+            {
+              "en": [
+                "Firewall Compatibility",
+                "May be blocked by restrictive firewalls",
+                "Works through HTTPS (port 443), rarely blocked"
+              ],
+              "ar": [
+                "توافق جدار الحماية",
+                "قد يتم حظره بواسطة جدران حماية مقيدة",
+                "يعمل عبر HTTPS (منفذ 443)، نادراً ما يُحظر"
+              ]
+            },
+            {
+              "en": [
+                "Setup Complexity",
+                "More complex installation",
+                "Easier setup, often no installation"
+              ],
+              "ar": [
+                "تعقيد الإعداد",
+                "تثبيت أكثر تعقيداً",
+                "إعداد أسهل، غالباً لا تثبيت"
+              ]
+            },
+            {
+              "en": [
+                "Best Use Case",
+                "Site-to-Site, full network access",
+                "Remote access, selective resource access"
+              ],
+              "ar": [
+                "أفضل حالة استخدام",
+                "موقع إلى موقع، وصول شبكة كامل",
+                "وصول عن بعد، وصول انتقائي للموارد"
+              ]
+            },
+            {
+              "en": [
+                "Security Level",
+                "Very high, encrypts all IP traffic",
+                "High, encrypts specific application traffic"
+              ],
+              "ar": [
+                "مستوى الأمان",
+                "عالي جداً، يشفر كل حركة IP",
+                "عالي، يشفر حركة تطبيقات محددة"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 12,
+          "type": "text",
+          "value": {
+            "en": "Choosing between IPSec and SSL VPN depends on your specific requirements. IPSec VPN is preferred when you need complete network layer security, such as connecting branch offices or providing full network access to remote employees. It offers stronger encryption of all traffic and better performance for large-scale deployments. SSL VPN is ideal for situations requiring quick access without complex software installation, such as contractors, partners, or employees using non-company devices. It excels in environments with strict firewall rules because it uses the standard HTTPS port that is almost never blocked.",
+            "ar": "يعتمد الاختيار بين IPSec وSSL VPN على متطلباتك المحددة. يُفضل IPSec VPN عندما تحتاج إلى أمان كامل لطبقة الشبكة، مثل ربط المكاتب الفرعية أو توفير وصول شبكة كامل للموظفين عن بعد. يوفر تشفيراً أقوى لجميع حركة المرور وأداء أفضل للنشر على نطاق واسع. SSL VPN مثالي للحالات التي تتطلب وصولاً سريعاً دون تثبيت برامج معقدة، مثل المقاولين والشركاء أو الموظفين الذين يستخدمون أجهزة غير تابعة للشركة. يتفوق في البيئات ذات قواعد جدار الحماية الصارمة لأنه يستخدم منفذ HTTPS القياسي الذي لا يُحظر تقريباً أبداً."
+          }
+        },
+        {
+          "id": 13,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Real-World Scenario: A hospital might use IPSec VPN to connect its medical record systems across different buildings for maximum security. At the same time, it uses SSL VPN to allow doctors to securely check patient records from their personal devices at home through a web portal.",
+            "ar": "سيناريو من الحياة الواقعية: قد يستخدم مستشفى IPSec VPN لربط أنظمة السجلات الطبية الخاصة به عبر مباني مختلفة لأقصى أمان. في الوقت نفسه، يستخدم SSL VPN للسماح للأطباء بالتحقق بأمان من سجلات المرضى من أجهزتهم الشخصية في المنزل من خلال بوابة ويب."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 1772371662672.2966,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://pub-cb38e65ea6bd411eb827a8641fdcc72d.r2.dev/VPN%20%26%20Secure%20Communications/3-3-IPSec%20VPN%20vs%20SSL%20VPN.webp"
+        }
+      ]
+    },
+    {
+      "id": "topic-4",
+      "title": {
+        "en": "Proxy Servers and Reverse Proxy: Intermediaries for Security and Performance",
+        "ar": "خوادم البروكسي والبروكسي العكسي: وسطاء للأمان والأداء"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "What is a Proxy Server and How Does It Work?",
+            "ar": "ما هو خادم البروكسي وكيف يعمل؟"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "A proxy server acts as an intermediary between your device and the internet. When you use a proxy, your requests do not go directly to the destination website. Instead, they first go to the proxy server, which then forwards your request to the website on your behalf. The website sends its response back to the proxy server, which then delivers it to you. Think of a proxy as a helpful assistant at the post office. You give your letter to the assistant, who sends it forward with their return address instead of yours. The reply comes back to the assistant, who then gives it to you.",
+            "ar": "يعمل خادم البروكسي كوسيط بين جهازك والإنترنت. عندما تستخدم بروكسي، لا تذهب طلباتك مباشرة إلى موقع الوجهة. بدلاً من ذلك، تذهب أولاً إلى خادم البروكسي، الذي يقوم بعد ذلك بإعادة توجيه طلبك إلى الموقع نيابة عنك. يرسل الموقع رده إلى خادم البروكسي، الذي يسلمه لك بعد ذلك. فكر في البروكسي كمساعد مفيد في مكتب البريد. تعطي رسالتك للمساعد، الذي يرسلها إلى الأمام مع عنوان العودة الخاص به بدلاً من عنوانك. يعود الرد إلى المساعد، الذي يعطيه لك بعد ذلك."
+          }
+        },
+        {
+          "id": 1772371944725.6797,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://pub-cb38e65ea6bd411eb827a8641fdcc72d.r2.dev/VPN%20%26%20Secure%20Communications/4-1-What%20is%20a%20Proxy%20Server.webp"
+        },
+        {
+          "id": 4,
+          "type": "text",
+          "value": {
+            "en": "Proxy servers serve multiple important purposes in network security and management. First, they provide anonymity by hiding your real IP address from the websites you visit. The website only sees the proxy server's IP address. Second, proxies can filter content, blocking access to certain websites based on company policies or parental controls. Third, they improve performance through caching. When multiple users request the same content, the proxy can serve it from its cache instead of downloading it again. Fourth, proxies help bypass geographic restrictions by making your traffic appear to come from a different location.",
+            "ar": "تخدم خوادم البروكسي أغراضاً مهمة متعددة في أمان الشبكة والإدارة. أولاً، توفر عدم الكشف عن الهوية بإخفاء عنوان IP الحقيقي الخاص بك من المواقع التي تزورها. يرى الموقع فقط عنوان IP الخاص بخادم البروكسي. ثانياً، يمكن للبروكسي تصفية المحتوى، حاجباً الوصول إلى مواقع معينة بناءً على سياسات الشركة أو الرقابة الأبوية. ثالثاً، تحسن الأداء من خلال التخزين المؤقت. عندما يطلب مستخدمون متعددون نفس المحتوى، يمكن للبروكسي تقديمه من ذاكرة التخزين المؤقت بدلاً من تنزيله مرة أخرى. رابعاً، تساعد البروكسي في تجاوز القيود الجغرافية بجعل حركة المرور الخاصة بك تبدو كأنها تأتي من موقع مختلف."
+          }
+        },
+        {
+          "id": 5,
+          "type": "list",
+          "title": {
+            "en": "Key Benefits of Using Proxy Servers",
+            "ar": "الفوائد الرئيسية لاستخدام خوادم البروكسي"
+          },
+          "items": {
+            "en": [
+              "Privacy Protection: Hides your real IP address from external websites",
+              "Content Filtering: Blocks access to inappropriate or dangerous websites",
+              "Performance Boost: Caches frequently accessed content for faster delivery",
+              "Access Control: Monitors and logs internet usage in organizations",
+              "Bandwidth Savings: Reduces internet traffic through caching mechanisms",
+              "Geographic Freedom: Accesses content restricted to specific regions"
+            ],
+            "ar": [
+              "حماية الخصوصية: يخفي عنوان IP الحقيقي الخاص بك من المواقع الخارجية",
+              "تصفية المحتوى: يحجب الوصول إلى المواقع غير المناسبة أو الخطيرة",
+              "تعزيز الأداء: يخزن المحتوى الذي يتم الوصول إليه بشكل متكرر لتسليم أسرع",
+              "التحكم في الوصول: يراقب ويسجل استخدام الإنترنت في المؤسسات",
+              "توفير النطاق الترددي: يقلل من حركة الإنترنت من خلال آليات التخزين المؤقت",
+              "الحرية الجغرافية: يصل إلى المحتوى المقيد لمناطق محددة"
+            ]
+          }
+        },
+        {
+          "id": 6,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "Important Warning: Free public proxy servers can be dangerous. Malicious actors sometimes set up free proxies to intercept and steal your data. Only use proxy servers from trusted sources, especially when handling sensitive information.",
+            "ar": "تحذير مهم: يمكن أن تكون خوادم البروكسي العامة المجانية خطيرة. يقوم الفاعلون الخبيثون أحياناً بإعداد بروكسي مجاني لاعتراض وسرقة بياناتك. استخدم فقط خوادم بروكسي من مصادر موثوقة، خاصة عند التعامل مع معلومات حساسة."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 7,
+          "type": "hr"
+        },
+        {
+          "id": 8,
+          "type": "title",
+          "value": {
+            "en": "Reverse Proxy: Protecting and Optimizing Your Servers",
+            "ar": "البروكسي العكسي: حماية وتحسين خوادمك"
+          }
+        },
+        {
+          "id": 9,
+          "type": "text",
+          "value": {
+            "en": "A reverse proxy works in the opposite direction from a regular proxy. While a forward proxy sits in front of clients protecting them, a reverse proxy sits in front of servers protecting them. When external users try to access your website or application, they actually connect to the reverse proxy first. The reverse proxy then decides which backend server should handle the request and forwards it there. The response travels back through the reverse proxy before reaching the user. This creates a protective layer between the internet and your actual servers.",
+            "ar": "يعمل البروكسي العكسي في الاتجاه المعاكس من البروكسي العادي. بينما يجلس البروكسي الأمامي أمام العملاء لحمايتهم، يجلس البروكسي العكسي أمام الخوادم لحمايتها. عندما يحاول المستخدمون الخارجيون الوصول إلى موقعك الإلكتروني أو تطبيقك، يتصلون في الواقع بالبروكسي العكسي أولاً. ثم يقرر البروكسي العكسي أي خادم خلفي يجب أن يتعامل مع الطلب ويعيد توجيهه إلى هناك. تنتقل الاستجابة مرة أخرى عبر البروكسي العكسي قبل الوصول إلى المستخدم. هذا ينشئ طبقة حماية بين الإنترنت وخوادمك الفعلية."
+          }
+        },
+        {
+          "id": 1772371953034.7793,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://pub-cb38e65ea6bd411eb827a8641fdcc72d.r2.dev/VPN%20%26%20Secure%20Communications/4-2-Forward%20Proxy%20vs%20Reverse%20ProxyForward%20Proxy%20vs%20Reverse%20Proxy.webp"
+        },
+        {
+          "id": 11,
+          "type": "text",
+          "value": {
+            "en": "Reverse proxies provide several critical functions for modern web applications. They act as a security barrier, protecting backend servers from direct exposure to the internet. Attackers cannot see or directly target your real servers because they only interact with the reverse proxy. Reverse proxies also distribute incoming traffic across multiple servers through load balancing. If one server becomes overloaded, the reverse proxy redirects traffic to other available servers, preventing any single server from becoming a bottleneck. Additionally, reverse proxies can handle SSL encryption, cache static content, and compress responses to improve performance.",
+            "ar": "توفر البروكسيات العكسية عدة وظائف حاسمة لتطبيقات الويب الحديثة. تعمل كحاجز أمني، تحمي الخوادم الخلفية من التعرض المباشر للإنترنت. لا يمكن للمهاجمين رؤية أو استهداف خوادمك الحقيقية مباشرة لأنهم يتفاعلون فقط مع البروكسي العكسي. تقوم البروكسيات العكسية أيضاً بتوزيع حركة المرور الواردة عبر خوادم متعددة من خلال موازنة الحمل. إذا أصبح خادم واحد محملاً بشكل زائد، يعيد البروكسي العكسي توجيه حركة المرور إلى خوادم أخرى متاحة، مما يمنع أي خادم واحد من أن يصبح عنق زجاجة. بالإضافة إلى ذلك، يمكن للبروكسيات العكسية التعامل مع تشفير SSL، تخزين المحتوى الثابت، وضغط الاستجابات لتحسين الأداء."
+          }
+        },
+        {
+          "id": 12,
+          "type": "table",
+          "title": {
+            "en": "Forward Proxy vs Reverse Proxy: Core Differences",
+            "ar": "البروكسي الأمامي مقابل البروكسي العكسي: الفروقات الأساسية"
+          },
+          "headers": {
+            "en": [
+              "Aspect",
+              "Forward Proxy",
+              "Reverse Proxy"
+            ],
+            "ar": [
+              "الجانب",
+              "البروكسي الأمامي",
+              "البروكسي العكسي"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "Position",
+                "In front of clients",
+                "In front of servers"
+              ],
+              "ar": [
+                "الموضع",
+                "أمام العملاء",
+                "أمام الخوادم"
+              ]
+            },
+            {
+              "en": [
+                "Protects",
+                "Client identity and privacy",
+                "Server infrastructure and identity"
+              ],
+              "ar": [
+                "يحمي",
+                "هوية العميل والخصوصية",
+                "البنية التحتية للخادم والهوية"
+              ]
+            },
+            {
+              "en": [
+                "Used By",
+                "End users and organizations",
+                "Website and service providers"
+              ],
+              "ar": [
+                "يستخدم بواسطة",
+                "المستخدمون النهائيون والمؤسسات",
+                "مزودو المواقع والخدمات"
+              ]
+            },
+            {
+              "en": [
+                "Traffic Direction",
+                "Client → Proxy → Internet",
+                "Internet → Proxy → Servers"
+              ],
+              "ar": [
+                "اتجاه حركة المرور",
+                "عميل ← بروكسي ← إنترنت",
+                "إنترنت ← بروكسي ← خوادم"
+              ]
+            },
+            {
+              "en": [
+                "Primary Purpose",
+                "Anonymity, filtering, caching",
+                "Load balancing, security, performance"
+              ],
+              "ar": [
+                "الغرض الأساسي",
+                "عدم الكشف عن الهوية، التصفية، التخزين المؤقت",
+                "موازنة الحمل، الأمان، الأداء"
+              ]
+            },
+            {
+              "en": [
+                "Configuration",
+                "Configured on client devices",
+                "Configured on server infrastructure"
+              ],
+              "ar": [
+                "التكوين",
+                "مكوّن على أجهزة العميل",
+                "مكوّن على البنية التحتية للخادم"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 13,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Real-World Example: When you visit a major website like an online shopping platform, you are actually connecting to a reverse proxy. This proxy might distribute your request to one of hundreds of backend servers based on which server is least busy at that moment. You never know which actual server handled your request, and that is exactly how it should work for security and efficiency.",
+            "ar": "مثال من الحياة الواقعية: عندما تزور موقعاً رئيسياً مثل منصة تسوق عبر الإنترنت، فأنت في الواقع تتصل ببروكسي عكسي. قد يوزع هذا البروكسي طلبك على واحد من مئات الخوادم الخلفية بناءً على أي خادم هو الأقل انشغالاً في تلك اللحظة. أنت لا تعرف أبداً أي خادم فعلي تعامل مع طلبك، وهذا بالضبط كيف يجب أن يعمل من أجل الأمان والكفاءة."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 14,
+          "type": "text",
+          "value": {
+            "en": "Popular reverse proxy software includes NGINX, Apache, and HAProxy. These tools are industry standards used by major websites and applications worldwide. They offer advanced features like health monitoring of backend servers, automatic failover when a server goes down, request rate limiting to prevent abuse, and detailed logging for security analysis. Understanding reverse proxies is essential for anyone working with web applications or cloud infrastructure, as they form a critical component of modern application architecture.",
+            "ar": "تتضمن برامج البروكسي العكسي الشائعة NGINX وApache وHAProxy. هذه الأدوات معايير صناعية تستخدمها المواقع والتطبيقات الرئيسية في جميع أنحاء العالم. تقدم ميزات متقدمة مثل مراقبة صحة الخوادم الخلفية، التحويل التلقائي عندما يتعطل خادم، تحديد معدل الطلب لمنع إساءة الاستخدام، والتسجيل التفصيلي لتحليل الأمان. فهم البروكسيات العكسية ضروري لأي شخص يعمل مع تطبيقات الويب أو البنية التحتية السحابية، حيث تشكل مكوناً حاسماً في معمارية التطبيقات الحديثة."
+          }
+        },
+        {
+          "id": 1772371948605.8118,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://pub-cb38e65ea6bd411eb827a8641fdcc72d.r2.dev/VPN%20%26%20Secure%20Communications/4-3-Forward%20Proxy%20vs%20Reverse%20Proxy.webp"
+        }
+      ]
+    },
+    {
+      "id": "topic-5",
+      "title": {
+        "en": "Zero Trust Architecture: Never Trust, Always Verify",
+        "ar": "معمارية الثقة المعدومة: لا تثق أبداً، تحقق دائماً"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "The Traditional Security Model and Its Failures",
+            "ar": "نموذج الأمان التقليدي وإخفاقاته"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "Traditional network security operated on a castle-and-moat model. The network perimeter was like a castle wall with a moat around it. Everything outside the wall was considered dangerous and untrusted. Everything inside the wall was considered safe and trusted. Organizations focused on building strong perimeter defenses with firewalls, intrusion detection systems, and VPNs. Once someone passed through the perimeter security and got inside the network, they were generally trusted and could access most internal resources freely. This model worked reasonably well when employees worked from offices and data stayed in company data centers.",
+            "ar": "عمل أمان الشبكة التقليدي على نموذج القلعة والخندق. كانت محيط الشبكة مثل جدار قلعة مع خندق حولها. كل شيء خارج الجدار كان يعتبر خطيراً وغير موثوق. كل شيء داخل الجدار كان يعتبر آمناً وموثوقاً. ركزت المؤسسات على بناء دفاعات محيط قوية مع جدران الحماية وأنظمة الكشف عن التسلل وVPN. بمجرد أن يمر شخص ما عبر أمان المحيط ويدخل إلى الشبكة، كان موثوقاً عموماً ويمكنه الوصول إلى معظم الموارد الداخلية بحرية. عمل هذا النموذج بشكل معقول عندما كان الموظفون يعملون من المكاتب وبقيت البيانات في مراكز بيانات الشركة."
+          }
+        },
+        {
+          "id": 1772372001402.9792,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://pub-cb38e65ea6bd411eb827a8641fdcc72d.r2.dev/VPN%20%26%20Secure%20Communications/5-1-raditional%20to%20Zero%20Trust%20security.webp"
+        },
+        {
+          "id": 4,
+          "type": "text",
+          "value": {
+            "en": "The traditional model began to fail as technology evolved. Cloud computing moved company data and applications outside the physical network perimeter. Remote work became common, with employees accessing resources from homes, cafes, and airports. Mobile devices and personal laptops connected to corporate networks. The clear boundary between inside and outside dissolved. More critically, attackers learned that once they breached the perimeter, they could move freely inside the network. Many major data breaches occurred because attackers got past perimeter security and then spent weeks or months inside the network stealing data without being detected. The castle model could not protect against threats that were already inside.",
+            "ar": "بدأ النموذج التقليدي في الفشل مع تطور التكنولوجيا. نقلت الحوسبة السحابية بيانات الشركة والتطبيقات خارج محيط الشبكة الفعلي. أصبح العمل عن بعد شائعاً، مع وصول الموظفين إلى الموارد من المنازل والمقاهي والمطارات. اتصلت الأجهزة المحمولة وأجهزة الكمبيوتر المحمولة الشخصية بالشبكات المؤسسية. الحد الواضح بين الداخل والخارج انحل. والأهم من ذلك، تعلم المهاجمون أنه بمجرد اختراق المحيط، يمكنهم التحرك بحرية داخل الشبكة. حدثت العديد من خروقات البيانات الكبرى لأن المهاجمين تجاوزوا أمان المحيط ثم أمضوا أسابيع أو أشهر داخل الشبكة يسرقون البيانات دون أن يتم اكتشافهم. لم يستطع نموذج القلعة الحماية من التهديدات التي كانت بالفعل في الداخل."
+          }
+        },
+        {
+          "id": 5,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "Critical Insight: Studies show that attackers who breach perimeter security spend an average of 200 days inside networks before being detected. During this time, they can steal massive amounts of sensitive data. The traditional model's assumption of trust for anything inside the network is fundamentally broken.",
+            "ar": "رؤية حاسمة: تظهر الدراسات أن المهاجمين الذين يخترقون أمان المحيط يقضون في المتوسط 200 يوماً داخل الشبكات قبل اكتشافهم. خلال هذا الوقت، يمكنهم سرقة كميات هائلة من البيانات الحساسة. افتراض النموذج التقليدي للثقة في أي شيء داخل الشبكة مكسور بشكل أساسي."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 6,
+          "type": "hr"
+        },
+        {
+          "id": 7,
+          "type": "title",
+          "value": {
+            "en": "Core Principles of Zero Trust: Verify Everything",
+            "ar": "المبادئ الأساسية للثقة المعدومة: تحقق من كل شيء"
+          }
+        },
+        {
+          "id": 8,
+          "type": "text",
+          "value": {
+            "en": "Zero Trust Architecture operates on a fundamentally different principle: never trust, always verify. Zero Trust assumes that threats can exist both outside and inside the network. No user, device, or application is automatically trusted based on location or network connection. Every access request must be authenticated, authorized, and continuously validated regardless of where it originates. Think of Zero Trust like airport security. Even if you have a boarding pass and are inside the airport, you still get checked again at the gate before boarding the plane. Your initial entry does not grant unlimited trust for everything beyond.",
+            "ar": "تعمل معمارية الثقة المعدومة على مبدأ مختلف جوهرياً: لا تثق أبداً، تحقق دائماً. تفترض الثقة المعدومة أن التهديدات يمكن أن توجد خارج وداخل الشبكة. لا يتم الوثوق تلقائياً بأي مستخدم أو جهاز أو تطبيق بناءً على الموقع أو اتصال الشبكة. يجب مصادقة كل طلب وصول والترخيص به والتحقق منه باستمرار بغض النظر عن مصدره. فكر في الثقة المعدومة مثل أمن المطار. حتى لو كان لديك بطاقة صعود وأنت داخل المطار، لا يزال يتم فحصك مرة أخرى عند البوابة قبل الصعود إلى الطائرة. دخولك الأولي لا يمنح ثقة غير محدودة لكل شيء بعد ذلك."
+          }
+        },
+        {
+          "id": 9,
+          "type": "orderedList",
+          "title": {
+            "en": "The Five Core Principles of Zero Trust",
+            "ar": "المبادئ الأساسية الخمسة للثقة المعدومة"
+          },
+          "items": [
+            {
+              "subtitle": {
+                "en": "Verify Identity Explicitly",
+                "ar": "تحقق من الهوية بشكل صريح"
+              },
+              "text": {
+                "en": "Always authenticate users using multiple factors. Verify not just username and password, but also additional factors like authentication apps, biometrics, or security tokens. Identity verification must happen for every access attempt.",
+                "ar": "قم دائماً بمصادقة المستخدمين باستخدام عوامل متعددة. تحقق ليس فقط من اسم المستخدم وكلمة المرور، ولكن أيضاً من عوامل إضافية مثل تطبيقات المصادقة أو القياسات الحيوية أو رموز الأمان. يجب أن يحدث التحقق من الهوية لكل محاولة وصول."
+              },
+              "example": {
+                "en": "Example: A user logging in from a new device must provide password, authentication code, and possibly answer security questions.",
+                "ar": "مثال: يجب على المستخدم الذي يسجل الدخول من جهاز جديد تقديم كلمة المرور ورمز المصادقة وربما الإجابة على أسئلة الأمان."
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Use Least Privilege Access",
+                "ar": "استخدم الوصول بأقل امتياز"
+              },
+              "text": {
+                "en": "Grant users and applications only the minimum access they need to perform their specific tasks. Do not give broad access just because it is easier. Limit access duration and scope as much as possible.",
+                "ar": "امنح المستخدمين والتطبيقات فقط الحد الأدنى من الوصول الذي يحتاجونه لأداء مهامهم المحددة. لا تمنح وصولاً واسعاً فقط لأنه أسهل. حدد مدة الوصول ونطاقه قدر الإمكان."
+              },
+              "example": {
+                "en": "Example: An accountant accesses only financial records, not engineering documents or HR files.",
+                "ar": "مثال: يصل المحاسب فقط إلى السجلات المالية، وليس مستندات الهندسة أو ملفات الموارد البشرية."
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Assume Breach",
+                "ar": "افترض حدوث خرق"
+              },
+              "text": {
+                "en": "Operate under the assumption that attackers may already be inside your network. Segment the network into small zones. Monitor all traffic and user behavior. Detect and respond to anomalies quickly. Do not assume internal traffic is safe.",
+                "ar": "اعمل تحت افتراض أن المهاجمين قد يكونون بالفعل داخل شبكتك. قسم الشبكة إلى مناطق صغيرة. راقب جميع حركة المرور وسلوك المستخدم. اكتشف الحالات الشاذة واستجب لها بسرعة. لا تفترض أن حركة المرور الداخلية آمنة."
+              },
+              "example": {
+                "en": "Example: Even if a user passed authentication, unusual data downloads trigger additional security checks.",
+                "ar": "مثال: حتى لو اجتاز مستخدم المصادقة، فإن تنزيلات البيانات غير العادية تؤدي إلى فحوصات أمان إضافية."
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Verify Device Health",
+                "ar": "تحقق من صحة الجهاز"
+              },
+              "text": {
+                "en": "Before granting access, check the security posture of the device making the request. Ensure it has updated software, proper security configurations, and no signs of compromise. Untrusted or unhealthy devices get limited or no access.",
+                "ar": "قبل منح الوصول، تحقق من الوضع الأمني للجهاز الذي يقدم الطلب. تأكد من أن لديه برنامجاً محدثاً وتكوينات أمان مناسبة وعدم وجود علامات على الاختراق. تحصل الأجهزة غير الموثوقة أو غير الصحية على وصول محدود أو معدوم."
+              },
+              "example": {
+                "en": "Example: A laptop with outdated antivirus software is denied access to sensitive customer data.",
+                "ar": "مثال: يُمنع الوصول إلى جهاز كمبيوتر محمول بمضاد فيروسات قديم من بيانات العملاء الحساسة."
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Continuous Monitoring and Validation",
+                "ar": "المراقبة والتحقق المستمر"
+              },
+              "text": {
+                "en": "Trust is not permanent. Continuously monitor all sessions, connections, and activities. Re-verify access rights dynamically. If behavior becomes suspicious or context changes, require re-authentication or terminate the session.",
+                "ar": "الثقة ليست دائمة. راقب باستمرار جميع الجلسات والاتصالات والأنشطة. أعد التحقق من حقوق الوصول ديناميكياً. إذا أصبح السلوك مشبوهاً أو تغير السياق، اطلب إعادة المصادقة أو أنهِ الجلسة."
+              },
+              "example": {
+                "en": "Example: A user who logs in from one location then suddenly appears from another country triggers security alerts and session termination.",
+                "ar": "مثال: مستخدم يسجل الدخول من موقع ثم يظهر فجأة من بلد آخر يؤدي إلى تنبيهات أمنية وإنهاء الجلسة."
+              }
+            }
+          ]
+        },
+        {
+          "id": 1772373836705.9707,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://pub-cb38e65ea6bd411eb827a8641fdcc72d.r2.dev/VPN%20%26%20Secure%20Communications/5-2-Core%20Principles%20of%20Zero%20Trust.webp"
+        },
+        {
+          "id": 11,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Professional Insight: Zero Trust does not mean zero productivity. When implemented correctly, users experience minimal friction while security is dramatically improved. Modern Zero Trust solutions use intelligent automation to verify access in milliseconds without slowing down work.",
+            "ar": "رؤية احترافية: الثقة المعدومة لا تعني إنتاجية معدومة. عند التنفيذ بشكل صحيح، يواجه المستخدمون احتكاكاً أقل بينما يتحسن الأمان بشكل كبير. تستخدم حلول الثقة المعدومة الحديثة الأتمتة الذكية للتحقق من الوصول في أجزاء من الثانية دون إبطاء العمل."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 12,
+          "type": "title",
+          "value": {
+            "en": "Implementing Zero Trust: Practical Steps",
+            "ar": "تنفيذ الثقة المعدومة: خطوات عملية"
+          }
+        },
+        {
+          "id": 13,
+          "type": "text",
+          "value": {
+            "en": "Implementing Zero Trust is a journey, not a single project. Organizations typically start by identifying their most critical assets and data. These become the first resources to protect with Zero Trust controls. Next, map all the ways users and applications access these resources. Understand the authentication methods, network paths, and access patterns. Then, implement strong identity verification using multi-factor authentication. Deploy micro-segmentation to divide the network into small, isolated zones. Each zone requires separate authentication and authorization to enter. Gradually expand Zero Trust principles to cover more resources and users over time.",
+            "ar": "تنفيذ الثقة المعدومة هو رحلة، وليس مشروعاً واحداً. عادة ما تبدأ المؤسسات بتحديد أصولها وبياناتها الأكثر أهمية. تصبح هذه أول الموارد المحمية بضوابط الثقة المعدومة. بعد ذلك، ارسم خريطة لجميع الطرق التي يصل بها المستخدمون والتطبيقات إلى هذه الموارد. افهم طرق المصادقة ومسارات الشبكة وأنماط الوصول. ثم، نفذ التحقق القوي من الهوية باستخدام المصادقة متعددة العوامل. انشر التقسيم الدقيق لتقسيم الشبكة إلى مناطق صغيرة ومعزولة. تتطلب كل منطقة مصادقة وترخيصاً منفصلين للدخول. قم بتوسيع مبادئ الثقة المعدومة تدريجياً لتغطية المزيد من الموارد والمستخدمين بمرور الوقت."
+          }
+        },
+        {
+          "id": 14,
+          "type": "table",
+          "title": {
+            "en": "Traditional Security vs Zero Trust: Implementation Comparison",
+            "ar": "الأمان التقليدي مقابل الثقة المعدومة: مقارنة التنفيذ"
+          },
+          "headers": {
+            "en": [
+              "Security Aspect",
+              "Traditional Approach",
+              "Zero Trust Approach"
+            ],
+            "ar": [
+              "الجانب الأمني",
+              "النهج التقليدي",
+              "نهج الثقة المعدومة"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "Trust Model",
+                "Trust but verify (after initial entry)",
+                "Never trust, always verify (continuously)"
+              ],
+              "ar": [
+                "نموذج الثقة",
+                "ثق لكن تحقق (بعد الدخول الأولي)",
+                "لا تثق أبداً، تحقق دائماً (بشكل مستمر)"
+              ]
+            },
+            {
+              "en": [
+                "Network Access",
+                "Broad access once inside perimeter",
+                "Micro-segmented, least privilege only"
+              ],
+              "ar": [
+                "الوصول للشبكة",
+                "وصول واسع بمجرد الدخول للمحيط",
+                "مجزأ دقيقاً، أقل امتياز فقط"
+              ]
+            },
+            {
+              "en": [
+                "Authentication",
+                "Single sign-on at perimeter",
+                "Multi-factor for every resource"
+              ],
+              "ar": [
+                "المصادقة",
+                "تسجيل دخول واحد عند المحيط",
+                "متعدد العوامل لكل مورد"
+              ]
+            },
+            {
+              "en": [
+                "Device Security",
+                "Assumed safe if on network",
+                "Continuous health verification"
+              ],
+              "ar": [
+                "أمان الجهاز",
+                "مفترض آمن إذا كان على الشبكة",
+                "التحقق المستمر من الصحة"
+              ]
+            },
+            {
+              "en": [
+                "Monitoring",
+                "Focus on perimeter traffic",
+                "Monitor all traffic, internal and external"
+              ],
+              "ar": [
+                "المراقبة",
+                "التركيز على حركة المحيط",
+                "راقب جميع حركة المرور، الداخلية والخارجية"
+              ]
+            },
+            {
+              "en": [
+                "Incident Response",
+                "Reactive after breach detected",
+                "Proactive with continuous validation"
+              ],
+              "ar": [
+                "الاستجابة للحوادث",
+                "رد فعل بعد اكتشاف الخرق",
+                "استباقية مع التحقق المستمر"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 15,
+          "type": "text",
+          "value": {
+            "en": "Zero Trust requires both technology and culture change. Technology components include identity and access management systems, multi-factor authentication tools, network segmentation solutions, and continuous monitoring platforms. The culture change is equally important. Security teams must shift from perimeter defense to data-centric protection. IT departments must embrace more granular access controls even if they require more management effort. Employees need training on new authentication processes. Leadership must understand that Zero Trust is an ongoing investment in security posture, not a one-time purchase. Organizations that successfully implement Zero Trust significantly reduce their risk of data breaches and improve their ability to detect and respond to threats quickly.",
+            "ar": "تتطلب الثقة المعدومة تغييراً في التكنولوجيا والثقافة. تتضمن مكونات التكنولوجيا أنظمة إدارة الهوية والوصول، وأدوات المصادقة متعددة العوامل، وحلول تجزئة الشبكة، ومنصات المراقبة المستمرة. التغيير الثقافي مهم بنفس القدر. يجب على فرق الأمان التحول من الدفاع عن المحيط إلى الحماية المتمركزة حول البيانات. يجب على أقسام تكنولوجيا المعلومات أن تتبنى ضوابط وصول أكثر دقة حتى لو كانت تتطلب جهد إدارة أكبر. يحتاج الموظفون إلى تدريب على عمليات المصادقة الجديدة. يجب على القيادة أن تفهم أن الثقة المعدومة هي استثمار مستمر في الوضع الأمني، وليس شراءً لمرة واحدة. المؤسسات التي تنفذ الثقة المعدومة بنجاح تقلل بشكل كبير من مخاطر خروقات البيانات وتحسن قدرتها على اكتشاف التهديدات والاستجابة لها بسرعة."
+          }
+        }
+      ]
+    },
+    {
+      "id": "topic-6",
+      "title": {
+        "en": "Practical Applications: Securing Your Communications in Real Scenarios",
+        "ar": "التطبيقات العملية: تأمين اتصالاتك في سيناريوهات حقيقية"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "Choosing the Right VPN for Different Needs",
+            "ar": "اختيار VPN المناسب لاحتياجات مختلفة"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "Selecting the appropriate VPN solution depends entirely on your specific situation and requirements. For personal use, such as protecting your privacy on public Wi-Fi or accessing content from different regions, a consumer VPN service is usually sufficient. Look for providers with strong encryption (AES-256), a strict no-logs policy, good connection speeds, and servers in locations you need. Popular options include services that operate in privacy-friendly jurisdictions and undergo regular independent security audits. For small businesses, consider VPN solutions that support multiple simultaneous connections and offer centralized management.",
+            "ar": "يعتمد اختيار حل VPN المناسب بالكامل على وضعك الخاص ومتطلباتك. للاستخدام الشخصي، مثل حماية خصوصيتك على الواي فاي العام أو الوصول إلى المحتوى من مناطق مختلفة، عادة ما تكون خدمة VPN الاستهلاكية كافية. ابحث عن مزودين بتشفير قوي (AES-256)، وسياسة صارمة بعدم الاحتفاظ بالسجلات، وسرعات اتصال جيدة، وخوادم في المواقع التي تحتاجها. تتضمن الخيارات الشائعة الخدمات التي تعمل في ولايات قضائية صديقة للخصوصية وتخضع لعمليات تدقيق أمنية مستقلة منتظمة. للشركات الصغيرة، فكر في حلول VPN التي تدعم اتصالات متزامنة متعددة وتوفر إدارة مركزية."
+          }
+        },
+        {
+          "id": 1772373883447.7598,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://pub-cb38e65ea6bd411eb827a8641fdcc72d.r2.dev/VPN%20%26%20Secure%20Communications/6-1-Choosing%20the%20Right%20VPN.webp"
+        },
+        {
+          "id": 4,
+          "type": "text",
+          "value": {
+            "en": "Enterprise organizations face more complex decisions. Large companies with multiple office locations benefit most from Site-to-Site VPN connecting all locations permanently. For remote workforce access, a combination approach often works best: SSL VPN for quick, browser-based access to specific applications, and IPSec VPN for employees who need full network access. Increasingly, enterprises are moving toward Zero Trust Network Access solutions that provide more granular control and better security than traditional VPNs. These solutions verify every connection attempt and enforce least-privilege access automatically, reducing the attack surface significantly.",
+            "ar": "تواجه المؤسسات الكبيرة قرارات أكثر تعقيداً. الشركات الكبيرة ذات مواقع المكاتب المتعددة تستفيد أكثر من VPN موقع إلى موقع الذي يربط جميع المواقع بشكل دائم. للوصول عن بعد للقوى العاملة، غالباً ما يعمل نهج مختلط بشكل أفضل: SSL VPN للوصول السريع القائم على المتصفح إلى تطبيقات محددة، وIPSec VPN للموظفين الذين يحتاجون إلى وصول شبكة كامل. بشكل متزايد، تتحرك المؤسسات نحو حلول الوصول للشبكة بثقة معدومة التي توفر تحكماً أكثر دقة وأماناً أفضل من VPN التقليدية. تتحقق هذه الحلول من كل محاولة اتصال وتفرض الوصول بأقل امتياز تلقائياً، مما يقلل من سطح الهجوم بشكل كبير."
+          }
+        },
+        {
+          "id": 5,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Cost Consideration: Free VPN services often come with limitations like slower speeds, data caps, fewer server locations, and questionable privacy practices. For serious privacy and security needs, invest in a reputable paid VPN service. Business and enterprise solutions require even more investment but provide essential security features and support.",
+            "ar": "اعتبار التكلفة: غالباً ما تأتي خدمات VPN المجانية مع قيود مثل سرعات أبطأ، وحدود بيانات، ومواقع خوادم أقل، وممارسات خصوصية مشكوك فيها. لاحتياجات الخصوصية والأمان الجادة، استثمر في خدمة VPN مدفوعة ذات سمعة طيبة. تتطلب حلول الأعمال والمؤسسات استثماراً أكبر ولكنها توفر ميزات أمان ودعماً أساسيين."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 6,
+          "type": "hr"
+        },
+        {
+          "id": 7,
+          "type": "title",
+          "value": {
+            "en": "Setting Up Secure Remote Work Environment",
+            "ar": "إعداد بيئة عمل عن بعد آمنة"
+          }
+        },
+        {
+          "id": 8,
+          "type": "text",
+          "value": {
+            "en": "Creating a secure remote work setup requires multiple layers of protection working together. Start with the basics: ensure your home router uses WPA3 or at least WPA2 encryption with a strong, unique password. Change the default administrator password on your router immediately, as attackers often know these defaults. Enable the router firewall if it is not already active. Next, install and configure your company VPN client on all devices you will use for work. Test the VPN connection to ensure it works reliably before you need it urgently. Make sure your operating system and all applications stay updated with the latest security patches.",
+            "ar": "يتطلب إنشاء إعداد عمل عن بعد آمن طبقات متعددة من الحماية تعمل معاً. ابدأ بالأساسيات: تأكد من أن جهاز التوجيه المنزلي الخاص بك يستخدم تشفير WPA3 أو على الأقل WPA2 مع كلمة مرور قوية وفريدة. غيّر كلمة مرور المسؤول الافتراضية على جهاز التوجيه الخاص بك فوراً، حيث غالباً ما يعرف المهاجمون هذه الافتراضات. قم بتمكين جدار حماية جهاز التوجيه إذا لم يكن نشطاً بالفعل. بعد ذلك، قم بتثبيت وتكوين عميل VPN الخاص بشركتك على جميع الأجهزة التي ستستخدمها للعمل. اختبر اتصال VPN للتأكد من أنه يعمل بشكل موثوق قبل أن تحتاجه بشكل عاجل. تأكد من أن نظام التشغيل الخاص بك وجميع التطبيقات تظل محدثة بأحدث تصحيحات الأمان."
+          }
+        },
+        {
+          "id": 9,
+          "type": "orderedList",
+          "title": {
+            "en": "Essential Steps for Secure Remote Work Setup",
+            "ar": "خطوات أساسية لإعداد عمل عن بعد آمن"
+          },
+          "items": [
+            {
+              "subtitle": {
+                "en": "Secure Your Home Network",
+                "ar": "قم بتأمين شبكتك المنزلية"
+              },
+              "text": {
+                "en": "Use strong WiFi encryption (WPA3 or WPA2), change default router passwords, enable router firewall, hide SSID broadcast if possible, and regularly update router firmware.",
+                "ar": "استخدم تشفير واي فاي قوي (WPA3 أو WPA2)، غيّر كلمات مرور جهاز التوجيه الافتراضية، قم بتمكين جدار حماية جهاز التوجيه، أخفِ بث SSID إذا أمكن، وقم بتحديث برنامج جهاز التوجيه بانتظام."
+              },
+              "example": {
+                "en": "Example: Change router admin from 'admin/admin' to a complex unique password like 'Hm$Rt2024!Secure'.",
+                "ar": "مثال: غيّر مسؤول جهاز التوجيه من 'admin/admin' إلى كلمة مرور فريدة معقدة مثل 'Hm$Rt2024!Secure'."
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Configure Company VPN Properly",
+                "ar": "قم بتكوين VPN الشركة بشكل صحيح"
+              },
+              "text": {
+                "en": "Install official VPN client from your IT department, configure it to connect automatically when accessing work resources, enable kill switch feature if available to prevent data leaks if VPN disconnects, and never disable it when working.",
+                "ar": "قم بتثبيت عميل VPN الرسمي من قسم تكنولوجيا المعلومات الخاص بك، قم بتكوينه للاتصال تلقائياً عند الوصول إلى موارد العمل، قم بتمكين ميزة مفتاح القتل إذا كانت متاحة لمنع تسرب البيانات إذا انقطع VPN، ولا تعطله أبداً عند العمل."
+              },
+              "example": {
+                "en": "Example: Set VPN to auto-connect when opening email or accessing company file shares.",
+                "ar": "مثال: اضبط VPN للاتصال تلقائياً عند فتح البريد الإلكتروني أو الوصول إلى مشاركات ملفات الشركة."
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Enable Multi-Factor Authentication Everywhere",
+                "ar": "قم بتمكين المصادقة متعددة العوامل في كل مكان"
+              },
+              "text": {
+                "en": "Activate MFA on VPN login, email accounts, cloud services, and all work applications. Use authenticator apps rather than SMS when possible, as SMS can be intercepted. Keep backup codes in a secure location.",
+                "ar": "قم بتفعيل المصادقة متعددة العوامل على تسجيل دخول VPN، وحسابات البريد الإلكتروني، والخدمات السحابية، وجميع تطبيقات العمل. استخدم تطبيقات المصادقة بدلاً من الرسائل النصية القصيرة عندما يكون ذلك ممكناً، حيث يمكن اعتراض الرسائل النصية القصيرة. احتفظ برموز النسخ الاحتياطي في مكان آمن."
+              },
+              "example": {
+                "en": "Example: Use Google Authenticator or Microsoft Authenticator apps for generating time-based codes.",
+                "ar": "مثال: استخدم تطبيقات Google Authenticator أو Microsoft Authenticator لإنشاء رموز مستندة إلى الوقت."
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Maintain Device Security",
+                "ar": "حافظ على أمان الجهاز"
+              },
+              "text": {
+                "en": "Keep operating system updated, install and maintain antivirus software, enable device encryption (BitLocker on Windows, FileVault on Mac), use strong screen lock passwords, and never leave devices unattended while logged in.",
+                "ar": "حافظ على تحديث نظام التشغيل، قم بتثبيت والحفاظ على برنامج مكافحة الفيروسات، قم بتمكين تشفير الجهاز (BitLocker على Windows، FileVault على Mac)، استخدم كلمات مرور قوية لقفل الشاشة، ولا تترك الأجهزة دون مراقبة أثناء تسجيل الدخول."
+              },
+              "example": {
+                "en": "Example: Set screen to lock automatically after 5 minutes of inactivity.",
+                "ar": "مثال: اضبط الشاشة للقفل تلقائياً بعد 5 دقائق من عدم النشاط."
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Practice Safe Behavior on Public WiFi",
+                "ar": "مارس سلوكاً آمناً على الواي فاي العام"
+              },
+              "text": {
+                "en": "Always connect VPN before accessing any work resources on public WiFi. Avoid accessing sensitive information even with VPN if network seems suspicious. Disable file sharing and network discovery when on public networks. Turn off WiFi when not in use.",
+                "ar": "اتصل دائماً بـ VPN قبل الوصول إلى أي موارد عمل على الواي فاي العام. تجنب الوصول إلى المعلومات الحساسة حتى مع VPN إذا بدت الشبكة مشبوهة. قم بتعطيل مشاركة الملفات واكتشاف الشبكة عندما تكون على شبكات عامة. أوقف تشغيل الواي فاي عند عدم الاستخدام."
+              },
+              "example": {
+                "en": "Example: In a coffee shop, connect to VPN first, then open email - never browse without VPN protection.",
+                "ar": "مثال: في مقهى، اتصل بـ VPN أولاً، ثم افتح البريد الإلكتروني - لا تتصفح أبداً بدون حماية VPN."
+              }
+            }
+          ]
+        },
+        {
+          "id": 1772373890785.9668,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://pub-cb38e65ea6bd411eb827a8641fdcc72d.r2.dev/VPN%20%26%20Secure%20Communications/6-2-%20layered%20security%20diagram.webp"
+        },
+        {
+          "id": 11,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "Common Mistake: Many remote workers disable VPN because it slightly slows their connection. This is extremely dangerous when accessing company resources. The minor speed reduction is a small price for protecting sensitive business data and maintaining compliance with security policies.",
+            "ar": "خطأ شائع: يعطل العديد من العاملين عن بعد VPN لأنه يبطئ اتصالهم قليلاً. هذا خطير للغاية عند الوصول إلى موارد الشركة. التخفيض الطفيف في السرعة هو ثمن صغير لحماية بيانات الأعمال الحساسة والحفاظ على الامتثال لسياسات الأمان."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 12,
+          "type": "title",
+          "value": {
+            "en": "Recognizing and Responding to VPN and Proxy Issues",
+            "ar": "التعرف على مشاكل VPN والبروكسي والاستجابة لها"
+          }
+        },
+        {
+          "id": 13,
+          "type": "text",
+          "value": {
+            "en": "Even with proper setup, VPN and proxy connections can experience issues. Common problems include slow connection speeds, frequent disconnections, inability to access certain websites or services, and DNS leaks that expose your real location despite using VPN. Slow speeds often result from server overload, so try connecting to a different server location. Disconnections might indicate network instability or firewall interference; check your firewall settings and try different VPN protocols. If specific services do not work through VPN, they might be blocking VPN traffic intentionally, which is common for some streaming services and banking websites for security reasons.",
+            "ar": "حتى مع الإعداد الصحيح، يمكن أن تواجه اتصالات VPN والبروكسي مشاكل. تتضمن المشاكل الشائعة سرعات اتصال بطيئة، وانقطاعات متكررة، وعدم القدرة على الوصول إلى مواقع أو خدمات معينة، وتسريبات DNS التي تكشف موقعك الحقيقي على الرغم من استخدام VPN. غالباً ما تنتج السرعات البطيئة عن حمل زائد على الخادم، لذلك حاول الاتصال بموقع خادم مختلف. قد تشير الانقطاعات إلى عدم استقرار الشبكة أو تداخل جدار الحماية؛ تحقق من إعدادات جدار الحماية الخاص بك وجرب بروتوكولات VPN مختلفة. إذا لم تعمل خدمات معينة عبر VPN، فقد تحظر حركة VPN عمداً، وهو شائع لبعض خدمات البث ومواقع البنوك لأسباب أمنية."
+          }
+        },
+        {
+          "id": 14,
+          "type": "table",
+          "title": {
+            "en": "Common VPN Problems and Solutions",
+            "ar": "مشاكل VPN الشائعة والحلول"
+          },
+          "headers": {
+            "en": [
+              "Problem",
+              "Possible Cause",
+              "Solution"
+            ],
+            "ar": [
+              "المشكلة",
+              "السبب المحتمل",
+              "الحل"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "Slow connection speed",
+                "Server overload or distant location",
+                "Switch to closer or less busy server"
+              ],
+              "ar": [
+                "سرعة اتصال بطيئة",
+                "حمل زائد على الخادم أو موقع بعيد",
+                "تبديل إلى خادم أقرب أو أقل انشغالاً"
+              ]
+            },
+            {
+              "en": [
+                "Frequent disconnections",
+                "Network instability or protocol issue",
+                "Try different protocol (OpenVPN, WireGuard, IKEv2)"
+              ],
+              "ar": [
+                "انقطاعات متكررة",
+                "عدم استقرار الشبكة أو مشكلة بروتوكول",
+                "جرب بروتوكول مختلف (OpenVPN، WireGuard، IKEv2)"
+              ]
+            },
+            {
+              "en": [
+                "Cannot connect at all",
+                "Firewall blocking VPN, wrong configuration",
+                "Check firewall settings, verify credentials, reinstall client"
+              ],
+              "ar": [
+                "لا يمكن الاتصال على الإطلاق",
+                "جدار الحماية يحظر VPN، تكوين خاطئ",
+                "تحقق من إعدادات جدار الحماية، تحقق من بيانات الاعتماد، أعد تثبيت العميل"
+              ]
+            },
+            {
+              "en": [
+                "DNS leak (location exposed)",
+                "VPN not routing DNS properly",
+                "Enable DNS leak protection in VPN settings, use VPN's DNS servers"
+              ],
+              "ar": [
+                "تسريب DNS (الموقع مكشوف)",
+                "VPN لا يوجه DNS بشكل صحيح",
+                "قم بتمكين حماية تسريب DNS في إعدادات VPN، استخدم خوادم DNS الخاصة بـ VPN"
+              ]
+            },
+            {
+              "en": [
+                "Some websites blocked",
+                "Site blocking VPN IP addresses",
+                "Try different server, use obfuscated servers if available"
+              ],
+              "ar": [
+                "بعض المواقع محظورة",
+                "الموقع يحظر عناوين IP لـ VPN",
+                "جرب خادماً مختلفاً، استخدم خوادم مبهمة إذا كانت متاحة"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 15,
+          "type": "text",
+          "value": {
+            "en": "DNS leaks are particularly dangerous because they expose your browsing activity even when VPN is active. A DNS leak occurs when your device sends DNS queries outside the VPN tunnel to your regular ISP instead of through the VPN. To test for DNS leaks, use online DNS leak test tools while connected to VPN. If the test shows your ISP's DNS servers instead of your VPN provider's servers, you have a leak. Fix this by enabling DNS leak protection in your VPN client settings and manually configuring your device to use only the VPN's DNS servers. For business VPN issues, always contact your IT support team rather than attempting complex troubleshooting yourself, as incorrect changes could create security vulnerabilities.",
+            "ar": "تسريبات DNS خطيرة بشكل خاص لأنها تكشف نشاط التصفح الخاص بك حتى عندما يكون VPN نشطاً. يحدث تسريب DNS عندما يرسل جهازك استعلامات DNS خارج نفق VPN إلى مزود خدمة الإنترنت العادي الخاص بك بدلاً من عبر VPN. لاختبار تسريبات DNS، استخدم أدوات اختبار تسريب DNS عبر الإنترنت أثناء الاتصال بـ VPN. إذا أظهر الاختبار خوادم DNS الخاصة بمزود خدمة الإنترنت بدلاً من خوادم مزود VPN الخاص بك، فلديك تسريب. قم بإصلاح هذا عن طريق تمكين حماية تسريب DNS في إعدادات عميل VPN الخاص بك وتكوين جهازك يدوياً لاستخدام خوادم DNS الخاصة بـ VPN فقط. لمشاكل VPN الخاصة بالأعمال، اتصل دائماً بفريق دعم تكنولوجيا المعلومات الخاص بك بدلاً من محاولة استكشاف الأخطاء المعقدة بنفسك، حيث يمكن أن تؤدي التغييرات غير الصحيحة إلى ثغرات أمنية."
+          }
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "createdAt": "2026-03-01T15:57:15.932Z",
+    "totalTopics": 6,
+    "totalElements": 86
+  }
+}

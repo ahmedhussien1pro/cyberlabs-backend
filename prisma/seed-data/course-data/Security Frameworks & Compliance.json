@@ -1,0 +1,1230 @@
+{
+  "landingData": {
+    "title": {
+      "en": "Security Frameworks & Compliance",
+      "ar": "أطر الأمن السيبراني والامتثال"
+    },
+    "description": {
+      "en": "Master industry-standard security frameworks including NIST, ISO 27001, and incident response. Learn how organizations protect data, meet compliance requirements, and respond to security incidents effectively.",
+      "ar": "أتقن أطر الأمن السيبراني المعتمدة عالمياً بما في ذلك NIST وISO 27001 والاستجابة للحوادث. تعلّم كيف تحمي المؤسسات البيانات وتلتزم بالمعايير وتستجيب للحوادث الأمنية بفعالية."
+    },
+    "difficulty": {
+      "en": "Beginner",
+      "ar": "مبتدئ"
+    },
+    "duration": {
+      "en": "90 Minutes",
+      "ar": "90 دقيقة"
+    },
+    "instructor": "CyberLab",
+    "rating": 4.9,
+    "students": 250
+  },
+  "topics": [
+    {
+      "id": "topic-1",
+      "title": {
+        "en": "Introduction to Security Frameworks",
+        "ar": "مقدمة إلى أطر الأمن السيبراني"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "What Are Security Frameworks?",
+            "ar": "ما هي أطر الأمن السيبراني؟"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "Security frameworks are structured guidelines that help organizations protect their information and systems. Think of them as blueprints for building a secure environment. Just like architects follow building codes to construct safe buildings, companies follow security frameworks to create safe digital spaces. These frameworks provide step-by-step instructions on what to protect, how to protect it, and how to respond when something goes wrong.",
+            "ar": "أطر الأمن السيبراني هي إرشادات منظمة تساعد المؤسسات على حماية معلوماتها وأنظمتها. فكّر فيها كمخططات لبناء بيئة آمنة. تماماً كما يتبع المهندسون المعماريون أكواد البناء لإنشاء مباني آمنة، تتبع الشركات أطر الأمن السيبراني لإنشاء مساحات رقمية آمنة. توفر هذه الأطر تعليمات خطوة بخطوة حول ما يجب حمايته، وكيفية حمايته، وكيفية الاستجابة عند حدوث خطأ ما."
+          }
+        },
+        {
+          "id": 1771184952453.3076,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageUrl": "https://pub-cb38e65ea6bd411eb827a8641fdcc72d.r2.dev/Security%20Frameworks%20%26%20Compliance/1-Security%20Frameworks.webp"
+        },
+        {
+          "id": 4,
+          "type": "text",
+          "value": {
+            "en": "Without frameworks, each organization would create its own security approach from scratch. This leads to gaps, inconsistencies, and wasted effort. Frameworks save time and reduce errors by providing proven methods that experts have tested across thousands of companies. They also help organizations prove to customers and regulators that they take security seriously.",
+            "ar": "بدون أطر عمل، ستنشئ كل مؤسسة نهجها الأمني الخاص من الصفر. يؤدي هذا إلى فجوات وتناقضات وجهد مُهدر. توفر الأطر الوقت وتقلل الأخطاء من خلال توفير طرق مثبتة اختبرها الخبراء عبر آلاف الشركات. كما تساعد المؤسسات على إثبات للعملاء والجهات التنظيمية أنها تأخذ الأمن على محمل الجد."
+          }
+        },
+        {
+          "id": 5,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Security frameworks are not laws, but many industries require companies to follow specific frameworks to meet legal compliance requirements.",
+            "ar": "أطر الأمن السيبراني ليست قوانين، لكن العديد من الصناعات تتطلب من الشركات اتباع أطر معينة لتلبية متطلبات الامتثال القانوني."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 6,
+          "type": "hr"
+        },
+        {
+          "id": 7,
+          "type": "title",
+          "value": {
+            "en": "Why Organizations Need Security Frameworks",
+            "ar": "لماذا تحتاج المؤسسات إلى أطر الأمن السيبراني؟"
+          }
+        },
+        {
+          "id": 8,
+          "type": "text",
+          "value": {
+            "en": "Imagine running a bank with no rules about how to protect customer money. Each employee might lock the vault differently, or some might forget to lock it at all. Security frameworks prevent this chaos in the digital world. They ensure everyone in an organization follows the same security practices, reducing the chance of mistakes that could lead to data breaches.",
+            "ar": "تخيّل إدارة بنك بدون قواعد حول كيفية حماية أموال العملاء. قد يقفل كل موظف الخزنة بطريقة مختلفة، أو قد ينسى البعض قفلها تماماً. تمنع أطر الأمن السيبراني هذه الفوضى في العالم الرقمي. تضمن أن الجميع في المؤسسة يتبعون نفس الممارسات الأمنية، مما يقلل فرصة الأخطاء التي قد تؤدي إلى اختراقات البيانات."
+          }
+        },
+        {
+          "id": 9,
+          "type": "list",
+          "title": {
+            "en": "Key Benefits of Security Frameworks",
+            "ar": "الفوائد الرئيسية لأطر الأمن السيبراني"
+          },
+          "items": {
+            "en": [
+              "Provide clear structure and consistency across the organization",
+              "Help identify and prioritize security risks before they become problems",
+              "Meet legal and industry compliance requirements",
+              "Build trust with customers and business partners",
+              "Reduce costs by preventing expensive security incidents"
+            ],
+            "ar": [
+              "توفير هيكل واضح واتساق عبر المؤسسة",
+              "المساعدة في تحديد وترتيب أولويات المخاطر الأمنية قبل أن تصبح مشاكل",
+              "تلبية متطلبات الامتثال القانونية والصناعية",
+              "بناء الثقة مع العملاء والشركاء التجاريين",
+              "تقليل التكاليف من خلال منع الحوادث الأمنية المكلفة"
+            ]
+          }
+        },
+        {
+          "id": 10,
+          "type": "table",
+          "title": {
+            "en": "Framework Benefits in Real Scenarios",
+            "ar": "فوائد الأطر في سيناريوهات واقعية"
+          },
+          "headers": {
+            "en": [
+              "Scenario",
+              "Without Framework",
+              "With Framework"
+            ],
+            "ar": [
+              "السيناريو",
+              "بدون إطار",
+              "مع الإطار"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "Data Breach",
+                "Confusion about who handles it",
+                "Clear response team and steps"
+              ],
+              "ar": [
+                "اختراق البيانات",
+                "ارتباك حول من يتعامل معه",
+                "فريق استجابة وخطوات واضحة"
+              ]
+            },
+            {
+              "en": [
+                "New System",
+                "Inconsistent security measures",
+                "Standard security checklist applied"
+              ],
+              "ar": [
+                "نظام جديد",
+                "إجراءات أمنية غير متسقة",
+                "قائمة تحقق أمنية قياسية مطبقة"
+              ]
+            },
+            {
+              "en": [
+                "Audit Request",
+                "Scramble to gather evidence",
+                "Documentation ready and organized"
+              ],
+              "ar": [
+                "طلب تدقيق",
+                "تكالب لجمع الأدلة",
+                "وثائق جاهزة ومنظمة"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 11,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "Simply adopting a framework is not enough. Organizations must actively implement, monitor, and continuously improve their security practices based on the framework's guidance.",
+            "ar": "مجرد اعتماد إطار عمل ليس كافياً. يجب على المؤسسات تنفيذ ومراقبة وتحسين ممارساتها الأمنية بشكل مستمر بناءً على إرشادات الإطار."
+          },
+          "link": "",
+          "isLab": false
+        }
+      ]
+    },
+    {
+      "id": "topic-2",
+      "title": {
+        "en": "NIST Cybersecurity Framework",
+        "ar": "إطار الأمن السيبراني NIST"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "Understanding NIST Framework",
+            "ar": "فهم إطار NIST"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "The NIST Cybersecurity Framework is one of the most widely used security frameworks in the world. NIST stands for National Institute of Standards and Technology. Originally created to help protect critical infrastructure like power plants and water systems, it is now used by organizations of all sizes and types. The framework breaks down cybersecurity into five core functions that are easy to understand and apply.",
+            "ar": "إطار الأمن السيبراني NIST هو أحد أكثر أطر الأمن استخداماً في العالم. NIST تعني المعهد الوطني للمعايير والتكنولوجيا. أُنشئ في الأصل للمساعدة في حماية البنية التحتية الحيوية مثل محطات الطاقة وأنظمة المياه، وهو الآن يُستخدم من قبل مؤسسات من جميع الأحجام والأنواع. يقسّم الإطار الأمن السيبراني إلى خمس وظائف أساسية سهلة الفهم والتطبيق."
+          }
+        },
+        {
+          "id": 1771184975200.9417,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageUrl": "https://pub-cb38e65ea6bd411eb827a8641fdcc72d.r2.dev/Security%20Frameworks%20%26%20Compliance/2-NIST%20Framework.webp"
+        },
+        {
+          "id": 4,
+          "type": "hr"
+        },
+        {
+          "id": 5,
+          "type": "title",
+          "value": {
+            "en": "The Five Core Functions",
+            "ar": "الوظائف الأساسية الخمس"
+          }
+        },
+        {
+          "id": 6,
+          "type": "orderedList",
+          "title": {
+            "en": "NIST Framework Functions Explained",
+            "ar": "شرح وظائف إطار NIST"
+          },
+          "items": [
+            {
+              "subtitle": {
+                "en": "Identify",
+                "ar": "تحديد (Identify)"
+              },
+              "text": {
+                "en": "Know what you need to protect. This means creating an inventory of all your assets: computers, servers, data, and software. You must understand what information is most valuable and where it is stored. You also identify potential risks and vulnerabilities in your systems.",
+                "ar": "اعرف ما تحتاج إلى حمايته. يعني هذا إنشاء جرد لجميع أصولك: أجهزة الكمبيوتر والخوادم والبيانات والبرامج. يجب أن تفهم أي معلومات هي الأكثر قيمة وأين يتم تخزينها. كما تحدد المخاطر والثغرات المحتملة في أنظمتك."
+              },
+              "example": {
+                "en": "A hospital identifies that patient medical records are their most critical asset and must be protected with highest priority.",
+                "ar": "يحدد مستشفى أن السجلات الطبية للمرضى هي أصولهم الأكثر أهمية ويجب حمايتها بأعلى أولوية."
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Protect",
+                "ar": "حماية (Protect)"
+              },
+              "text": {
+                "en": "Implement safeguards to secure your assets. This includes technical controls like firewalls and encryption, as well as organizational controls like security policies and employee training. The goal is to limit or prevent the impact of potential security events.",
+                "ar": "نفّذ ضمانات لتأمين أصولك. يشمل هذا ضوابط تقنية مثل جدران الحماية والتشفير، بالإضافة إلى ضوابط تنظيمية مثل سياسات الأمن وتدريب الموظفين. الهدف هو الحد من أو منع تأثير الأحداث الأمنية المحتملة."
+              },
+              "example": {
+                "en": "Installing antivirus software, requiring strong passwords, and training staff to recognize phishing emails.",
+                "ar": "تثبيت برامج مكافحة الفيروسات، وطلب كلمات مرور قوية، وتدريب الموظفين على التعرف على رسائل الاحتيال الإلكتروني."
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Detect",
+                "ar": "كشف (Detect)"
+              },
+              "text": {
+                "en": "Monitor your systems to find security incidents as they happen. This involves continuous monitoring of networks, regular security scans, and alert systems that notify you when something suspicious occurs. Early detection means faster response and less damage.",
+                "ar": "راقب أنظمتك لاكتشاف الحوادث الأمنية عند حدوثها. يشمل هذا المراقبة المستمرة للشبكات، والفحوصات الأمنية المنتظمة، وأنظمة التنبيه التي تُخطرك عند حدوث شيء مشبوه. الكشف المبكر يعني استجابة أسرع وضرر أقل."
+              },
+              "example": {
+                "en": "A bank's monitoring system detects unusual login attempts from a foreign country at 3 AM and immediately alerts the security team.",
+                "ar": "يكتشف نظام مراقبة البنك محاولات تسجيل دخول غير عادية من بلد أجنبي في الساعة 3 صباحاً ويُنبه فريق الأمن فوراً."
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Respond",
+                "ar": "استجابة (Respond)"
+              },
+              "text": {
+                "en": "Take action when a security incident is detected. This means having a plan for who does what, how to contain the incident, and how to communicate about it. A good response minimizes damage and helps restore normal operations quickly.",
+                "ar": "اتخذ إجراءً عند اكتشاف حادث أمني. يعني هذا وجود خطة لمن يفعل ماذا، وكيفية احتواء الحادث، وكيفية التواصل بشأنه. الاستجابة الجيدة تقلل الضرر وتساعد على استعادة العمليات الطبيعية بسرعة."
+              },
+              "example": {
+                "en": "When ransomware is detected, the IT team immediately isolates infected computers from the network to prevent spread.",
+                "ar": "عند اكتشاف برمجيات الفدية، يعزل فريق تقنية المعلومات فوراً الأجهزة المصابة عن الشبكة لمنع الانتشار."
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Recover",
+                "ar": "تعافي (Recover)"
+              },
+              "text": {
+                "en": "Restore normal operations after a security incident. This includes repairing damaged systems, recovering lost data from backups, and learning from what happened to prevent similar incidents in the future. Recovery planning ensures business continuity even after serious attacks.",
+                "ar": "استعد العمليات الطبيعية بعد حادث أمني. يشمل هذا إصلاح الأنظمة التالفة، واستعادة البيانات المفقودة من النسخ الاحتياطية، والتعلم مما حدث لمنع حوادث مماثلة في المستقبل. تخطيط التعافي يضمن استمرارية العمل حتى بعد الهجمات الخطيرة."
+              },
+              "example": {
+                "en": "After a cyberattack, a company restores its website from backup, updates security measures, and reviews what went wrong to improve their defenses.",
+                "ar": "بعد هجوم إلكتروني، تستعيد شركة موقعها الإلكتروني من النسخة الاحتياطية، وتحدّث إجراءات الأمن، وتراجع ما حدث خطأ لتحسين دفاعاتها."
+              }
+            }
+          ]
+        },
+        {
+          "id": 7,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "The NIST framework is designed to be flexible. Small businesses and large corporations can both use it by scaling the implementation to match their size and resources.",
+            "ar": "إطار NIST مصمم ليكون مرناً. يمكن للشركات الصغيرة والمؤسسات الكبيرة استخدامه من خلال تكييف التنفيذ ليتناسب مع حجمها ومواردها."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 8,
+          "type": "text",
+          "value": {
+            "en": "Think of NIST's five functions as a continuous cycle rather than a one-time checklist. Organizations constantly move through these functions, always identifying new assets, protecting them, detecting threats, responding to incidents, and recovering from attacks. This creates a mature security posture that adapts to new threats.",
+            "ar": "فكّر في وظائف NIST الخمس كدورة مستمرة بدلاً من قائمة تحقق لمرة واحدة. تتنقل المؤسسات باستمرار عبر هذه الوظائف، وتحدد دائماً أصولاً جديدة، وتحميها، وتكتشف التهديدات، وتستجيب للحوادث، وتتعافى من الهجمات. يخلق هذا وضع أمني ناضج يتكيف مع التهديدات الجديدة."
+          }
+        }
+      ]
+    },
+    {
+      "id": "topic-3",
+      "title": {
+        "en": "ISO 27001 Standard",
+        "ar": "معيار ISO 27001"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "Introduction to ISO 27001",
+            "ar": "مقدمة إلى ISO 27001"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "ISO 27001 is an international standard for information security management. ISO stands for International Organization for Standardization. Unlike NIST which is primarily used in the United States, ISO 27001 is recognized globally and used by organizations worldwide. It provides a systematic approach to managing sensitive company information so that it remains secure.",
+            "ar": "ISO 27001 هو معيار دولي لإدارة أمن المعلومات. ISO تعني المنظمة الدولية للمعايير. على عكس NIST الذي يُستخدم بشكل أساسي في الولايات المتحدة، ISO 27001 معترف به عالمياً وتستخدمه مؤسسات في جميع أنحاء العالم. يوفر نهجاً منهجياً لإدارة معلومات الشركة الحساسة بحيث تبقى آمنة."
+          }
+        },
+        {
+          "id": 3,
+          "type": "text",
+          "value": {
+            "en": "Organizations can get officially certified in ISO 27001 by passing an audit from an independent certification body. This certification proves to customers, partners, and regulators that the organization follows strict information security practices. Many companies require their suppliers to have ISO 27001 certification before doing business with them.",
+            "ar": "يمكن للمؤسسات الحصول على شهادة رسمية في ISO 27001 من خلال اجتياز تدقيق من هيئة اعتماد مستقلة. تثبت هذه الشهادة للعملاء والشركاء والجهات التنظيمية أن المؤسسة تتبع ممارسات صارمة لأمن المعلومات. تتطلب العديد من الشركات من مورديها الحصول على شهادة ISO 27001 قبل التعامل معهم."
+          }
+        },
+        {
+          "id": 4,
+          "type": "hr"
+        },
+        {
+          "id": 5,
+          "type": "title",
+          "value": {
+            "en": "Core Requirements of ISO 27001",
+            "ar": "المتطلبات الأساسية لـ ISO 27001"
+          }
+        },
+        {
+          "id": 1771185055781.3965,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageUrl": "https://pub-cb38e65ea6bd411eb827a8641fdcc72d.r2.dev/Security%20Frameworks%20%26%20Compliance/3-%20Requirements%20of%20ISO%2027001.webp"
+        },
+        {
+          "id": 7,
+          "type": "text",
+          "value": {
+            "en": "ISO 27001 requires organizations to establish an Information Security Management System, often called ISMS. This is a framework of policies and procedures that includes all legal, physical, and technical controls involved in managing information risks. The ISMS approach ensures security is not just about technology, but also about people and processes.",
+            "ar": "يتطلب ISO 27001 من المؤسسات إنشاء نظام إدارة أمن المعلومات، يُسمى غالباً ISMS. هذا إطار عمل من السياسات والإجراءات يتضمن جميع الضوابط القانونية والمادية والتقنية المتعلقة بإدارة مخاطر المعلومات. نهج ISMS يضمن أن الأمن ليس فقط عن التكنولوجيا، بل أيضاً عن الأشخاص والعمليات."
+          }
+        },
+        {
+          "id": 8,
+          "type": "list",
+          "title": {
+            "en": "Key Components of ISO 27001 Implementation",
+            "ar": "المكونات الرئيسية لتطبيق ISO 27001"
+          },
+          "items": {
+            "en": [
+              "Define the scope of your information security management system",
+              "Conduct a comprehensive risk assessment to identify threats",
+              "Select appropriate security controls from the standard's list",
+              "Create security policies and procedures in written documents",
+              "Train all employees on their security responsibilities",
+              "Regularly audit and review the system for improvements"
+            ],
+            "ar": [
+              "حدد نطاق نظام إدارة أمن المعلومات الخاص بك",
+              "أجرِ تقييماً شاملاً للمخاطر لتحديد التهديدات",
+              "اختر ضوابط الأمان المناسبة من قائمة المعيار",
+              "أنشئ سياسات وإجراءات أمنية في وثائق مكتوبة",
+              "درّب جميع الموظفين على مسؤولياتهم الأمنية",
+              "راجع ودقق النظام بانتظام للتحسينات"
+            ]
+          }
+        },
+        {
+          "id": 9,
+          "type": "table",
+          "title": {
+            "en": "ISO 27001 vs NIST Framework",
+            "ar": "مقارنة ISO 27001 مع إطار NIST"
+          },
+          "headers": {
+            "en": [
+              "Aspect",
+              "ISO 27001",
+              "NIST Framework"
+            ],
+            "ar": [
+              "الجانب",
+              "ISO 27001",
+              "إطار NIST"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "Geographic Focus",
+                "International",
+                "US-based but widely adopted"
+              ],
+              "ar": [
+                "التركيز الجغرافي",
+                "دولي",
+                "أمريكي لكن مُعتمد على نطاق واسع"
+              ]
+            },
+            {
+              "en": [
+                "Certification",
+                "Formal certification available",
+                "No formal certification process"
+              ],
+              "ar": [
+                "الاعتماد",
+                "شهادة رسمية متاحة",
+                "لا توجد عملية اعتماد رسمية"
+              ]
+            },
+            {
+              "en": [
+                "Structure",
+                "Detailed requirements and controls",
+                "High-level guidance and functions"
+              ],
+              "ar": [
+                "الهيكل",
+                "متطلبات وضوابط مفصلة",
+                "إرشادات ووظائف عالية المستوى"
+              ]
+            },
+            {
+              "en": [
+                "Main Focus",
+                "Management system approach",
+                "Risk management framework"
+              ],
+              "ar": [
+                "التركيز الرئيسي",
+                "نهج نظام الإدارة",
+                "إطار إدارة المخاطر"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 10,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Organizations often use both ISO 27001 and NIST together. ISO 27001 provides the management structure while NIST provides the operational framework. They complement each other well.",
+            "ar": "غالباً ما تستخدم المؤسسات ISO 27001 وNIST معاً. يوفر ISO 27001 الهيكل الإداري بينما يوفر NIST الإطار التشغيلي. يكملان بعضهما البعض بشكل جيد."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 11,
+          "type": "text",
+          "value": {
+            "en": "The certification process for ISO 27001 typically takes several months. Organizations must document their ISMS, implement the required controls, and demonstrate that their system is working effectively. An external auditor then reviews everything and, if satisfied, grants the certification. Companies must maintain their certification through regular audits, usually every year.",
+            "ar": "عملية الاعتماد لـ ISO 27001 تستغرق عادة عدة أشهر. يجب على المؤسسات توثيق ISMS الخاص بها، وتنفيذ الضوابط المطلوبة، وإثبات أن نظامها يعمل بفعالية. يراجع مدقق خارجي بعد ذلك كل شيء، وإذا كان راضياً، يمنح الشهادة. يجب على الشركات الحفاظ على شهادتها من خلال عمليات تدقيق منتظمة، عادة كل عام."
+          }
+        }
+      ]
+    },
+    {
+      "id": "topic-4",
+      "title": {
+        "en": "NIST Incident Response Lifecycle",
+        "ar": "دورة حياة الاستجابة للحوادث وفق NIST"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "What is Incident Response?",
+            "ar": "ما هي الاستجابة للحوادث؟"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "Incident response is the organized approach to addressing and managing security breaches or cyberattacks. When a security incident happens, chaos can quickly take over if there is no plan. Incident response provides a structured process that guides the security team through detection, containment, and recovery. The goal is to handle the situation in a way that limits damage and reduces recovery time and costs.",
+            "ar": "الاستجابة للحوادث هي النهج المنظم لمعالجة وإدارة الاختراقات الأمنية أو الهجمات الإلكترونية. عند حدوث حادث أمني، يمكن أن تسيطر الفوضى بسرعة إذا لم تكن هناك خطة. توفر الاستجابة للحوادث عملية منظمة ترشد فريق الأمن خلال الكشف والاحتواء والتعافي. الهدف هو التعامل مع الموقف بطريقة تحد من الضرر وتقلل وقت وتكاليف التعافي."
+          }
+        },
+        {
+          "id": 1771185263572.1155,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageUrl": "https://pub-cb38e65ea6bd411eb827a8641fdcc72d.r2.dev/Security%20Frameworks%20%26%20Compliance/4-NIST%20Incident%20Response.webp"
+        },
+        {
+          "id": 4,
+          "type": "text",
+          "value": {
+            "en": "Every organization needs an incident response plan, even small businesses. Cyberattacks can happen to anyone, and without a plan, even a minor incident can spiral into a major crisis. The NIST framework provides a proven methodology used by government agencies and major corporations worldwide. It defines clear phases, roles, and responsibilities to handle security incidents systematically and effectively.",
+            "ar": "تحتاج كل مؤسسة إلى خطة استجابة للحوادث، حتى الشركات الصغيرة. يمكن أن تحدث الهجمات الإلكترونية لأي شخص، وبدون خطة، حتى حادث بسيط يمكن أن يتحول إلى أزمة كبيرة. يوفر إطار NIST منهجية مثبتة تستخدمها الوكالات الحكومية والشركات الكبرى في جميع أنحاء العالم. يحدد مراحل وأدوار ومسؤوليات واضحة للتعامل مع الحوادث الأمنية بشكل منهجي وفعال."
+          }
+        },
+        {
+          "id": 5,
+          "type": "hr"
+        },
+        {
+          "id": 6,
+          "type": "title",
+          "value": {
+            "en": "The Four Phases of NIST Incident Response",
+            "ar": "المراحل الأربع للاستجابة للحوادث وفق NIST"
+          }
+        },
+        {
+          "id": 7,
+          "type": "text",
+          "value": {
+            "en": "NIST organizes incident response into four comprehensive phases. Unlike other models that separate each step, NIST combines related activities into logical groupings. This creates a continuous lifecycle where each phase flows naturally into the next, and lessons learned feed back into preparation for future incidents.",
+            "ar": "ينظم NIST الاستجابة للحوادث في أربع مراحل شاملة. على عكس النماذج الأخرى التي تفصل كل خطوة، يجمع NIST الأنشطة المرتبطة في مجموعات منطقية. يخلق هذا دورة حياة مستمرة حيث تتدفق كل مرحلة بشكل طبيعي إلى التالية، والدروس المستفادة تغذي التحضير للحوادث المستقبلية."
+          }
+        },
+        {
+          "id": 8,
+          "type": "orderedList",
+          "title": {
+            "en": "NIST Incident Response Lifecycle Phases",
+            "ar": "مراحل دورة حياة الاستجابة للحوادث وفق NIST"
+          },
+          "items": [
+            {
+              "subtitle": {
+                "en": "Preparation",
+                "ar": "التحضير (Preparation)"
+              },
+              "text": {
+                "en": "Build your incident response capability before an attack happens. This phase includes creating an incident response team with defined roles, developing detailed policies and procedures, implementing security monitoring tools, acquiring necessary hardware and software, and conducting regular training exercises. Preparation also involves establishing communication channels with external parties like law enforcement and security vendors. This foundation makes all other phases possible and determines how effectively your organization can respond when incidents occur.",
+                "ar": "ابنِ قدرة الاستجابة للحوادث قبل حدوث هجوم. تشمل هذه المرحلة إنشاء فريق استجابة للحوادث بأدوار محددة، وتطوير سياسات وإجراءات مفصلة، وتطبيق أدوات مراقبة الأمان، واقتناء الأجهزة والبرامج اللازمة، وإجراء تمارين تدريبية منتظمة. يتضمن التحضير أيضاً إنشاء قنوات اتصال مع أطراف خارجية مثل جهات إنفاذ القانون وموردي الأمن. هذا الأساس يجعل جميع المراحل الأخرى ممكنة ويحدد مدى فعالية استجابة مؤسستك عند حدوث الحوادث."
+              },
+              "example": {
+                "en": "A company creates a detailed incident response playbook, establishes a 24/7 security operations center, trains their IT team through simulated ransomware scenarios, and prepares communication templates for different incident types.",
+                "ar": "تنشئ شركة دليل استجابة للحوادث مفصل، وتؤسس مركز عمليات أمنية على مدار الساعة، وتدرّب فريق تقنية المعلومات من خلال سيناريوهات برمجيات فدية محاكاة، وتعد قوالب اتصال لأنواع مختلفة من الحوادث."
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Detection and Analysis",
+                "ar": "الكشف والتحليل (Detection and Analysis)"
+              },
+              "text": {
+                "en": "Identify that a security incident has occurred and determine its full nature and scope. This combined phase involves monitoring security alerts from multiple sources, analyzing suspicious activities to separate real threats from false alarms, determining the incident severity and potential impact, documenting all findings, and prioritizing the response based on criticality. Analysis continues throughout the incident as new information emerges. Teams must work quickly but carefully to understand what happened, how it happened, and what systems are affected before moving to containment.",
+                "ar": "حدد أن حادث أمني قد وقع وحدد طبيعته ونطاقه الكامل. تتضمن هذه المرحلة المدمجة مراقبة التنبيهات الأمنية من مصادر متعددة، وتحليل الأنشطة المشبوهة للفصل بين التهديدات الحقيقية والإنذارات الكاذبة، وتحديد خطورة الحادث والتأثير المحتمل، وتوثيق جميع النتائج، وترتيب أولويات الاستجابة بناءً على الأهمية الحرجة. يستمر التحليل طوال الحادث مع ظهور معلومات جديدة. يجب على الفرق العمل بسرعة ولكن بعناية لفهم ما حدث وكيف حدث وما الأنظمة المتأثرة قبل الانتقال إلى الاحتواء."
+              },
+              "example": {
+                "en": "Security software alerts unusual network traffic to an external server. The team investigates logs, identifies compromised employee credentials, determines which systems accessed the malicious server, and classifies this as a high-severity data exfiltration attempt requiring immediate action.",
+                "ar": "تنبّه برامج الأمان بحركة شبكة غير عادية إلى خادم خارجي. يحقق الفريق في السجلات، ويحدد بيانات اعتماد موظف مخترقة، ويحدد أي أنظمة وصلت إلى الخادم الضار، ويصنف هذا كمحاولة تسريب بيانات شديدة الخطورة تتطلب إجراءً فورياً."
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Containment, Eradication, and Recovery",
+                "ar": "الاحتواء والإزالة والتعافي (Containment, Eradication, and Recovery)"
+              },
+              "text": {
+                "en": "This comprehensive phase combines three critical activities. Containment stops the incident from spreading through short-term actions like isolating affected systems and long-term measures like applying security patches. Eradication removes the threat completely by deleting malware, closing exploited vulnerabilities, and eliminating attacker access points. Recovery restores systems to normal operation by rebuilding compromised systems, restoring data from clean backups, verifying system integrity, and implementing enhanced monitoring. These activities often happen in parallel and may require multiple iterations to ensure complete remediation.",
+                "ar": "تجمع هذه المرحلة الشاملة ثلاثة أنشطة حرجة. الاحتواء يوقف انتشار الحادث من خلال إجراءات قصيرة المدى مثل عزل الأنظمة المتأثرة وتدابير طويلة المدى مثل تطبيق تصحيحات الأمان. الإزالة تزيل التهديد بالكامل بحذف البرمجيات الضارة، وإغلاق الثغرات المستغلة، والقضاء على نقاط وصول المهاجم. التعافي يستعيد الأنظمة للعمل الطبيعي بإعادة بناء الأنظمة المخترقة، واستعادة البيانات من نسخ احتياطية نظيفة، والتحقق من سلامة النظام، وتطبيق مراقبة محسّنة. غالباً ما تحدث هذه الأنشطة بالتوازي وقد تتطلب تكرارات متعددة لضمان المعالجة الكاملة."
+              },
+              "example": {
+                "en": "After detecting ransomware, the team immediately disconnects infected systems from the network (containment), removes all malware traces and patches the exploited vulnerability (eradication), then restores systems from verified clean backups and monitors them intensively for 30 days to ensure no persistence mechanisms remain (recovery).",
+                "ar": "بعد اكتشاف برمجيات الفدية، يفصل الفريق فوراً الأنظمة المصابة عن الشبكة (احتواء)، ويزيل جميع آثار البرمجيات الضارة ويصلح الثغرة المستغلة (إزالة)، ثم يستعيد الأنظمة من نسخ احتياطية نظيفة تم التحقق منها ويراقبها بشكل مكثف لمدة 30 يوماً لضمان عدم بقاء آليات استمرار (تعافي)."
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Post-Incident Activity",
+                "ar": "أنشطة ما بعد الحادث (Post-Incident Activity)"
+              },
+              "text": {
+                "en": "Conduct a thorough review after the incident is resolved to extract maximum learning value. This phase involves holding a lessons-learned meeting with all stakeholders, documenting what happened and why, analyzing what worked well and what failed, identifying specific improvements to procedures and controls, updating the incident response plan based on findings, and sharing knowledge across the organization. This critical phase transforms incidents from purely negative events into opportunities for organizational growth and improved security posture. The insights gained feed directly back into the Preparation phase, creating the continuous improvement cycle.",
+                "ar": "أجرِ مراجعة شاملة بعد حل الحادث لاستخلاص أقصى قيمة تعليمية. تتضمن هذه المرحلة عقد اجتماع للدروس المستفادة مع جميع أصحاب المصلحة، وتوثيق ما حدث ولماذا، وتحليل ما نجح وما فشل، وتحديد تحسينات محددة للإجراءات والضوابط، وتحديث خطة الاستجابة للحوادث بناءً على النتائج، ومشاركة المعرفة عبر المؤسسة. تحول هذه المرحلة الحرجة الحوادث من أحداث سلبية بحتة إلى فرص للنمو التنظيمي وتحسين الوضع الأمني. تغذي الرؤى المكتسبة مباشرة إلى مرحلة التحضير، مما يخلق دورة التحسين المستمر."
+              },
+              "example": {
+                "en": "Two weeks after resolving a phishing incident, the security team holds a comprehensive review meeting. They document that the attack succeeded due to lack of email filtering, recommend implementing advanced email security, identify training gaps, and update their incident response procedures to include faster credential rotation protocols.",
+                "ar": "بعد أسبوعين من حل حادث احتيال إلكتروني، يعقد فريق الأمان اجتماع مراجعة شامل. يوثقون أن الهجوم نجح بسبب نقص تصفية البريد الإلكتروني، ويوصون بتطبيق أمن بريد إلكتروني متقدم، ويحددون فجوات التدريب، ويحدثون إجراءات الاستجابة للحوادث لتشمل بروتوكولات تدوير بيانات اعتماد أسرع."
+              }
+            }
+          ]
+        },
+        {
+          "id": 9,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "NIST combines Containment, Eradication, and Recovery into one phase because these activities are deeply interconnected and often occur simultaneously during active incident response. This reflects the reality of incident handling where teams must balance stopping the attack, removing threats, and restoring operations.",
+            "ar": "يجمع NIST الاحتواء والإزالة والتعافي في مرحلة واحدة لأن هذه الأنشطة مترابطة بعمق وغالباً ما تحدث في وقت واحد خلال الاستجابة النشطة للحوادث. يعكس هذا واقع التعامل مع الحوادث حيث يجب على الفرق الموازنة بين إيقاف الهجوم وإزالة التهديدات واستعادة العمليات."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 10,
+          "type": "hr"
+        },
+        {
+          "id": 11,
+          "type": "title",
+          "value": {
+            "en": "The Continuous Improvement Cycle",
+            "ar": "دورة التحسين المستمر"
+          }
+        },
+        {
+          "id": 12,
+          "type": "text",
+          "value": {
+            "en": "The NIST incident response lifecycle is not a one-time linear process but a continuous cycle of improvement. After post-incident activities are complete, organizations return to the Preparation phase with enhanced knowledge and improved procedures. Each incident provides valuable intelligence about attacker techniques, system vulnerabilities, and organizational weaknesses. This information directly improves detection capabilities, response procedures, and preventive controls. Organizations that embrace this continuous cycle become progressively more resilient with each incident they handle.",
+            "ar": "دورة حياة الاستجابة للحوادث وفق NIST ليست عملية خطية لمرة واحدة بل دورة تحسين مستمرة. بعد اكتمال أنشطة ما بعد الحادث، تعود المؤسسات إلى مرحلة التحضير بمعرفة معززة وإجراءات محسّنة. يوفر كل حادث معلومات استخباراتية قيمة حول تقنيات المهاجمين وثغرات الأنظمة ونقاط الضعف التنظيمية. تحسّن هذه المعلومات مباشرة قدرات الكشف وإجراءات الاستجابة والضوابط الوقائية. المؤسسات التي تتبنى هذه الدورة المستمرة تصبح أكثر مرونة تدريجياً مع كل حادث تتعامل معه."
+          }
+        },
+        {
+          "id": 13,
+          "type": "table",
+          "title": {
+            "en": "NIST vs Traditional Five-Phase Model",
+            "ar": "مقارنة NIST مع النموذج التقليدي الخماسي"
+          },
+          "headers": {
+            "en": [
+              "NIST Four Phases",
+              "Traditional Five Phases",
+              "Key Difference"
+            ],
+            "ar": [
+              "مراحل NIST الأربع",
+              "المراحل التقليدية الخمس",
+              "الفرق الرئيسي"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "Preparation",
+                "Preparation",
+                "Same foundation phase"
+              ],
+              "ar": [
+                "التحضير",
+                "التحضير",
+                "نفس المرحلة الأساسية"
+              ]
+            },
+            {
+              "en": [
+                "Detection and Analysis",
+                "Detection + Analysis (separate)",
+                "Combined for efficiency"
+              ],
+              "ar": [
+                "الكشف والتحليل",
+                "الكشف + التحليل (منفصلان)",
+                "مدمجة للكفاءة"
+              ]
+            },
+            {
+              "en": [
+                "Containment, Eradication, and Recovery",
+                "Containment + Eradication + Recovery (separate)",
+                "Unified operational phase"
+              ],
+              "ar": [
+                "الاحتواء والإزالة والتعافي",
+                "الاحتواء + الإزالة + التعافي (منفصلة)",
+                "مرحلة تشغيلية موحدة"
+              ]
+            },
+            {
+              "en": [
+                "Post-Incident Activity",
+                "Usually part of Recovery",
+                "Dedicated learning phase"
+              ],
+              "ar": [
+                "أنشطة ما بعد الحادث",
+                "عادة جزء من التعافي",
+                "مرحلة تعلّم مخصصة"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 14,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "Never skip the Post-Incident Activity phase to save time. This is where organizations transform painful incidents into valuable security improvements. Without this phase, you risk repeating the same mistakes and remaining vulnerable to similar attacks.",
+            "ar": "لا تتخطى أبداً مرحلة أنشطة ما بعد الحادث لتوفير الوقت. هذا هو المكان الذي تحول فيه المؤسسات الحوادث المؤلمة إلى تحسينات أمنية قيمة. بدون هذه المرحلة، تخاطر بتكرار نفس الأخطاء والبقاء عرضة لهجمات مماثلة."
+          },
+          "link": "",
+          "isLab": false
+        }
+      ]
+    },
+    {
+      "id": "topic-5",
+      "title": {
+        "en": "Security Policies and Documentation",
+        "ar": "سياسات الأمن والتوثيق"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "Understanding Security Documentation",
+            "ar": "فهم توثيق الأمن"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "Security documentation creates the rules and guidelines that govern how an organization protects its information. Think of it like the legal system in a country. Laws provide the broad principles, regulations give specific requirements, and procedures explain exactly how to follow those requirements. Security documentation works the same way, creating different levels of guidance from high-level policies down to detailed technical procedures.",
+            "ar": "توثيق الأمن ينشئ القواعد والإرشادات التي تحكم كيفية حماية المؤسسة لمعلوماتها. فكّر فيه مثل النظام القانوني في بلد ما. القوانين توفر المبادئ الواسعة، واللوائح تعطي متطلبات محددة، والإجراءات تشرح بالضبط كيفية اتباع تلك المتطلبات. توثيق الأمن يعمل بنفس الطريقة، وينشئ مستويات مختلفة من الإرشادات من السياسات رفيعة المستوى إلى الإجراءات التقنية المفصلة."
+          }
+        },
+        {
+          "id": 3,
+          "type": "text",
+          "value": {
+            "en": "Without proper documentation, security becomes inconsistent. Different employees might follow different approaches, creating vulnerabilities. Documentation ensures everyone understands their security responsibilities and follows the same standards. It also provides evidence for audits and compliance requirements, proving that the organization takes security seriously.",
+            "ar": "بدون توثيق مناسب، يصبح الأمن غير متسق. قد يتبع موظفون مختلفون أساليب مختلفة، مما يخلق ثغرات. التوثيق يضمن أن الجميع يفهمون مسؤولياتهم الأمنية ويتبعون نفس المعايير. كما يوفر أدلة لعمليات التدقيق ومتطلبات الامتثال، مثبتاً أن المؤسسة تأخذ الأمن على محمل الجد."
+          }
+        },
+        {
+          "id": 4,
+          "type": "hr"
+        },
+        {
+          "id": 5,
+          "type": "title",
+          "value": {
+            "en": "Four Types of Security Documentation",
+            "ar": "أربعة أنواع من توثيق الأمن"
+          }
+        },
+        {
+          "id": 1771185314361.013,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageUrl": "https://pub-cb38e65ea6bd411eb827a8641fdcc72d.r2.dev/Security%20Frameworks%20%26%20Compliance/5-Four%20Types%20of%20Security.webp"
+        },
+        {
+          "id": 7,
+          "type": "table",
+          "title": {
+            "en": "Security Documentation Hierarchy",
+            "ar": "التسلسل الهرمي لتوثيق الأمن"
+          },
+          "headers": {
+            "en": [
+              "Type",
+              "Purpose",
+              "Example"
+            ],
+            "ar": [
+              "النوع",
+              "الغرض",
+              "مثال"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "Policy",
+                "High-level strategic direction",
+                "Information Security Policy: We protect all customer data"
+              ],
+              "ar": [
+                "السياسة",
+                "توجيه استراتيجي رفيع المستوى",
+                "سياسة أمن المعلومات: نحمي جميع بيانات العملاء"
+              ]
+            },
+            {
+              "en": [
+                "Standard",
+                "Mandatory specific requirements",
+                "Password Standard: All passwords must be 12 characters minimum"
+              ],
+              "ar": [
+                "المعيار",
+                "متطلبات محددة إلزامية",
+                "معيار كلمات المرور: يجب أن تكون جميع كلمات المرور 12 حرف كحد أدنى"
+              ]
+            },
+            {
+              "en": [
+                "Procedure",
+                "Step-by-step instructions",
+                "Password Reset Procedure: 1. Verify identity 2. Generate new password 3. Log change"
+              ],
+              "ar": [
+                "الإجراء",
+                "تعليمات خطوة بخطوة",
+                "إجراء إعادة تعيين كلمة المرور: 1. تحقق من الهوية 2. أنشئ كلمة مرور جديدة 3. سجّل التغيير"
+              ]
+            },
+            {
+              "en": [
+                "Guideline",
+                "Recommended best practices",
+                "Password Guideline: Consider using a password manager for convenience"
+              ],
+              "ar": [
+                "الإرشاد",
+                "أفضل الممارسات الموصى بها",
+                "إرشاد كلمات المرور: فكّر في استخدام مدير كلمات مرور للراحة"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 8,
+          "type": "text",
+          "value": {
+            "en": "Policies are the foundation of security documentation. They are broad statements approved by senior management that define the organization's security goals. For example, an acceptable use policy defines what employees can and cannot do with company computers. Policies rarely change and apply to everyone in the organization. They answer the question of why security matters and what needs protection.",
+            "ar": "السياسات هي أساس توثيق الأمن. هي بيانات واسعة معتمدة من الإدارة العليا تحدد أهداف الأمن في المؤسسة. على سبيل المثال، سياسة الاستخدام المقبول تحدد ما يمكن وما لا يمكن للموظفين فعله بأجهزة الكمبيوتر التابعة للشركة. نادراً ما تتغير السياسات وتنطبق على الجميع في المؤسسة. تجيب على سؤال لماذا يهم الأمن وما الذي يحتاج إلى حماية."
+          }
+        },
+        {
+          "id": 9,
+          "type": "text",
+          "value": {
+            "en": "Standards provide specific mandatory requirements that support policies. While a policy might say data must be protected, a standard specifies exactly how to protect it, such as requiring encryption for all sensitive data. Standards are technical and measurable, making it easy to verify compliance. Organizations often adopt industry standards like requiring multi-factor authentication for all remote access.",
+            "ar": "المعايير توفر متطلبات إلزامية محددة تدعم السياسات. بينما قد تقول السياسة أن البيانات يجب أن تُحمى، يحدد المعيار بالضبط كيفية حمايتها، مثل طلب التشفير لجميع البيانات الحساسة. المعايير تقنية وقابلة للقياس، مما يسهل التحقق من الامتثال. غالباً ما تعتمد المؤسسات معايير صناعية مثل طلب المصادقة متعددة العوامل لجميع الوصول عن بُعد."
+          }
+        },
+        {
+          "id": 10,
+          "type": "text",
+          "value": {
+            "en": "Procedures are detailed step-by-step instructions for completing specific security tasks. They tell employees exactly what to do in different situations. For example, an incident response procedure would list each action to take when malware is detected, including who to notify, which systems to isolate, and how to document the incident. Good procedures are clear enough that someone unfamiliar with the task can follow them successfully.",
+            "ar": "الإجراءات هي تعليمات مفصلة خطوة بخطوة لإكمال مهام أمنية محددة. تخبر الموظفين بالضبط ما يجب فعله في مواقف مختلفة. على سبيل المثال، إجراء الاستجابة للحوادث يسرد كل إجراء يجب اتخاذه عند اكتشاف برمجيات ضارة، بما في ذلك من يجب إخطاره، وأي أنظمة يجب عزلها، وكيفية توثيق الحادث. الإجراءات الجيدة واضحة بما يكفي بحيث يمكن لشخص غير مألوف مع المهمة اتباعها بنجاح."
+          }
+        },
+        {
+          "id": 11,
+          "type": "text",
+          "value": {
+            "en": "Guidelines offer recommendations and best practices rather than mandatory requirements. They provide flexibility for different situations. For example, a guideline might suggest using a password manager or recommend reviewing access permissions quarterly. Guidelines help employees make good security decisions when strict procedures do not exist for every possible scenario.",
+            "ar": "الإرشادات تقدم توصيات وأفضل الممارسات بدلاً من المتطلبات الإلزامية. توفر مرونة لمواقف مختلفة. على سبيل المثال، قد يقترح إرشاد استخدام مدير كلمات مرور أو يوصي بمراجعة أذونات الوصول ربع سنوي. الإرشادات تساعد الموظفين على اتخاذ قرارات أمنية جيدة عندما لا توجد إجراءات صارمة لكل سيناريو ممكن."
+          }
+        },
+        {
+          "id": 12,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Security documentation must be reviewed and updated regularly. As technology changes and new threats emerge, policies and procedures need to evolve to remain effective.",
+            "ar": "يجب مراجعة وتحديث توثيق الأمن بانتظام. مع تغيّر التكنولوجيا وظهور تهديدات جديدة، تحتاج السياسات والإجراءات إلى التطور للبقاء فعالة."
+          },
+          "link": "",
+          "isLab": false
+        }
+      ]
+    },
+    {
+      "id": "topic-6",
+      "title": {
+        "en": "Compliance and Regulatory Requirements",
+        "ar": "الامتثال والمتطلبات التنظيمية"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "What is Compliance?",
+            "ar": "ما هو الامتثال؟"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "Compliance means following the laws, regulations, and standards that apply to your organization's handling of information. Different industries have different compliance requirements. Healthcare organizations must comply with regulations protecting patient data. Financial institutions must follow banking security rules. Companies processing credit card payments must meet payment card industry standards. Compliance is not optional; it is a legal requirement with serious consequences for violations.",
+            "ar": "الامتثال يعني اتباع القوانين واللوائح والمعايير التي تنطبق على تعامل مؤسستك مع المعلومات. الصناعات المختلفة لديها متطلبات امتثال مختلفة. يجب على مؤسسات الرعاية الصحية الامتثال للوائح التي تحمي بيانات المرضى. يجب على المؤسسات المالية اتباع قواعد أمن البنوك. يجب على الشركات التي تعالج مدفوعات بطاقات الائتمان تلبية معايير صناعة بطاقات الدفع. الامتثال ليس اختيارياً؛ إنه متطلب قانوني له عواقب خطيرة للانتهاكات."
+          }
+        },
+        {
+          "id": 1771185339786.6902,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageUrl": "https://pub-cb38e65ea6bd411eb827a8641fdcc72d.r2.dev/Security%20Frameworks%20%26%20Compliance/6-What%20is%20Compliance.webp",
+          "imageMode": "url"
+        },
+        {
+          "id": 4,
+          "type": "text",
+          "value": {
+            "en": "Organizations face significant penalties for non-compliance, including heavy fines, legal action, and loss of business licenses. Beyond financial penalties, compliance violations damage reputation and erode customer trust. When a company fails to protect customer data as required by law, customers lose confidence and take their business elsewhere. Compliance is therefore both a legal obligation and a business necessity.",
+            "ar": "تواجه المؤسسات عقوبات كبيرة لعدم الامتثال، بما في ذلك غرامات ثقيلة وإجراءات قانونية وفقدان تراخيص الأعمال. بالإضافة إلى العقوبات المالية، انتهاكات الامتثال تضر بالسمعة وتقوض ثقة العملاء. عندما تفشل شركة في حماية بيانات العملاء كما يتطلب القانون، يفقد العملاء الثقة وينقلون أعمالهم إلى مكان آخر. الامتثال هو لذلك التزام قانوني وضرورة تجارية."
+          }
+        },
+        {
+          "id": 5,
+          "type": "hr"
+        },
+        {
+          "id": 6,
+          "type": "title",
+          "value": {
+            "en": "Common Compliance Requirements",
+            "ar": "متطلبات الامتثال الشائعة"
+          }
+        },
+        {
+          "id": 7,
+          "type": "list",
+          "title": {
+            "en": "Key Elements of Most Compliance Frameworks",
+            "ar": "العناصر الأساسية لمعظم أطر الامتثال"
+          },
+          "items": {
+            "en": [
+              "Data protection and privacy controls to safeguard personal information",
+              "Access management ensuring only authorized people see sensitive data",
+              "Regular security audits and assessments to verify compliance",
+              "Incident reporting procedures to notify authorities of breaches",
+              "Employee training on compliance requirements and responsibilities",
+              "Documentation proving security measures are implemented and maintained"
+            ],
+            "ar": [
+              "ضوابط حماية البيانات والخصوصية لحماية المعلومات الشخصية",
+              "إدارة الوصول لضمان أن الأشخاص المصرح لهم فقط يرون البيانات الحساسة",
+              "عمليات تدقيق وتقييمات أمنية منتظمة للتحقق من الامتثال",
+              "إجراءات الإبلاغ عن الحوادث لإخطار السلطات بالاختراقات",
+              "تدريب الموظفين على متطلبات ومسؤوليات الامتثال",
+              "توثيق يثبت أن إجراءات الأمن منفذة ومُحافظ عليها"
+            ]
+          }
+        },
+        {
+          "id": 8,
+          "type": "text",
+          "value": {
+            "en": "Compliance frameworks often overlap with security frameworks. For example, implementing the NIST Cybersecurity Framework helps organizations meet many compliance requirements across different regulations. ISO 27001 certification demonstrates compliance with international information security standards. Organizations benefit by choosing frameworks that address multiple compliance needs simultaneously, reducing duplication of effort.",
+            "ar": "أطر الامتثال غالباً ما تتداخل مع أطر الأمن. على سبيل المثال، تطبيق إطار NIST للأمن السيبراني يساعد المؤسسات على تلبية العديد من متطلبات الامتثال عبر لوائح مختلفة. شهادة ISO 27001 تثبت الامتثال للمعايير الدولية لأمن المعلومات. تستفيد المؤسسات من خلال اختيار أطر تعالج احتياجات امتثال متعددة في نفس الوقت، مما يقلل التكرار في الجهد."
+          }
+        },
+        {
+          "id": 9,
+          "type": "table",
+          "title": {
+            "en": "Compliance Audits and Assessment",
+            "ar": "عمليات تدقيق وتقييم الامتثال"
+          },
+          "headers": {
+            "en": [
+              "Assessment Type",
+              "Frequency",
+              "Purpose"
+            ],
+            "ar": [
+              "نوع التقييم",
+              "التكرار",
+              "الغرض"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "Internal Audit",
+                "Quarterly or Semi-annually",
+                "Organization checks its own compliance"
+              ],
+              "ar": [
+                "التدقيق الداخلي",
+                "ربع سنوي أو نصف سنوي",
+                "المؤسسة تتحقق من امتثالها الخاص"
+              ]
+            },
+            {
+              "en": [
+                "External Audit",
+                "Annually",
+                "Independent auditor verifies compliance"
+              ],
+              "ar": [
+                "التدقيق الخارجي",
+                "سنوياً",
+                "مدقق مستقل يتحقق من الامتثال"
+              ]
+            },
+            {
+              "en": [
+                "Penetration Testing",
+                "Annually or After Major Changes",
+                "Simulate attacks to find vulnerabilities"
+              ],
+              "ar": [
+                "اختبار الاختراق",
+                "سنوياً أو بعد تغييرات كبيرة",
+                "محاكاة هجمات لإيجاد الثغرات"
+              ]
+            },
+            {
+              "en": [
+                "Risk Assessment",
+                "Annually",
+                "Identify and prioritize security risks"
+              ],
+              "ar": [
+                "تقييم المخاطر",
+                "سنوياً",
+                "تحديد وترتيب أولويات المخاطر الأمنية"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 10,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "Compliance is not the same as security. An organization can be compliant but still have security weaknesses. Compliance provides minimum requirements, but effective security often requires going beyond minimum standards.",
+            "ar": "الامتثال ليس نفس الأمن. يمكن أن تكون المؤسسة متوافقة ولكن لا تزال لديها نقاط ضعف أمنية. يوفر الامتثال الحد الأدنى من المتطلبات، لكن الأمن الفعّال غالباً ما يتطلب تجاوز المعايير الدنيا."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 11,
+          "type": "text",
+          "value": {
+            "en": "Maintaining compliance is an ongoing process, not a one-time achievement. Regulations change, new threats emerge, and business operations evolve. Organizations must continuously monitor their compliance status, update their security controls, and train their employees. Regular audits help identify gaps before they become violations. Successful compliance programs integrate security into everyday business processes rather than treating it as a separate checklist.",
+            "ar": "الحفاظ على الامتثال هو عملية مستمرة، وليس إنجازاً لمرة واحدة. تتغير اللوائح، وتظهر تهديدات جديدة، وتتطور العمليات التجارية. يجب على المؤسسات المراقبة المستمرة لحالة امتثالها، وتحديث ضوابط الأمن الخاصة بها، وتدريب موظفيها. عمليات التدقيق المنتظمة تساعد في تحديد الفجوات قبل أن تصبح انتهاكات. برامج الامتثال الناجحة تدمج الأمن في العمليات التجارية اليومية بدلاً من معاملته كقائمة تحقق منفصلة."
+          }
+        }
+      ]
+    },
+    {
+      "id": "topic-7",
+      "title": {
+        "en": "Building a Security-Aware Culture",
+        "ar": "بناء ثقافة الوعي الأمني"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "The Human Element in Security Frameworks",
+            "ar": "العنصر البشري في أطر الأمن"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "Security frameworks and technical controls are only effective if people use them correctly. The best firewall in the world cannot protect against an employee who clicks on a phishing link or shares their password. This is why building a security-aware culture is essential. A security-aware culture means that every person in the organization understands security risks, knows their responsibilities, and makes security-conscious decisions in their daily work.",
+            "ar": "أطر الأمن والضوابط التقنية فعّالة فقط إذا استخدمها الناس بشكل صحيح. أفضل جدار حماية في العالم لا يمكنه الحماية ضد موظف ينقر على رابط احتيال أو يشارك كلمة مروره. لهذا السبب بناء ثقافة الوعي الأمني ضروري. ثقافة الوعي الأمني تعني أن كل شخص في المؤسسة يفهم المخاطر الأمنية، ويعرف مسؤولياته، ويتخذ قرارات واعية أمنياً في عمله اليومي."
+          }
+        },
+        {
+          "id": 3,
+          "type": "text",
+          "value": {
+            "en": "Creating this culture requires more than a single training session. It needs ongoing education, clear communication from leadership, positive reinforcement of good security behaviors, and consequences for security violations. When security becomes part of the organizational values rather than just a set of rules, employees naturally make better security decisions.",
+            "ar": "إنشاء هذه الثقافة يتطلب أكثر من جلسة تدريبية واحدة. يحتاج إلى تعليم مستمر، وتواصل واضح من القيادة، وتعزيز إيجابي للسلوكيات الأمنية الجيدة، وعواقب لانتهاكات الأمن. عندما يصبح الأمن جزءاً من قيم المؤسسة بدلاً من مجرد مجموعة من القواعد، يتخذ الموظفون بشكل طبيعي قرارات أمنية أفضل."
+          }
+        },
+        {
+          "id": 4,
+          "type": "hr"
+        },
+        {
+          "id": 5,
+          "type": "title",
+          "value": {
+            "en": "Key Components of Security Awareness",
+            "ar": "المكونات الأساسية للوعي الأمني"
+          }
+        },
+        {
+          "id": 6,
+          "type": "orderedList",
+          "title": {
+            "en": "Building Security Awareness Programs",
+            "ar": "بناء برامج الوعي الأمني"
+          },
+          "items": [
+            {
+              "subtitle": {
+                "en": "Regular Training",
+                "ar": "التدريب المنتظم"
+              },
+              "text": {
+                "en": "Conduct security training sessions at least quarterly for all employees. Training should cover current threats like phishing, social engineering, and ransomware. Use real examples relevant to your industry. Make training interactive and engaging rather than boring lectures. Test understanding through quizzes and simulations.",
+                "ar": "أجرِ جلسات تدريب أمني على الأقل ربع سنوي لجميع الموظفين. يجب أن يغطي التدريب التهديدات الحالية مثل الاحتيال والهندسة الاجتماعية وبرمجيات الفدية. استخدم أمثلة حقيقية ذات صلة بصناعتك. اجعل التدريب تفاعلياً وجذاباً بدلاً من محاضرات مملة. اختبر الفهم من خلال الاختبارات القصيرة والمحاكاة."
+              },
+              "example": {
+                "en": "Monthly simulated phishing emails test if employees can recognize suspicious messages and report them properly.",
+                "ar": "رسائل بريد إلكتروني احتيالية محاكاة شهرية تختبر ما إذا كان الموظفون يمكنهم التعرف على الرسائل المشبوهة والإبلاغ عنها بشكل صحيح."
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Clear Communication",
+                "ar": "التواصل الواضح"
+              },
+              "text": {
+                "en": "Communicate security policies and procedures in simple language that everyone can understand. Avoid technical jargon when speaking to non-technical staff. Explain not just what employees must do, but why it matters. Share security updates and alerts promptly when new threats emerge.",
+                "ar": "تواصل بسياسات وإجراءات الأمن بلغة بسيطة يمكن للجميع فهمها. تجنب المصطلحات التقنية عند التحدث إلى الموظفين غير التقنيين. اشرح ليس فقط ما يجب على الموظفين فعله، بل لماذا يهم. شارك تحديثات وتنبيهات الأمن فوراً عند ظهور تهديدات جديدة."
+              },
+              "example": {
+                "en": "Instead of saying 'enable MFA', explain 'Add a second verification step to protect your account, like a code sent to your phone'.",
+                "ar": "بدلاً من قول 'فعّل MFA'، اشرح 'أضف خطوة تحقق ثانية لحماية حسابك، مثل رمز يُرسل إلى هاتفك'."
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Leadership Example",
+                "ar": "قدوة القيادة"
+              },
+              "text": {
+                "en": "Senior leaders must visibly demonstrate commitment to security. When executives follow security policies and talk about security importance, employees take notice. Leadership should allocate adequate resources for security, participate in training, and hold people accountable for security responsibilities.",
+                "ar": "يجب على القادة الكبار إظهار الالتزام بالأمن بشكل واضح. عندما يتبع المسؤولون التنفيذيون سياسات الأمن ويتحدثون عن أهمية الأمن، ينتبه الموظفون. يجب على القيادة تخصيص موارد كافية للأمن، والمشاركة في التدريب، ومحاسبة الأشخاص على مسؤوليات الأمن."
+              },
+              "example": {
+                "en": "The CEO participates in security training alongside regular staff, showing that security applies to everyone regardless of position.",
+                "ar": "يشارك الرئيس التنفيذي في تدريب الأمن جنباً إلى جنب مع الموظفين العاديين، مما يُظهر أن الأمن يطبق على الجميع بغض النظر عن المنصب."
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Easy Reporting",
+                "ar": "سهولة الإبلاغ"
+              },
+              "text": {
+                "en": "Make it simple for employees to report security concerns without fear of blame. Create a clear reporting process with designated contacts. Respond quickly to reports and thank employees for being vigilant. When employees feel safe reporting mistakes or suspicious activities, problems get fixed faster.",
+                "ar": "اجعل من السهل على الموظفين الإبلاغ عن المخاوف الأمنية دون خوف من اللوم. أنشئ عملية إبلاغ واضحة مع جهات اتصال محددة. استجب بسرعة للتقارير واشكر الموظفين على يقظتهم. عندما يشعر الموظفون بالأمان في الإبلاغ عن الأخطاء أو الأنشطة المشبوهة، يتم إصلاح المشاكل بشكل أسرع."
+              },
+              "example": {
+                "en": "A simple 'Report Security Issue' button in company email allows one-click reporting of suspicious messages.",
+                "ar": "زر بسيط 'أبلغ عن مشكلة أمنية' في البريد الإلكتروني للشركة يسمح بالإبلاغ بنقرة واحدة عن الرسائل المشبوهة."
+              }
+            }
+          ]
+        },
+        {
+          "id": 7,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Security awareness is not just for large corporations. Small businesses with limited budgets can still build strong security cultures through free resources, regular team discussions, and leading by example.",
+            "ar": "الوعي الأمني ليس فقط للشركات الكبيرة. يمكن للشركات الصغيرة ذات الميزانيات المحدودة أن تبني ثقافات أمنية قوية من خلال الموارد المجانية والمناقشات الجماعية المنتظمة والقيادة بالقدوة."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 8,
+          "type": "text",
+          "value": {
+            "en": "Measuring the effectiveness of security awareness programs helps identify what works and what needs improvement. Track metrics like the percentage of employees completing training, the number of reported security incidents, and the results of phishing simulations. Organizations with strong security cultures see fewer successful attacks because employees recognize and stop threats before they cause damage.",
+            "ar": "قياس فعالية برامج الوعي الأمني يساعد في تحديد ما يعمل وما يحتاج إلى تحسين. تتبع مقاييس مثل نسبة الموظفين الذين أكملوا التدريب، وعدد الحوادث الأمنية المُبلغ عنها، ونتائج محاكاة الاحتيال. المؤسسات ذات ثقافات الأمن القوية ترى هجمات ناجحة أقل لأن الموظفين يتعرفون على التهديدات ويوقفونها قبل أن تسبب ضرراً."
+          }
+        },
+        {
+          "id": 9,
+          "type": "terminal",
+          "label": {
+            "en": "Security Awareness Reminder",
+            "ar": "تذكير الوعي الأمني"
+          },
+          "value": "user@company:~$ security-check --daily\n[INFO] Security awareness tip of the day:\nAlways verify sender identity before clicking links in emails.\nWhen in doubt, contact IT security team.\n[SUCCESS] Stay vigilant!"
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "createdAt": "2026-02-15T20:20:56.711Z",
+    "totalTopics": 7,
+    "totalElements": 76
+  }
+}

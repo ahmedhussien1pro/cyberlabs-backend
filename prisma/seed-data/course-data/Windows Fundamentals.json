@@ -1,0 +1,1687 @@
+{
+  "landingData": {
+    "title": {
+      "en": "Windows Fundamentals: Core Concepts and Essential Skills",
+      "ar": "أساسيات ويندوز: المفاهيم الأساسية والمهارات الضرورية"
+    },
+    "description": {
+      "en": "Master the foundational concepts of Windows operating systems, including architecture, file systems, command-line tools, and user management. Build essential skills for system administration and cybersecurity.",
+      "ar": "أتقن المفاهيم الأساسية لأنظمة تشغيل ويندوز، بما في ذلك البنية المعمارية، أنظمة الملفات، أدوات سطر الأوامر، وإدارة المستخدمين. اكتسب المهارات الأساسية لإدارة الأنظمة والأمن السيبراني."
+    },
+    "difficulty": {
+      "en": "Beginner",
+      "ar": "مبتدئ"
+    },
+    "duration": {
+      "en": "90 Minutes",
+      "ar": "90 دقيقة"
+    },
+    "instructor": "CyberLab",
+    "rating": 4.9,
+    "students": 250
+  },
+  "topics": [
+    {
+      "id": "topic-1",
+      "title": {
+        "en": "Understanding Windows Operating System Architecture",
+        "ar": "فهم بنية نظام تشغيل ويندوز"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "What is Windows Architecture and Why Does It Matter?",
+            "ar": "ما هي بنية ويندوز ولماذا هي مهمة؟"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "Windows architecture refers to the internal design and organization of the Windows operating system. It defines how different software components interact with hardware and how applications communicate with the system. Understanding this architecture is essential for troubleshooting problems, securing systems, and making informed decisions about software installation. The architecture follows a layered approach, where each layer has specific responsibilities and protects the layers below it.",
+            "ar": "تشير بنية ويندوز إلى التصميم الداخلي وتنظيم نظام التشغيل ويندوز. تحدد كيفية تفاعل مكونات البرامج المختلفة مع الأجهزة وكيفية تواصل التطبيقات مع النظام. فهم هذه البنية ضروري لحل المشكلات وتأمين الأنظمة واتخاذ قرارات مستنيرة حول تثبيت البرامج. تتبع البنية نهجاً طبقياً، حيث كل طبقة لها مسؤوليات محددة وتحمي الطبقات أسفلها."
+          }
+        },
+        {
+          "id": 1772582495425.5298,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Windows%20Fundamentals/1-1-%20layered%20Windows%20architecture.webp"
+        },
+        {
+          "id": 4,
+          "type": "text",
+          "value": {
+            "en": "The Windows operating system is divided into two main modes: Kernel Mode and User Mode. Kernel Mode has complete access to all hardware and system resources. It runs the most critical system code that manages memory, processes, and hardware drivers. User Mode is where regular applications run with restricted access to system resources. This separation exists for security and stability reasons. If an application crashes in User Mode, it cannot damage the entire system because it lacks direct access to critical components.",
+            "ar": "ينقسم نظام التشغيل ويندوز إلى وضعين رئيسيين: وضع النواة ووضع المستخدم. يتمتع وضع النواة بوصول كامل إلى جميع الأجهزة وموارد النظام. يشغل أهم كود نظام يدير الذاكرة والعمليات ومشغلات الأجهزة. وضع المستخدم هو حيث تعمل التطبيقات العادية بوصول محدود لموارد النظام. يوجد هذا الفصل لأسباب أمنية واستقرار. إذا تعطل تطبيق في وضع المستخدم، لا يمكنه تدمير النظام بأكمله لأنه يفتقر إلى الوصول المباشر للمكونات الحرجة."
+          }
+        },
+        {
+          "id": 5,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Think of Kernel Mode as the control room of a power plant where only trained engineers are allowed. User Mode is like the public areas where regular visitors can access services safely without touching critical infrastructure.",
+            "ar": "فكر في وضع النواة كغرفة التحكم في محطة طاقة حيث يُسمح فقط للمهندسين المدربين. وضع المستخدم مثل المناطق العامة حيث يمكن للزوار العاديين الوصول للخدمات بأمان دون لمس البنية التحتية الحرجة."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 6,
+          "type": "title",
+          "value": {
+            "en": "Key Components of Windows Architecture",
+            "ar": "المكونات الرئيسية لبنية ويندوز"
+          }
+        },
+        {
+          "id": 7,
+          "type": "text",
+          "value": {
+            "en": "The Windows Kernel is the core of the operating system. It manages fundamental operations like memory allocation, process scheduling, and hardware communication. The Kernel contains the Hardware Abstraction Layer (HAL), which provides a consistent interface between hardware and software. This means programmers can write applications without worrying about specific hardware details. The Executive Services layer sits above the HAL and provides higher-level services like object management, security management, and input/output operations.",
+            "ar": "نواة ويندوز هي قلب نظام التشغيل. تدير العمليات الأساسية مثل تخصيص الذاكرة، جدولة العمليات، والتواصل مع الأجهزة. تحتوي النواة على طبقة تجريد الأجهزة (HAL)، التي توفر واجهة متسقة بين الأجهزة والبرامج. هذا يعني أن المبرمجين يمكنهم كتابة التطبيقات دون القلق بشأن تفاصيل الأجهزة المحددة. تقع طبقة الخدمات التنفيذية فوق HAL وتوفر خدمات عالية المستوى مثل إدارة الكائنات، إدارة الأمان، وعمليات الإدخال/الإخراج."
+          }
+        },
+        {
+          "id": 8,
+          "type": "text",
+          "value": {
+            "en": "Device Drivers are specialized programs that allow Windows to communicate with hardware devices like printers, graphics cards, and network adapters. They run in Kernel Mode because they need direct hardware access. A poorly written driver can cause system crashes or security vulnerabilities. Windows uses a driver signing mechanism to verify that drivers come from trusted sources. System administrators should only install drivers from verified manufacturers to maintain system security and stability.",
+            "ar": "مشغلات الأجهزة هي برامج متخصصة تسمح لويندوز بالتواصل مع أجهزة الأجهزة مثل الطابعات وبطاقات الرسومات ومحولات الشبكة. تعمل في وضع النواة لأنها تحتاج وصولاً مباشراً للأجهزة. مشغل مكتوب بشكل سيء يمكن أن يسبب تعطل النظام أو ثغرات أمنية. يستخدم ويندوز آلية توقيع المشغلات للتحقق من أن المشغلات تأتي من مصادر موثوقة. يجب على مديري الأنظمة تثبيت مشغلات فقط من مصنعين تم التحقق منهم للحفاظ على أمان واستقرار النظام."
+          }
+        },
+        {
+          "id": 1772582510306.5842,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Windows%20Fundamentals/1-2-relationship%20between%20Kernel%20Mode%20and%20User%20Mode.webp"
+        },
+        {
+          "id": 10,
+          "type": "table",
+          "title": {
+            "en": "Kernel Mode vs User Mode Comparison",
+            "ar": "مقارنة بين وضع النواة ووضع المستخدم"
+          },
+          "headers": {
+            "en": [
+              "Aspect",
+              "Kernel Mode",
+              "User Mode"
+            ],
+            "ar": [
+              "الجانب",
+              "وضع النواة",
+              "وضع المستخدم"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "Access Level",
+                "Full access to hardware and memory",
+                "Restricted access through APIs"
+              ],
+              "ar": [
+                "مستوى الوصول",
+                "وصول كامل للأجهزة والذاكرة",
+                "وصول محدود عبر واجهات برمجية"
+              ]
+            },
+            {
+              "en": [
+                "Crash Impact",
+                "System-wide crash (Blue Screen)",
+                "Only the application crashes"
+              ],
+              "ar": [
+                "تأثير التعطل",
+                "تعطل على مستوى النظام (الشاشة الزرقاء)",
+                "فقط التطبيق يتعطل"
+              ]
+            },
+            {
+              "en": [
+                "Components",
+                "Kernel, drivers, HAL",
+                "Applications, user processes"
+              ],
+              "ar": [
+                "المكونات",
+                "النواة، المشغلات، HAL",
+                "التطبيقات، عمليات المستخدم"
+              ]
+            },
+            {
+              "en": [
+                "Security",
+                "Trusted code only",
+                "Untrusted code allowed"
+              ],
+              "ar": [
+                "الأمان",
+                "كود موثوق فقط",
+                "كود غير موثوق مسموح"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 11,
+          "type": "hr"
+        },
+        {
+          "id": 12,
+          "type": "title",
+          "value": {
+            "en": "Windows Registry and System Configuration",
+            "ar": "سجل ويندوز وتكوين النظام"
+          }
+        },
+        {
+          "id": 13,
+          "type": "text",
+          "value": {
+            "en": "The Windows Registry is a centralized database that stores configuration settings and options for the operating system, hardware, software, and user preferences. Every time you change a system setting, install software, or modify user preferences, entries in the Registry are created or updated. The Registry is organized into hierarchical structures called hives. Understanding the Registry is crucial for system administration, troubleshooting, and cybersecurity because malicious software often modifies Registry entries to persist on a system or change security settings.",
+            "ar": "سجل ويندوز هو قاعدة بيانات مركزية تخزن إعدادات التكوين والخيارات لنظام التشغيل والأجهزة والبرامج وتفضيلات المستخدم. في كل مرة تغير فيها إعداد نظام، أو تثبت برنامجاً، أو تعدل تفضيلات المستخدم، يتم إنشاء أو تحديث إدخالات في السجل. السجل منظم في هياكل هرمية تسمى خلايا. فهم السجل أمر حاسم لإدارة الأنظمة، حل المشكلات، والأمن السيبراني لأن البرامج الضارة غالباً ما تعدل إدخالات السجل للبقاء على النظام أو تغيير إعدادات الأمان."
+          }
+        },
+        {
+          "id": 14,
+          "type": "text",
+          "value": {
+            "en": "The Registry contains five main root keys, each serving a specific purpose. HKEY_LOCAL_MACHINE contains configuration information for the entire computer, affecting all users. HKEY_CURRENT_USER stores settings specific to the currently logged-in user. HKEY_CLASSES_ROOT contains file association information and COM object registration. HKEY_USERS holds settings for all user profiles on the computer. HKEY_CURRENT_CONFIG contains information about the current hardware profile. Each key can contain subkeys and values, similar to folders and files in a file system.",
+            "ar": "يحتوي السجل على خمسة مفاتيح جذر رئيسية، كل منها يخدم غرضاً محدداً. HKEY_LOCAL_MACHINE يحتوي على معلومات التكوين للكمبيوتر بأكمله، مؤثراً على جميع المستخدمين. HKEY_CURRENT_USER يخزن إعدادات خاصة بالمستخدم المسجل دخوله حالياً. HKEY_CLASSES_ROOT يحتوي على معلومات ارتباط الملفات وتسجيل كائنات COM. HKEY_USERS يحمل إعدادات لجميع ملفات تعريف المستخدمين على الكمبيوتر. HKEY_CURRENT_CONFIG يحتوي على معلومات حول ملف تعريف الأجهزة الحالي. كل مفتاح يمكن أن يحتوي على مفاتيح فرعية وقيم، مشابه للمجلدات والملفات في نظام الملفات."
+          }
+        },
+        {
+          "id": 15,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "Editing the Registry incorrectly can cause serious system problems. Always create a backup before making changes. Many security attacks involve unauthorized Registry modifications, so monitoring Registry changes is an important security practice.",
+            "ar": "تحرير السجل بشكل غير صحيح يمكن أن يسبب مشاكل نظام خطيرة. دائماً أنشئ نسخة احتياطية قبل إجراء التغييرات. العديد من الهجمات الأمنية تتضمن تعديلات غير مصرح بها على السجل، لذا مراقبة تغييرات السجل ممارسة أمنية مهمة."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 16,
+          "type": "text",
+          "value": {
+            "en": "Windows Services are background programs that run without user interaction. They start automatically when the system boots and continue running even when no user is logged in. Services perform essential system tasks like networking, security updates, hardware monitoring, and print spooling. Administrators can configure services to start automatically, manually, or be disabled. Understanding which services are running is important for security because attackers sometimes install malicious services to maintain persistence. Each service runs under a specific user account context, which determines its permissions and access rights.",
+            "ar": "خدمات ويندوز هي برامج خلفية تعمل دون تفاعل المستخدم. تبدأ تلقائياً عند تشغيل النظام وتستمر في العمل حتى عندما لا يكون أي مستخدم مسجل دخوله. تؤدي الخدمات مهام نظام أساسية مثل الشبكات، تحديثات الأمان، مراقبة الأجهزة، وتخزين الطباعة مؤقتاً. يمكن للمديرين تكوين الخدمات للبدء تلقائياً، يدوياً، أو تعطيلها. فهم الخدمات التي تعمل مهم للأمان لأن المهاجمين أحياناً يثبتون خدمات ضارة للحفاظ على الاستمرارية. كل خدمة تعمل تحت سياق حساب مستخدم محدد، مما يحدد صلاحياتها وحقوق الوصول."
+          }
+        },
+        {
+          "id": 1772582504068.5535,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Windows%20Fundamentals/1-3-system%20boot%20process..webp"
+        },
+        {
+          "id": 18,
+          "type": "list",
+          "title": {
+            "en": "Critical Windows Architecture Security Concepts",
+            "ar": "مفاهيم أمنية حرجة لبنية ويندوز"
+          },
+          "items": {
+            "en": [
+              "Privilege Separation: User Mode protects the system from untrusted application code",
+              "Driver Signing: Ensures only verified drivers can load into Kernel Mode",
+              "Registry Permissions: Control which users and programs can modify system settings",
+              "Service Isolation: Services run under specific accounts with limited permissions",
+              "Memory Protection: Prevents applications from accessing memory belonging to other processes"
+            ],
+            "ar": [
+              "فصل الصلاحيات: وضع المستخدم يحمي النظام من كود التطبيقات غير الموثوق",
+              "توقيع المشغلات: يضمن أن المشغلات المتحقق منها فقط يمكنها التحميل في وضع النواة",
+              "صلاحيات السجل: تتحكم في المستخدمين والبرامج التي يمكنها تعديل إعدادات النظام",
+              "عزل الخدمات: الخدمات تعمل تحت حسابات محددة بصلاحيات محدودة",
+              "حماية الذاكرة: تمنع التطبيقات من الوصول إلى ذاكرة تخص عمليات أخرى"
+            ]
+          }
+        },
+        {
+          "id": 19,
+          "type": "text",
+          "value": {
+            "en": "Windows uses a concept called Process Isolation to prevent one application from interfering with another. Each process runs in its own protected memory space. If one application tries to access memory belonging to another process, Windows blocks this access and may terminate the offending program. This protection is fundamental to system security because it prevents malicious programs from easily stealing data from legitimate applications. Modern Windows versions include additional protections like Address Space Layout Randomization (ASLR) and Data Execution Prevention (DEP) that make it harder for attackers to exploit vulnerabilities.",
+            "ar": "يستخدم ويندوز مفهوماً يسمى عزل العمليات لمنع تطبيق من التداخل مع آخر. كل عملية تعمل في مساحة ذاكرة محمية خاصة بها. إذا حاول تطبيق الوصول إلى ذاكرة تخص عملية أخرى، يحجب ويندوز هذا الوصول وقد ينهي البرنامج المخالف. هذه الحماية أساسية لأمان النظام لأنها تمنع البرامج الضارة من سرقة البيانات بسهولة من التطبيقات الشرعية. تتضمن إصدارات ويندوز الحديثة حماية إضافية مثل عشوائية تخطيط مساحة العنوان (ASLR) ومنع تنفيذ البيانات (DEP) التي تجعل من الصعب على المهاجمين استغلال الثغرات."
+          }
+        },
+        {
+          "id": 20,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Think of Windows architecture like an airport security system. The public areas (User Mode) are accessible to everyone but with restrictions. The secure areas (Kernel Mode) require special clearance. The control tower (Kernel) coordinates everything. Security checkpoints (privilege boundaries) prevent unauthorized access to critical areas.",
+            "ar": "فكر في بنية ويندوز مثل نظام أمن المطار. المناطق العامة (وضع المستخدم) متاحة للجميع ولكن بقيود. المناطق الآمنة (وضع النواة) تتطلب تصريحاً خاصاً. برج المراقبة (النواة) ينسق كل شيء. نقاط التفتيش الأمنية (حدود الصلاحيات) تمنع الوصول غير المصرح به للمناطق الحرجة."
+          },
+          "link": "",
+          "isLab": false
+        }
+      ]
+    },
+    {
+      "id": "topic-2",
+      "title": {
+        "en": "Windows File Systems: NTFS and FAT32",
+        "ar": "أنظمة الملفات في ويندوز: NTFS و FAT32"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "Understanding File Systems and Their Importance",
+            "ar": "فهم أنظمة الملفات وأهميتها"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "A file system is the method an operating system uses to organize, store, and retrieve data on storage devices like hard drives, USB drives, and solid-state drives. The file system determines how data is structured, how filenames are formatted, what metadata is stored, and what security features are available. Windows primarily uses two file systems: NTFS (New Technology File System) for modern installations and FAT32 (File Allocation Table 32) for compatibility with older systems and removable media. Choosing the right file system affects performance, security, file size limits, and compatibility with other devices.",
+            "ar": "نظام الملفات هو الطريقة التي يستخدمها نظام التشغيل لتنظيم وتخزين واسترجاع البيانات على أجهزة التخزين مثل الأقراص الصلبة، محركات USB، ومحركات الحالة الصلبة. يحدد نظام الملفات كيفية هيكلة البيانات، كيفية تنسيق أسماء الملفات، البيانات الوصفية المخزنة، وميزات الأمان المتاحة. يستخدم ويندوز بشكل أساسي نظامي ملفات: NTFS (نظام ملفات التقنية الجديدة) للتثبيتات الحديثة وFAT32 (جدول تخصيص الملفات 32) للتوافق مع الأنظمة القديمة والوسائط القابلة للإزالة. اختيار نظام الملفات الصحيح يؤثر على الأداء والأمان وحدود حجم الملف والتوافق مع الأجهزة الأخرى."
+          }
+        },
+        {
+          "id": 1772582555328.169,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Windows%20Fundamentals/2-1-NTFS%20vs%20FAT32.webp"
+        },
+        {
+          "id": 4,
+          "type": "title",
+          "value": {
+            "en": "NTFS: The Modern Windows File System",
+            "ar": "NTFS: نظام الملفات الحديث لويندوز"
+          }
+        },
+        {
+          "id": 5,
+          "type": "text",
+          "value": {
+            "en": "NTFS is the default file system for modern Windows operating systems, introduced with Windows NT. It offers advanced features that make it suitable for professional and enterprise environments. NTFS supports very large files (up to 16 exabytes theoretically) and very large volumes (disk partitions). More importantly for security, NTFS includes built-in access control lists (ACLs) that allow administrators to set detailed permissions on files and folders. This means you can specify exactly which users can read, write, modify, or delete specific files. NTFS also supports encryption at the file system level through the Encrypting File System (EFS).",
+            "ar": "NTFS هو نظام الملفات الافتراضي لأنظمة التشغيل ويندوز الحديثة، تم تقديمه مع Windows NT. يوفر ميزات متقدمة تجعله مناسباً للبيئات المهنية والمؤسسية. يدعم NTFS ملفات كبيرة جداً (حتى 16 إكسابايت نظرياً) وأحجام كبيرة جداً (أقسام القرص). والأهم للأمان، يتضمن NTFS قوائم التحكم في الوصول (ACLs) المدمجة التي تسمح للمديرين بتعيين صلاحيات مفصلة على الملفات والمجلدات. هذا يعني أنك يمكنك تحديد بالضبط المستخدمين الذين يمكنهم قراءة أو كتابة أو تعديل أو حذف ملفات محددة. يدعم NTFS أيضاً التشفير على مستوى نظام الملفات من خلال نظام الملفات المشفرة (EFS)."
+          }
+        },
+        {
+          "id": 6,
+          "type": "text",
+          "value": {
+            "en": "One critical feature of NTFS is journaling. The NTFS journal is a special log file that records changes before they are actually written to the disk. If the system crashes or loses power during a write operation, Windows can use the journal to recover the file system to a consistent state. This prevents file system corruption that could result in data loss. The journal records metadata changes like file creation, deletion, and permission modifications. This journaling capability makes NTFS much more reliable than older file systems, especially in environments where power failures or system crashes might occur.",
+            "ar": "ميزة حاسمة لـ NTFS هي التسجيل اليومي. سجل NTFS هو ملف سجل خاص يسجل التغييرات قبل كتابتها فعلياً على القرص. إذا تعطل النظام أو فقد الطاقة أثناء عملية كتابة، يمكن لويندوز استخدام السجل لاستعادة نظام الملفات إلى حالة متسقة. هذا يمنع تلف نظام الملفات الذي قد يؤدي إلى فقدان البيانات. يسجل السجل تغييرات البيانات الوصفية مثل إنشاء الملفات والحذف وتعديلات الصلاحيات. هذه القدرة على التسجيل اليومي تجعل NTFS أكثر موثوقية بكثير من أنظمة الملفات القديمة، خاصة في البيئات حيث قد تحدث فشل في الطاقة أو تعطل النظام."
+          }
+        },
+        {
+          "id": 7,
+          "type": "list",
+          "title": {
+            "en": "Key NTFS Security and Management Features",
+            "ar": "ميزات أمان وإدارة NTFS الرئيسية"
+          },
+          "items": {
+            "en": [
+              "Access Control Lists (ACLs): Define precise permissions for users and groups",
+              "Encrypting File System (EFS): Encrypt individual files and folders",
+              "Disk Quotas: Limit the amount of disk space users can consume",
+              "Compression: Reduce file size transparently without losing data",
+              "File and Folder Auditing: Track who accesses or modifies files",
+              "Volume Shadow Copy: Create automatic backup snapshots for recovery"
+            ],
+            "ar": [
+              "قوائم التحكم في الوصول (ACLs): تحدد صلاحيات دقيقة للمستخدمين والمجموعات",
+              "نظام الملفات المشفرة (EFS): تشفير الملفات والمجلدات الفردية",
+              "حصص القرص: تحديد مقدار مساحة القرص التي يمكن للمستخدمين استهلاكها",
+              "الضغط: تقليل حجم الملف بشفافية دون فقدان البيانات",
+              "مراجعة الملفات والمجلدات: تتبع من يصل أو يعدل الملفات",
+              "نسخ ظل الحجم: إنشاء لقطات نسخ احتياطي تلقائية للاستعادة"
+            ]
+          }
+        },
+        {
+          "id": 1772582573090.8496,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Windows%20Fundamentals/2-2-NTFS%20Security%20and%20Management%20Features.webp"
+        },
+        {
+          "id": 9,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "NTFS permissions are cumulative. If a user belongs to multiple groups with different permissions, the most permissive combination applies. However, Deny permissions always override Allow permissions. This is important for security planning.",
+            "ar": "صلاحيات NTFS تراكمية. إذا كان المستخدم ينتمي إلى مجموعات متعددة بصلاحيات مختلفة، تطبق التركيبة الأكثر تساهلاً. ومع ذلك، صلاحيات الرفض دائماً تتجاوز صلاحيات السماح. هذا مهم للتخطيط الأمني."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 10,
+          "type": "hr"
+        },
+        {
+          "id": 11,
+          "type": "title",
+          "value": {
+            "en": "FAT32: Legacy File System for Compatibility",
+            "ar": "FAT32: نظام الملفات القديم للتوافق"
+          }
+        },
+        {
+          "id": 12,
+          "type": "text",
+          "value": {
+            "en": "FAT32 is an older file system that stands for File Allocation Table with 32-bit addressing. It was introduced with Windows 95 and remains widely used for removable media like USB flash drives, SD cards, and external hard drives. The main advantage of FAT32 is its universal compatibility. Almost every operating system and device (computers, cameras, game consoles, TVs) can read and write FAT32. However, FAT32 has significant limitations that make it unsuitable for modern system drives. The maximum file size is 4 GB, meaning you cannot store a single file larger than 4 GB on a FAT32 volume. The maximum volume size is 32 GB when formatted by Windows, though the file system technically supports larger volumes.",
+            "ar": "FAT32 هو نظام ملفات أقدم يرمز إلى جدول تخصيص الملفات بمعالجة 32 بت. تم تقديمه مع Windows 95 ولا يزال يستخدم على نطاق واسع للوسائط القابلة للإزالة مثل محركات USB المحمولة، بطاقات SD، والأقراص الصلبة الخارجية. الميزة الرئيسية لـ FAT32 هي توافقه العالمي. تقريباً كل نظام تشغيل وجهاز (الكمبيوترات، الكاميرات، أجهزة الألعاب، أجهزة التلفاز) يمكنه قراءة وكتابة FAT32. ومع ذلك، لدى FAT32 قيود كبيرة تجعله غير مناسب لمحركات النظام الحديثة. الحد الأقصى لحجم الملف هو 4 جيجابايت، مما يعني أنك لا يمكنك تخزين ملف واحد أكبر من 4 جيجابايت على حجم FAT32. الحد الأقصى لحجم الحجم هو 32 جيجابايت عند التنسيق بواسطة ويندوز، رغم أن نظام الملفات يدعم تقنياً أحجاماً أكبر."
+          }
+        },
+        {
+          "id": 13,
+          "type": "text",
+          "value": {
+            "en": "From a security perspective, FAT32 is fundamentally limited. It does not support file-level permissions or access control lists. Any user who can access the drive can read, modify, or delete any file on it. FAT32 does not support encryption at the file system level. It also lacks journaling, making it more susceptible to corruption if power is lost during a write operation. For these reasons, FAT32 should never be used for system drives or for storing sensitive data that requires protection. Its primary use today is for removable media where compatibility across many devices is more important than advanced features or security.",
+            "ar": "من منظور أمني، FAT32 محدود بشكل أساسي. لا يدعم صلاحيات على مستوى الملف أو قوائم التحكم في الوصول. أي مستخدم يمكنه الوصول إلى المحرك يمكنه قراءة أو تعديل أو حذف أي ملف عليه. لا يدعم FAT32 التشفير على مستوى نظام الملفات. كما يفتقر إلى التسجيل اليومي، مما يجعله أكثر عرضة للتلف إذا فقدت الطاقة أثناء عملية كتابة. لهذه الأسباب، يجب عدم استخدام FAT32 أبداً لمحركات النظام أو لتخزين بيانات حساسة تتطلب حماية. استخدامه الأساسي اليوم هو للوسائط القابلة للإزالة حيث التوافق عبر العديد من الأجهزة أكثر أهمية من الميزات المتقدمة أو الأمان."
+          }
+        },
+        {
+          "id": 14,
+          "type": "table",
+          "title": {
+            "en": "NTFS vs FAT32 Feature Comparison",
+            "ar": "مقارنة ميزات NTFS مقابل FAT32"
+          },
+          "headers": {
+            "en": [
+              "Feature",
+              "NTFS",
+              "FAT32"
+            ],
+            "ar": [
+              "الميزة",
+              "NTFS",
+              "FAT32"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "Maximum File Size",
+                "16 Exabytes (practically unlimited)",
+                "4 GB"
+              ],
+              "ar": [
+                "الحد الأقصى لحجم الملف",
+                "16 إكسابايت (عملياً غير محدود)",
+                "4 جيجابايت"
+              ]
+            },
+            {
+              "en": [
+                "Maximum Volume Size",
+                "256 Terabytes",
+                "32 GB (Windows format limit)"
+              ],
+              "ar": [
+                "الحد الأقصى لحجم الحجم",
+                "256 تيرابايت",
+                "32 جيجابايت (حد تنسيق ويندوز)"
+              ]
+            },
+            {
+              "en": [
+                "File Permissions",
+                "Yes (ACLs)",
+                "No"
+              ],
+              "ar": [
+                "صلاحيات الملفات",
+                "نعم (ACLs)",
+                "لا"
+              ]
+            },
+            {
+              "en": [
+                "Encryption Support",
+                "Yes (EFS)",
+                "No"
+              ],
+              "ar": [
+                "دعم التشفير",
+                "نعم (EFS)",
+                "لا"
+              ]
+            },
+            {
+              "en": [
+                "Journaling",
+                "Yes",
+                "No"
+              ],
+              "ar": [
+                "التسجيل اليومي",
+                "نعم",
+                "لا"
+              ]
+            },
+            {
+              "en": [
+                "Compression",
+                "Yes",
+                "No"
+              ],
+              "ar": [
+                "الضغط",
+                "نعم",
+                "لا"
+              ]
+            },
+            {
+              "en": [
+                "Cross-Platform Support",
+                "Limited (mainly Windows)",
+                "Excellent (all platforms)"
+              ],
+              "ar": [
+                "دعم متعدد المنصات",
+                "محدود (بشكل رئيسي ويندوز)",
+                "ممتاز (جميع المنصات)"
+              ]
+            },
+            {
+              "en": [
+                "Best Use Case",
+                "System drives, large files, security",
+                "USB drives, memory cards, compatibility"
+              ],
+              "ar": [
+                "أفضل حالة استخدام",
+                "محركات النظام، ملفات كبيرة، أمان",
+                "محركات USB، بطاقات الذاكرة، التوافق"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 15,
+          "type": "text",
+          "value": {
+            "en": "Understanding file system structure helps in data recovery and forensic analysis. Both NTFS and FAT32 organize data using clusters, which are groups of sectors on the disk. When you delete a file, the file system typically just marks the space as available rather than actually erasing the data immediately. This is why deleted files can often be recovered using specialized software. On NTFS, the Master File Table (MFT) is a special file that contains records for every file and folder on the volume. On FAT32, the File Allocation Table serves a similar purpose, keeping track of which clusters belong to which files.",
+            "ar": "فهم هيكل نظام الملفات يساعد في استعادة البيانات والتحليل الجنائي. كل من NTFS وFAT32 ينظمان البيانات باستخدام مجموعات، وهي مجموعات من القطاعات على القرص. عند حذف ملف، نظام الملفات عادة فقط يحدد المساحة كمتاحة بدلاً من مسح البيانات فعلياً على الفور. لهذا السبب يمكن غالباً استعادة الملفات المحذوفة باستخدام برامج متخصصة. على NTFS، جدول الملفات الرئيسي (MFT) هو ملف خاص يحتوي على سجلات لكل ملف ومجلد على الحجم. على FAT32، جدول تخصيص الملفات يخدم غرضاً مشابهاً، متتبعاً المجموعات التي تنتمي لأي ملفات."
+          }
+        },
+        {
+          "id": 16,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "When disposing of storage devices, simply deleting files or formatting is not enough to permanently erase data. Sensitive data should be securely wiped using specialized tools that overwrite the entire disk multiple times. This prevents data recovery by unauthorized parties.",
+            "ar": "عند التخلص من أجهزة التخزين، مجرد حذف الملفات أو التنسيق ليس كافياً لمسح البيانات بشكل دائم. يجب مسح البيانات الحساسة بأمان باستخدام أدوات متخصصة تستبدل القرص بأكمله عدة مرات. هذا يمنع استعادة البيانات من قبل أطراف غير مصرح بها."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 1772582566546.9253,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Windows%20Fundamentals/2-3-choose%20the%20right%20file%20system.webp"
+        },
+        {
+          "id": 18,
+          "type": "orderedList",
+          "title": {
+            "en": "How to Check Your File System Type",
+            "ar": "كيفية التحقق من نوع نظام الملفات"
+          },
+          "items": [
+            {
+              "subtitle": {
+                "en": "Open File Explorer",
+                "ar": "افتح مستكشف الملفات"
+              },
+              "text": {
+                "en": "Click on the folder icon in your taskbar or press Windows key plus E on your keyboard. This opens Windows File Explorer where you can see all your drives.",
+                "ar": "انقر على أيقونة المجلد في شريط المهام أو اضغط على مفتاح Windows بالإضافة إلى E على لوحة المفاتيح. هذا يفتح مستكشف ملفات ويندوز حيث يمكنك رؤية جميع محركاتك."
+              },
+              "example": {
+                "en": "Example: Press Win+E simultaneously",
+                "ar": "مثال: اضغط Win+E في وقت واحد"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Select This PC or Computer",
+                "ar": "حدد هذا الكمبيوتر أو Computer"
+              },
+              "text": {
+                "en": "In the left sidebar of File Explorer, click on This PC to view all connected drives including your hard drive, USB drives, and other storage devices.",
+                "ar": "في الشريط الجانبي الأيسر لمستكشف الملفات، انقر على هذا الكمبيوتر لعرض جميع المحركات المتصلة بما في ذلك القرص الصلب، محركات USB، وأجهزة التخزين الأخرى."
+              },
+              "example": {
+                "en": "Example: Look for an icon labeled 'This PC' with a computer symbol",
+                "ar": "مثال: ابحث عن أيقونة معنونة 'هذا الكمبيوتر' برمز كمبيوتر"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Right-click on Drive and Select Properties",
+                "ar": "انقر بزر الماوس الأيمن على المحرك وحدد خصائص"
+              },
+              "text": {
+                "en": "Right-click on any drive you want to check. From the menu that appears, select Properties at the bottom. A new window opens showing detailed information about that drive.",
+                "ar": "انقر بزر الماوس الأيمن على أي محرك تريد التحقق منه. من القائمة التي تظهر، حدد خصائص في الأسفل. تفتح نافذة جديدة تعرض معلومات مفصلة حول ذلك المحرك."
+              },
+              "example": {
+                "en": "Example: Right-click C: drive then click Properties",
+                "ar": "مثال: انقر بزر الماوس الأيمن على محرك C: ثم انقر خصائص"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "View File System Information",
+                "ar": "عرض معلومات نظام الملفات"
+              },
+              "text": {
+                "en": "In the Properties window, look for a line labeled File system. This shows whether the drive uses NTFS, FAT32, or another file system. You will also see total capacity, used space, and free space.",
+                "ar": "في نافذة الخصائص، ابحث عن سطر معنون نظام الملفات. هذا يظهر ما إذا كان المحرك يستخدم NTFS أو FAT32 أو نظام ملفات آخر. سترى أيضاً السعة الكلية والمساحة المستخدمة والمساحة الحرة."
+              },
+              "example": {
+                "en": "Example: File system: NTFS or File system: FAT32",
+                "ar": "مثال: نظام الملفات: NTFS أو نظام الملفات: FAT32"
+              }
+            }
+          ]
+        },
+        {
+          "id": 19,
+          "type": "text",
+          "value": {
+            "en": "Modern Windows installations also support exFAT, which is a newer version designed to replace FAT32 for flash memory storage. exFAT removes the 4 GB file size limit and supports much larger volumes. However, like FAT32, it still lacks the security features and journaling found in NTFS. exFAT is commonly used for SDXC memory cards and large USB flash drives where compatibility is needed but files larger than 4 GB must be supported. For cybersecurity professionals, understanding these differences helps in forensic investigations, secure data handling, and proper system configuration.",
+            "ar": "تدعم تثبيتات ويندوز الحديثة أيضاً exFAT، وهو إصدار أحدث مصمم ليحل محل FAT32 لتخزين ذاكرة الفلاش. يزيل exFAT حد حجم الملف 4 جيجابايت ويدعم أحجاماً أكبر بكثير. ومع ذلك، مثل FAT32، لا يزال يفتقر إلى ميزات الأمان والتسجيل اليومي الموجودة في NTFS. يُستخدم exFAT بشكل شائع لبطاقات ذاكرة SDXC ومحركات USB الكبيرة حيث التوافق مطلوب ولكن يجب دعم ملفات أكبر من 4 جيجابايت. لمحترفي الأمن السيبراني، فهم هذه الفروق يساعد في التحقيقات الجنائية، التعامل الآمن مع البيانات، والتكوين الصحيح للنظام."
+          }
+        },
+        {
+          "id": 20,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Think of file systems like different types of storage buildings. NTFS is a modern secure bank vault with individual safe deposit boxes, detailed access logs, and backup systems. FAT32 is a simple open warehouse where anyone can access anything, suitable when you need to share items quickly with many different people without complex security.",
+            "ar": "فكر في أنظمة الملفات مثل أنواع مختلفة من مباني التخزين. NTFS هو قبو بنك آمن حديث بصناديق ودائع آمنة فردية، سجلات وصول مفصلة، وأنظمة نسخ احتياطي. FAT32 هو مستودع مفتوح بسيط حيث يمكن لأي شخص الوصول لأي شيء، مناسب عندما تحتاج لمشاركة العناصر بسرعة مع العديد من الأشخاص المختلفين دون أمان معقد."
+          },
+          "link": "",
+          "isLab": false
+        }
+      ]
+    },
+    {
+      "id": "topic-3",
+      "title": {
+        "en": "Command Prompt and PowerShell: Windows Command-Line Tools",
+        "ar": "موجه الأوامر وPowerShell: أدوات سطر الأوامر في ويندوز"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "Introduction to Command-Line Interfaces",
+            "ar": "مقدمة لواجهات سطر الأوامر"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "A command-line interface (CLI) is a text-based way to interact with your computer by typing commands instead of clicking icons and menus. Windows provides two primary command-line tools: Command Prompt (cmd.exe) and PowerShell. These tools allow you to perform administrative tasks, automate repetitive operations, troubleshoot problems, and access system features that might not be available through the graphical interface. For cybersecurity professionals, command-line skills are essential because many security tools and diagnostic utilities are command-line based. Understanding these tools enables faster system analysis, remote administration, and scripting of security tasks.",
+            "ar": "واجهة سطر الأوامر (CLI) هي طريقة نصية للتفاعل مع الكمبيوتر بكتابة الأوامر بدلاً من النقر على الأيقونات والقوائم. يوفر ويندوز أداتين رئيسيتين لسطر الأوامر: موجه الأوامر (cmd.exe) وPowerShell. تسمح لك هذه الأدوات بأداء مهام إدارية، أتمتة العمليات المتكررة، حل مشكلات، والوصول لميزات النظام التي قد لا تكون متاحة عبر الواجهة الرسومية. لمحترفي الأمن السيبراني، مهارات سطر الأوامر أساسية لأن العديد من أدوات الأمان والمرافق التشخيصية تعتمد على سطر الأوامر. فهم هذه الأدوات يمكّن من تحليل النظام بشكل أسرع، الإدارة عن بعد، وكتابة نصوص لمهام الأمان."
+          }
+        },
+        {
+          "id": 1772582617011.9062,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Windows%20Fundamentals/3-1-Command%20Prompt%20and%20PowerShell.webp"
+        },
+        {
+          "id": 4,
+          "type": "text",
+          "value": {
+            "en": "Command Prompt is the older command-line interface that has existed since the early days of Windows. It is based on DOS (Disk Operating System) commands and provides access to many system utilities. Command Prompt processes commands as simple text strings. It executes programs, batch files, and system utilities. While powerful for basic tasks, Command Prompt has limitations when dealing with complex data manipulation or system automation. PowerShell is the modern replacement for Command Prompt, introduced with Windows Vista but significantly improved in later versions. PowerShell is not just a command interpreter but a complete scripting language and automation framework built on .NET Framework.",
+            "ar": "موجه الأوامر هو واجهة سطر الأوامر القديمة التي كانت موجودة منذ الأيام الأولى لويندوز. يعتمد على أوامر DOS (نظام التشغيل القرصي) ويوفر الوصول للعديد من مرافق النظام. يعالج موجه الأوامر الأوامر كسلاسل نصية بسيطة. ينفذ البرامج، ملفات الدفعة، ومرافق النظام. بينما قوي للمهام الأساسية، موجه الأوامر له قيود عند التعامل مع معالجة البيانات المعقدة أو أتمتة النظام. PowerShell هو البديل الحديث لموجه الأوامر، تم تقديمه مع Windows Vista ولكن تم تحسينه بشكل كبير في الإصدارات اللاحقة. PowerShell ليس مجرد مفسر أوامر ولكنه لغة برمجة نصية كاملة وإطار عمل أتمتة مبني على .NET Framework."
+          }
+        },
+        {
+          "id": 5,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "To open Command Prompt: Press Windows key plus R, type cmd, and press Enter. To open PowerShell: Press Windows key plus X and select Windows PowerShell or Windows Terminal from the menu. You may need administrator privileges for certain commands.",
+            "ar": "لفتح موجه الأوامر: اضغط على مفتاح Windows بالإضافة إلى R، اكتب cmd، واضغط Enter. لفتح PowerShell: اضغط على مفتاح Windows بالإضافة إلى X وحدد Windows PowerShell أو Windows Terminal من القائمة. قد تحتاج صلاحيات مدير لأوامر معينة."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 6,
+          "type": "title",
+          "value": {
+            "en": "Essential Command Prompt Commands for System Management",
+            "ar": "أوامر موجه الأوامر الأساسية لإدارة النظام"
+          }
+        },
+        {
+          "id": 7,
+          "type": "text",
+          "value": {
+            "en": "Learning fundamental Command Prompt commands helps you navigate the system, manage files, and diagnose network problems. The 'dir' command lists files and folders in the current directory, similar to viewing folder contents in File Explorer. The 'cd' (change directory) command allows you to move between folders. For example, 'cd Documents' moves into the Documents folder. The 'mkdir' command creates new directories, while 'rmdir' removes empty directories. The 'del' command deletes files. These basic navigation and file management commands form the foundation for more advanced operations.",
+            "ar": "تعلم أوامر موجه الأوامر الأساسية يساعدك على التنقل في النظام، إدارة الملفات، وتشخيص مشاكل الشبكة. أمر 'dir' يسرد الملفات والمجلدات في الدليل الحالي، مشابه لعرض محتويات المجلد في مستكشف الملفات. أمر 'cd' (تغيير الدليل) يسمح لك بالتنقل بين المجلدات. على سبيل المثال، 'cd Documents' ينتقل إلى مجلد المستندات. أمر 'mkdir' ينشئ أدلة جديدة، بينما 'rmdir' يزيل الأدلة الفارغة. أمر 'del' يحذف الملفات. هذه الأوامر الأساسية للتنقل وإدارة الملفات تشكل الأساس لعمليات أكثر تقدماً."
+          }
+        },
+        {
+          "id": 8,
+          "type": "terminal",
+          "label": {
+            "en": "Basic Command Prompt Navigation",
+            "ar": "التنقل الأساسي في موجه الأوامر"
+          },
+          "value": "C:\\Users\\Student> dir\nVolume in drive C is Windows\nDirectory of C:\\Users\\Student\n\n01/15/2024  02:30 PM    <DIR>          Documents\n01/15/2024  03:45 PM    <DIR>          Downloads\n01/20/2024  10:15 AM             2,048 report.txt\n\nC:\\Users\\Student> cd Documents\nC:\\Users\\Student\\Documents>"
+        },
+        {
+          "id": 9,
+          "type": "text",
+          "value": {
+            "en": "Network diagnostic commands are crucial for cybersecurity work. The 'ipconfig' command displays your network configuration including IP address, subnet mask, and default gateway. Adding '/all' provides detailed information including MAC address and DNS servers. The 'ping' command tests network connectivity by sending packets to a target address and measuring response time. For example, 'ping google.com' checks if you can reach Google's servers. The 'tracert' (trace route) command shows the path packets take through the network to reach a destination, revealing each router hop along the way. The 'netstat' command displays active network connections and listening ports, useful for detecting unauthorized network activity.",
+            "ar": "أوامر تشخيص الشبكة حاسمة لعمل الأمن السيبراني. أمر 'ipconfig' يعرض تكوين شبكتك بما في ذلك عنوان IP، قناع الشبكة الفرعية، والبوابة الافتراضية. إضافة '/all' توفر معلومات مفصلة بما في ذلك عنوان MAC وخوادم DNS. أمر 'ping' يختبر اتصال الشبكة بإرسال حزم إلى عنوان هدف وقياس وقت الاستجابة. على سبيل المثال، 'ping google.com' يتحقق إذا كان يمكنك الوصول لخوادم جوجل. أمر 'tracert' (تتبع المسار) يظهر المسار الذي تأخذه الحزم عبر الشبكة للوصول لوجهة، كاشفاً كل قفزة موجه على الطريق. أمر 'netstat' يعرض اتصالات الشبكة النشطة والمنافذ المستمعة، مفيد لكشف نشاط الشبكة غير المصرح به."
+          }
+        },
+        {
+          "id": 10,
+          "type": "terminal",
+          "label": {
+            "en": "Network Diagnostics Example",
+            "ar": "مثال تشخيص الشبكة"
+          },
+          "value": "C:\\Users\\Student> ipconfig\n\nEthernet adapter Ethernet:\n   IPv4 Address. . . . . . . : 192.168.1.100\n   Subnet Mask . . . . . . . : 255.255.255.0\n   Default Gateway . . . . . : 192.168.1.1\n\nC:\\Users\\Student> ping 8.8.8.8\n\nPinging 8.8.8.8 with 32 bytes of data:\nReply from 8.8.8.8: bytes=32 time=15ms TTL=117\nReply from 8.8.8.8: bytes=32 time=14ms TTL=117"
+        },
+        {
+          "id": 1772582631796.5054,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Windows%20Fundamentals/3-2-network%20troubleshooting%20workflow.webp"
+        },
+        {
+          "id": 12,
+          "type": "list",
+          "title": {
+            "en": "Important Command Prompt Commands for Security",
+            "ar": "أوامر موجه الأوامر المهمة للأمان"
+          },
+          "items": {
+            "en": [
+              "sfc /scannow: Scans and repairs corrupted system files",
+              "chkdsk: Checks disk for errors and bad sectors",
+              "tasklist: Lists all running processes (useful for detecting malware)",
+              "taskkill: Terminates a running process by name or process ID",
+              "netsh: Configures network settings including firewall rules",
+              "systeminfo: Displays detailed system configuration information"
+            ],
+            "ar": [
+              "sfc /scannow: يفحص ويصلح ملفات النظام التالفة",
+              "chkdsk: يتحقق من القرص للأخطاء والقطاعات السيئة",
+              "tasklist: يسرد جميع العمليات الجارية (مفيد لكشف البرامج الضارة)",
+              "taskkill: ينهي عملية جارية بالاسم أو معرف العملية",
+              "netsh: يكوّن إعدادات الشبكة بما في ذلك قواعد جدار الحماية",
+              "systeminfo: يعرض معلومات تكوين النظام المفصلة"
+            ]
+          }
+        },
+        {
+          "id": 13,
+          "type": "hr"
+        },
+        {
+          "id": 14,
+          "type": "title",
+          "value": {
+            "en": "PowerShell: Advanced Automation and Scripting",
+            "ar": "PowerShell: الأتمتة والبرمجة النصية المتقدمة"
+          }
+        },
+        {
+          "id": 15,
+          "type": "text",
+          "value": {
+            "en": "PowerShell represents a fundamental shift in how Windows administration works. Unlike Command Prompt which processes text, PowerShell works with objects. An object is a structured piece of data with properties (characteristics) and methods (actions). When you run a PowerShell command, you receive objects that you can manipulate, filter, sort, and pass to other commands. This object-oriented approach makes PowerShell extremely powerful for complex tasks. PowerShell commands are called cmdlets (pronounced 'command-lets') and follow a consistent Verb-Noun naming pattern like Get-Process, Stop-Service, or Set-ExecutionPolicy. This naming convention makes commands predictable and easy to understand.",
+            "ar": "PowerShell يمثل تحولاً أساسياً في كيفية عمل إدارة ويندوز. على عكس موجه الأوامر الذي يعالج النص، يعمل PowerShell مع الكائنات. الكائن هو جزء منظم من البيانات بخصائص (مميزات) وطرق (إجراءات). عندما تشغل أمر PowerShell، تتلقى كائنات يمكنك معالجتها وتصفيتها وفرزها وتمريرها لأوامر أخرى. هذا النهج الموجه نحو الكائنات يجعل PowerShell قوياً للغاية للمهام المعقدة. تسمى أوامر PowerShell cmdlets (تنطق 'command-lets') وتتبع نمط تسمية فعل-اسم متسق مثل Get-Process، Stop-Service، أو Set-ExecutionPolicy. هذا الاتفاقية التسمية تجعل الأوامر قابلة للتنبؤ وسهلة الفهم."
+          }
+        },
+        {
+          "id": 16,
+          "type": "text",
+          "value": {
+            "en": "The pipeline is one of PowerShell's most powerful features. The pipeline character (|) allows you to take the output of one cmdlet and send it as input to another cmdlet. For example, 'Get-Process | Where-Object {$_.CPU -gt 100} | Stop-Process' gets all processes, filters for those using more than 100 units of CPU time, and stops them. This chaining capability enables you to build complex operations from simple building blocks. PowerShell also includes powerful filtering with 'Where-Object', sorting with 'Sort-Object', and formatting with 'Format-Table' and 'Format-List'. These tools let you precisely manipulate data without writing complex code.",
+            "ar": "الأنابيب هي واحدة من أقوى ميزات PowerShell. حرف الأنبوب (|) يسمح لك بأخذ مخرجات cmdlet واحد وإرسالها كمدخل لـ cmdlet آخر. على سبيل المثال، 'Get-Process | Where-Object {$_.CPU -gt 100} | Stop-Process' يحصل على جميع العمليات، يصفي لتلك التي تستخدم أكثر من 100 وحدة من وقت CPU، ويوقفها. هذه القدرة على التسلسل تمكنك من بناء عمليات معقدة من كتل بناء بسيطة. يتضمن PowerShell أيضاً تصفية قوية مع 'Where-Object'، فرز مع 'Sort-Object'، وتنسيق مع 'Format-Table' و'Format-List'. هذه الأدوات تتيح لك معالجة البيانات بدقة دون كتابة كود معقد."
+          }
+        },
+        {
+          "id": 17,
+          "type": "terminal",
+          "label": {
+            "en": "PowerShell Pipeline Example",
+            "ar": "مثال أنبوب PowerShell"
+          },
+          "value": "PS C:\\Users\\Student> Get-Process | Where-Object {$_.WorkingSet -gt 100MB} | Sort-Object WorkingSet -Descending | Select-Object -First 5 Name, WorkingSet\n\nName                 WorkingSet\n----                 ----------\nchrome               524288000\nfirefox              314572800\ncode                 209715200\noutlook              157286400\nteams                104857600"
+        },
+        {
+          "id": 18,
+          "type": "text",
+          "value": {
+            "en": "PowerShell includes a comprehensive help system. The 'Get-Help' cmdlet displays documentation for any cmdlet. For example, 'Get-Help Get-Process' shows how to use the Get-Process cmdlet. Adding '-Examples' shows practical examples, while '-Detailed' provides complete documentation including parameter descriptions. The 'Get-Command' cmdlet lists all available cmdlets, functions, and aliases. If you want to find cmdlets related to a specific task, use wildcards: 'Get-Command *network*' finds all commands with 'network' in their name. PowerShell also supports aliases for common commands. For instance, 'dir' and 'ls' both run the Get-ChildItem cmdlet, providing compatibility with Command Prompt and Linux users.",
+            "ar": "يتضمن PowerShell نظام مساعدة شامل. cmdlet 'Get-Help' يعرض وثائق لأي cmdlet. على سبيل المثال، 'Get-Help Get-Process' يظهر كيفية استخدام cmdlet Get-Process. إضافة '-Examples' يظهر أمثلة عملية، بينما '-Detailed' يوفر وثائق كاملة بما في ذلك وصف المعلمات. cmdlet 'Get-Command' يسرد جميع cmdlets والوظائف والأسماء المستعارة المتاحة. إذا كنت تريد العثور على cmdlets متعلقة بمهمة محددة، استخدم أحرف البدل: 'Get-Command *network*' يجد جميع الأوامر بـ 'network' في اسمها. يدعم PowerShell أيضاً أسماء مستعارة للأوامر الشائعة. على سبيل المثال، 'dir' و'ls' كلاهما يشغلان cmdlet Get-ChildItem، موفرين توافقاً مع موجه الأوامر ومستخدمي Linux."
+          }
+        },
+        {
+          "id": 19,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "PowerShell has an execution policy that controls which scripts can run to prevent malicious code execution. By default, scripts are blocked. To run scripts, administrators can change the execution policy using Set-ExecutionPolicy. Always verify script sources before changing this security setting.",
+            "ar": "لدى PowerShell سياسة تنفيذ تتحكم في النصوص التي يمكن تشغيلها لمنع تنفيذ الكود الضار. افتراضياً، النصوص محظورة. لتشغيل النصوص، يمكن للمديرين تغيير سياسة التنفيذ باستخدام Set-ExecutionPolicy. تحقق دائماً من مصادر النصوص قبل تغيير هذا الإعداد الأمني."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 1772582625788.479,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Windows%20Fundamentals/3-3-Command%20Prompt%20and%20PowerShell.webp"
+        },
+        {
+          "id": 21,
+          "type": "orderedList",
+          "title": {
+            "en": "Essential PowerShell Cmdlets for Cybersecurity",
+            "ar": "Cmdlets PowerShell الأساسية للأمن السيبراني"
+          },
+          "items": [
+            {
+              "subtitle": {
+                "en": "Get-Process: Monitor Running Processes",
+                "ar": "Get-Process: مراقبة العمليات الجارية"
+              },
+              "text": {
+                "en": "Retrieves information about all processes running on the system. You can filter by process name, CPU usage, or memory consumption to identify suspicious processes consuming unusual resources.",
+                "ar": "يسترجع معلومات حول جميع العمليات الجارية على النظام. يمكنك التصفية حسب اسم العملية، استخدام CPU، أو استهلاك الذاكرة لتحديد العمليات المشبوهة التي تستهلك موارد غير عادية."
+              },
+              "example": {
+                "en": "Example: Get-Process | Where-Object {$_.CPU -gt 50}",
+                "ar": "مثال: Get-Process | Where-Object {$_.CPU -gt 50}"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Get-EventLog: Review Security Events",
+                "ar": "Get-EventLog: مراجعة أحداث الأمان"
+              },
+              "text": {
+                "en": "Accesses Windows Event Logs to review system, security, and application events. Critical for detecting failed login attempts, privilege escalations, or unusual system behavior.",
+                "ar": "يصل إلى سجلات أحداث ويندوز لمراجعة أحداث النظام والأمان والتطبيقات. حاسم لكشف محاولات تسجيل الدخول الفاشلة، تصعيد الصلاحيات، أو سلوك النظام غير العادي."
+              },
+              "example": {
+                "en": "Example: Get-EventLog -LogName Security -Newest 100",
+                "ar": "مثال: Get-EventLog -LogName Security -Newest 100"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Get-NetTCPConnection: Check Network Connections",
+                "ar": "Get-NetTCPConnection: فحص اتصالات الشبكة"
+              },
+              "text": {
+                "en": "Displays active TCP connections including local and remote addresses, ports, and connection states. Essential for identifying unauthorized network connections or data exfiltration attempts.",
+                "ar": "يعرض اتصالات TCP النشطة بما في ذلك العناوين المحلية والبعيدة، المنافذ، وحالات الاتصال. أساسي لتحديد اتصالات الشبكة غير المصرح بها أو محاولات تسريب البيانات."
+              },
+              "example": {
+                "en": "Example: Get-NetTCPConnection -State Established",
+                "ar": "مثال: Get-NetTCPConnection -State Established"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Get-LocalUser and Get-LocalGroup: Audit Accounts",
+                "ar": "Get-LocalUser و Get-LocalGroup: مراجعة الحسابات"
+              },
+              "text": {
+                "en": "Lists all user accounts and groups on the local system. Important for verifying that no unauthorized accounts exist and that group memberships follow security policies.",
+                "ar": "يسرد جميع حسابات المستخدمين والمجموعات على النظام المحلي. مهم للتحقق من عدم وجود حسابات غير مصرح بها وأن عضويات المجموعات تتبع سياسات الأمان."
+              },
+              "example": {
+                "en": "Example: Get-LocalUser | Where-Object {$_.Enabled -eq $true}",
+                "ar": "مثال: Get-LocalUser | Where-Object {$_.Enabled -eq $true}"
+              }
+            }
+          ]
+        },
+        {
+          "id": 22,
+          "type": "text",
+          "value": {
+            "en": "PowerShell scripting enables automation of repetitive security tasks. Scripts are saved with a .ps1 extension and can contain complex logic including loops, conditional statements, and functions. For example, you could write a script that checks all user accounts for password expiration dates, generates a report, and emails it to administrators. PowerShell Remoting allows you to run commands on remote computers, essential for managing multiple systems from a central location. Security professionals use PowerShell for tasks like automated vulnerability scanning, log collection, compliance checking, and incident response. Mastering PowerShell significantly increases efficiency in managing and securing Windows environments.",
+            "ar": "برمجة PowerShell النصية تمكّن أتمتة مهام الأمان المتكررة. النصوص محفوظة بامتداد .ps1 ويمكن أن تحتوي على منطق معقد بما في ذلك الحلقات، العبارات الشرطية، والوظائف. على سبيل المثال، يمكنك كتابة نص يتحقق من جميع حسابات المستخدمين لتواريخ انتهاء صلاحية كلمة المرور، يولد تقريراً، ويرسله بالبريد الإلكتروني للمديرين. PowerShell Remoting يسمح لك بتشغيل أوامر على أجهزة الكمبيوتر البعيدة، أساسي لإدارة أنظمة متعددة من موقع مركزي. يستخدم محترفو الأمان PowerShell لمهام مثل فحص الثغرات الآلي، جمع السجلات، فحص الامتثال، والاستجابة للحوادث. إتقان PowerShell يزيد بشكل كبير من الكفاءة في إدارة وتأمين بيئات ويندوز."
+          }
+        },
+        {
+          "id": 23,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Think of Command Prompt like a simple calculator: it performs one operation at a time with numbers. PowerShell is like a scientific calculator with programmable functions: it can handle complex calculations, store results, and perform sequences of operations automatically. Both have their place, but PowerShell offers far more power for advanced tasks.",
+            "ar": "فكر في موجه الأوامر مثل آلة حاسبة بسيطة: تؤدي عملية واحدة في كل مرة بأرقام. PowerShell مثل آلة حاسبة علمية بوظائف قابلة للبرمجة: يمكنه التعامل مع حسابات معقدة، تخزين النتائج، وأداء تسلسلات من العمليات تلقائياً. كلاهما له مكانه، لكن PowerShell يوفر قوة أكبر بكثير للمهام المتقدمة."
+          },
+          "link": "",
+          "isLab": false
+        }
+      ]
+    },
+    {
+      "id": "topic-4",
+      "title": {
+        "en": "User Accounts and Permissions: Local vs Domain",
+        "ar": "حسابات المستخدمين والصلاحيات: المحلي مقابل النطاق"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "Understanding Windows User Account Types",
+            "ar": "فهم أنواع حسابات المستخدمين في ويندوز"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "User accounts are the foundation of Windows security. Every person who uses a Windows computer must have a user account that identifies them to the system. Windows uses these accounts to determine what resources each person can access and what actions they can perform. There are two fundamental types of user accounts in Windows environments: Local Accounts and Domain Accounts. Local accounts exist only on a single computer and are stored in that computer's local security database. Domain accounts exist in a centralized directory service called Active Directory and can be used to access resources across multiple computers in an organization. Understanding the difference between these account types is crucial for both system administration and cybersecurity.",
+            "ar": "حسابات المستخدمين هي أساس أمان ويندوز. كل شخص يستخدم كمبيوتر ويندوز يجب أن يكون لديه حساب مستخدم يعرّفه للنظام. يستخدم ويندوز هذه الحسابات لتحديد الموارد التي يمكن لكل شخص الوصول إليها والإجراءات التي يمكنه تنفيذها. هناك نوعان أساسيان من حسابات المستخدمين في بيئات ويندوز: الحسابات المحلية وحسابات النطاق. الحسابات المحلية موجودة فقط على كمبيوتر واحد ومخزنة في قاعدة بيانات الأمان المحلية لذلك الكمبيوتر. حسابات النطاق موجودة في خدمة دليل مركزية تسمى Active Directory ويمكن استخدامها للوصول للموارد عبر أجهزة كمبيوتر متعددة في مؤسسة. فهم الفرق بين هذه الأنواع من الحسابات أمر حاسم لكل من إدارة الأنظمة والأمن السيبراني."
+          }
+        },
+        {
+          "id": 1772582681887.629,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Windows%20Fundamentals/4-1-local%20versus%20domain%20account%20architecture.webp"
+        },
+        {
+          "id": 4,
+          "type": "text",
+          "value": {
+            "en": "Local user accounts are created and managed on individual computers. When you set up a new Windows computer that is not connected to a corporate network, you create a local account. This account's username, password, and security settings are stored in the Security Accounts Manager (SAM) database on that specific computer. If you have three computers at home, each would have its own separate local accounts. Even if you use the same username and password on all three computers, they are technically three different accounts that just happen to have the same credentials. Local accounts are appropriate for home users, small businesses without centralized IT infrastructure, or standalone systems that do not need to share resources with other computers.",
+            "ar": "حسابات المستخدمين المحلية يتم إنشاؤها وإدارتها على أجهزة كمبيوتر فردية. عندما تقوم بإعداد كمبيوتر ويندوز جديد غير متصل بشبكة شركة، تنشئ حساباً محلياً. اسم المستخدم وكلمة المرور وإعدادات الأمان لهذا الحساب مخزنة في قاعدة بيانات مدير حسابات الأمان (SAM) على ذلك الكمبيوتر المحدد. إذا كان لديك ثلاثة أجهزة كمبيوتر في المنزل، كل منها سيكون له حساباته المحلية المنفصلة الخاصة. حتى لو استخدمت نفس اسم المستخدم وكلمة المرور على جميع الأجهزة الثلاثة، فهي تقنياً ثلاثة حسابات مختلفة تصادف أن لها نفس بيانات الاعتماد. الحسابات المحلية مناسبة لمستخدمي المنازل، الشركات الصغيرة بدون بنية تحتية لتكنولوجيا المعلومات المركزية، أو الأنظمة المستقلة التي لا تحتاج لمشاركة الموارد مع أجهزة كمبيوتر أخرى."
+          }
+        },
+        {
+          "id": 5,
+          "type": "text",
+          "value": {
+            "en": "Domain accounts are part of a network domain managed by Windows Active Directory Domain Services. Active Directory is a centralized database that stores information about all users, computers, and resources in an organization's network. When you create a domain account, it exists in Active Directory, not on any individual computer. This means a user can log in with the same domain account from any computer that is joined to the domain. The credentials are verified against the Active Directory server, not the local computer. Domain accounts enable centralized management: an IT administrator can create accounts, set passwords, assign permissions, and enforce security policies from one central location that affects all computers in the organization. This is essential for businesses, schools, government agencies, and any organization with multiple computers that need coordinated management.",
+            "ar": "حسابات النطاق هي جزء من نطاق شبكة يديره خدمات نطاق Active Directory في ويندوز. Active Directory هي قاعدة بيانات مركزية تخزن معلومات حول جميع المستخدمين وأجهزة الكمبيوتر والموارد في شبكة المؤسسة. عندما تنشئ حساب نطاق، يوجد في Active Directory، وليس على أي كمبيوتر فردي. هذا يعني أن المستخدم يمكنه تسجيل الدخول بنفس حساب النطاق من أي كمبيوتر منضم للنطاق. يتم التحقق من بيانات الاعتماد مقابل خادم Active Directory، وليس الكمبيوتر المحلي. تمكّن حسابات النطاق الإدارة المركزية: يمكن لمسؤول تكنولوجيا المعلومات إنشاء حسابات، تعيين كلمات مرور، تعيين صلاحيات، وفرض سياسات أمان من موقع مركزي واحد يؤثر على جميع أجهزة الكمبيوتر في المؤسسة. هذا ضروري للشركات والمدارس والوكالات الحكومية وأي مؤسسة بها أجهزة كمبيوتر متعددة تحتاج إدارة منسقة."
+          }
+        },
+        {
+          "id": 6,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Think of local accounts like individual keys for different doors. Each key only works on one specific door. Domain accounts are like a master key card that works on many doors throughout a building. The card is verified by a central security system that controls access to all areas.",
+            "ar": "فكر في الحسابات المحلية مثل مفاتيح فردية لأبواب مختلفة. كل مفتاح يعمل فقط على باب محدد واحد. حسابات النطاق مثل بطاقة مفتاح رئيسي تعمل على العديد من الأبواب في جميع أنحاء المبنى. يتم التحقق من البطاقة بواسطة نظام أمان مركزي يتحكم في الوصول لجميع المناطق."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 7,
+          "type": "table",
+          "title": {
+            "en": "Local Accounts vs Domain Accounts Comparison",
+            "ar": "مقارنة الحسابات المحلية مقابل حسابات النطاق"
+          },
+          "headers": {
+            "en": [
+              "Characteristic",
+              "Local Accounts",
+              "Domain Accounts"
+            ],
+            "ar": [
+              "الخاصية",
+              "الحسابات المحلية",
+              "حسابات النطاق"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "Storage Location",
+                "Local computer SAM database",
+                "Active Directory server"
+              ],
+              "ar": [
+                "موقع التخزين",
+                "قاعدة بيانات SAM المحلية للكمبيوتر",
+                "خادم Active Directory"
+              ]
+            },
+            {
+              "en": [
+                "Scope",
+                "Single computer only",
+                "All domain-joined computers"
+              ],
+              "ar": [
+                "النطاق",
+                "كمبيوتر واحد فقط",
+                "جميع أجهزة الكمبيوتر المنضمة للنطاق"
+              ]
+            },
+            {
+              "en": [
+                "Management",
+                "Managed individually on each PC",
+                "Centrally managed from domain controller"
+              ],
+              "ar": [
+                "الإدارة",
+                "تدار بشكل فردي على كل جهاز كمبيوتر",
+                "تدار مركزياً من وحدة تحكم النطاق"
+              ]
+            },
+            {
+              "en": [
+                "Password Policy",
+                "Set per computer",
+                "Enforced organization-wide"
+              ],
+              "ar": [
+                "سياسة كلمة المرور",
+                "محددة لكل كمبيوتر",
+                "مفروضة على مستوى المؤسسة"
+              ]
+            },
+            {
+              "en": [
+                "Use Case",
+                "Home users, standalone systems",
+                "Business networks, organizations"
+              ],
+              "ar": [
+                "حالة الاستخدام",
+                "مستخدمو المنازل، أنظمة مستقلة",
+                "شبكات الأعمال، المؤسسات"
+              ]
+            },
+            {
+              "en": [
+                "Security Auditing",
+                "Local logs only",
+                "Centralized logging and monitoring"
+              ],
+              "ar": [
+                "مراجعة الأمان",
+                "سجلات محلية فقط",
+                "تسجيل ومراقبة مركزية"
+              ]
+            },
+            {
+              "en": [
+                "Account Portability",
+                "No - separate account per computer",
+                "Yes - same account works everywhere"
+              ],
+              "ar": [
+                "قابلية نقل الحساب",
+                "لا - حساب منفصل لكل كمبيوتر",
+                "نعم - نفس الحساب يعمل في كل مكان"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 8,
+          "type": "hr"
+        },
+        {
+          "id": 9,
+          "type": "title",
+          "value": {
+            "en": "Windows Permission System and Access Control",
+            "ar": "نظام الصلاحيات والتحكم في الوصول في ويندوز"
+          }
+        },
+        {
+          "id": 10,
+          "type": "text",
+          "value": {
+            "en": "Windows permissions control what users can do with files, folders, and system resources. The permission system is based on Access Control Lists (ACLs), which are lists attached to every file, folder, and object in Windows. Each ACL contains Access Control Entries (ACEs) that specify which users or groups have which permissions. There are two types of permissions: NTFS permissions that control access to files and folders stored on NTFS volumes, and Share permissions that control access to folders shared over the network. NTFS permissions are more granular and powerful, offering detailed control over who can read, write, modify, delete, or take ownership of files. Understanding permissions is critical for security because improperly configured permissions are a common way attackers gain unauthorized access to sensitive data.",
+            "ar": "صلاحيات ويندوز تتحكم فيما يمكن للمستخدمين فعله بالملفات والمجلدات وموارد النظام. يعتمد نظام الصلاحيات على قوائم التحكم في الوصول (ACLs)، وهي قوائم مرفقة بكل ملف ومجلد وكائن في ويندوز. كل ACL يحتوي على إدخالات التحكم في الوصول (ACEs) التي تحدد المستخدمين أو المجموعات التي لها أي صلاحيات. هناك نوعان من الصلاحيات: صلاحيات NTFS التي تتحكم في الوصول للملفات والمجلدات المخزنة على أحجام NTFS، وصلاحيات المشاركة التي تتحكم في الوصول للمجلدات المشتركة عبر الشبكة. صلاحيات NTFS أكثر دقة وقوة، تقدم تحكماً مفصلاً في من يمكنه قراءة أو كتابة أو تعديل أو حذف أو تولي ملكية الملفات. فهم الصلاحيات حاسم للأمان لأن الصلاحيات المكونة بشكل غير صحيح هي طريقة شائعة يكتسب بها المهاجمون وصولاً غير مصرح به لبيانات حساسة."
+          }
+        },
+        {
+          "id": 1772582695283.873,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Windows%20Fundamentals/4-2-hierarchy%20of%20NTFS%20permissions.webp"
+        },
+        {
+          "id": 11,
+          "type": "text",
+          "value": {
+            "en": "[INFOGRAPHIC_HINT] Create a mid-topic explainer image showing the hierarchy of NTFS permissions. Design a pyramid structure with six levels from top to bottom representing permission levels. Top level (smallest): Full Control with crown icon. Second level: Modify with wrench icon. Third level: Read & Execute with play button icon. Fourth level: Write with pencil icon. Fifth level: Read with eye icon. Bottom level (largest): List Folder Contents with folder icon. Use color gradient from red (most powerful) at top through orange, yellow, to green (least privileged) at bottom. Next to the pyramid, show three example scenarios as small panels: Panel 1 shows user reading a document (Read permission - green), Panel 2 shows user editing a document (Modify permission - orange), Panel 3 shows administrator with all capabilities (Full Control - red). This visual teaches the permission hierarchy and practical application.",
+            "ar": "[تلميح إنفوجرافيك] أنشئ صورة شرح في منتصف الموضوع توضح تسلسل صلاحيات NTFS. صمم هيكل هرمي بستة مستويات من الأعلى إلى الأسفل تمثل مستويات الصلاحيات. المستوى الأعلى (الأصغر): التحكم الكامل بأيقونة تاج. المستوى الثاني: التعديل بأيقونة مفتاح ربط. المستوى الثالث: القراءة والتنفيذ بأيقونة زر تشغيل. المستوى الرابع: الكتابة بأيقونة قلم رصاص. المستوى الخامس: القراءة بأيقونة عين. المستوى السفلي (الأكبر): سرد محتويات المجلد بأيقونة مجلد. استخدم تدرج لوني من الأحمر (الأقوى) في الأعلى عبر البرتقالي، الأصفر، إلى الأخضر (الأقل امتيازاً) في الأسفل. بجانب الهرم، أظهر ثلاثة سيناريوهات مثال كلوحات صغيرة: اللوحة 1 تظهر مستخدماً يقرأ مستنداً (صلاحية القراءة - أخضر)، اللوحة 2 تظهر مستخدماً يحرر مستنداً (صلاحية التعديل - برتقالي)، اللوحة 3 تظهر مديراً بجميع القدرات (التحكم الكامل - أحمر)."
+          }
+        },
+        {
+          "id": 12,
+          "type": "list",
+          "title": {
+            "en": "Standard NTFS File and Folder Permissions",
+            "ar": "صلاحيات ملفات ومجلدات NTFS القياسية"
+          },
+          "items": {
+            "en": [
+              "Full Control: Complete access including reading, writing, changing permissions, and taking ownership",
+              "Modify: Read, write, delete files and subfolders but cannot change permissions",
+              "Read & Execute: View file contents and run executable programs",
+              "Read: View file contents and properties but cannot make changes",
+              "Write: Create new files and folders and make changes to existing ones",
+              "List Folder Contents: View names of files and subfolders (folders only)"
+            ],
+            "ar": [
+              "التحكم الكامل: وصول كامل بما في ذلك القراءة والكتابة وتغيير الصلاحيات وتولي الملكية",
+              "التعديل: قراءة وكتابة وحذف الملفات والمجلدات الفرعية ولكن لا يمكن تغيير الصلاحيات",
+              "القراءة والتنفيذ: عرض محتويات الملف وتشغيل البرامج القابلة للتنفيذ",
+              "القراءة: عرض محتويات الملف والخصائص ولكن لا يمكن إجراء تغييرات",
+              "الكتابة: إنشاء ملفات ومجلدات جديدة وإجراء تغييرات على الموجودة",
+              "سرد محتويات المجلد: عرض أسماء الملفات والمجلدات الفرعية (المجلدات فقط)"
+            ]
+          }
+        },
+        {
+          "id": 13,
+          "type": "text",
+          "value": {
+            "en": "Permission inheritance is a key concept in Windows security. By default, when you create a new file or subfolder, it automatically inherits permissions from its parent folder. This inheritance system simplifies permission management because you can set permissions on a top-level folder and all contents automatically receive those same permissions. However, inheritance can be disabled if you need specific files or folders to have different permissions than their parent. Understanding inheritance is important because security misconfigurations often occur when administrators do not realize that changing permissions on a parent folder affects all child objects. You can view and modify inheritance settings through the Advanced Security Settings dialog in the file or folder Properties.",
+            "ar": "وراثة الصلاحيات هي مفهوم رئيسي في أمان ويندوز. افتراضياً، عند إنشاء ملف جديد أو مجلد فرعي، يرث تلقائياً الصلاحيات من مجلده الأب. نظام الوراثة هذا يبسط إدارة الصلاحيات لأنك يمكنك تعيين صلاحيات على مجلد المستوى الأعلى وجميع المحتويات تستقبل تلقائياً نفس تلك الصلاحيات. ومع ذلك، يمكن تعطيل الوراثة إذا كنت بحاجة لملفات أو مجلدات محددة لها صلاحيات مختلفة عن والدها. فهم الوراثة مهم لأن أخطاء التكوين الأمني غالباً ما تحدث عندما لا يدرك المديرون أن تغيير الصلاحيات على مجلد أب يؤثر على جميع الكائنات الفرعية. يمكنك عرض وتعديل إعدادات الوراثة من خلال مربع حوار إعدادات الأمان المتقدمة في خصائص الملف أو المجلد."
+          }
+        },
+        {
+          "id": 14,
+          "type": "text",
+          "value": {
+            "en": "Effective permissions are the actual permissions a user has on a file or folder after Windows combines all applicable permissions. A user might have permissions assigned directly to their account, plus additional permissions from multiple groups they belong to. Windows calculates effective permissions by combining all Allow permissions from all sources. However, there is a critical exception: Deny permissions always override Allow permissions. If a user is denied access through any group membership, they are denied even if other groups grant access. This Deny-takes-precedence rule is intentional and allows administrators to explicitly block access when necessary. You can use the Effective Access tab in Advanced Security Settings to see what permissions a specific user actually has on a file or folder.",
+            "ar": "الصلاحيات الفعالة هي الصلاحيات الفعلية التي يمتلكها المستخدم على ملف أو مجلد بعد أن يجمع ويندوز جميع الصلاحيات المطبقة. قد يكون لدى المستخدم صلاحيات معينة مباشرة لحسابه، بالإضافة إلى صلاحيات إضافية من مجموعات متعددة ينتمي إليها. يحسب ويندوز الصلاحيات الفعالة بدمج جميع صلاحيات السماح من جميع المصادر. ومع ذلك، هناك استثناء حاسم: صلاحيات الرفض دائماً تتجاوز صلاحيات السماح. إذا تم رفض وصول المستخدم من خلال أي عضوية مجموعة، يُرفض حتى لو منحت مجموعات أخرى الوصول. قاعدة أسبقية الرفض هذه مقصودة وتسمح للمديرين بحجب الوصول صراحة عند الضرورة. يمكنك استخدام علامة تبويب الوصول الفعال في إعدادات الأمان المتقدمة لمعرفة الصلاحيات التي يمتلكها مستخدم محدد فعلياً على ملف أو مجلد."
+          }
+        },
+        {
+          "id": 15,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "A common security mistake is granting Full Control permission to regular users. This allows them to change permissions and potentially lock out administrators. Grant only the minimum permissions needed for users to do their work. This principle is called Least Privilege.",
+            "ar": "خطأ أمني شائع هو منح صلاحية التحكم الكامل للمستخدمين العاديين. هذا يسمح لهم بتغيير الصلاحيات وربما حجب المديرين. امنح فقط الحد الأدنى من الصلاحيات اللازمة للمستخدمين للقيام بعملهم. هذا المبدأ يسمى الامتياز الأدنى."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 16,
+          "type": "hr"
+        },
+        {
+          "id": 17,
+          "type": "title",
+          "value": {
+            "en": "User Groups and Administrative Privileges",
+            "ar": "مجموعات المستخدمين والصلاحيات الإدارية"
+          }
+        },
+        {
+          "id": 18,
+          "type": "text",
+          "value": {
+            "en": "User groups are collections of user accounts that share common permissions and rights. Instead of assigning permissions to individual users one by one, administrators create groups and assign permissions to the group. Then all users added to that group automatically receive those permissions. This group-based management is far more efficient and less error-prone than managing permissions for hundreds or thousands of individual users. Windows includes several built-in groups with predefined permissions. The most important built-in groups are Administrators, Users, Power Users, and Guests. Each has a specific security level appropriate for different roles. Understanding these groups and their capabilities is fundamental to Windows security management.",
+            "ar": "مجموعات المستخدمين هي مجموعات من حسابات المستخدمين التي تشترك في صلاحيات وحقوق مشتركة. بدلاً من تعيين صلاحيات للمستخدمين الأفراد واحداً تلو الآخر، ينشئ المديرون مجموعات ويعينون صلاحيات للمجموعة. ثم جميع المستخدمين المضافين لتلك المجموعة يستقبلون تلقائياً تلك الصلاحيات. إدارة المجموعات هذه أكثر كفاءة بكثير وأقل عرضة للخطأ من إدارة صلاحيات لمئات أو آلاف المستخدمين الأفراد. يتضمن ويندوز عدة مجموعات مدمجة بصلاحيات محددة مسبقاً. أهم المجموعات المدمجة هي المديرون والمستخدمون والمستخدمون المتقدمون والضيوف. كل منها له مستوى أمان محدد مناسب لأدوار مختلفة. فهم هذه المجموعات وقدراتها أساسي لإدارة أمان ويندوز."
+          }
+        },
+        {
+          "id": 19,
+          "type": "text",
+          "value": {
+            "en": "The Administrators group has complete control over the computer. Members can install software, modify system settings, access all files regardless of permissions, create and delete user accounts, and change security policies. This group has the highest level of privilege in Windows. Because of this power, membership in the Administrators group should be strictly limited to people who genuinely need full system control. Every additional administrator account increases security risk because if that account is compromised, the attacker gains complete control of the system. In organizations, only IT staff and specific management personnel should be administrators. Regular employees should not have administrative privileges even if they occasionally need to install software.",
+            "ar": "مجموعة المديرين لها سيطرة كاملة على الكمبيوتر. يمكن للأعضاء تثبيت البرامج، تعديل إعدادات النظام، الوصول لجميع الملفات بغض النظر عن الصلاحيات، إنشاء وحذف حسابات المستخدمين، وتغيير سياسات الأمان. هذه المجموعة لها أعلى مستوى من الامتياز في ويندوز. بسبب هذه القوة، يجب أن تكون العضوية في مجموعة المديرين محدودة بشكل صارم للأشخاص الذين يحتاجون حقاً سيطرة كاملة على النظام. كل حساب مدير إضافي يزيد من مخاطر الأمان لأنه إذا تم اختراق ذلك الحساب، يكتسب المهاجم سيطرة كاملة على النظام. في المؤسسات، فقط موظفو تكنولوجيا المعلومات وموظفو إدارة محددون يجب أن يكونوا مديرين. الموظفون العاديون يجب ألا يكون لديهم صلاحيات إدارية حتى لو احتاجوا أحياناً لتثبيت البرامج."
+          }
+        },
+        {
+          "id": 20,
+          "type": "text",
+          "value": {
+            "en": "The Users group is where most accounts belong. Members of the Users group can run applications, use printers, access their own files, and perform most daily computing tasks. However, they cannot install software, modify system settings, or access other users' files without explicit permission. This limited privilege level protects the system from both accidental damage and intentional attacks. If malware infects a standard user account, the malware is also limited to user-level privileges and cannot easily spread throughout the system or install persistent threats. Modern security best practices recommend that everyone, including IT staff, use standard user accounts for daily work and only elevate to administrator privileges when specifically needed for administrative tasks.",
+            "ar": "مجموعة المستخدمين هي حيث تنتمي معظم الحسابات. أعضاء مجموعة المستخدمين يمكنهم تشغيل التطبيقات، استخدام الطابعات، الوصول لملفاتهم الخاصة، وأداء معظم مهام الحوسبة اليومية. ومع ذلك، لا يمكنهم تثبيت البرامج، تعديل إعدادات النظام، أو الوصول لملفات مستخدمين آخرين دون إذن صريح. مستوى الامتياز المحدود هذا يحمي النظام من كل من الضرر العرضي والهجمات المتعمدة. إذا أصابت برامج ضارة حساب مستخدم قياسي، البرامج الضارة أيضاً محدودة لصلاحيات مستوى المستخدم ولا يمكنها بسهولة الانتشار في جميع أنحاء النظام أو تثبيت تهديدات مستمرة. أفضل الممارسات الأمنية الحديثة توصي بأن الجميع، بما في ذلك موظفو تكنولوجيا المعلومات، يستخدمون حسابات مستخدم قياسية للعمل اليومي ويرتقون فقط لصلاحيات المدير عند الحاجة خصيصاً لمهام إدارية."
+          }
+        },
+        {
+          "id": 1772582689288.372,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Windows%20Fundamentals/4-3-User%20Account%20Control.webp"
+        },
+        {
+          "id": 21,
+          "type": "text",
+          "value": {
+            "en": "[INFOGRAPHIC_HINT] Create an end-of-topic summary image showing the security principle of User Account Control (UAC) and privilege separation. Design a two-tier security model illustration. Top tier (secure operations): show icons for administrative tasks - installing software, modifying system files, creating user accounts, changing security settings. Add a prominent shield icon and prompt dialog box representing UAC elevation request. Bottom tier (daily operations): show icons for standard user tasks - running applications, editing documents, browsing web, accessing personal files. Use red background for administrative tier (danger/power) and green background for user tier (safe/normal). Draw a barrier between the tiers with a lock, showing that moving from green to red requires authentication. Add arrows showing that users normally operate in green zone, only temporarily elevating to red zone when necessary. This visual reinforces the Least Privilege principle and UAC protection.",
+            "ar": "[تلميح إنفوجرافيك] أنشئ صورة ملخص نهاية الموضوع توضح مبدأ أمان التحكم في حساب المستخدم (UAC) وفصل الصلاحيات. صمم رسماً توضيحياً لنموذج أمان من مستويين. المستوى الأعلى (العمليات الآمنة): أظهر أيقونات للمهام الإدارية - تثبيت البرامج، تعديل ملفات النظام، إنشاء حسابات المستخدمين، تغيير إعدادات الأمان. أضف أيقونة درع بارزة ومربع حوار موجه يمثل طلب ارتفاع UAC. المستوى السفلي (العمليات اليومية): أظهر أيقونات لمهام المستخدم القياسية - تشغيل التطبيقات، تحرير المستندات، تصفح الويب، الوصول للملفات الشخصية. استخدم خلفية حمراء للمستوى الإداري (خطر/قوة) وخلفية خضراء لمستوى المستخدم (آمن/عادي). ارسم حاجزاً بين المستويات بقفل، يظهر أن الانتقال من المنطقة الخضراء للحمراء يتطلب مصادقة. أضف أسهماً تظهر أن المستخدمين يعملون عادة في المنطقة الخضراء، يرتفعون مؤقتاً فقط للمنطقة الحمراء عند الضرورة."
+          }
+        },
+        {
+          "id": 22,
+          "type": "orderedList",
+          "title": {
+            "en": "How to Check and Modify User Group Membership",
+            "ar": "كيفية التحقق من وتعديل عضوية مجموعة المستخدم"
+          },
+          "items": [
+            {
+              "subtitle": {
+                "en": "Open Computer Management Console",
+                "ar": "افتح وحدة تحكم إدارة الكمبيوتر"
+              },
+              "text": {
+                "en": "Right-click on This PC or Computer icon on your desktop or in File Explorer. Select Manage from the context menu. This opens the Computer Management console where you can configure many system settings.",
+                "ar": "انقر بزر الماوس الأيمن على أيقونة هذا الكمبيوتر أو Computer على سطح المكتب أو في مستكشف الملفات. حدد إدارة من قائمة السياق. هذا يفتح وحدة تحكم إدارة الكمبيوتر حيث يمكنك تكوين العديد من إعدادات النظام."
+              },
+              "example": {
+                "en": "Example: Right-click This PC then click Manage",
+                "ar": "مثال: انقر بزر الماوس الأيمن على هذا الكمبيوتر ثم انقر إدارة"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Navigate to Local Users and Groups",
+                "ar": "انتقل إلى المستخدمين والمجموعات المحليين"
+              },
+              "text": {
+                "en": "In the Computer Management window, expand the Local Users and Groups node in the left sidebar. You will see two subfolders: Users and Groups. The Users folder shows all user accounts. The Groups folder shows all groups.",
+                "ar": "في نافذة إدارة الكمبيوتر، وسّع عقدة المستخدمين والمجموعات المحليين في الشريط الجانبي الأيسر. سترى مجلدين فرعيين: المستخدمون والمجموعات. مجلد المستخدمون يظهر جميع حسابات المستخدمين. مجلد المجموعات يظهر جميع المجموعات."
+              },
+              "example": {
+                "en": "Example: Click arrow next to Local Users and Groups",
+                "ar": "مثال: انقر على السهم بجانب المستخدمين والمجموعات المحليين"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "View User Account Group Membership",
+                "ar": "عرض عضوية مجموعة حساب المستخدم"
+              },
+              "text": {
+                "en": "Click on the Users folder to see all accounts. Double-click on any user account to open its properties. Click on the Member Of tab to see which groups this user belongs to. This shows the effective group memberships that determine the user's permissions.",
+                "ar": "انقر على مجلد المستخدمون لرؤية جميع الحسابات. انقر نقراً مزدوجاً على أي حساب مستخدم لفتح خصائصه. انقر على علامة تبويب عضو في لرؤية المجموعات التي ينتمي إليها هذا المستخدم. هذا يظهر عضويات المجموعات الفعالة التي تحدد صلاحيات المستخدم."
+              },
+              "example": {
+                "en": "Example: Double-click user account then click Member Of tab",
+                "ar": "مثال: انقر نقراً مزدوجاً على حساب المستخدم ثم انقر علامة تبويب عضو في"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Add or Remove Group Membership",
+                "ar": "إضافة أو إزالة عضوية المجموعة"
+              },
+              "text": {
+                "en": "In the Member Of tab, click Add to add the user to additional groups, or select a group and click Remove to remove membership. Be very careful when adding users to the Administrators group as this grants full system control. Click OK to save changes.",
+                "ar": "في علامة تبويب عضو في، انقر إضافة لإضافة المستخدم لمجموعات إضافية، أو حدد مجموعة وانقر إزالة لإزالة العضوية. كن حذراً جداً عند إضافة مستخدمين لمجموعة المديرين حيث يمنح هذا سيطرة كاملة على النظام. انقر موافق لحفظ التغييرات."
+              },
+              "example": {
+                "en": "Example: Click Add button, type Administrators, click OK",
+                "ar": "مثال: انقر زر إضافة، اكتب Administrators، انقر موافق"
+              }
+            }
+          ]
+        },
+        {
+          "id": 23,
+          "type": "text",
+          "value": {
+            "en": "User Account Control (UAC) is a security feature that prevents unauthorized changes to the operating system. When a program tries to perform an administrative task, UAC displays a prompt asking for permission or administrator credentials. This prompt interrupts the workflow and forces a conscious decision about whether to allow the action. UAC operates on the principle of Least Privilege by keeping even administrator accounts running with standard user privileges until elevation is explicitly requested. This significantly reduces the attack surface because malware running under a standard user token cannot silently make system changes. While UAC prompts can be annoying, they serve a critical security function and should not be disabled. In organizational environments, UAC settings should be configured through Group Policy to prevent users from lowering security levels.",
+            "ar": "التحكم في حساب المستخدم (UAC) هو ميزة أمان تمنع التغييرات غير المصرح بها على نظام التشغيل. عندما يحاول برنامج تنفيذ مهمة إدارية، يعرض UAC موجهاً يطلب الإذن أو بيانات اعتماد المدير. هذا الموجه يقطع سير العمل ويفرض قراراً واعياً حول ما إذا كان يسمح بالإجراء. يعمل UAC على مبدأ الامتياز الأدنى بإبقاء حتى حسابات المديرين تعمل بصلاحيات مستخدم قياسية حتى يُطلب الارتفاع صراحة. هذا يقلل بشكل كبير من سطح الهجوم لأن البرامج الضارة التي تعمل تحت رمز مستخدم قياسي لا يمكنها بصمت إجراء تغييرات النظام. بينما يمكن أن تكون موجهات UAC مزعجة، فهي تخدم وظيفة أمنية حاسمة ويجب عدم تعطيلها. في البيئات المؤسسية، يجب تكوين إعدادات UAC من خلال سياسة المجموعة لمنع المستخدمين من خفض مستويات الأمان."
+          }
+        },
+        {
+          "id": 24,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Think of user groups like job roles in a company. The Administrators group is like senior management with access to everything. The Users group is like regular employees who can do their work but cannot make company-wide changes. Assigning people to appropriate groups ensures everyone has the access they need without giving anyone more power than necessary.",
+            "ar": "فكر في مجموعات المستخدمين مثل أدوار الوظائف في شركة. مجموعة المديرين مثل الإدارة العليا بوصول لكل شيء. مجموعة المستخدمين مثل الموظفين العاديين الذين يمكنهم القيام بعملهم ولكن لا يمكنهم إجراء تغييرات على مستوى الشركة. تعيين الأشخاص للمجموعات المناسبة يضمن أن كل شخص لديه الوصول الذي يحتاجه دون منح أي شخص قوة أكثر من الضروري."
+          },
+          "link": "",
+          "isLab": false
+        }
+      ]
+    },
+    {
+      "id": "topic-5",
+      "title": {
+        "en": "Windows Security Fundamentals: Firewalls and System Auditing",
+        "ar": "أساسيات أمان ويندوز: جدران الحماية ومراجعة النظام"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "Understanding Windows Defender Firewall",
+            "ar": "فهم جدار حماية Windows Defender"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "A firewall is a security system that monitors and controls network traffic between your computer and the network or internet. Windows Defender Firewall, built into all modern Windows versions, acts as a barrier that examines every network connection attempt and decides whether to allow or block it based on predefined security rules. Think of it as a security guard at the entrance of a building who checks everyone entering and leaving against an approved list. The firewall operates at the network layer, inspecting packets of data to determine their source, destination, and purpose. Without a firewall, any program on your computer could freely communicate with the internet, allowing malware to send stolen data or receive commands from attackers. The firewall prevents unauthorized network access and is your first line of defense against network-based attacks.",
+            "ar": "جدار الحماية هو نظام أمان يراقب ويتحكم في حركة مرور الشبكة بين الكمبيوتر والشبكة أو الإنترنت. جدار حماية Windows Defender، المدمج في جميع إصدارات ويندوز الحديثة، يعمل كحاجز يفحص كل محاولة اتصال شبكة ويقرر ما إذا كان يسمح بها أو يحظرها بناءً على قواعد أمان محددة مسبقاً. فكر فيه كحارس أمن عند مدخل مبنى يتحقق من كل شخص يدخل ويغادر مقابل قائمة معتمدة. يعمل جدار الحماية على طبقة الشبكة، يفحص حزم البيانات لتحديد مصدرها ووجهتها والغرض منها. بدون جدار حماية، يمكن لأي برنامج على الكمبيوتر التواصل بحرية مع الإنترنت، مما يسمح للبرامج الضارة بإرسال بيانات مسروقة أو استقبال أوامر من المهاجمين. يمنع جدار الحماية الوصول غير المصرح به للشبكة وهو خط دفاعك الأول ضد الهجمات القائمة على الشبكة."
+          }
+        },
+        {
+          "id": 1772582742753.7107,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Windows%20Fundamentals/5-1-Windows%20Defender%20Firewall.webp"
+        },
+        {
+          "id": 4,
+          "type": "text",
+          "value": {
+            "en": "Windows Defender Firewall operates with different profiles for different network environments. There are three profiles: Domain (when connected to a corporate network with Active Directory), Private (for home or trusted networks), and Public (for untrusted networks like airports or coffee shops). Each profile can have different firewall rules because security requirements vary by location. When you connect to a public Wi-Fi network, Windows should automatically apply the Public profile with stricter rules that block more incoming connections. On your home network, the Private profile may allow file sharing and media streaming. Understanding these profiles is important because the wrong profile can either expose you to unnecessary risk or block legitimate network functionality. You should always classify new networks correctly when Windows asks you to choose between Private and Public.",
+            "ar": "يعمل جدار حماية Windows Defender بملفات تعريف مختلفة لبيئات شبكة مختلفة. هناك ثلاثة ملفات تعريف: النطاق (عند الاتصال بشبكة شركة مع Active Directory)، الخاص (للشبكات المنزلية أو الموثوقة)، والعام (للشبكات غير الموثوقة مثل المطارات أو المقاهي). يمكن أن يكون لكل ملف تعريف قواعد جدار حماية مختلفة لأن متطلبات الأمان تختلف حسب الموقع. عند الاتصال بشبكة Wi-Fi عامة، يجب أن يطبق ويندوز تلقائياً ملف التعريف العام مع قواعد أكثر صرامة تحظر المزيد من الاتصالات الواردة. على شبكتك المنزلية، قد يسمح ملف التعريف الخاص بمشاركة الملفات وبث الوسائط. فهم ملفات التعريف هذه مهم لأن ملف التعريف الخاطئ يمكن أن يعرضك لمخاطر غير ضرورية أو يحظر وظائف الشبكة الشرعية. يجب دائماً تصنيف الشبكات الجديدة بشكل صحيح عندما يطلب منك ويندوز الاختيار بين الخاص والعام."
+          }
+        },
+        {
+          "id": 5,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "Never disable Windows Defender Firewall unless you have another firewall actively protecting your system. Some users disable it when troubleshooting network problems, but this leaves the computer completely exposed to network attacks. Always re-enable the firewall immediately after testing.",
+            "ar": "لا تعطل أبداً جدار حماية Windows Defender ما لم يكن لديك جدار حماية آخر يحمي نظامك بنشاط. بعض المستخدمين يعطلونه عند استكشاف مشاكل الشبكة، لكن هذا يترك الكمبيوتر معرضاً تماماً لهجمات الشبكة. أعد تمكين جدار الحماية دائماً مباشرة بعد الاختبار."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 6,
+          "type": "text",
+          "value": {
+            "en": "Firewall rules determine which network traffic is allowed and which is blocked. Each rule specifies criteria such as program, port number, protocol (TCP or UDP), and direction (inbound or outbound). Inbound rules control connections coming into your computer from the network. Outbound rules control connections going out from your computer to the network. By default, Windows Defender Firewall blocks most inbound connections but allows most outbound connections. This default configuration prevents external attackers from initiating connections to your computer while allowing your programs to access the internet. When you install new software that needs network access, Windows may display a firewall prompt asking whether to allow the program. Your response creates a new firewall rule. Understanding rules helps you make informed decisions when these prompts appear and enables you to create custom rules for specific security requirements.",
+            "ar": "قواعد جدار الحماية تحدد حركة مرور الشبكة المسموحة والمحظورة. كل قاعدة تحدد معايير مثل البرنامج، رقم المنفذ، البروتوكول (TCP أو UDP)، والاتجاه (وارد أو صادر). القواعد الواردة تتحكم في الاتصالات القادمة لجهاز الكمبيوتر من الشبكة. القواعد الصادرة تتحكم في الاتصالات الخارجة من جهاز الكمبيوتر للشبكة. افتراضياً، يحظر جدار حماية Windows Defender معظم الاتصالات الواردة ولكن يسمح بمعظم الاتصالات الصادرة. هذا التكوين الافتراضي يمنع المهاجمين الخارجيين من بدء اتصالات بجهاز الكمبيوتر بينما يسمح لبرامجك بالوصول للإنترنت. عند تثبيت برامج جديدة تحتاج وصول الشبكة، قد يعرض ويندوز موجه جدار حماية يسأل ما إذا كان يسمح للبرنامج. ردك ينشئ قاعدة جدار حماية جديدة. فهم القواعد يساعدك على اتخاذ قرارات مستنيرة عند ظهور هذه الموجهات ويمكّنك من إنشاء قواعد مخصصة لمتطلبات أمان محددة."
+          }
+        },
+        {
+          "id": 7,
+          "type": "list",
+          "title": {
+            "en": "Key Components of a Firewall Rule",
+            "ar": "المكونات الرئيسية لقاعدة جدار الحماية"
+          },
+          "items": {
+            "en": [
+              "Program Path: Specifies which application the rule applies to",
+              "Port Number: Defines the network port for communication (e.g., port 80 for HTTP, 443 for HTTPS)",
+              "Protocol: TCP for reliable connections or UDP for faster connectionless communication",
+              "Direction: Inbound (incoming to your computer) or Outbound (going from your computer)",
+              "Action: Allow or Block the connection",
+              "Profile: Which network profile the rule applies to (Domain, Private, Public, or All)"
+            ],
+            "ar": [
+              "مسار البرنامج: يحدد التطبيق الذي تنطبق عليه القاعدة",
+              "رقم المنفذ: يحدد منفذ الشبكة للاتصال (مثال: المنفذ 80 لـ HTTP، 443 لـ HTTPS)",
+              "البروتوكول: TCP للاتصالات الموثوقة أو UDP للاتصالات الأسرع بدون اتصال",
+              "الاتجاه: وارد (قادم لجهاز الكمبيوتر) أو صادر (خارج من جهاز الكمبيوتر)",
+              "الإجراء: السماح أو حظر الاتصال",
+              "الملف الشخصي: ملف تعريف الشبكة الذي تنطبق عليه القاعدة (النطاق، الخاص، العام، أو الكل)"
+            ]
+          }
+        },
+        {
+          "id": 1772582772636.5847,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageUrl": "https://cdn.cyber-labs.tech/Windows%20Fundamentals/5-2-firewall%20rule%20decision%20process.webp",
+          "imageMode": "url"
+        },
+        {
+          "id": 9,
+          "type": "hr"
+        },
+        {
+          "id": 10,
+          "type": "title",
+          "value": {
+            "en": "Windows Event Logs and Security Auditing",
+            "ar": "سجلات أحداث ويندوز ومراجعة الأمان"
+          }
+        },
+        {
+          "id": 11,
+          "type": "text",
+          "value": {
+            "en": "Windows Event Logs are detailed records of everything that happens on your computer. The operating system, applications, and security components continuously write events to these logs. Each event entry includes a timestamp, event ID number, source, description, and severity level. There are several log categories, but the most important for security are the Security log, System log, and Application log. The Security log records authentication events like logins and logouts, permission changes, and security policy modifications. The System log records operating system events like service starts and stops, driver loading, and system errors. The Application log records events from individual programs. Event logs are essential for security monitoring, troubleshooting, compliance auditing, and forensic investigation. They provide a detailed historical record that helps administrators understand what happened on a system.",
+            "ar": "سجلات أحداث ويندوز هي سجلات مفصلة لكل شيء يحدث على جهاز الكمبيوتر. يكتب نظام التشغيل والتطبيقات ومكونات الأمان باستمرار أحداثاً لهذه السجلات. كل إدخال حدث يتضمن طابع زمني، رقم معرف الحدث، المصدر، الوصف، ومستوى الخطورة. هناك عدة فئات سجل، لكن الأهم للأمان هي سجل الأمان، سجل النظام، وسجل التطبيق. يسجل سجل الأمان أحداث المصادقة مثل تسجيلات الدخول والخروج، تغييرات الصلاحيات، وتعديلات سياسة الأمان. يسجل سجل النظام أحداث نظام التشغيل مثل بدء وإيقاف الخدمات، تحميل المشغلات، وأخطاء النظام. يسجل سجل التطبيق أحداثاً من برامج فردية. سجلات الأحداث أساسية لمراقبة الأمان، استكشاف المشكلات، مراجعة الامتثال، والتحقيق الجنائي. توفر سجلاً تاريخياً مفصلاً يساعد المديرين على فهم ما حدث على النظام."
+          }
+        },
+        {
+          "id": 12,
+          "type": "text",
+          "value": {
+            "en": "Security auditing is the process of configuring Windows to record specific security-relevant events and then reviewing those records to detect problems. Audit policies determine which types of events are logged. You can enable auditing for various activities including logon attempts, file access, permission changes, process creation, and system policy modifications. For example, enabling file auditing on a sensitive folder records who accessed the files, when they accessed them, and what they did (read, modify, delete). Failed logon attempts might indicate someone trying to guess passwords. Sudden privilege escalations could signal a compromised account. Regular review of security logs helps detect intrusions, policy violations, and suspicious behavior before they cause serious damage. In organizations, security logs are often collected centrally and analyzed by Security Information and Event Management (SIEM) systems.",
+            "ar": "مراجعة الأمان هي عملية تكوين ويندوز لتسجيل أحداث محددة ذات صلة بالأمان ثم مراجعة تلك السجلات لكشف المشاكل. تحدد سياسات المراجعة أنواع الأحداث التي يتم تسجيلها. يمكنك تمكين المراجعة لأنشطة متنوعة بما في ذلك محاولات تسجيل الدخول، الوصول للملفات، تغييرات الصلاحيات، إنشاء العمليات، وتعديلات سياسة النظام. على سبيل المثال، تمكين مراجعة الملفات على مجلد حساس يسجل من وصل للملفات، متى وصلوا إليها، وماذا فعلوا (قراءة، تعديل، حذف). محاولات تسجيل الدخول الفاشلة قد تشير إلى شخص يحاول تخمين كلمات المرور. تصعيدات الصلاحيات المفاجئة يمكن أن تشير لحساب مخترق. المراجعة المنتظمة لسجلات الأمان تساعد على كشف الاختراقات، انتهاكات السياسة، والسلوك المشبوه قبل أن تسبب ضرراً خطيراً. في المؤسسات، غالباً ما يتم جمع سجلات الأمان مركزياً وتحليلها بواسطة أنظمة إدارة معلومات وأحداث الأمان (SIEM)."
+          }
+        },
+        {
+          "id": 13,
+          "type": "terminal",
+          "label": {
+            "en": "PowerShell: Querying Security Events",
+            "ar": "PowerShell: الاستعلام عن أحداث الأمان"
+          },
+          "value": "PS C:\\Users\\Admin> Get-EventLog -LogName Security -Newest 5 | Select-Object TimeGenerated, EventID, Message\n\nTimeGenerated        EventID Message\n-------------        ------- -------\n3/3/2026 10:30:15 PM    4624 An account was successfully logged on...\n3/3/2026 10:25:42 PM    4672 Special privileges assigned to new logon...\n3/3/2026 10:20:11 PM    4648 A logon was attempted using explicit credentials...\n3/3/2026 09:15:33 PM    4625 An account failed to log on...\n3/3/2026 09:10:05 PM    4634 An account was logged off..."
+        },
+        {
+          "id": 14,
+          "type": "text",
+          "value": {
+            "en": "Common security event IDs help you quickly identify important activities. Event ID 4624 indicates successful logon, while 4625 indicates failed logon attempt. Multiple 4625 events in a short time might indicate a brute-force password attack. Event ID 4672 shows when special privileges were assigned to a user, important for tracking administrative activities. Event ID 4688 records process creation, useful for detecting malware execution. Event ID 4719 indicates system audit policy changes, which attackers might modify to hide their activities. Event ID 4720 means a new user account was created, potentially indicating an attacker establishing persistence. Learning these key event IDs enables faster incident detection and response. Security professionals often create scripts or use monitoring tools to automatically alert on suspicious patterns like multiple failed logins or unexpected account creations.",
+            "ar": "معرفات أحداث الأمان الشائعة تساعدك على التعرف بسرعة على الأنشطة المهمة. معرف الحدث 4624 يشير لتسجيل دخول ناجح، بينما 4625 يشير لمحاولة تسجيل دخول فاشلة. أحداث 4625 متعددة في وقت قصير قد تشير لهجوم تخمين كلمة مرور بالقوة الغاشمة. معرف الحدث 4672 يظهر متى تم تعيين صلاحيات خاصة لمستخدم، مهم لتتبع الأنشطة الإدارية. معرف الحدث 4688 يسجل إنشاء العملية، مفيد لكشف تنفيذ البرامج الضارة. معرف الحدث 4719 يشير لتغييرات سياسة مراجعة النظام، التي قد يعدلها المهاجمون لإخفاء أنشطتهم. معرف الحدث 4720 يعني تم إنشاء حساب مستخدم جديد، يشير محتملاً لمهاجم يؤسس استمرارية. تعلم معرفات الأحداث الرئيسية هذه يمكّن من كشف واستجابة أسرع للحوادث. محترفو الأمان غالباً ما ينشئون نصوصاً أو يستخدمون أدوات مراقبة لتنبيههم تلقائياً عن أنماط مشبوهة مثل تسجيلات دخول فاشلة متعددة أو إنشاءات حسابات غير متوقعة."
+          }
+        },
+        {
+          "id": 15,
+          "type": "table",
+          "title": {
+            "en": "Critical Security Event IDs for Monitoring",
+            "ar": "معرفات أحداث الأمان الحرجة للمراقبة"
+          },
+          "headers": {
+            "en": [
+              "Event ID",
+              "Description",
+              "Security Significance"
+            ],
+            "ar": [
+              "معرف الحدث",
+              "الوصف",
+              "الأهمية الأمنية"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "4624",
+                "Successful account logon",
+                "Track who accessed the system and when"
+              ],
+              "ar": [
+                "4624",
+                "تسجيل دخول حساب ناجح",
+                "تتبع من وصل للنظام ومتى"
+              ]
+            },
+            {
+              "en": [
+                "4625",
+                "Failed logon attempt",
+                "Detect password guessing or brute-force attacks"
+              ],
+              "ar": [
+                "4625",
+                "محاولة تسجيل دخول فاشلة",
+                "كشف تخمين كلمة المرور أو هجمات القوة الغاشمة"
+              ]
+            },
+            {
+              "en": [
+                "4672",
+                "Special privileges assigned",
+                "Monitor administrative privilege usage"
+              ],
+              "ar": [
+                "4672",
+                "تعيين صلاحيات خاصة",
+                "مراقبة استخدام الصلاحيات الإدارية"
+              ]
+            },
+            {
+              "en": [
+                "4688",
+                "New process created",
+                "Detect malware execution or suspicious programs"
+              ],
+              "ar": [
+                "4688",
+                "عملية جديدة تم إنشاؤها",
+                "كشف تنفيذ البرامج الضارة أو البرامج المشبوهة"
+              ]
+            },
+            {
+              "en": [
+                "4720",
+                "User account created",
+                "Identify unauthorized account creation"
+              ],
+              "ar": [
+                "4720",
+                "تم إنشاء حساب مستخدم",
+                "تحديد إنشاء حساب غير مصرح به"
+              ]
+            },
+            {
+              "en": [
+                "4719",
+                "Audit policy changed",
+                "Alert on attempts to hide attacker activities"
+              ],
+              "ar": [
+                "4719",
+                "تغيير سياسة المراجعة",
+                "تنبيه على محاولات إخفاء أنشطة المهاجمين"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 16,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Event Viewer is the built-in Windows tool for viewing logs. Access it by typing 'Event Viewer' in the Start menu. Navigate to Windows Logs to see Security, System, and Application logs. You can filter events by ID, date, or keyword to find specific information quickly.",
+            "ar": "عارض الأحداث هو أداة ويندوز المدمجة لعرض السجلات. يمكن الوصول إليه بكتابة 'Event Viewer' في قائمة ابدأ. انتقل إلى سجلات ويندوز لرؤية سجلات الأمان والنظام والتطبيق. يمكنك تصفية الأحداث حسب المعرف أو التاريخ أو الكلمة الرئيسية للعثور بسرعة على معلومات محددة."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 1772582754697.1167,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Windows%20Fundamentals/5-3-security%20monitoring%20workflow.webp"
+        },
+        {
+          "id": 18,
+          "type": "hr"
+        },
+        {
+          "id": 19,
+          "type": "title",
+          "value": {
+            "en": "Practical Security Monitoring and Best Practices",
+            "ar": "مراقبة الأمان العملية وأفضل الممارسات"
+          }
+        },
+        {
+          "id": 20,
+          "type": "text",
+          "value": {
+            "en": "Effective security monitoring requires a systematic approach combining preventive controls (firewall) with detective controls (auditing). First, ensure Windows Defender Firewall is enabled on all network profiles with appropriate rules. Review existing firewall rules periodically and remove unnecessary ones. Each allowed inbound connection is a potential entry point for attackers. Second, enable comprehensive audit policies covering logon events, account management, privilege use, and object access. The more visibility you have, the better you can detect problems. Third, establish a routine for reviewing security logs. Even checking logs weekly is better than never reviewing them. Look for patterns like repeated failed logins from the same account, logons at unusual times, or access to sensitive files by unauthorized users.",
+            "ar": "المراقبة الأمنية الفعالة تتطلب نهجاً منظماً يجمع بين الضوابط الوقائية (جدار الحماية) والضوابط الكاشفة (المراجعة). أولاً، تأكد من تمكين جدار حماية Windows Defender على جميع ملفات تعريف الشبكة بقواعد مناسبة. راجع قواعد جدار الحماية الموجودة بشكل دوري وأزل الغير ضرورية. كل اتصال وارد مسموح هو نقطة دخول محتملة للمهاجمين. ثانياً، مكّن سياسات مراجعة شاملة تغطي أحداث تسجيل الدخول، إدارة الحسابات، استخدام الصلاحيات، والوصول للكائنات. كلما زادت الرؤية لديك، كلما كان بإمكانك كشف المشاكل بشكل أفضل. ثالثاً، أنشئ روتيناً لمراجعة سجلات الأمان. حتى فحص السجلات أسبوعياً أفضل من عدم مراجعتها أبداً. ابحث عن أنماط مثل تسجيلات دخول فاشلة متكررة من نفس الحساب، تسجيلات دخول في أوقات غير عادية، أو الوصول لملفات حساسة من قبل مستخدمين غير مصرح لهم."
+          }
+        },
+        {
+          "id": 21,
+          "type": "orderedList",
+          "title": {
+            "en": "Essential Security Monitoring Tasks",
+            "ar": "مهام مراقبة الأمان الأساسية"
+          },
+          "items": [
+            {
+              "subtitle": {
+                "en": "Daily: Check Firewall Status",
+                "ar": "يومياً: تحقق من حالة جدار الحماية"
+              },
+              "text": {
+                "en": "Verify that Windows Defender Firewall is active on all network profiles. Open Windows Security, go to Firewall & network protection, and confirm all three profiles show firewall is on. If disabled, investigate why and re-enable immediately.",
+                "ar": "تحقق من أن جدار حماية Windows Defender نشط على جميع ملفات تعريف الشبكة. افتح أمان ويندوز، انتقل لحماية جدار الحماية والشبكة، وتأكد أن جميع الملفات الثلاثة تظهر جدار الحماية قيد التشغيل. إذا كان معطلاً، حقق في السبب وأعد التمكين فوراً."
+              },
+              "example": {
+                "en": "Example: Windows Security > Firewall & network protection",
+                "ar": "مثال: أمان ويندوز > حماية جدار الحماية والشبكة"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Weekly: Review Security Event Logs",
+                "ar": "أسبوعياً: راجع سجلات أحداث الأمان"
+              },
+              "text": {
+                "en": "Open Event Viewer and examine the Security log for suspicious activities. Filter for Event IDs 4625 (failed logons) and 4720 (account creation). Investigate any unexpected patterns such as multiple failed login attempts or accounts created outside normal business hours.",
+                "ar": "افتح عارض الأحداث وافحص سجل الأمان للأنشطة المشبوهة. صفّ لمعرفات الأحداث 4625 (تسجيلات دخول فاشلة) و4720 (إنشاء حساب). حقق في أي أنماط غير متوقعة مثل محاولات تسجيل دخول فاشلة متعددة أو حسابات تم إنشاؤها خارج ساعات العمل العادية."
+              },
+              "example": {
+                "en": "Example: Event Viewer > Windows Logs > Security > Filter Current Log",
+                "ar": "مثال: عارض الأحداث > سجلات ويندوز > الأمان > تصفية السجل الحالي"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Monthly: Audit User Accounts and Permissions",
+                "ar": "شهرياً: راجع حسابات المستخدمين والصلاحيات"
+              },
+              "text": {
+                "en": "Review all user accounts to verify they are still needed. Disable or delete accounts for employees who have left. Check Administrator group membership and remove any users who no longer need elevated privileges. Review file permissions on sensitive folders.",
+                "ar": "راجع جميع حسابات المستخدمين للتحقق من أنها لا تزال مطلوبة. عطّل أو احذف حسابات الموظفين الذين غادروا. تحقق من عضوية مجموعة المديرين وأزل أي مستخدمين لم يعودوا بحاجة لصلاحيات مرتفعة. راجع صلاحيات الملفات على المجلدات الحساسة."
+              },
+              "example": {
+                "en": "Example: Computer Management > Local Users and Groups",
+                "ar": "مثال: إدارة الكمبيوتر > المستخدمون والمجموعات المحليون"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Quarterly: Review and Update Firewall Rules",
+                "ar": "ربع سنوياً: راجع وحدّث قواعد جدار الحماية"
+              },
+              "text": {
+                "en": "Open Windows Defender Firewall with Advanced Security and review all custom rules. Remove rules for programs that are no longer installed. Verify that rules allowing inbound connections are still necessary. Document the purpose of each rule for future reference.",
+                "ar": "افتح جدار حماية Windows Defender مع الأمان المتقدم وراجع جميع القواعد المخصصة. أزل قواعد البرامج التي لم تعد مثبتة. تحقق من أن القواعد التي تسمح بالاتصالات الواردة لا تزال ضرورية. وثّق الغرض من كل قاعدة للرجوع إليها مستقبلاً."
+              },
+              "example": {
+                "en": "Example: wf.msc > Inbound Rules > review each custom rule",
+                "ar": "مثال: wf.msc > القواعد الواردة > راجع كل قاعدة مخصصة"
+              }
+            }
+          ]
+        },
+        {
+          "id": 22,
+          "type": "text",
+          "value": {
+            "en": "Log retention and backup are critical considerations. Windows event logs have size limits and automatically overwrite old entries when full. For security and compliance purposes, you should configure logs to archive before overwriting, or export important logs to separate storage. PowerShell scripts can automate log collection and backup. In professional environments, logs are typically forwarded to a central log management system that provides long-term storage, advanced analysis, and alerting capabilities. Even in home or small office environments, periodically exporting security logs to external storage provides a historical record useful for investigating incidents that might not be discovered immediately. Remember that attackers often try to delete logs to hide their tracks, so protecting log integrity is an important security measure.",
+            "ar": "الاحتفاظ بالسجلات والنسخ الاحتياطي اعتبارات حاسمة. سجلات أحداث ويندوز لها حدود حجم وتستبدل تلقائياً الإدخالات القديمة عند الامتلاء. لأغراض الأمان والامتثال، يجب تكوين السجلات للأرشفة قبل الاستبدال، أو تصدير السجلات المهمة لتخزين منفصل. يمكن لنصوص PowerShell أتمتة جمع السجلات والنسخ الاحتياطي. في البيئات المهنية، عادة ما يتم إعادة توجيه السجلات لنظام إدارة سجلات مركزي يوفر تخزيناً طويل الأجل، تحليلاً متقدماً، وقدرات تنبيه. حتى في بيئات المنزل أو المكتب الصغير، تصدير سجلات الأمان بشكل دوري لتخزين خارجي يوفر سجلاً تاريخياً مفيداً للتحقيق في حوادث قد لا يتم اكتشافها فوراً. تذكر أن المهاجمين غالباً ما يحاولون حذف السجلات لإخفاء آثارهم، لذا حماية سلامة السجل إجراء أمني مهم."
+          }
+        },
+        {
+          "id": 23,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "Attackers with administrator access can potentially clear event logs to hide their activities. If you find that security logs have been unexpectedly cleared (Event ID 1102), this is a strong indicator of a security breach and should trigger immediate investigation.",
+            "ar": "المهاجمون بوصول المدير يمكنهم محتملاً مسح سجلات الأحداث لإخفاء أنشطتهم. إذا وجدت أن سجلات الأمان تم مسحها بشكل غير متوقع (معرف الحدث 1102)، هذا مؤشر قوي على خرق أمني ويجب أن يثير تحقيقاً فورياً."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 24,
+          "type": "text",
+          "value": {
+            "en": "Defense in depth is the security principle of using multiple overlapping security controls rather than relying on a single protection mechanism. Windows Defender Firewall is one layer. User account controls and permissions are another layer. Audit logging provides visibility across all layers. Antivirus software adds another layer of protection. Regular updates patch vulnerabilities. Each layer independently reduces risk, and together they provide robust protection. Even if an attacker bypasses one control, other layers still protect the system. This multi-layered approach is fundamental to cybersecurity. As you develop your security skills, always think about implementing multiple complementary protections rather than depending on any single security measure. Windows provides many built-in security features, and using them together creates a strong security posture.",
+            "ar": "الدفاع في العمق هو مبدأ أمني لاستخدام ضوابط أمان متعددة متداخلة بدلاً من الاعتماد على آلية حماية واحدة. جدار حماية Windows Defender هو طبقة واحدة. ضوابط حسابات المستخدمين والصلاحيات هي طبقة أخرى. تسجيل المراجعة يوفر رؤية عبر جميع الطبقات. برامج مكافحة الفيروسات تضيف طبقة حماية أخرى. التحديثات المنتظمة تصلح الثغرات. كل طبقة تقلل المخاطر بشكل مستقل، ومعاً توفر حماية قوية. حتى لو تجاوز مهاجم ضابطاً واحداً، طبقات أخرى لا تزال تحمي النظام. هذا النهج متعدد الطبقات أساسي للأمن السيبراني. بينما تطور مهاراتك الأمنية، فكر دائماً في تطبيق حماية متعددة متكاملة بدلاً من الاعتماد على أي إجراء أمان واحد. يوفر ويندوز العديد من ميزات الأمان المدمجة، واستخدامها معاً ينشئ وضعاً أمنياً قوياً."
+          }
+        },
+        {
+          "id": 25,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Think of Windows security like airport security. The firewall is the perimeter fence that controls who enters. User accounts and permissions are the boarding passes that determine where you can go. Security auditing is the surveillance cameras that record all activities. No single control is perfect, but together they create multiple barriers that make unauthorized access extremely difficult.",
+            "ar": "فكر في أمان ويندوز مثل أمان المطار. جدار الحماية هو السياج المحيط الذي يتحكم في من يدخل. حسابات المستخدمين والصلاحيات هي بطاقات الصعود التي تحدد أين يمكنك الذهاب. مراجعة الأمان هي كاميرات المراقبة التي تسجل جميع الأنشطة. لا يوجد ضابط واحد مثالي، لكن معاً ينشئون حواجز متعددة تجعل الوصول غير المصرح به صعباً للغاية."
+          },
+          "link": "",
+          "isLab": false
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "createdAt": "2026-03-04T11:29:31.120Z",
+    "totalTopics": 5,
+    "totalElements": 114
+  }
+}

@@ -1,0 +1,2983 @@
+{
+  "landingData": {
+    "title": {
+      "en": "Wireshark - Packet Analysis Pro",
+      "ar": "Wireshark - تحليل الحزم الاحترافي"
+    },
+    "description": {
+      "en": "Master Wireshark from the ground up. Learn how to capture, filter, and deeply analyze network traffic to detect attacks, troubleshoot performance issues, and investigate security incidents using real PCAP files.",
+      "ar": "أتقن استخدام Wireshark من الصفر. تعلّم كيف تلتقط حزم الشبكة وتصفّيها وتحللها بعمق لاكتشاف الهجمات وتشخيص مشاكل الأداء والتحقيق في الحوادث الأمنية باستخدام ملفات PCAP حقيقية."
+    },
+    "difficulty": {
+      "en": "Beginner to Intermediate",
+      "ar": "مبتدئ إلى متوسط"
+    },
+    "duration": {
+      "en": "480 Minutes",
+      "ar": "480 دقيقة"
+    },
+    "instructor": "CyberLab",
+    "rating": 4.9,
+    "students": 320
+  },
+  "topics": [
+    {
+      "id": "topic-1",
+      "title": {
+        "en": "Interface Selection & Capture Filters",
+        "ar": "اختيار الواجهة وفلاتر الالتقاط"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "Understanding Network Interfaces in Wireshark",
+            "ar": "فهم واجهات الشبكة في Wireshark"
+          }
+        },
+        {
+          "id": 3,
+          "type": "text",
+          "value": {
+            "en": "Before you capture a single packet, Wireshark asks you a critical question: which interface should it listen on? A network interface is the entry point between your machine and the network. Every device that connects your computer to a network — whether physical or virtual — is a separate interface, and each one carries different traffic. Choosing the wrong interface means you will capture nothing useful.",
+            "ar": "قبل أن تلتقط حزمة واحدة، يسألك Wireshark سؤالاً مهماً: أيّ واجهة يجب أن يستمع إليها؟ واجهة الشبكة (Network Interface) هي نقطة الدخول بين جهازك والشبكة. كل جهاز يربط حاسوبك بالشبكة — سواء كان فعلياً أو افتراضياً — هو واجهة مستقلة تحمل حركة مرور مختلفة. اختيار الواجهة الخاطئة يعني أنك لن تلتقط أي شيء مفيد."
+          }
+        },
+        {
+          "id": 1773103251277.9546,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageUrl": "https://cdn.cyber-labs.tech/Wireshark%20-%20Packet%20Analysis%20Pro/interface%20type.webp"
+        },
+        {
+          "id": 4,
+          "type": "table",
+          "title": {
+            "en": "Common Network Interface Types",
+            "ar": "أنواع واجهات الشبكة الشائعة"
+          },
+          "headers": {
+            "en": [
+              "Interface Name",
+              "Type",
+              "What It Carries",
+              "When to Use"
+            ],
+            "ar": [
+              "اسم الواجهة",
+              "النوع",
+              "ما الذي تحمله",
+              "متى تستخدمها"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "eth0 / en0",
+                "Ethernet (Wired)",
+                "All wired LAN traffic",
+                "Default for most wired analysis"
+              ],
+              "ar": [
+                "eth0 / en0",
+                "إيثرنت (سلكي)",
+                "كل حركة مرور الشبكة السلكية",
+                "الافتراضي لمعظم تحليلات الشبكة السلكية"
+              ]
+            },
+            {
+              "en": [
+                "wlan0 / Wi-Fi",
+                "Wireless (802.11)",
+                "Wi-Fi data frames",
+                "Wireless traffic analysis"
+              ],
+              "ar": [
+                "wlan0 / Wi-Fi",
+                "لاسلكي (802.11)",
+                "إطارات Wi-Fi",
+                "تحليل حركة مرور الشبكة اللاسلكية"
+              ]
+            },
+            {
+              "en": [
+                "lo / Loopback",
+                "Virtual Internal",
+                "Traffic within your own machine",
+                "Testing local apps or services"
+              ],
+              "ar": [
+                "lo / Loopback",
+                "افتراضي داخلي",
+                "الحركة داخل جهازك فقط",
+                "اختبار التطبيقات والخدمات المحلية"
+              ]
+            },
+            {
+              "en": [
+                "USB Adapter",
+                "External Physical",
+                "Traffic through USB network card",
+                "Portable captures, extra interfaces"
+              ],
+              "ar": [
+                "USB Adapter",
+                "خارجي فعلي",
+                "الحركة عبر بطاقة شبكة USB",
+                "الالتقاط المتنقل أو الواجهات الإضافية"
+              ]
+            },
+            {
+              "en": [
+                "vlan0 / Sub-interface",
+                "Virtual VLAN",
+                "Tagged VLAN traffic",
+                "Segmented enterprise network analysis"
+              ],
+              "ar": [
+                "vlan0 / واجهة فرعية",
+                "VLAN افتراضي",
+                "حركة المرور ذات الوسم VLAN",
+                "تحليل الشبكات المؤسسية المقسّمة"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 5,
+          "type": "text",
+          "value": {
+            "en": "To identify which interface is currently active, open Wireshark and navigate to Statistics → Capture Interfaces. This window shows all detected interfaces along with a live packet-per-second counter and a sparkline graph. The interface showing the highest traffic rate is almost always the one carrying your active network connection. This simple check saves analysts from starting a capture on the wrong interface and wasting time.",
+            "ar": "لتحديد الواجهة النشطة حالياً، افتح Wireshark وانتقل إلى Statistics → Capture Interfaces. تعرض هذه النافذة جميع الواجهات المكتشفة مع عداد الحزم في الثانية ورسم بياني حي. الواجهة التي تُظهر أعلى معدل حركة مرور هي دائماً التي تحمل اتصالك النشط. يوفّر هذا الفحص البسيط على المحللين الوقت ويمنعهم من البدء بالتقاط الحزم على واجهة خاطئة."
+          }
+        },
+        {
+          "id": 6,
+          "type": "title",
+          "value": {
+            "en": "Promiscuous Mode vs. Monitor Mode",
+            "ar": "الوضع المختلط مقابل وضع المراقبة"
+          }
+        },
+        {
+          "id": 7,
+          "type": "text",
+          "value": {
+            "en": "By default, a network interface only accepts packets addressed to its own MAC address and broadcast frames. This means you would miss most of the traffic on a shared network. Promiscuous mode removes this restriction — when enabled, the interface accepts and passes ALL frames on the wire to Wireshark, regardless of the destination MAC. This is essential for capturing traffic that is not addressed to your machine, such as when monitoring a network segment via a network tap or mirrored switch port.",
+            "ar": "بشكل افتراضي، تقبل واجهة الشبكة فقط الحزم الموجّهة إلى عنوان MAC الخاص بها والإطارات البثّية. هذا يعني أنك ستفوّت معظم حركة المرور على الشبكة المشتركة. يزيل الوضع المختلط (Promiscuous Mode) هذا القيد — عند تفعيله، تقبل الواجهة جميع الإطارات على الكابل وتمررها إلى Wireshark بغض النظر عن MAC الوجهة. هذا ضروري لالتقاط الحركة غير الموجّهة إلى جهازك."
+          }
+        },
+        {
+          "id": 8,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Monitor mode is exclusive to Wi-Fi interfaces. Unlike promiscuous mode which only captures data frames, monitor mode captures all 802.11 frame types: data, management (beacons, probe requests), and control frames. This lets you see which access points are broadcasting nearby, which clients are connecting, and detect rogue access points. Monitor mode requires a wireless adapter that supports it, and typically disables your normal Wi-Fi connection while active.",
+            "ar": "وضع المراقبة (Monitor Mode) حصري لواجهات Wi-Fi. على خلاف الوضع المختلط الذي يلتقط إطارات البيانات فقط، يلتقط وضع المراقبة جميع أنواع إطارات 802.11: البيانات والإدارة (النبضات وطلبات الاستشعار) وإطارات التحكم. يتطلب هذا الوضع بطاقة لاسلكية تدعمه، وعادةً يعطّل اتصالك بالـ Wi-Fi أثناء تفعيله."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 9,
+          "type": "title",
+          "value": {
+            "en": "Remote Capture & Multi-Interface Sessions",
+            "ar": "الالتقاط عن بُعد وجلسات الواجهات المتعددة"
+          }
+        },
+        {
+          "id": 10,
+          "type": "text",
+          "value": {
+            "en": "Sometimes the machine you need to analyze is not in front of you. Wireshark supports remote packet capture through two methods. The first uses rpcapd, a daemon installed on the remote machine that streams packets back to Wireshark over the network. The second — more common on Linux systems — uses SSH combined with tcpdump: you run tcpdump remotely and pipe its output directly into Wireshark running locally. This is powerful for capturing traffic on servers, routers, or embedded devices without installing Wireshark on them.",
+            "ar": "أحياناً الجهاز الذي تحتاج لتحليله ليس أمامك. يدعم Wireshark الالتقاط عن بُعد بطريقتين. الأولى تستخدم rpcapd، وهو خدمة مُثبَّتة على الجهاز البعيد تبث الحزم إلى Wireshark عبر الشبكة. الثانية — الأكثر شيوعاً على Linux — تستخدم SSH مع tcpdump: تشغّل tcpdump عن بُعد وتوجّه مخرجاته مباشرةً إلى Wireshark المحلي. هذا مفيد لالتقاط حركة المرور على الخوادم أو الأجهزة المضمّنة دون تثبيت Wireshark عليها."
+          }
+        },
+        {
+          "id": 11,
+          "type": "terminal",
+          "label": {
+            "en": "SSH + tcpdump Remote Capture piped into Wireshark",
+            "ar": "الالتقاط عن بُعد عبر SSH + tcpdump موجَّه إلى Wireshark"
+          },
+          "value": "ssh user@remote-host 'tcpdump -i eth0 -w - not port 22' | wireshark -k -i -"
+        },
+        {
+          "id": 12,
+          "type": "text",
+          "value": {
+            "en": "Wireshark also allows capturing on multiple interfaces simultaneously. This is valuable when traffic crosses multiple network segments or when you need to compare timing between two interfaces. After capturing, if you have separate PCAP files from different sources or time windows, you can combine them into a single chronologically sorted file using the mergecap command-line tool that ships with Wireshark.",
+            "ar": "يتيح Wireshark أيضاً الالتقاط من واجهات متعددة في آنٍ واحد. هذا مفيد عندما تعبر حركة المرور أجزاء متعددة من الشبكة أو عندما تحتاج لمقارنة التوقيت بين واجهتين. بعد الالتقاط، إذا كانت لديك ملفات PCAP منفصلة من مصادر أو نوافذ زمنية مختلفة، يمكنك دمجها في ملف واحد مرتّب زمنياً باستخدام أداة mergecap التي تأتي مع Wireshark."
+          }
+        },
+        {
+          "id": 13,
+          "type": "terminal",
+          "label": {
+            "en": "Merging multiple PCAP files with mergecap",
+            "ar": "دمج ملفات PCAP متعددة باستخدام mergecap"
+          },
+          "value": "mergecap -w combined_output.pcapng capture1.pcap capture2.pcap capture3.pcap"
+        },
+        {
+          "id": 14,
+          "type": "hr"
+        },
+        {
+          "id": 15,
+          "type": "title",
+          "value": {
+            "en": "Berkeley Packet Filter (BPF) — Capture Filters",
+            "ar": "فلتر الحزم بيركلي (BPF) — فلاتر الالتقاط"
+          }
+        },
+        {
+          "id": 16,
+          "type": "text",
+          "value": {
+            "en": "A capture filter is a rule applied at the kernel level before any packet reaches Wireshark. This is fundamentally different from a display filter, which is applied after packets are already stored in memory. The engine behind capture filters is called the Berkeley Packet Filter (BPF). Because BPF runs inside the operating system kernel, it is extremely fast and efficient — it discards unwanted packets before they consume CPU time, RAM, or disk space. On busy networks capturing gigabytes of traffic per minute, a well-crafted BPF filter can reduce your capture file size by 90% or more.",
+            "ar": "فلتر الالتقاط (Capture Filter) هو قاعدة تُطبَّق على مستوى النواة قبل وصول أي حزمة إلى Wireshark. هذا يختلف جوهرياً عن فلتر العرض (Display Filter) الذي يُطبَّق بعد تخزين الحزم في الذاكرة. المحرك الذي يقوم عليه فلاتر الالتقاط يُسمى Berkeley Packet Filter أو BPF. لأن BPF يعمل داخل نواة نظام التشغيل، فهو سريع للغاية — يتخلص من الحزم غير المرغوبة قبل أن تستهلك وقت المعالج أو الذاكرة أو مساحة القرص. على الشبكات المزدحمة التي تلتقط جيجابايتات في الدقيقة، يمكن لفلتر BPF المُصمَّم جيداً أن يقلل حجم ملف الالتقاط بنسبة 90% أو أكثر."
+          }
+        },
+        {
+          "id": 17,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "Capture filters CANNOT be changed while a capture is running. If you realize you need a different filter, you must stop the capture, update the filter, and start a new session. This is why planning your capture filter before starting is critical — especially on live production networks where you cannot replay missed traffic.",
+            "ar": "لا يمكن تغيير فلاتر الالتقاط أثناء تشغيل الجلسة. إذا أدركت أنك تحتاج فلتراً مختلفاً، يجب إيقاف الالتقاط وتحديث الفلتر وبدء جلسة جديدة. لهذا السبب يُعدّ التخطيط لفلتر الالتقاط قبل البدء أمراً بالغ الأهمية — خاصةً على شبكات الإنتاج الحية حيث لا يمكنك إعادة تشغيل الحركة الفائتة."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 1773103426819.3875,
+          "type": "image",
+          "srcKey": "",
+          "size": "small",
+          "imageUrl": "https://cdn.cyber-labs.tech/Wireshark%20-%20Packet%20Analysis%20Pro/Capture%20Filters%20and%20Display%20Filters.webp"
+        },
+        {
+          "id": 18,
+          "type": "text",
+          "value": {
+            "en": "BPF syntax follows a simple and consistent structure: [protocol] [direction] [type] [value]. You specify what protocol to match (tcp, udp, icmp, arp), the direction (src for source, dst for destination, or omit for both), the type of identifier (host for a single IP, net for a subnet, port for a port number), and finally the value itself. Combine multiple conditions using the logical operators and, or, and not. Wrap complex sub-expressions in parentheses to control evaluation order.",
+            "ar": "تتبع صياغة BPF بنيةً بسيطة ومتسقة: [protocol] [direction] [type] [value]. تحدد البروتوكول المراد مطابقته (tcp أو udp أو icmp أو arp)، والاتجاه (src للمصدر، dst للوجهة، أو احذفه للاثنين)، ونوع المعرّف (host لعنوان IP واحد، net لشبكة فرعية، port لرقم منفذ)، وأخيراً القيمة نفسها. ادمج شروطاً متعددة باستخدام المعاملات المنطقية and وor وnot، وضع التعبيرات الفرعية المعقدة بين قوسين للتحكم في ترتيب التقييم."
+          }
+        },
+        {
+          "id": 19,
+          "type": "list",
+          "title": {
+            "en": "Essential BPF Capture Filter Examples",
+            "ar": "أمثلة أساسية على فلاتر الالتقاط BPF"
+          },
+          "items": {
+            "en": [
+              "host 192.168.1.1 — capture only traffic to or from this specific IP address",
+              "port 80 or port 443 — capture HTTP and HTTPS traffic only",
+              "not arp and not icmp — exclude noisy ARP and ICMP packets to reduce clutter",
+              "tcp and src net 10.0.0.0/8 — capture only TCP traffic originating from the internal subnet",
+              "udp port 53 — capture DNS queries and responses only",
+              "ether host AA:BB:CC:DD:EE:FF — capture traffic to or from a specific MAC address",
+              "udp portrange 16384-32767 — capture RTP audio streams used in VoIP calls",
+              "tcp dst port 22 — capture only inbound SSH connection attempts"
+            ],
+            "ar": [
+              "host 192.168.1.1 — التقط فقط الحركة من وإلى هذا العنوان IP المحدد",
+              "port 80 or port 443 — التقط حركة HTTP وHTTPS فقط",
+              "not arp and not icmp — استبعد حزم ARP وICMP الضوضائية لتقليل الفوضى",
+              "tcp and src net 10.0.0.0/8 — التقط فقط حركة TCP الصادرة من الشبكة الداخلية",
+              "udp port 53 — التقط استعلامات DNS وردودها فقط",
+              "ether host AA:BB:CC:DD:EE:FF — التقط الحركة من وإلى عنوان MAC محدد",
+              "udp portrange 16384-32767 — التقط تدفقات صوت RTP المستخدمة في مكالمات VoIP",
+              "tcp dst port 22 — التقط فقط محاولات الاتصال SSH الواردة"
+            ]
+          }
+        },
+        {
+          "id": 20,
+          "type": "hr"
+        },
+        {
+          "id": 21,
+          "type": "title",
+          "value": {
+            "en": "Capture Session Configuration & Best Practices",
+            "ar": "إعداد جلسة الالتقاط وأفضل الممارسات"
+          }
+        },
+        {
+          "id": 22,
+          "type": "text",
+          "value": {
+            "en": "For long-running captures — such as overnight monitoring or multi-hour incident investigations — a single growing PCAP file is impractical. Wireshark's ring buffer mode solves this by automatically rotating capture files when they reach a set size (e.g., 50 MB) or after a set time interval (e.g., every 10 minutes). You configure a maximum number of files to keep, and Wireshark overwrites the oldest file when the limit is reached, creating a rolling window of recent traffic. This prevents disk exhaustion while ensuring you always have the most recent data available.",
+            "ar": "بالنسبة للالتقاطات طويلة المدى — مثل المراقبة الليلية أو التحقيقات متعددة الساعات — ملف PCAP واحد متنامٍ غير عملي. يحل وضع الذاكرة الحلقية (Ring Buffer) في Wireshark هذه المشكلة بتدوير ملفات الالتقاط تلقائياً عند بلوغ حجم محدد (مثلاً 50 ميغابايت) أو بعد فترة زمنية محددة (مثلاً كل 10 دقائق). تضبط عدداً أقصى من الملفات للاحتفاظ بها، ويقوم Wireshark بالكتابة فوق الأقدم عند بلوغ الحد، مما يخلق نافذة متجددة من حركة المرور الأخيرة."
+          }
+        },
+        {
+          "id": 23,
+          "type": "table",
+          "title": {
+            "en": "PCAP vs PCAPNG File Format Comparison",
+            "ar": "مقارنة بين صيغتَي ملفات PCAP وPCAPNG"
+          },
+          "headers": {
+            "en": [
+              "Feature",
+              ".pcap",
+              ".pcapng"
+            ],
+            "ar": [
+              "الميزة",
+              ".pcap",
+              ".pcapng"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "Multiple interface support",
+                "No",
+                "Yes — each packet tagged with its interface"
+              ],
+              "ar": [
+                "دعم واجهات متعددة",
+                "لا",
+                "نعم — كل حزمة مُوسومة بواجهتها"
+              ]
+            },
+            {
+              "en": [
+                "Packet comments",
+                "No",
+                "Yes — add notes to individual packets"
+              ],
+              "ar": [
+                "تعليقات على الحزم",
+                "لا",
+                "نعم — إضافة ملاحظات على حزم فردية"
+              ]
+            },
+            {
+              "en": [
+                "Session metadata",
+                "Minimal",
+                "Full — capture OS, hardware, application"
+              ],
+              "ar": [
+                "بيانات وصفية للجلسة",
+                "محدودة",
+                "كاملة — نظام التشغيل والجهاز والتطبيق"
+              ]
+            },
+            {
+              "en": [
+                "Compatibility",
+                "Universal (older tools)",
+                "Modern tools only"
+              ],
+              "ar": [
+                "التوافق",
+                "شامل (الأدوات القديمة)",
+                "الأدوات الحديثة فقط"
+              ]
+            },
+            {
+              "en": [
+                "Recommended for",
+                "Simple one-time captures",
+                "Professional analysis and long-term storage"
+              ],
+              "ar": [
+                "موصى به لـ",
+                "الالتقاطات البسيطة لمرة واحدة",
+                "التحليل الاحترافي والتخزين طويل الأمد"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 24,
+          "type": "text",
+          "value": {
+            "en": "The snaplen setting controls how many bytes of each packet Wireshark actually saves. Setting snaplen to 65535 bytes captures the full packet including all payload data — this is what you want for security analysis and content inspection. Setting it to a smaller value like 96 bytes captures only the headers (Ethernet, IP, TCP) and discards the payload — useful for high-speed traffic measurement where you only need metadata and not content. Always use full snaplen for security investigations.",
+            "ar": "يتحكم إعداد snaplen في عدد البايتات من كل حزمة التي يحفظها Wireshark فعلياً. ضبطه على 65535 بايت يلتقط الحزمة كاملة بما فيها بيانات الحمولة — هذا ما تريده للتحليل الأمني وفحص المحتوى. ضبطه على قيمة أصغر كـ96 بايت يلتقط الرؤوس فقط (Ethernet وIP وTCP) ويتجاهل الحمولة — مفيد لقياس حركة المرور عالية السرعة عندما تحتاج فقط للبيانات الوصفية. استخدم دائماً snaplen كاملاً في تحقيقات الأمان."
+          }
+        },
+        {
+          "id": 26,
+          "type": "terminal",
+          "label": {
+            "en": "CLI Capture using tshark with a BPF capture filter",
+            "ar": "الالتقاط من سطر الأوامر باستخدام tshark مع فلتر BPF"
+          },
+          "value": "tshark -i eth0 -w /captures/dns_traffic.pcap -f \"udp port 53\" -b filesize:51200 -b files:5"
+        },
+        {
+          "id": 27,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "The tshark command above captures DNS traffic on eth0, saves to a file, uses ring buffer mode with 5 files of 50 MB each (-b filesize:51200 means 51200 KB = 50 MB), and applies the BPF filter 'udp port 53' at the kernel level. dumpcap is an even more lightweight alternative to tshark for long-running background captures — it uses less CPU and is the recommended tool when you only need to collect packets without real-time analysis.",
+            "ar": "أمر tshark أعلاه يلتقط حركة DNS على eth0، يحفظها في ملف، يستخدم وضع الذاكرة الحلقية بـ5 ملفات بحجم 50 ميغابايت لكل منها، ويطبّق فلتر BPF على مستوى النواة. أداة dumpcap هي بديل أخف وزناً من tshark للالتقاطات الخلفية طويلة المدى — تستهلك معالجاً أقل وهي الأداة الموصى بها عندما تحتاج فقط لجمع الحزم دون تحليل فوري."
+          },
+          "link": "",
+          "isLab": false
+        }
+      ]
+    },
+    {
+      "id": "topic-2",
+      "title": {
+        "en": "Advanced Display Filters",
+        "ar": "فلاتر العرض المتقدمة"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "What Are Display Filters and Why They Are Different",
+            "ar": "ما هي فلاتر العرض ولماذا تختلف عن فلاتر الالتقاط"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "Display filters are one of the most powerful features in Wireshark. Unlike capture filters, which permanently discard packets at the kernel level before they are saved, display filters operate on packets that are already captured and stored in memory. They hide packets that do not match the filter, but they never delete them — the moment you clear the filter, all original packets reappear. This non-destructive nature means you can freely experiment with complex display filters without any risk of losing data.",
+            "ar": "فلاتر العرض هي إحدى أقوى ميزات Wireshark. على خلاف فلاتر الالتقاط التي تتخلص من الحزم نهائياً على مستوى النواة قبل حفظها، تعمل فلاتر العرض على الحزم المُلتقطة والمخزّنة في الذاكرة. تُخفي الحزم غير المطابقة للفلتر لكنها لا تحذفها أبداً — بمجرد مسح الفلتر، تعود جميع الحزم الأصلية للظهور. هذه الطبيعة غير التدميرية تعني أنك تستطيع تجربة فلاتر معقدة بحرية تامة دون أي خطر لفقدان البيانات."
+          }
+        },
+        {
+          "id": 1773103277803.1587,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageUrl": "https://cdn.cyber-labs.tech/Wireshark%20-%20Packet%20Analysis%20Pro/Capture%20Filter.webp"
+        },
+        {
+          "id": 4,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "Display filters use Wireshark's own field names from its protocol dissectors — NOT BPF syntax. The most common beginner mistake is typing BPF syntax like 'tcp port 80' into the display filter bar. This will turn the bar red (invalid) or in some versions return incorrect results silently. The correct display filter equivalent is 'tcp.port == 80'. Always look for the green color in the filter bar to confirm your syntax is valid.",
+            "ar": "تستخدم فلاتر العرض أسماء الحقول الخاصة بـ Wireshark من محلّلات البروتوكول — وليس صياغة BPF. الخطأ الأكثر شيوعاً لدى المبتدئين هو كتابة صياغة BPF مثل 'tcp port 80' في شريط فلتر العرض. سيتحول الشريط إلى الأحمر (غير صالح) أو في بعض الإصدارات يُعطي نتائج خاطئة بصمت. الفلتر الصحيح المكافئ هو 'tcp.port == 80'. ابحث دائماً عن اللون الأخضر في شريط الفلتر لتأكيد صحة الصياغة."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 5,
+          "type": "title",
+          "value": {
+            "en": "Comparison & Matching Operators",
+            "ar": "عوامل المقارنة والمطابقة"
+          }
+        },
+        {
+          "id": 6,
+          "type": "text",
+          "value": {
+            "en": "Wireshark display filters support a rich set of comparison operators beyond simple equality. The contains operator checks whether a string field includes a substring anywhere in its value — making it perfect for searching hostnames, URIs, or user-agent strings. The matches operator applies a full Perl-compatible regular expression (PCRE) to a field, giving you pattern-matching power for finding obfuscated URIs, encoded payloads, or domain generation algorithm patterns. The in operator tests whether a field's value belongs to a specified set, which is cleaner than chaining multiple OR conditions.",
+            "ar": "تدعم فلاتر عرض Wireshark مجموعة غنية من عوامل المقارنة تتجاوز المساواة البسيطة. يفحص عامل contains ما إذا كان حقل نصي يتضمن سلسلة فرعية في أي مكان بقيمته — مما يجعله مثالياً للبحث في أسماء المضيفين أو URIs أو سلاسل User-Agent. يطبّق عامل matches تعبيراً منتظماً متوافقاً مع Perl (PCRE) على حقل، مما يمنحك قدرة المطابقة بالنمط للعثور على URIs مشفّرة أو حمولات مُعمّاة أو أنماط خوارزميات توليد النطاق. يختبر عامل in ما إذا كانت قيمة حقل تنتمي إلى مجموعة محددة، وهو أنظف من ربط شروط OR متعددة."
+          }
+        },
+        {
+          "id": 7,
+          "type": "table",
+          "title": {
+            "en": "Display Filter Operators with Examples",
+            "ar": "عوامل فلاتر العرض مع أمثلة"
+          },
+          "headers": {
+            "en": [
+              "Operator",
+              "Meaning",
+              "Example",
+              "Use Case"
+            ],
+            "ar": [
+              "العامل",
+              "المعنى",
+              "مثال",
+              "حالة الاستخدام"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "==",
+                "Exact match",
+                "ip.src == 10.0.0.1",
+                "Filter a specific source IP"
+              ],
+              "ar": [
+                "==",
+                "مطابقة تامة",
+                "ip.src == 10.0.0.1",
+                "فلترة عنوان IP مصدر محدد"
+              ]
+            },
+            {
+              "en": [
+                "!=",
+                "Not equal",
+                "http.response.code != 200",
+                "Find all non-success HTTP responses"
+              ],
+              "ar": [
+                "!=",
+                "لا يساوي",
+                "http.response.code != 200",
+                "البحث عن ردود HTTP غير الناجحة"
+              ]
+            },
+            {
+              "en": [
+                "contains",
+                "Substring match",
+                "http.host contains \"evil\"",
+                "Find suspicious domain names in HTTP headers"
+              ],
+              "ar": [
+                "contains",
+                "تطابق سلسلة فرعية",
+                "http.host contains \"evil\"",
+                "البحث عن أسماء نطاقات مشبوهة في رؤوس HTTP"
+              ]
+            },
+            {
+              "en": [
+                "matches",
+                "Regex pattern match",
+                "http.request.uri matches \"\\.php$\"",
+                "Find all requests targeting PHP files"
+              ],
+              "ar": [
+                "matches",
+                "تطابق نمط منتظم",
+                "http.request.uri matches \"\\.php$\"",
+                "البحث عن جميع الطلبات التي تستهدف ملفات PHP"
+              ]
+            },
+            {
+              "en": [
+                "in",
+                "Set membership",
+                "tcp.port in {80 443 8080}",
+                "Match multiple ports without chaining OR"
+              ],
+              "ar": [
+                "in",
+                "انتماء لمجموعة",
+                "tcp.port in {80 443 8080}",
+                "مطابقة منافذ متعددة دون ربط OR"
+              ]
+            },
+            {
+              "en": [
+                ">",
+                "Greater than",
+                "ip.ttl > 100",
+                "Find packets with high TTL values"
+              ],
+              "ar": [
+                ">",
+                "أكبر من",
+                "ip.ttl > 100",
+                "البحث عن حزم ذات قيم TTL عالية"
+              ]
+            },
+            {
+              "en": [
+                "<",
+                "Less than",
+                "ip.ttl < 10",
+                "Detect possible TTL manipulation"
+              ],
+              "ar": [
+                "<",
+                "أصغر من",
+                "ip.ttl < 10",
+                "اكتشاف التلاعب المحتمل بـ TTL"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 8,
+          "type": "hr"
+        },
+        {
+          "id": 9,
+          "type": "title",
+          "value": {
+            "en": "Protocol-Specific Advanced Filters",
+            "ar": "فلاتر متقدمة خاصة بالبروتوكولات"
+          }
+        },
+        {
+          "id": 10,
+          "type": "text",
+          "value": {
+            "en": "The real power of Wireshark display filters emerges when you target specific fields within protocol headers. Wireshark dissects each protocol layer and exposes every individual field as a filterable name. For the IP layer, you can filter by TTL values to catch TTL manipulation or fragmented packets that might indicate evasion techniques. The ip.flags.mf == 1 filter specifically catches fragmented IP packets — legitimate large transfers use fragmentation, but attackers also use IP fragmentation to bypass shallow packet inspection firewalls.",
+            "ar": "تظهر القوة الحقيقية لفلاتر عرض Wireshark عند استهداف حقول محددة داخل رؤوس البروتوكولات. يُفكّك Wireshark كل طبقة بروتوكول ويكشف كل حقل فردي كاسم قابل للفلترة. لطبقة IP، يمكنك الفلترة بقيم TTL لاكتشاف التلاعب بـ TTL أو الحزم المجزّأة التي قد تشير لتقنيات التهرب. فلتر ip.flags.mf == 1 يلتقط تحديداً حزم IP المجزّأة — النقلات الكبيرة الشرعية تستخدم التجزئة، لكن المهاجمين يستخدمونها أيضاً لتجاوز جدران الحماية ذات الفحص السطحي."
+          }
+        },
+        {
+          "id": 11,
+          "type": "list",
+          "title": {
+            "en": "TCP Layer Advanced Display Filters",
+            "ar": "فلاتر عرض متقدمة لطبقة TCP"
+          },
+          "items": {
+            "en": [
+              "tcp.flags.syn == 1 && tcp.flags.ack == 0 — SYN-only packets, key indicator of port scanning activity",
+              "tcp.analysis.retransmission — segments resent because no ACK was received within the timeout period",
+              "tcp.analysis.zero_window — receiver buffer is full; sender must pause, causing severe performance degradation",
+              "tcp.analysis.duplicate_ack — receiver repeatedly requesting the same segment, indicating out-of-order delivery",
+              "tcp.analysis.out_of_order — segments arriving out of sequence, common on high-latency links",
+              "tcp.analysis.window_full — sender has filled the advertised receive window; transmission stalls",
+              "tcp.stream eq 5 — isolate and view all packets belonging to a specific TCP conversation stream",
+              "tcp.analysis.keep_alive — heartbeat packets sent on idle connections to prevent timeout closure"
+            ],
+            "ar": [
+              "tcp.flags.syn == 1 && tcp.flags.ack == 0 — حزم SYN فقط، مؤشر رئيسي لنشاط مسح المنافذ",
+              "tcp.analysis.retransmission — الأجزاء المُعاد إرسالها لعدم استلام ACK خلال وقت الانتهاء",
+              "tcp.analysis.zero_window — مخزن المستقبل ممتلئ؛ يجب أن يتوقف المرسل، مما يسبب تدهوراً شديداً في الأداء",
+              "tcp.analysis.duplicate_ack — المستقبل يطلب نفس الجزء مراراً، مما يدل على تسليم خارج التسلسل",
+              "tcp.analysis.out_of_order — الأجزاء تصل خارج التسلسل، شائع على الروابط عالية الكمون",
+              "tcp.analysis.window_full — المرسل ملأ نافذة الاستقبال المُعلنة؛ يتوقف الإرسال",
+              "tcp.stream eq 5 — عزل وعرض جميع الحزم التابعة لتدفق محادثة TCP محدد",
+              "tcp.analysis.keep_alive — حزم النبضات المرسلة على الاتصالات الخاملة لمنع إغلاق انتهاء المهلة"
+            ]
+          }
+        },
+        {
+          "id": 12,
+          "type": "text",
+          "value": {
+            "en": "For HTTP, TLS, and DNS traffic, display filters let you drill down into application-layer content with surgical precision. Filtering http.user_agent for known attack tool names like sqlmap, nikto, or python-requests immediately surfaces automated scanning or exploitation attempts. For DNS, filtering dns.flags.rcode == 3 isolates NXDOMAIN responses — a high rate of these on a single host's traffic often means malware is attempting to contact command-and-control domains generated by a Domain Generation Algorithm (DGA), most of which do not exist and return NXDOMAIN.",
+            "ar": "بالنسبة لحركة HTTP وTLS وDNS، تتيح لك فلاتر العرض التعمق في محتوى طبقة التطبيق بدقة جراحية. فلترة http.user_agent لأسماء أدوات الهجوم المعروفة مثل sqlmap وnikto وpython-requests يكشف فوراً محاولات المسح الآلي أو الاستغلال. بالنسبة لـ DNS، فلترة dns.flags.rcode == 3 يعزل استجابات NXDOMAIN — معدل مرتفع منها في حركة مرور مضيف واحد يعني في الغالب أن البرمجية الخبيثة تحاول الاتصال بنطاقات قيادة وتحكم مولّدة بخوارزمية توليد النطاق (DGA)، معظمها لا يوجد ويُرجع NXDOMAIN."
+          }
+        },
+        {
+          "id": 13,
+          "type": "code",
+          "language": "text",
+          "value": "// Advanced Display Filter Examples — Copy-Paste Ready\n\n// Detect SYN port scanning\ntcp.flags.syn == 1 && tcp.flags.ack == 0\n\n// Find SQL injection attempts in HTTP URIs\nhttp.request.uri matches \"(UNION|SELECT|OR 1=1|DROP TABLE)\"\n\n// Detect DNS tunneling (long subdomains)\ndns.qry.name matches \"[a-z0-9]{25}\\\\.\"\n\n// Find TLS Client Hello packets\ntls.handshake.type == 1\n\n// Isolate traffic between two specific hosts\n(ip.src == 192.168.1.10 && ip.dst == 10.0.0.5) || (ip.src == 10.0.0.5 && ip.dst == 192.168.1.10)\n\n// Detect ICMP tunneling by payload size\nicmp && data.len > 100\n\n// Find HTTP responses with error codes\nhttp.response.code >= 400 && http.response.code <= 599\n\n// Detect FTP brute force (login failure responses)\nftp.response.code == 530"
+        },
+        {
+          "id": 14,
+          "type": "hr"
+        },
+        {
+          "id": 15,
+          "type": "title",
+          "value": {
+            "en": "Practical Filter Techniques & Workflow Shortcuts",
+            "ar": "تقنيات الفلترة العملية واختصارات سير العمل"
+          }
+        },
+        {
+          "id": 16,
+          "type": "text",
+          "value": {
+            "en": "Wireshark provides several shortcuts that dramatically speed up the process of building display filters during an active investigation. The most efficient method is to right-click on any value inside the packet details pane and select Apply as Filter → Selected. Wireshark automatically constructs the correct field name and value syntax and applies it instantly. This eliminates the need to memorize exact field names and prevents typos. You can also use Prepare as Filter to build a filter in the filter bar without applying it yet, allowing you to combine it with other conditions manually.",
+            "ar": "يوفر Wireshark عدة اختصارات تسرّع بشكل كبير عملية بناء فلاتر العرض أثناء التحقيق النشط. الطريقة الأكثر كفاءة هي النقر بزر الماوس الأيمن على أي قيمة في جزء تفاصيل الحزمة واختيار Apply as Filter → Selected. يبني Wireshark تلقائياً اسم الحقل الصحيح وصياغة القيمة ويطبّقها فوراً. هذا يلغي الحاجة لحفظ أسماء الحقول الدقيقة ويمنع الأخطاء الإملائية. يمكنك أيضاً استخدام Prepare as Filter لبناء فلتر في شريط الفلتر دون تطبيقه بعد، مما يتيح دمجه يدوياً مع شروط أخرى."
+          }
+        },
+        {
+          "id": 17,
+          "type": "orderedList",
+          "title": {
+            "en": "How to Save and Reuse Display Filters Efficiently",
+            "ar": "كيفية حفظ فلاتر العرض وإعادة استخدامها بكفاءة"
+          },
+          "items": [
+            {
+              "subtitle": {
+                "en": "Step 1 — Open the Display Filters Dialog",
+                "ar": "الخطوة 1 — افتح مربع حوار فلاتر العرض"
+              },
+              "text": {
+                "en": "Navigate to Analyze → Display Filters in the menu bar. This opens a dialog showing all saved named filters.",
+                "ar": "انتقل إلى Analyze → Display Filters في شريط القوائم. يفتح هذا مربع حوار يعرض جميع الفلاتر المُسمّاة المحفوظة."
+              },
+              "example": {
+                "en": "You will see default filters like 'HTTP', 'TCP only', 'No ARP' already present",
+                "ar": "ستجد فلاتر افتراضية مثل 'HTTP' و'TCP only' و'No ARP' موجودة بالفعل"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Step 2 — Click the + Button to Add a New Filter",
+                "ar": "الخطوة 2 — انقر على زر + لإضافة فلتر جديد"
+              },
+              "text": {
+                "en": "Type a descriptive name for your filter (e.g., 'SYN Scan Detector') and enter the full display filter expression in the Filter field.",
+                "ar": "اكتب اسماً وصفياً للفلتر (مثلاً 'SYN Scan Detector') وأدخل تعبير فلتر العرض الكامل في حقل Filter."
+              },
+              "example": {
+                "en": "Name: 'SYN Scan' | Filter: tcp.flags.syn == 1 && tcp.flags.ack == 0",
+                "ar": "الاسم: 'SYN Scan' | الفلتر: tcp.flags.syn == 1 && tcp.flags.ack == 0"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Step 3 — Create a Toolbar Button for One-Click Access",
+                "ar": "الخطوة 3 — أنشئ زر شريط أدوات للوصول بنقرة واحدة"
+              },
+              "text": {
+                "en": "Click the bookmark icon in the filter bar and select 'Save this filter button to the toolbar'. The filter will appear as a clickable button in the filter toolbar for instant access.",
+                "ar": "انقر على أيقونة الإشارة المرجعية في شريط الفلتر واختر 'Save this filter button to the toolbar'. سيظهر الفلتر كزر قابل للنقر في شريط الفلتر للوصول الفوري."
+              },
+              "example": {
+                "en": "e.g., Create buttons for: 'DNS Only', 'HTTP Errors', 'C2 Beacon Check', 'SYN Scan'",
+                "ar": "مثلاً: أنشئ أزراراً لـ 'DNS Only' و'HTTP Errors' و'C2 Beacon Check' و'SYN Scan'"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Step 4 — Use Edit → Find Packet for Deep Search",
+                "ar": "الخطوة 4 — استخدم Edit → Find Packet للبحث العميق"
+              },
+              "text": {
+                "en": "When you need to find a specific packet within already-filtered results, use Edit → Find Packet. You can search by display filter, hex value, string content, or packet number. This is faster than scrolling through thousands of packets manually.",
+                "ar": "عندما تحتاج للعثور على حزمة محددة ضمن نتائج مُفلتَرة، استخدم Edit → Find Packet. يمكنك البحث بفلتر العرض أو قيمة hex أو محتوى نصي أو رقم الحزمة. هذا أسرع من التمرير يدوياً عبر آلاف الحزم."
+              },
+              "example": {
+                "en": "Search for string 'password' in packet payloads to find credential submission",
+                "ar": "ابحث عن النص 'password' في حمولات الحزم للعثور على تقديم بيانات الاعتماد"
+              }
+            }
+          ]
+        },
+        {
+          "id": 18,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "The Follow TCP Stream shortcut is the fastest way to read a full conversation. Right-click any packet in a TCP session and select Follow → TCP Stream. Wireshark automatically applies the filter 'tcp.stream eq N' and opens a window showing the complete reconstructed session with client data in red and server data in blue. You can read HTTP requests, see login forms, extract file transfers, or identify credentials — all in plain readable text. Always use this as your first step when investigating a suspicious connection.",
+            "ar": "اختصار Follow TCP Stream هو أسرع طريقة لقراءة محادثة كاملة. انقر بزر الماوس الأيمن على أي حزمة في جلسة TCP واختر Follow → TCP Stream. يطبّق Wireshark تلقائياً الفلتر 'tcp.stream eq N' ويفتح نافذة تُظهر الجلسة المُعاد بناؤها كاملةً مع بيانات العميل باللون الأحمر وبيانات الخادم باللون الأزرق. يمكنك قراءة طلبات HTTP ونماذج تسجيل الدخول واستخراج نقل الملفات أو تحديد بيانات الاعتماد — كل ذلك في نص مقروء. استخدم هذا دائماً كخطوتك الأولى عند التحقيق في اتصال مشبوه."
+          },
+          "link": "",
+          "isLab": false
+        }
+      ]
+    },
+    {
+      "id": "topic-3",
+      "title": {
+        "en": "TCP Stream Analysis",
+        "ar": "تحليل تدفق TCP"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "Understanding TCP at the Packet Level",
+            "ar": "فهم TCP على مستوى الحزمة"
+          }
+        },
+        {
+          "id": 1773103291665.0593,
+          "type": "image",
+          "srcKey": "",
+          "size": "small",
+          "imageUrl": "https://cdn.cyber-labs.tech/Wireshark%20-%20Packet%20Analysis%20Pro/TCP%203-way%20handshake.webp"
+        },
+        {
+          "id": 3,
+          "type": "text",
+          "value": {
+            "en": "TCP (Transmission Control Protocol) is a connection-oriented protocol, meaning a formal handshake must be completed before any data is exchanged. Every TCP connection begins with a 3-way handshake: the client sends a SYN (synchronize) packet to request a connection, the server responds with SYN-ACK (synchronize-acknowledge) to confirm readiness, and the client completes the handshake with an ACK. Only after this sequence is data transferred. Wireshark captures all three packets and assigns the entire conversation a unique tcp.stream index number — this number is your primary handle for isolating and following a specific session.",
+            "ar": "TCP (بروتوكول التحكم في الإرسال) هو بروتوكول موجّه للاتصال، أي يجب إتمام مصافحة رسمية قبل تبادل أي بيانات. يبدأ كل اتصال TCP بمصافحة ثلاثية: يرسل العميل حزمة SYN لطلب الاتصال، يردّ الخادم بـ SYN-ACK لتأكيد الاستعداد، ويُتمّ العميل المصافحة بـ ACK. فقط بعد هذا التسلسل تُنقل البيانات. يلتقط Wireshark الحزم الثلاث ويُسنّد للمحادثة كلها رقم مؤشر tcp.stream فريد — هذا الرقم هو مقبضك الأساسي لعزل جلسة محددة ومتابعتها."
+          }
+        },
+        {
+          "id": 4,
+          "type": "text",
+          "value": {
+            "en": "Two critical fields in every TCP packet are the Sequence Number (SEQ) and the Acknowledgment Number (ACK). The sequence number tracks how many bytes the sender has transmitted — it starts at a random Initial Sequence Number (ISN) during the SYN and increments by the number of data bytes in each segment. The acknowledgment number tells the other side: 'I have received all bytes up to this point, please send the next one starting from this SEQ number.' Understanding these two fields is fundamental to diagnosing retransmissions, detecting out-of-order delivery, and identifying connection manipulation attacks.",
+            "ar": "حقلان حاسمان في كل حزمة TCP هما رقم التسلسل (SEQ) ورقم الإقرار (ACK). يتتبع رقم التسلسل عدد البايتات التي أرسلها المرسل — يبدأ برقم تسلسل أولي عشوائي (ISN) خلال SYN ويزيد بعدد بايتات البيانات في كل جزء. يخبر رقم الإقرار الطرف الآخر: 'استلمت جميع البايتات حتى هذه النقطة، أرسل التالية بدءاً من رقم SEQ هذا.' فهم هذين الحقلين أساسي لتشخيص إعادة الإرسال واكتشاف التسليم خارج التسلسل وتحديد هجمات التلاعب بالاتصال."
+          }
+        },
+        {
+          "id": 5,
+          "type": "hr"
+        },
+        {
+          "id": 6,
+          "type": "title",
+          "value": {
+            "en": "Following TCP Streams & Reconstructing Sessions",
+            "ar": "متابعة تدفقات TCP وإعادة بناء الجلسات"
+          }
+        },
+        {
+          "id": 7,
+          "type": "text",
+          "value": {
+            "en": "One of Wireshark's most valuable features for both security analysts and network troubleshooters is the ability to follow a TCP stream. When you right-click any packet in a TCP session and select Follow → TCP Stream, Wireshark automatically identifies all packets belonging to that same conversation using the unique combination of source IP, source port, destination IP, and destination port. It then reconstructs the entire session in chronological order and displays it in a dedicated window — showing exactly what was sent and received during the connection, just as the application would have seen it.",
+            "ar": "إحدى أكثر ميزات Wireshark قيمةً لمحللي الأمان ومستكشفي أعطال الشبكة هي القدرة على متابعة تدفق TCP. عند النقر بزر الماوس الأيمن على أي حزمة في جلسة TCP واختيار Follow → TCP Stream، يحدد Wireshark تلقائياً جميع الحزم التابعة لتلك المحادثة باستخدام التوليفة الفريدة من IP المصدر والمنفذ المصدر وIP الوجهة والمنفذ الوجهة. ثم يُعيد بناء الجلسة كاملة بترتيب زمني ويعرضها في نافذة مخصصة — تُظهر بالضبط ما أُرسل وما استُقبل خلال الاتصال، كما رأه التطبيق."
+          }
+        },
+        {
+          "id": 8,
+          "type": "list",
+          "title": {
+            "en": "TCP Stream View Options and Their Use Cases",
+            "ar": "خيارات عرض تدفق TCP وحالات استخدامها"
+          },
+          "items": {
+            "en": [
+              "UTF-8 / ASCII view — reads HTTP requests, form data, cleartext credentials, FTP commands in human-readable form",
+              "Hex Dump view — shows raw bytes with ASCII representation side by side; essential for binary protocol forensics and identifying encoded payloads",
+              "C Arrays view — outputs the stream as a C byte array; useful for writing IDS signatures or crafting proof-of-concept exploit code",
+              "Base64 view — automatically decodes Base64-encoded stream content; reveals encoded commands in web shell traffic",
+              "YAML view — structured output useful for scripted post-processing and automated log ingestion pipelines",
+              "Save As button — exports the full stream content to a file; use this to preserve evidence, extract credentials, or isolate transferred files",
+              "< and > navigation arrows — jump sequentially between all TCP streams in the capture without closing the stream window",
+              "Color coding — client-to-server traffic shown in red, server-to-client in blue; makes reading bidirectional sessions instantly intuitive"
+            ],
+            "ar": [
+              "عرض UTF-8 / ASCII — يقرأ طلبات HTTP وبيانات النماذج وبيانات الاعتماد النصية وأوامر FTP بشكل مقروء للبشر",
+              "عرض Hex Dump — يعرض البايتات الخام مع تمثيل ASCII جنباً لجنب؛ ضروري للتحليل الجنائي للبروتوكولات الثنائية وتحديد الحمولات المُشفَّرة",
+              "عرض C Arrays — يُخرج التدفق كمصفوفة بايت في C؛ مفيد لكتابة توقيعات IDS أو صياغة كود إثبات المفهوم للاستغلال",
+              "عرض Base64 — يفكّ تلقائياً محتوى التدفق المُشفَّر بـ Base64؛ يكشف الأوامر المُشفَّرة في حركة مرور Web Shell",
+              "عرض YAML — مخرجات منظمة مفيدة للمعالجة البرمجية اللاحقة وخطوط استيعاب السجلات الآلية",
+              "زر Save As — يصدّر محتوى التدفق كاملاً إلى ملف؛ استخدمه للحفاظ على الأدلة أو استخراج بيانات الاعتماد أو عزل الملفات المنقولة",
+              "أسهم التنقل < و > — القفز بالتسلسل بين جميع تدفقات TCP في الالتقاط دون إغلاق نافذة التدفق",
+              "ترميز الألوان — حركة مرور العميل-للخادم تظهر باللون الأحمر، والخادم-للعميل باللون الأزرق؛ يجعل قراءة الجلسات ثنائية الاتجاه بديهية فوراً"
+            ]
+          }
+        },
+        {
+          "id": 9,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "When you follow a TCP stream, Wireshark automatically applies a display filter in the format 'tcp.stream eq N' to the main capture window. This filter isolates all packets of that conversation so you can see them in the packet list pane as well. You can manually type tcp.stream eq 5 (for example) in the display filter bar to jump to any specific stream by its index number. This is especially powerful when correlating stream content with individual packet timestamps, flags, and header fields.",
+            "ar": "عند متابعة تدفق TCP، يُطبّق Wireshark تلقائياً فلتر عرض بالصيغة 'tcp.stream eq N' على نافذة الالتقاط الرئيسية. يعزل هذا الفلتر جميع حزم تلك المحادثة لتستطيع رؤيتها في لوحة قائمة الحزم أيضاً. يمكنك كتابة tcp.stream eq 5 (مثلاً) يدوياً في شريط فلتر العرض للقفز إلى أي تدفق محدد برقم مؤشره. هذا قوي بشكل خاص عند ربط محتوى التدفق مع طوابع وقت الحزم الفردية والأعلام وحقول الرأس."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 10,
+          "type": "title",
+          "value": {
+            "en": "TCP Handshake & Connection State Analysis",
+            "ar": "تحليل حالة المصافحة والاتصال TCP"
+          }
+        },
+        {
+          "id": 11,
+          "type": "text",
+          "value": {
+            "en": "Analyzing TCP connection states is one of the first steps in identifying network attacks and anomalies. A complete handshake (SYN → SYN-ACK → ACK) means a connection was successfully established and data was exchanged. A SYN packet that receives no SYN-ACK in response indicates the destination port is either closed (returns RST) or filtered by a firewall (returns nothing). When you see a large burst of SYN packets from one source IP to many different destination ports, this is the classic signature of a TCP SYN port scan — the attacker is mapping which services are running on the target.",
+            "ar": "تحليل حالات اتصال TCP هو أحد الخطوات الأولى لتحديد هجمات الشبكة والشذوذات. المصافحة الكاملة (SYN → SYN-ACK → ACK) تعني أن الاتصال نجح وتم تبادل البيانات. حزمة SYN لا تتلقى SYN-ACK استجاباً تشير إلى أن منفذ الوجهة إما مغلق (يُرجع RST) أو مُعيق بجدار حماية (لا شيء يُرجع). عندما ترى اندفاعاً كبيراً من حزم SYN من عنوان IP مصدر واحد إلى منافذ وجهة مختلفة كثيرة، فهذا هو التوقيع الكلاسيكي لمسح منافذ TCP SYN — المهاجم يرسم خريطة الخدمات المُشغَّلة على الهدف."
+          }
+        },
+        {
+          "id": 12,
+          "type": "table",
+          "title": {
+            "en": "TCP Connection States and Their Security Meaning",
+            "ar": "حالات اتصال TCP ومعناها الأمني"
+          },
+          "headers": {
+            "en": [
+              "Observed Pattern",
+              "What It Means",
+              "Security Implication"
+            ],
+            "ar": [
+              "النمط الملاحظ",
+              "ما يعنيه",
+              "الدلالة الأمنية"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "SYN → SYN-ACK → ACK",
+                "Full handshake — connection established",
+                "Normal; inspect payload for threats"
+              ],
+              "ar": [
+                "SYN → SYN-ACK → ACK",
+                "مصافحة كاملة — الاتصال تأسّس",
+                "طبيعي؛ افحص الحمولة بحثاً عن التهديدات"
+              ]
+            },
+            {
+              "en": [
+                "SYN → RST",
+                "Port closed or actively rejected",
+                "Port scan probe hit a closed port"
+              ],
+              "ar": [
+                "SYN → RST",
+                "المنفذ مغلق أو مرفوض بنشاط",
+                "مسح منفذ وصل لمنفذ مغلق"
+              ]
+            },
+            {
+              "en": [
+                "SYN → (no reply)",
+                "Port filtered by firewall",
+                "Firewall silently drops the probe"
+              ],
+              "ar": [
+                "SYN → (لا رد)",
+                "المنفذ محجوب بجدار حماية",
+                "جدار الحماية يتجاهل الطلب بصمت"
+              ]
+            },
+            {
+              "en": [
+                "SYN → SYN-ACK → RST",
+                "OS accepted but application rejected",
+                "App-level access control blocking connection"
+              ],
+              "ar": [
+                "SYN → SYN-ACK → RST",
+                "نظام التشغيل قبل لكن التطبيق رفض",
+                "تحكم وصول على مستوى التطبيق يحجب الاتصال"
+              ]
+            },
+            {
+              "en": [
+                "Many SYNs with no ACK completion",
+                "Half-open connection flood",
+                "SYN Flood DDoS — exhausting server state table"
+              ],
+              "ar": [
+                "SYN كثيرة بلا إتمام ACK",
+                "فيضان اتصالات نصف مفتوحة",
+                "SYN Flood DDoS — استنزاف جدول حالة الخادم"
+              ]
+            },
+            {
+              "en": [
+                "FIN-ACK → FIN-ACK",
+                "Normal 4-way teardown",
+                "Clean session closure — both sides agreed"
+              ],
+              "ar": [
+                "FIN-ACK → FIN-ACK",
+                "إغلاق رباعي طبيعي",
+                "إغلاق نظيف للجلسة — الطرفان وافقا"
+              ]
+            },
+            {
+              "en": [
+                "Sudden RST mid-session",
+                "Abrupt connection kill",
+                "Firewall reset, crash, or injected RST attack"
+              ],
+              "ar": [
+                "RST مفاجئ في منتصف الجلسة",
+                "قتل مفاجئ للاتصال",
+                "إعادة ضبط جدار الحماية أو تعطّل أو هجوم حقن RST"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 13,
+          "type": "hr"
+        },
+        {
+          "id": 14,
+          "type": "title",
+          "value": {
+            "en": "TCP Performance Problems & Analysis Filters",
+            "ar": "مشاكل أداء TCP وفلاتر التحليل"
+          }
+        },
+        {
+          "id": 15,
+          "type": "text",
+          "value": {
+            "en": "Wireshark automatically detects and annotates common TCP performance problems as it processes each packet. These annotations are stored in a special tcp.analysis group of fields that you can filter on. A retransmission occurs when the sender does not receive an ACK for a segment within a calculated timeout (the Retransmission Timeout, or RTO). The sender then resends the segment. High retransmission rates indicate packet loss on the network path — possibly due to a bad cable, congested router, or faulty network interface. Each retransmission wastes bandwidth and increases latency for the user.",
+            "ar": "يكتشف Wireshark تلقائياً ويُعلّق على مشاكل أداء TCP الشائعة أثناء معالجة كل حزمة. تُخزَّن هذه التعليقات في مجموعة خاصة من الحقول tcp.analysis يمكنك الفلترة عليها. تحدث إعادة الإرسال عندما لا يستلم المرسل ACK لجزء خلال مهلة محسوبة (مهلة إعادة الإرسال، أو RTO). يُعيد المرسل حينها إرسال الجزء. معدلات إعادة الإرسال المرتفعة تدل على فقدان حزم في مسار الشبكة — ربما بسبب كابل معطوب أو موجّه مزدحم أو واجهة شبكة معطلة. كل إعادة إرسال تُهدر عرض الحزمة وتزيد الكمون للمستخدم."
+          }
+        },
+        {
+          "id": 16,
+          "type": "text",
+          "value": {
+            "en": "The TCP Zero Window condition is one of the most severe performance killers you will encounter. When a receiver's buffer is completely full, it advertises a receive window size of zero in its ACK packets. This tells the sender to stop transmitting completely — even if it has data ready to send. The sender then enters a probe cycle, sending tiny Zero Window Probe packets periodically to test whether the receiver has freed up buffer space. Until the window opens again, data transfer is completely halted. This condition often manifests as seemingly random slowdowns in applications and is easy to identify with Wireshark's tcp.analysis.zero_window filter.",
+            "ar": "حالة TCP Zero Window هي واحدة من أشد عوامل إعاقة الأداء التي ستصادفها. عندما تمتلئ ذاكرة التخزين المؤقت للمستقبل تماماً، يُعلن عن حجم نافذة استقبال مساوٍ للصفر في حزم ACK. هذا يخبر المرسل بإيقاف الإرسال تماماً — حتى لو كانت لديه بيانات جاهزة للإرسال. يدخل المرسل حينها دورة استطلاع، يُرسل فيها حزم Zero Window Probe صغيرة دورياً لاختبار ما إذا كان المستقبل قد حرّر مساحة في المخزن المؤقت. حتى تنفتح النافذة مجدداً، يتوقف نقل البيانات تماماً. تظهر هذه الحالة كثيراً على شكل تباطؤ عشوائي ظاهرياً في التطبيقات ويسهل تحديدها بفلتر tcp.analysis.zero_window."
+          }
+        },
+        {
+          "id": 17,
+          "type": "list",
+          "title": {
+            "en": "Complete TCP Analysis Filter Reference",
+            "ar": "مرجع فلاتر تحليل TCP الكامل"
+          },
+          "items": {
+            "en": [
+              "tcp.analysis.retransmission — packet was resent because no ACK was received within timeout; indicates packet loss on the path",
+              "tcp.analysis.fast_retransmission — retransmission triggered by 3 duplicate ACKs before RTO expires; faster recovery but still indicates loss",
+              "tcp.analysis.duplicate_ack — receiver is requesting the same missing segment repeatedly; precedes retransmission; sign of out-of-order or lost packets",
+              "tcp.analysis.zero_window — receive buffer is full; sender must pause all data transmission until window reopens",
+              "tcp.analysis.window_full — sender has filled the entire advertised receive window; waiting for ACK before sending more",
+              "tcp.analysis.out_of_order — segment arrived out of sequence; common on high-latency multi-path routes",
+              "tcp.analysis.keep_alive — heartbeat packet sent on idle connection to keep NAT mappings and firewall state entries alive",
+              "tcp.analysis.keep_alive_ack — acknowledgment of a keep-alive probe; confirms both sides of idle connection are still reachable",
+              "tcp.analysis.lost_segment — Wireshark detected a gap in sequence numbers; a segment was never seen in the capture",
+              "tcp.analysis.ack_rtt — round-trip time for an ACKed segment; useful for measuring per-segment latency across the connection lifetime"
+            ],
+            "ar": [
+              "tcp.analysis.retransmission — أُعيد إرسال حزمة لعدم استلام ACK خلال المهلة؛ يشير لفقدان حزم في المسار",
+              "tcp.analysis.fast_retransmission — إعادة إرسال مُشغَّلة بـ 3 ACKs مكررة قبل انتهاء RTO؛ تعافٍ أسرع لكن لا يزال يشير للفقدان",
+              "tcp.analysis.duplicate_ack — المستقبل يطلب نفس الجزء الناقص مراراً؛ يسبق إعادة الإرسال؛ علامة حزم خارج الترتيب أو مفقودة",
+              "tcp.analysis.zero_window — ذاكرة الاستقبال ممتلئة؛ يجب على المرسل إيقاف جميع الإرسال حتى تعاد فتح النافذة",
+              "tcp.analysis.window_full — ملأ المرسل نافذة الاستقبال المُعلَنة كاملاً؛ ينتظر ACK قبل الإرسال أكثر",
+              "tcp.analysis.out_of_order — وصل جزء خارج التسلسل؛ شائع على مسارات عالية الكمون متعددة المسالك",
+              "tcp.analysis.keep_alive — حزمة نبضة القلب المُرسَلة على اتصال خامل للحفاظ على تعيينات NAT وإدخالات حالة جدار الحماية",
+              "tcp.analysis.keep_alive_ack — إقرار باستجابة Keep-Alive؛ يؤكد أن الطرفين لا يزالان متاحَين في الاتصال الخامل",
+              "tcp.analysis.lost_segment — اكتشف Wireshark فجوة في أرقام التسلسل؛ جزء لم يُرَ في الالتقاط قط",
+              "tcp.analysis.ack_rtt — زمن الرحلة ذهاباً وإياباً لجزء مُقرّ؛ مفيد لقياس كمون كل جزء عبر عمر الاتصال"
+            ]
+          }
+        },
+        {
+          "id": 18,
+          "type": "hr"
+        },
+        {
+          "id": 19,
+          "type": "title",
+          "value": {
+            "en": "TCP Visual Graphs for Performance Investigation",
+            "ar": "الرسوم البيانية المرئية لـ TCP لتحقيق الأداء"
+          }
+        },
+        {
+          "id": 1773103692648.239,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageUrl": "https://cdn.cyber-labs.tech/Wireshark%20-%20Packet%20Analysis%20Pro/TCP%20Stream%20Graphs%20in%20Wireshark.webp"
+        },
+        {
+          "id": 21,
+          "type": "text",
+          "value": {
+            "en": "To access TCP Stream Graphs in Wireshark, first apply a filter to isolate the TCP stream you want to analyze (e.g., tcp.stream eq 3), then navigate to Statistics → TCP Stream Graphs. The Time-Sequence (Stevens) graph plots each segment's sequence number against its timestamp — a healthy connection shows a smooth upward staircase. Flat horizontal sections mean the sender stalled (zero window or waiting for ACK). Vertical drops or repeated dots at the same sequence number indicate retransmissions of the same lost segment. The Throughput graph shows data transfer rate over time — dips reveal congestion events and loss moments, which directly correlate with poor user experience in real-time applications.",
+            "ar": "للوصول إلى رسوم TCP البيانية في Wireshark، طبّق أولاً فلتراً لعزل تدفق TCP الذي تريد تحليله (مثلاً: tcp.stream eq 3)، ثم انتقل إلى Statistics → TCP Stream Graphs. يرسم مخطط Time-Sequence (Stevens) رقم تسلسل كل جزء مقابل طابعه الزمني — يُظهر الاتصال الصحي درجات سلّم صاعدة سلسة. الأقسام الأفقية المستوية تعني أن المرسل توقف (نافذة صفرية أو انتظار ACK). الانخفاضات الرأسية أو النقاط المتكررة عند نفس رقم التسلسل تشير لإعادة إرسال نفس الجزء المفقود. يُظهر مخطط Throughput معدل نقل البيانات عبر الزمن — تكشف الانخفاضات أحداث الازدحام ولحظات الفقدان التي ترتبط مباشرة بتجربة مستخدم رديئة في التطبيقات الفورية."
+          }
+        },
+        {
+          "id": 22,
+          "type": "terminal",
+          "label": {
+            "en": "Extracting TCP stream data using tshark (CLI)",
+            "ar": "استخراج بيانات تدفق TCP باستخدام tshark (سطر الأوامر)"
+          },
+          "value": "# Follow TCP stream index 0 and print as ASCII text\ntshark -r capture.pcap -q -z follow,tcp,ascii,0\n\n# List all TCP streams with their source/destination pairs\ntshark -r capture.pcap -T fields -e tcp.stream -e ip.src -e tcp.srcport -e ip.dst -e tcp.dstport | sort -u\n\n# Extract all retransmitted packets to a new PCAP file\ntshark -r capture.pcap -Y \"tcp.analysis.retransmission\" -w retransmissions.pcap\n\n# Count retransmissions per source IP to find the most affected hosts\ntshark -r capture.pcap -Y \"tcp.analysis.retransmission\" -T fields -e ip.src | sort | uniq -c | sort -rn"
+        },
+        {
+          "id": 23,
+          "type": "hr"
+        },
+        {
+          "id": 24,
+          "type": "title",
+          "value": {
+            "en": "TCP Options Deep Dive — MSS, SACK, Window Scaling, Timestamps",
+            "ar": "التعمق في خيارات TCP — MSS وSACK وتوسّع النافذة والطوابع الزمنية"
+          }
+        },
+        {
+          "id": 25,
+          "type": "text",
+          "value": {
+            "en": "TCP options are negotiated during the initial SYN and SYN-ACK exchange and define the capabilities of the connection for its entire lifetime. The Maximum Segment Size (MSS) option tells each side the largest data payload it can accept in a single TCP segment. MSS is typically set to the network's MTU minus the IP and TCP header overhead (e.g., 1500 - 40 = 1460 bytes on standard Ethernet). If the two sides advertise mismatched MSS values, or if a middle-box changes the path MTU without updating MSS, the result is unnecessary IP fragmentation — which dramatically increases retransmissions and degrades performance. In Wireshark, you can find the negotiated MSS value inside the TCP options section of the SYN packet.",
+            "ar": "تُفاوَض خيارات TCP أثناء تبادل SYN وSYN-ACK الأولي وتُحدد قدرات الاتصال طوال عمره بالكامل. يخبر خيار الحجم الأقصى للجزء (MSS) كل طرف بأكبر حمولة بيانات يمكنه قبولها في جزء TCP واحد. يُضبط MSS عادةً على MTU الشبكة ناقص مصاريف رأسَي IP وTCP (مثلاً: 1500 - 40 = 1460 بايت على إيثرنت القياسي). إذا أعلن الطرفان قيم MSS غير متطابقة، أو إذا غيّر جهاز وسيط MTU المسار دون تحديث MSS، فالنتيجة تجزئة IP غير ضرورية — مما يزيد إعادة الإرسال بشكل كبير ويُدهور الأداء. في Wireshark، تجد قيمة MSS المتفاوض عليها داخل قسم خيارات TCP لحزمة SYN."
+          }
+        },
+        {
+          "id": 26,
+          "type": "text",
+          "value": {
+            "en": "Selective Acknowledgment (SACK) is a TCP option that allows the receiver to inform the sender exactly which non-contiguous blocks of data it has received. Without SACK, if segment 5 is lost but segments 6-10 arrive, the receiver can only ACK up to segment 4 — forcing the sender to retransmit everything from segment 5 onwards. With SACK enabled, the receiver can say 'I have segments 1-4 and 6-10, only resend segment 5.' This dramatically reduces unnecessary retransmissions on high-latency or lossy links. In Wireshark, SACK blocks appear in the TCP Options section as sack_left_edge and sack_right_edge values. The absence of SACK on a connection experiencing high loss will significantly worsen recovery time.",
+            "ar": "الإقرار الانتقائي (SACK) هو خيار TCP يسمح للمستقبل بإعلام المرسل بالضبط عن الكتل غير المتجاورة من البيانات التي استلمها. بدون SACK، إذا فُقد الجزء رقم 5 لكن وصلت الأجزاء 6-10، لا يستطيع المستقبل سوى الإقرار حتى الجزء رقم 4 — مما يُجبر المرسل على إعادة إرسال كل شيء من الجزء 5 فصاعداً. مع تفعيل SACK، يستطيع المستقبل القول 'لديّ الأجزاء 1-4 و6-10، أعِد إرسال الجزء 5 فقط.' هذا يُقلل إعادة الإرسال غير الضرورية بشكل كبير على الروابط عالية الكمون أو كثيرة الفقدان. في Wireshark، تظهر كتل SACK في قسم خيارات TCP كقيم sack_left_edge وsack_right_edge."
+          }
+        },
+        {
+          "id": 27,
+          "type": "table",
+          "title": {
+            "en": "TCP Options and Their Role in Connection Performance",
+            "ar": "خيارات TCP ودورها في أداء الاتصال"
+          },
+          "headers": {
+            "en": [
+              "TCP Option",
+              "Negotiated In",
+              "Purpose",
+              "Absence Impact"
+            ],
+            "ar": [
+              "خيار TCP",
+              "يُفاوَض في",
+              "الغرض",
+              "تأثير الغياب"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "MSS (Maximum Segment Size)",
+                "SYN and SYN-ACK",
+                "Sets max payload size per segment",
+                "IP fragmentation, retransmissions"
+              ],
+              "ar": [
+                "MSS (الحجم الأقصى للجزء)",
+                "SYN وSYN-ACK",
+                "يضبط أقصى حجم حمولة لكل جزء",
+                "تجزئة IP وإعادة إرسال"
+              ]
+            },
+            {
+              "en": [
+                "SACK (Selective ACK)",
+                "SYN and SYN-ACK",
+                "Allows non-contiguous ACK blocks",
+                "Retransmit all data after first loss"
+              ],
+              "ar": [
+                "SACK (الإقرار الانتقائي)",
+                "SYN وSYN-ACK",
+                "يتيح كتل ACK غير متجاورة",
+                "إعادة إرسال كل البيانات بعد أول فقدان"
+              ]
+            },
+            {
+              "en": [
+                "Window Scale",
+                "SYN and SYN-ACK",
+                "Multiplies window by 2^factor",
+                "64KB max window — bottleneck on fast WAN"
+              ],
+              "ar": [
+                "Window Scale (توسّع النافذة)",
+                "SYN وSYN-ACK",
+                "يضرب النافذة في 2^عامل",
+                "حد أقصى 64KB للنافذة — اختناق على WAN السريع"
+              ]
+            },
+            {
+              "en": [
+                "Timestamps",
+                "SYN and SYN-ACK",
+                "Precise RTT measurement + PAWS protection",
+                "Less accurate RTT; replay attack risk"
+              ],
+              "ar": [
+                "Timestamps (الطوابع الزمنية)",
+                "SYN وSYN-ACK",
+                "قياس RTT دقيق + حماية PAWS",
+                "RTT أقل دقة؛ خطر هجمات الإعادة"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 28,
+          "type": "hr"
+        },
+        {
+          "id": 29,
+          "type": "title",
+          "value": {
+            "en": "Expert Information Panel — Rapid PCAP Triage",
+            "ar": "لوحة معلومات الخبراء — الفرز السريع لـ PCAP"
+          }
+        },
+        {
+          "id": 30,
+          "type": "text",
+          "value": {
+            "en": "The Expert Information panel (Analyze → Expert Information) is one of the most powerful triage tools Wireshark provides. When you open a large PCAP file with thousands of packets, scanning each packet manually is impractical. The Expert Information panel automatically categorizes every detected anomaly and protocol event into four severity levels. Errors represent critical issues that indicate either a fundamental protocol violation or a serious network problem — malformed TCP segments, checksum errors, or protocol inconsistencies fall here. Warnings cover significant but non-fatal issues: retransmissions, RST storms, zero windows, and duplicate ACKs. Notes describe behavioral observations like keep-alives and window updates. Chats log routine connection events like normal handshakes and teardowns.",
+            "ar": "لوحة معلومات الخبراء (Analyze → Expert Information) هي إحدى أقوى أدوات الفرز التي يوفرها Wireshark. عند فتح ملف PCAP كبير يحتوي آلاف الحزم، فحص كل حزمة يدوياً أمر غير عملي. تُصنّف لوحة معلومات الخبراء تلقائياً كل شذوذ مكتشف وحدث بروتوكول في أربعة مستويات خطورة. Errors تمثّل مشاكل حرجة تشير إما لانتهاك بروتوكول جوهري أو مشكلة شبكة خطيرة — تقع هنا أجزاء TCP المشوّهة وأخطاء المجموع الاختباري وتناقضات البروتوكول. Warnings تغطي مشاكل مهمة لكن غير مميتة: إعادة الإرسال وعواصف RST والنوافذ الصفرية وACKs المكررة. Notes تصف ملاحظات سلوكية كـ keep-alives وتحديثات النوافذ. Chats تسجّل أحداث الاتصال الروتينية كالمصافحات والإغلاق الطبيعيَّين."
+          }
+        },
+        {
+          "id": 31,
+          "type": "text",
+          "value": {
+            "en": "In a security context, the Expert Information panel is invaluable for quickly identifying signs of attack rather than performance problems. A massive number of RST warnings from a single source strongly suggests a port scan or RST injection attack. A high count of malformed packet Errors may indicate a fuzzing attack or a deliberately crafted malformed packet designed to crash a vulnerable service. Dozens of connection reset warnings targeting the same destination port could signal a brute force attempt being blocked by a firewall. The panel also links each warning to the specific packet number, so you can click any entry and instantly jump to that packet in the main capture view for deeper inspection.",
+            "ar": "في السياق الأمني، تُعدّ لوحة معلومات الخبراء لا تقدر بثمن لتحديد علامات الهجوم بسرعة بدلاً من مشاكل الأداء. عدد ضخم من تحذيرات RST من مصدر واحد يقترح بقوة مسح منافذ أو هجوم حقن RST. عدد مرتفع من أخطاء Malformed Packets قد يشير لهجوم تمويه (fuzzing) أو حزمة مُشوَّهة عمداً مُصمَّمة لتعطيل خدمة ضعيفة. عشرات تحذيرات إعادة ضبط الاتصال التي تستهدف نفس منفذ الوجهة قد تُشير لمحاولة قوة غاشمة يحجبها جدار حماية. تربط اللوحة أيضاً كل تحذير برقم الحزمة المحددة، لتستطيع النقر على أي إدخال والقفز فوراً لتلك الحزمة في عرض الالتقاط الرئيسي للفحص الأعمق."
+          }
+        },
+        {
+          "id": 32,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "A practical workflow for any new PCAP: (1) Open Expert Information first — scan for any Errors and count the Warnings. If you see hundreds of RST Errors or malformed segments, prioritize those before anything else. (2) Open Statistics → TCP Stream Graphs for the top 2-3 streams by bytes (from the Conversations view) to visually assess throughput and retransmission patterns. (3) Only then begin applying protocol-specific display filters. This sequence saves significant time by directing your attention to the highest-priority anomalies first.",
+            "ar": "سير عمل عملي لأي PCAP جديد: (1) افتح Expert Information أولاً — افحص أي Errors وعدّ Warnings. إذا رأيت مئات من RST Errors أو أجزاء مشوّهة، أعطِها الأولوية قبل أي شيء آخر. (2) افتح Statistics → TCP Stream Graphs لأكبر تدفقَين أو ثلاثة حسب البايتات (من عرض Conversations) لتقييم بصري للإنتاجية وأنماط إعادة الإرسال. (3) فقط بعدها ابدأ بتطبيق فلاتر العرض الخاصة بالبروتوكول. يوفّر هذا التسلسل وقتاً كبيراً بتوجيه انتباهك للشذوذات الأعلى أولوية أولاً."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 33,
+          "type": "code",
+          "language": "python",
+          "value": "# Parse a PCAP and report TCP analysis events using scapy\nfrom scapy.all import rdpcap, TCP\nfrom collections import Counter\n\npackets = rdpcap('capture.pcap')\n\nretransmissions = []\nrst_sources = []\nzero_windows = []\n\nfor pkt in packets:\n    if pkt.haslayer(TCP):\n        tcp = pkt[TCP]\n        # Detect RST packets\n        if tcp.flags & 0x04:  # RST flag\n            rst_sources.append(pkt['IP'].src)\n        # Detect Zero Window (window size == 0, no SYN/FIN)\n        if tcp.window == 0 and not (tcp.flags & 0x02) and not (tcp.flags & 0x01):\n            zero_windows.append({\n                'src': pkt['IP'].src,\n                'dst': pkt['IP'].dst,\n                'sport': tcp.sport,\n                'dport': tcp.dport\n            })\n\nrst_count = Counter(rst_sources)\nprint(\"=== RST Sources (Top 10) ===\")\nfor ip, count in rst_count.most_common(10):\n    print(f\"  {ip}: {count} RST packets\")\n\nprint(f\"\\n=== Zero Window Events: {len(zero_windows)} total ===\")\nfor zw in zero_windows[:5]:\n    print(f\"  {zw['src']}:{zw['sport']} → {zw['dst']}:{zw['dport']}\")"
+        }
+      ]
+    },
+    {
+      "id": "topic-4",
+      "title": {
+        "en": "HTTP Traffic Analysis",
+        "ar": "تحليل حركة مرور HTTP"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "How HTTP Works Inside Wireshark",
+            "ar": "كيف يعمل HTTP داخل Wireshark"
+          }
+        },
+        {
+          "id": 1773103307411.5073,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageUrl": "https://cdn.cyber-labs.tech/Wireshark%20-%20Packet%20Analysis%20Pro/HTTP%20request-response%20cycle.webp"
+        },
+        {
+          "id": 3,
+          "type": "text",
+          "value": {
+            "en": "HTTP (HyperText Transfer Protocol) is a text-based application-layer protocol that runs over TCP port 80 by default. Every web page load, form submission, file download, and API call is an HTTP transaction. Wireshark fully dissects HTTP traffic, breaking each packet into its individual components: the Request Line (method, URI, HTTP version), the Response Status Line (version, status code, reason phrase), all headers, and the message body. This complete dissection makes HTTP one of the most analysis-friendly protocols in Wireshark — every field is individually filterable and searchable.",
+            "ar": "HTTP (بروتوكول نقل النص التشعبي) هو بروتوكول نصي لطبقة التطبيق يعمل فوق TCP على المنفذ 80 بشكل افتراضي. كل تحميل صفحة ويب وإرسال نموذج وتنزيل ملف واستدعاء API هو معاملة HTTP. يُفكّك Wireshark حركة مرور HTTP بالكامل، مقسّماً كل حزمة إلى مكوناتها الفردية: سطر الطلب (الطريقة وURI وإصدار HTTP) وسطر حالة الاستجابة (الإصدار ورمز الحالة وعبارة السبب) وجميع الرؤوس وجسم الرسالة. هذا التفكيك الكامل يجعل HTTP أحد أكثر البروتوكولات ملاءمةً للتحليل في Wireshark — كل حقل قابل للفلترة والبحث بشكل مستقل."
+          }
+        },
+        {
+          "id": 4,
+          "type": "table",
+          "title": {
+            "en": "HTTP Version Comparison in Wireshark Context",
+            "ar": "مقارنة إصدارات HTTP في سياق Wireshark"
+          },
+          "headers": {
+            "en": [
+              "Feature",
+              "HTTP/1.0",
+              "HTTP/1.1",
+              "HTTP/2 (h2)"
+            ],
+            "ar": [
+              "الميزة",
+              "HTTP/1.0",
+              "HTTP/1.1",
+              "HTTP/2 (h2)"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "Connection model",
+                "One request per connection",
+                "Persistent connections (keep-alive)",
+                "Multiplexed streams over one connection"
+              ],
+              "ar": [
+                "نموذج الاتصال",
+                "طلب واحد لكل اتصال",
+                "اتصالات مستمرة (keep-alive)",
+                "تدفقات متعددة فوق اتصال واحد"
+              ]
+            },
+            {
+              "en": [
+                "Wireshark visibility",
+                "Fully readable text",
+                "Fully readable text",
+                "Binary frames — needs TLS decryption"
+              ],
+              "ar": [
+                "رؤية Wireshark",
+                "نص مقروء بالكامل",
+                "نص مقروء بالكامل",
+                "إطارات ثنائية — تحتاج فك تشفير TLS"
+              ]
+            },
+            {
+              "en": [
+                "Header format",
+                "Plain text",
+                "Plain text",
+                "Compressed with HPACK algorithm"
+              ],
+              "ar": [
+                "صيغة الرؤوس",
+                "نص عادي",
+                "نص عادي",
+                "مضغوط بخوارزمية HPACK"
+              ]
+            },
+            {
+              "en": [
+                "Security analysis ease",
+                "Very easy",
+                "Easy",
+                "Requires extra setup for decryption"
+              ],
+              "ar": [
+                "سهولة التحليل الأمني",
+                "سهل جداً",
+                "سهل",
+                "يتطلب إعداداً إضافياً للفك"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 5,
+          "type": "hr"
+        },
+        {
+          "id": 6,
+          "type": "title",
+          "value": {
+            "en": "Capturing and Filtering HTTP Traffic",
+            "ar": "التقاط حركة مرور HTTP وفلترتها"
+          }
+        },
+        {
+          "id": 7,
+          "type": "text",
+          "value": {
+            "en": "The basic display filter 'http' shows all HTTP packets in the capture. But in real investigations, you need to be far more precise. Filtering by HTTP method lets you isolate specific types of transactions — GET requests retrieve resources, POST requests submit form data or upload files, PUT requests update resources, and DELETE requests remove them. From a security perspective, POST requests are particularly important because they carry form data, login credentials, file uploads, and API payloads. Any POST going to an unexpected external IP should immediately raise suspicion.",
+            "ar": "فلتر العرض الأساسي 'http' يُظهر جميع حزم HTTP في الالتقاط. لكن في التحقيقات الحقيقية، تحتاج لأن تكون أكثر دقة. الفلترة بطريقة HTTP تتيح لك عزل أنواع محددة من المعاملات — طلبات GET تسترجع الموارد، وطلبات POST ترسل بيانات النماذج أو ترفع الملفات، وطلبات PUT تُحدّث الموارد، وطلبات DELETE تحذفها. من منظور الأمان، طلبات POST مهمة بشكل خاص لأنها تحمل بيانات النماذج وبيانات تسجيل الدخول ورفعات الملفات وحمولات API. أي POST يذهب لـ IP خارجي غير متوقع يجب أن يثير الشك فوراً."
+          }
+        },
+        {
+          "id": 8,
+          "type": "list",
+          "title": {
+            "en": "Essential HTTP Display Filters for Security Analysis",
+            "ar": "فلاتر عرض HTTP الأساسية للتحليل الأمني"
+          },
+          "items": {
+            "en": [
+              "http — show all HTTP packets (requests and responses combined)",
+              "http.request — only client requests (GET, POST, PUT, DELETE, HEAD, OPTIONS)",
+              "http.response — only server responses (200 OK, 404 Not Found, 500 Error, etc.)",
+              "http.request.method == \"POST\" — isolate all form submissions and file uploads",
+              "http.response.code == 401 — find unauthorized access attempts (login failures)",
+              "http.response.code == 500 — find server errors (possible exploitation attempts)",
+              "http.request.uri contains \"/admin\" — detect access attempts to administrative panels",
+              "http.user_agent contains \"sqlmap\" — detect automated SQL injection scanning tools",
+              "http.user_agent contains \"python-requests\" — detect scripted HTTP clients (possible C2 or automation)",
+              "http.cookie — filter packets containing session cookies (useful for session hijacking analysis)",
+              "http.host contains \"pastebin\" — detect data exfiltration via paste sites",
+              "http.content_length > 1000000 — find unusually large uploads (potential exfiltration)"
+            ],
+            "ar": [
+              "http — عرض جميع حزم HTTP (الطلبات والردود معاً)",
+              "http.request — الطلبات فقط (GET وPOST وPUT وDELETE وHEAD وOPTIONS)",
+              "http.response — الردود فقط (200 OK و404 و500 وغيرها)",
+              "http.request.method == \"POST\" — عزل جميع إرسالات النماذج ورفعات الملفات",
+              "http.response.code == 401 — البحث عن محاولات الوصول غير المصرح به (فشل تسجيل الدخول)",
+              "http.response.code == 500 — البحث عن أخطاء الخادم (محاولات استغلال محتملة)",
+              "http.request.uri contains \"/admin\" — اكتشاف محاولات الوصول إلى لوحات الإدارة",
+              "http.user_agent contains \"sqlmap\" — اكتشاف أدوات فحص SQL injection الآلية",
+              "http.user_agent contains \"python-requests\" — اكتشاف عملاء HTTP المبرمجة (C2 محتمل أو أتمتة)",
+              "http.cookie — فلترة الحزم التي تحتوي على ملفات تعريف الارتباط (مفيد لتحليل اختطاف الجلسات)",
+              "http.host contains \"pastebin\" — اكتشاف سحب البيانات عبر مواقع اللصق",
+              "http.content_length > 1000000 — البحث عن رفعات كبيرة بشكل غير عادي (سحب بيانات محتمل)"
+            ]
+          }
+        },
+        {
+          "id": 9,
+          "type": "title",
+          "value": {
+            "en": "Extracting HTTP Objects and Files",
+            "ar": "استخراج كائنات HTTP والملفات"
+          }
+        },
+        {
+          "id": 10,
+          "type": "text",
+          "value": {
+            "en": "One of the most powerful forensic capabilities in Wireshark is the ability to extract files and objects transferred over HTTP directly from a PCAP file. Using File → Export Objects → HTTP, Wireshark scans the entire capture for HTTP responses that contain file content — images, JavaScript files, HTML pages, PDF documents, executable binaries, ZIP archives, and any other MIME type. Each object is listed with its hostname, filename, content type, and size. You can select individual files or export everything at once to a local folder for further examination.",
+            "ar": "إحدى أقوى القدرات الجنائية في Wireshark هي القدرة على استخراج الملفات والكائنات المنقولة عبر HTTP مباشرةً من ملف PCAP. باستخدام File → Export Objects → HTTP، يمسح Wireshark الالتقاط بالكامل بحثاً عن ردود HTTP تحتوي على محتوى ملفات — صور وملفات JavaScript وصفحات HTML ومستندات PDF وملفات تنفيذية ثنائية وأرشيفات ZIP وأي نوع MIME آخر. كل كائن مدرج مع اسم مضيفه واسم ملفه ونوع محتواه وحجمه. يمكنك تحديد ملفات فردية أو تصدير كل شيء دفعةً واحدة إلى مجلد محلي للفحص الإضافي."
+          }
+        },
+        {
+          "id": 11,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "After exporting suspicious HTTP objects (especially .exe, .dll, .js, .php files), calculate their SHA256 hash and search for it in a threat intelligence database. A malicious file will often have a known hash that has been flagged by the security community. On Linux: sha256sum filename. On Windows: certutil -hashfile filename SHA256. This takes 10 seconds and can immediately confirm whether a downloaded file is known malware.",
+            "ar": "بعد تصدير كائنات HTTP المشبوهة (خاصةً ملفات .exe و.dll و.js و.php)، احسب تجزئة SHA256 الخاصة بها وابحث عنها في قاعدة بيانات معلومات التهديدات. الملف الخبيث غالباً ما يكون له تجزئة معروفة تم تحديدها بواسطة مجتمع الأمان. على Linux: sha256sum filename. على Windows: certutil -hashfile filename SHA256. يستغرق هذا 10 ثوانٍ ويمكنه تأكيد ما إذا كان الملف المُنزَّل برمجيةً خبيثة معروفة فوراً."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 12,
+          "type": "hr"
+        },
+        {
+          "id": 13,
+          "type": "title",
+          "value": {
+            "en": "Security-Focused HTTP Analysis Techniques",
+            "ar": "تقنيات تحليل HTTP الموجّهة للأمان"
+          }
+        },
+        {
+          "id": 14,
+          "type": "text",
+          "value": {
+            "en": "HTTP traffic reveals a tremendous amount of security-relevant information when analyzed carefully. Cleartext credentials are the most obvious finding — HTTP Basic Authentication encodes credentials in Base64 (not encryption) inside the Authorization header. The format is 'Basic dXNlcjpwYXNz' where the encoded part decodes to 'username:password'. Any analyst can decode this in seconds. Session tokens in Cookie and Set-Cookie headers are equally sensitive — intercepting a valid session cookie allows an attacker to impersonate the logged-in user without knowing their password.",
+            "ar": "تكشف حركة مرور HTTP قدراً هائلاً من المعلومات ذات الصلة بالأمان عند تحليلها بعناية. بيانات الاعتماد النصية هي النتيجة الأكثر وضوحاً — تُشفّر مصادقة HTTP الأساسية بيانات الاعتماد بـ Base64 (ليس تشفيراً) داخل رأس Authorization. الصيغة هي 'Basic dXNlcjpwYXNz' حيث يُفكَّك الجزء المُشفَّر إلى 'username:password'. أي محلل يستطيع فكّ هذا في ثوانٍ. رموز الجلسة في رؤوس Cookie وSet-Cookie حساسة بالقدر ذاته — اعتراض ملف تعريف ارتباط جلسة صالح يتيح للمهاجم انتحال هوية المستخدم المسجّل دون معرفة كلمة مروره."
+          }
+        },
+        {
+          "id": 1773103348680.2166,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageUrl": "https://cdn.cyber-labs.tech/Wireshark%20-%20Packet%20Analysis%20Pro/Web%20Attack%20Fingerprints%20in%20HTTP%20Traffic.webp"
+        },
+        {
+          "id": 16,
+          "type": "list",
+          "title": {
+            "en": "HTTP Attack Patterns and Their Wireshark Filters",
+            "ar": "أنماط هجمات HTTP وفلاتر Wireshark المقابلة لها"
+          },
+          "items": {
+            "en": [
+              "SQL Injection — Filter: http.request.uri matches \"(UNION|SELECT|OR 1=1|DROP|INSERT|UPDATE)\" — look for database commands in URI parameters",
+              "Web Shell Activity — Filter: http.request.method == \"POST\" && http.request.uri matches \"\\.(php|asp|aspx|jsp)$\" — POST to script files on server",
+              "Directory Traversal — Filter: http.request.uri contains \"../\" — attacker trying to escape web root to read system files",
+              "Cleartext Credentials — Filter: http.authorization — shows all HTTP Basic Auth headers containing Base64-encoded credentials",
+              "Session Token Theft — Filter: http.cookie — review session token values; repeated use of a token from different IPs = hijacking",
+              "C2 Beaconing — Use Statistics → IO Graph to spot regular periodic spikes; then filter http.request.uri == \"/specific/path\" to confirm",
+              "Tool Detection — Filter: http.user_agent matches \"(sqlmap|nikto|hydra|masscan|nmap|curl|python|go-http)\" — automated tool fingerprints",
+              "Large Data Exfiltration — Filter: http.request.method == \"POST\" && http.content_length > 500000 — large outbound POST bodies"
+            ],
+            "ar": [
+              "SQL Injection — الفلتر: http.request.uri matches \"(UNION|SELECT|OR 1=1|DROP|INSERT|UPDATE)\" — ابحث عن أوامر قاعدة بيانات في معامِلات URI",
+              "نشاط Web Shell — الفلتر: http.request.method == \"POST\" && http.request.uri matches \"\\.(php|asp|aspx|jsp)$\" — POST إلى ملفات سكريبت على الخادم",
+              "Directory Traversal — الفلتر: http.request.uri contains \"../\" — المهاجم يحاول الهروب من جذر الويب لقراءة ملفات النظام",
+              "بيانات الاعتماد النصية — الفلتر: http.authorization — يعرض جميع رؤوس HTTP Basic Auth التي تحتوي بيانات مُشفَّرة بـ Base64",
+              "سرقة رمز الجلسة — الفلتر: http.cookie — راجع قيم رموز الجلسة؛ الاستخدام المتكرر لرمز من IPs مختلفة = اختطاف",
+              "C2 Beaconing — استخدم Statistics → IO Graph لاكتشاف الذرى الدورية المنتظمة؛ ثم قيّد http.request.uri == \"/مسار/محدد\" للتأكيد",
+              "اكتشاف الأدوات — الفلتر: http.user_agent matches \"(sqlmap|nikto|hydra|masscan|nmap|curl|python|go-http)\" — بصمات الأدوات الآلية",
+              "سحب البيانات الكبيرة — الفلتر: http.request.method == \"POST\" && http.content_length > 500000 — أجسام POST صادرة كبيرة"
+            ]
+          }
+        },
+        {
+          "id": 17,
+          "type": "title",
+          "value": {
+            "en": "HTTPS Decryption and HTTP/2 Analysis",
+            "ar": "فك تشفير HTTPS وتحليل HTTP/2"
+          }
+        },
+        {
+          "id": 18,
+          "type": "text",
+          "value": {
+            "en": "Most modern web traffic uses HTTPS, which means the HTTP layer is encrypted inside TLS. Without decryption, Wireshark can only see TLS handshake metadata and encrypted records — not the actual HTTP requests and responses. However, on systems you control (your own browser, a test server, or an application you are testing), you can enable TLS decryption by providing Wireshark with the pre-master secret log file. Browsers and many TLS libraries support writing the TLS session keys to a file when the SSLKEYLOGFILE environment variable is set.",
+            "ar": "معظم حركة مرور الويب الحديثة تستخدم HTTPS، مما يعني أن طبقة HTTP مُشفَّرة داخل TLS. بدون فك التشفير، لا يستطيع Wireshark رؤية سوى بيانات وصفية لمصافحة TLS والسجلات المُشفَّرة — ليس طلبات واستجابات HTTP الفعلية. ومع ذلك، على الأنظمة التي تتحكم بها (متصفحك الخاص أو خادم اختبار أو تطبيق تختبره)، يمكنك تفعيل فك تشفير TLS بتزويد Wireshark بملف سجل المفتاح السري المسبق. تدعم المتصفحات والعديد من مكتبات TLS كتابة مفاتيح جلسة TLS إلى ملف عند تعيين متغير البيئة SSLKEYLOGFILE."
+          }
+        },
+        {
+          "id": 19,
+          "type": "terminal",
+          "label": {
+            "en": "Enable TLS key logging in your browser (Linux/Mac)",
+            "ar": "تفعيل تسجيل مفاتيح TLS في المتصفح (Linux/Mac)"
+          },
+          "value": "# Set the environment variable before launching the browser\nexport SSLKEYLOGFILE=/home/user/tls_keys.log\n\n# Launch Chrome or Firefox — it will log TLS session keys automatically\nchrome &\n\n# In Wireshark: Edit → Preferences → Protocols → TLS\n# Set '(Pre)-Master-Secret log filename' to: /home/user/tls_keys.log\n# Now all HTTPS traffic will be fully decrypted and visible as HTTP"
+        },
+        {
+          "id": 20,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "TLS decryption using SSLKEYLOGFILE only works for traffic where you control the client application. You cannot decrypt traffic from other users or systems this way — that would require the private key of the server. Never attempt to decrypt HTTPS traffic you are not authorized to inspect. This technique is strictly for authorized penetration testing, your own lab environments, and debugging your own applications.",
+            "ar": "يعمل فك تشفير TLS باستخدام SSLKEYLOGFILE فقط لحركة المرور التي تتحكم فيها في تطبيق العميل. لا يمكنك فك تشفير حركة مرور المستخدمين أو الأنظمة الأخرى بهذه الطريقة — ذلك يتطلب المفتاح الخاص للخادم. لا تحاول أبداً فك تشفير حركة مرور HTTPS غير مصرح لك بفحصها. هذه التقنية حصرياً لاختبار الاختراق المُرخَّص وبيئات المختبرات الخاصة بك وتصحيح تطبيقاتك الخاصة."
+          },
+          "link": "",
+          "isLab": false
+        }
+      ]
+    },
+    {
+      "id": "topic-5",
+      "title": {
+        "en": "DNS Query Analysis",
+        "ar": "تحليل استعلامات DNS"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "How DNS Works and Why It Matters for Security",
+            "ar": "كيف يعمل DNS ولماذا يهم من منظور الأمان"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "DNS (Domain Name System) is often called the phone book of the internet — it translates human-readable domain names like 'example.com' into IP addresses that computers use to communicate. Every internet connection begins with a DNS query. This makes DNS a uniquely valuable protocol for security analysis: because almost all malware, command-and-control frameworks, and data exfiltration tools must use DNS to locate their servers, analyzing DNS traffic can reveal malicious activity even when the actual data channel is encrypted. Wireshark captures and fully dissects DNS packets, exposing every field for analysis.",
+            "ar": "يُسمى DNS (نظام أسماء النطاقات) أحياناً دليل هاتف الإنترنت — يترجم أسماء النطاقات المقروءة للبشر مثل 'example.com' إلى عناوين IP التي تستخدمها الحواسيب للتواصل. كل اتصال بالإنترنت يبدأ باستعلام DNS. هذا يجعل DNS بروتوكولاً ذا قيمة فريدة للتحليل الأمني: لأن معظم البرمجيات الخبيثة وأُطر القيادة والتحكم وأدوات سحب البيانات يجب أن تستخدم DNS لتحديد موقع خوادمها، يمكن لتحليل حركة مرور DNS الكشف عن النشاط الخبيث حتى عندما تكون قناة البيانات الفعلية مُشفَّرة. يلتقط Wireshark ويُفكّك حزم DNS بالكامل، كاشفاً كل حقل للتحليل."
+          }
+        },
+        {
+          "id": 1773103797243.8896,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageUrl": "https://cdn.cyber-labs.tech/Wireshark%20-%20Packet%20Analysis%20Pro/DNS%20resolution%20process.webp"
+        },
+        {
+          "id": 4,
+          "type": "table",
+          "title": {
+            "en": "DNS Record Types and Their Security Relevance",
+            "ar": "أنواع سجلات DNS وصلتها بالأمان"
+          },
+          "headers": {
+            "en": [
+              "Record Type",
+              "Purpose",
+              "Security Relevance"
+            ],
+            "ar": [
+              "نوع السجل",
+              "الغرض",
+              "الصلة بالأمان"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "A",
+                "Maps domain to IPv4 address",
+                "Main target for fast-flux botnet detection"
+              ],
+              "ar": [
+                "A",
+                "يربط النطاق بعنوان IPv4",
+                "الهدف الرئيسي لاكتشاف شبكات Fast-Flux"
+              ]
+            },
+            {
+              "en": [
+                "AAAA",
+                "Maps domain to IPv6 address",
+                "C2 infrastructure hiding on IPv6 to evade IPv4 monitoring"
+              ],
+              "ar": [
+                "AAAA",
+                "يربط النطاق بعنوان IPv6",
+                "بنية C2 مخفية على IPv6 لتجنب رصد IPv4"
+              ]
+            },
+            {
+              "en": [
+                "MX",
+                "Mail exchange server",
+                "Used in phishing infrastructure identification"
+              ],
+              "ar": [
+                "MX",
+                "خادم تبادل البريد",
+                "يُستخدم في تحديد بنية التصيد الاحتيالي"
+              ]
+            },
+            {
+              "en": [
+                "TXT",
+                "Arbitrary text data",
+                "Primary carrier for DNS tunneling data exfiltration"
+              ],
+              "ar": [
+                "TXT",
+                "بيانات نصية عشوائية",
+                "الناقل الرئيسي لتهريب بيانات DNS tunneling"
+              ]
+            },
+            {
+              "en": [
+                "CNAME",
+                "Domain alias / redirect",
+                "Used in DNS tunneling and C2 domain chaining"
+              ],
+              "ar": [
+                "CNAME",
+                "اسم مستعار / إعادة توجيه",
+                "يُستخدم في DNS tunneling وربط نطاقات C2"
+              ]
+            },
+            {
+              "en": [
+                "PTR",
+                "Reverse DNS (IP to name)",
+                "High-volume PTR queries = automated network scanner"
+              ],
+              "ar": [
+                "PTR",
+                "DNS عكسي (IP إلى اسم)",
+                "حجم كبير من استعلامات PTR = ماسح شبكة آلي"
+              ]
+            },
+            {
+              "en": [
+                "AXFR / IXFR",
+                "Zone transfer request",
+                "Unauthorized AXFR = full DNS database exposed to attacker"
+              ],
+              "ar": [
+                "AXFR / IXFR",
+                "طلب نقل منطقة",
+                "AXFR غير مصرح = قاعدة بيانات DNS كاملة مكشوفة للمهاجم"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 5,
+          "type": "hr"
+        },
+        {
+          "id": 6,
+          "type": "title",
+          "value": {
+            "en": "Essential DNS Display Filters",
+            "ar": "فلاتر عرض DNS الأساسية"
+          }
+        },
+        {
+          "id": 7,
+          "type": "list",
+          "title": {
+            "en": "DNS Filters from Basic to Advanced",
+            "ar": "فلاتر DNS من الأساسي إلى المتقدم"
+          },
+          "items": {
+            "en": [
+              "dns — show all DNS traffic (both queries and responses)",
+              "dns.flags.response == 0 — only DNS queries (what the client is asking for)",
+              "dns.flags.response == 1 — only DNS responses (what the server answered)",
+              "dns.qry.name == \"example.com\" — filter for a specific queried domain name",
+              "dns.qry.name contains \"evil\" — find any query containing a suspicious keyword in the domain name",
+              "dns.flags.rcode == 0 — NOERROR: successful resolutions only",
+              "dns.flags.rcode == 2 — SERVFAIL: server failure responses (misconfigured or unavailable resolver)",
+              "dns.flags.rcode == 3 — NXDOMAIN: domain does not exist (key DGA malware indicator)",
+              "dns.qry.type == 16 — TXT record queries (primary DNS tunneling data carrier)",
+              "dns.qry.type == 252 — AXFR zone transfer requests (critical: unauthorized = major security finding)",
+              "dns.qry.type == 12 — PTR reverse lookup queries (high volume = network scanning activity)",
+              "dns.resp.ttl < 30 — very short TTL responses (fast-flux botnet or C2 infrastructure indicator)",
+              "dns.time > 1 — slow DNS responses exceeding 1 second (resolver issues or DNS-based blocking)"
+            ],
+            "ar": [
+              "dns — عرض جميع حركة مرور DNS (الاستعلامات والردود معاً)",
+              "dns.flags.response == 0 — استعلامات DNS فقط (ما يسأل عنه العميل)",
+              "dns.flags.response == 1 — ردود DNS فقط (ما أجاب عنه الخادم)",
+              "dns.qry.name == \"example.com\" — الفلترة لاسم نطاق محدد تم الاستعلام عنه",
+              "dns.qry.name contains \"evil\" — البحث عن أي استعلام يحتوي كلمة مفتاحية مشبوهة في اسم النطاق",
+              "dns.flags.rcode == 0 — NOERROR: الحلول الناجحة فقط",
+              "dns.flags.rcode == 2 — SERVFAIL: ردود فشل الخادم (محلّل غير مُهيَّأ أو غير متاح)",
+              "dns.flags.rcode == 3 — NXDOMAIN: النطاق غير موجود (مؤشر رئيسي لبرمجيات DGA الخبيثة)",
+              "dns.qry.type == 16 — استعلامات سجلات TXT (الناقل الرئيسي لبيانات DNS tunneling)",
+              "dns.qry.type == 252 — طلبات نقل منطقة AXFR (حرج: غير مصرح = اكتشاف أمني كبير)",
+              "dns.qry.type == 12 — استعلامات البحث العكسي PTR (حجم كبير = نشاط مسح شبكة)",
+              "dns.resp.ttl < 30 — ردود ذات TTL قصير جداً (مؤشر Fast-flux أو بنية C2)",
+              "dns.time > 1 — ردود DNS بطيئة تتجاوز ثانية واحدة (مشاكل محلّل أو حظر قائم على DNS)"
+            ]
+          }
+        },
+        {
+          "id": 8,
+          "type": "hr"
+        },
+        {
+          "id": 9,
+          "type": "title",
+          "value": {
+            "en": "DNS Tunneling Detection — Deep Dive",
+            "ar": "اكتشاف نفق DNS — تعمّق شامل"
+          }
+        },
+        {
+          "id": 10,
+          "type": "text",
+          "value": {
+            "en": "DNS tunneling is one of the most sophisticated data exfiltration and command-and-control techniques used by advanced attackers. The core idea exploits the fact that DNS traffic is almost never blocked by firewalls — organizations need DNS to function. An attacker controls a domain (e.g., 'attacker.com') and its authoritative DNS server. Malware on the victim machine encodes data (commands, stolen files, keystrokes) into DNS query labels: for example, 'aGVsbG8gd29ybGQ.attacker.com'. The query travels through the organization's DNS resolver to the attacker's nameserver, which decodes the label and extracts the exfiltrated data. The response can carry commands back using TXT records.",
+            "ar": "DNS tunneling هو أحد أكثر تقنيات سحب البيانات والقيادة والتحكم تطوراً التي يستخدمها المهاجمون المتقدمون. الفكرة الجوهرية تستغل حقيقة أن حركة مرور DNS نادراً ما تُحجب بجدران الحماية — المؤسسات تحتاج DNS للعمل. يتحكم المهاجم في نطاق (مثلاً 'attacker.com') وخادم DNS الموثوق به. تُشفّر البرمجية الخبيثة على جهاز الضحية البيانات (الأوامر والملفات المسروقة ونقرات المفاتيح) في تسميات استعلام DNS: مثلاً 'aGVsbG8gd29ybGQ.attacker.com'. يسافر الاستعلام عبر محلّل DNS المؤسسي إلى خادم أسماء المهاجم الذي يفكّ التسمية ويستخرج البيانات المُسرَّبة. يمكن للرد أن يحمل الأوامر عبر سجلات TXT."
+          }
+        },
+        {
+          "id": 11,
+          "type": "text",
+          "value": {
+            "en": "Detecting DNS tunneling in Wireshark requires looking for a combination of statistical and structural anomalies that legitimate DNS traffic does not produce. A normal DNS query for a website might have a label like 'www.google.com' — short, readable, and meaningful. A DNS tunneling query looks like 'Y2hvbW8gaW4gcGhwIGZ1bmt0aW9uYQ.c2.evil-domain.com' — long, random-looking, Base64 or hex encoded, and targeting a domain that only handles this suspicious subdomain traffic. No real user ever types or visits these domains — they only appear because malware generates them automatically.",
+            "ar": "يتطلب اكتشاف DNS tunneling في Wireshark البحث عن مجموعة من الشذوذات الإحصائية والبنيوية التي لا تنتجها حركة مرور DNS الشرعية. استعلام DNS عادي لموقع ويب قد يكون له تسمية مثل 'www.google.com' — قصيرة ومقروءة وذات معنى. استعلام DNS tunneling يبدو كـ 'Y2hvbW8gaW4gcGhwIGZ1bmt0aW9uYQ.c2.evil-domain.com' — طويل ذو مظهر عشوائي مُشفَّر بـ Base64 أو hex، ويستهدف نطاقاً يتعامل فقط مع هذه الحركة المشبوهة. لا يكتب أي مستخدم حقيقي هذه النطاقات أو يزورها — تظهر فقط لأن البرمجية الخبيثة تولّدها آلياً."
+          }
+        },
+        {
+          "id": 12,
+          "type": "list",
+          "title": {
+            "en": "DNS Tunneling Indicators in Wireshark",
+            "ar": "مؤشرات DNS Tunneling في Wireshark"
+          },
+          "items": {
+            "en": [
+              "Query name length > 50 characters — normal FQDNs are typically under 30 characters including domain",
+              "Subdomain labels containing Base64 characters (A-Z, a-z, 0-9, +, /, =) in long random strings",
+              "High volume of TXT or NULL record queries to the same parent domain — legitimate sites rarely use TXT at this rate",
+              "Single domain receiving hundreds or thousands of queries per hour from one internal host",
+              "DNS response sizes much larger than normal — a typical A record response is under 100 bytes; tunneling inflates it to 400-1400 bytes",
+              "Regular interval queries to the same domain (beaconing pattern) — every 30s, 60s, or 300s",
+              "Absence of corresponding HTTP/HTTPS traffic — if a host resolves a domain but never connects to it via TCP, it may be using DNS as the only channel",
+              "Filter to find long subdomain queries: dns.qry.name matches \"[a-z0-9]{25}\\.\""
+            ],
+            "ar": [
+              "طول اسم الاستعلام > 50 حرفاً — الأسماء الكاملة المؤهلة عادةً تكون أقل من 30 حرفاً بما فيها النطاق",
+              "تسميات نطاق فرعي تحتوي أحرف Base64 (A-Z، a-z، 0-9، +، /، =) في سلاسل طويلة عشوائية",
+              "حجم كبير من استعلامات سجلات TXT أو NULL لنفس النطاق الأصلي — المواقع الشرعية نادراً تستخدم TXT بهذا المعدل",
+              "نطاق واحد يستقبل مئات أو آلاف الاستعلامات في الساعة من مضيف داخلي واحد",
+              "أحجام استجابة DNS أكبر بكثير من الطبيعي — استجابة سجل A نموذجية أقل من 100 بايت؛ التنفيق يرفعها لـ400-1400 بايت",
+              "استعلامات بفاصل زمني منتظم لنفس النطاق (نمط beaconing) — كل 30 أو 60 أو 300 ثانية",
+              "غياب حركة مرور HTTP/HTTPS المقابلة — إذا حلّ مضيف نطاقاً لكن لم يتصل به أبداً عبر TCP، قد يستخدم DNS كقناة وحيدة",
+              "فلتر للعثور على استعلامات ذات نطاق فرعي طويل: dns.qry.name matches \"[a-z0-9]{25}\\.\"  "
+            ]
+          }
+        },
+        {
+          "id": 13,
+          "type": "title",
+          "value": {
+            "en": "Fast-Flux, DGA, and Zone Transfer Analysis",
+            "ar": "تحليل Fast-Flux وDGA ونقل المناطق"
+          }
+        },
+        {
+          "id": 14,
+          "type": "text",
+          "value": {
+            "en": "Fast-flux is a technique used by botnets and malware distribution networks to make their infrastructure difficult to block. A fast-flux domain has A records that change every few seconds, pointing to different compromised machines (bots) that act as proxies. The TTL of these records is set very low — often 30 seconds or less — so resolvers frequently re-query for the latest IP. In Wireshark, you identify fast-flux by watching a single domain return different IP addresses in successive DNS responses within seconds, combined with the dns.resp.ttl < 30 filter.",
+            "ar": "Fast-flux هو تقنية تستخدمها شبكات الروبوتات وشبكات توزيع البرمجيات الخبيثة لجعل بنيتها التحتية صعبة الحظر. نطاق fast-flux له سجلات A تتغير كل بضع ثوانٍ، تشير إلى أجهزة مخترقة مختلفة (روبوتات) تعمل كوسطاء. يُضبط TTL هذه السجلات منخفضاً جداً — في الغالب 30 ثانية أو أقل — لكي يُعيد المحلّلون الاستعلام بتكرار عن أحدث IP. في Wireshark، تحدد fast-flux بمشاهدة نطاق واحد يُرجع عناوين IP مختلفة في ردود DNS متتالية خلال ثوانٍ، مقترناً بفلتر dns.resp.ttl < 30."
+          }
+        },
+        {
+          "id": 15,
+          "type": "text",
+          "value": {
+            "en": "Domain Generation Algorithm (DGA) malware generates hundreds or thousands of random-looking domain names each day using a seeded algorithm. The malware attempts to connect to each generated domain until one responds — that is the attacker's active C2 server for that day. The overwhelming signature in Wireshark is a storm of NXDOMAIN responses: the infected host queries domains like 'xk3jm2pa.com', 'q7tr9lpz.net', 'bnz4rwtq.org' — all returning NXDOMAIN because the attacker only registered one or a few of the generated names. Use Statistics → DNS and sort by NXDOMAIN count to instantly identify which internal host is DGA-infected.",
+            "ar": "تولّد برمجيات DGA (خوارزمية توليد النطاق) مئات أو آلاف أسماء النطاقات ذات المظهر العشوائي كل يوم باستخدام خوارزمية ببذرة محددة. تحاول البرمجية الاتصال بكل نطاق مولَّد حتى يستجيب أحدها — ذلك هو خادم C2 النشط للمهاجم في ذلك اليوم. التوقيع الساحق في Wireshark هو عاصفة من ردود NXDOMAIN: يستعلم المضيف المصاب عن نطاقات مثل 'xk3jm2pa.com' و'q7tr9lpz.net' و'bnz4rwtq.org' — كلها تُرجع NXDOMAIN لأن المهاجم سجّل اسماً واحداً أو عدداً قليلاً من الأسماء المولّدة فقط. استخدم Statistics → DNS ورتّب حسب عدد NXDOMAIN لتحديد المضيف الداخلي المصاب بـ DGA فوراً."
+          }
+        },
+        {
+          "id": 16,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "DNS Zone Transfer (AXFR) is a maintenance operation that copies the entire DNS database of a zone from a primary nameserver to a secondary one. If an attacker can perform an unauthorized AXFR, they receive a complete list of every hostname, IP address, mail server, and subdomain in your organization — essentially a full network map. Filter for AXFR with dns.qry.type == 252. If this filter returns packets and the source is not a known secondary nameserver, treat it as a critical security incident. Legitimate AXFR should only come from secondary DNS servers.",
+            "ar": "نقل منطقة DNS (AXFR) هو عملية صيانة تنسخ قاعدة بيانات DNS الكاملة لمنطقة من خادم أسماء أساسي إلى خادم ثانوي. إذا استطاع مهاجم إجراء AXFR غير مصرح، يستلم قائمة كاملة بكل اسم مضيف وعنوان IP وخادم بريد ونطاق فرعي في مؤسستك — وهو أساساً خريطة شبكة كاملة. قيّد بـ AXFR باستخدام dns.qry.type == 252. إذا أرجع هذا الفلتر حزماً ولم يكن المصدر خادم أسماء ثانوي معروف، فعامِله كحادثة أمنية حرجة. AXFR الشرعي يجب أن يأتي من خوادم DNS الثانوية فقط."
+          },
+          "link": "",
+          "isLab": false
+        }
+      ]
+    },
+    {
+      "id": "topic-6",
+      "title": {
+        "en": "Malicious Traffic Detection",
+        "ar": "اكتشاف حركة المرور الخبيثة"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "Establishing a Baseline Before Hunting Threats",
+            "ar": "إنشاء خط الأساس قبل صيد التهديدات"
+          }
+        },
+        {
+          "id": 1773103737645.9016,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageUrl": "https://cdn.cyber-labs.tech/Wireshark%20-%20Packet%20Analysis%20Pro/First%20Steps%20in%20Wireshark.webp"
+        },
+        {
+          "id": 3,
+          "type": "text",
+          "value": {
+            "en": "You cannot identify what is malicious unless you first understand what is normal. This principle — establishing a baseline — is the foundation of every threat hunting exercise. Before applying any attack-specific filters, every analyst should start a PCAP investigation with the same statistical views. Protocol Hierarchy (Statistics → Protocol Hierarchy) shows all protocols present as percentages of total traffic. If you see Tor, BitTorrent, or an obscure UDP protocol consuming significant bandwidth in a corporate environment, that is immediately suspicious. Normal corporate traffic is dominated by DNS, HTTP/HTTPS, and common business application protocols.",
+            "ar": "لا يمكنك تحديد ما هو خبيث ما لم تفهم أولاً ما هو طبيعي. هذا المبدأ — إنشاء خط الأساس — هو أساس كل تمرين صيد تهديدات. قبل تطبيق أي فلاتر خاصة بالهجمات، يجب على كل محلل البدء في التحقيق في PCAP بنفس العروض الإحصائية. تسلسل هرمي للبروتوكول (Statistics → Protocol Hierarchy) يُظهر جميع البروتوكولات الموجودة كنسب مئوية من إجمالي حركة المرور. إذا رأيت Tor أو BitTorrent أو بروتوكول UDP غامض يستهلك عرض حزمة كبير في بيئة مؤسسية، فهذا مثير للشك فوراً."
+          }
+        },
+        {
+          "id": 4,
+          "type": "orderedList",
+          "title": {
+            "en": "The 5 Baseline Checks Every PCAP Investigation Must Start With",
+            "ar": "الفحوصات الخمسة الأساسية التي يجب أن تبدأ بها كل تحقيق PCAP"
+          },
+          "items": [
+            {
+              "subtitle": {
+                "en": "Protocol Hierarchy",
+                "ar": "التسلسل الهرمي للبروتوكول"
+              },
+              "text": {
+                "en": "Go to Statistics → Protocol Hierarchy. Review every protocol listed and its percentage of traffic. Look for unexpected protocols (Tor, P2P, unusual UDP/TCP), unusually high proportions of a single protocol, and any protocol that should not exist in this environment.",
+                "ar": "انتقل إلى Statistics → Protocol Hierarchy. راجع كل بروتوكول مدرج ونسبته من حركة المرور. ابحث عن البروتوكولات غير المتوقعة (Tor أو P2P أو UDP/TCP غير عادي) ونسب مرتفعة بشكل غير عادي لبروتوكول واحد وأي بروتوكول يجب ألا يكون موجوداً في هذه البيئة."
+              },
+              "example": {
+                "en": "Red flag: IRC protocol present in a corporate network — often used by legacy botnets for C2",
+                "ar": "علامة تحذير: بروتوكول IRC موجود في شبكة مؤسسية — يُستخدم كثيراً بواسطة شبكات الروبوتات القديمة للقيادة والتحكم"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Conversations View",
+                "ar": "عرض المحادثات"
+              },
+              "text": {
+                "en": "Go to Statistics → Conversations → IPv4 tab. Sort by Bytes descending. The top entries are the biggest data movers — verify each is a known, legitimate system. An internal host sending gigabytes to an unknown external IP is a critical exfiltration finding.",
+                "ar": "انتقل إلى Statistics → Conversations → تبويب IPv4. رتّب حسب البايتات تنازلياً. الإدخالات العلوية هي أكبر ناقلات البيانات — تحقق من أن كل منها نظام معروف وشرعي. مضيف داخلي يُرسل جيجابايتات إلى IP خارجي مجهول هو اكتشاف سحب بيانات حرج."
+              },
+              "example": {
+                "en": "Red flag: 192.168.1.55 → 185.220.101.x: 2.4 GB transferred — unknown external IP receiving massive data",
+                "ar": "علامة تحذير: 192.168.1.55 → 185.220.101.x: نُقل 2.4 جيجابايت — IP خارجي مجهول يستقبل كميات ضخمة من البيانات"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Endpoints List",
+                "ar": "قائمة نقاط النهاية"
+              },
+              "text": {
+                "en": "Go to Statistics → Endpoints → IPv4 tab. This lists every unique IP address seen in the capture. Compare against your known asset inventory. Any IP not in your inventory that appears as a source inside your network may indicate a rogue device or compromised host.",
+                "ar": "انتقل إلى Statistics → Endpoints → تبويب IPv4. يسرد هذا كل عنوان IP فريد رُصد في الالتقاط. قارن بقائمة جرد الأصول المعروفة لديك. أي IP غير موجود في جردك يظهر كمصدر داخل شبكتك قد يشير إلى جهاز غير مصرح أو مضيف مخترق."
+              },
+              "example": {
+                "en": "Red flag: a device at 192.168.1.199 appears but is not in the IT asset register — possible rogue device",
+                "ar": "علامة تحذير: جهاز على 192.168.1.199 يظهر لكنه غير موجود في سجل أصول IT — جهاز غير مصرح محتمل"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "IO Graph — Traffic Over Time",
+                "ar": "IO Graph — حركة المرور عبر الزمن"
+              },
+              "text": {
+                "en": "Go to Statistics → IO Graph. The default view plots total packets per second over the capture duration. Look for sudden spikes (possible DDoS or scan), flat periodic bumps at regular intervals (beaconing), or a dramatic increase followed by a drop (data exfiltration burst).",
+                "ar": "انتقل إلى Statistics → IO Graph. العرض الافتراضي يرسم إجمالي الحزم في الثانية على مدة الالتقاط. ابحث عن ارتفاعات مفاجئة (DDoS أو مسح محتمل) وانتفاخات دورية منتظمة (beaconing) أو ارتفاع حاد يعقبه انخفاض (اندفاع سحب بيانات)."
+              },
+              "example": {
+                "en": "Red flag: a spike of 500 packets/sec every exactly 60 seconds — classic C2 beaconing signature",
+                "ar": "علامة تحذير: ارتفاع 500 حزمة/ثانية بالضبط كل 60 ثانية — توقيع C2 beaconing الكلاسيكي"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Expert Information",
+                "ar": "معلومات الخبراء"
+              },
+              "text": {
+                "en": "Go to Analyze → Expert Information. This panel categorizes automatically detected issues by severity: Errors (critical protocol violations, malformed packets), Warnings (retransmissions, RST storms, zero windows), Notes (keep-alives, window updates), and Chats (normal connection events). Start by reviewing all Errors and Warnings.",
+                "ar": "انتقل إلى Analyze → Expert Information. تُصنّف هذه اللوحة المشاكل المكتشفة آلياً حسب الخطورة: Errors (انتهاكات بروتوكول حرجة وحزم مشوّهة) وWarnings (إعادة إرسال وعواصف RST ونوافذ صفرية) وNotes (keep-alives وتحديثات النوافذ) وChats (أحداث الاتصال العادية). ابدأ بمراجعة جميع Errors وWarnings."
+              },
+              "example": {
+                "en": "Red flag: hundreds of 'TCP RST' warnings from a single source — possible RST injection or port scan",
+                "ar": "علامة تحذير: مئات من تحذيرات 'TCP RST' من مصدر واحد — حقن RST محتمل أو مسح منافذ"
+              }
+            }
+          ]
+        },
+        {
+          "id": 5,
+          "type": "hr"
+        },
+        {
+          "id": 6,
+          "type": "title",
+          "value": {
+            "en": "Port Scanning Detection",
+            "ar": "اكتشاف مسح المنافذ"
+          }
+        },
+        {
+          "id": 7,
+          "type": "text",
+          "value": {
+            "en": "Port scanning is almost always the first phase of an attack — the reconnaissance step where an attacker maps which services are running on a target. Different scanning tools and techniques leave distinct packet-level signatures that Wireshark can expose. A TCP SYN scan — the default mode of Nmap — sends SYN packets to many ports in rapid succession. Because the connection is never completed, it generates a pattern of SYN packets from one source with RST responses from the closed ports and SYN-ACK followed by RST (to refuse the connection) from open ports. The filter tcp.flags.syn == 1 && tcp.flags.ack == 0 applied to one suspicious source IP will immediately reveal if scanning is occurring.",
+            "ar": "مسح المنافذ هو دائماً تقريباً المرحلة الأولى من الهجوم — خطوة الاستطلاع التي يرسم فيها المهاجم خريطة الخدمات المُشغَّلة على الهدف. تُخلّف أدوات وتقنيات المسح المختلفة توقيعات مميزة على مستوى الحزمة يمكن لـ Wireshark الكشف عنها. مسح TCP SYN — الوضع الافتراضي لـ Nmap — يرسل حزم SYN لمنافذ كثيرة بتتالٍ سريع. لأن الاتصال لا يكتمل أبداً، يولّد نمطاً من حزم SYN من مصدر واحد مع ردود RST من المنافذ المغلقة وSYN-ACK يعقبه RST من المنافذ المفتوحة. تطبيق الفلتر tcp.flags.syn == 1 && tcp.flags.ack == 0 على IP مصدر مشبوه واحد سيكشف فوراً عن وجود مسح."
+          }
+        },
+        {
+          "id": 8,
+          "type": "table",
+          "title": {
+            "en": "Port Scan Types and Their Wireshark Signatures",
+            "ar": "أنواع مسح المنافذ وتوقيعاتها في Wireshark"
+          },
+          "headers": {
+            "en": [
+              "Scan Type",
+              "TCP Flags Sent",
+              "Wireshark Filter",
+              "Open Port Response",
+              "Closed Port Response"
+            ],
+            "ar": [
+              "نوع المسح",
+              "أعلام TCP المُرسَلة",
+              "فلتر Wireshark",
+              "استجابة المنفذ المفتوح",
+              "استجابة المنفذ المغلق"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "SYN Scan (Nmap default)",
+                "SYN only",
+                "tcp.flags.syn==1 && tcp.flags.ack==0",
+                "SYN-ACK then RST",
+                "RST"
+              ],
+              "ar": [
+                "SYN Scan (افتراضي Nmap)",
+                "SYN فقط",
+                "tcp.flags.syn==1 && tcp.flags.ack==0",
+                "SYN-ACK ثم RST",
+                "RST"
+              ]
+            },
+            {
+              "en": [
+                "Connect Scan",
+                "Full 3-way + FIN/RST",
+                "tcp.flags.syn==1",
+                "Full handshake + teardown",
+                "RST"
+              ],
+              "ar": [
+                "Connect Scan",
+                "مصافحة كاملة + FIN/RST",
+                "tcp.flags.syn==1",
+                "مصافحة كاملة + إغلاق",
+                "RST"
+              ]
+            },
+            {
+              "en": [
+                "Xmas Scan",
+                "FIN + PSH + URG",
+                "tcp.flags == 0x029",
+                "No response (filtered)",
+                "RST"
+              ],
+              "ar": [
+                "Xmas Scan",
+                "FIN + PSH + URG",
+                "tcp.flags == 0x029",
+                "لا رد (محجوب)",
+                "RST"
+              ]
+            },
+            {
+              "en": [
+                "NULL Scan",
+                "No flags set",
+                "tcp.flags == 0x000",
+                "No response (filtered)",
+                "RST"
+              ],
+              "ar": [
+                "NULL Scan",
+                "لا أعلام مضبوطة",
+                "tcp.flags == 0x000",
+                "لا رد (محجوب)",
+                "RST"
+              ]
+            },
+            {
+              "en": [
+                "UDP Scan",
+                "UDP probe packet",
+                "icmp.type==3 && icmp.code==3",
+                "Service response (UDP)",
+                "ICMP Port Unreachable"
+              ],
+              "ar": [
+                "UDP Scan",
+                "حزمة استطلاع UDP",
+                "icmp.type==3 && icmp.code==3",
+                "استجابة الخدمة (UDP)",
+                "ICMP Port Unreachable"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 9,
+          "type": "hr"
+        },
+        {
+          "id": 10,
+          "type": "title",
+          "value": {
+            "en": "ARP Poisoning, Brute Force, and Malware C2 Detection",
+            "ar": "اكتشاف تسميم ARP والقوة الغاشمة وقيادة وتحكم البرمجيات الخبيثة"
+          }
+        },
+        {
+          "id": 11,
+          "type": "text",
+          "value": {
+            "en": "ARP poisoning is a man-in-the-middle attack technique where an attacker sends forged ARP Reply packets claiming that their MAC address corresponds to a victim IP address (such as the default gateway). Machines on the local network update their ARP cache with this false mapping, causing them to send traffic destined for the gateway to the attacker's machine instead. The attacker can then forward the traffic (invisible MITM), modify it in transit, or capture credentials. In Wireshark, the tell-tale sign is multiple ARP Reply packets claiming the same IP address belongs to different MAC addresses. Filter with arp.opcode == 2 (ARP Replies only) and look for conflicting MAC-to-IP mappings.",
+            "ar": "تسميم ARP هو تقنية هجوم رجل-في-المنتصف حيث يُرسل المهاجم حزم ARP Reply مزوّرة يدّعي فيها أن عنوان MAC الخاص به يقابل عنوان IP الضحية (مثل البوابة الافتراضية). تُحدّث الأجهزة في الشبكة المحلية ذاكرتها التخزينية لـ ARP بهذا الربط الزائف، مما يجعلها ترسل الحركة المُوجَّهة للبوابة إلى جهاز المهاجم بدلاً منه. يستطيع المهاجم حينها إعادة توجيه الحركة (MITM غير مرئي) أو تعديلها أثناء العبور أو التقاط بيانات الاعتماد. في Wireshark، العلامة الدالة هي حزم ARP Reply متعددة تدّعي أن نفس عنوان IP ينتمي لعناوين MAC مختلفة."
+          }
+        },
+        {
+          "id": 12,
+          "type": "text",
+          "value": {
+            "en": "C2 beaconing is one of the most important malicious patterns to detect. After a machine is infected with malware, it periodically contacts the attacker's command-and-control server to check for new instructions, confirm it is still active, and report status. This beacon traffic has a distinctive mathematical regularity — the infected machine contacts the same IP or domain at near-identical time intervals. Use Statistics → IO Graph and add a custom filter line for the suspected IP or protocol. If the resulting line shows sharp, evenly-spaced spikes rather than random traffic, you have identified beaconing behavior. The more regular the interval, the more likely it is hardcoded malware rather than a legitimate application.",
+            "ar": "C2 beaconing هو أحد أهم الأنماط الخبيثة للاكتشاف. بعد إصابة جهاز بالبرمجية الخبيثة، يتصل دورياً بخادم القيادة والتحكم للمهاجم للتحقق من تعليمات جديدة وتأكيد نشاطه والإبلاغ عن الحالة. لحركة مرور النبضة هذه انتظام رياضي مميز — يتصل الجهاز المصاب بنفس IP أو النطاق بفترات زمنية شبه متطابقة. استخدم Statistics → IO Graph وأضف سطر فلتر مخصص لـ IP أو البروتوكول المشتبه به. إذا أظهر الخط الناتج ارتفاعات حادة متباعدة بانتظام بدلاً من حركة مرور عشوائية، فقد حددت سلوك beaconing."
+          }
+        },
+        {
+          "id": 13,
+          "type": "list",
+          "title": {
+            "en": "Critical Malicious Traffic Detection Filters — Quick Reference",
+            "ar": "فلاتر اكتشاف حركة المرور الخبيثة الحرجة — مرجع سريع"
+          },
+          "items": {
+            "en": [
+              "tcp.flags.syn==1 && tcp.flags.ack==0 — SYN-only packets; mass volume from one source = port scan",
+              "arp.opcode==2 — ARP replies only; same IP with two different MACs = ARP poisoning MITM attack",
+              "icmp && data.len > 100 — oversized ICMP payloads; normal ping = 32 bytes; > 100 bytes = possible ICMP tunneling",
+              "tcp.dstport==22 && tcp.flags.syn==1 — many SYN to SSH port from one IP = SSH brute force attempt",
+              "http.request.method==\"POST\" && http.request.uri contains \"login\" — HTTP brute force login attempts",
+              "ftp.response.code==530 — FTP Login Incorrect response; repeated = credential brute force",
+              "smb2.nt_status==0xC000006D — SMB LOGON_FAILURE; repeated = SMB brute force or Pass-the-Hash attempt",
+              "tcp.dstport==3389 && tcp.flags.syn==1 — repeated SYN to RDP port = RDP brute force scanning",
+              "dns.flags.rcode==3 — NXDOMAIN; storm of these = DGA malware generating random domain names",
+              "dns.qry.name matches \"[a-z0-9]{25}\\.\" — long random subdomain labels = DNS tunneling indicator",
+              "kerberos.msg_type==12 — Kerberos TGS-REQ; high volume for service accounts = Kerberoasting attack",
+              "smb2 && ip.src==192.168.0.0/16 && ip.dst==192.168.0.0/16 — internal SMB traffic between hosts = lateral movement",
+              "tcp.flags==0x029 — Xmas scan (FIN+PSH+URG flags simultaneously set)",
+              "tcp.flags==0x000 — NULL scan (no TCP flags set at all — evasion technique)",
+              "http.user_agent matches \"(sqlmap|nikto|hydra|masscan|python-requests|curl|go-http-client)\" — automated attack tool fingerprints"
+            ],
+            "ar": [
+              "tcp.flags.syn==1 && tcp.flags.ack==0 — حزم SYN فقط؛ حجم كبير من مصدر واحد = مسح منافذ",
+              "arp.opcode==2 — ردود ARP فقط؛ نفس IP مع MAC مختلفَين = هجوم MITM بتسميم ARP",
+              "icmp && data.len > 100 — حمولات ICMP كبيرة؛ ping الطبيعي = 32 بايت؛ > 100 بايت = نفق ICMP محتمل",
+              "tcp.dstport==22 && tcp.flags.syn==1 — SYN كثيرة لمنفذ SSH من IP واحد = محاولة قوة غاشمة SSH",
+              "http.request.method==\"POST\" && http.request.uri contains \"login\" — محاولات تسجيل دخول بقوة غاشمة HTTP",
+              "ftp.response.code==530 — استجابة Login Incorrect في FTP؛ متكررة = قوة غاشمة لبيانات الاعتماد",
+              "smb2.nt_status==0xC000006D — LOGON_FAILURE في SMB؛ متكررة = قوة غاشمة SMB أو محاولة Pass-the-Hash",
+              "tcp.dstport==3389 && tcp.flags.syn==1 — SYN متكررة لمنفذ RDP = مسح قوة غاشمة RDP",
+              "dns.flags.rcode==3 — NXDOMAIN؛ عاصفة منها = برمجية DGA خبيثة تولّد أسماء نطاقات عشوائية",
+              "dns.qry.name matches \"[a-z0-9]{25}\\.\" — تسميات نطاق فرعي طويلة عشوائية = مؤشر DNS tunneling",
+              "kerberos.msg_type==12 — Kerberos TGS-REQ؛ حجم كبير لحسابات الخدمة = هجوم Kerberoasting",
+              "smb2 && ip.src==192.168.0.0/16 && ip.dst==192.168.0.0/16 — حركة SMB داخلية بين المضيفين = حركة جانبية",
+              "tcp.flags==0x029 — Xmas scan (أعلام FIN+PSH+URG مضبوطة معاً في وقت واحد)",
+              "tcp.flags==0x000 — NULL scan (لا أعلام TCP مضبوطة إطلاقاً — تقنية تحايل)",
+              "http.user_agent matches \"(sqlmap|nikto|hydra|masscan|python-requests|curl|go-http-client)\" — بصمات أدوات الهجوم الآلي"
+            ]
+          }
+        },
+        {
+          "id": 14,
+          "type": "hr"
+        },
+        {
+          "id": 15,
+          "type": "title",
+          "value": {
+            "en": "Lateral Movement and Data Exfiltration Detection",
+            "ar": "اكتشاف الحركة الجانبية وسحب البيانات"
+          }
+        },
+        {
+          "id": 16,
+          "type": "text",
+          "value": {
+            "en": "After an attacker gains initial access to one machine inside a network, they rarely stop there. Lateral movement is the technique of pivoting from the compromised host to other systems on the internal network, escalating access and expanding control. In Wireshark, lateral movement leaves clear protocol traces. SMB (port 445) connections between internal hosts — especially when combined with authentication failures followed by success — indicate credential-based lateral movement using tools like PsExec or WMIC. Kerberos traffic showing unusual volumes of TGS-REQ (Ticket Granting Service Request) messages for service accounts suggests a Kerberoasting attack, where an attacker is requesting Kerberos tickets to crack service account passwords offline.",
+            "ar": "بعد حصول المهاجم على وصول أولي لجهاز واحد داخل الشبكة، نادراً ما يتوقف عند ذلك. الحركة الجانبية هي تقنية الانتقال من المضيف المخترق إلى أنظمة أخرى في الشبكة الداخلية، لتصعيد الوصول وتوسيع السيطرة. في Wireshark، تترك الحركة الجانبية آثاراً واضحة للبروتوكول. اتصالات SMB (المنفذ 445) بين المضيفين الداخليين — خاصةً عند اقترانها بفشل المصادقة يعقبه نجاح — تشير إلى حركة جانبية قائمة على بيانات الاعتماد باستخدام أدوات كـ PsExec أو WMIC. حركة مرور Kerberos التي تُظهر أحجاماً غير عادية من رسائل TGS-REQ لحسابات الخدمة تقترح هجوم Kerberoasting."
+          }
+        },
+        {
+          "id": 17,
+          "type": "text",
+          "value": {
+            "en": "Data exfiltration — the unauthorized transfer of data out of an organization — is the endgame of most attacks. The challenge for analysts is that exfiltration can be disguised as legitimate traffic. Large HTTP POST requests, FTP uploads, encrypted HTTPS sessions with abnormal upload sizes, DNS tunneling, and even ICMP tunneling are all used by attackers to move stolen data out without triggering obvious alerts. In Wireshark, the most reliable indicators are statistical rather than signature-based: identify which internal hosts are generating the most outbound traffic, look for connections to IP addresses that have no business relationship with the organization, and watch for protocols being used in unconventional ways.",
+            "ar": "سحب البيانات — النقل غير المصرح للبيانات خارج المؤسسة — هو الهدف النهائي لمعظم الهجمات. التحدي للمحللين هو أن السحب يمكن إخفاؤه كحركة مرور شرعية. طلبات HTTP POST الكبيرة ورفعات FTP وجلسات HTTPS مُشفَّرة بأحجام رفع غير طبيعية ونفق DNS وحتى نفق ICMP — كلها تُستخدم من قِبل المهاجمين لنقل البيانات المسروقة للخارج دون تشغيل تنبيهات واضحة. في Wireshark، المؤشرات الأكثر موثوقية إحصائية لا توقيعية: حدّد المضيفين الداخليين الذين يولّدون أكثر حركة المرور الصادرة، وابحث عن اتصالات لعناوين IP ليس لها علاقة عمل بالمؤسسة."
+          }
+        },
+        {
+          "id": 1773103835857.3354,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageUrl": "https://cdn.cyber-labs.tech/Wireshark%20-%20Packet%20Analysis%20Pro/Attack%20Lifecycle%20as%20seen%20in%20Wireshark.webp"
+        },
+        {
+          "id": 19,
+          "type": "terminal",
+          "label": {
+            "en": "Detecting top exfiltration sources using tshark CLI",
+            "ar": "اكتشاف أكبر مصادر سحب البيانات باستخدام tshark"
+          },
+          "value": "# Find top 10 internal hosts by outbound bytes to external IPs\ntshark -r capture.pcap -T fields -e ip.src -e ip.dst -e frame.len \\\n  | awk '$1 ~ /^192\\.168\\./ && $2 !~ /^192\\.168\\./ {sum[$1]+=$3} END {for(ip in sum) print sum[ip], ip}' \\\n  | sort -rn | head -10\n\n# Find all large HTTP POST requests (possible exfiltration)\ntshark -r capture.pcap -Y 'http.request.method == \"POST\" && http.content_length > 100000' \\\n  -T fields -e frame.time -e ip.src -e ip.dst -e http.request.uri -e http.content_length\n\n# Detect FTP uploads (STOR command = file being sent to FTP server)\ntshark -r capture.pcap -Y 'ftp.request.command == \"STOR\"' \\\n  -T fields -e frame.time -e ip.src -e ip.dst -e ftp.request.arg"
+        },
+        {
+          "id": 20,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "Never rely on a single indicator when declaring malicious activity. A high-volume outbound connection might be a legitimate software update. A periodic signal might be a heartbeat from a monitoring tool. Always correlate at least three independent indicators before escalating a finding: for example, (1) unusual protocol in Protocol Hierarchy + (2) matching external IP in Conversations + (3) periodic IO Graph pattern. The combination of multiple weak signals into one coherent story is what separates a professional analyst from a false-positive generator.",
+            "ar": "لا تعتمد أبداً على مؤشر واحد عند الإعلان عن نشاط خبيث. قد يكون الاتصال الصادر ذو الحجم الكبير تحديثاً شرعياً للبرنامج. قد تكون الإشارة الدورية نبضة قلب من أداة مراقبة. دائماً اربط ثلاثة مؤشرات مستقلة على الأقل قبل تصعيد اكتشاف: مثلاً (1) بروتوكول غير عادي في Protocol Hierarchy + (2) IP خارجي مطابق في Conversations + (3) نمط IO Graph دوري. الجمع بين إشارات ضعيفة متعددة في قصة متماسكة واحدة هو ما يُميّز المحلل المحترف عن مولّد الإيجابيات الكاذبة."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 21,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Custom Coloring Rules in Wireshark (View → Coloring Rules) are an underused but powerful tool for malicious traffic detection. You can create color rules that automatically highlight suspicious packets in real-time as you scroll through a capture. For example: color all packets matching tcp.flags.syn==1 && tcp.flags.ack==0 in bright red, all dns.flags.rcode==3 packets in orange, and all arp.duplicate-address-detected packets in yellow. Within seconds of opening a PCAP, colored highlights will visually flag the attack patterns without requiring any manual filtering.",
+            "ar": "قواعد التلوين المخصصة في Wireshark (View → Coloring Rules) هي أداة مُستخدَمة بأقل من إمكاناتها لكنها قوية لاكتشاف حركة المرور الخبيثة. يمكنك إنشاء قواعد ألوان تُبرز الحزم المشبوهة تلقائياً في الوقت الفعلي أثناء تصفحك للالتقاط. مثلاً: لوّن جميع الحزم المطابقة لـ tcp.flags.syn==1 && tcp.flags.ack==0 باللون الأحمر الساطع، وجميع حزم dns.flags.rcode==3 باللون البرتقالي، وجميع حزم arp.duplicate-address-detected باللون الأصفر. في غضون ثوانٍ من فتح PCAP، ستُعلّم الألوان المميّزة أنماط الهجوم بصرياً دون الحاجة لأي فلترة يدوية."
+          },
+          "link": "",
+          "isLab": false
+        }
+      ]
+    },
+    {
+      "id": "topic-7",
+      "title": {
+        "en": "Lab: Analyze PCAP Files",
+        "ar": "المختبر: تحليل ملفات PCAP"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "Setting Up Your PCAP Analysis Lab Environment",
+            "ar": "إعداد بيئة مختبر تحليل PCAP الخاصة بك"
+          }
+        },
+        {
+          "id": 3,
+          "type": "text",
+          "value": {
+            "en": "A well-configured lab environment is the difference between productive PCAP analysis and frustrating guesswork. For this course, you need Wireshark (latest stable version) installed on your system, alongside tshark for command-line batch analysis. Practice PCAP files are essential — never practice on live production traffic. There are several high-quality public repositories of real-world PCAP files covering benign traffic, malware infections, port scans, credential theft, and full incident scenarios. Install NetworkMiner for passive file and credential extraction from PCAPs. Use Zeek (formerly Bro) alongside Wireshark to generate structured protocol logs — Zeek provides a different analytical lens that complements Wireshark's packet-level view.",
+            "ar": "بيئة مختبر مُهيَّأة جيداً هي الفرق بين تحليل PCAP المنتج والتخمين المُحبِط. لهذه الدورة، تحتاج Wireshark (أحدث إصدار مستقر) مثبّتاً على نظامك، إلى جانب tshark لتحليل الدُّفعات من سطر الأوامر. ملفات PCAP التدريبية ضرورية — لا تتدرب أبداً على حركة مرور الإنتاج الحية. هناك عدة مستودعات عامة عالية الجودة لملفات PCAP من العالم الحقيقي تغطي حركة المرور الحميدة وإصابات البرمجيات الخبيثة ومسح المنافذ وسرقة بيانات الاعتماد وسيناريوهات الحوادث الكاملة. ثبّت NetworkMiner لاستخراج الملفات وبيانات الاعتماد السلبي من ملفات PCAP."
+          }
+        },
+        {
+          "id": 1773103856897.1545,
+          "type": "image",
+          "srcKey": "",
+          "size": "small",
+          "imageUrl": "https://cdn.cyber-labs.tech/Wireshark%20-%20Packet%20Analysis%20Pro/PCAP%20Analysis%20Toolkit.webp"
+        },
+        {
+          "id": 4,
+          "type": "list",
+          "title": {
+            "en": "Recommended PCAP Sources for Lab Practice",
+            "ar": "مصادر PCAP الموصى بها للتدريب المختبري"
+          },
+          "items": {
+            "en": [
+              "Wireshark Sample Captures Wiki — official collection of protocol-specific PCAPs covering HTTP, DNS, TLS, VoIP, and more",
+              "Malware Traffic Analysis (malware-traffic-analysis.net) — real malware infection PCAPs with detailed write-ups for each incident",
+              "PacketLife.net Capture Library — diverse protocol captures for protocol learning and troubleshooting practice",
+              "NETRESEC publicly available PCAPs — curated list of PCAPs from CTF competitions, honeypots, and security research",
+              "APNIC Training PCAP exercises — structured beginner exercises with guided analysis tasks",
+              "Any CTF (Capture The Flag) competition archive — platforms like CyberDefenders and BlueTeamLabs provide PCAP-based challenges with realistic incident scenarios"
+            ],
+            "ar": [
+              "Wireshark Sample Captures Wiki — مجموعة رسمية من PCAPs خاصة بالبروتوكولات تغطي HTTP وDNS وTLS وVoIP وغيرها",
+              "Malware Traffic Analysis — ملفات PCAP لإصابات برمجيات خبيثة حقيقية مع شروح مفصّلة لكل حادثة",
+              "PacketLife.net Capture Library — التقاطات بروتوكولات متنوعة لتعلم البروتوكولات وممارسة استكشاف الأعطال",
+              "NETRESEC PCAPs المتاحة للعموم — قائمة منتقاة من PCAPs من مسابقات CTF وhoneypots وأبحاث الأمان",
+              "تمارين PCAP APNIC — تمارين منظمة للمبتدئين مع مهام تحليل موجَّهة",
+              "أي أرشيف مسابقة CTF — منصات كـ CyberDefenders وBlueTeamLabs توفر تحديات قائمة على PCAP بسيناريوهات حوادث واقعية"
+            ]
+          }
+        },
+        {
+          "id": 5,
+          "type": "hr"
+        },
+        {
+          "id": 6,
+          "type": "title",
+          "value": {
+            "en": "Lab Exercise 1 — Credential Extraction from Cleartext Protocols",
+            "ar": "تمرين مختبري 1 — استخراج بيانات الاعتماد من البروتوكولات النصية"
+          }
+        },
+        {
+          "id": 7,
+          "type": "text",
+          "value": {
+            "en": "This exercise targets the most fundamental finding in network forensics: cleartext credentials. Protocols like Telnet, FTP, HTTP Basic Authentication, and POP3 transmit usernames and passwords in plain text with no encryption. Any analyst — or attacker — who captures traffic on the same network segment can read these credentials simply by following the TCP stream. This exercise teaches you to identify unencrypted session traffic, isolate the credential exchange, and document the finding in a format suitable for an incident report.",
+            "ar": "يستهدف هذا التمرين الاكتشاف الأساسي في الجنائيات الشبكية: بيانات الاعتماد النصية. البروتوكولات مثل Telnet وFTP ومصادقة HTTP الأساسية وPOP3 تنقل أسماء المستخدمين وكلمات المرور بنص عادي بلا تشفير. أي محلل — أو مهاجم — يلتقط حركة المرور على نفس مقطع الشبكة يستطيع قراءة هذه البيانات ببساطة عن طريق متابعة تدفق TCP. يعلّمك هذا التمرين تحديد حركة مرور الجلسة غير المُشفَّرة وعزل تبادل بيانات الاعتماد وتوثيق الاكتشاف."
+          }
+        },
+        {
+          "id": 8,
+          "type": "orderedList",
+          "title": {
+            "en": "Step-by-Step: Extracting Credentials from a Telnet/FTP PCAP",
+            "ar": "خطوة بخطوة: استخراج بيانات الاعتماد من PCAP Telnet/FTP"
+          },
+          "items": [
+            {
+              "subtitle": {
+                "en": "Open and identify the protocol",
+                "ar": "افتح وحدّد البروتوكول"
+              },
+              "text": {
+                "en": "Open the PCAP in Wireshark. Apply display filter: telnet OR ftp. Observe packets in the packet list. In the Info column, you will see FTP commands like USER, PASS, and Telnet negotiation sequences.",
+                "ar": "افتح ملف PCAP في Wireshark. طبّق فلتر العرض: telnet OR ftp. لاحظ الحزم في قائمة الحزم. في عمود Info، سترى أوامر FTP مثل USER وPASS وتسلسلات تفاوض Telnet."
+              },
+              "example": {
+                "en": "You see: FTP Request: USER admin | FTP Request: PASS s3cr3t123 — credentials fully visible",
+                "ar": "ترى: FTP Request: USER admin | FTP Request: PASS s3cr3t123 — بيانات الاعتماد مرئية بالكامل"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Follow the TCP stream",
+                "ar": "اتّبع تدفق TCP"
+              },
+              "text": {
+                "en": "Right-click any FTP or Telnet packet and select Follow → TCP Stream. The stream window shows the full session. For FTP, look for the USER and PASS commands in red (client-sent). For Telnet, the entire terminal session — including the login prompt and password — appears in plaintext.",
+                "ar": "انقر بزر الماوس الأيمن على أي حزمة FTP أو Telnet واختر Follow → TCP Stream. تُظهر نافذة التدفق الجلسة كاملة. لـ FTP، ابحث عن أوامر USER وPASS باللون الأحمر (مُرسَلة من العميل). لـ Telnet، تظهر جلسة الطرفية كاملة — بما فيها مطالبة تسجيل الدخول وكلمة المرور — بنص عادي."
+              },
+              "example": {
+                "en": "Stream shows: 'login: root' followed by 'Password: admin123' — complete credential capture",
+                "ar": "يُظهر التدفق: 'login: root' يتبعه 'Password: admin123' — التقاط كامل لبيانات الاعتماد"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Document the finding",
+                "ar": "وثّق الاكتشاف"
+              },
+              "text": {
+                "en": "Record the source IP, destination IP, destination port, timestamp of the authentication attempt, the captured username and password, and the protocol used. Note the protocol version and whether encryption was available. This documentation format is what you would include in a security incident report.",
+                "ar": "سجّل IP المصدر وIP الوجهة ومنفذ الوجهة وطابع وقت محاولة المصادقة واسم المستخدم وكلمة المرور الملتقطَين والبروتوكول المُستخدَم. دوّن إصدار البروتوكول وما إذا كان التشفير متاحاً. هذا التنسيق التوثيقي هو ما ستُدرجه في تقرير حادثة أمنية."
+              },
+              "example": {
+                "en": "Finding: Cleartext FTP credentials — src 192.168.1.10 → dst 10.0.0.5:21 — User: admin / Pass: admin123 — 2026-03-10 01:47:22",
+                "ar": "الاكتشاف: بيانات اعتماد FTP نصية — المصدر 192.168.1.10 → الوجهة 10.0.0.5:21 — المستخدم: admin / كلمة المرور: admin123 — 2026-03-10 01:47:22"
+              }
+            }
+          ]
+        },
+        {
+          "id": 9,
+          "type": "hr"
+        },
+        {
+          "id": 10,
+          "type": "title",
+          "value": {
+            "en": "Lab Exercise 2 — HTTP File Transfer and Object Extraction",
+            "ar": "تمرين مختبري 2 — نقل ملفات HTTP واستخراج الكائنات"
+          }
+        },
+        {
+          "id": 11,
+          "type": "text",
+          "value": {
+            "en": "This exercise focuses on reconstructing file transfers that occurred over HTTP. In incident response, identifying what files were downloaded or uploaded through HTTP traffic is critical — it can reveal malware payloads received by an infected host, documents exfiltrated by an insider threat, or tools dropped by an attacker after initial compromise. Wireshark's Export Objects feature automates the file reconstruction process, but understanding the underlying HTTP exchange helps you verify the result and analyze files that fail automatic reconstruction.",
+            "ar": "يركز هذا التمرين على إعادة بناء نقل الملفات التي حدثت عبر HTTP. في الاستجابة للحوادث، تحديد الملفات التي تم تنزيلها أو رفعها عبر حركة مرور HTTP أمر حاسم — يمكن أن يكشف عن حمولات برمجيات خبيثة استلمها مضيف مصاب أو وثائق سحبها تهديد داخلي أو أدوات أسقطها مهاجم بعد الاختراق الأولي. تُؤتمت ميزة Export Objects في Wireshark عملية إعادة بناء الملفات، لكن فهم تبادل HTTP الأساسي يساعدك على التحقق من النتيجة وتحليل الملفات التي تفشل في إعادة البناء التلقائي."
+          }
+        },
+        {
+          "id": 12,
+          "type": "orderedList",
+          "title": {
+            "en": "Step-by-Step: HTTP Object Extraction Workflow",
+            "ar": "خطوة بخطوة: سير عمل استخراج كائنات HTTP"
+          },
+          "items": [
+            {
+              "subtitle": {
+                "en": "Filter and identify HTTP transfers",
+                "ar": "قيّد وحدّد نقل HTTP"
+              },
+              "text": {
+                "en": "Apply filter: http.request.method == \"GET\" || http.response.code == 200. Look for 200 OK responses with Content-Type headers that indicate file transfers: application/octet-stream, application/zip, application/pdf, image/jpeg, or text/html for web pages. The Content-Length header tells you the file size.",
+                "ar": "طبّق الفلتر: http.request.method == \"GET\" || http.response.code == 200. ابحث عن ردود 200 OK مع رؤوس Content-Type تشير لنقل ملفات: application/octet-stream أو application/zip أو application/pdf أو image/jpeg. رأس Content-Length يخبرك بحجم الملف."
+              },
+              "example": {
+                "en": "Suspicious: GET /update.exe HTTP/1.1 → 200 OK Content-Type: application/octet-stream Content-Length: 524288",
+                "ar": "مشبوه: GET /update.exe HTTP/1.1 → 200 OK Content-Type: application/octet-stream Content-Length: 524288"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Export all HTTP objects",
+                "ar": "صدّر جميع كائنات HTTP"
+              },
+              "text": {
+                "en": "Navigate to File → Export Objects → HTTP. A window appears listing every file Wireshark found in HTTP responses. Each entry shows the packet number, hostname, filename, content type, and size. Select all suspicious files and click Save All to a dedicated evidence folder.",
+                "ar": "انتقل إلى File → Export Objects → HTTP. تظهر نافذة تسرد كل ملف وجده Wireshark في ردود HTTP. كل إدخال يُظهر رقم الحزمة واسم المضيف واسم الملف ونوع المحتوى والحجم. اختر جميع الملفات المشبوهة وانقر Save All إلى مجلد أدلة مخصص."
+              },
+              "example": {
+                "en": "Exported: update.exe (524KB from 185.220.x.x), payload.js (12KB from same IP) — both from unknown external IP",
+                "ar": "صُدِّر: update.exe (524 كيلوبايت من 185.220.x.x) وpayload.js (12 كيلوبايت من نفس IP) — كلاهما من IP خارجي مجهول"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Hash and verify extracted files",
+                "ar": "احسب التجزئة وتحقق من الملفات المستخرجة"
+              },
+              "text": {
+                "en": "For each extracted file, calculate its SHA256 hash. On Linux use: sha256sum filename. On Windows use: certutil -hashfile filename SHA256. Record the hash. A known-malicious file will often have a hash that matches entries in threat intelligence databases. Even if the hash is unknown, preserving it documents the exact file state at time of capture.",
+                "ar": "لكل ملف مستخرج، احسب تجزئة SHA256 الخاصة به. على Linux: sha256sum filename. على Windows: certutil -hashfile filename SHA256. سجّل التجزئة. الملف الخبيث المعروف غالباً ما تكون له تجزئة تطابق إدخالات في قواعد بيانات معلومات التهديدات. حتى إذا كانت التجزئة غير معروفة، الاحتفاظ بها يوثّق الحالة الدقيقة للملف وقت الالتقاط."
+              },
+              "example": {
+                "en": "sha256sum update.exe → 3a7bd3e2360a3d29eea436fcfb7e44c735d117c42d1c1835420b6b9942dd4f1b — submit to threat intel lookup",
+                "ar": "sha256sum update.exe → 3a7bd3e2360a3d29eea436fcfb7e44c735d117c42d1c1835420b6b9942dd4f1b — أرسل للبحث في معلومات التهديدات"
+              }
+            }
+          ]
+        },
+        {
+          "id": 13,
+          "type": "hr"
+        },
+        {
+          "id": 14,
+          "type": "title",
+          "value": {
+            "en": "Lab Exercise 3 — Malware PCAP Full Investigation",
+            "ar": "تمرين مختبري 3 — تحقيق كامل في PCAP برمجيات خبيثة"
+          }
+        },
+        {
+          "id": 15,
+          "type": "text",
+          "value": {
+            "en": "This is the most comprehensive lab exercise in the course. You will open a real malware infection PCAP and perform a complete end-to-end investigation following a professional analyst methodology. The goal is not just to find one indicator but to reconstruct the full infection chain: how the malware arrived, how it established persistence, how it communicated with its C2, and what data it may have exfiltrated. This type of analysis is what a SOC analyst or incident responder performs during a real security incident.",
+            "ar": "هذا هو أشمل تمرين مختبري في الدورة. ستفتح ملف PCAP لإصابة برمجيات خبيثة حقيقية وتُجري تحقيقاً كاملاً شاملاً وفق منهجية محلل محترف. الهدف ليس فقط إيجاد مؤشر واحد بل إعادة بناء سلسلة الإصابة الكاملة: كيف وصلت البرمجية الخبيثة، كيف أسّست ثباتاً، كيف تواصلت مع C2 الخاص بها، وما البيانات التي ربما سحبتها. هذا النوع من التحليل هو ما يُجريه محلل SOC أو مستجيب حوادث خلال حادثة أمنية حقيقية."
+          }
+        },
+        {
+          "id": 16,
+          "type": "orderedList",
+          "title": {
+            "en": "7-Step Malware PCAP Investigation Methodology",
+            "ar": "منهجية التحقيق في PCAP البرمجيات الخبيثة بـ 7 خطوات"
+          },
+          "items": [
+            {
+              "subtitle": {
+                "en": "Step 1 — Protocol Hierarchy Triage",
+                "ar": "الخطوة 1 — فرز تسلسل هرمي للبروتوكول"
+              },
+              "text": {
+                "en": "Open Statistics → Protocol Hierarchy. Note every protocol present and its percentage. Look for unexpected protocols (IRC, unusual UDP, encrypted tunnels over non-standard ports). This gives you the first map of what happened in this capture.",
+                "ar": "افتح Statistics → Protocol Hierarchy. دوّن كل بروتوكول موجود ونسبته. ابحث عن البروتوكولات غير المتوقعة (IRC أو UDP غير عادي أو أنفاق مُشفَّرة عبر منافذ غير قياسية). هذا يعطيك الخريطة الأولى لما حدث في هذا الالتقاط."
+              },
+              "example": {
+                "en": "Finding: 23% of traffic is IRC on port 6667 — legacy botnet C2 confirmed at this step",
+                "ar": "الاكتشاف: 23٪ من حركة المرور هي IRC على المنفذ 6667 — C2 شبكة روبوتات قديمة مؤكَّدة في هذه الخطوة"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Step 2 — Identify Top Communicators",
+                "ar": "الخطوة 2 — تحديد أكثر المتصلين نشاطاً"
+              },
+              "text": {
+                "en": "Open Statistics → Conversations, sort by Bytes descending. Identify the infected internal host (the one sending the most data externally) and the C2 server IP. Also check the Endpoints tab for any internal IP that should not be communicating externally.",
+                "ar": "افتح Statistics → Conversations، رتّب حسب البايتات تنازلياً. حدّد المضيف الداخلي المصاب (الذي يُرسل أكثر البيانات خارجياً) وعنوان IP لخادم C2. تحقق أيضاً من تبويب Endpoints بحثاً عن أي IP داخلي لا يجب أن يتصل خارجياً."
+              },
+              "example": {
+                "en": "192.168.1.44 sent 840MB to 185.234.219.6 — unknown external IP — confirmed infected host and C2 server",
+                "ar": "192.168.1.44 أرسل 840 ميغابايت إلى 185.234.219.6 — IP خارجي مجهول — مضيف مصاب مؤكَّد وخادم C2"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Step 3 — Visualize Traffic Timeline",
+                "ar": "الخطوة 3 — تصوّر الجدول الزمني لحركة المرور"
+              },
+              "text": {
+                "en": "Open Statistics → IO Graph. Add a custom filter line for the suspected infected host IP: ip.addr == 192.168.1.44. Observe the traffic pattern. Flat periodic spikes at regular intervals confirm beaconing. A large one-time spike indicates data exfiltration burst. Note the timestamps of each significant event.",
+                "ar": "افتح Statistics → IO Graph. أضف سطر فلتر مخصص لـ IP المضيف المصاب المشتبه به: ip.addr == 192.168.1.44. لاحظ نمط حركة المرور. الارتفاعات الدورية المنتظمة تؤكد beaconing. الارتفاع الكبير لمرة واحدة يشير لاندفاع سحب بيانات. دوّن الطوابع الزمنية لكل حدث مهم."
+              },
+              "example": {
+                "en": "IO Graph shows: regular 60-second spikes (C2 beacon) + one large spike at minute 23 (exfiltration burst)",
+                "ar": "يُظهر IO Graph: ارتفاعات منتظمة كل 60 ثانية (نبضة C2) + ارتفاع كبير واحد عند الدقيقة 23 (اندفاع سحب البيانات)"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Step 4 — Analyze HTTP Traffic",
+                "ar": "الخطوة 4 — تحليل حركة مرور HTTP"
+              },
+              "text": {
+                "en": "Apply filter: http. Examine all HTTP requests from the infected host. Note: User-Agent strings (malware often uses non-browser agents), POST destinations and sizes, URI patterns, and any Base64-encoded parameters in GET requests. Follow suspicious TCP streams to read full request and response content.",
+                "ar": "طبّق الفلتر: http. افحص جميع طلبات HTTP من المضيف المصاب. لاحظ: سلاسل User-Agent (البرمجيات الخبيثة كثيراً ما تستخدم وكلاء غير متصفحات) ووجهات POST وأحجامها وأنماط URI وأي معامِلات مُشفَّرة بـ Base64 في طلبات GET. اتّبع تدفقات TCP المشبوهة لقراءة محتوى الطلب والاستجابة كاملاً."
+              },
+              "example": {
+                "en": "User-Agent: Mozilla/4.0 (compatible; MSIE 6.0) — outdated IE6 agent string used by legacy malware families",
+                "ar": "User-Agent: Mozilla/4.0 (compatible; MSIE 6.0) — سلسلة وكيل IE6 قديمة تستخدمها عائلات برمجيات خبيثة قديمة"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Step 5 — Analyze DNS Traffic",
+                "ar": "الخطوة 5 — تحليل حركة مرور DNS"
+              },
+              "text": {
+                "en": "Apply filter: dns. Check for NXDOMAIN storms (dns.flags.rcode == 3) indicating DGA activity. Look for long subdomain queries indicating DNS tunneling. Use Statistics → DNS to see a summary of all queried domains, response codes, and query types. Any domain queried hundreds of times is a C2 or DGA target.",
+                "ar": "طبّق الفلتر: dns. تحقق من عواصف NXDOMAIN (dns.flags.rcode == 3) التي تشير لنشاط DGA. ابحث عن استعلامات نطاق فرعي طويلة تشير لـ DNS tunneling. استخدم Statistics → DNS لرؤية ملخص جميع النطاقات المستعلَم عنها ورموز الاستجابة وأنواع الاستعلام. أي نطاق يُستعلَم عنه مئات المرات هو هدف C2 أو DGA."
+              },
+              "example": {
+                "en": "192 NXDOMAIN responses for domains like xk4pq.biz, m7rz.net — classic DGA malware pattern confirmed",
+                "ar": "192 استجابة NXDOMAIN لنطاقات مثل xk4pq.biz وm7rz.net — نمط برمجية DGA خبيثة كلاسيكي مؤكَّد"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Step 6 — Export and Hash Suspicious Files",
+                "ar": "الخطوة 6 — صدّر الملفات المشبوهة واحسب تجزئتها"
+              },
+              "text": {
+                "en": "Use File → Export Objects → HTTP to extract all transferred files. For each .exe, .dll, .js, .php, .zip, or .doc file, calculate the SHA256 hash and search for it in threat intelligence. Even if the hash is not known, document the file name, size, source IP, destination IP, and timestamp. These form your Indicators of Compromise (IOCs).",
+                "ar": "استخدم File → Export Objects → HTTP لاستخراج جميع الملفات المنقولة. لكل ملف .exe أو .dll أو .js أو .php أو .zip أو .doc، احسب تجزئة SHA256 وابحث عنها في معلومات التهديدات. حتى إذا كانت التجزئة غير معروفة، وثّق اسم الملف والحجم وIP المصدر وIP الوجهة والطابع الزمني. تُشكّل هذه مؤشرات الاختراق (IOCs)."
+              },
+              "example": {
+                "en": "IOC documented: update.exe | SHA256: 3a7bd3... | src: 185.234.219.6 | dst: 192.168.1.44 | time: 2026-03-10 01:23:44",
+                "ar": "IOC موثَّق: update.exe | SHA256: 3a7bd3... | المصدر: 185.234.219.6 | الوجهة: 192.168.1.44 | الوقت: 2026-03-10 01:23:44"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Step 7 — Write the Incident Summary Report",
+                "ar": "الخطوة 7 — اكتب تقرير ملخص الحادثة"
+              },
+              "text": {
+                "en": "Compile your findings into a structured incident summary. Include: (1) infected host IP and MAC, (2) infection vector (how malware arrived), (3) C2 server IP and domain, (4) C2 communication method and interval, (5) any data exfiltrated (protocol, destination, estimated volume), (6) all IOCs (IPs, domains, file hashes, User-Agents), (7) a chronological timeline of events using packet timestamps.",
+                "ar": "اجمع اكتشافاتك في ملخص حادثة منظَّم. اشمل: (1) IP وMAC المضيف المصاب، (2) متجه الإصابة (كيف وصلت البرمجية الخبيثة)، (3) IP ونطاق خادم C2، (4) طريقة التواصل مع C2 والفترة الزمنية، (5) أي بيانات مسحوبة (البروتوكول والوجهة والحجم التقديري)، (6) جميع IOCs (IPs والنطاقات وتجزئات الملفات وUser-Agents)، (7) جدول زمني تسلسلي للأحداث باستخدام طوابع وقت الحزم."
+              },
+              "example": {
+                "en": "Timeline: T+0s Malware downloaded → T+5s DNS beacon started → T+60s First C2 check-in → T+23min Data exfiltration burst → T+30min Second stage payload dropped",
+                "ar": "الجدول الزمني: T+0 تنزيل البرمجية الخبيثة → T+5 بدأت نبضة DNS → T+60 أول تواصل مع C2 → T+23 دقيقة اندفاع سحب البيانات → T+30 دقيقة إسقاط حمولة المرحلة الثانية"
+              }
+            }
+          ]
+        },
+        {
+          "id": 17,
+          "type": "hr"
+        },
+        {
+          "id": 18,
+          "type": "title",
+          "value": {
+            "en": "Lab Exercise 4 — Port Scan Identification and Attacker Profiling",
+            "ar": "تمرين مختبري 4 — تحديد مسح المنافذ وتوصيف المهاجم"
+          }
+        },
+        {
+          "id": 19,
+          "type": "text",
+          "value": {
+            "en": "This exercise teaches you to identify a port scan in a PCAP, determine what type of scan was used, discover which ports were found open, and build an attacker profile from packet-level metadata. Real-world scans leave fingerprints beyond just the TCP flags — the TTL value, TCP window size, and IP identification field patterns can often identify the operating system or tool used by the scanner. This kind of attacker fingerprinting is valuable during threat hunting to link multiple incidents to the same threat actor.",
+            "ar": "يعلّمك هذا التمرين تحديد مسح منافذ في PCAP وتحديد نوع المسح المُستخدَم واكتشاف المنافذ التي وُجدت مفتوحةً وبناء ملف تعريف للمهاجم من بيانات وصفية على مستوى الحزمة. عمليات المسح في العالم الحقيقي تترك بصمات تتجاوز مجرد أعلام TCP — يمكن لقيمة TTL وحجم نافذة TCP وأنماط حقل معرّف IP في الغالب تحديد نظام التشغيل أو الأداة المُستخدَمة من قِبل الماسح. هذا النوع من بصمة المهاجم قيّم خلال صيد التهديدات لربط حوادث متعددة بنفس الجهة التهديدية."
+          }
+        },
+        {
+          "id": 20,
+          "type": "orderedList",
+          "title": {
+            "en": "Step-by-Step: Port Scan Analysis and Attacker Fingerprinting",
+            "ar": "خطوة بخطوة: تحليل مسح المنافذ وبصمة المهاجم"
+          },
+          "items": [
+            {
+              "subtitle": {
+                "en": "Step 1 — Identify the scanning source",
+                "ar": "الخطوة 1 — حدّد مصدر المسح"
+              },
+              "text": {
+                "en": "Apply filter: tcp.flags.syn==1 && tcp.flags.ack==0. In Statistics → Conversations, sort by Packets descending. The source IP with the highest packet count sending SYNs to many different destination ports is the scanner. Note this IP for all subsequent analysis steps.",
+                "ar": "طبّق الفلتر: tcp.flags.syn==1 && tcp.flags.ack==0. في Statistics → Conversations، رتّب حسب الحزم تنازلياً. عنوان IP المصدر ذو أعلى عدد حزم الذي يرسل SYNs لمنافذ وجهة مختلفة كثيرة هو الماسح. دوّن هذا IP لجميع خطوات التحليل اللاحقة."
+              },
+              "example": {
+                "en": "Source 10.10.10.5 sent 65,535 SYN packets to 192.168.1.1 across all possible destination ports — full port sweep confirmed",
+                "ar": "المصدر 10.10.10.5 أرسل 65,535 حزمة SYN إلى 192.168.1.1 عبر جميع منافذ الوجهة الممكنة — تأكيد مسح كامل للمنافذ"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Step 2 — Determine open ports from responses",
+                "ar": "الخطوة 2 — حدّد المنافذ المفتوحة من الردود"
+              },
+              "text": {
+                "en": "Apply filter: tcp.flags.syn==1 && tcp.flags.ack==1 && ip.dst==<scanner_IP>. Every SYN-ACK returned to the scanner is a response from an open port. The tcp.srcport field in each of these packets tells you exactly which port is open on the target. Build a list of every port that returned SYN-ACK — this is your open port map.",
+                "ar": "طبّق الفلتر: tcp.flags.syn==1 && tcp.flags.ack==1 && ip.dst==<IP_الماسح>. كل SYN-ACK يُرجع للماسح هو استجابة من منفذ مفتوح. حقل tcp.srcport في كل من هذه الحزم يخبرك بالضبط أي منفذ مفتوح على الهدف. ابنِ قائمة بكل منفذ أرجع SYN-ACK — هذه خريطة منافذك المفتوحة."
+              },
+              "example": {
+                "en": "SYN-ACKs received from ports 22, 80, 443, 3306, 8080 — target is running SSH, HTTP, HTTPS, MySQL, and a web app",
+                "ar": "SYN-ACKs استُقبلت من المنافذ 22 و80 و443 و3306 و8080 — الهدف يُشغّل SSH وHTTP وHTTPS وMySQL وتطبيق ويب"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Step 3 — Determine closed and filtered ports",
+                "ar": "الخطوة 3 — حدّد المنافذ المغلقة والمحجوبة"
+              },
+              "text": {
+                "en": "Apply filter: tcp.flags.rst==1 && ip.dst==<scanner_IP>. RST responses indicate closed ports — the OS is actively rejecting the connection. Ports that received neither SYN-ACK nor RST are filtered (firewalled). You can identify filtered ports by comparing the complete list of destination ports probed versus those that received any response.",
+                "ar": "طبّق الفلتر: tcp.flags.rst==1 && ip.dst==<IP_الماسح>. ردود RST تشير للمنافذ المغلقة — نظام التشغيل يرفض الاتصال بنشاط. المنافذ التي لم تستقبل SYN-ACK ولا RST محجوبة (بجدار حماية). يمكنك تحديد المنافذ المحجوبة بمقارنة القائمة الكاملة لمنافذ الوجهة التي تمت إثارتها مقابل تلك التي استقبلت أي استجابة."
+              },
+              "example": {
+                "en": "Port 3389: no response at all — likely blocked by firewall; Port 21: RST received — FTP service not running, port actively closed",
+                "ar": "المنفذ 3389: لا استجابة إطلاقاً — محجوب على الأرجح بجدار حماية؛ المنفذ 21: RST استُقبل — خدمة FTP غير مُشغَّلة، المنفذ مغلق بنشاط"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Step 4 — Identify the scan type from flag patterns",
+                "ar": "الخطوة 4 — حدّد نوع المسح من أنماط الأعلام"
+              },
+              "text": {
+                "en": "Inspect the TCP flags of the probe packets sent by the scanner. SYN-only packets (tcp.flags==0x002) indicate a SYN stealth scan. Packets with FIN+PSH+URG (tcp.flags==0x029) indicate an Xmas scan. Packets with no flags (tcp.flags==0x000) indicate a NULL scan. Packets with only FIN set (tcp.flags==0x001) indicate a FIN scan. Each scan type has a different evasion goal and different firewall bypass capability.",
+                "ar": "افحص أعلام TCP لحزم الإثارة المُرسَلة من الماسح. حزم SYN فقط (tcp.flags==0x002) تشير لمسح SYN خفي. الحزم مع FIN+PSH+URG (tcp.flags==0x029) تشير لـ Xmas scan. الحزم بلا أعلام (tcp.flags==0x000) تشير لـ NULL scan. الحزم مع FIN فقط (tcp.flags==0x001) تشير لـ FIN scan. كل نوع مسح له هدف تحايل مختلف وقدرة مختلفة للتحايل على جدار الحماية."
+              },
+              "example": {
+                "en": "All probe packets have tcp.flags==0x002 only — confirms Nmap default SYN stealth scan (-sS flag)",
+                "ar": "جميع حزم الإثارة لها tcp.flags==0x002 فقط — يؤكد Nmap SYN stealth scan الافتراضي (الخيار -sS)"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Step 5 — Passive OS fingerprinting from TTL and Window Size",
+                "ar": "الخطوة 5 — البصمة السلبية لنظام التشغيل من TTL وحجم النافذة"
+              },
+              "text": {
+                "en": "Select any SYN packet from the scanner. In the IP header, note the TTL value. In the TCP header, note the Window Size. These two fields together can identify the scanner's operating system with high accuracy. Linux typically uses TTL=64 and Window Size=5840. Windows uses TTL=128 and Window Size=65535 or 8192. This is passive OS fingerprinting — no active probing required, just reading existing packet headers.",
+                "ar": "اختر أي حزمة SYN من الماسح. في رأس IP، لاحظ قيمة TTL. في رأس TCP، لاحظ حجم النافذة. هذان الحقلان معاً يمكنهما تحديد نظام تشغيل الماسح بدقة عالية. يستخدم Linux عادةً TTL=64 وWindow Size=5840. يستخدم Windows TTL=128 وWindow Size=65535 أو 8192. هذه بصمة نظام تشغيل سلبية — لا حاجة لإثارة نشطة، فقط قراءة رؤوس الحزم الموجودة."
+              },
+              "example": {
+                "en": "Scanner packets: TTL=64, Window=5840 → Linux system; TTL=128, Window=65535 → Windows system",
+                "ar": "حزم الماسح: TTL=64, Window=5840 → نظام Linux؛ TTL=128, Window=65535 → نظام Windows"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Step 6 — Measure scan speed and estimate tool used",
+                "ar": "الخطوة 6 — قِس سرعة المسح وقدّر الأداة المُستخدَمة"
+              },
+              "text": {
+                "en": "Right-click the first SYN packet from the scanner and select Set/Unset Time Reference. Then navigate to the last SYN packet from the same source. The time delta shown in the Time column tells you how long the full scan took. Divide total ports probed by elapsed seconds to get packets-per-second rate. Nmap default rate is ~1000 PPS; Masscan can reach 1,000,000 PPS and will be visible as an enormous traffic spike in the IO Graph.",
+                "ar": "انقر بزر الماوس الأيمن على أول حزمة SYN من الماسح واختر Set/Unset Time Reference. ثم انتقل لآخر حزمة SYN من نفس المصدر. الفارق الزمني المُظهَر في عمود Time يخبرك كم استغرق المسح الكامل. قسّم إجمالي المنافذ المُثارة على الثواني المنقضية للحصول على معدل الحزم في الثانية. المعدل الافتراضي لـ Nmap ~1000 حزمة/ثانية؛ يمكن لـ Masscan الوصول لـ 1,000,000 حزمة/ثانية وسيكون مرئياً كارتفاع هائل في IO Graph."
+              },
+              "example": {
+                "en": "65,535 SYNs in 6.5 seconds = ~10,000 PPS → consistent with Masscan aggressive scan rate, not Nmap default",
+                "ar": "65,535 حزمة SYN في 6.5 ثانية = ~10,000 حزمة/ثانية → يتسق مع معدل Masscan العدواني، وليس Nmap الافتراضي"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Step 7 — Build the Attacker Profile IOC Card",
+                "ar": "الخطوة 7 — ابنِ بطاقة IOC لملف تعريف المهاجم"
+              },
+              "text": {
+                "en": "Compile all collected evidence into a structured attacker IOC card: (1) Scanner IP address, (2) Scan start and end timestamp, (3) Target IP(s) and port range scanned, (4) Scan technique identified (SYN, Xmas, NULL, etc.), (5) Open ports discovered, (6) Estimated scanner OS (from TTL/Window Size), (7) Estimated tool used (from scan rate and flag patterns), (8) Any follow-on activity after the scan (exploitation attempt, payload delivery). This IOC card forms the basis of a threat intelligence report.",
+                "ar": "اجمع كل الأدلة المجموعة في بطاقة IOC منظَّمة للمهاجم: (1) عنوان IP الماسح، (2) طابع وقت بداية ونهاية المسح، (3) IP الهدف/الأهداف ونطاق المنافذ الممسوح، (4) تقنية المسح المحددة (SYN أو Xmas أو NULL إلخ)، (5) المنافذ المفتوحة المكتشفة، (6) نظام تشغيل الماسح المقدَّر (من TTL/حجم النافذة)، (7) الأداة المُستخدَمة المقدَّرة (من معدل المسح وأنماط الأعلام)، (8) أي نشاط لاحق بعد المسح (محاولة استغلال أو تسليم حمولة). تُشكّل بطاقة IOC هذه أساس تقرير معلومات التهديدات."
+              },
+              "example": {
+                "en": "Attacker: 10.10.10.5 | Scan: SYN stealth | Tool: Nmap (est.) | OS: Linux TTL=64 | Open ports: 22,80,443,3306 | Follow-on: HTTP exploit attempt on port 80 at T+4min",
+                "ar": "المهاجم: 10.10.10.5 | المسح: SYN stealth | الأداة: Nmap (تقديراً) | نظام التشغيل: Linux TTL=64 | المنافذ المفتوحة: 22,80,443,3306 | النشاط اللاحق: محاولة استغلال HTTP على المنفذ 80 عند T+4 دقائق"
+              }
+            }
+          ]
+        },
+        {
+          "id": 21,
+          "type": "table",
+          "title": {
+            "en": "Passive OS Fingerprinting Reference — TTL and TCP Window Size",
+            "ar": "مرجع البصمة السلبية لنظام التشغيل — TTL وحجم نافذة TCP"
+          },
+          "headers": {
+            "en": [
+              "Operating System",
+              "Default TTL",
+              "Default TCP Window Size",
+              "Notes"
+            ],
+            "ar": [
+              "نظام التشغيل",
+              "TTL الافتراضي",
+              "حجم نافذة TCP الافتراضي",
+              "ملاحظات"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "Linux (kernel 2.4/2.6)",
+                "64",
+                "5840",
+                "Most common Linux default; varies by distribution"
+              ],
+              "ar": [
+                "Linux (النواة 2.4/2.6)",
+                "64",
+                "5840",
+                "الافتراضي الأكثر شيوعاً لـ Linux؛ يتباين حسب التوزيعة"
+              ]
+            },
+            {
+              "en": [
+                "Linux (modern, kernel 4.x+)",
+                "64",
+                "29200 or 65535",
+                "Modern kernels use larger windows with auto-tuning"
+              ],
+              "ar": [
+                "Linux (حديث، نواة 4.x+)",
+                "64",
+                "29200 أو 65535",
+                "النوى الحديثة تستخدم نوافذ أكبر مع الضبط التلقائي"
+              ]
+            },
+            {
+              "en": [
+                "Windows XP",
+                "128",
+                "65535",
+                "Legacy; rarely seen in modern environments"
+              ],
+              "ar": [
+                "Windows XP",
+                "128",
+                "65535",
+                "قديم؛ نادراً ما يُرى في البيئات الحديثة"
+              ]
+            },
+            {
+              "en": [
+                "Windows 7 / Vista / Server 2008",
+                "128",
+                "8192",
+                "Distinctive small window size for this Windows family"
+              ],
+              "ar": [
+                "Windows 7 / Vista / Server 2008",
+                "128",
+                "8192",
+                "حجم نافذة صغير مميز لهذه العائلة من Windows"
+              ]
+            },
+            {
+              "en": [
+                "Windows 10 / Server 2016+",
+                "128",
+                "65535 (with scaling)",
+                "Modern Windows uses window scaling; effective window much larger"
+              ],
+              "ar": [
+                "Windows 10 / Server 2016+",
+                "128",
+                "65535 (مع التدرج)",
+                "Windows الحديثة تستخدم تدرج النافذة؛ النافذة الفعلية أكبر بكثير"
+              ]
+            },
+            {
+              "en": [
+                "macOS / iOS",
+                "64",
+                "65535",
+                "Apple OS behaves similarly to Linux TTL-wise"
+              ],
+              "ar": [
+                "macOS / iOS",
+                "64",
+                "65535",
+                "نظام Apple يتصرف بشكل مشابه لـ Linux من حيث TTL"
+              ]
+            },
+            {
+              "en": [
+                "Cisco IOS Router",
+                "255",
+                "4128",
+                "High TTL is a strong Cisco router fingerprint"
+              ],
+              "ar": [
+                "موجّه Cisco IOS",
+                "255",
+                "4128",
+                "TTL العالي هو بصمة قوية لموجّه Cisco"
+              ]
+            },
+            {
+              "en": [
+                "FreeBSD / OpenBSD",
+                "64",
+                "65535",
+                "BSD systems follow Linux-like TTL convention"
+              ],
+              "ar": [
+                "FreeBSD / OpenBSD",
+                "64",
+                "65535",
+                "أنظمة BSD تتّبع اتفاقية TTL المشابهة لـ Linux"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 22,
+          "type": "terminal",
+          "label": {
+            "en": "tshark command: passive OS fingerprinting from a PCAP",
+            "ar": "أمر tshark: البصمة السلبية لنظام التشغيل من PCAP"
+          },
+          "value": "# Extract all SYN packets with source IP, TTL, and TCP window size\n# This enables passive OS fingerprinting of every host that initiated a connection\ntshark -r capture.pcap -Y \"tcp.flags.syn eq 1 and tcp.flags.ack eq 0\" \\\n  -T fields -e ip.src -e ip.ttl -e tcp.window_size \\\n  | sort -u\n\n# Example output:\n# 10.10.10.5    64    5840       → Linux scanner\n# 192.168.1.44  128   65535      → Windows host\n# 10.0.0.1      255   4128       → Cisco router\n\n# Count SYN packets per source IP to identify scanners (high SYN count = scanner)\ntshark -r capture.pcap -Y \"tcp.flags.syn eq 1 and tcp.flags.ack eq 0\" \\\n  -T fields -e ip.src \\\n  | sort | uniq -c | sort -rn | head -20\n\n# Identify open ports from SYN-ACK responses back to a scanner\ntshark -r capture.pcap -Y \"tcp.flags.syn eq 1 and tcp.flags.ack eq 1 and ip.dst eq 10.10.10.5\" \\\n  -T fields -e ip.src -e tcp.srcport \\\n  | sort -t$'\\t' -k2 -n"
+        },
+        {
+          "id": 23,
+          "type": "hr"
+        },
+        {
+          "id": 24,
+          "type": "title",
+          "value": {
+            "en": "Lab Exercise 5 — DNS Tunneling and C2 Beaconing Detection",
+            "ar": "تمرين مختبري 5 — اكتشاف نفق DNS وbeaconing قيادة وتحكم"
+          }
+        },
+        {
+          "id": 25,
+          "type": "text",
+          "value": {
+            "en": "DNS tunneling is one of the most sophisticated data exfiltration and C2 communication techniques because DNS traffic is almost never blocked by firewalls. Every organization needs DNS to function, so outbound UDP port 53 traffic is virtually always permitted. Attackers exploit this by encoding data — commands, responses, stolen files — inside DNS query and response packets. The data is hidden in subdomains (for exfiltration via queries) or in TXT record responses (for C2 commands). Legitimate DNS queries are short, infrequent, and target recognizable domain names. DNS tunneling traffic looks completely different: extremely long subdomain strings, unusually high query frequency to a single domain, and large TXT record responses.",
+            "ar": "نفق DNS هو أحد أكثر تقنيات سحب البيانات والتواصل مع قيادة وتحكم تطوراً لأن حركة مرور DNS لا تُحجب تقريباً أبداً بجدران الحماية. كل مؤسسة تحتاج DNS للعمل، لذا فإن حركة مرور UDP المنفذ 53 الصادرة مسموح بها فعلياً دائماً. يستغل المهاجمون هذا بترميز البيانات — الأوامر والاستجابات والملفات المسروقة — داخل حزم استعلام واستجابة DNS. البيانات مخفية في النطاقات الفرعية (للسحب عبر الاستعلامات) أو في استجابات سجل TXT (لأوامر C2). استعلامات DNS الشرعية قصيرة وغير متكررة وتستهدف أسماء نطاقات معروفة. حركة مرور نفق DNS تبدو مختلفة تماماً: سلاسل نطاق فرعي طويلة للغاية وتردد استعلام مرتفع بشكل غير عادي لنطاق واحد واستجابات سجل TXT كبيرة."
+          }
+        },
+        {
+          "id": 26,
+          "type": "orderedList",
+          "title": {
+            "en": "Step-by-Step: Detecting DNS Tunneling in a PCAP",
+            "ar": "خطوة بخطوة: اكتشاف نفق DNS في PCAP"
+          },
+          "items": [
+            {
+              "subtitle": {
+                "en": "Step 1 — Baseline normal DNS traffic",
+                "ar": "الخطوة 1 — أسّس خط الأساس لحركة مرور DNS الطبيعية"
+              },
+              "text": {
+                "en": "Apply filter: dns. Use Statistics → DNS to see a summary view of all DNS activity. Note the average query name length, query types (A records should dominate in normal traffic), and which domains are queried most often. Normal DNS: short names, mostly A/AAAA/MX/CNAME record types, low query volume per domain, responses are tiny (under 512 bytes).",
+                "ar": "طبّق الفلتر: dns. استخدم Statistics → DNS لرؤية عرض ملخص لجميع نشاط DNS. لاحظ متوسط طول اسم الاستعلام وأنواع الاستعلام (يجب أن تهيمن سجلات A في حركة المرور الطبيعية) والنطاقات الأكثر استعلاماً. DNS الطبيعي: أسماء قصيرة ومعظمها أنواع سجلات A/AAAA/MX/CNAME وحجم استعلام منخفض لكل نطاق واستجابات صغيرة (أقل من 512 بايت)."
+              },
+              "example": {
+                "en": "Normal: dns.qry.name length avg = 20 chars, mostly A/AAAA records, response size avg = 60 bytes",
+                "ar": "طبيعي: متوسط طول dns.qry.name = 20 حرفاً، معظمها سجلات A/AAAA، متوسط حجم الاستجابة = 60 بايت"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Step 2 — Hunt for anomalously long subdomain labels",
+                "ar": "الخطوة 2 — اصطد تسميات النطاقات الفرعية الطويلة بشكل شاذ"
+              },
+              "text": {
+                "en": "Apply filter: dns && frame.len > 100. Legitimate DNS queries are short. A query with a frame length over 100 bytes almost certainly contains an encoded payload in the subdomain. Additionally, use the display filter: dns.qry.name matches \"[a-zA-Z0-9]{25}\" to match query names containing strings of 25 or more alphanumeric characters — a strong indicator of Base64 or hex-encoded data in the subdomain field.",
+                "ar": "طبّق الفلتر: dns && frame.len > 100. استعلامات DNS الشرعية قصيرة. استعلام بطول إطار أكثر من 100 بايت يحتوي على الأرجح حمولة مُشفَّرة في النطاق الفرعي. بالإضافة لذلك، استخدم فلتر العرض: dns.qry.name matches \"[a-zA-Z0-9]{25}\" لمطابقة أسماء الاستعلامات التي تحتوي على سلاسل من 25 حرفاً أو أكثر — مؤشر قوي على بيانات مُشفَّرة بـ Base64 أو hex في حقل النطاق الفرعي."
+              },
+              "example": {
+                "en": "Suspicious query: ZGF0YTpzZWNyZXRmaWxlY29udGVudA==.exfil.attacker.com — clearly Base64 payload in subdomain",
+                "ar": "استعلام مشبوه: ZGF0YTpzZWNyZXRmaWxlY29udGVudA==.exfil.attacker.com — حمولة Base64 واضحة في النطاق الفرعي"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Step 3 — Detect high-frequency queries to a single domain",
+                "ar": "الخطوة 3 — اكتشف الاستعلامات عالية التردد لنطاق واحد"
+              },
+              "text": {
+                "en": "Use Statistics → DNS and look at the query count per parent domain. A legitimate domain receives at most tens of queries per hour from a single client. A DNS tunnel generates hundreds or thousands of queries per minute to the same parent domain (e.g., attacker.com) because each piece of exfiltrated data requires a separate query. Sort by query count descending and investigate any domain with unusually high query volume.",
+                "ar": "استخدم Statistics → DNS وانظر لعدد الاستعلامات لكل نطاق أصلي. النطاق الشرعي يستقبل على الأكثر عشرات الاستعلامات في الساعة من عميل واحد. يولّد نفق DNS مئات أو آلاف الاستعلامات في الدقيقة لنفس النطاق الأصلي (مثل attacker.com) لأن كل قطعة من البيانات المسحوبة تتطلب استعلاماً منفصلاً. رتّب حسب عدد الاستعلامات تنازلياً وحقق في أي نطاق بحجم استعلام مرتفع بشكل غير عادي."
+              },
+              "example": {
+                "en": "attacker.com: 4,872 DNS queries in 10 minutes from 192.168.1.44 — DNS tunneling confirmed",
+                "ar": "attacker.com: 4,872 استعلام DNS في 10 دقائق من 192.168.1.44 — تأكيد نفق DNS"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Step 4 — Inspect TXT record responses for C2 commands",
+                "ar": "الخطوة 4 — افحص استجابات سجلات TXT لأوامر C2"
+              },
+              "text": {
+                "en": "Apply filter: dns.resp.type == 16 (TXT record responses). Normal TXT records contain short, human-readable strings like SPF policies or domain verification tokens. Malware C2 over DNS encodes commands in TXT record responses from the attacker's nameserver. A TXT response containing a long Base64 string or binary-looking data is a clear C2 command delivery indicator. Decode any suspicious TXT content using CyberChef or a command-line base64 tool.",
+                "ar": "طبّق الفلتر: dns.resp.type == 16 (استجابات سجل TXT). سجلات TXT الطبيعية تحتوي سلاسل قصيرة مقروءة للبشر كسياسات SPF أو رموز التحقق من النطاق. برمجيات C2 الخبيثة عبر DNS تُشفّر الأوامر في استجابات سجل TXT من خادم أسماء المهاجم. استجابة TXT تحتوي سلسلة Base64 طويلة أو بيانات تبدو ثنائية هي مؤشر واضح على تسليم أمر C2. فكّ تشفير أي محتوى TXT مشبوه باستخدام CyberChef أو أداة base64 في سطر الأوامر."
+              },
+              "example": {
+                "en": "TXT response: 'cnVuIHBvd2Vyc2hlbGwgLWVuYyBJQUFB...' → decoded: 'run powershell -enc IAAA...' — encoded PowerShell C2 command",
+                "ar": "استجابة TXT: 'cnVuIHBvd2Vyc2hlbGwgLWVuYyBJQUFB...' → مُفكَّك: 'run powershell -enc IAAA...' — أمر PowerShell C2 مُشفَّر"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Step 5 — Measure beaconing interval precision",
+                "ar": "الخطوة 5 — قِس دقة فترة beaconing"
+              },
+              "text": {
+                "en": "Isolate all DNS queries from the infected host to the C2 domain: dns && ip.src == 192.168.1.44 && dns.qry.name contains 'attacker.com'. Note the timestamp of each query. Calculate the delta between consecutive queries. If the intervals are mathematically precise — e.g., exactly 60.00 seconds each time — this is hardcoded malware sleep interval behavior. Human activity and legitimate applications have jitter (variation). A jitter of less than 1% confirms automated beaconing.",
+                "ar": "عزل جميع استعلامات DNS من المضيف المصاب للنطاق C2: dns && ip.src == 192.168.1.44 && dns.qry.name contains 'attacker.com'. لاحظ الطابع الزمني لكل استعلام. احسب الفارق بين الاستعلامات المتتالية. إذا كانت الفترات دقيقة رياضياً — مثلاً 60.00 ثانية بالضبط في كل مرة — فهذا سلوك فترة نوم مُبرمجة ثابتاً للبرمجية الخبيثة. النشاط البشري والتطبيقات الشرعية لها تذبذب (تباين). تذبذب أقل من 1% يؤكد beaconing آلي."
+              },
+              "example": {
+                "en": "Query intervals: 60.001s, 60.003s, 59.999s, 60.002s — jitter <0.005% — hardcoded 60-second beacon confirmed",
+                "ar": "فترات الاستعلام: 60.001 ث، 60.003 ث، 59.999 ث، 60.002 ث — تذبذب <0.005% — نبضة 60 ثانية مُبرمجة ثابتاً مؤكَّدة"
+              }
+            }
+          ]
+        },
+        {
+          "id": 27,
+          "type": "terminal",
+          "label": {
+            "en": "tshark: DNS tunneling detection and beacon interval measurement",
+            "ar": "tshark: اكتشاف نفق DNS وقياس فترة النبضة"
+          },
+          "value": "# Find DNS queries with suspiciously long names (>40 chars = likely encoded payload)\ntshark -r capture.pcap -Y 'dns' -T fields -e frame.time_relative -e ip.src -e dns.qry.name \\\n  | awk 'length($3) > 40 {print}' | head -30\n\n# Count DNS queries per parent domain to find high-frequency C2/tunnel targets\ntshark -r capture.pcap -Y 'dns.flags.response eq 0' -T fields -e dns.qry.name \\\n  | awk -F'.' '{print $(NF-1)\".\"$NF}' \\\n  | sort | uniq -c | sort -rn | head -20\n\n# Extract all DNS TXT record responses (C2 command delivery channel)\ntshark -r capture.pcap -Y 'dns.resp.type == 16' \\\n  -T fields -e frame.time -e ip.src -e ip.dst -e dns.txt\n\n# Measure beacon interval between repeated queries to same C2 domain\ntshark -r capture.pcap -Y 'dns && ip.src == 192.168.1.44 && dns.qry.name contains \"attacker.com\"' \\\n  -T fields -e frame.time_epoch -e dns.qry.name \\\n  | awk 'NR>1 {printf \"Interval: %.3f seconds\\n\", $1-prev} {prev=$1}'"
+        },
+        {
+          "id": 28,
+          "type": "hr"
+        },
+        {
+          "id": 29,
+          "type": "title",
+          "value": {
+            "en": "Final Lab Capstone — Full Incident Reconstruction",
+            "ar": "تمرين المختبر الختامي — إعادة بناء الحادثة الكاملة"
+          }
+        },
+        {
+          "id": 30,
+          "type": "text",
+          "value": {
+            "en": "The capstone exercise ties together every skill developed throughout this course. You will be given a single PCAP file containing a complete attack chain from initial reconnaissance through data exfiltration. Unlike the earlier targeted exercises where you knew what to look for, this exercise provides no hints. Your task is to start from zero — exactly as a real analyst would when handed a PCAP from a suspicious network event — and reconstruct the complete story of what happened, who the attacker was, what was compromised, and what data left the network.",
+            "ar": "يجمع تمرين التتويج كل المهارات المطوَّرة خلال هذه الدورة. ستحصل على ملف PCAP واحد يحتوي سلسلة هجوم كاملة من الاستطلاع الأولي حتى سحب البيانات. على عكس التمارين المُستهدَفة السابقة حيث كنت تعرف ما تبحث عنه، هذا التمرين لا يقدم أي تلميحات. مهمتك هي البدء من الصفر — بالضبط كما يفعل محلل حقيقي حين يُسلَّم PCAP من حدث شبكي مشبوه — وإعادة بناء القصة الكاملة لما حدث ومن كان المهاجم وما الذي اختُرق وما البيانات التي غادرت الشبكة."
+          }
+        },
+        {
+          "id": 31,
+          "type": "list",
+          "title": {
+            "en": "Capstone Deliverables — What Your Final Report Must Answer",
+            "ar": "مخرجات التتويج — ما يجب أن يُجيب عنه تقريرك النهائي"
+          },
+          "items": {
+            "en": [
+              "Initial access vector — what was the first malicious packet in the capture and what protocol/technique was used?",
+              "Infected host identification — what is the IP, MAC address, hostname (from DHCP/NetBIOS), and OS of the compromised machine?",
+              "C2 infrastructure — what IP, domain, protocol, and communication interval did the malware use for command and control?",
+              "Lateral movement — did the attacker attempt to spread to other hosts? Which protocols were used and which internal hosts were targeted?",
+              "Data exfiltration — what data left the network? What protocol was used, what was the destination, and what is the estimated volume?",
+              "Full IOC list — all malicious IPs, domains, file hashes, User-Agent strings, and URI patterns found in the capture",
+              "Attack timeline — a chronological sequence of all attacker actions with exact Wireshark timestamps from the capture",
+              "Recommended remediation — what immediate actions should the organization take based on your findings?"
+            ],
+            "ar": [
+              "متجه الوصول الأولي — ما كانت أول حزمة خبيثة في الالتقاط وما البروتوكول/التقنية المُستخدَمة؟",
+              "تحديد المضيف المصاب — ما IP وMAC واسم المضيف (من DHCP/NetBIOS) ونظام تشغيل الجهاز المخترق؟",
+              "بنية تحتية C2 — ما IP والنطاق والبروتوكول وفترة الاتصال التي استخدمتها البرمجية الخبيثة للقيادة والتحكم؟",
+              "الحركة الجانبية — هل حاول المهاجم الانتشار لمضيفين آخرين؟ ما البروتوكولات المُستخدَمة وما المضيفين الداخليين الذين استُهدفوا؟",
+              "سحب البيانات — ما البيانات التي غادرت الشبكة؟ ما البروتوكول المُستخدَم وما الوجهة وما الحجم التقديري؟",
+              "قائمة IOC الكاملة — جميع IPs والنطاقات وتجزئات الملفات وسلاسل User-Agent وأنماط URI الخبيثة الموجودة في الالتقاط",
+              "الجدول الزمني للهجوم — تسلسل زمني لجميع إجراءات المهاجم مع طوابع وقت Wireshark الدقيقة من الالتقاط",
+              "الإصلاح الموصى به — ما الإجراءات الفورية التي يجب على المؤسسة اتخاذها بناءً على اكتشافاتك؟"
+            ]
+          }
+        },
+        {
+          "id": 32,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Recommended PCAP files for the capstone exercise: (1) Download 'Emotet infection with Trickbot' PCAP from malware-traffic-analysis.net — it contains drive-by download, malware execution, HTTPS C2 beaconing, and post-infection reconnaissance all in one file. (2) Alternatively, use any CyberDefenders 'BlueTeam' or 'PCAP analysis' challenge — they include answer keys so you can validate your analysis independently. The goal is not just finding indicators, but building the narrative: tell the story of this attack from start to finish as if presenting to a security manager who has never seen Wireshark.",
+            "ar": "ملفات PCAP الموصى بها لتمرين التتويج: (1) نزّل PCAP 'إصابة Emotet مع Trickbot' من malware-traffic-analysis.net — يحتوي تنزيل drive-by وتنفيذ برمجية خبيثة وbeaconing C2 عبر HTTPS واستطلاع ما بعد الإصابة في ملف واحد. (2) بديلاً، استخدم أي تحدي 'BlueTeam' أو 'PCAP analysis' من CyberDefenders — تتضمن مفاتيح إجابات لتتحقق من تحليلك باستقلالية. الهدف ليس مجرد إيجاد المؤشرات، بل بناء السردية: اروِ قصة هذا الهجوم من البداية حتى النهاية كما لو كنت تعرض على مدير أمني لم يرَ Wireshark قط."
+          },
+          "link": "",
+          "isLab": true
+        },
+        {
+          "id": 33,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "Never open PCAP files from unknown sources on your primary workstation or production machine. Malformed or specially crafted PCAP files can exploit vulnerabilities in Wireshark itself (there have been multiple Wireshark CVEs related to malicious PCAP parsing). Always analyze suspicious PCAPs inside an isolated virtual machine with no access to sensitive data or network shares. Take a VM snapshot before opening any untrusted capture file so you can restore to a clean state if needed.",
+            "ar": "لا تفتح أبداً ملفات PCAP من مصادر مجهولة على محطة عملك الرئيسية أو جهاز الإنتاج. يمكن لملفات PCAP المُشوَّهة أو المُصمَّمة خصيصاً استغلال ثغرات في Wireshark ذاته (كانت هناك CVEs متعددة لـ Wireshark مرتبطة بتحليل PCAP الخبيث). دائماً حلّل PCAPs المشبوهة داخل جهاز افتراضي معزول بلا وصول للبيانات الحساسة أو مشاركات الشبكة. خذ لقطة للجهاز الافتراضي قبل فتح أي ملف التقاط غير موثوق حتى تتمكن من الاستعادة لحالة نظيفة إذا لزم الأمر."
+          },
+          "link": "",
+          "isLab": false
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,2033 @@
+{
+  "landingData": {
+    "title": {
+      "en": "Web Application Architecture",
+      "ar": "بنية تطبيقات الويب"
+    },
+    "description": {
+      "en": "Master the fundamental building blocks of web applications. Learn how frontend and backend work together, understand databases, APIs, web servers, and the MVC architecture pattern that powers modern web development.",
+      "ar": "أتقن المكونات الأساسية لتطبيقات الويب. تعلم كيف يعمل الواجهة الأمامية والخلفية معًا، وافهم قواعد البيانات وواجهات برمجة التطبيقات وخوادم الويب ونمط بنية MVC الذي يشغل تطوير الويب الحديث."
+    },
+    "difficulty": {
+      "en": "Beginner",
+      "ar": "مبتدئ"
+    },
+    "duration": {
+      "en": "90 Minutes",
+      "ar": "90 دقيقة"
+    },
+    "instructor": "CyberLab",
+    "rating": 4.9,
+    "students": 250
+  },
+  "topics": [
+    {
+      "id": "topic-1",
+      "title": {
+        "en": "Frontend vs Backend: Roles and Responsibilities",
+        "ar": "الواجهة الأمامية والخلفية: الأدوار والمسؤوليات"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "Understanding the Two Sides of Web Applications",
+            "ar": "فهم الجانبين من تطبيقات الويب"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "Every web application you use, from social media to online banking, is built with two main parts working together. The frontend is what you see and interact with directly in your browser. The backend is the hidden engine that processes your requests, manages data, and makes everything work behind the scenes. Think of a restaurant: the dining area where you sit and order is the frontend, while the kitchen where food is prepared is the backend. Both are essential, and neither can function properly without the other.",
+            "ar": "كل تطبيق ويب تستخدمه، من وسائل التواصل الاجتماعي إلى الخدمات المصرفية عبر الإنترنت، مبني من جزأين رئيسيين يعملان معًا. الواجهة الأمامية (Frontend) هي ما تراه وتتفاعل معه مباشرة في متصفحك. الواجهة الخلفية (Backend) هي المحرك الخفي الذي يعالج طلباتك ويدير البيانات ويجعل كل شيء يعمل خلف الكواليس. فكر في مطعم: منطقة تناول الطعام حيث تجلس وتطلب هي الواجهة الأمامية، بينما المطبخ حيث يتم إعداد الطعام هو الواجهة الخلفية. كلاهما ضروري، ولا يمكن لأي منهما العمل بشكل صحيح بدون الآخر."
+          }
+        },
+        {
+          "id": 1772826681985.6587,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Web%20Application%20Architecture/1-1-Two%20Sides%20of%20Web%20Applications.webp"
+        },
+        {
+          "id": 4,
+          "type": "title",
+          "value": {
+            "en": "Frontend: The User Experience Layer",
+            "ar": "الواجهة الأمامية: طبقة تجربة المستخدم"
+          }
+        },
+        {
+          "id": 5,
+          "type": "text",
+          "value": {
+            "en": "The frontend is responsible for everything users can see, click, and interact with. It includes the layout of pages, buttons, forms, images, animations, and text styling. Frontend code runs directly in your web browser, which means it executes on your computer or phone, not on a remote server. This is why you can sometimes see parts of a website even when your internet connection is slow or interrupted. The three core technologies that power the frontend are HTML for structure, CSS for visual styling, and JavaScript for interactive behavior.",
+            "ar": "الواجهة الأمامية مسؤولة عن كل ما يمكن للمستخدمين رؤيته والنقر عليه والتفاعل معه. تتضمن تخطيط الصفحات والأزرار والنماذج والصور والرسوم المتحركة وتنسيق النصوص. يعمل كود الواجهة الأمامية مباشرة في متصفح الويب الخاص بك، مما يعني أنه ينفذ على جهاز الكمبيوتر أو الهاتف الخاص بك، وليس على خادم بعيد. لهذا السبب يمكنك أحيانًا رؤية أجزاء من موقع ويب حتى عندما يكون اتصالك بالإنترنت بطيئًا أو متقطعًا. التقنيات الثلاث الأساسية التي تشغل الواجهة الأمامية هي HTML للبنية، وCSS للتنسيق البصري، وJavaScript للسلوك التفاعلي."
+          }
+        },
+        {
+          "id": 6,
+          "type": "text",
+          "value": {
+            "en": "When you fill out a login form, the frontend validates your input to make sure you entered an email address and not just random text. When you click a submit button, the frontend captures that action and sends your data to the backend. When new content arrives from the backend, the frontend displays it in an attractive and understandable way. Modern frontend development has evolved to create rich, app-like experiences right in the browser, with smooth animations, instant feedback, and responsive designs that adapt to different screen sizes.",
+            "ar": "عندما تملأ نموذج تسجيل الدخول، تتحقق الواجهة الأمامية من إدخالك للتأكد من أنك أدخلت عنوان بريد إلكتروني وليس مجرد نص عشوائي. عندما تنقر على زر الإرسال، تلتقط الواجهة الأمامية هذا الإجراء وترسل بياناتك إلى الواجهة الخلفية. عندما يصل محتوى جديد من الواجهة الخلفية، تعرضه الواجهة الأمامية بطريقة جذابة ومفهومة. تطور تطوير الواجهة الأمامية الحديثة لإنشاء تجارب غنية تشبه التطبيقات مباشرة في المتصفح، مع رسوم متحركة سلسة وردود فعل فورية وتصميمات متجاوبة تتكيف مع أحجام الشاشات المختلفة."
+          }
+        },
+        {
+          "id": 7,
+          "type": "list",
+          "title": {
+            "en": "Key Frontend Responsibilities",
+            "ar": "المسؤوليات الرئيسية للواجهة الأمامية"
+          },
+          "items": {
+            "en": [
+              "Displaying content in an organized and visually appealing way",
+              "Capturing user inputs from forms, clicks, and keyboard actions",
+              "Validating data before sending it to the backend to catch simple errors early",
+              "Providing immediate feedback to users such as loading indicators or error messages",
+              "Adapting the layout to work on phones, tablets, and desktop computers",
+              "Creating smooth transitions and animations to improve user experience"
+            ],
+            "ar": [
+              "عرض المحتوى بطريقة منظمة وجذابة بصرياً",
+              "التقاط مدخلات المستخدم من النماذج والنقرات وإجراءات لوحة المفاتيح",
+              "التحقق من صحة البيانات قبل إرسالها إلى الواجهة الخلفية لاكتشاف الأخطاء البسيطة مبكراً",
+              "تقديم ردود فعل فورية للمستخدمين مثل مؤشرات التحميل أو رسائل الخطأ",
+              "تكييف التخطيط للعمل على الهواتف والأجهزة اللوحية وأجهزة الكمبيوتر المكتبية",
+              "إنشاء انتقالات ورسوم متحركة سلسة لتحسين تجربة المستخدم"
+            ]
+          }
+        },
+        {
+          "id": 8,
+          "type": "title",
+          "value": {
+            "en": "Backend: The Processing and Logic Layer",
+            "ar": "الواجهة الخلفية: طبقة المعالجة والمنطق"
+          }
+        },
+        {
+          "id": 9,
+          "type": "text",
+          "value": {
+            "en": "The backend is where the real business logic happens. It runs on powerful servers in data centers, not on the user's device. When the frontend sends a request, the backend receives it, processes it, interacts with databases, performs calculations, checks permissions, and sends back a response. The backend is written in server-side programming languages like Python, Java, PHP, Ruby, or Node.js. Unlike frontend code that anyone can inspect in their browser, backend code remains hidden and secure on the server, protecting sensitive business rules and data access logic.",
+            "ar": "الواجهة الخلفية هي المكان الذي يحدث فيه منطق العمل الحقيقي. تعمل على خوادم قوية في مراكز البيانات، وليس على جهاز المستخدم. عندما ترسل الواجهة الأمامية طلباً، تستقبله الواجهة الخلفية، وتعالجه، وتتفاعل مع قواعد البيانات، وتجري الحسابات، وتتحقق من الأذونات، وترسل رداً. تُكتب الواجهة الخلفية بلغات برمجة جانب الخادم مثل Python وJava وPHP وRuby أو Node.js. على عكس كود الواجهة الأمامية الذي يمكن لأي شخص فحصه في متصفحه، يظل كود الواجهة الخلفية مخفياً وآمناً على الخادم، محمياً قواعد العمل الحساسة ومنطق الوصول إلى البيانات."
+          }
+        },
+        {
+          "id": 1772826698056.173,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Web%20Application%20Architecture/1-2-backend%20handles%20a%20user%20login.webp"
+        },
+        {
+          "id": 11,
+          "type": "text",
+          "value": {
+            "en": "Consider an online shopping website. When you search for a product, the backend queries the database to find matching items, filters them based on availability and price, calculates shipping costs based on your location, and checks if any discounts apply to your account. It then formats all this information and sends it back to the frontend for display. The backend also handles critical security tasks like authenticating users, authorizing access to specific resources, encrypting sensitive data, and logging activities for security monitoring. These security functions cannot be trusted to the frontend because users have full control over their own browsers.",
+            "ar": "ضع في اعتبارك موقع تسوق عبر الإنترنت. عندما تبحث عن منتج، تستعلم الواجهة الخلفية من قاعدة البيانات للعثور على العناصر المطابقة، وتصفيها بناءً على التوفر والسعر، وتحسب تكاليف الشحن بناءً على موقعك، وتتحقق مما إذا كانت أي خصومات تنطبق على حسابك. ثم تنسق كل هذه المعلومات وترسلها مرة أخرى إلى الواجهة الأمامية للعرض. تتعامل الواجهة الخلفية أيضاً مع مهام الأمان الحرجة مثل مصادقة المستخدمين، وتفويض الوصول إلى موارد معينة، وتشفير البيانات الحساسة، وتسجيل الأنشطة لمراقبة الأمان. لا يمكن الوثوق بهذه الوظائف الأمنية للواجهة الأمامية لأن المستخدمين لديهم سيطرة كاملة على متصفحاتهم الخاصة."
+          }
+        },
+        {
+          "id": 12,
+          "type": "list",
+          "title": {
+            "en": "Key Backend Responsibilities",
+            "ar": "المسؤوليات الرئيسية للواجهة الخلفية"
+          },
+          "items": {
+            "en": [
+              "Processing and validating all data received from the frontend with strict security rules",
+              "Querying databases to retrieve, create, update, or delete information",
+              "Implementing business logic such as calculating prices, applying discounts, or processing payments",
+              "Authenticating users by verifying their identity through passwords or other credentials",
+              "Authorizing access by checking if users have permission to perform specific actions",
+              "Communicating with external services such as payment processors or email systems",
+              "Logging activities and monitoring system health for security and performance"
+            ],
+            "ar": [
+              "معالجة والتحقق من صحة جميع البيانات المستلمة من الواجهة الأمامية مع قواعد أمان صارمة",
+              "الاستعلام من قواعد البيانات لاسترداد أو إنشاء أو تحديث أو حذف المعلومات",
+              "تنفيذ منطق العمل مثل حساب الأسعار أو تطبيق الخصومات أو معالجة المدفوعات",
+              "مصادقة المستخدمين من خلال التحقق من هويتهم عبر كلمات المرور أو بيانات اعتماد أخرى",
+              "تفويض الوصول من خلال التحقق مما إذا كان لدى المستخدمين إذن لتنفيذ إجراءات معينة",
+              "التواصل مع الخدمات الخارجية مثل معالجات الدفع أو أنظمة البريد الإلكتروني",
+              "تسجيل الأنشطة ومراقبة صحة النظام للأمان والأداء"
+            ]
+          }
+        },
+        {
+          "id": 13,
+          "type": "hr"
+        },
+        {
+          "id": 14,
+          "type": "title",
+          "value": {
+            "en": "How Frontend and Backend Communicate",
+            "ar": "كيف تتواصل الواجهة الأمامية والخلفية"
+          }
+        },
+        {
+          "id": 15,
+          "type": "text",
+          "value": {
+            "en": "The frontend and backend communicate through HTTP requests and responses, just like sending and receiving letters through a postal system. When you perform an action like clicking a button to post a comment, the frontend packages your data into an HTTP request and sends it to a specific backend address called an endpoint. The backend processes this request, performs necessary operations, and sends back an HTTP response containing the results or confirmation. This communication typically happens in milliseconds, creating the illusion of instant interaction.",
+            "ar": "تتواصل الواجهة الأمامية والخلفية من خلال طلبات واستجابات HTTP، تماماً مثل إرسال واستلام الرسائل عبر نظام بريدي. عندما تقوم بإجراء مثل النقر على زر لنشر تعليق، تحزم الواجهة الأمامية بياناتك في طلب HTTP وترسله إلى عنوان خلفي محدد يسمى نقطة النهاية (Endpoint). تعالج الواجهة الخلفية هذا الطلب، وتنفذ العمليات اللازمة، وترسل استجابة HTTP تحتوي على النتائج أو التأكيد. يحدث هذا التواصل عادةً في ميلي ثانية، مما يخلق وهم التفاعل الفوري."
+          }
+        },
+        {
+          "id": 16,
+          "type": "text",
+          "value": {
+            "en": "Modern web applications often use JSON format to structure the data being exchanged. JSON is a simple text format that both frontend JavaScript and backend languages can easily read and write. For example, when you add an item to your shopping cart, the frontend might send JSON data like this: {\"productId\": 12345, \"quantity\": 2}. The backend receives this, adds the item to your cart in the database, and responds with updated cart information that the frontend then displays. This separation allows frontend developers and backend developers to work independently, as long as they agree on the format and structure of the data being exchanged.",
+            "ar": "غالباً ما تستخدم تطبيقات الويب الحديثة تنسيق JSON لهيكلة البيانات المتبادلة. JSON هو تنسيق نصي بسيط يمكن لكل من JavaScript للواجهة الأمامية ولغات الواجهة الخلفية قراءته وكتابته بسهولة. على سبيل المثال، عندما تضيف عنصراً إلى عربة التسوق الخاصة بك، قد ترسل الواجهة الأمامية بيانات JSON مثل هذا: {\"productId\": 12345, \"quantity\": 2}. تتلقى الواجهة الخلفية هذا، وتضيف العنصر إلى عربتك في قاعدة البيانات، وتستجيب بمعلومات العربة المحدثة التي تعرضها الواجهة الأمامية بعد ذلك. يسمح هذا الفصل لمطوري الواجهة الأمامية ومطوري الواجهة الخلفية بالعمل بشكل مستقل، طالما اتفقوا على تنسيق وهيكل البيانات المتبادلة."
+          }
+        },
+        {
+          "id": 17,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Security Best Practice: Never trust data coming from the frontend. Always validate and sanitize all inputs on the backend because users can modify frontend code in their browsers. Treat the frontend as an untrusted environment and the backend as your security checkpoint.",
+            "ar": "أفضل ممارسات الأمان: لا تثق أبداً في البيانات القادمة من الواجهة الأمامية. تحقق دائماً من صحة جميع المدخلات وقم بتنظيفها على الواجهة الخلفية لأن المستخدمين يمكنهم تعديل كود الواجهة الأمامية في متصفحاتهم. تعامل مع الواجهة الأمامية كبيئة غير موثوقة والواجهة الخلفية كنقطة تفتيش الأمان الخاصة بك."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 18,
+          "type": "table",
+          "title": {
+            "en": "Frontend vs Backend Comparison",
+            "ar": "مقارنة الواجهة الأمامية والخلفية"
+          },
+          "headers": {
+            "en": [
+              "Aspect",
+              "Frontend",
+              "Backend"
+            ],
+            "ar": [
+              "الجانب",
+              "الواجهة الأمامية",
+              "الواجهة الخلفية"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "Where it runs",
+                "User's browser on their device",
+                "Server in a data center"
+              ],
+              "ar": [
+                "أين يعمل",
+                "متصفح المستخدم على جهازه",
+                "خادم في مركز بيانات"
+              ]
+            },
+            {
+              "en": [
+                "Main languages",
+                "HTML, CSS, JavaScript",
+                "Python, Java, PHP, Node.js, Ruby"
+              ],
+              "ar": [
+                "اللغات الرئيسية",
+                "HTML، CSS، JavaScript",
+                "Python، Java، PHP، Node.js، Ruby"
+              ]
+            },
+            {
+              "en": [
+                "Primary focus",
+                "User interface and experience",
+                "Business logic and data management"
+              ],
+              "ar": [
+                "التركيز الأساسي",
+                "واجهة المستخدم والتجربة",
+                "منطق العمل وإدارة البيانات"
+              ]
+            },
+            {
+              "en": [
+                "Visibility",
+                "Users can inspect all code",
+                "Code is hidden and secure"
+              ],
+              "ar": [
+                "الرؤية",
+                "يمكن للمستخدمين فحص كل الكود",
+                "الكود مخفي وآمن"
+              ]
+            },
+            {
+              "en": [
+                "Security role",
+                "Basic validation only",
+                "Complete security enforcement"
+              ],
+              "ar": [
+                "دور الأمان",
+                "التحقق الأساسي فقط",
+                "إنفاذ الأمان الكامل"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 1772826692523.9763,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Web%20Application%20Architecture/1-3-Frontend%20vs%20Backend.webp"
+        },
+        {
+          "id": 20,
+          "type": "title",
+          "value": {
+            "en": "Common Misconceptions About Frontend and Backend",
+            "ar": "المفاهيم الخاطئة الشائعة حول الواجهة الأمامية والخلفية"
+          }
+        },
+        {
+          "id": 21,
+          "type": "text",
+          "value": {
+            "en": "Many beginners believe that frontend development is easier or less important than backend development, but this is not true. Modern frontend development requires deep knowledge of complex frameworks, performance optimization, accessibility standards, and user experience principles. Similarly, some think backend is only about databases, but it encompasses authentication systems, API design, security implementations, scalability architecture, and much more. Both domains require specialized skills and ongoing learning. Another misconception is that one developer must choose either frontend or backend exclusively. While specialization is common, full-stack developers who understand both sides are highly valuable because they can design better systems and solve problems that span both layers.",
+            "ar": "يعتقد العديد من المبتدئين أن تطوير الواجهة الأمامية أسهل أو أقل أهمية من تطوير الواجهة الخلفية، ولكن هذا غير صحيح. يتطلب تطوير الواجهة الأمامية الحديث معرفة عميقة بأطر العمل المعقدة وتحسين الأداء ومعايير إمكانية الوصول ومبادئ تجربة المستخدم. وبالمثل، يعتقد البعض أن الواجهة الخلفية تتعلق فقط بقواعد البيانات، ولكنها تشمل أنظمة المصادقة وتصميم واجهة برمجة التطبيقات وتطبيقات الأمان وهندسة القابلية للتوسع وأكثر من ذلك بكثير. يتطلب كلا المجالين مهارات متخصصة وتعلماً مستمراً. هناك مفهوم خاطئ آخر هو أن المطور يجب أن يختار إما الواجهة الأمامية أو الخلفية حصرياً. بينما التخصص شائع، فإن المطورين الكاملين (Full-stack) الذين يفهمون كلا الجانبين ذوو قيمة عالية لأنهم يمكنهم تصميم أنظمة أفضل وحل المشكلات التي تمتد عبر كلا الطبقتين."
+          }
+        },
+        {
+          "id": 22,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "Common Security Mistake: Implementing authentication or authorization logic only in the frontend. Attackers can easily bypass frontend checks by directly calling backend APIs. Always implement security controls on the backend, and use the frontend only for user experience improvements.",
+            "ar": "خطأ أمني شائع: تنفيذ منطق المصادقة أو التفويض فقط في الواجهة الأمامية. يمكن للمهاجمين تجاوز فحوصات الواجهة الأمامية بسهولة عن طريق استدعاء واجهات برمجة التطبيقات الخلفية مباشرة. قم دائماً بتنفيذ ضوابط الأمان على الواجهة الخلفية، واستخدم الواجهة الأمامية فقط لتحسينات تجربة المستخدم."
+          },
+          "link": "",
+          "isLab": false
+        }
+      ]
+    },
+    {
+      "id": "topic-2",
+      "title": {
+        "en": "Database Basics: SQL vs NoSQL",
+        "ar": "أساسيات قواعد البيانات: SQL مقابل NoSQL"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "Understanding Databases and Why Applications Need Them",
+            "ar": "فهم قواعد البيانات ولماذا تحتاجها التطبيقات"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "A database is an organized collection of data that can be easily accessed, managed, and updated. Every modern web application needs a database to store information persistently. Without a database, all your data would disappear when the server restarts or loses power. Think of a database as a highly organized digital filing cabinet where every piece of information has a specific place and can be quickly retrieved when needed. When you create an account on a website, your username, email, and encrypted password are stored in a database. When you post a comment, upload a photo, or make a purchase, all that information is saved in a database so it can be retrieved and displayed later.",
+            "ar": "قاعدة البيانات هي مجموعة منظمة من البيانات يمكن الوصول إليها وإدارتها وتحديثها بسهولة. يحتاج كل تطبيق ويب حديث إلى قاعدة بيانات لتخزين المعلومات بشكل دائم. بدون قاعدة بيانات، ستختفي جميع بياناتك عند إعادة تشغيل الخادم أو فقدان الطاقة. فكر في قاعدة البيانات كخزانة ملفات رقمية منظمة للغاية حيث لكل جزء من المعلومات مكان محدد ويمكن استرجاعه بسرعة عند الحاجة. عندما تنشئ حساباً على موقع ويب، يتم تخزين اسم المستخدم والبريد الإلكتروني وكلمة المرور المشفرة في قاعدة بيانات. عندما تنشر تعليقاً أو تحمل صورة أو تقوم بعملية شراء، يتم حفظ كل هذه المعلومات في قاعدة بيانات بحيث يمكن استرجاعها وعرضها لاحقاً."
+          }
+        },
+        {
+          "id": 1772826739959.7002,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Web%20Application%20Architecture/2-1-database%20fundamentals.webp"
+        },
+        {
+          "id": 3,
+          "type": "text",
+          "value": {
+            "en": "[INFOGRAPHIC_HINT] Create a topic header image in 16:9 format showing database fundamentals. Display a large cylindrical database icon in the center. Around it, show four arrows pointing outward to four icons representing database operations: Create (plus icon), Read (magnifying glass), Update (pencil icon), Delete (trash icon). These are the fundamental CRUD operations. Below, split the image into two sections: left shows a structured table grid labeled 'SQL - Structured Data', right shows flexible document shapes labeled 'NoSQL - Flexible Data'. Use white background, blue for SQL elements, orange for NoSQL elements. Minimal text with clear visual separation.",
+            "ar": "[INFOGRAPHIC_HINT] أنشئ صورة رئيسية للموضوع بتنسيق 16:9 توضح أساسيات قاعدة البيانات. اعرض أيقونة قاعدة بيانات أسطوانية كبيرة في المنتصف. حولها، أظهر أربعة أسهم تشير للخارج إلى أربع أيقونات تمثل عمليات قاعدة البيانات: الإنشاء (أيقونة زائد)، القراءة (عدسة مكبرة)، التحديث (أيقونة قلم)، الحذف (أيقونة سلة مهملات). هذه هي عمليات CRUD الأساسية. في الأسفل، قسّم الصورة إلى قسمين: اليسار يعرض شبكة جدول منظمة مسماة 'SQL - بيانات منظمة'، اليمين يعرض أشكال مستندات مرنة مسماة 'NoSQL - بيانات مرنة'. استخدم خلفية بيضاء، اللون الأزرق لعناصر SQL، البرتقالي لعناصر NoSQL. نص بسيط مع فصل مرئي واضح."
+          }
+        },
+        {
+          "id": 4,
+          "type": "text",
+          "value": {
+            "en": "Databases are designed to handle massive amounts of data efficiently. A popular social media platform might store billions of posts, photos, and comments. A banking system needs to track millions of transactions with perfect accuracy. Databases provide powerful tools to search through this data quickly, ensure data integrity, handle multiple users accessing the same information simultaneously, and maintain backups for disaster recovery. The backend application communicates with the database using a query language, sending commands to create, read, update, or delete data. These four fundamental operations are often abbreviated as CRUD.",
+            "ar": "تم تصميم قواعد البيانات للتعامل مع كميات هائلة من البيانات بكفاءة. قد تخزن منصة وسائط اجتماعية شهيرة مليارات المنشورات والصور والتعليقات. يحتاج النظام المصرفي إلى تتبع ملايين المعاملات بدقة كاملة. توفر قواعد البيانات أدوات قوية للبحث خلال هذه البيانات بسرعة، وضمان سلامة البيانات، والتعامل مع مستخدمين متعددين يصلون إلى نفس المعلومات في وقت واحد، والحفاظ على النسخ الاحتياطية للتعافي من الكوارث. يتواصل تطبيق الواجهة الخلفية مع قاعدة البيانات باستخدام لغة استعلام، وإرسال أوامر لإنشاء أو قراءة أو تحديث أو حذف البيانات. غالباً ما يتم اختصار هذه العمليات الأربع الأساسية باسم CRUD."
+          }
+        },
+        {
+          "id": 5,
+          "type": "title",
+          "value": {
+            "en": "SQL Databases: Structured and Relational",
+            "ar": "قواعد بيانات SQL: منظمة وعلائقية"
+          }
+        },
+        {
+          "id": 6,
+          "type": "text",
+          "value": {
+            "en": "SQL stands for Structured Query Language, and SQL databases are called relational databases because they organize data into tables with rows and columns, similar to spreadsheets. Each table represents a specific type of entity, such as users, products, or orders. Each row in a table represents one instance of that entity, and each column represents a specific attribute. For example, a Users table might have columns for UserID, Username, Email, and RegistrationDate. SQL databases enforce a strict schema, which means you must define the structure of your data in advance, specifying what columns exist, what data types they accept, and what relationships exist between tables.",
+            "ar": "SQL تعني لغة الاستعلام المهيكلة (Structured Query Language)، وتُسمى قواعد بيانات SQL قواعد بيانات علائقية لأنها تنظم البيانات في جداول بصفوف وأعمدة، على غرار جداول البيانات. يمثل كل جدول نوعاً محدداً من الكيانات، مثل المستخدمين أو المنتجات أو الطلبات. يمثل كل صف في الجدول مثيلاً واحداً من هذا الكيان، ويمثل كل عمود سمة محددة. على سبيل المثال، قد يحتوي جدول المستخدمين على أعمدة لـ UserID (معرف المستخدم) وUsername (اسم المستخدم) وEmail (البريد الإلكتروني) وRegistrationDate (تاريخ التسجيل). تفرض قواعد بيانات SQL مخططاً صارماً، مما يعني أنه يجب عليك تحديد هيكل بياناتك مسبقاً، وتحديد الأعمدة الموجودة، وأنواع البيانات التي تقبلها، والعلاقات الموجودة بين الجداول."
+          }
+        },
+        {
+          "id": 7,
+          "type": "text",
+          "value": {
+            "en": "The power of relational databases lies in their ability to create relationships between tables. Imagine an online store with a Users table, a Products table, and an Orders table. When a user places an order, the Orders table stores a reference to both the UserID and the ProductID, creating a relationship between these entities. This allows you to easily answer complex questions like which products a specific user has purchased, or which users have bought a particular product. SQL provides a standardized language to query this data. Popular SQL database systems include MySQL, PostgreSQL, Microsoft SQL Server, and Oracle Database. They are mature, well-tested, and have decades of optimization and security features built in.",
+            "ar": "تكمن قوة قواعد البيانات العلائقية في قدرتها على إنشاء علاقات بين الجداول. تخيل متجراً عبر الإنترنت به جدول المستخدمين وجدول المنتجات وجدول الطلبات. عندما يقدم مستخدم طلباً، يخزن جدول الطلبات مرجعاً لكل من UserID (معرف المستخدم) وProductID (معرف المنتج)، مما يخلق علاقة بين هذه الكيانات. يتيح لك ذلك الإجابة بسهولة على أسئلة معقدة مثل المنتجات التي اشتراها مستخدم معين، أو المستخدمين الذين اشتروا منتجاً معيناً. توفر SQL لغة موحدة للاستعلام عن هذه البيانات. تشمل أنظمة قواعد بيانات SQL الشائعة MySQL وPostgreSQL وMicrosoft SQL Server وOracle Database. إنها ناضجة ومختبرة جيداً ولديها عقود من ميزات التحسين والأمان المدمجة."
+          }
+        },
+        {
+          "id": 8,
+          "type": "code",
+          "language": "sql",
+          "value": "-- Example SQL query to retrieve user information\nSELECT Username, Email, RegistrationDate\nFROM Users\nWHERE RegistrationDate > '2025-01-01'\nORDER BY Username ASC;\n\n-- Example SQL query with JOIN to find user orders\nSELECT Users.Username, Products.ProductName, Orders.OrderDate\nFROM Orders\nJOIN Users ON Orders.UserID = Users.UserID\nJOIN Products ON Orders.ProductID = Products.ProductID\nWHERE Users.Username = 'ahmed_mohamed';"
+        },
+        {
+          "id": 9,
+          "type": "text",
+          "value": {
+            "en": "SQL databases excel at maintaining data consistency and integrity through features like ACID transactions. ACID stands for Atomicity, Consistency, Isolation, and Durability. These properties ensure that database operations are reliable even when multiple users are accessing the database simultaneously or when system failures occur. For example, when transferring money between bank accounts, ACID guarantees that either both the debit and credit operations complete successfully, or neither happens, preventing scenarios where money disappears or appears from nowhere. This makes SQL databases the preferred choice for applications where data accuracy and consistency are critical, such as financial systems, healthcare records, and inventory management.",
+            "ar": "تتفوق قواعد بيانات SQL في الحفاظ على اتساق البيانات وسلامتها من خلال ميزات مثل معاملات ACID. ACID يرمز إلى الذرية (Atomicity) والاتساق (Consistency) والعزل (Isolation) والمتانة (Durability). تضمن هذه الخصائص أن عمليات قاعدة البيانات موثوقة حتى عندما يصل مستخدمون متعددون إلى قاعدة البيانات في وقت واحد أو عند حدوث أعطال في النظام. على سبيل المثال، عند تحويل الأموال بين الحسابات المصرفية، تضمن ACID أن عمليات الخصم والائتمان تكتمل بنجاح، أو لا يحدث أي منهما، مما يمنع السيناريوهات التي تختفي فيها الأموال أو تظهر من العدم. وهذا يجعل قواعد بيانات SQL الخيار المفضل للتطبيقات التي تكون فيها دقة البيانات والاتساق أمراً بالغ الأهمية، مثل الأنظمة المالية والسجلات الصحية وإدارة المخزون."
+          }
+        },
+        {
+          "id": 10,
+          "type": "list",
+          "title": {
+            "en": "Key Characteristics of SQL Databases",
+            "ar": "الخصائص الرئيسية لقواعد بيانات SQL"
+          },
+          "items": {
+            "en": [
+              "Data organized in tables with predefined rows and columns",
+              "Strict schema that must be defined before inserting data",
+              "Relationships between tables using foreign keys",
+              "ACID transactions ensuring data consistency and reliability",
+              "Powerful query language with complex JOIN operations",
+              "Ideal for structured data with clear relationships",
+              "Vertical scaling by upgrading server hardware"
+            ],
+            "ar": [
+              "البيانات منظمة في جداول بصفوف وأعمدة محددة مسبقاً",
+              "مخطط صارم يجب تحديده قبل إدخال البيانات",
+              "علاقات بين الجداول باستخدام المفاتيح الأجنبية",
+              "معاملات ACID تضمن اتساق البيانات والموثوقية",
+              "لغة استعلام قوية مع عمليات JOIN معقدة",
+              "مثالية للبيانات المنظمة مع علاقات واضحة",
+              "التوسع الرأسي من خلال ترقية أجهزة الخادم"
+            ]
+          }
+        },
+        {
+          "id": 11,
+          "type": "hr"
+        },
+        {
+          "id": 12,
+          "type": "title",
+          "value": {
+            "en": "NoSQL Databases: Flexible and Scalable",
+            "ar": "قواعد بيانات NoSQL: مرنة وقابلة للتوسع"
+          }
+        },
+        {
+          "id": 1772826752896.6992,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Web%20Application%20Architecture/2-2-when%20to%20choose%20SQL%20vs%20NoSQL.webp"
+        },
+        {
+          "id": 14,
+          "type": "text",
+          "value": {
+            "en": "NoSQL databases emerged to address limitations of traditional SQL databases when dealing with massive scale and rapidly changing data structures. NoSQL means Not Only SQL, indicating that these databases use different approaches to store and query data. Unlike SQL databases with their rigid table structures, NoSQL databases offer flexible schemas that can adapt to changing requirements without requiring database migrations. There are several types of NoSQL databases, each optimized for specific use cases: document databases store data as JSON-like documents, key-value stores work like giant dictionaries, column-family databases organize data by columns rather than rows, and graph databases excel at managing highly connected data.",
+            "ar": "ظهرت قواعد بيانات NoSQL لمعالجة قيود قواعد بيانات SQL التقليدية عند التعامل مع نطاق ضخم وهياكل بيانات تتغير بسرعة. NoSQL تعني ليس SQL فقط (Not Only SQL)، مما يشير إلى أن قواعد البيانات هذه تستخدم أساليب مختلفة لتخزين البيانات والاستعلام عنها. على عكس قواعد بيانات SQL مع هياكل الجداول الصارمة، توفر قواعد بيانات NoSQL مخططات مرنة يمكن أن تتكيف مع المتطلبات المتغيرة دون الحاجة إلى عمليات ترحيل قاعدة البيانات. هناك عدة أنواع من قواعد بيانات NoSQL، كل منها محسّن لحالات استخدام محددة: قواعد بيانات المستندات تخزن البيانات كمستندات تشبه JSON، ومخازن القيمة المفتاحية تعمل مثل القواميس العملاقة، وقواعد بيانات عائلة الأعمدة تنظم البيانات حسب الأعمدة بدلاً من الصفوف، وقواعد بيانات الرسم البياني تتفوق في إدارة البيانات المتصلة بشدة."
+          }
+        },
+        {
+          "id": 15,
+          "type": "text",
+          "value": {
+            "en": "MongoDB is one of the most popular NoSQL databases and uses a document-based model. Instead of storing data in rigid tables, MongoDB stores data as JSON-like documents that can have different structures from each other. For example, one user document might have fields for username, email, and profile picture, while another user document could have additional fields for social media links and bio text without requiring you to modify the database schema. This flexibility is valuable when your data model is still evolving or when different records naturally have different attributes. NoSQL databases typically prioritize horizontal scalability, meaning you can handle more data and users by adding more servers to your cluster rather than upgrading a single powerful server.",
+            "ar": "MongoDB هي واحدة من أشهر قواعد بيانات NoSQL وتستخدم نموذجاً قائماً على المستندات. بدلاً من تخزين البيانات في جداول صارمة، تخزن MongoDB البيانات كمستندات تشبه JSON يمكن أن يكون لها هياكل مختلفة عن بعضها البعض. على سبيل المثال، قد يحتوي مستند مستخدم واحد على حقول لاسم المستخدم والبريد الإلكتروني وصورة الملف الشخصي، بينما يمكن أن يحتوي مستند مستخدم آخر على حقول إضافية لروابط وسائل التواصل الاجتماعي ونص السيرة الذاتية دون الحاجة إلى تعديل مخطط قاعدة البيانات. هذه المرونة قيمة عندما يكون نموذج بياناتك لا يزال قيد التطور أو عندما تحتوي السجلات المختلفة بشكل طبيعي على سمات مختلفة. عادةً ما تعطي قواعد بيانات NoSQL الأولوية لقابلية التوسع الأفقي، مما يعني أنه يمكنك التعامل مع المزيد من البيانات والمستخدمين عن طريق إضافة المزيد من الخوادم إلى مجموعتك بدلاً من ترقية خادم واحد قوي."
+          }
+        },
+        {
+          "id": 16,
+          "type": "code",
+          "language": "javascript",
+          "value": "// Example MongoDB document structure (JSON-like)\n{\n  \"_id\": \"507f1f77bcf86cd799439011\",\n  \"username\": \"sara_ahmed\",\n  \"email\": \"sara@example.com\",\n  \"registrationDate\": \"2025-03-01\",\n  \"profile\": {\n    \"bio\": \"Software developer interested in web technologies\",\n    \"location\": \"Cairo\",\n    \"socialLinks\": [\n      {\"platform\": \"github\", \"url\": \"github.com/sara\"},\n      {\"platform\": \"linkedin\", \"url\": \"linkedin.com/in/sara\"}\n    ]\n  },\n  \"preferences\": {\n    \"language\": \"ar\",\n    \"notifications\": true\n  }\n}"
+        },
+        {
+          "id": 17,
+          "type": "text",
+          "value": {
+            "en": "NoSQL databases trade some of the strict consistency guarantees of SQL databases for higher performance and scalability. Instead of ACID, many NoSQL databases follow BASE principles: Basically Available, Soft state, Eventual consistency. This means that in a distributed system with multiple servers, data changes might take a moment to propagate to all servers, but eventually all servers will have the same data. For applications like social media feeds, real-time analytics, or content management systems where absolute consistency is less critical than speed and availability, this tradeoff is acceptable. Popular NoSQL databases include MongoDB for documents, Redis for key-value storage, Cassandra for wide-column storage, and Neo4j for graph data.",
+            "ar": "تتداول قواعد بيانات NoSQL بعض ضمانات الاتساق الصارمة لقواعد بيانات SQL للحصول على أداء وقابلية توسع أعلى. بدلاً من ACID، تتبع العديد من قواعد بيانات NoSQL مبادئ BASE: متاح أساساً (Basically Available)، حالة ناعمة (Soft state)، اتساق نهائي (Eventual consistency). هذا يعني أنه في نظام موزع مع خوادم متعددة، قد تستغرق تغييرات البيانات لحظة للانتشار إلى جميع الخوادم، ولكن في النهاية سيكون لدى جميع الخوادم نفس البيانات. بالنسبة للتطبيقات مثل موجزات وسائل التواصل الاجتماعي أو تحليلات الوقت الفعلي أو أنظمة إدارة المحتوى حيث الاتساق المطلق أقل أهمية من السرعة والتوفر، فإن هذا المقايضة مقبولة. تشمل قواعد بيانات NoSQL الشائعة MongoDB للمستندات، وRedis لتخزين القيمة المفتاحية، وCassandra لتخزين الأعمدة الواسعة، وNeo4j لبيانات الرسم البياني."
+          }
+        },
+        {
+          "id": 18,
+          "type": "list",
+          "title": {
+            "en": "Key Characteristics of NoSQL Databases",
+            "ar": "الخصائص الرئيسية لقواعد بيانات NoSQL"
+          },
+          "items": {
+            "en": [
+              "Flexible schema allowing documents with different structures",
+              "Designed for horizontal scaling across multiple servers",
+              "Various data models: document, key-value, column-family, graph",
+              "Eventual consistency model prioritizing availability and speed",
+              "Optimized for specific use cases like real-time analytics",
+              "Handles unstructured or semi-structured data effectively",
+              "Easier to adapt to changing application requirements"
+            ],
+            "ar": [
+              "مخطط مرن يسمح بمستندات ذات هياكل مختلفة",
+              "مصممة للتوسع الأفقي عبر خوادم متعددة",
+              "نماذج بيانات متنوعة: المستند، القيمة المفتاحية، عائلة الأعمدة، الرسم البياني",
+              "نموذج اتساق نهائي يعطي الأولوية للتوفر والسرعة",
+              "محسّنة لحالات استخدام محددة مثل تحليلات الوقت الفعلي",
+              "تتعامل بفعالية مع البيانات غير المنظمة أو شبه المنظمة",
+              "أسهل في التكيف مع متطلبات التطبيق المتغيرة"
+            ]
+          }
+        },
+        {
+          "id": 19,
+          "type": "table",
+          "title": {
+            "en": "SQL vs NoSQL Detailed Comparison",
+            "ar": "مقارنة تفصيلية بين SQL وNoSQL"
+          },
+          "headers": {
+            "en": [
+              "Feature",
+              "SQL Databases",
+              "NoSQL Databases"
+            ],
+            "ar": [
+              "الميزة",
+              "قواعد بيانات SQL",
+              "قواعد بيانات NoSQL"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "Data Structure",
+                "Tables with fixed columns",
+                "Flexible documents or other models"
+              ],
+              "ar": [
+                "هيكل البيانات",
+                "جداول بأعمدة ثابتة",
+                "مستندات مرنة أو نماذج أخرى"
+              ]
+            },
+            {
+              "en": [
+                "Schema",
+                "Rigid, predefined",
+                "Flexible, dynamic"
+              ],
+              "ar": [
+                "المخطط",
+                "صارم، محدد مسبقاً",
+                "مرن، ديناميكي"
+              ]
+            },
+            {
+              "en": [
+                "Scaling",
+                "Vertical (upgrade server)",
+                "Horizontal (add more servers)"
+              ],
+              "ar": [
+                "التوسع",
+                "رأسي (ترقية الخادم)",
+                "أفقي (إضافة المزيد من الخوادم)"
+              ]
+            },
+            {
+              "en": [
+                "Consistency",
+                "ACID transactions",
+                "BASE eventual consistency"
+              ],
+              "ar": [
+                "الاتساق",
+                "معاملات ACID",
+                "اتساق نهائي BASE"
+              ]
+            },
+            {
+              "en": [
+                "Best For",
+                "Structured data, complex relationships",
+                "Large scale, flexible data, rapid development"
+              ],
+              "ar": [
+                "الأفضل لـ",
+                "البيانات المنظمة، العلاقات المعقدة",
+                "النطاق الكبير، البيانات المرنة، التطوير السريع"
+              ]
+            },
+            {
+              "en": [
+                "Examples",
+                "MySQL, PostgreSQL, SQL Server",
+                "MongoDB, Redis, Cassandra, Neo4j"
+              ],
+              "ar": [
+                "أمثلة",
+                "MySQL، PostgreSQL، SQL Server",
+                "MongoDB، Redis، Cassandra، Neo4j"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 20,
+          "type": "hr"
+        },
+        {
+          "id": 21,
+          "type": "title",
+          "value": {
+            "en": "Choosing the Right Database for Your Application",
+            "ar": "اختيار قاعدة البيانات المناسبة لتطبيقك"
+          }
+        },
+        {
+          "id": 22,
+          "type": "text",
+          "value": {
+            "en": "The choice between SQL and NoSQL is not about one being better than the other, but rather about selecting the right tool for your specific needs. If your data has clear, consistent structure with well-defined relationships, and if data consistency and integrity are absolutely critical, SQL databases are usually the better choice. Banking systems, e-commerce transaction processing, and healthcare records are excellent examples where SQL excels. On the other hand, if your application needs to handle massive amounts of data, scale horizontally across many servers, or work with data that doesn't fit neatly into tables, NoSQL might be more appropriate. Social media platforms, real-time analytics, content management systems, and IoT sensor data are common NoSQL use cases.",
+            "ar": "الاختيار بين SQL وNoSQL ليس حول كون أحدهما أفضل من الآخر، بل يتعلق باختيار الأداة المناسبة لاحتياجاتك المحددة. إذا كانت بياناتك ذات بنية واضحة ومتسقة مع علاقات محددة جيداً، وإذا كان اتساق البيانات وسلامتها أمراً بالغ الأهمية، فإن قواعد بيانات SQL عادة ما تكون الخيار الأفضل. الأنظمة المصرفية ومعالجة معاملات التجارة الإلكترونية والسجلات الصحية هي أمثلة ممتازة حيث تتفوق SQL. من ناحية أخرى، إذا كان تطبيقك يحتاج إلى التعامل مع كميات هائلة من البيانات، أو التوسع أفقياً عبر العديد من الخوادم، أو العمل مع البيانات التي لا تتناسب بشكل أنيق مع الجداول، فقد يكون NoSQL أكثر ملاءمة. منصات وسائل التواصل الاجتماعي وتحليلات الوقت الفعلي وأنظمة إدارة المحتوى وبيانات أجهزة استشعار إنترنت الأشياء هي حالات استخدام NoSQL شائعة."
+          }
+        },
+        {
+          "id": 1772826746445.9502,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Web%20Application%20Architecture/2-3-Choosing%20the%20Right%20Database.webp"
+        },
+        {
+          "id": 24,
+          "type": "text",
+          "value": {
+            "en": "Many modern applications actually use both types of databases in a polyglot persistence approach. For example, an e-commerce platform might use a SQL database for critical transaction data and customer accounts, while using Redis (a NoSQL key-value store) for caching frequently accessed product information, and MongoDB (a NoSQL document database) for storing flexible product catalog data with varying attributes. This hybrid approach lets you leverage the strengths of each database type for the parts of your application where they excel. As you gain experience, you will develop intuition for recognizing which database type fits your data patterns and scaling requirements best.",
+            "ar": "العديد من التطبيقات الحديثة تستخدم في الواقع كلا النوعين من قواعد البيانات في نهج ثبات متعدد اللغات (Polyglot Persistence). على سبيل المثال، قد تستخدم منصة التجارة الإلكترونية قاعدة بيانات SQL لبيانات المعاملات الحرجة وحسابات العملاء، بينما تستخدم Redis (مخزن قيمة مفتاحية NoSQL) للتخزين المؤقت لمعلومات المنتج التي يتم الوصول إليها بشكل متكرر، وMongoDB (قاعدة بيانات مستندات NoSQL) لتخزين بيانات كتالوج المنتجات المرنة مع سمات متفاوتة. يتيح لك هذا النهج الهجين الاستفادة من نقاط القوة في كل نوع من قواعد البيانات للأجزاء من تطبيقك حيث تتفوق. مع اكتساب الخبرة، ستطور حدساً للتعرف على نوع قاعدة البيانات الذي يناسب أنماط بياناتك ومتطلبات التوسع بشكل أفضل."
+          }
+        },
+        {
+          "id": 25,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Learning Tip: Start with SQL databases as a beginner because they teach you fundamental database concepts like data modeling, relationships, and query optimization. Once you understand these principles, transitioning to NoSQL becomes much easier because you will understand what tradeoffs are being made and why.",
+            "ar": "نصيحة تعليمية: ابدأ بقواعد بيانات SQL كمبتدئ لأنها تعلمك مفاهيم قاعدة البيانات الأساسية مثل نمذجة البيانات والعلاقات وتحسين الاستعلام. بمجرد أن تفهم هذه المبادئ، يصبح الانتقال إلى NoSQL أسهل بكثير لأنك ستفهم ما هي المقايضات التي يتم إجراؤها ولماذا."
+          },
+          "link": "",
+          "isLab": false
+        }
+      ]
+    },
+    {
+      "id": "topic-3",
+      "title": {
+        "en": "APIs and REST: Connecting Applications",
+        "ar": "واجهات برمجة التطبيقات وREST: ربط التطبيقات"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "What is an API and Why Applications Need Them",
+            "ar": "ما هي واجهة برمجة التطبيقات ولماذا تحتاجها التطبيقات"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "API stands for Application Programming Interface, and it is essentially a set of rules and protocols that allows different software applications to communicate with each other. Think of an API as a waiter in a restaurant: you (the frontend) tell the waiter what you want, the waiter takes your request to the kitchen (the backend), the kitchen prepares your order, and the waiter brings back the results. The API is the interface that standardizes how requests are made and responses are delivered. APIs enable different systems, even those built by different companies using different technologies, to work together seamlessly. When you use a weather app on your phone, it calls an API to get weather data from a remote weather service. When you sign into a website using your Google account, that website uses Google's authentication API.",
+            "ar": "API تعني واجهة برمجة التطبيقات (Application Programming Interface)، وهي في الأساس مجموعة من القواعد والبروتوكولات التي تسمح لتطبيقات البرمجيات المختلفة بالتواصل مع بعضها البعض. فكر في API كنادل في مطعم: أنت (الواجهة الأمامية) تخبر النادل بما تريد، النادل يأخذ طلبك إلى المطبخ (الواجهة الخلفية)، المطبخ يحضر طلبك، والنادل يعيد النتائج. API هي الواجهة التي توحد كيفية تقديم الطلبات وتسليم الاستجابات. تمكن واجهات برمجة التطبيقات أنظمة مختلفة، حتى تلك التي بنيت من قبل شركات مختلفة باستخدام تقنيات مختلفة، من العمل معاً بسلاسة. عندما تستخدم تطبيق طقس على هاتفك، يستدعي API للحصول على بيانات الطقس من خدمة طقس عن بُعد. عندما تسجل الدخول إلى موقع ويب باستخدام حساب Google الخاص بك، يستخدم هذا الموقع API مصادقة Google."
+          }
+        },
+        {
+          "id": 1772826976573.6008,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Web%20Application%20Architecture/3-1-API%20communication%20flow.webp"
+        },
+        {
+          "id": 4,
+          "type": "text",
+          "value": {
+            "en": "APIs provide tremendous benefits to developers and users alike. They allow developers to build on top of existing functionality without reinventing the wheel. Instead of building your own payment processing system, you can use Stripe's API. Instead of creating your own mapping system, you can use Google Maps API. This accelerates development, reduces costs, and allows developers to focus on their unique value proposition rather than rebuilding common features. APIs also enable modularity and separation of concerns: the frontend team can work independently from the backend team as long as they agree on the API contract, which specifies what requests can be made and what responses to expect. This separation is crucial for large teams and complex projects.",
+            "ar": "توفر واجهات برمجة التطبيقات فوائد هائلة للمطورين والمستخدمين على حد سواء. تسمح للمطورين بالبناء فوق الوظائف الموجودة دون إعادة اختراع العجلة. بدلاً من بناء نظام معالجة الدفع الخاص بك، يمكنك استخدام API من Stripe. بدلاً من إنشاء نظام رسم الخرائط الخاص بك، يمكنك استخدام API من Google Maps. يسرع هذا التطوير، ويقلل التكاليف، ويسمح للمطورين بالتركيز على عرض القيمة الفريد الخاص بهم بدلاً من إعادة بناء الميزات الشائعة. تمكن واجهات برمجة التطبيقات أيضاً النمطية وفصل الاهتمامات: يمكن لفريق الواجهة الأمامية العمل بشكل مستقل عن فريق الواجهة الخلفية طالما اتفقوا على عقد API، الذي يحدد الطلبات التي يمكن تقديمها والاستجابات المتوقعة. هذا الفصل بالغ الأهمية للفرق الكبيرة والمشاريع المعقدة."
+          }
+        },
+        {
+          "id": 5,
+          "type": "list",
+          "title": {
+            "en": "Key Benefits of APIs",
+            "ar": "الفوائد الرئيسية لواجهات برمجة التطبيقات"
+          },
+          "items": {
+            "en": [
+              "Enable different applications and services to communicate regardless of their underlying technology",
+              "Allow developers to leverage existing services without rebuilding functionality",
+              "Support separation between frontend and backend development teams",
+              "Enable third-party integrations making applications more powerful",
+              "Facilitate mobile app development by providing backend access",
+              "Allow businesses to monetize their data and services by offering APIs to partners"
+            ],
+            "ar": [
+              "تمكين التطبيقات والخدمات المختلفة من التواصل بغض النظر عن التكنولوجيا الأساسية الخاصة بها",
+              "السماح للمطورين بالاستفادة من الخدمات الموجودة دون إعادة بناء الوظائف",
+              "دعم الفصل بين فرق تطوير الواجهة الأمامية والخلفية",
+              "تمكين عمليات التكامل مع طرف ثالث مما يجعل التطبيقات أكثر قوة",
+              "تسهيل تطوير تطبيقات الجوال من خلال توفير الوصول إلى الواجهة الخلفية",
+              "السماح للشركات بتحقيق الدخل من بياناتها وخدماتها من خلال تقديم واجهات برمجة التطبيقات للشركاء"
+            ]
+          }
+        },
+        {
+          "id": 6,
+          "type": "title",
+          "value": {
+            "en": "REST API: The Most Common Web API Architecture",
+            "ar": "REST API: بنية واجهة برمجة التطبيقات الأكثر شيوعاً على الويب"
+          }
+        },
+        {
+          "id": 7,
+          "type": "text",
+          "value": {
+            "en": "REST stands for Representational State Transfer, and it is an architectural style for designing networked applications. REST APIs use standard HTTP methods and follow specific principles that make them predictable, scalable, and easy to understand. Most modern web APIs are RESTful, meaning they follow REST principles. The key idea behind REST is that everything is treated as a resource (like a user, a product, or an order), and each resource has a unique URL identifier called an endpoint. You interact with these resources using standard HTTP methods: GET to retrieve data, POST to create new data, PUT to update existing data, and DELETE to remove data. This mapping to HTTP methods makes REST intuitive for web developers.",
+            "ar": "REST تعني نقل الحالة التمثيلية (Representational State Transfer)، وهي نمط معماري لتصميم التطبيقات المتصلة بالشبكة. تستخدم واجهات برمجة التطبيقات REST طرق HTTP القياسية وتتبع مبادئ محددة تجعلها قابلة للتنبؤ وقابلة للتوسع وسهلة الفهم. معظم واجهات برمجة التطبيقات الحديثة على الويب هي RESTful، مما يعني أنها تتبع مبادئ REST. الفكرة الرئيسية وراء REST هي أن كل شيء يُعامل كمورد (مثل مستخدم أو منتج أو طلب)، ولكل مورد معرّف URL فريد يسمى نقطة النهاية (Endpoint). تتفاعل مع هذه الموارد باستخدام طرق HTTP القياسية: GET لاسترداد البيانات، POST لإنشاء بيانات جديدة، PUT لتحديث البيانات الموجودة، وDELETE لإزالة البيانات. هذا التعيين لطرق HTTP يجعل REST بديهية لمطوري الويب."
+          }
+        },
+        {
+          "id": 8,
+          "type": "text",
+          "value": {
+            "en": "Let us look at a practical example. Imagine a blog application with a REST API for managing articles. The endpoint might be `/api/articles`. To get a list of all articles, you send a GET request to `/api/articles`. To get a specific article with ID 123, you send a GET request to `/api/articles/123`. To create a new article, you send a POST request to `/api/articles` with the article data in the request body. To update article 123, you send a PUT request to `/api/articles/123` with the updated data. To delete article 123, you send a DELETE request to `/api/articles/123`. This consistent, predictable pattern makes REST APIs easy to learn and use.",
+            "ar": "دعنا ننظر إلى مثال عملي. تخيل تطبيق مدونة مع REST API لإدارة المقالات. قد تكون نقطة النهاية `/api/articles`. للحصول على قائمة بجميع المقالات، ترسل طلب GET إلى `/api/articles`. للحصول على مقال محدد بمعرف 123، ترسل طلب GET إلى `/api/articles/123`. لإنشاء مقال جديد، ترسل طلب POST إلى `/api/articles` مع بيانات المقال في نص الطلب. لتحديث المقال 123، ترسل طلب PUT إلى `/api/articles/123` مع البيانات المحدثة. لحذف المقال 123، ترسل طلب DELETE إلى `/api/articles/123`. هذا النمط المتسق والقابل للتنبؤ يجعل واجهات برمجة التطبيقات REST سهلة التعلم والاستخدام."
+          }
+        },
+        {
+          "id": 9,
+          "type": "table",
+          "title": {
+            "en": "Common HTTP Methods in REST APIs",
+            "ar": "طرق HTTP الشائعة في واجهات برمجة التطبيقات REST"
+          },
+          "headers": {
+            "en": [
+              "HTTP Method",
+              "Purpose",
+              "Example Endpoint",
+              "Example Use"
+            ],
+            "ar": [
+              "طريقة HTTP",
+              "الغرض",
+              "نقطة النهاية مثال",
+              "مثال الاستخدام"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "GET",
+                "Retrieve data",
+                "/api/users/123",
+                "Get user profile"
+              ],
+              "ar": [
+                "GET",
+                "استرداد البيانات",
+                "/api/users/123",
+                "الحصول على ملف تعريف المستخدم"
+              ]
+            },
+            {
+              "en": [
+                "POST",
+                "Create new data",
+                "/api/users",
+                "Register new user"
+              ],
+              "ar": [
+                "POST",
+                "إنشاء بيانات جديدة",
+                "/api/users",
+                "تسجيل مستخدم جديد"
+              ]
+            },
+            {
+              "en": [
+                "PUT",
+                "Update existing data",
+                "/api/users/123",
+                "Update user profile"
+              ],
+              "ar": [
+                "PUT",
+                "تحديث البيانات الموجودة",
+                "/api/users/123",
+                "تحديث ملف تعريف المستخدم"
+              ]
+            },
+            {
+              "en": [
+                "DELETE",
+                "Remove data",
+                "/api/users/123",
+                "Delete user account"
+              ],
+              "ar": [
+                "DELETE",
+                "إزالة البيانات",
+                "/api/users/123",
+                "حذف حساب المستخدم"
+              ]
+            },
+            {
+              "en": [
+                "PATCH",
+                "Partially update data",
+                "/api/users/123",
+                "Update only user email"
+              ],
+              "ar": [
+                "PATCH",
+                "تحديث البيانات جزئياً",
+                "/api/users/123",
+                "تحديث البريد الإلكتروني فقط"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 1772826990985.9404,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Web%20Application%20Architecture/3-2-REST%20API%20interaction%20diagram.webp"
+        },
+        {
+          "id": 10,
+          "type": "text",
+          "value": {
+            "en": "[INFOGRAPHIC_HINT] Create a step-by-step REST API interaction diagram in 16:9 format. Show 4 sequential steps horizontally: Step 1 labeled 'Client Sends Request' shows computer icon with arrow containing 'GET /api/products/42'. Step 2 labeled 'Server Receives Request' shows server icon processing. Step 3 labeled 'Server Queries Database' shows server connecting to database cylinder with query symbol. Step 4 labeled 'Server Returns Response' shows arrow returning to computer with JSON data icon and HTTP status '200 OK'. Below each step, add small example JSON snippets or status indicators. Use white background, blue for request flow, green for successful response, with minimal text and clear directional arrows showing the complete request-response cycle.",
+            "ar": "[INFOGRAPHIC_HINT] أنشئ مخطط تفاعل REST API خطوة بخطوة بتنسيق 16:9. أظهر 4 خطوات متسلسلة أفقياً: الخطوة 1 المسماة 'يرسل العميل الطلب' تعرض أيقونة كمبيوتر مع سهم يحتوي على 'GET /api/products/42'. الخطوة 2 المسماة 'يستقبل الخادم الطلب' تعرض أيقونة خادم تعالج. الخطوة 3 المسماة 'يستعلم الخادم من قاعدة البيانات' تعرض خادماً يتصل بأسطوانة قاعدة بيانات مع رمز استعلام. الخطوة 4 المسماة 'يرجع الخادم الاستجابة' تعرض سهماً يعود إلى الكمبيوتر مع أيقونة بيانات JSON وحالة HTTP '200 OK'. أسفل كل خطوة، أضف مقتطفات JSON صغيرة أو مؤشرات حالة. استخدم خلفية بيضاء، اللون الأزرق لتدفق الطلب، الأخضر للاستجابة الناجحة، مع نص بسيط وأسهم اتجاهية واضحة توضح دورة الطلب والاستجابة الكاملة."
+          }
+        },
+        {
+          "id": 11,
+          "type": "title",
+          "value": {
+            "en": "REST API Principles and Best Practices",
+            "ar": "مبادئ وأفضل ممارسات REST API"
+          }
+        },
+        {
+          "id": 12,
+          "type": "text",
+          "value": {
+            "en": "REST APIs follow several important principles that make them work well. First, they are stateless, meaning each request contains all the information needed to process it, and the server does not remember previous requests. This makes REST APIs scalable because any server can handle any request without needing to know about past interactions. Second, REST APIs use standard HTTP status codes to communicate the result of operations: 200 means success, 201 means successfully created, 400 means bad request (client error), 401 means unauthorized, 404 means not found, and 500 means server error. These standardized codes help clients understand what happened without parsing response messages.",
+            "ar": "تتبع واجهات برمجة التطبيقات REST عدة مبادئ مهمة تجعلها تعمل بشكل جيد. أولاً، هي عديمة الحالة (Stateless)، مما يعني أن كل طلب يحتوي على جميع المعلومات اللازمة لمعالجته، ولا يتذكر الخادم الطلبات السابقة. يجعل هذا واجهات برمجة التطبيقات REST قابلة للتوسع لأن أي خادم يمكنه التعامل مع أي طلب دون الحاجة إلى معرفة التفاعلات السابقة. ثانياً، تستخدم واجهات برمجة التطبيقات REST رموز حالة HTTP القياسية للتواصل عن نتيجة العمليات: 200 تعني النجاح، 201 تعني تم الإنشاء بنجاح، 400 تعني طلب سيئ (خطأ العميل)، 401 تعني غير مصرح، 404 تعني غير موجود، و500 تعني خطأ الخادم. تساعد هذه الرموز الموحدة العملاء على فهم ما حدث دون تحليل رسائل الاستجابة."
+          }
+        },
+        {
+          "id": 13,
+          "type": "text",
+          "value": {
+            "en": "Good REST API design uses meaningful, hierarchical URLs that represent resource relationships. For example, to get comments on article 123, you might use `/api/articles/123/comments` rather than `/api/getCommentsForArticle?articleId=123`. This makes the API intuitive and self-documenting. REST APIs typically exchange data in JSON format, which is lightweight, human-readable, and easily parsed by programming languages. Versioning is another important practice: as your API evolves, you may need to make breaking changes, so you version your API (like `/api/v1/users` and `/api/v2/users`) to allow old clients to continue working while new clients use the updated version.",
+            "ar": "يستخدم تصميم REST API الجيد عناوين URL ذات معنى وهرمية تمثل علاقات الموارد. على سبيل المثال، للحصول على تعليقات على المقال 123، قد تستخدم `/api/articles/123/comments` بدلاً من `/api/getCommentsForArticle?articleId=123`. هذا يجعل API بديهية وذاتية التوثيق. عادةً ما تتبادل واجهات برمجة التطبيقات REST البيانات بتنسيق JSON، وهو خفيف الوزن وقابل للقراءة من قبل البشر ويمكن تحليله بسهولة بواسطة لغات البرمجة. الإصدار (Versioning) هو ممارسة مهمة أخرى: مع تطور API الخاص بك، قد تحتاج إلى إجراء تغييرات كبيرة، لذا تقوم بإصدار API الخاص بك (مثل `/api/v1/users` و`/api/v2/users`) للسماح للعملاء القدامى بمواصلة العمل بينما يستخدم العملاء الجدد الإصدار المحدث."
+          }
+        },
+        {
+          "id": 14,
+          "type": "code",
+          "language": "javascript",
+          "value": "// Example REST API request using JavaScript fetch\n// GET request to retrieve user data\nfetch('https://api.example.com/api/v1/users/123', {\n  method: 'GET',\n  headers: {\n    'Content-Type': 'application/json',\n    'Authorization': 'Bearer your-auth-token-here'\n  }\n})\n.then(response => {\n  if (response.ok) {\n    return response.json();\n  }\n  throw new Error('Network response was not ok');\n})\n.then(data => {\n  console.log('User data:', data);\n})\n.catch(error => {\n  console.error('Error fetching user:', error);\n});\n\n// POST request to create a new user\nfetch('https://api.example.com/api/v1/users', {\n  method: 'POST',\n  headers: {\n    'Content-Type': 'application/json',\n    'Authorization': 'Bearer your-auth-token-here'\n  },\n  body: JSON.stringify({\n    username: 'ahmed_said',\n    email: 'ahmed@example.com',\n    password: 'securePassword123'\n  })\n})\n.then(response => response.json())\n.then(data => {\n  console.log('User created:', data);\n})\n.catch(error => {\n  console.error('Error creating user:', error);\n});"
+        },
+        {
+          "id": 15,
+          "type": "hr"
+        },
+        {
+          "id": 16,
+          "type": "title",
+          "value": {
+            "en": "API Authentication and Security",
+            "ar": "مصادقة وأمان واجهة برمجة التطبيقات"
+          }
+        },
+        {
+          "id": 17,
+          "type": "text",
+          "value": {
+            "en": "Most APIs require authentication to ensure that only authorized users can access them. The most common modern authentication method is using tokens. When you log in, the server generates a unique token (a long random string) and sends it to you. You then include this token in the header of every subsequent API request to prove your identity. This is more secure than sending your username and password with every request. The most popular token format is JWT (JSON Web Token), which contains encrypted information about the user and their permissions. APIs should always use HTTPS (HTTP with encryption) to protect data in transit, preventing attackers from intercepting sensitive information like passwords or tokens.",
+            "ar": "تتطلب معظم واجهات برمجة التطبيقات المصادقة لضمان أن المستخدمين المصرح لهم فقط يمكنهم الوصول إليها. طريقة المصادقة الحديثة الأكثر شيوعاً هي استخدام الرموز (Tokens). عندما تسجل الدخول، ينشئ الخادم رمزاً فريداً (سلسلة عشوائية طويلة) ويرسله إليك. ثم تقوم بتضمين هذا الرمز في رأس كل طلب API لاحق لإثبات هويتك. هذا أكثر أماناً من إرسال اسم المستخدم وكلمة المرور الخاصين بك مع كل طلب. تنسيق الرمز الأكثر شيوعاً هو JWT (JSON Web Token)، والذي يحتوي على معلومات مشفرة حول المستخدم وأذوناته. يجب على واجهات برمجة التطبيقات دائماً استخدام HTTPS (HTTP مع التشفير) لحماية البيانات أثناء النقل، مما يمنع المهاجمين من اعتراض المعلومات الحساسة مثل كلمات المرور أو الرموز."
+          }
+        },
+        {
+          "id": 18,
+          "type": "text",
+          "value": {
+            "en": "APIs also implement rate limiting to prevent abuse. Rate limiting restricts how many requests a client can make within a specific time period, protecting the server from being overwhelmed by too many requests. For example, an API might allow 100 requests per minute per user. If you exceed this limit, the API returns a 429 status code (Too Many Requests) and asks you to wait before trying again. Authorization is another critical aspect: authentication proves who you are, but authorization determines what you are allowed to do. Even if you are authenticated, the API checks whether you have permission to perform specific actions, such as deleting data or accessing another user's private information.",
+            "ar": "تنفذ واجهات برمجة التطبيقات أيضاً تحديد المعدل (Rate Limiting) لمنع سوء الاستخدام. يقيد تحديد المعدل عدد الطلبات التي يمكن للعميل تقديمها خلال فترة زمنية محددة، مما يحمي الخادم من الإرهاق بالكثير من الطلبات. على سبيل المثال، قد تسمح واجهة برمجة التطبيقات بـ 100 طلب في الدقيقة لكل مستخدم. إذا تجاوزت هذا الحد، ترجع API رمز الحالة 429 (طلبات كثيرة جداً) وتطلب منك الانتظار قبل المحاولة مرة أخرى. التفويض (Authorization) جانب حرج آخر: تثبت المصادقة من أنت، لكن التفويض يحدد ما يُسمح لك بفعله. حتى إذا كنت مصادقاً، يتحقق API مما إذا كان لديك إذن لتنفيذ إجراءات محددة، مثل حذف البيانات أو الوصول إلى معلومات خاصة لمستخدم آخر."
+          }
+        },
+        {
+          "id": 19,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "Security Warning: Never include API keys or authentication tokens directly in your frontend code. They can be easily extracted by anyone inspecting your JavaScript. Instead, have your backend handle sensitive API calls, or use environment variables and secure token management practices.",
+            "ar": "تحذير أمني: لا تقم أبداً بتضمين مفاتيح API أو رموز المصادقة مباشرة في كود الواجهة الأمامية الخاص بك. يمكن استخراجها بسهولة من قبل أي شخص يفحص JavaScript الخاص بك. بدلاً من ذلك، اجعل الواجهة الخلفية الخاصة بك تتعامل مع استدعاءات API الحساسة، أو استخدم متغيرات البيئة وممارسات إدارة الرموز الآمنة."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 20,
+          "type": "list",
+          "title": {
+            "en": "REST API Security Best Practices",
+            "ar": "أفضل ممارسات أمان REST API"
+          },
+          "items": {
+            "en": [
+              "Always use HTTPS to encrypt data in transit between client and server",
+              "Implement token-based authentication using JWT or similar standards",
+              "Apply rate limiting to prevent abuse and protect against denial-of-service attacks",
+              "Validate and sanitize all input data on the server side",
+              "Use proper authorization checks to ensure users can only access their own data",
+              "Return appropriate error messages without exposing sensitive system information",
+              "Keep API documentation updated but do not expose internal implementation details"
+            ],
+            "ar": [
+              "استخدم دائماً HTTPS لتشفير البيانات أثناء النقل بين العميل والخادم",
+              "تنفيذ المصادقة القائمة على الرموز باستخدام JWT أو معايير مماثلة",
+              "تطبيق تحديد المعدل لمنع سوء الاستخدام والحماية من هجمات رفض الخدمة",
+              "التحقق من صحة وتنظيف جميع بيانات الإدخال على جانب الخادم",
+              "استخدام فحوصات التفويض المناسبة لضمان أن المستخدمين يمكنهم فقط الوصول إلى بياناتهم الخاصة",
+              "إرجاع رسائل خطأ مناسبة دون الكشف عن معلومات النظام الحساسة",
+              "إبقاء وثائق API محدثة ولكن لا تكشف عن تفاصيل التنفيذ الداخلية"
+            ]
+          }
+        },
+        {
+          "id": 1772826985123.0261,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Web%20Application%20Architecture/3-3-REST%20API%20Security%20Best%20Practices.webp"
+        },
+        {
+          "id": 22,
+          "type": "title",
+          "value": {
+            "en": "Real-World API Examples and Use Cases",
+            "ar": "أمثلة وحالات استخدام واقعية لواجهة برمجة التطبيقات"
+          }
+        },
+        {
+          "id": 23,
+          "type": "text",
+          "value": {
+            "en": "Understanding APIs becomes clearer when you see how they power everyday applications you use. When you log into a website using Sign in with Google, that website calls Google's OAuth API to authenticate you without needing to create a separate account. When you see a map embedded in a website showing store locations, that is Google Maps API being used. When you make an online purchase and pay with a credit card, the e-commerce site calls a payment processing API like Stripe or PayPal. When weather apps show current conditions and forecasts, they call weather service APIs. When social media platforms display embedded tweets or Instagram posts on external websites, those sites are using Twitter or Instagram APIs.",
+            "ar": "يصبح فهم واجهات برمجة التطبيقات أكثر وضوحاً عندما ترى كيف تشغل التطبيقات اليومية التي تستخدمها. عندما تسجل الدخول إلى موقع ويب باستخدام تسجيل الدخول بواسطة Google، يستدعي هذا الموقع OAuth API من Google لمصادقتك دون الحاجة إلى إنشاء حساب منفصل. عندما ترى خريطة مضمنة في موقع ويب تعرض مواقع المتاجر، فهذا هو Google Maps API المستخدم. عندما تقوم بعملية شراء عبر الإنترنت وتدفع ببطاقة ائتمان، يستدعي موقع التجارة الإلكترونية API لمعالجة الدفع مثل Stripe أو PayPal. عندما تعرض تطبيقات الطقس الظروف الحالية والتوقعات، فإنها تستدعي واجهات برمجة تطبيقات خدمة الطقس. عندما تعرض منصات وسائل التواصل الاجتماعي تغريدات أو منشورات Instagram مضمنة على مواقع ويب خارجية، تستخدم هذه المواقع واجهات برمجة التطبيقات من Twitter أو Instagram."
+          }
+        },
+        {
+          "id": 24,
+          "type": "text",
+          "value": {
+            "en": "APIs also enable mobile applications to function. Mobile apps are essentially frontends that communicate with backend servers through APIs. When you open a mobile banking app, it calls the bank's API to retrieve your account balance and transaction history. When you post a photo to Instagram from your phone, the app calls Instagram's API to upload the image and create the post. This separation allows companies to maintain a single backend with one API that serves web browsers, iOS apps, Android apps, and even third-party integrations. This architecture significantly reduces development and maintenance costs while ensuring consistency across all platforms.",
+            "ar": "تمكن واجهات برمجة التطبيقات أيضاً تطبيقات الجوال من العمل. تطبيقات الجوال هي في الأساس واجهات أمامية تتواصل مع خوادم الواجهة الخلفية من خلال واجهات برمجة التطبيقات. عندما تفتح تطبيق خدمات مصرفية عبر الجوال، يستدعي API البنك لاسترداد رصيد حسابك وتاريخ المعاملات. عندما تنشر صورة على Instagram من هاتفك، يستدعي التطبيق API من Instagram لتحميل الصورة وإنشاء المنشور. يسمح هذا الفصل للشركات بالحفاظ على واجهة خلفية واحدة مع API واحدة تخدم متصفحات الويب وتطبيقات iOS وتطبيقات Android وحتى عمليات التكامل مع طرف ثالث. تقلل هذه البنية بشكل كبير من تكاليف التطوير والصيانة مع ضمان الاتساق عبر جميع المنصات."
+          }
+        },
+        {
+          "id": 25,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Learning Path: Start by exploring public APIs that do not require authentication, such as free weather APIs or public data APIs. Tools like Postman or browser extensions can help you send API requests and see responses without writing code. This hands-on experimentation will solidify your understanding of how APIs work in practice.",
+            "ar": "مسار التعلم: ابدأ باستكشاف واجهات برمجة التطبيقات العامة التي لا تتطلب مصادقة، مثل واجهات برمجة تطبيقات الطقس المجانية أو واجهات برمجة تطبيقات البيانات العامة. يمكن أن تساعدك أدوات مثل Postman أو امتدادات المتصفح في إرسال طلبات API ورؤية الاستجابات دون كتابة كود. ستعزز هذه التجربة العملية فهمك لكيفية عمل واجهات برمجة التطبيقات في الممارسة."
+          },
+          "link": "",
+          "isLab": false
+        }
+      ]
+    },
+    {
+      "id": "topic-4",
+      "title": {
+        "en": "Web Servers: Apache and Nginx",
+        "ar": "خوادم الويب: Apache وNginx"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "Understanding Web Servers and Their Critical Role",
+            "ar": "فهم خوادم الويب ودورها الحرج"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "A web server is specialized software that runs on a physical or virtual server machine and handles HTTP requests from clients like web browsers. When you type a URL into your browser and press Enter, your browser sends an HTTP request to a web server. The web server receives this request, processes it, and sends back the appropriate response, which might be an HTML page, an image, a JSON data response, or an error message. Without web servers, there would be no way to deliver web content to users. Think of a web server as a highly efficient librarian: when you ask for a specific book (make a request), the librarian quickly finds it and hands it to you (sends the response).",
+            "ar": "خادم الويب هو برنامج متخصص يعمل على جهاز خادم مادي أو افتراضي ويتعامل مع طلبات HTTP من العملاء مثل متصفحات الويب. عندما تكتب عنوان URL في متصفحك وتضغط على Enter، يرسل متصفحك طلب HTTP إلى خادم ويب. يستقبل خادم الويب هذا الطلب، ويعالجه، ويرسل الاستجابة المناسبة، والتي قد تكون صفحة HTML أو صورة أو استجابة بيانات JSON أو رسالة خطأ. بدون خوادم الويب، لن تكون هناك طريقة لتقديم محتوى الويب للمستخدمين. فكر في خادم الويب كأمين مكتبة فعال للغاية: عندما تطلب كتاباً محدداً (تقديم طلب)، يجده أمين المكتبة بسرعة ويسلمه لك (يرسل الاستجابة)."
+          }
+        },
+        {
+          "id": 1772827033122.1814,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Web%20Application%20Architecture/4-1-web%20server's%20role%20in%20web%20architecture.webp"
+        },
+        {
+          "id": 4,
+          "type": "text",
+          "value": {
+            "en": "Web servers handle many important tasks beyond simply serving files. They manage concurrent connections from potentially thousands of users simultaneously, route requests to the appropriate backend application code, serve static files like images and CSS efficiently, implement security features like SSL/TLS encryption for HTTPS, handle compression to reduce bandwidth usage, implement caching strategies to improve performance, manage load balancing to distribute traffic across multiple backend servers, and log all requests for monitoring and debugging purposes. Modern web servers are incredibly efficient and can handle thousands of requests per second on modest hardware when properly configured.",
+            "ar": "تتعامل خوادم الويب مع العديد من المهام المهمة بخلاف مجرد تقديم الملفات. تدير الاتصالات المتزامنة من آلاف المستخدمين المحتملين في وقت واحد، وتوجه الطلبات إلى كود تطبيق الواجهة الخلفية المناسب، وتخدم الملفات الثابتة مثل الصور وCSS بكفاءة، وتنفذ ميزات الأمان مثل تشفير SSL/TLS لـ HTTPS، وتتعامل مع الضغط لتقليل استخدام عرض النطاق الترددي، وتنفذ استراتيجيات التخزين المؤقت لتحسين الأداء، وتدير موازنة التحميل لتوزيع حركة المرور عبر خوادم خلفية متعددة، وتسجل جميع الطلبات لأغراض المراقبة وتصحيح الأخطاء. خوادم الويب الحديثة فعالة بشكل لا يصدق ويمكنها التعامل مع آلاف الطلبات في الثانية على أجهزة متواضعة عند تكوينها بشكل صحيح."
+          }
+        },
+        {
+          "id": 5,
+          "type": "text",
+          "value": {
+            "en": "There are two dominant web servers in the industry today: Apache HTTP Server and Nginx. Apache has been around since 1995 and powers a significant portion of websites worldwide. Nginx, released in 2004, was specifically designed to handle high-concurrency scenarios and has gained massive popularity for its performance and efficiency. Together, these two web servers handle the majority of web traffic on the internet. Understanding how they work and when to use each one is essential knowledge for anyone building web applications. Both are open-source, free to use, and run on various operating systems including Linux, Windows, and macOS, though they are most commonly deployed on Linux servers.",
+            "ar": "هناك خادمان ويب مهيمنان في الصناعة اليوم: Apache HTTP Server وNginx. Apache موجود منذ عام 1995 ويشغل جزءاً كبيراً من مواقع الويب في جميع أنحاء العالم. Nginx، الذي تم إصداره في عام 2004، تم تصميمه خصيصاً للتعامل مع سيناريوهات التزامن العالي واكتسب شعبية هائلة لأدائه وكفاءته. معاً، يتعامل خادما الويب هذان مع غالبية حركة مرور الويب على الإنترنت. يعد فهم كيفية عملهما ومتى تستخدم كل منهما معرفة أساسية لأي شخص يبني تطبيقات ويب. كلاهما مفتوح المصدر ومجاني للاستخدام ويعملان على أنظمة تشغيل مختلفة بما في ذلك Linux وWindows وmacOS، على الرغم من أنهما يتم نشرهما بشكل شائع على خوادم Linux."
+          }
+        },
+        {
+          "id": 6,
+          "type": "list",
+          "title": {
+            "en": "Core Responsibilities of Web Servers",
+            "ar": "المسؤوليات الأساسية لخوادم الويب"
+          },
+          "items": {
+            "en": [
+              "Receiving and parsing HTTP/HTTPS requests from client browsers and applications",
+              "Serving static files like HTML, CSS, JavaScript, images, and videos directly from disk",
+              "Forwarding dynamic requests to backend application servers for processing",
+              "Managing SSL/TLS certificates and encrypting traffic for secure HTTPS connections",
+              "Implementing virtual hosts to serve multiple websites from a single server",
+              "Compressing responses to reduce bandwidth and improve loading speeds",
+              "Caching frequently requested content to minimize server load and response time",
+              "Logging all requests and errors for monitoring, analytics, and security auditing"
+            ],
+            "ar": [
+              "استقبال وتحليل طلبات HTTP/HTTPS من متصفحات العملاء والتطبيقات",
+              "تقديم الملفات الثابتة مثل HTML وCSS وJavaScript والصور ومقاطع الفيديو مباشرة من القرص",
+              "إعادة توجيه الطلبات الديناميكية إلى خوادم تطبيقات الواجهة الخلفية للمعالجة",
+              "إدارة شهادات SSL/TLS وتشفير حركة المرور لاتصالات HTTPS الآمنة",
+              "تنفيذ المضيفات الافتراضية لخدمة مواقع ويب متعددة من خادم واحد",
+              "ضغط الاستجابات لتقليل عرض النطاق الترددي وتحسين سرعات التحميل",
+              "التخزين المؤقت للمحتوى المطلوب بشكل متكرر لتقليل حمل الخادم ووقت الاستجابة",
+              "تسجيل جميع الطلبات والأخطاء للمراقبة والتحليلات وتدقيق الأمان"
+            ]
+          }
+        },
+        {
+          "id": 7,
+          "type": "hr"
+        },
+        {
+          "id": 8,
+          "type": "title",
+          "value": {
+            "en": "Apache HTTP Server: The Veteran Workhorse",
+            "ar": "Apache HTTP Server: الحصان الموثوق المخضرم"
+          }
+        },
+        {
+          "id": 9,
+          "type": "text",
+          "value": {
+            "en": "Apache HTTP Server, commonly just called Apache, is one of the oldest and most widely used web servers in the world. Its longevity comes from its stability, extensive documentation, and massive ecosystem of modules that extend its functionality. Apache uses a process-driven or thread-driven architecture, where each connection is handled by a separate process or thread. This approach is straightforward and works well for many use cases. Apache's biggest strength is its flexibility and configurability. It uses .htaccess files that allow directory-level configuration without requiring root access to the main server configuration, making it popular in shared hosting environments where multiple users share one server.",
+            "ar": "Apache HTTP Server، الذي يُطلق عليه عادةً Apache فقط، هو أحد أقدم خوادم الويب وأكثرها استخداماً في العالم. تأتي طول عمره من استقراره ووثائقه الواسعة والنظام البيئي الضخم من الوحدات النمطية التي توسع وظائفه. يستخدم Apache بنية تعتمد على العمليات أو الخيوط، حيث يتم التعامل مع كل اتصال بواسطة عملية أو خيط منفصل. هذا النهج واضح ومباشر ويعمل بشكل جيد للعديد من حالات الاستخدام. أكبر نقطة قوة لـ Apache هي مرونته وقابليته للتكوين. يستخدم ملفات .htaccess التي تسمح بتكوين مستوى الدليل دون الحاجة إلى وصول الجذر إلى تكوين الخادم الرئيسي، مما يجعله شائعاً في بيئات الاستضافة المشتركة حيث يشارك مستخدمون متعددون خادماً واحداً."
+          }
+        },
+        {
+          "id": 10,
+          "type": "text",
+          "value": {
+            "en": "Apache supports a vast number of modules that add functionality. The mod_rewrite module allows powerful URL rewriting for creating clean, SEO-friendly URLs. The mod_ssl module adds SSL/TLS support for HTTPS. The mod_proxy module enables Apache to act as a reverse proxy, forwarding requests to backend application servers. Modules for authentication, compression, caching, and logging are all available. This modular architecture means you only load the features you need, keeping Apache efficient. Apache also has excellent support for server-side scripting languages. It can run PHP code directly through mod_php, and it works seamlessly with Python, Perl, and other languages through various modules.",
+            "ar": "يدعم Apache عدداً كبيراً من الوحدات النمطية التي تضيف وظائف. تسمح وحدة mod_rewrite بإعادة كتابة URL قوية لإنشاء عناوين URL نظيفة وصديقة لمحركات البحث. تضيف وحدة mod_ssl دعم SSL/TLS لـ HTTPS. تمكّن وحدة mod_proxy Apache من العمل كوكيل عكسي، وإعادة توجيه الطلبات إلى خوادم تطبيقات الواجهة الخلفية. تتوفر وحدات للمصادقة والضغط والتخزين المؤقت والتسجيل. تعني هذه البنية المعيارية أنك تحمّل فقط الميزات التي تحتاجها، مما يحافظ على كفاءة Apache. يتمتع Apache أيضاً بدعم ممتاز للغات البرمجة النصية من جانب الخادم. يمكنه تشغيل كود PHP مباشرة من خلال mod_php، ويعمل بسلاسة مع Python وPerl ولغات أخرى من خلال وحدات مختلفة."
+          }
+        },
+        {
+          "id": 11,
+          "type": "code",
+          "language": "apache",
+          "value": "# Example Apache configuration for a virtual host\n# This configuration serves a website from /var/www/mysite\n\n<VirtualHost *:80>\n    ServerName www.example.com\n    ServerAlias example.com\n    DocumentRoot /var/www/mysite\n    \n    # Directory configuration\n    <Directory /var/www/mysite>\n        Options Indexes FollowSymLinks\n        AllowOverride All\n        Require all granted\n    </Directory>\n    \n    # Enable URL rewriting\n    RewriteEngine On\n    RewriteCond %{HTTPS} off\n    RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]\n    \n    # Error and access logs\n    ErrorLog ${APACHE_LOG_DIR}/mysite_error.log\n    CustomLog ${APACHE_LOG_DIR}/mysite_access.log combined\n</VirtualHost>\n\n# HTTPS configuration\n<VirtualHost *:443>\n    ServerName www.example.com\n    DocumentRoot /var/www/mysite\n    \n    SSLEngine on\n    SSLCertificateFile /etc/ssl/certs/mysite.crt\n    SSLCertificateKeyFile /etc/ssl/private/mysite.key\n</VirtualHost>"
+        },
+        {
+          "id": 12,
+          "type": "text",
+          "value": {
+            "en": "Apache's process-based architecture has both advantages and disadvantages. The advantage is simplicity and isolation: each request is handled independently, and if one process crashes, it does not affect others. The disadvantage is resource consumption: creating a new process or thread for each connection uses more memory and CPU resources compared to more modern approaches. Under extremely high traffic with thousands of concurrent connections, Apache can consume significant server resources. However, for most small to medium-sized websites and applications, Apache's resource usage is perfectly acceptable and the ease of configuration outweighs performance concerns.",
+            "ar": "تتمتع بنية Apache القائمة على العمليات بمزايا وعيوب. الميزة هي البساطة والعزل: يتم التعامل مع كل طلب بشكل مستقل، وإذا تعطلت عملية واحدة، فلن تؤثر على الآخرين. العيب هو استهلاك الموارد: يستخدم إنشاء عملية أو خيط جديد لكل اتصال المزيد من موارد الذاكرة والمعالج مقارنة بالأساليب الأكثر حداثة. تحت حركة مرور عالية للغاية مع آلاف الاتصالات المتزامنة، يمكن أن يستهلك Apache موارد خادم كبيرة. ومع ذلك، بالنسبة لمعظم مواقع الويب والتطبيقات الصغيرة إلى المتوسطة الحجم، فإن استخدام موارد Apache مقبول تماماً وسهولة التكوين تفوق مخاوف الأداء."
+          }
+        },
+        {
+          "id": 13,
+          "type": "list",
+          "title": {
+            "en": "Apache Key Strengths",
+            "ar": "نقاط قوة Apache الرئيسية"
+          },
+          "items": {
+            "en": [
+              "Mature and battle-tested with over 25 years of development and deployment",
+              "Extensive documentation and large community support for troubleshooting",
+              "Highly flexible configuration with .htaccess files for directory-level settings",
+              "Massive module ecosystem covering virtually every web server need",
+              "Excellent support for dynamic content and server-side scripting languages",
+              "Works well in shared hosting environments with multiple users"
+            ],
+            "ar": [
+              "ناضج ومختبر في المعارك مع أكثر من 25 عاماً من التطوير والنشر",
+              "وثائق واسعة ودعم مجتمعي كبير لاستكشاف الأخطاء وإصلاحها",
+              "تكوين مرن للغاية مع ملفات .htaccess لإعدادات مستوى الدليل",
+              "نظام بيئي ضخم من الوحدات النمطية يغطي عملياً كل حاجة لخادم الويب",
+              "دعم ممتاز للمحتوى الديناميكي ولغات البرمجة النصية من جانب الخادم",
+              "يعمل بشكل جيد في بيئات الاستضافة المشتركة مع مستخدمين متعددين"
+            ]
+          }
+        },
+        {
+          "id": 14,
+          "type": "hr"
+        },
+        {
+          "id": 15,
+          "type": "title",
+          "value": {
+            "en": "Nginx: The High-Performance Alternative",
+            "ar": "Nginx: البديل عالي الأداء"
+          }
+        },
+        {
+          "id": 1772827046407.337,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Web%20Application%20Architecture/4-2-Apache%20vs%20Nginx%20architecture%20differences.webp"
+        },
+        {
+          "id": 17,
+          "type": "text",
+          "value": {
+            "en": "Nginx, pronounced as engine-x, was created by Igor Sysoev in 2004 to solve the C10K problem, which refers to the challenge of handling 10,000 concurrent connections on a single server. Traditional web servers like Apache struggled with this scale due to their process-based architecture. Nginx takes a fundamentally different approach using an event-driven, asynchronous, non-blocking architecture. Instead of creating a separate process or thread for each connection, Nginx uses a small number of worker processes that can handle thousands of connections simultaneously. This architecture makes Nginx incredibly efficient with system resources, allowing it to handle massive amounts of concurrent traffic with minimal memory and CPU usage.",
+            "ar": "Nginx، الذي يُنطق engine-x، أنشأه Igor Sysoev في عام 2004 لحل مشكلة C10K، والتي تشير إلى تحدي التعامل مع 10,000 اتصال متزامن على خادم واحد. كافحت خوادم الويب التقليدية مثل Apache مع هذا النطاق بسبب بنيتها القائمة على العمليات. يتبع Nginx نهجاً مختلفاً بشكل أساسي باستخدام بنية موجهة بالحدث وغير متزامنة وغير محجوبة. بدلاً من إنشاء عملية أو خيط منفصل لكل اتصال، يستخدم Nginx عدداً صغيراً من عمليات العمال التي يمكنها التعامل مع آلاف الاتصالات في وقت واحد. تجعل هذه البنية Nginx فعالاً بشكل لا يصدق مع موارد النظام، مما يسمح له بالتعامل مع كميات هائلة من حركة المرور المتزامنة مع الحد الأدنى من استخدام الذاكرة والمعالج."
+          }
+        },
+        {
+          "id": 18,
+          "type": "text",
+          "value": {
+            "en": "Nginx excels at serving static content at extremely high speeds. Its architecture is optimized for efficiently reading files from disk and sending them to clients. This makes it perfect as a frontend server that handles static assets like images, CSS, and JavaScript files while forwarding dynamic requests to backend application servers. Nginx is also an excellent reverse proxy and load balancer. In many modern architectures, Nginx sits in front of multiple backend servers, distributing incoming requests across them to balance the load and improve reliability. If one backend server fails, Nginx automatically routes traffic to the remaining healthy servers. This capability makes Nginx essential for building scalable, high-availability web applications.",
+            "ar": "يتفوق Nginx في تقديم المحتوى الثابت بسرعات عالية للغاية. بنيته محسّنة لقراءة الملفات من القرص بكفاءة وإرسالها إلى العملاء. وهذا يجعله مثالياً كخادم أمامي يتعامل مع الأصول الثابتة مثل الصور وملفات CSS وJavaScript بينما يعيد توجيه الطلبات الديناميكية إلى خوادم تطبيقات الواجهة الخلفية. Nginx أيضاً وكيل عكسي ممتاز وموازن تحميل. في العديد من البنى الحديثة، يجلس Nginx أمام خوادم خلفية متعددة، ويوزع الطلبات الواردة عبرها لموازنة الحمل وتحسين الموثوقية. إذا فشل أحد خوادم الواجهة الخلفية، يوجه Nginx تلقائياً حركة المرور إلى الخوادم الصحية المتبقية. تجعل هذه القدرة Nginx ضرورياً لبناء تطبيقات ويب قابلة للتوسع وعالية التوفر."
+          }
+        },
+        {
+          "id": 19,
+          "type": "text",
+          "value": {
+            "en": "Nginx configuration is done through a single main configuration file, typically located at /etc/nginx/nginx.conf, and additional configuration files in the /etc/nginx/sites-available/ directory. Unlike Apache, Nginx does not support .htaccess files, which means all configuration must be done at the server level by administrators. This is actually an advantage in many scenarios because it eliminates the performance overhead of checking for .htaccess files in every directory. Nginx configuration syntax is clear and concise, using blocks and directives to define server behavior. While the lack of .htaccess makes Nginx less suitable for shared hosting, it is perfect for dedicated servers and cloud environments where you have full control.",
+            "ar": "يتم تكوين Nginx من خلال ملف تكوين رئيسي واحد، يقع عادةً في /etc/nginx/nginx.conf، وملفات تكوين إضافية في دليل /etc/nginx/sites-available/. على عكس Apache، لا يدعم Nginx ملفات .htaccess، مما يعني أن جميع التكوينات يجب أن يتم إجراؤها على مستوى الخادم بواسطة المسؤولين. هذا في الواقع ميزة في العديد من السيناريوهات لأنه يزيل الحمل الزائد للأداء من التحقق من ملفات .htaccess في كل دليل. بناء جملة تكوين Nginx واضح وموجز، باستخدام الكتل والتوجيهات لتحديد سلوك الخادم. بينما يجعل عدم وجود .htaccess Nginx أقل ملاءمة للاستضافة المشتركة، فهو مثالي للخوادم المخصصة وبيئات السحابة حيث لديك سيطرة كاملة."
+          }
+        },
+        {
+          "id": 20,
+          "type": "code",
+          "language": "nginx",
+          "value": "# Example Nginx configuration for serving a web application\n# This configuration handles both static files and proxies to backend\n\nserver {\n    listen 80;\n    server_name www.example.com example.com;\n    \n    # Redirect HTTP to HTTPS\n    return 301 https://$server_name$request_uri;\n}\n\nserver {\n    listen 443 ssl http2;\n    server_name www.example.com example.com;\n    \n    # SSL configuration\n    ssl_certificate /etc/ssl/certs/example.crt;\n    ssl_certificate_key /etc/ssl/private/example.key;\n    ssl_protocols TLSv1.2 TLSv1.3;\n    \n    # Root directory for static files\n    root /var/www/mysite;\n    index index.html index.htm;\n    \n    # Serve static files directly\n    location ~* \\.(jpg|jpeg|png|gif|css|js|ico|svg)$ {\n        expires 30d;\n        add_header Cache-Control \"public, immutable\";\n    }\n    \n    # Proxy dynamic requests to backend application\n    location /api/ {\n        proxy_pass http://127.0.0.1:3000;\n        proxy_http_version 1.1;\n        proxy_set_header Upgrade $http_upgrade;\n        proxy_set_header Connection 'upgrade';\n        proxy_set_header Host $host;\n        proxy_cache_bypass $http_upgrade;\n    }\n    \n    # Custom error pages\n    error_page 404 /404.html;\n    error_page 500 502 503 504 /50x.html;\n    \n    # Access and error logs\n    access_log /var/log/nginx/mysite_access.log;\n    error_log /var/log/nginx/mysite_error.log;\n}"
+        },
+        {
+          "id": 21,
+          "type": "list",
+          "title": {
+            "en": "Nginx Key Strengths",
+            "ar": "نقاط قوة Nginx الرئيسية"
+          },
+          "items": {
+            "en": [
+              "Event-driven architecture handles thousands of concurrent connections with minimal resources",
+              "Exceptional performance for serving static files at high speed",
+              "Excellent reverse proxy and load balancing capabilities",
+              "Low memory footprint even under heavy traffic loads",
+              "Built-in support for HTTP/2 and modern web protocols",
+              "Ideal for microservices architectures and containerized deployments",
+              "Perfect for high-traffic websites and API gateways"
+            ],
+            "ar": [
+              "البنية الموجهة بالحدث تتعامل مع آلاف الاتصالات المتزامنة بموارد محدودة",
+              "أداء استثنائي لتقديم الملفات الثابتة بسرعة عالية",
+              "قدرات ممتازة للوكيل العكسي وموازنة التحميل",
+              "بصمة ذاكرة منخفضة حتى تحت أحمال حركة مرور ثقيلة",
+              "دعم مدمج لـ HTTP/2 وبروتوكولات الويب الحديثة",
+              "مثالي لبنيات الخدمات الصغيرة والنشر بالحاويات",
+              "مثالي لمواقع الويب عالية الحركة وبوابات API"
+            ]
+          }
+        },
+        {
+          "id": 22,
+          "type": "title",
+          "value": {
+            "en": "Choosing Between Apache and Nginx",
+            "ar": "الاختيار بين Apache وNginx"
+          }
+        },
+        {
+          "id": 23,
+          "type": "text",
+          "value": {
+            "en": "The choice between Apache and Nginx depends on your specific requirements and constraints. Apache remains an excellent choice for shared hosting environments, applications that rely heavily on .htaccess configuration, projects requiring extensive use of Apache-specific modules, and situations where you need tight integration with server-side scripting languages like PHP through mod_php. Apache's maturity and extensive documentation make it beginner-friendly, and for small to medium traffic websites, its resource usage is perfectly acceptable. If you are working in an environment where you do not have root access to the server, Apache's .htaccess files provide valuable flexibility.",
+            "ar": "يعتمد الاختيار بين Apache وNginx على متطلباتك وقيودك المحددة. يظل Apache خياراً ممتازاً لبيئات الاستضافة المشتركة، والتطبيقات التي تعتمد بشكل كبير على تكوين .htaccess، والمشاريع التي تتطلب استخداماً مكثفاً لوحدات Apache المحددة، والحالات التي تحتاج فيها إلى تكامل محكم مع لغات البرمجة النصية من جانب الخادم مثل PHP من خلال mod_php. تجعل نضج Apache ووثائقه الواسعة صديقاً للمبتدئين، وبالنسبة لمواقع الويب ذات حركة المرور الصغيرة إلى المتوسطة، فإن استخدام موارده مقبول تماماً. إذا كنت تعمل في بيئة لا تملك فيها وصول الجذر إلى الخادم، توفر ملفات .htaccess من Apache مرونة قيمة."
+          }
+        },
+        {
+          "id": 1772827040933.675,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Web%20Application%20Architecture/4-3-Choosing%20Between%20Apache%20and%20Nginx.webp"
+        },
+        {
+          "id": 25,
+          "type": "text",
+          "value": {
+            "en": "Nginx is the superior choice for high-traffic websites where performance and efficiency are critical, serving static content at scale, acting as a reverse proxy or load balancer in front of application servers, microservices architectures where you need an API gateway, containerized deployments with Docker and Kubernetes, and cloud environments where resource efficiency directly impacts costs. Many modern web architectures actually use both servers together: Nginx as the frontend server handling static content, SSL termination, and load balancing, while Apache runs backend application servers processing dynamic content. This hybrid approach leverages the strengths of both servers.",
+            "ar": "Nginx هو الخيار الأفضل لمواقع الويب عالية الحركة حيث يكون الأداء والكفاءة أمراً بالغ الأهمية، وتقديم المحتوى الثابت على نطاق واسع، والعمل كوكيل عكسي أو موازن تحميل أمام خوادم التطبيقات، وبنيات الخدمات الصغيرة حيث تحتاج إلى بوابة API، والنشر بالحاويات مع Docker وKubernetes، وبيئات السحابة حيث تؤثر كفاءة الموارد بشكل مباشر على التكاليف. تستخدم العديد من بنى الويب الحديثة في الواقع كلا الخادمين معاً: Nginx كخادم أمامي يتعامل مع المحتوى الثابت وإنهاء SSL وموازنة التحميل، بينما يقوم Apache بتشغيل خوادم تطبيقات الواجهة الخلفية لمعالجة المحتوى الديناميكي. يستفيد هذا النهج الهجين من نقاط قوة كلا الخادمين."
+          }
+        },
+        {
+          "id": 26,
+          "type": "table",
+          "title": {
+            "en": "Apache vs Nginx Detailed Comparison",
+            "ar": "مقارنة تفصيلية بين Apache وNginx"
+          },
+          "headers": {
+            "en": [
+              "Feature",
+              "Apache",
+              "Nginx"
+            ],
+            "ar": [
+              "الميزة",
+              "Apache",
+              "Nginx"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "Architecture",
+                "Process/thread-based",
+                "Event-driven, asynchronous"
+              ],
+              "ar": [
+                "البنية",
+                "قائم على العمليات/الخيوط",
+                "موجه بالحدث، غير متزامن"
+              ]
+            },
+            {
+              "en": [
+                "Performance with static content",
+                "Good",
+                "Excellent"
+              ],
+              "ar": [
+                "الأداء مع المحتوى الثابت",
+                "جيد",
+                "ممتاز"
+              ]
+            },
+            {
+              "en": [
+                "High concurrency handling",
+                "Moderate",
+                "Excellent"
+              ],
+              "ar": [
+                "التعامل مع التزامن العالي",
+                "متوسط",
+                "ممتاز"
+              ]
+            },
+            {
+              "en": [
+                "Resource usage",
+                "Higher under high load",
+                "Very efficient"
+              ],
+              "ar": [
+                "استخدام الموارد",
+                "أعلى تحت حمل عالٍ",
+                "فعال جداً"
+              ]
+            },
+            {
+              "en": [
+                "Configuration flexibility",
+                ".htaccess support",
+                "Server-level only"
+              ],
+              "ar": [
+                "مرونة التكوين",
+                "دعم .htaccess",
+                "مستوى الخادم فقط"
+              ]
+            },
+            {
+              "en": [
+                "Module ecosystem",
+                "Massive",
+                "Growing"
+              ],
+              "ar": [
+                "نظام الوحدات البيئي",
+                "ضخم",
+                "متنامي"
+              ]
+            },
+            {
+              "en": [
+                "Learning curve",
+                "Gentle",
+                "Moderate"
+              ],
+              "ar": [
+                "منحنى التعلم",
+                "تدريجي",
+                "متوسط"
+              ]
+            },
+            {
+              "en": [
+                "Best for",
+                "Shared hosting, PHP apps",
+                "High traffic, reverse proxy, static content"
+              ],
+              "ar": [
+                "الأفضل لـ",
+                "الاستضافة المشتركة، تطبيقات PHP",
+                "حركة مرور عالية، وكيل عكسي، محتوى ثابت"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 27,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Modern Best Practice: Many production environments use Nginx as a reverse proxy in front of Apache. Nginx handles SSL, serves static files, and distributes load, while Apache runs application code. This architecture combines Nginx's efficiency with Apache's powerful dynamic content capabilities.",
+            "ar": "أفضل ممارسة حديثة: تستخدم العديد من بيئات الإنتاج Nginx كوكيل عكسي أمام Apache. يتعامل Nginx مع SSL، ويخدم الملفات الثابتة، ويوزع الحمل، بينما يقوم Apache بتشغيل كود التطبيق. تجمع هذه البنية بين كفاءة Nginx وقدرات المحتوى الديناميكي القوية لـ Apache."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 28,
+          "type": "terminal",
+          "label": {
+            "en": "Common Web Server Commands",
+            "ar": "أوامر خادم الويب الشائعة"
+          },
+          "value": "# Apache commands (Ubuntu/Debian)\nsudo systemctl start apache2      # Start Apache\nsudo systemctl stop apache2       # Stop Apache\nsudo systemctl restart apache2    # Restart Apache\nsudo systemctl status apache2     # Check status\nsudo apache2 -t                   # Test configuration\n\n# Nginx commands\nsudo systemctl start nginx        # Start Nginx\nsudo systemctl stop nginx         # Stop Nginx\nsudo systemctl restart nginx      # Restart Nginx\nsudo systemctl status nginx       # Check status\nsudo nginx -t                     # Test configuration\nsudo nginx -s reload              # Reload without downtime"
+        }
+      ]
+    },
+    {
+      "id": "topic-5",
+      "title": {
+        "en": "MVC Architecture: Model-View-Controller Pattern",
+        "ar": "بنية MVC: نمط النموذج-العرض-المتحكم"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "Understanding Design Patterns and MVC",
+            "ar": "فهم أنماط التصميم وMVC"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "Before diving into MVC specifically, it is important to understand what a design pattern is and why it matters. A design pattern is a reusable solution to a commonly occurring problem in software design. Rather than reinventing solutions every time you build an application, design patterns provide proven templates that experienced developers have refined over decades. They are not code you can copy and paste, but rather conceptual blueprints that guide how you structure your application. Using design patterns makes your code more organized, maintainable, and easier for other developers to understand. MVC, which stands for Model-View-Controller, is one of the most popular and enduring design patterns in web development, used by countless frameworks and applications worldwide.",
+            "ar": "قبل الغوص في MVC على وجه التحديد، من المهم أن تفهم ما هو نمط التصميم ولماذا يهم. نمط التصميم هو حل قابل لإعادة الاستخدام لمشكلة تحدث بشكل شائع في تصميم البرمجيات. بدلاً من إعادة اختراع الحلول في كل مرة تقوم فيها ببناء تطبيق، توفر أنماط التصميم قوالب مثبتة صقلها المطورون ذوو الخبرة على مدى عقود. إنها ليست كوداً يمكنك نسخه ولصقه، بل هي مخططات مفاهيمية توجه كيفية هيكلة تطبيقك. يجعل استخدام أنماط التصميم كودك أكثر تنظيماً وقابلية للصيانة وأسهل للمطورين الآخرين لفهمه. MVC، التي تعني Model-View-Controller (النموذج-العرض-المتحكم)، هي واحدة من أكثر أنماط التصميم شعبية ودواماً في تطوير الويب، وتستخدمها أطر عمل وتطبيقات لا تحصى في جميع أنحاء العالم."
+          }
+        },
+        {
+          "id": 1772827092410.271,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Web%20Application%20Architecture/5-1-MVC%20architecture%20overview.webp"
+        },
+        {
+          "id": 4,
+          "type": "text",
+          "value": {
+            "en": "The fundamental problem MVC solves is the separation of concerns. In early web applications, developers often mixed all their code together: database queries, business logic, and HTML presentation were all tangled in the same files. This made applications extremely difficult to maintain, test, and scale. If you wanted to change how data was displayed, you had to wade through database code. If you needed to modify a database query, you risked breaking the user interface. MVC solves this by cleanly separating applications into three distinct components, each with its own responsibility. This separation makes applications dramatically easier to understand, modify, test, and maintain, especially as they grow in complexity.",
+            "ar": "المشكلة الأساسية التي يحلها MVC هي فصل الاهتمامات. في تطبيقات الويب المبكرة، كان المطورون غالباً يخلطون كل أكوادهم معاً: استعلامات قاعدة البيانات ومنطق العمل وعرض HTML كانت كلها متشابكة في نفس الملفات. جعل هذا التطبيقات صعبة للغاية للصيانة والاختبار والتوسع. إذا كنت ترغب في تغيير كيفية عرض البيانات، كان عليك أن تخوض في كود قاعدة البيانات. إذا كنت بحاجة إلى تعديل استعلام قاعدة البيانات، فإنك تخاطر بكسر واجهة المستخدم. يحل MVC هذا من خلال فصل التطبيقات بشكل نظيف إلى ثلاثة مكونات متميزة، كل منها له مسؤوليته الخاصة. يجعل هذا الفصل التطبيقات أسهل بكثير للفهم والتعديل والاختبار والصيانة، خاصة مع نموها في التعقيد."
+          }
+        },
+        {
+          "id": 5,
+          "type": "list",
+          "title": {
+            "en": "Key Benefits of MVC Architecture",
+            "ar": "الفوائد الرئيسية لبنية MVC"
+          },
+          "items": {
+            "en": [
+              "Clear separation of concerns making code organization logical and predictable",
+              "Easier maintenance because changes to one component rarely affect others",
+              "Multiple developers can work on different components simultaneously without conflicts",
+              "Simplified testing as each component can be tested independently",
+              "Reusability of components across different parts of the application",
+              "Flexibility to change user interface without touching business logic or data layer"
+            ],
+            "ar": [
+              "فصل واضح للاهتمامات يجعل تنظيم الكود منطقياً وقابلاً للتنبؤ",
+              "صيانة أسهل لأن التغييرات في أحد المكونات نادراً ما تؤثر على الآخرين",
+              "يمكن للعديد من المطورين العمل على مكونات مختلفة في وقت واحد دون تعارضات",
+              "اختبار مبسط حيث يمكن اختبار كل مكون بشكل مستقل",
+              "إعادة استخدام المكونات عبر أجزاء مختلفة من التطبيق",
+              "المرونة لتغيير واجهة المستخدم دون لمس منطق العمل أو طبقة البيانات"
+            ]
+          }
+        },
+        {
+          "id": 6,
+          "type": "hr"
+        },
+        {
+          "id": 7,
+          "type": "title",
+          "value": {
+            "en": "Model: The Data and Business Logic Layer",
+            "ar": "النموذج: طبقة البيانات ومنطق العمل"
+          }
+        },
+        {
+          "id": 8,
+          "type": "text",
+          "value": {
+            "en": "The Model is responsible for everything related to data and business logic. It represents the application's data structure, defines how data is stored, retrieved, and manipulated, and implements all business rules and validation logic. The Model interacts directly with the database, performing CRUD operations (Create, Read, Update, Delete) on data. It also contains methods that implement business logic, such as calculating prices with discounts, validating email formats, checking if a user has permission to perform an action, or determining if an order qualifies for free shipping. Critically, the Model has no knowledge of how data will be displayed to users. It does not contain any HTML, CSS, or presentation logic. It simply manages data and business rules.",
+            "ar": "النموذج (Model) مسؤول عن كل ما يتعلق بالبيانات ومنطق العمل. يمثل هيكل بيانات التطبيق، ويحدد كيفية تخزين البيانات واسترجاعها ومعالجتها، وينفذ جميع قواعد العمل ومنطق التحقق. يتفاعل النموذج مباشرة مع قاعدة البيانات، وينفذ عمليات CRUD (الإنشاء، القراءة، التحديث، الحذف) على البيانات. يحتوي أيضاً على طرق تنفذ منطق العمل، مثل حساب الأسعار مع الخصومات، والتحقق من صحة تنسيقات البريد الإلكتروني، والتحقق مما إذا كان لدى المستخدم إذن لتنفيذ إجراء، أو تحديد ما إذا كان الطلب مؤهلاً للشحن المجاني. والأهم من ذلك، لا يعرف النموذج كيف سيتم عرض البيانات للمستخدمين. لا يحتوي على أي HTML أو CSS أو منطق عرض. إنه ببساطة يدير البيانات وقواعد العمل."
+          }
+        },
+        {
+          "id": 9,
+          "type": "text",
+          "value": {
+            "en": "Consider a User Model in a web application. This Model would define what properties a user has: username, email, password hash, registration date, and perhaps a profile picture URL. It would include methods for creating a new user account (which would validate that the email is unique and the password meets security requirements), authenticating a user during login (comparing the provided password against the stored hash), updating user profile information, and deleting a user account. The User Model might also have methods like isAdmin() to check if the user has admin privileges, or canEditPost() to determine if the user is authorized to modify a specific post. All of this logic lives in the Model, completely independent of how the user interface looks or how the data will be presented.",
+            "ar": "ضع في اعتبارك نموذج المستخدم (User Model) في تطبيق ويب. سيحدد هذا النموذج الخصائص التي يمتلكها المستخدم: اسم المستخدم، البريد الإلكتروني، تجزئة كلمة المرور، تاريخ التسجيل، وربما عنوان URL لصورة الملف الشخصي. سيتضمن طرقاً لإنشاء حساب مستخدم جديد (والذي من شأنه التحقق من أن البريد الإلكتروني فريد وأن كلمة المرور تفي بمتطلبات الأمان)، ومصادقة مستخدم أثناء تسجيل الدخول (مقارنة كلمة المرور المقدمة مع التجزئة المخزنة)، وتحديث معلومات ملف تعريف المستخدم، وحذف حساب المستخدم. قد يحتوي نموذج المستخدم أيضاً على طرق مثل isAdmin() للتحقق مما إذا كان المستخدم لديه امتيازات المسؤول، أو canEditPost() لتحديد ما إذا كان المستخدم مصرحاً له بتعديل منشور معين. يعيش كل هذا المنطق في النموذج، مستقلاً تماماً عن كيفية ظهور واجهة المستخدم أو كيفية عرض البيانات."
+          }
+        },
+        {
+          "id": 10,
+          "type": "code",
+          "language": "python",
+          "value": "# Example Model class in Python (simplified)\nclass UserModel:\n    def __init__(self, database_connection):\n        self.db = database_connection\n    \n    def create_user(self, username, email, password):\n        \"\"\"Create a new user account with validation\"\"\"\n        # Validate email format\n        if not self.is_valid_email(email):\n            raise ValueError(\"Invalid email format\")\n        \n        # Check if email already exists\n        if self.email_exists(email):\n            raise ValueError(\"Email already registered\")\n        \n        # Hash the password for security\n        password_hash = self.hash_password(password)\n        \n        # Insert into database\n        query = \"INSERT INTO users (username, email, password_hash) VALUES (?, ?, ?)\"\n        self.db.execute(query, (username, email, password_hash))\n        return True\n    \n    def authenticate(self, email, password):\n        \"\"\"Verify user credentials during login\"\"\"\n        query = \"SELECT id, password_hash FROM users WHERE email = ?\"\n        user = self.db.fetch_one(query, (email,))\n        \n        if user and self.verify_password(password, user['password_hash']):\n            return user['id']\n        return None\n    \n    def get_user_by_id(self, user_id):\n        \"\"\"Retrieve user data from database\"\"\"\n        query = \"SELECT id, username, email, created_at FROM users WHERE id = ?\"\n        return self.db.fetch_one(query, (user_id,))\n    \n    def is_admin(self, user_id):\n        \"\"\"Check if user has admin privileges\"\"\"\n        query = \"SELECT is_admin FROM users WHERE id = ?\"\n        user = self.db.fetch_one(query, (user_id,))\n        return user['is_admin'] if user else False"
+        },
+        {
+          "id": 11,
+          "type": "text",
+          "value": {
+            "en": "Models are also responsible for maintaining data integrity. They enforce constraints such as ensuring required fields are not empty, validating that numeric values fall within acceptable ranges, checking foreign key relationships to prevent orphaned records, and implementing any domain-specific business rules. For example, an Order Model might have a method that calculates the total price by summing item prices, applying any discount codes, adding shipping costs based on location, and calculating taxes. This business logic belongs in the Model because it is fundamental to how the application works, regardless of whether users access it through a web browser, mobile app, or API.",
+            "ar": "النماذج مسؤولة أيضاً عن الحفاظ على سلامة البيانات. تفرض قيوداً مثل ضمان عدم خلو الحقول المطلوبة، والتحقق من أن القيم الرقمية تقع ضمن نطاقات مقبولة، والتحقق من علاقات المفتاح الأجنبي لمنع السجلات اليتيمة، وتنفيذ أي قواعد عمل خاصة بالمجال. على سبيل المثال، قد يحتوي نموذج الطلب (Order Model) على طريقة تحسب السعر الإجمالي عن طريق جمع أسعار العناصر، وتطبيق أي رموز خصم، وإضافة تكاليف الشحن بناءً على الموقع، وحساب الضرائب. ينتمي منطق العمل هذا إلى النموذج لأنه أساسي لكيفية عمل التطبيق، بغض النظر عما إذا كان المستخدمون يصلون إليه من خلال متصفح ويب أو تطبيق جوال أو API."
+          }
+        },
+        {
+          "id": 12,
+          "type": "hr"
+        },
+        {
+          "id": 13,
+          "type": "title",
+          "value": {
+            "en": "View: The Presentation Layer",
+            "ar": "العرض: طبقة العرض التقديمي"
+          }
+        },
+        {
+          "id": 1772827108849.2527,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Web%20Application%20Architecture/5-2-The%20Presentation%20Layer.webp"
+        },
+        {
+          "id": 15,
+          "type": "text",
+          "value": {
+            "en": "The View is responsible for presenting data to users in a visual format. It contains all the HTML, CSS, and client-side JavaScript that creates the user interface. The View receives data from the Controller and displays it in an appropriate format, whether that is an HTML page, a JSON response for an API, an XML document, or even a PDF report. The View is concerned purely with presentation: how data looks, how it is formatted, what colors and fonts are used, how elements are arranged on the screen. Crucially, the View contains no business logic and makes no decisions about what data to show. It simply takes the data it receives and renders it according to its template.",
+            "ar": "العرض (View) مسؤول عن تقديم البيانات للمستخدمين بتنسيق بصري. يحتوي على كل HTML وCSS وJavaScript من جانب العميل الذي ينشئ واجهة المستخدم. يتلقى العرض البيانات من المتحكم ويعرضها بتنسيق مناسب، سواء كانت صفحة HTML أو استجابة JSON لواجهة برمجة التطبيقات أو مستند XML أو حتى تقرير PDF. يهتم العرض بشكل خالص بالعرض التقديمي: كيف تبدو البيانات، وكيف يتم تنسيقها، وما الألوان والخطوط المستخدمة، وكيف يتم ترتيب العناصر على الشاشة. والأهم من ذلك، لا يحتوي العرض على أي منطق عمل ولا يتخذ قرارات حول البيانات التي يجب عرضها. إنه ببساطة يأخذ البيانات التي يتلقاها ويعرضها وفقاً لقالبه."
+          }
+        },
+        {
+          "id": 16,
+          "type": "text",
+          "value": {
+            "en": "Modern web frameworks use templating engines to make Views more powerful and maintainable. Template engines allow you to embed variables and simple logic into HTML. For example, you might have placeholders like {{username}} or {{email}} that get replaced with actual data when the page is rendered. You can include conditional statements to show or hide elements based on data, such as displaying an Edit button only if the current user is the post author. You can use loops to display lists of items, like iterating through an array of products and displaying each one in a card format. Popular template engines include Jinja2 for Python, Blade for Laravel PHP framework, Handlebars for JavaScript, and Thymeleaf for Java.",
+            "ar": "تستخدم أطر عمل الويب الحديثة محركات القوالب لجعل العروض أكثر قوة وقابلية للصيانة. تسمح محركات القوالب بتضمين متغيرات ومنطق بسيط في HTML. على سبيل المثال، قد يكون لديك عناصر نائبة مثل {{username}} أو {{email}} والتي يتم استبدالها ببيانات فعلية عند عرض الصفحة. يمكنك تضمين عبارات شرطية لإظهار أو إخفاء العناصر بناءً على البيانات، مثل عرض زر التحرير فقط إذا كان المستخدم الحالي هو مؤلف المنشور. يمكنك استخدام الحلقات لعرض قوائم العناصر، مثل التكرار من خلال مصفوفة من المنتجات وعرض كل منها بتنسيق بطاقة. تشمل محركات القوالب الشائعة Jinja2 لـ Python، وBlade لإطار عمل Laravel PHP، وHandlebars لـ JavaScript، وThymeleaf لـ Java."
+          }
+        },
+        {
+          "id": 17,
+          "type": "code",
+          "language": "html",
+          "value": "<!-- Example View template (using generic template syntax) -->\n<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <title>User Profile - {{ username }}</title>\n    <link rel=\"stylesheet\" href=\"/css/styles.css\">\n</head>\n<body>\n    <header>\n        <h1>User Profile</h1>\n        <nav>\n            <a href=\"/home\">Home</a>\n            <a href=\"/profile\">Profile</a>\n            {% if is_admin %}\n                <a href=\"/admin\">Admin Panel</a>\n            {% endif %}\n        </nav>\n    </header>\n    \n    <main>\n        <div class=\"profile-card\">\n            <h2>{{ username }}</h2>\n            <p>Email: {{ email }}</p>\n            <p>Member since: {{ registration_date }}</p>\n            \n            {% if can_edit %}\n                <button onclick=\"location.href='/profile/edit'\">Edit Profile</button>\n            {% endif %}\n        </div>\n        \n        <div class=\"user-posts\">\n            <h3>Recent Posts</h3>\n            {% if posts %}\n                <ul>\n                {% for post in posts %}\n                    <li>\n                        <h4>{{ post.title }}</h4>\n                        <p>{{ post.excerpt }}</p>\n                        <span>Posted on {{ post.created_at }}</span>\n                    </li>\n                {% endfor %}\n                </ul>\n            {% else %}\n                <p>No posts yet.</p>\n            {% endif %}\n        </div>\n    </main>\n    \n    <script src=\"/js/profile.js\"></script>\n</body>\n</html>"
+        },
+        {
+          "id": 18,
+          "type": "text",
+          "value": {
+            "en": "An important principle is that Views should be reusable and composable. Rather than creating one giant template for an entire page, good practice involves breaking Views into smaller, reusable components. You might have a header View component that is included on every page, a user card component that displays user information and can be used in multiple contexts, and a pagination component that can be reused wherever you need to paginate data. This component-based approach, similar to modern frontend frameworks like React and Vue, makes your Views more maintainable and reduces code duplication. When you need to update how user cards look across your entire application, you only need to modify one component template.",
+            "ar": "مبدأ مهم هو أن العروض يجب أن تكون قابلة لإعادة الاستخدام والتركيب. بدلاً من إنشاء قالب عملاق واحد لصفحة كاملة، تتضمن الممارسة الجيدة تقسيم العروض إلى مكونات أصغر وقابلة لإعادة الاستخدام. قد يكون لديك مكون عرض رأس يتم تضمينه في كل صفحة، ومكون بطاقة مستخدم يعرض معلومات المستخدم ويمكن استخدامه في سياقات متعددة، ومكون ترقيم يمكن إعادة استخدامه في أي مكان تحتاج فيه إلى ترقيم البيانات. هذا النهج القائم على المكونات، المشابه لأطر عمل الواجهة الأمامية الحديثة مثل React وVue، يجعل عروضك أكثر قابلية للصيانة ويقلل من تكرار الكود. عندما تحتاج إلى تحديث كيفية ظهور بطاقات المستخدم عبر تطبيقك بالكامل، تحتاج فقط إلى تعديل قالب مكون واحد."
+          }
+        },
+        {
+          "id": 19,
+          "type": "hr"
+        },
+        {
+          "id": 20,
+          "type": "title",
+          "value": {
+            "en": "Controller: The Traffic Director",
+            "ar": "المتحكم: موجه حركة المرور"
+          }
+        },
+        {
+          "id": 21,
+          "type": "text",
+          "value": {
+            "en": "The Controller acts as the intermediary between the Model and the View, coordinating the flow of information. When a user makes a request, such as clicking a button or submitting a form, the Controller receives that request first. It interprets what the user wants to do, calls the appropriate Model methods to retrieve or manipulate data, performs any necessary processing, and then selects the appropriate View to display the results. The Controller contains application logic that determines what happens in response to user actions, but it does not contain business logic (which belongs in the Model) or presentation logic (which belongs in the View). Think of the Controller as a manager who delegates tasks: it does not do the detailed work itself, but it knows who should do what and coordinates everyone.",
+            "ar": "يعمل المتحكم (Controller) كوسيط بين النموذج والعرض، وينسق تدفق المعلومات. عندما يقدم مستخدم طلباً، مثل النقر على زر أو إرسال نموذج، يستقبل المتحكم هذا الطلب أولاً. يفسر ما يريد المستخدم فعله، ويستدعي طرق النموذج المناسبة لاسترداد البيانات أو معالجتها، وينفذ أي معالجة ضرورية، ثم يختار العرض المناسب لعرض النتائج. يحتوي المتحكم على منطق التطبيق الذي يحدد ما يحدث استجابة لإجراءات المستخدم، لكنه لا يحتوي على منطق العمل (الذي ينتمي إلى النموذج) أو منطق العرض (الذي ينتمي إلى العرض). فكر في المتحكم كمدير يفوض المهام: إنه لا يقوم بالعمل التفصيلي بنفسه، لكنه يعرف من يجب أن يفعل ماذا وينسق الجميع."
+          }
+        },
+        {
+          "id": 22,
+          "type": "text",
+          "value": {
+            "en": "Let us trace a complete user request through the MVC pattern. Imagine a user wants to view their profile page. They click a Profile link, which sends an HTTP GET request to the URL /profile. The web server routes this request to the ProfileController. The ProfileController's show method is called. This method first checks if a user is logged in by verifying the session. If not logged in, it redirects to the login page. If logged in, it calls the UserModel's get_user_by_id method to retrieve the user's data from the database. The Model returns a data object containing username, email, registration date, and recent posts. The Controller packages this data and passes it to the profile View template. The View renders the HTML page with the user's information inserted in the appropriate places. The Controller sends this rendered HTML back to the user's browser as the HTTP response.",
+            "ar": "دعنا نتتبع طلب مستخدم كامل من خلال نمط MVC. تخيل أن مستخدماً يريد عرض صفحة ملفه الشخصي. ينقرون على رابط الملف الشخصي، الذي يرسل طلب HTTP GET إلى عنوان URL /profile. يوجه خادم الويب هذا الطلب إلى ProfileController. يتم استدعاء طريقة العرض (show) لـ ProfileController. تتحقق هذه الطريقة أولاً مما إذا كان المستخدم قد سجل الدخول من خلال التحقق من الجلسة. إذا لم يتم تسجيل الدخول، فإنه يعيد التوجيه إلى صفحة تسجيل الدخول. إذا تم تسجيل الدخول، فإنه يستدعي طريقة get_user_by_id لنموذج المستخدم لاسترداد بيانات المستخدم من قاعدة البيانات. يعيد النموذج كائن بيانات يحتوي على اسم المستخدم والبريد الإلكتروني وتاريخ التسجيل والمنشورات الأخيرة. يحزم المتحكم هذه البيانات ويمررها إلى قالب عرض الملف الشخصي. يعرض العرض صفحة HTML مع إدراج معلومات المستخدم في الأماكن المناسبة. يرسل المتحكم هذا HTML المعروض مرة أخرى إلى متصفح المستخدم كاستجابة HTTP."
+          }
+        },
+        {
+          "id": 23,
+          "type": "code",
+          "language": "python",
+          "value": "# Example Controller class in Python (simplified)\nclass ProfileController:\n    def __init__(self, user_model, session):\n        self.user_model = user_model\n        self.session = session\n    \n    def show(self, request):\n        \"\"\"Handle GET request to view user profile\"\"\"\n        # Check if user is logged in\n        user_id = self.session.get('user_id')\n        if not user_id:\n            return self.redirect('/login')\n        \n        # Get user data from Model\n        user = self.user_model.get_user_by_id(user_id)\n        if not user:\n            return self.error_404(\"User not found\")\n        \n        # Get user's recent posts\n        posts = self.user_model.get_user_posts(user_id, limit=5)\n        \n        # Check if current user can edit this profile\n        can_edit = (user_id == user['id']) or self.user_model.is_admin(user_id)\n        \n        # Prepare data for View\n        view_data = {\n            'username': user['username'],\n            'email': user['email'],\n            'registration_date': user['created_at'],\n            'posts': posts,\n            'can_edit': can_edit,\n            'is_admin': self.user_model.is_admin(user_id)\n        }\n        \n        # Render View with data and return response\n        return self.render('profile.html', view_data)\n    \n    def update(self, request):\n        \"\"\"Handle POST request to update user profile\"\"\"\n        user_id = self.session.get('user_id')\n        if not user_id:\n            return self.redirect('/login')\n        \n        # Get form data from request\n        new_username = request.form.get('username')\n        new_email = request.form.get('email')\n        \n        # Validate and update through Model\n        try:\n            self.user_model.update_user(user_id, new_username, new_email)\n            self.session.set_flash('Profile updated successfully', 'success')\n        except ValueError as e:\n            self.session.set_flash(str(e), 'error')\n        \n        # Redirect back to profile page\n        return self.redirect('/profile')"
+        },
+        {
+          "id": 24,
+          "type": "text",
+          "value": {
+            "en": "Controllers also handle input validation at the application level. While the Model performs data-level validation (ensuring email format is correct, password meets requirements), the Controller performs request-level validation (ensuring required fields are present in the form submission, user has permission to perform this action). Controllers manage the request-response cycle, setting HTTP status codes, managing cookies and sessions, handling redirects, and dealing with errors appropriately. Good Controllers are thin, meaning they contain minimal logic themselves. They primarily coordinate calls to Models and select appropriate Views. If a Controller method becomes long and complex, it is often a sign that some logic should be moved into the Model or extracted into a separate service class.",
+            "ar": "تتعامل المتحكمات أيضاً مع التحقق من صحة الإدخال على مستوى التطبيق. بينما ينفذ النموذج التحقق على مستوى البيانات (التأكد من أن تنسيق البريد الإلكتروني صحيح، وتفي كلمة المرور بالمتطلبات)، ينفذ المتحكم التحقق على مستوى الطلب (التأكد من وجود الحقول المطلوبة في إرسال النموذج، ولدى المستخدم إذن لتنفيذ هذا الإجراء). تدير المتحكمات دورة الطلب والاستجابة، وتعيين رموز حالة HTTP، وإدارة ملفات تعريف الارتباط والجلسات، والتعامل مع عمليات إعادة التوجيه، والتعامل مع الأخطاء بشكل مناسب. المتحكمات الجيدة رقيقة، مما يعني أنها تحتوي على الحد الأدنى من المنطق بأنفسها. إنها تنسق في المقام الأول المكالمات إلى النماذج وتختار العروض المناسبة. إذا أصبحت طريقة متحكم طويلة ومعقدة، فغالباً ما تكون علامة على أن بعض المنطق يجب نقله إلى النموذج أو استخراجه إلى فئة خدمة منفصلة."
+          }
+        },
+        {
+          "id": 25,
+          "type": "title",
+          "value": {
+            "en": "MVC in Modern Web Frameworks",
+            "ar": "MVC في أطر عمل الويب الحديثة"
+          }
+        },
+        {
+          "id": 26,
+          "type": "text",
+          "value": {
+            "en": "[INFOGRAPHIC_HINT] Create a frameworks overview image in 16:9 format showing popular MVC frameworks. Display a central MVC triangle diagram (Model-View-Controller) with arrows showing their relationships. Around this central diagram, show 6-8 framework logos/names arranged in a circle: Django (Python), Ruby on Rails (Ruby), Laravel (PHP), ASP.NET MVC (C#), Spring MVC (Java), Express with template engines (Node.js). Connect each framework to the central MVC pattern with thin lines, showing they all implement the same fundamental pattern. Below each framework name, add a very brief label indicating the language. Use white background, consistent icon style, with the central MVC pattern in color (Model-orange, View-blue, Controller-green) and framework logos in their brand colors. This shows how MVC is a universal pattern implemented across different technologies.",
+            "ar": "[INFOGRAPHIC_HINT] أنشئ صورة نظرة عامة على أطر العمل بتنسيق 16:9 توضح أطر عمل MVC الشائعة. اعرض مخطط مثلث MVC مركزي (النموذج-العرض-المتحكم) مع أسهم توضح علاقاتهم. حول هذا المخطط المركزي، أظهر 6-8 شعارات/أسماء أطر عمل مرتبة في دائرة: Django (Python)، Ruby on Rails (Ruby)، Laravel (PHP)، ASP.NET MVC (C#)، Spring MVC (Java)، Express مع محركات القوالب (Node.js). اربط كل إطار عمل بنمط MVC المركزي بخطوط رفيعة، موضحاً أنهم جميعاً ينفذون نفس النمط الأساسي. أسفل اسم كل إطار عمل، أضف تسمية مختصرة جداً تشير إلى اللغة. استخدم خلفية بيضاء، أسلوب أيقونة متسق، مع نمط MVC المركزي بالألوان (النموذج-برتقالي، العرض-أزرق، المتحكم-أخضر) وشعارات أطر العمل بألوان علامتها التجارية. يوضح هذا كيف أن MVC نمط عالمي منفذ عبر تقنيات مختلفة."
+          }
+        },
+        {
+          "id": 1772827099896.5564,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Web%20Application%20Architecture/5-3-MVC%20in%20Modern%20Web%20Frameworks.webp"
+        },
+        {
+          "id": 27,
+          "type": "text",
+          "value": {
+            "en": "Nearly every major web framework implements some form of MVC or a close variant. Django, the popular Python framework, uses a pattern they call MVT (Model-View-Template), which is essentially MVC with different naming: Django's View acts like a Controller, and Django's Template acts like a View. Ruby on Rails popularized MVC for web development and follows the pattern strictly. Laravel, the leading PHP framework, implements MVC clearly with separate directories for Models, Views, and Controllers. ASP.NET MVC from Microsoft, Spring MVC for Java, and countless other frameworks all use this proven architectural pattern. Even modern frontend frameworks like Angular incorporate MVC-inspired patterns, though they adapt them for client-side development.",
+            "ar": "يطبق كل إطار عمل ويب رئيسي تقريباً شكلاً من أشكال MVC أو متغيراً قريباً. Django، إطار عمل Python الشهير، يستخدم نمطاً يسمونه MVT (Model-View-Template)، والذي هو في الأساس MVC مع تسمية مختلفة: يعمل عرض Django مثل متحكم، ويعمل قالب Django مثل عرض. عمم Ruby on Rails نمط MVC لتطوير الويب ويتبع النمط بشكل صارم. Laravel، إطار عمل PHP الرائد، ينفذ MVC بوضوح مع أدلة منفصلة للنماذج والعروض والمتحكمات. ASP.NET MVC من Microsoft، وSpring MVC لـ Java، وعدد لا يحصى من أطر العمل الأخرى تستخدم جميعها هذا النمط المعماري المثبت. حتى أطر عمل الواجهة الأمامية الحديثة مثل Angular تتضمن أنماطاً مستوحاة من MVC، على الرغم من أنها تكيفها لتطوير جانب العميل."
+          }
+        },
+        {
+          "id": 28,
+          "type": "text",
+          "value": {
+            "en": "Understanding MVC gives you a mental model that transfers across frameworks and languages. Once you grasp the concept, learning a new MVC framework becomes much easier because you already understand the underlying structure. You know to look for where Models are defined, how Controllers handle routes, and where View templates are stored. This transferable knowledge is one of the most valuable benefits of learning established design patterns. As you gain experience, you will also learn when to bend or break MVC rules. In small applications, strict separation might be overkill. In complex applications, you might introduce additional layers like Services for complex business logic or Repositories for data access abstraction. But knowing the MVC foundation helps you make informed decisions about when and why to deviate from it.",
+            "ar": "يمنحك فهم MVC نموذجاً ذهنياً ينتقل عبر أطر العمل واللغات. بمجرد أن تفهم المفهوم، يصبح تعلم إطار عمل MVC جديد أسهل بكثير لأنك تفهم بالفعل البنية الأساسية. أنت تعرف أين تبحث عن تعريف النماذج، وكيف تتعامل المتحكمات مع المسارات، وأين يتم تخزين قوالب العروض. هذه المعرفة القابلة للنقل هي واحدة من أكثر الفوائد قيمة لتعلم أنماط التصميم المعمول بها. مع اكتساب الخبرة، ستتعلم أيضاً متى تثني أو تكسر قواعد MVC. في التطبيقات الصغيرة، قد يكون الفصل الصارم مبالغة. في التطبيقات المعقدة، قد تقدم طبقات إضافية مثل الخدمات (Services) لمنطق الأعمال المعقد أو المستودعات (Repositories) لتجريد الوصول إلى البيانات. لكن معرفة أساس MVC يساعدك على اتخاذ قرارات مستنيرة حول متى ولماذا تنحرف عنه."
+          }
+        },
+        {
+          "id": 29,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Learning Exercise: Take any web application you use regularly and try to identify its MVC components. When you see a profile page, that's the View. The data displayed came from the Model. The logic that decided what to show and handled your clicks is the Controller. This mental exercise helps solidify your understanding of how MVC works in practice.",
+            "ar": "تمرين تعليمي: خذ أي تطبيق ويب تستخدمه بانتظام وحاول تحديد مكونات MVC الخاصة به. عندما ترى صفحة ملف شخصي، فهذا هو العرض. جاءت البيانات المعروضة من النموذج. المنطق الذي قرر ما يجب عرضه وتعامل مع نقراتك هو المتحكم. يساعد هذا التمرين الذهني على ترسيخ فهمك لكيفية عمل MVC في الممارسة."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 30,
+          "type": "table",
+          "title": {
+            "en": "MVC Component Responsibilities Summary",
+            "ar": "ملخص مسؤوليات مكونات MVC"
+          },
+          "headers": {
+            "en": [
+              "Component",
+              "Primary Responsibility",
+              "Contains",
+              "Does NOT Contain"
+            ],
+            "ar": [
+              "المكون",
+              "المسؤولية الأساسية",
+              "يحتوي على",
+              "لا يحتوي على"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "Model",
+                "Data and business logic",
+                "Database operations, validation, business rules, data structures",
+                "HTML, presentation logic, request handling"
+              ],
+              "ar": [
+                "النموذج",
+                "البيانات ومنطق العمل",
+                "عمليات قاعدة البيانات، التحقق، قواعد العمل، هياكل البيانات",
+                "HTML، منطق العرض، معالجة الطلبات"
+              ]
+            },
+            {
+              "en": [
+                "View",
+                "Data presentation",
+                "HTML, CSS, JavaScript, templates, UI components",
+                "Database queries, business logic, routing"
+              ],
+              "ar": [
+                "العرض",
+                "عرض البيانات",
+                "HTML، CSS، JavaScript، قوالب، مكونات واجهة المستخدم",
+                "استعلامات قاعدة البيانات، منطق العمل، التوجيه"
+              ]
+            },
+            {
+              "en": [
+                "Controller",
+                "Request coordination",
+                "Request handling, input validation, calling Models, selecting Views",
+                "Complex business logic, HTML markup, database queries"
+              ],
+              "ar": [
+                "المتحكم",
+                "تنسيق الطلبات",
+                "معالجة الطلبات، التحقق من الإدخال، استدعاء النماذج، اختيار العروض",
+                "منطق العمل المعقد، ترميز HTML، استعلامات قاعدة البيانات"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "topic-6",
+      "title": {
+        "en": "Integrating All Components: Building Complete Web Applications",
+        "ar": "دمج جميع المكونات: بناء تطبيقات ويب متكاملة"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "How All Architecture Components Work Together",
+            "ar": "كيف تعمل جميع مكونات البنية معاً"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "Now that you understand each component individually, it is essential to see how they all work together in a complete web application architecture. Modern web applications are complex systems where frontend code running in browsers, backend application servers, web servers, databases, and APIs all collaborate seamlessly. Understanding this integration is crucial for building robust, scalable applications and for troubleshooting issues when they arise. Let us trace a complete user interaction from the moment they type a URL until they see the resulting page, examining every component and interaction along the way.",
+            "ar": "الآن بعد أن فهمت كل مكون على حدة، من الضروري أن ترى كيف يعملون جميعاً معاً في بنية تطبيق ويب كاملة. تطبيقات الويب الحديثة أنظمة معقدة حيث يتعاون كود الواجهة الأمامية الذي يعمل في المتصفحات، وخوادم تطبيقات الواجهة الخلفية، وخوادم الويب، وقواعد البيانات، وواجهات برمجة التطبيقات بسلاسة. يعد فهم هذا التكامل أمراً بالغ الأهمية لبناء تطبيقات قوية وقابلة للتوسع ولاستكشاف المشكلات وحلها عند ظهورها. دعنا نتتبع تفاعل مستخدم كامل من اللحظة التي يكتبون فيها عنوان URL حتى يروا الصفحة الناتجة، ونفحص كل مكون وتفاعل على طول الطريق."
+          }
+        },
+        {
+          "id": 3,
+          "type": "text",
+          "value": {
+            "en": "Imagine a user wants to purchase a product from an e-commerce website. They open their browser and navigate to www.example-shop.com. Their browser sends an HTTP request to the domain's IP address. This request first reaches a web server, likely Nginx, which is configured to handle HTTPS connections and serve static files. Nginx receives the request for the homepage, checks its cache to see if it has a recent copy, and if not, forwards the request to the backend application server. The backend application, built using an MVC framework like Django or Laravel, receives the request. The routing system determines that the homepage route should be handled by the HomeController. The HomeController's index method executes.",
+            "ar": "تخيل أن مستخدماً يريد شراء منتج من موقع تجارة إلكترونية. يفتحون متصفحهم وينتقلون إلى www.example-shop.com. يرسل متصفحهم طلب HTTP إلى عنوان IP للنطاق. يصل هذا الطلب أولاً إلى خادم ويب، على الأرجح Nginx، المُكوّن للتعامل مع اتصالات HTTPS وتقديم الملفات الثابتة. يستقبل Nginx الطلب للصفحة الرئيسية، ويتحقق من ذاكرة التخزين المؤقت الخاصة به لمعرفة ما إذا كان لديه نسخة حديثة، وإذا لم يكن الأمر كذلك، يعيد توجيه الطلب إلى خادم تطبيق الواجهة الخلفية. يتلقى تطبيق الواجهة الخلفية، المبني باستخدام إطار عمل MVC مثل Django أو Laravel، الطلب. يحدد نظام التوجيه أن مسار الصفحة الرئيسية يجب أن يتم التعامل معه بواسطة HomeController. يتم تنفيذ طريقة الفهرس (index) لـ HomeController."
+          }
+        },
+        {
+          "id": 4,
+          "type": "text",
+          "value": {
+            "en": "The HomeController calls several Model methods to gather the data needed for the homepage. It calls ProductModel.get_featured_products() to retrieve the featured products that should be displayed prominently. This Model method queries the SQL database using a SELECT statement with WHERE featured=true, retrieves the matching records, and returns them as Product objects. The Controller also calls CategoryModel.get_all_categories() to get the list of product categories for the navigation menu. Each of these database queries happens quickly, usually in milliseconds, because the database has indexes on frequently queried columns. The Controller now has all the data it needs: a list of featured products, categories, and perhaps promotional banner information.",
+            "ar": "يستدعي HomeController عدة طرق للنموذج لجمع البيانات اللازمة للصفحة الرئيسية. يستدعي ProductModel.get_featured_products() لاسترداد المنتجات المميزة التي يجب عرضها بشكل بارز. تستعلم طريقة النموذج هذه من قاعدة بيانات SQL باستخدام عبارة SELECT مع WHERE featured=true، وتسترجع السجلات المطابقة، وتعيدها ككائنات Product. يستدعي المتحكم أيضاً CategoryModel.get_all_categories() للحصول على قائمة فئات المنتجات لقائمة التنقل. يحدث كل من استعلامات قاعدة البيانات هذه بسرعة، عادة في ميلي ثانية، لأن قاعدة البيانات لديها فهارس على الأعمدة التي يتم الاستعلام عنها بشكل متكرر. لدى المتحكم الآن جميع البيانات التي يحتاجها: قائمة بالمنتجات المميزة والفئات وربما معلومات لافتة ترويجية."
+          }
+        },
+        {
+          "id": 5,
+          "type": "orderedList",
+          "title": {
+            "en": "Complete Request Flow Step by Step",
+            "ar": "تدفق الطلب الكامل خطوة بخطوة"
+          },
+          "items": [
+            {
+              "subtitle": {
+                "en": "User Action",
+                "ar": "إجراء المستخدم"
+              },
+              "text": {
+                "en": "User types URL in browser and presses Enter. Browser performs DNS lookup to find server IP address, then sends HTTP/HTTPS request to that IP.",
+                "ar": "يكتب المستخدم عنوان URL في المتصفح ويضغط على Enter. يقوم المتصفح بالبحث عن DNS للعثور على عنوان IP للخادم، ثم يرسل طلب HTTP/HTTPS إلى ذلك IP."
+              },
+              "example": {
+                "en": "GET https://www.example-shop.com/ HTTP/1.1",
+                "ar": "GET https://www.example-shop.com/ HTTP/1.1"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Web Server Processing",
+                "ar": "معالجة خادم الويب"
+              },
+              "text": {
+                "en": "Nginx receives request, handles SSL/TLS decryption, checks cache for static content, forwards dynamic requests to application server.",
+                "ar": "يستقبل Nginx الطلب، ويتعامل مع فك تشفير SSL/TLS، ويتحقق من ذاكرة التخزين المؤقت للمحتوى الثابت، ويعيد توجيه الطلبات الديناميكية إلى خادم التطبيق."
+              },
+              "example": {
+                "en": "Nginx proxies request to backend at 127.0.0.1:8000",
+                "ar": "يوكل Nginx الطلب إلى الواجهة الخلفية على 127.0.0.1:8000"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Routing and Controller",
+                "ar": "التوجيه والمتحكم"
+              },
+              "text": {
+                "en": "Application framework matches URL to route, instantiates appropriate Controller, calls the corresponding method.",
+                "ar": "يطابق إطار عمل التطبيق URL مع المسار، وينشئ المتحكم المناسب، ويستدعي الطريقة المقابلة."
+              },
+              "example": {
+                "en": "Route '/' → HomeController.index()",
+                "ar": "المسار '/' ← HomeController.index()"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Model Data Retrieval",
+                "ar": "استرداد بيانات النموذج"
+              },
+              "text": {
+                "en": "Controller calls Model methods, Models query database (SQL or NoSQL), data is retrieved and returned as objects or arrays.",
+                "ar": "يستدعي المتحكم طرق النموذج، تستعلم النماذج من قاعدة البيانات (SQL أو NoSQL)، يتم استرداد البيانات وإعادتها ككائنات أو مصفوفات."
+              },
+              "example": {
+                "en": "ProductModel.get_featured() executes SELECT * FROM products WHERE featured=1",
+                "ar": "ينفذ ProductModel.get_featured() SELECT * FROM products WHERE featured=1"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "View Rendering",
+                "ar": "عرض الصفحة"
+              },
+              "text": {
+                "en": "Controller passes data to View template, template engine processes template inserting data into placeholders, generates final HTML.",
+                "ar": "يمرر المتحكم البيانات إلى قالب العرض، يعالج محرك القالب القالب مُدرجاً البيانات في العناصر النائبة، وينشئ HTML النهائي."
+              },
+              "example": {
+                "en": "home.html template receives products array, loops through to display each",
+                "ar": "يتلقى قالب home.html مصفوفة المنتجات، ويمر عبرها لعرض كل منها"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Response Delivery",
+                "ar": "تسليم الاستجابة"
+              },
+              "text": {
+                "en": "Controller returns rendered HTML to web server, web server sends HTTP response with status code and headers back to browser.",
+                "ar": "يعيد المتحكم HTML المعروض إلى خادم الويب، يرسل خادم الويب استجابة HTTP مع رمز الحالة والرؤوس مرة أخرى إلى المتصفح."
+              },
+              "example": {
+                "en": "HTTP/1.1 200 OK with complete HTML page in response body",
+                "ar": "HTTP/1.1 200 OK مع صفحة HTML كاملة في نص الاستجابة"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Frontend Rendering",
+                "ar": "عرض الواجهة الأمامية"
+              },
+              "text": {
+                "en": "Browser receives HTML, parses it, requests additional resources (CSS, JS, images), executes JavaScript, renders final page to user.",
+                "ar": "يتلقى المتصفح HTML، ويحلله، ويطلب موارد إضافية (CSS، JS، الصور)، وينفذ JavaScript، ويعرض الصفحة النهائية للمستخدم."
+              },
+              "example": {
+                "en": "Browser makes 20+ additional requests for CSS files, images, JavaScript bundles",
+                "ar": "يقوم المتصفح بإجراء أكثر من 20 طلباً إضافياً لملفات CSS والصور وحزم JavaScript"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "User Interaction",
+                "ar": "تفاعل المستخدم"
+              },
+              "text": {
+                "en": "User clicks product, frontend JavaScript captures click, sends AJAX/fetch API request to backend without full page reload.",
+                "ar": "ينقر المستخدم على المنتج، يلتقط JavaScript في الواجهة الأمامية النقرة، ويرسل طلب AJAX/fetch API إلى الواجهة الخلفية دون إعادة تحميل كاملة للصفحة."
+              },
+              "example": {
+                "en": "fetch('/api/products/123') for product details, response is JSON data",
+                "ar": "fetch('/api/products/123') لتفاصيل المنتج، الاستجابة هي بيانات JSON"
+              }
+            }
+          ]
+        },
+        {
+          "id": 6,
+          "type": "text",
+          "value": {
+            "en": "When the user clicks on a product to view details, a new interaction cycle begins, but this time it might use an API approach. The frontend JavaScript captures the click event and sends an AJAX request to the backend API endpoint /api/products/123. This request goes through Nginx again, which forwards it to the backend. The ProductController's show method receives the request, retrieves product details from the ProductModel by calling get_product_by_id(123), and instead of rendering an HTML View, it returns the data in JSON format. The frontend JavaScript receives this JSON response and uses it to update just part of the page, displaying the product details in a modal or side panel without reloading the entire page. This is the modern approach where frontend and backend communicate via APIs, with the frontend handling much of the presentation logic.",
+            "ar": "عندما ينقر المستخدم على منتج لعرض التفاصيل، تبدأ دورة تفاعل جديدة، ولكن هذه المرة قد تستخدم نهج API. يلتقط JavaScript في الواجهة الأمامية حدث النقر ويرسل طلب AJAX إلى نقطة نهاية API في الواجهة الخلفية /api/products/123. يمر هذا الطلب عبر Nginx مرة أخرى، الذي يعيد توجيهه إلى الواجهة الخلفية. تتلقى طريقة العرض (show) لـ ProductController الطلب، وتسترجع تفاصيل المنتج من ProductModel عن طريق استدعاء get_product_by_id(123)، وبدلاً من عرض عرض HTML، تعيد البيانات بتنسيق JSON. يتلقى JavaScript في الواجهة الأمامية استجابة JSON هذه ويستخدمها لتحديث جزء فقط من الصفحة، وعرض تفاصيل المنتج في نافذة منبثقة أو لوحة جانبية دون إعادة تحميل الصفحة بأكملها. هذا هو النهج الحديث حيث تتواصل الواجهة الأمامية والخلفية عبر واجهات برمجة التطبيقات، مع تعامل الواجهة الأمامية مع معظم منطق العرض."
+          }
+        },
+        {
+          "id": 7,
+          "type": "hr"
+        },
+        {
+          "id": 8,
+          "type": "title",
+          "value": {
+            "en": "Scalability and Performance Considerations",
+            "ar": "اعتبارات قابلية التوسع والأداء"
+          }
+        },
+        {
+          "id": 9,
+          "type": "text",
+          "value": {
+            "en": "As web applications grow, understanding how to scale each component becomes critical. Scalability refers to the application's ability to handle increased load by adding more resources. There are two types of scaling: vertical scaling means upgrading a single server with more powerful hardware (more RAM, faster CPU), while horizontal scaling means adding more servers and distributing the load across them. Modern cloud architectures favor horizontal scaling because it is more flexible and cost-effective. You can add servers during peak traffic and remove them during quiet periods, paying only for what you use. Each component in our web architecture scales differently and presents unique challenges.",
+            "ar": "مع نمو تطبيقات الويب، يصبح فهم كيفية توسيع كل مكون أمراً بالغ الأهمية. تشير قابلية التوسع إلى قدرة التطبيق على التعامل مع حمل متزايد من خلال إضافة المزيد من الموارد. هناك نوعان من التوسع: التوسع الرأسي يعني ترقية خادم واحد بأجهزة أكثر قوة (المزيد من RAM، معالج أسرع)، بينما يعني التوسع الأفقي إضافة المزيد من الخوادم وتوزيع الحمل عبرها. تفضل البنى السحابية الحديثة التوسع الأفقي لأنه أكثر مرونة وفعالية من حيث التكلفة. يمكنك إضافة خوادم خلال ذروة حركة المرور وإزالتها خلال الفترات الهادئة، ودفع فقط مقابل ما تستخدمه. يتوسع كل مكون في بنية الويب لدينا بشكل مختلف ويمثل تحديات فريدة."
+          }
+        },
+        {
+          "id": 10,
+          "type": "text",
+          "value": {
+            "en": "Web servers like Nginx scale horizontally very well. You can run multiple Nginx instances behind a load balancer, which distributes incoming requests across all available servers. If one server becomes overloaded or fails, the load balancer redirects traffic to healthy servers. This is straightforward because web servers are typically stateless – they do not store user-specific information between requests, so any server can handle any request. Application servers also scale horizontally, but they require careful session management. If a user logs in through Server A, but their next request goes to Server B, Server B needs access to the user's session information. This is solved using centralized session storage in Redis or a database, or by using stateless authentication with JWT tokens.",
+            "ar": "خوادم الويب مثل Nginx تتوسع أفقياً بشكل جيد للغاية. يمكنك تشغيل مثيلات Nginx متعددة خلف موازن تحميل، والذي يوزع الطلبات الواردة عبر جميع الخوادم المتاحة. إذا أصبح أحد الخوادم محملاً بشكل زائد أو فشل، يعيد موازن التحميل توجيه حركة المرور إلى الخوادم الصحية. هذا واضح ومباشر لأن خوادم الويب عادة ما تكون عديمة الحالة - لا تخزن معلومات خاصة بالمستخدم بين الطلبات، لذا يمكن لأي خادم التعامل مع أي طلب. تتوسع خوادم التطبيقات أيضاً أفقياً، لكنها تتطلب إدارة جلسة دقيقة. إذا سجل مستخدم الدخول من خلال الخادم A، ولكن طلبهم التالي يذهب إلى الخادم B، يحتاج الخادم B إلى الوصول إلى معلومات جلسة المستخدم. يتم حل هذا باستخدام تخزين جلسة مركزية في Redis أو قاعدة بيانات، أو باستخدام مصادقة عديمة الحالة مع رموز JWT."
+          }
+        },
+        {
+          "id": 11,
+          "type": "text",
+          "value": {
+            "en": "Databases are the most challenging component to scale. SQL databases traditionally scale vertically – you upgrade to a more powerful database server. Horizontal scaling for SQL databases is complex because maintaining ACID properties across multiple servers is difficult. Techniques like read replicas (where write operations go to a master database and read operations are distributed across replica databases) and database sharding (splitting data across multiple databases) help, but add complexity. This is one reason why NoSQL databases became popular: they were designed from the ground up for horizontal scaling. A NoSQL database like MongoDB or Cassandra can easily add more nodes to the cluster, automatically distributing data across them. The tradeoff is relaxed consistency guarantees, which is acceptable for many use cases.",
+            "ar": "قواعد البيانات هي المكون الأكثر تحدياً للتوسع. قواعد بيانات SQL تقليدياً تتوسع رأسياً - تقوم بالترقية إلى خادم قاعدة بيانات أكثر قوة. التوسع الأفقي لقواعد بيانات SQL معقد لأن الحفاظ على خصائص ACID عبر خوادم متعددة أمر صعب. تساعد تقنيات مثل النسخ المتماثلة للقراءة (حيث تذهب عمليات الكتابة إلى قاعدة بيانات رئيسية وتوزع عمليات القراءة عبر قواعد بيانات النسخ المتماثلة) والتقسيم الأفقي لقاعدة البيانات (تقسيم البيانات عبر قواعد بيانات متعددة)، لكنها تضيف تعقيداً. هذا أحد الأسباب التي جعلت قواعد بيانات NoSQL تصبح شائعة: تم تصميمها من الأساس للتوسع الأفقي. يمكن لقاعدة بيانات NoSQL مثل MongoDB أو Cassandra إضافة المزيد من العقد بسهولة إلى المجموعة، وتوزيع البيانات تلقائياً عبرها. المقايضة هي ضمانات اتساق مرنة، وهو أمر مقبول للعديد من حالات الاستخدام."
+          }
+        },
+        {
+          "id": 12,
+          "type": "list",
+          "title": {
+            "en": "Performance Optimization Strategies",
+            "ar": "استراتيجيات تحسين الأداء"
+          },
+          "items": {
+            "en": [
+              "Caching: Store frequently accessed data in memory (Redis, Memcached) to avoid repeated database queries",
+              "CDN (Content Delivery Network): Serve static assets from servers geographically close to users for faster delivery",
+              "Database indexing: Create indexes on frequently queried columns to speed up SELECT operations",
+              "Query optimization: Write efficient SQL queries, use EXPLAIN to analyze query performance, avoid N+1 query problems",
+              "Lazy loading: Load data only when needed rather than fetching everything upfront",
+              "Asynchronous processing: Move slow operations like email sending or image processing to background job queues",
+              "Compression: Enable gzip compression on web servers to reduce data transfer size",
+              "Minification: Reduce JavaScript and CSS file sizes by removing whitespace and comments"
+            ],
+            "ar": [
+              "التخزين المؤقت: تخزين البيانات التي يتم الوصول إليها بشكل متكرر في الذاكرة (Redis، Memcached) لتجنب استعلامات قاعدة البيانات المتكررة",
+              "CDN (شبكة توصيل المحتوى): تقديم الأصول الثابتة من خوادم قريبة جغرافياً من المستخدمين لتسليم أسرع",
+              "فهرسة قاعدة البيانات: إنشاء فهارس على الأعمدة التي يتم الاستعلام عنها بشكل متكرر لتسريع عمليات SELECT",
+              "تحسين الاستعلام: كتابة استعلامات SQL فعالة، استخدام EXPLAIN لتحليل أداء الاستعلام، تجنب مشاكل استعلام N+1",
+              "التحميل البطيء: تحميل البيانات فقط عند الحاجة بدلاً من جلب كل شيء مقدماً",
+              "المعالجة غير المتزامنة: نقل العمليات البطيئة مثل إرسال البريد الإلكتروني أو معالجة الصور إلى قوائم انتظار الوظائف الخلفية",
+              "الضغط: تمكين ضغط gzip على خوادم الويب لتقليل حجم نقل البيانات",
+              "التصغير: تقليل أحجام ملفات JavaScript وCSS عن طريق إزالة المسافات البيضاء والتعليقات"
+            ]
+          }
+        },
+        {
+          "id": 13,
+          "type": "hr"
+        },
+        {
+          "id": 14,
+          "type": "title",
+          "value": {
+            "en": "Security Across the Architecture",
+            "ar": "الأمان عبر البنية"
+          }
+        },
+        {
+          "id": 15,
+          "type": "text",
+          "value": {
+            "en": "Security must be implemented at every layer of the web application architecture. A vulnerability in any single component can compromise the entire system. Defense in depth is the principle of implementing multiple layers of security controls, so if one layer fails, others still protect the system. At the web server level, Nginx or Apache should be configured to use strong SSL/TLS settings, disable unnecessary HTTP methods, hide server version information in headers, implement rate limiting to prevent abuse, and use security headers like Content-Security-Policy and X-Frame-Options to protect against common attacks. Regular security updates are essential because vulnerabilities are constantly discovered and patched.",
+            "ar": "يجب تنفيذ الأمان في كل طبقة من بنية تطبيق الويب. يمكن أن تؤدي ثغرة أمنية في أي مكون واحد إلى اختراق النظام بأكمله. الدفاع في العمق هو مبدأ تنفيذ طبقات متعددة من ضوابط الأمان، بحيث إذا فشلت طبقة واحدة، لا تزال الطبقات الأخرى تحمي النظام. على مستوى خادم الويب، يجب تكوين Nginx أو Apache لاستخدام إعدادات SSL/TLS قوية، وتعطيل طرق HTTP غير الضرورية، وإخفاء معلومات إصدار الخادم في الرؤوس، وتنفيذ تحديد المعدل لمنع سوء الاستخدام، واستخدام رؤوس الأمان مثل Content-Security-Policy وX-Frame-Options للحماية من الهجمات الشائعة. التحديثات الأمنية المنتظمة ضرورية لأن الثغرات الأمنية يتم اكتشافها وإصلاحها باستمرار."
+          }
+        },
+        {
+          "id": 16,
+          "type": "text",
+          "value": {
+            "en": "At the application level, security involves input validation and sanitization to prevent injection attacks, proper authentication to verify user identity, authorization checks to ensure users only access what they are permitted to, secure password storage using strong hashing algorithms like bcrypt, protection against Cross-Site Scripting (XSS) by escaping output, protection against Cross-Site Request Forgery (CSRF) using tokens, and proper session management with secure, httpOnly cookies. The MVC architecture helps security by clearly separating concerns: security-critical logic stays in the backend Model and Controller layers where users cannot access or modify it, while the frontend View layer, which users can inspect and manipulate, contains no sensitive logic or secrets.",
+            "ar": "على مستوى التطبيق، يشمل الأمان التحقق من صحة المدخلات وتنظيفها لمنع هجمات الحقن، والمصادقة المناسبة للتحقق من هوية المستخدم، وفحوصات التفويض لضمان أن المستخدمين يصلون فقط إلى ما هو مسموح لهم، وتخزين كلمة مرور آمن باستخدام خوارزميات تجزئة قوية مثل bcrypt، والحماية من البرمجة النصية عبر المواقع (XSS) من خلال تجاوز الإخراج، والحماية من تزوير الطلب عبر المواقع (CSRF) باستخدام الرموز، وإدارة الجلسة المناسبة مع ملفات تعريف ارتباط آمنة وhttpOnly. تساعد بنية MVC الأمان من خلال فصل الاهتمامات بوضوح: يبقى المنطق الحرج للأمان في طبقات النموذج والمتحكم في الواجهة الخلفية حيث لا يمكن للمستخدمين الوصول إليه أو تعديله، بينما لا تحتوي طبقة عرض الواجهة الأمامية، التي يمكن للمستخدمين فحصها ومعالجتها، على منطق حساس أو أسرار."
+          }
+        },
+        {
+          "id": 17,
+          "type": "text",
+          "value": {
+            "en": "Database security involves using least privilege principles where application database users only have permissions for operations they need, encrypting sensitive data at rest, protecting against SQL injection by using parameterized queries or ORM query builders, regular backups with secure storage, and monitoring for suspicious activity. API security requires authentication using tokens, rate limiting to prevent abuse, input validation on all endpoints, proper CORS configuration to control which domains can access the API, and versioning to allow security fixes without breaking existing clients. Security is never complete; it requires ongoing vigilance, regular audits, staying informed about new vulnerabilities, and promptly applying security patches.",
+            "ar": "يتضمن أمان قاعدة البيانات استخدام مبادئ الحد الأدنى من الامتياز حيث يكون لدى مستخدمي قاعدة بيانات التطبيق أذونات فقط للعمليات التي يحتاجونها، وتشفير البيانات الحساسة عند الراحة، والحماية من حقن SQL باستخدام استعلامات ذات معاملات أو منشئي استعلام ORM، والنسخ الاحتياطية المنتظمة مع تخزين آمن، ومراقبة النشاط المشبوه. يتطلب أمان API المصادقة باستخدام الرموز، وتحديد المعدل لمنع سوء الاستخدام، والتحقق من صحة الإدخال في جميع نقاط النهاية، وتكوين CORS المناسب للتحكم في النطاقات التي يمكنها الوصول إلى API، والإصدار للسماح بإصلاحات الأمان دون كسر العملاء الحاليين. لا يكتمل الأمان أبداً؛ يتطلب يقظة مستمرة وعمليات تدقيق منتظمة والبقاء على اطلاع بالثغرات الجديدة وتطبيق تصحيحات الأمان على الفور."
+          }
+        },
+        {
+          "id": 18,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "Critical Security Principle: Always assume that users are hostile actors trying to break your application. Never trust data from the frontend. Validate everything on the backend. Implement security controls at multiple layers so that compromising one layer does not compromise the entire system. Security is not a feature you add at the end; it must be built into the architecture from the beginning.",
+            "ar": "مبدأ أمني حرج: افترض دائماً أن المستخدمين هم جهات فاعلة معادية تحاول كسر تطبيقك. لا تثق أبداً في البيانات من الواجهة الأمامية. تحقق من صحة كل شيء على الواجهة الخلفية. نفذ ضوابط الأمان في طبقات متعددة بحيث لا يؤدي اختراق طبقة واحدة إلى اختراق النظام بأكمله. الأمان ليس ميزة تضيفها في النهاية؛ يجب أن يُبنى في البنية من البداية."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 19,
+          "type": "title",
+          "value": {
+            "en": "Modern Architectures and Future Trends",
+            "ar": "البنى الحديثة والاتجاهات المستقبلية"
+          }
+        },
+        {
+          "id": 20,
+          "type": "text",
+          "value": {
+            "en": "Web architecture continues to evolve rapidly. Microservices architecture breaks applications into many small, independent services that communicate via APIs. Instead of one monolithic backend, you might have separate services for authentication, product catalog, order processing, and payment handling. Each service can be developed, deployed, and scaled independently. Serverless architectures abstract away server management completely, allowing developers to write functions that execute in response to events without worrying about servers, scaling, or infrastructure. Platforms like AWS Lambda and Azure Functions handle all the underlying complexity. These approaches offer tremendous flexibility and can reduce operational costs, but they also introduce new complexities in service coordination, deployment, and debugging.",
+            "ar": "تستمر بنية الويب في التطور بسرعة. بنية الخدمات الصغيرة (Microservices) تقسم التطبيقات إلى العديد من الخدمات الصغيرة المستقلة التي تتواصل عبر واجهات برمجة التطبيقات. بدلاً من واجهة خلفية وحدوية واحدة، قد يكون لديك خدمات منفصلة للمصادقة، وكتالوج المنتجات، ومعالجة الطلبات، ومعالجة الدفع. يمكن تطوير كل خدمة ونشرها وتوسيعها بشكل مستقل. تلخص البنى بدون خادم (Serverless) إدارة الخادم تماماً، مما يسمح للمطورين بكتابة وظائف تُنفذ استجابةً للأحداث دون القلق بشأن الخوادم أو التوسع أو البنية التحتية. تتعامل منصات مثل AWS Lambda وAzure Functions مع كل التعقيد الأساسي. توفر هذه الأساليب مرونة هائلة ويمكن أن تقلل من التكاليف التشغيلية، لكنها تقدم أيضاً تعقيدات جديدة في تنسيق الخدمات والنشر وتصحيح الأخطاء."
+          }
+        },
+        {
+          "id": 21,
+          "type": "text",
+          "value": {
+            "en": "Container technology, particularly Docker and Kubernetes, has transformed how applications are deployed. Containers package applications with all their dependencies into portable units that run consistently across different environments. Kubernetes orchestrates containers, handling deployment, scaling, load balancing, and self-healing automatically. This infrastructure-as-code approach makes deployments reproducible and eliminates the works on my machine problem. Progressive Web Apps (PWAs) blur the line between web and native applications, offering offline functionality, push notifications, and installation to home screens while still being web-based. Single Page Applications (SPAs) using frameworks like React, Vue, or Angular move more logic to the frontend, communicating with backend APIs for data, creating app-like experiences that feel instant and responsive.",
+            "ar": "غيرت تقنية الحاويات، وخاصة Docker وKubernetes، كيفية نشر التطبيقات. تحزم الحاويات التطبيقات مع جميع تبعياتها في وحدات محمولة تعمل بشكل متسق عبر بيئات مختلفة. ينسق Kubernetes الحاويات، ويتعامل مع النشر والتوسع وموازنة التحميل والإصلاح الذاتي تلقائياً. يجعل هذا النهج البنية التحتية كرمز عمليات النشر قابلة للتكرار ويزيل مشكلة 'يعمل على جهازي'. تطمس تطبيقات الويب التقدمية (PWAs) الخط بين تطبيقات الويب والتطبيقات الأصلية، وتوفر وظائف غير متصلة بالإنترنت وإشعارات الدفع والتثبيت على الشاشات الرئيسية مع الاستمرار في الاعتماد على الويب. تطبيقات الصفحة الواحدة (SPAs) باستخدام أطر عمل مثل React وVue أو Angular تنقل المزيد من المنطق إلى الواجهة الأمامية، والتواصل مع واجهات برمجة تطبيقات الواجهة الخلفية للبيانات، وإنشاء تجارب تشبه التطبيقات تشعر بالفورية والاستجابة."
+          }
+        },
+        {
+          "id": 22,
+          "type": "text",
+          "value": {
+            "en": "Despite all these advancements, the fundamental principles you have learned remain relevant. Whether you are building a traditional MVC application, a microservices architecture, or a serverless system, you still need to separate concerns, manage data properly, secure your application at every layer, optimize for performance, and understand how different components communicate. The technologies and tools change, but the underlying concepts of web architecture are timeless. By understanding these foundations deeply, you position yourself to adapt to whatever new technologies emerge in the future. You have now gained comprehensive knowledge of web application architecture, from frontend and backend separation, through databases and APIs, to web servers and the MVC pattern, culminating in understanding how all these pieces integrate into working systems.",
+            "ar": "على الرغم من كل هذه التطورات، تظل المبادئ الأساسية التي تعلمتها ذات صلة. سواء كنت تبني تطبيق MVC تقليدياً، أو بنية خدمات صغيرة، أو نظاماً بدون خادم، لا يزال يتعين عليك فصل الاهتمامات، وإدارة البيانات بشكل صحيح، وتأمين تطبيقك في كل طبقة، وتحسين الأداء، وفهم كيفية تواصل المكونات المختلفة. تتغير التقنيات والأدوات، لكن المفاهيم الأساسية لبنية الويب خالدة. من خلال فهم هذه الأسس بعمق، فإنك تضع نفسك في موضع التكيف مع أي تقنيات جديدة تظهر في المستقبل. لقد اكتسبت الآن معرفة شاملة ببنية تطبيقات الويب، من فصل الواجهة الأمامية والخلفية، من خلال قواعد البيانات وواجهات برمجة التطبيقات، إلى خوادم الويب ونمط MVC، وتتويجاً بفهم كيفية تكامل كل هذه القطع في أنظمة عمل."
+          }
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "createdAt": "2026-03-06T19:59:55.253Z",
+    "totalTopics": 6,
+    "totalElements": 155
+  }
+}

@@ -1,0 +1,2399 @@
+{
+  "landingData": {
+    "title": {
+      "en": "Web Security Basics",
+      "ar": "أساسيات أمن الويب"
+    },
+    "description": {
+      "en": "Master essential web security concepts including OWASP Top 10 vulnerabilities, SQL Injection, XSS attacks, security headers, and Burp Suite tools. Learn how to identify, exploit, and defend against common web application threats through practical examples and hands-on techniques.",
+      "ar": "أتقن مفاهيم أمن الويب الأساسية بما في ذلك ثغرات OWASP العشرة الأكثر شيوعاً، وحقن SQL، وهجمات XSS، ورؤوس الأمان، وأدوات Burp Suite. تعلم كيفية تحديد واستغلال والدفاع ضد التهديدات الشائعة لتطبيقات الويب من خلال أمثلة عملية وتقنيات تطبيقية."
+    },
+    "difficulty": {
+      "en": "Beginner to Intermediate",
+      "ar": "من مبتدئ إلى متوسط"
+    },
+    "duration": {
+      "en": "90 Minutes",
+      "ar": "90 دقيقة"
+    },
+    "instructor": "CyberLab",
+    "rating": 4.9,
+    "students": 250
+  },
+  "topics": [
+    {
+      "id": "topic-1",
+      "title": {
+        "en": "Understanding OWASP Top 10 Vulnerabilities",
+        "ar": "فهم ثغرات OWASP العشرة الأكثر شيوعاً"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "What is OWASP and Why It Matters",
+            "ar": "ما هو OWASP ولماذا هو مهم"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "OWASP stands for Open Web Application Security Project. It is a global nonprofit organization focused on improving software security. OWASP publishes a list called the Top 10, which identifies the most critical security risks facing web applications. This list is updated every few years based on real-world data from security experts and organizations worldwide. Understanding the OWASP Top 10 helps developers and security professionals prioritize their security efforts on the most dangerous and common vulnerabilities.",
+            "ar": "OWASP تعني مشروع أمن تطبيقات الويب المفتوح. وهي منظمة عالمية غير ربحية تركز على تحسين أمان البرمجيات. تنشر OWASP قائمة تسمى القائمة العشرة الأولى، والتي تحدد أخطر المخاطر الأمنية التي تواجه تطبيقات الويب. يتم تحديث هذه القائمة كل بضع سنوات بناءً على بيانات من العالم الحقيقي من خبراء الأمن والمنظمات في جميع أنحاء العالم. فهم قائمة OWASP العشرة يساعد المطورين ومحترفي الأمن على تحديد أولويات جهودهم الأمنية على الثغرات الأكثر خطورة وشيوعاً."
+          }
+        },
+        {
+          "id": 1773500663974.3,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Web%20Security%20Basics/1-1-What%20is%20OWASP.webp"
+        },
+        {
+          "id": 4,
+          "type": "text",
+          "value": {
+            "en": "The OWASP Top 10 list serves as a universal security awareness document. Companies use it as a baseline to assess their web application security. Penetration testers use it as a checklist when testing applications. Developers use it to write more secure code from the start. The list changes over time because attack techniques evolve and new technologies introduce new risks. For example, broken authentication was ranked differently in previous years compared to recent updates.",
+            "ar": "تعمل قائمة OWASP العشرة كوثيقة توعية أمنية عالمية. تستخدمها الشركات كخط أساس لتقييم أمان تطبيقات الويب الخاصة بها. يستخدمها مختبرو الاختراق كقائمة مراجعة عند اختبار التطبيقات. يستخدمها المطورون لكتابة كود أكثر أماناً منذ البداية. تتغير القائمة بمرور الوقت لأن تقنيات الهجوم تتطور والتقنيات الجديدة تقدم مخاطر جديدة. على سبيل المثال، تم تصنيف المصادقة المكسورة بشكل مختلف في السنوات السابقة مقارنة بالتحديثات الأخيرة."
+          }
+        },
+        {
+          "id": 5,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "The OWASP Top 10 is not a complete security checklist. It focuses on the most critical risks, but secure applications must address many other security concerns beyond these ten categories.",
+            "ar": "قائمة OWASP العشرة ليست قائمة أمان كاملة. تركز على المخاطر الأكثر أهمية، لكن التطبيقات الآمنة يجب أن تعالج العديد من المخاوف الأمنية الأخرى خارج هذه الفئات العشر."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 6,
+          "type": "title",
+          "value": {
+            "en": "The Current OWASP Top 10 Categories",
+            "ar": "فئات OWASP العشرة الحالية"
+          }
+        },
+        {
+          "id": 7,
+          "type": "text",
+          "value": {
+            "en": "The most recent OWASP Top 10 list includes these critical vulnerability categories. First, Broken Access Control occurs when users can access resources or perform actions they should not be allowed to. Second, Cryptographic Failures happen when sensitive data is not properly encrypted or protected. Third, Injection flaws allow attackers to insert malicious code into applications. These three alone account for a significant percentage of all web security breaches discovered each year.",
+            "ar": "تتضمن قائمة OWASP العشرة الأحدث هذه الفئات الحرجة من الثغرات. أولاً، التحكم المكسور في الوصول يحدث عندما يمكن للمستخدمين الوصول إلى موارد أو تنفيذ إجراءات لا ينبغي السماح لهم بها. ثانياً، إخفاقات التشفير تحدث عندما لا يتم تشفير أو حماية البيانات الحساسة بشكل صحيح. ثالثاً، عيوب الحقن تسمح للمهاجمين بإدراج كود ضار في التطبيقات. هذه الثلاثة وحدها تمثل نسبة كبيرة من جميع اختراقات أمن الويب المكتشفة كل عام."
+          }
+        },
+        {
+          "id": 8,
+          "type": "text",
+          "value": {
+            "en": "Fourth, Insecure Design represents flaws in the application architecture itself, not just coding mistakes. Fifth, Security Misconfiguration happens when security settings are incorrectly applied or left at insecure defaults. Sixth, Vulnerable and Outdated Components refer to using libraries or frameworks with known security holes. These issues often arise because developers do not keep their software dependencies updated or properly configured.",
+            "ar": "رابعاً، التصميم غير الآمن يمثل عيوباً في بنية التطبيق نفسها، وليس فقط أخطاء برمجية. خامساً، التكوين الخاطئ للأمان يحدث عندما يتم تطبيق إعدادات الأمان بشكل غير صحيح أو تُترك على الإعدادات الافتراضية غير الآمنة. سادساً، المكونات الضعيفة والقديمة تشير إلى استخدام مكتبات أو أطر عمل بها ثغرات أمنية معروفة. غالباً ما تنشأ هذه المشكلات لأن المطورين لا يحافظون على تحديث تبعيات البرامج الخاصة بهم أو تكوينها بشكل صحيح."
+          }
+        },
+        {
+          "id": 1773500681992.736,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Web%20Security%20Basics/1-2-first%20six%20OWASP%20categories.webp"
+        },
+        {
+          "id": 10,
+          "type": "text",
+          "value": {
+            "en": "Seventh, Identification and Authentication Failures occur when systems fail to properly verify who users are or maintain their session security. Eighth, Software and Data Integrity Failures relate to code and data that can be tampered with during updates or processing. Ninth, Security Logging and Monitoring Failures prevent organizations from detecting attacks in progress. Tenth, Server-Side Request Forgery allows attackers to make the server send requests to unintended destinations. Each of these represents a different attack vector that criminals actively exploit.",
+            "ar": "سابعاً، إخفاقات التعريف والمصادقة تحدث عندما تفشل الأنظمة في التحقق بشكل صحيح من هوية المستخدمين أو الحفاظ على أمان جلساتهم. ثامناً، إخفاقات سلامة البرامج والبيانات تتعلق بالكود والبيانات التي يمكن العبث بها أثناء التحديثات أو المعالجة. تاسعاً، إخفاقات تسجيل الأحداث والمراقبة الأمنية تمنع المنظمات من اكتشاف الهجمات الجارية. عاشراً، تزوير الطلبات من جانب الخادم يسمح للمهاجمين بجعل الخادم يرسل طلبات إلى وجهات غير مقصودة. كل من هذه يمثل ناقل هجوم مختلف يستغله المجرمون بنشاط."
+          }
+        },
+        {
+          "id": 11,
+          "type": "table",
+          "title": {
+            "en": "OWASP Top 10 Quick Reference",
+            "ar": "مرجع سريع لـ OWASP العشرة"
+          },
+          "headers": {
+            "en": [
+              "Rank",
+              "Vulnerability",
+              "Risk Level",
+              "Common Impact"
+            ],
+            "ar": [
+              "الترتيب",
+              "الثغرة",
+              "مستوى الخطر",
+              "التأثير الشائع"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "1",
+                "Broken Access Control",
+                "Critical",
+                "Unauthorized data access"
+              ],
+              "ar": [
+                "1",
+                "التحكم المكسور في الوصول",
+                "حرج",
+                "الوصول غير المصرح به للبيانات"
+              ]
+            },
+            {
+              "en": [
+                "2",
+                "Cryptographic Failures",
+                "High",
+                "Data breach, privacy loss"
+              ],
+              "ar": [
+                "2",
+                "إخفاقات التشفير",
+                "عالي",
+                "اختراق البيانات، فقدان الخصوصية"
+              ]
+            },
+            {
+              "en": [
+                "3",
+                "Injection",
+                "Critical",
+                "Database compromise"
+              ],
+              "ar": [
+                "3",
+                "الحقن",
+                "حرج",
+                "اختراق قاعدة البيانات"
+              ]
+            },
+            {
+              "en": [
+                "4",
+                "Insecure Design",
+                "High",
+                "System-wide vulnerabilities"
+              ],
+              "ar": [
+                "4",
+                "التصميم غير الآمن",
+                "عالي",
+                "ثغرات على مستوى النظام"
+              ]
+            },
+            {
+              "en": [
+                "5",
+                "Security Misconfiguration",
+                "High",
+                "Unnecessary exposure"
+              ],
+              "ar": [
+                "5",
+                "التكوين الخاطئ للأمان",
+                "عالي",
+                "تعرض غير ضروري"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 12,
+          "type": "text",
+          "value": {
+            "en": "Understanding these categories helps security professionals think systematically about web application risks. Rather than searching randomly for vulnerabilities, testers can methodically check each category. Developers can design applications with these risks in mind from the beginning. Organizations can create security policies that specifically address each of these common weaknesses. The categorization also makes it easier to communicate security requirements between technical and non-technical stakeholders.",
+            "ar": "فهم هذه الفئات يساعد محترفي الأمن على التفكير بشكل منهجي حول مخاطر تطبيقات الويب. بدلاً من البحث بشكل عشوائي عن الثغرات، يمكن للمختبرين فحص كل فئة بشكل منهجي. يمكن للمطورين تصميم التطبيقات مع وضع هذه المخاطر في الاعتبار من البداية. يمكن للمنظمات إنشاء سياسات أمنية تعالج على وجه التحديد كل من نقاط الضعف الشائعة هذه. التصنيف أيضاً يسهل التواصل حول متطلبات الأمان بين أصحاب المصلحة التقنيين وغير التقنيين."
+          }
+        },
+        {
+          "id": 13,
+          "type": "hr"
+        },
+        {
+          "id": 14,
+          "type": "title",
+          "value": {
+            "en": "Why OWASP Top 10 Changes Over Time",
+            "ar": "لماذا تتغير قائمة OWASP العشرة بمرور الوقت"
+          }
+        },
+        {
+          "id": 15,
+          "type": "text",
+          "value": {
+            "en": "The threat landscape in web security constantly evolves. Attackers develop new techniques, and defenders create new protections. Technologies change, introducing both new capabilities and new risks. The OWASP community collects data from security testing companies, bug bounty programs, and security researchers worldwide. They analyze thousands of real vulnerabilities found in production applications. Based on this analysis, they update the Top 10 list every three to four years to reflect current realities.",
+            "ar": "يتطور مشهد التهديدات في أمن الويب باستمرار. يطور المهاجمون تقنيات جديدة، ويقوم المدافعون بإنشاء حمايات جديدة. تتغير التقنيات، مما يقدم قدرات جديدة ومخاطر جديدة. يجمع مجتمع OWASP بيانات من شركات اختبار الأمان وبرامج مكافآت الأخطاء والباحثين الأمنيين في جميع أنحاء العالم. يحللون آلاف الثغرات الحقيقية الموجودة في تطبيقات الإنتاج. بناءً على هذا التحليل، يقومون بتحديث قائمة العشرة الأولى كل ثلاث إلى أربع سنوات لتعكس الواقع الحالي."
+          }
+        },
+        {
+          "id": 16,
+          "type": "text",
+          "value": {
+            "en": "For example, older versions of the Top 10 included Cross-Site Request Forgery as a separate category. In recent updates, this was merged into other categories because automated defenses became more common. Meanwhile, new categories like Insecure Design were added to address architectural problems that coding alone cannot fix. Server-Side Request Forgery became more prominent as microservices and cloud architectures grew popular. The list adapts to what security professionals actually encounter in the field.",
+            "ar": "على سبيل المثال، تضمنت الإصدارات الأقدم من القائمة العشرة تزوير الطلبات عبر المواقع كفئة منفصلة. في التحديثات الأخيرة، تم دمج هذا في فئات أخرى لأن الدفاعات الآلية أصبحت أكثر شيوعاً. في الوقت نفسه، تمت إضافة فئات جديدة مثل التصميم غير الآمن لمعالجة المشاكل المعمارية التي لا يمكن للبرمجة وحدها إصلاحها. أصبح تزوير الطلبات من جانب الخادم أكثر بروزاً مع نمو شعبية الخدمات الصغيرة وبنيات السحابة. تتكيف القائمة مع ما يواجهه محترفو الأمن فعلياً في الميدان."
+          }
+        },
+        {
+          "id": 17,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "Just because a vulnerability drops off the Top 10 list does not mean it is no longer dangerous. It may simply be less common or better defended against. Always consider your specific application context, not just the current Top 10.",
+            "ar": "لمجرد أن ثغرة تسقط من قائمة العشرة الأولى لا يعني أنها لم تعد خطيرة. قد تكون ببساطة أقل شيوعاً أو محمية بشكل أفضل. ضع دائماً في اعتبارك سياق التطبيق الخاص بك، وليس فقط القائمة العشرة الحالية."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 1773500676518.009,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Web%20Security%20Basics/1-3-Why%20OWASP%20Top%2010%20Changes%20Over%20Time.webp"
+        },
+        {
+          "id": 19,
+          "type": "title",
+          "value": {
+            "en": "How Organizations Use OWASP Top 10",
+            "ar": "كيف تستخدم المنظمات قائمة OWASP العشرة"
+          }
+        },
+        {
+          "id": 20,
+          "type": "text",
+          "value": {
+            "en": "Security teams integrate the OWASP Top 10 into their testing methodologies. When conducting penetration tests, they systematically check for each vulnerability category. Security training programs use the Top 10 as a curriculum framework to ensure developers learn about the most important risks first. Code review checklists often map specific coding patterns to OWASP categories. Automated security scanning tools frequently organize their findings according to OWASP classifications, making reports easier to understand and prioritize.",
+            "ar": "تدمج فرق الأمان قائمة OWASP العشرة في منهجيات الاختبار الخاصة بها. عند إجراء اختبارات الاختراق، يتحققون بشكل منهجي من كل فئة ثغرات. تستخدم برامج التدريب الأمني القائمة العشرة كإطار منهج دراسي لضمان تعلم المطورين عن أهم المخاطر أولاً. غالباً ما تربط قوائم مراجعة مراجعة الكود أنماط برمجية محددة بفئات OWASP. غالباً ما تنظم أدوات المسح الأمني الآلية نتائجها وفقاً لتصنيفات OWASP، مما يجعل التقارير أسهل في الفهم وتحديد الأولويات."
+          }
+        },
+        {
+          "id": 21,
+          "type": "text",
+          "value": {
+            "en": "Compliance frameworks and security standards often reference the OWASP Top 10. Payment card industry standards require addressing injection flaws. Healthcare regulations demand proper cryptographic controls. Government security guidelines incorporate access control requirements. By aligning their security programs with OWASP categories, organizations can satisfy multiple compliance requirements simultaneously. This makes the Top 10 not just a technical guide but also a business and legal tool.",
+            "ar": "غالباً ما تشير أطر الامتثال ومعايير الأمان إلى قائمة OWASP العشرة. تتطلب معايير صناعة بطاقات الدفع معالجة عيوب الحقن. تطالب لوائح الرعاية الصحية بضوابط تشفير مناسبة. تتضمن المبادئ التوجيهية الأمنية الحكومية متطلبات التحكم في الوصول. من خلال مواءمة برامج الأمان الخاصة بها مع فئات OWASP، يمكن للمنظمات تلبية متطلبات امتثال متعددة في وقت واحد. هذا يجعل القائمة العشرة ليس فقط دليلاً تقنياً ولكن أيضاً أداة تجارية وقانونية."
+          }
+        },
+        {
+          "id": 22,
+          "type": "list",
+          "title": {
+            "en": "Practical Applications of OWASP Top 10",
+            "ar": "التطبيقات العملية لقائمة OWASP العشرة"
+          },
+          "items": {
+            "en": [
+              "Security testing teams use it as a testing checklist",
+              "Developers reference it during secure coding training",
+              "Managers use it to prioritize security budget allocation",
+              "Automated tools organize vulnerability reports by these categories",
+              "Security auditors verify that each category has been addressed",
+              "Bug bounty programs often pay higher rewards for Top 10 vulnerabilities"
+            ],
+            "ar": [
+              "تستخدمها فرق اختبار الأمان كقائمة مراجعة للاختبار",
+              "يشير إليها المطورون أثناء التدريب على البرمجة الآمنة",
+              "يستخدمها المديرون لتحديد أولويات تخصيص ميزانية الأمان",
+              "تنظم الأدوات الآلية تقارير الثغرات حسب هذه الفئات",
+              "يتحقق مدققو الأمان من معالجة كل فئة",
+              "غالباً ما تدفع برامج مكافآت الأخطاء مكافآت أعلى لثغرات القائمة العشرة"
+            ]
+          }
+        },
+        {
+          "id": 23,
+          "type": "text",
+          "value": {
+            "en": "Software development lifecycles increasingly incorporate OWASP Top 10 checks at multiple stages. During design phase, architects consider how their choices affect each vulnerability category. During development, code analysis tools flag patterns associated with Top 10 risks. During testing, security teams specifically target these categories. After deployment, monitoring systems watch for attack patterns related to common exploits. This multi-stage integration creates defense in depth against the most prevalent threats.",
+            "ar": "تتضمن دورات حياة تطوير البرمجيات بشكل متزايد فحوصات OWASP العشرة في مراحل متعددة. خلال مرحلة التصميم، يفكر المهندسون المعماريون في كيفية تأثير اختياراتهم على كل فئة ثغرات. خلال التطوير، تُشير أدوات تحليل الكود إلى الأنماط المرتبطة بمخاطر القائمة العشرة. خلال الاختبار، تستهدف فرق الأمان على وجه التحديد هذه الفئات. بعد النشر، تراقب أنظمة المراقبة أنماط الهجوم المتعلقة بالاستغلالات الشائعة. هذا التكامل متعدد المراحل يخلق دفاعاً في العمق ضد التهديدات الأكثر انتشاراً."
+          }
+        },
+        {
+          "id": 24,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Many security certifications and professional development programs now include OWASP Top 10 knowledge as a core requirement. Learning these categories opens career opportunities in application security, penetration testing, and secure software development.",
+            "ar": "تتضمن العديد من شهادات الأمان وبرامج التطوير المهني الآن معرفة قائمة OWASP العشرة كمتطلب أساسي. تعلم هذه الفئات يفتح فرص عمل في أمان التطبيقات واختبار الاختراق وتطوير البرمجيات الآمنة."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 25,
+          "type": "title",
+          "value": {
+            "en": "Learning Path with OWASP Top 10",
+            "ar": "مسار التعلم مع قائمة OWASP العشرة"
+          }
+        },
+        {
+          "id": 26,
+          "type": "text",
+          "value": {
+            "en": "For beginners in web security, the OWASP Top 10 provides a structured learning path. Start by understanding each category conceptually. Learn what makes each vulnerability dangerous and how attackers exploit it. Then practice identifying these vulnerabilities in intentionally vulnerable applications designed for learning. Next, study the defense mechanisms and secure coding practices that prevent each category of attack. Finally, apply this knowledge by testing real applications or building secure applications from scratch.",
+            "ar": "للمبتدئين في أمن الويب، توفر قائمة OWASP العشرة مساراً تعليمياً منظماً. ابدأ بفهم كل فئة مفاهيمياً. تعلم ما يجعل كل ثغرة خطيرة وكيف يستغلها المهاجمون. ثم تدرب على تحديد هذه الثغرات في تطبيقات ضعيفة عمداً مصممة للتعلم. بعد ذلك، ادرس آليات الدفاع وممارسات البرمجة الآمنة التي تمنع كل فئة من الهجمات. أخيراً، طبق هذه المعرفة عن طريق اختبار تطبيقات حقيقية أو بناء تطبيقات آمنة من الصفر."
+          }
+        },
+        {
+          "id": 27,
+          "type": "orderedList",
+          "title": {
+            "en": "Recommended Learning Sequence",
+            "ar": "التسلسل التعليمي الموصى به"
+          },
+          "items": [
+            {
+              "subtitle": {
+                "en": "Study the Concepts",
+                "ar": "ادرس المفاهيم"
+              },
+              "text": {
+                "en": "Read the official descriptions for each of the ten categories. Understand the technical explanation and real-world examples.",
+                "ar": "اقرأ الأوصاف الرسمية لكل من الفئات العشر. افهم الشرح التقني والأمثلة الواقعية."
+              },
+              "example": {
+                "en": "Example: Learn how broken access control differs from authentication failures",
+                "ar": "مثال: تعلم كيف يختلف التحكم المكسور في الوصول عن إخفاقات المصادقة"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Practice Identification",
+                "ar": "تدرب على التحديد"
+              },
+              "text": {
+                "en": "Use practice environments with intentional vulnerabilities. Try to find examples of each Top 10 category.",
+                "ar": "استخدم بيئات التدريب مع الثغرات المتعمدة. حاول إيجاد أمثلة على كل فئة من القائمة العشرة."
+              },
+              "example": {
+                "en": "Example: Explore vulnerable web applications designed for training",
+                "ar": "مثال: استكشف تطبيقات الويب الضعيفة المصممة للتدريب"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Learn Defense Techniques",
+                "ar": "تعلم تقنيات الدفاع"
+              },
+              "text": {
+                "en": "Study secure coding practices and security controls that prevent each vulnerability type. Understand both application-level and infrastructure-level defenses.",
+                "ar": "ادرس ممارسات البرمجة الآمنة وضوابط الأمان التي تمنع كل نوع من الثغرات. افهم الدفاعات على مستوى التطبيق والبنية التحتية."
+              },
+              "example": {
+                "en": "Example: Learn input validation, parameterized queries, and output encoding",
+                "ar": "مثال: تعلم التحقق من صحة الإدخال والاستعلامات المعلمية وترميز الإخراج"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Apply in Projects",
+                "ar": "طبق في المشاريع"
+              },
+              "text": {
+                "en": "Build small web applications with security in mind from the start. Implement proper controls for each OWASP category.",
+                "ar": "ابن تطبيقات ويب صغيرة مع وضع الأمان في الاعتبار من البداية. قم بتنفيذ ضوابط مناسبة لكل فئة من OWASP."
+              },
+              "example": {
+                "en": "Example: Create a login system with proper authentication and session management",
+                "ar": "مثال: أنشئ نظام تسجيل دخول مع مصادقة وإدارة جلسات مناسبة"
+              }
+            }
+          ]
+        },
+        {
+          "id": 28,
+          "type": "text",
+          "value": {
+            "en": "As you progress through this learning path, you will notice that many categories overlap and interact. For example, security misconfiguration can lead to cryptographic failures. Broken access control often combines with authentication issues. Understanding these interconnections deepens your security knowledge and makes you more effective at finding and fixing vulnerabilities. The OWASP Top 10 is not just a list to memorize but a framework for thinking about web application security holistically.",
+            "ar": "مع تقدمك خلال مسار التعلم هذا، ستلاحظ أن العديد من الفئات تتداخل وتتفاعل. على سبيل المثال، يمكن أن يؤدي التكوين الخاطئ للأمان إلى إخفاقات في التشفير. غالباً ما يتحد التحكم المكسور في الوصول مع مشاكل المصادقة. فهم هذه الترابطات يعمق معرفتك الأمنية ويجعلك أكثر فعالية في إيجاد وإصلاح الثغرات. قائمة OWASP العشرة ليست مجرد قائمة للحفظ ولكن إطار للتفكير في أمان تطبيقات الويب بشكل شامل."
+          }
+        }
+      ]
+    },
+    {
+      "id": "topic-2",
+      "title": {
+        "en": "SQL Injection Attacks and Prevention",
+        "ar": "هجمات حقن SQL والوقاية منها"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "What is SQL Injection",
+            "ar": "ما هو حقن SQL"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "SQL Injection is a code injection technique that exploits security vulnerabilities in an application's database layer. It occurs when user input is incorrectly handled and becomes part of an SQL query. Attackers insert malicious SQL code through input fields like login forms, search boxes, or URL parameters. When the application executes this manipulated query, it can reveal sensitive data, modify database contents, or even take control of the database server. SQL Injection consistently ranks among the most dangerous web vulnerabilities.",
+            "ar": "حقن SQL هو تقنية حقن كود تستغل ثغرات أمنية في طبقة قاعدة البيانات للتطبيق. يحدث عندما يتم التعامل مع إدخال المستخدم بشكل غير صحيح ويصبح جزءاً من استعلام SQL. يُدرج المهاجمون كود SQL ضار من خلال حقول الإدخال مثل نماذج تسجيل الدخول أو مربعات البحث أو معاملات URL. عندما ينفذ التطبيق هذا الاستعلام المتلاعب به، يمكن أن يكشف بيانات حساسة أو يعدل محتويات قاعدة البيانات أو حتى يتحكم في خادم قاعدة البيانات. يحتل حقن SQL باستمرار مرتبة بين أخطر ثغرات الويب."
+          }
+        },
+        {
+          "id": 1773500912846.0469,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Web%20Security%20Basics/2-1-SQL%20injection%20attack%20flow.webp"
+        },
+        {
+          "id": 4,
+          "type": "text",
+          "value": {
+            "en": "To understand SQL Injection, you must first understand how web applications interact with databases. When you submit a login form, the application takes your username and password and creates an SQL query to check if they match records in the database. In a vulnerable application, the user input is directly inserted into the SQL query string without proper validation or sanitization. This allows an attacker to break out of the intended query structure and inject their own SQL commands.",
+            "ar": "لفهم حقن SQL، يجب أن تفهم أولاً كيف تتفاعل تطبيقات الويب مع قواعد البيانات. عندما تُقدم نموذج تسجيل دخول، يأخذ التطبيق اسم المستخدم وكلمة المرور الخاصة بك وينشئ استعلام SQL للتحقق مما إذا كانت تتطابق مع السجلات في قاعدة البيانات. في تطبيق ضعيف، يتم إدراج إدخال المستخدم مباشرة في سلسلة استعلام SQL دون التحقق من الصحة أو التعقيم المناسب. هذا يسمح للمهاجم بالخروج من بنية الاستعلام المقصودة وحقن أوامر SQL الخاصة به."
+          }
+        },
+        {
+          "id": 5,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "SQL Injection can affect any database system including MySQL, PostgreSQL, SQL Server, and Oracle. The specific syntax varies, but the underlying principle remains the same across all database platforms.",
+            "ar": "يمكن أن يؤثر حقن SQL على أي نظام قاعدة بيانات بما في ذلك MySQL و PostgreSQL و SQL Server و Oracle. تختلف الصيغة المحددة، لكن المبدأ الأساسي يظل كما هو عبر جميع منصات قواعد البيانات."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 6,
+          "type": "title",
+          "value": {
+            "en": "How SQL Injection Works - Technical Breakdown",
+            "ar": "كيف يعمل حقن SQL - تحليل تقني"
+          }
+        },
+        {
+          "id": 7,
+          "type": "text",
+          "value": {
+            "en": "Consider a simple login form that checks credentials. The vulnerable code might construct a query like this: SELECT * FROM users WHERE username = 'input_username' AND password = 'input_password'. The application replaces input_username and input_password with whatever the user types. A normal user enters legitimate credentials. But an attacker enters something different. Instead of a username, they might enter: admin'--. The single quote closes the username string early, and the double dash is an SQL comment that ignores everything after it.",
+            "ar": "فكر في نموذج تسجيل دخول بسيط يتحقق من بيانات الاعتماد. قد ينشئ الكود الضعيف استعلاماً مثل هذا: SELECT * FROM users WHERE username = 'input_username' AND password = 'input_password'. يستبدل التطبيق input_username و input_password بما يكتبه المستخدم. يُدخل مستخدم عادي بيانات اعتماد شرعية. لكن المهاجم يُدخل شيئاً مختلفاً. بدلاً من اسم المستخدم، قد يُدخل: admin'--. تُغلق الاقتباس المفرد سلسلة اسم المستخدم مبكراً، والشرطة المزدوجة هي تعليق SQL يتجاهل كل شيء بعدها."
+          }
+        },
+        {
+          "id": 8,
+          "type": "text",
+          "value": {
+            "en": "When this malicious input is inserted into the query, it becomes: SELECT * FROM users WHERE username = 'admin'--' AND password = 'anything'. The database executes this modified query. Everything after the double dash is treated as a comment and ignored. So the password check is completely bypassed. The query simply finds a user named admin and returns it, granting access without knowing the actual password. This is one of the simplest forms of SQL Injection, called authentication bypass.",
+            "ar": "عندما يتم إدراج هذا الإدخال الضار في الاستعلام، يصبح: SELECT * FROM users WHERE username = 'admin'--' AND password = 'anything'. تنفذ قاعدة البيانات هذا الاستعلام المعدل. يتم التعامل مع كل شيء بعد الشرطة المزدوجة كتعليق ويتم تجاهله. لذا يتم تجاوز التحقق من كلمة المرور تماماً. يجد الاستعلام ببساطة مستخدماً يُدعى admin ويُرجعه، مما يمنح الوصول دون معرفة كلمة المرور الفعلية. هذا واحد من أبسط أشكال حقن SQL، يسمى تجاوز المصادقة."
+          }
+        },
+        {
+          "id": 9,
+          "type": "code",
+          "language": "sql",
+          "value": "-- Vulnerable query construction\nquery = \"SELECT * FROM users WHERE username = '\" + user_input + \"'\"\n\n-- Normal input: admin\n-- Results in: SELECT * FROM users WHERE username = 'admin'\n\n-- Malicious input: admin' OR '1'='1\n-- Results in: SELECT * FROM users WHERE username = 'admin' OR '1'='1'\n-- This returns ALL users because '1'='1' is always true"
+        },
+        {
+          "id": 1773500930317.8713,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Web%20Security%20Basics/2-2-showing%20SQL%20injection%20transformation.webp"
+        },
+        {
+          "id": 11,
+          "type": "title",
+          "value": {
+            "en": "Types of SQL Injection Attacks",
+            "ar": "أنواع هجمات حقن SQL"
+          }
+        },
+        {
+          "id": 12,
+          "type": "text",
+          "value": {
+            "en": "SQL Injection attacks come in several distinct forms, each with different techniques and goals. In-Band SQL Injection is the most common type where the attacker uses the same communication channel to launch the attack and gather results. This includes Error-Based injection, where attackers deliberately cause database errors to extract information from error messages. It also includes Union-Based injection, where attackers use the UNION SQL operator to combine results from multiple SELECT statements, retrieving data from other tables.",
+            "ar": "تأتي هجمات حقن SQL في عدة أشكال متميزة، كل منها بتقنيات وأهداف مختلفة. حقن SQL داخل النطاق هو النوع الأكثر شيوعاً حيث يستخدم المهاجم نفس قناة الاتصال لشن الهجوم وجمع النتائج. يشمل هذا الحقن القائم على الأخطاء، حيث يتسبب المهاجمون عمداً في أخطاء قاعدة البيانات لاستخراج المعلومات من رسائل الخطأ. كما يشمل أيضاً الحقن القائم على UNION، حيث يستخدم المهاجمون عامل SQL UNION لدمج نتائج من عبارات SELECT متعددة، واسترداد البيانات من جداول أخرى."
+          }
+        },
+        {
+          "id": 13,
+          "type": "text",
+          "value": {
+            "en": "Inferential SQL Injection, also called Blind SQL Injection, is more subtle. The attacker does not see query results directly on the webpage. Instead, they observe the application's behavior to infer information about the database. Boolean-Based Blind injection sends queries that cause the application to behave differently based on whether a condition is true or false. Time-Based Blind injection uses database commands that cause delays, allowing attackers to infer information based on how long responses take.",
+            "ar": "حقن SQL الاستنتاجي، المسمى أيضاً حقن SQL الأعمى، أكثر دقة. لا يرى المهاجم نتائج الاستعلام مباشرة على صفحة الويب. بدلاً من ذلك، يلاحظون سلوك التطبيق لاستنتاج معلومات حول قاعدة البيانات. الحقن الأعمى القائم على المنطق يرسل استعلامات تتسبب في تصرف التطبيق بشكل مختلف بناءً على ما إذا كان الشرط صحيحاً أم خاطئاً. الحقن الأعمى القائم على الوقت يستخدم أوامر قاعدة البيانات التي تسبب تأخيرات، مما يسمح للمهاجمين باستنتاج المعلومات بناءً على المدة التي تستغرقها الاستجابات."
+          }
+        },
+        {
+          "id": 14,
+          "type": "text",
+          "value": {
+            "en": "Out-of-Band SQL Injection is less common but very powerful. It occurs when the attacker cannot use the same channel to launch the attack and gather results. Instead, the attacker triggers the database to send data to an external server they control. This might involve DNS requests, HTTP requests, or other network protocols. This technique is useful when the application does not return query results or error messages, making other injection types impossible.",
+            "ar": "حقن SQL خارج النطاق أقل شيوعاً لكنه قوي جداً. يحدث عندما لا يمكن للمهاجم استخدام نفس القناة لشن الهجوم وجمع النتائج. بدلاً من ذلك، يحفز المهاجم قاعدة البيانات على إرسال البيانات إلى خادم خارجي يتحكم فيه. قد يتضمن ذلك طلبات DNS أو طلبات HTTP أو بروتوكولات شبكة أخرى. هذه التقنية مفيدة عندما لا يُرجع التطبيق نتائج الاستعلام أو رسائل الخطأ، مما يجعل أنواع الحقن الأخرى مستحيلة."
+          }
+        },
+        {
+          "id": 15,
+          "type": "table",
+          "title": {
+            "en": "SQL Injection Types Comparison",
+            "ar": "مقارنة أنواع حقن SQL"
+          },
+          "headers": {
+            "en": [
+              "Type",
+              "Detection",
+              "Impact",
+              "Complexity"
+            ],
+            "ar": [
+              "النوع",
+              "الكشف",
+              "التأثير",
+              "التعقيد"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "Error-Based",
+                "Visible errors",
+                "Information disclosure",
+                "Easy"
+              ],
+              "ar": [
+                "قائم على الأخطاء",
+                "أخطاء مرئية",
+                "الكشف عن المعلومات",
+                "سهل"
+              ]
+            },
+            {
+              "en": [
+                "Union-Based",
+                "Data in response",
+                "Full data extraction",
+                "Medium"
+              ],
+              "ar": [
+                "قائم على UNION",
+                "البيانات في الاستجابة",
+                "استخراج كامل للبيانات",
+                "متوسط"
+              ]
+            },
+            {
+              "en": [
+                "Boolean Blind",
+                "Behavior changes",
+                "Gradual data extraction",
+                "Hard"
+              ],
+              "ar": [
+                "أعمى منطقي",
+                "تغييرات السلوك",
+                "استخراج تدريجي للبيانات",
+                "صعب"
+              ]
+            },
+            {
+              "en": [
+                "Time Blind",
+                "Response delays",
+                "Slow data extraction",
+                "Hard"
+              ],
+              "ar": [
+                "أعمى زمني",
+                "تأخيرات الاستجابة",
+                "استخراج بطيء للبيانات",
+                "صعب"
+              ]
+            },
+            {
+              "en": [
+                "Out-of-Band",
+                "External channel",
+                "Bypasses restrictions",
+                "Very Hard"
+              ],
+              "ar": [
+                "خارج النطاق",
+                "قناة خارجية",
+                "تجاوز القيود",
+                "صعب جداً"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 16,
+          "type": "hr"
+        },
+        {
+          "id": 17,
+          "type": "title",
+          "value": {
+            "en": "Real-World Impact of SQL Injection",
+            "ar": "التأثير الواقعي لحقن SQL"
+          }
+        },
+        {
+          "id": 18,
+          "type": "text",
+          "value": {
+            "en": "SQL Injection attacks have caused some of the most damaging data breaches in history. Attackers have stolen millions of credit card numbers, personal information, and confidential business data through SQL Injection. In many cases, a single vulnerable input field allowed attackers to download entire databases containing customer information, financial records, and proprietary data. The stolen data is often sold on underground markets or used for identity theft and fraud.",
+            "ar": "تسببت هجمات حقن SQL في بعض من أكثر اختراقات البيانات ضرراً في التاريخ. سرق المهاجمون ملايين أرقام بطاقات الائتمان والمعلومات الشخصية والبيانات التجارية السرية من خلال حقن SQL. في كثير من الحالات، سمح حقل إدخال ضعيف واحد للمهاجمين بتنزيل قواعد بيانات كاملة تحتوي على معلومات العملاء والسجلات المالية والبيانات الخاصة. غالباً ما تُباع البيانات المسروقة في أسواق سرية أو تُستخدم لسرقة الهوية والاحتيال."
+          }
+        },
+        {
+          "id": 19,
+          "type": "text",
+          "value": {
+            "en": "Beyond data theft, SQL Injection can lead to complete system compromise. Attackers can modify database contents, delete critical records, or add administrative accounts. Some database systems allow executing operating system commands through SQL, potentially giving attackers control over the entire server. Attackers have used SQL Injection to deface websites, disrupt services, and plant malware. The financial cost includes not only immediate losses but also regulatory fines, legal fees, and long-term reputation damage.",
+            "ar": "بعيداً عن سرقة البيانات، يمكن أن يؤدي حقن SQL إلى اختراق كامل للنظام. يمكن للمهاجمين تعديل محتويات قاعدة البيانات أو حذف سجلات حرجة أو إضافة حسابات إدارية. تسمح بعض أنظمة قواعد البيانات بتنفيذ أوامر نظام التشغيل من خلال SQL، مما قد يمنح المهاجمين السيطرة على الخادم بأكمله. استخدم المهاجمون حقن SQL لتشويه المواقع وتعطيل الخدمات وزرع البرامج الضارة. تشمل التكلفة المالية ليس فقط الخسائر الفورية ولكن أيضاً الغرامات التنظيمية والرسوم القانونية وأضرار السمعة على المدى الطويل."
+          }
+        },
+        {
+          "id": 20,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "Many organizations discovered SQL Injection vulnerabilities only after suffering a breach. Regular security testing and code review are essential to find these vulnerabilities before attackers do.",
+            "ar": "اكتشفت العديد من المنظمات ثغرات حقن SQL فقط بعد تعرضها لاختراق. الاختبار الأمني المنتظم ومراجعة الكود ضروريان لإيجاد هذه الثغرات قبل أن يفعل المهاجمون."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 21,
+          "type": "title",
+          "value": {
+            "en": "Preventing SQL Injection - Defense Mechanisms",
+            "ar": "الوقاية من حقن SQL - آليات الدفاع"
+          }
+        },
+        {
+          "id": 22,
+          "type": "text",
+          "value": {
+            "en": "The primary defense against SQL Injection is using parameterized queries, also called prepared statements. Instead of concatenating user input directly into SQL strings, parameterized queries send the SQL code and the data separately to the database. The database knows which parts are code and which parts are data, making injection impossible. This is not just a best practice but the only truly effective way to prevent SQL Injection. Every modern database system and programming language supports parameterized queries.",
+            "ar": "الدفاع الأساسي ضد حقن SQL هو استخدام الاستعلامات المعلمية، المسماة أيضاً بالعبارات المحضرة. بدلاً من تسلسل إدخال المستخدم مباشرة في سلاسل SQL، تُرسل الاستعلامات المعلمية كود SQL والبيانات بشكل منفصل إلى قاعدة البيانات. تعرف قاعدة البيانات أي الأجزاء عبارة عن كود وأي الأجزاء عبارة عن بيانات، مما يجعل الحقن مستحيلاً. هذا ليس فقط أفضل ممارسة ولكنه الطريقة الفعالة الوحيدة حقاً لمنع حقن SQL. كل نظام قاعدة بيانات ولغة برمجة حديثة تدعم الاستعلامات المعلمية."
+          }
+        },
+        {
+          "id": 23,
+          "type": "code",
+          "language": "python",
+          "value": "# VULNERABLE CODE - Never do this\nusername = request.form['username']\nquery = \"SELECT * FROM users WHERE username = '\" + username + \"'\"\ndb.execute(query)  # Dangerous!\n\n# SECURE CODE - Use parameterized queries\nusername = request.form['username']\nquery = \"SELECT * FROM users WHERE username = ?\"\ndb.execute(query, (username,))  # Safe!\n\n# The database treats the username as DATA, not CODE\n# No matter what the user enters, it cannot modify the query structure"
+        },
+        {
+          "id": 24,
+          "type": "text",
+          "value": {
+            "en": "Input validation provides an additional layer of defense. Validate all user input against expected formats before processing. For example, if expecting a number, verify that the input contains only digits. If expecting an email address, check for proper email format. Reject or sanitize any input that does not match expected patterns. However, input validation alone is not sufficient because attackers constantly find new bypass techniques. Always combine input validation with parameterized queries.",
+            "ar": "يوفر التحقق من صحة الإدخال طبقة دفاع إضافية. تحقق من صحة جميع إدخالات المستخدم مقابل التنسيقات المتوقعة قبل المعالجة. على سبيل المثال، إذا كنت تتوقع رقماً، تحقق من أن الإدخال يحتوي فقط على أرقام. إذا كنت تتوقع عنوان بريد إلكتروني، تحقق من التنسيق الصحيح للبريد الإلكتروني. ارفض أو عقم أي إدخال لا يتطابق مع الأنماط المتوقعة. ومع ذلك، فإن التحقق من صحة الإدخال وحده غير كافٍ لأن المهاجمين يجدون باستمرار تقنيات تجاوز جديدة. اجمع دائماً بين التحقق من صحة الإدخال والاستعلامات المعلمية."
+          }
+        },
+        {
+          "id": 1773500921098.081,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Web%20Security%20Basics/2-3-vulnerable%20vs%20secure%20code%20approaches.webp"
+        },
+        {
+          "id": 26,
+          "type": "list",
+          "title": {
+            "en": "Additional SQL Injection Defense Practices",
+            "ar": "ممارسات دفاع إضافية ضد حقن SQL"
+          },
+          "items": {
+            "en": [
+              "Use least privilege principle for database accounts",
+              "Disable unnecessary database features and stored procedures",
+              "Implement Web Application Firewalls to detect attack patterns",
+              "Regular security testing including automated scanning",
+              "Keep database management systems updated with security patches",
+              "Log and monitor all database queries for suspicious patterns",
+              "Never display detailed database error messages to users"
+            ],
+            "ar": [
+              "استخدم مبدأ الامتياز الأقل لحسابات قاعدة البيانات",
+              "عطل ميزات قاعدة البيانات والإجراءات المخزنة غير الضرورية",
+              "نفذ جدران حماية تطبيقات الويب لاكتشاف أنماط الهجوم",
+              "الاختبار الأمني المنتظم بما في ذلك المسح الآلي",
+              "حافظ على تحديث أنظمة إدارة قواعد البيانات بتصحيحات الأمان",
+              "سجل وراقب جميع استعلامات قاعدة البيانات للأنماط المشبوهة",
+              "لا تعرض أبداً رسائل خطأ قاعدة البيانات التفصيلية للمستخدمين"
+            ]
+          }
+        },
+        {
+          "id": 27,
+          "type": "text",
+          "value": {
+            "en": "Applying the principle of least privilege limits damage if SQL Injection does occur. Database accounts used by web applications should have only the minimum permissions necessary. If an application only needs to read customer data, its database account should not have permission to delete tables or modify system settings. This way, even if an attacker successfully injects SQL commands, they are limited by the account's permissions. Separate database accounts for different application functions provides further isolation.",
+            "ar": "تطبيق مبدأ الامتياز الأقل يحد من الضرر إذا حدث حقن SQL. يجب أن تحتوي حسابات قواعد البيانات المستخدمة من قبل تطبيقات الويب على الحد الأدنى من الصلاحيات الضرورية فقط. إذا كان التطبيق يحتاج فقط إلى قراءة بيانات العملاء، فلا يجب أن يكون لحساب قاعدة البيانات الخاص به إذن لحذف الجداول أو تعديل إعدادات النظام. بهذه الطريقة، حتى إذا نجح المهاجم في حقن أوامر SQL، فإنه محدود بصلاحيات الحساب. توفير حسابات قاعدة بيانات منفصلة لوظائف تطبيق مختلفة يوفر عزلاً أكبر."
+          }
+        },
+        {
+          "id": 28,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Modern web frameworks and ORMs (Object-Relational Mappers) often use parameterized queries automatically. However, developers must still be careful when writing raw SQL queries or using dynamic query building features.",
+            "ar": "غالباً ما تستخدم أطر عمل الويب الحديثة و ORMs (مخططات كائن-علاقية) الاستعلامات المعلمية تلقائياً. ومع ذلك، لا يزال يجب على المطورين توخي الحذر عند كتابة استعلامات SQL خام أو استخدام ميزات بناء الاستعلام الديناميكي."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 29,
+          "type": "title",
+          "value": {
+            "en": "Testing for SQL Injection Vulnerabilities",
+            "ar": "اختبار ثغرات حقن SQL"
+          }
+        },
+        {
+          "id": 30,
+          "type": "text",
+          "value": {
+            "en": "Security professionals test for SQL Injection systematically. They identify all input points including form fields, URL parameters, HTTP headers, and cookies. For each input point, they try various SQL Injection payloads to see if they can manipulate the application's behavior. Simple tests include entering a single quote to check if it causes a database error. More advanced tests involve crafting complete SQL commands to extract data or bypass authentication. Automated tools can speed up this process, but manual testing often finds vulnerabilities that automated tools miss.",
+            "ar": "يختبر محترفو الأمان حقن SQL بشكل منهجي. يحددون جميع نقاط الإدخال بما في ذلك حقول النماذج ومعاملات URL ورؤوس HTTP وملفات تعريف الارتباط. لكل نقطة إدخال، يحاولون حمولات حقن SQL مختلفة لمعرفة ما إذا كان بإمكانهم التلاعب بسلوك التطبيق. تشمل الاختبارات البسيطة إدخال اقتباس مفرد للتحقق مما إذا كان يسبب خطأ في قاعدة البيانات. تتضمن الاختبارات الأكثر تقدماً صياغة أوامر SQL كاملة لاستخراج البيانات أو تجاوز المصادقة. يمكن للأدوات الآلية تسريع هذه العملية، لكن الاختبار اليدوي غالباً ما يجد ثغرات تفوتها الأدوات الآلية."
+          }
+        },
+        {
+          "id": 31,
+          "type": "terminal",
+          "label": {
+            "en": "Basic SQL Injection Test Examples",
+            "ar": "أمثلة اختبار حقن SQL الأساسية"
+          },
+          "value": "# Test 1: Single quote to trigger error\ninput: admin'\nexpected: Database error message (vulnerable)\n\n# Test 2: Authentication bypass\ninput: admin'--\nexpected: Successful login without password (vulnerable)\n\n# Test 3: Boolean-based test\ninput: admin' AND '1'='1\nexpected: Normal behavior\ninput: admin' AND '1'='2\nexpected: Different behavior (vulnerable if different)\n\n# Test 4: Time-based test\ninput: admin' AND SLEEP(5)--\nexpected: 5-second delay in response (vulnerable)"
+        },
+        {
+          "id": 32,
+          "type": "text",
+          "value": {
+            "en": "Organizations should conduct SQL Injection testing regularly, not just once. Test after every significant code change or new feature deployment. Include SQL Injection scenarios in your security testing procedures and developer training programs. Bug bounty programs encourage external researchers to find and report vulnerabilities. Remember that finding and fixing SQL Injection vulnerabilities before attackers discover them is far less costly than responding to a data breach.",
+            "ar": "يجب على المنظمات إجراء اختبار حقن SQL بانتظام، وليس مرة واحدة فقط. اختبر بعد كل تغيير كبير في الكود أو نشر ميزة جديدة. قم بتضمين سيناريوهات حقن SQL في إجراءات الاختبار الأمني وبرامج تدريب المطورين. تشجع برامج مكافآت الأخطاء الباحثين الخارجيين على إيجاد والإبلاغ عن الثغرات. تذكر أن إيجاد وإصلاح ثغرات حقن SQL قبل أن يكتشفها المهاجمون أقل تكلفة بكثير من الاستجابة لاختراق البيانات."
+          }
+        }
+      ]
+    },
+    {
+      "id": "topic-3",
+      "title": {
+        "en": "Cross-Site Scripting (XSS) Attacks Explained",
+        "ar": "شرح هجمات البرمجة النصية عبر المواقع (XSS)"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "Understanding XSS Vulnerabilities",
+            "ar": "فهم ثغرات XSS"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "Cross-Site Scripting, commonly abbreviated as XSS, is a web security vulnerability that allows attackers to inject malicious scripts into web pages viewed by other users. Unlike SQL Injection which targets databases, XSS targets the users of a website. When a victim loads a page containing malicious script, their browser executes that script as if it were legitimate code from the website. This gives the attacker access to sensitive information like session cookies, allowing them to impersonate the victim or perform actions on their behalf.",
+            "ar": "البرمجة النصية عبر المواقع، المختصرة عادة بـ XSS، هي ثغرة أمنية في الويب تسمح للمهاجمين بحقن نصوص برمجية ضارة في صفحات الويب التي يشاهدها مستخدمون آخرون. على عكس حقن SQL الذي يستهدف قواعد البيانات، يستهدف XSS مستخدمي الموقع. عندما يحمل الضحية صفحة تحتوي على نص برمجي ضار، ينفذ متصفحه ذلك النص كما لو كان كوداً شرعياً من الموقع. هذا يمنح المهاجم الوصول إلى معلومات حساسة مثل ملفات تعريف ارتباط الجلسة، مما يسمح لهم بانتحال شخصية الضحية أو تنفيذ إجراءات نيابة عنهم."
+          }
+        },
+        {
+          "id": 1773501729064.7346,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Web%20Security%20Basics/3-1-illustrating%20the%20XSS%20attack%20flow.webp"
+        },
+        {
+          "id": 4,
+          "type": "text",
+          "value": {
+            "en": "XSS vulnerabilities occur when web applications take user input and include it in web pages without proper validation or encoding. Common injection points include search boxes, comment sections, user profiles, and any feature where users can submit content that gets displayed to others. The fundamental problem is that web browsers cannot distinguish between legitimate scripts from the website and malicious scripts injected by attackers. Both execute with the same privileges, giving injected scripts full access to the page and its data.",
+            "ar": "تحدث ثغرات XSS عندما تأخذ تطبيقات الويب إدخال المستخدم وتدرجه في صفحات الويب دون التحقق من الصحة أو الترميز المناسب. تشمل نقاط الحقن الشائعة مربعات البحث وأقسام التعليقات وملفات تعريف المستخدم وأي ميزة حيث يمكن للمستخدمين إرسال محتوى يُعرض للآخرين. المشكلة الأساسية هي أن متصفحات الويب لا تستطيع التمييز بين النصوص الشرعية من الموقع والنصوص الضارة المحقونة من قبل المهاجمين. كلاهما ينفذ بنفس الامتيازات، مما يمنح النصوص المحقونة وصولاً كاملاً إلى الصفحة وبياناتها."
+          }
+        },
+        {
+          "id": 5,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "The name Cross-Site Scripting comes from early attacks that sent scripts from one website to execute on another site. Although modern XSS attacks work differently, the name has stuck in the security community.",
+            "ar": "يأتي اسم البرمجة النصية عبر المواقع من الهجمات المبكرة التي أرسلت نصوصاً من موقع واحد للتنفيذ على موقع آخر. على الرغم من أن هجمات XSS الحديثة تعمل بشكل مختلف، إلا أن الاسم ظل في مجتمع الأمان."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 6,
+          "type": "title",
+          "value": {
+            "en": "Reflected XSS - The Most Common Type",
+            "ar": "XSS المنعكس - النوع الأكثر شيوعاً"
+          }
+        },
+        {
+          "id": 7,
+          "type": "text",
+          "value": {
+            "en": "Reflected XSS, also called Non-Persistent XSS, occurs when malicious script is immediately reflected back to the user in the web application's response. The script is not stored on the server. Instead, it typically comes from the request itself, such as URL parameters or form submissions. For example, a search feature might display your search term on the results page. If the application does not properly encode this output, an attacker can craft a malicious URL containing JavaScript code. When a victim clicks this link, the malicious script executes in their browser.",
+            "ar": "يحدث XSS المنعكس، المسمى أيضاً XSS غير المستمر، عندما يُعكس النص الضار فوراً إلى المستخدم في استجابة تطبيق الويب. لا يتم تخزين النص على الخادم. بدلاً من ذلك، يأتي عادة من الطلب نفسه، مثل معاملات URL أو تقديمات النماذج. على سبيل المثال، قد تعرض ميزة البحث مصطلح البحث الخاص بك على صفحة النتائج. إذا لم يقم التطبيق بترميز هذا الإخراج بشكل صحيح، يمكن للمهاجم صياغة عنوان URL ضار يحتوي على كود JavaScript. عندما ينقر الضحية على هذا الرابط، ينفذ النص الضار في متصفحه."
+          }
+        },
+        {
+          "id": 8,
+          "type": "text",
+          "value": {
+            "en": "Reflected XSS attacks require social engineering to succeed. The attacker must trick the victim into clicking a malicious link or visiting a malicious page. Attackers often disguise these links using URL shorteners or embedding them in emails and social media posts. Once clicked, the attack executes automatically without any further interaction from the victim. The victim sees what appears to be the legitimate website, making the attack difficult to detect. Reflected XSS is particularly dangerous on websites where users are already logged in, as the attack can access session cookies and authenticated functionality.",
+            "ar": "تتطلب هجمات XSS المنعكس هندسة اجتماعية لتنجح. يجب على المهاجم خداع الضحية للنقر على رابط ضار أو زيارة صفحة ضارة. غالباً ما يخفي المهاجمون هذه الروابط باستخدام مختصرات URL أو تضمينها في رسائل البريد الإلكتروني ومنشورات وسائل التواصل الاجتماعي. بمجرد النقر، ينفذ الهجوم تلقائياً دون أي تفاعل إضافي من الضحية. يرى الضحية ما يبدو أنه الموقع الشرعي، مما يجعل الهجوم صعب الاكتشاف. XSS المنعكس خطير بشكل خاص على المواقع التي يكون المستخدمون مسجلين دخولها بالفعل، حيث يمكن للهجوم الوصول إلى ملفات تعريف ارتباط الجلسة والوظائف المصادق عليها."
+          }
+        },
+        {
+          "id": 9,
+          "type": "code",
+          "language": "html",
+          "value": "<!-- Vulnerable search page that reflects user input -->\n<h2>Search Results for: SEARCH_TERM</h2>\n\n<!-- Normal search: -->\nURL: https://example.com/search?q=security\nPage displays: Search Results for: security\n\n<!-- Malicious search with XSS: -->\nURL: https://example.com/search?q=<script>alert('XSS')</script>\nPage displays and EXECUTES: Search Results for: <script>alert('XSS')</script>\n\n<!-- The script tag gets interpreted as code, not text -->\n<!-- This allows attackers to steal cookies, redirect users, or modify page content -->"
+        },
+        {
+          "id": 1773501762851.6445,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Web%20Security%20Basics/3-2-Reflected%20XSS%20attack%20sequence..webp"
+        },
+        {
+          "id": 11,
+          "type": "title",
+          "value": {
+            "en": "Stored XSS - The More Dangerous Variant",
+            "ar": "XSS المخزن - النوع الأكثر خطورة"
+          }
+        },
+        {
+          "id": 12,
+          "type": "text",
+          "value": {
+            "en": "Stored XSS, also called Persistent XSS, occurs when malicious script is permanently stored on the target server. This typically happens through features like comment sections, user profiles, message boards, or any place where user content is saved and later displayed to other users. Unlike Reflected XSS which requires tricking a specific victim, Stored XSS automatically attacks everyone who views the infected page. The malicious script remains active until someone removes it from the database, potentially affecting thousands of users over time.",
+            "ar": "يحدث XSS المخزن، المسمى أيضاً XSS المستمر، عندما يتم تخزين النص الضار بشكل دائم على الخادم المستهدف. يحدث هذا عادة من خلال ميزات مثل أقسام التعليقات أو ملفات تعريف المستخدم أو لوحات الرسائل أو أي مكان يتم فيه حفظ محتوى المستخدم وعرضه لاحقاً للمستخدمين الآخرين. على عكس XSS المنعكس الذي يتطلب خداع ضحية محددة، يهاجم XSS المخزن تلقائياً كل من يشاهد الصفحة المصابة. يظل النص الضار نشطاً حتى يقوم شخص ما بإزالته من قاعدة البيانات، مما قد يؤثر على آلاف المستخدمين بمرور الوقت."
+          }
+        },
+        {
+          "id": 13,
+          "type": "text",
+          "value": {
+            "en": "Stored XSS is considered more severe than Reflected XSS for several reasons. First, it does not require social engineering; the attack spreads automatically to all users who view the affected content. Second, the malicious script persists, creating a long-term threat. Third, users often trust content stored on websites more than content in URLs, making detection harder. Attackers can inject malicious scripts into profile fields, forum posts, product reviews, or anywhere user content is displayed. Even administrators viewing flagged content can become victims if the application does not properly sanitize displays.",
+            "ar": "يُعتبر XSS المخزن أكثر خطورة من XSS المنعكس لعدة أسباب. أولاً، لا يتطلب هندسة اجتماعية؛ ينتشر الهجوم تلقائياً لجميع المستخدمين الذين يشاهدون المحتوى المتأثر. ثانياً، يستمر النص الضار، مما يخلق تهديداً طويل الأمد. ثالثاً، غالباً ما يثق المستخدمون في المحتوى المخزن على المواقع أكثر من المحتوى في عناوين URL، مما يجعل الاكتشاف أصعب. يمكن للمهاجمين حقن نصوص ضارة في حقول الملف الشخصي أو منشورات المنتدى أو مراجعات المنتجات أو في أي مكان يتم عرض محتوى المستخدم. حتى المسؤولون الذين يشاهدون المحتوى المُبلغ عنه يمكن أن يصبحوا ضحايا إذا لم يقم التطبيق بتعقيم العروض بشكل صحيح."
+          }
+        },
+        {
+          "id": 14,
+          "type": "table",
+          "title": {
+            "en": "Reflected vs Stored XSS Comparison",
+            "ar": "مقارنة XSS المنعكس مقابل المخزن"
+          },
+          "headers": {
+            "en": [
+              "Aspect",
+              "Reflected XSS",
+              "Stored XSS"
+            ],
+            "ar": [
+              "الجانب",
+              "XSS المنعكس",
+              "XSS المخزن"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "Storage",
+                "Not stored on server",
+                "Permanently stored"
+              ],
+              "ar": [
+                "التخزين",
+                "غير مخزن على الخادم",
+                "مخزن بشكل دائم"
+              ]
+            },
+            {
+              "en": [
+                "Delivery",
+                "Via malicious link",
+                "Automatically to viewers"
+              ],
+              "ar": [
+                "التوصيل",
+                "عبر رابط ضار",
+                "تلقائياً للمشاهدين"
+              ]
+            },
+            {
+              "en": [
+                "Social Engineering",
+                "Required",
+                "Not required"
+              ],
+              "ar": [
+                "الهندسة الاجتماعية",
+                "مطلوبة",
+                "غير مطلوبة"
+              ]
+            },
+            {
+              "en": [
+                "Impact Scope",
+                "Individual victims",
+                "All page viewers"
+              ],
+              "ar": [
+                "نطاق التأثير",
+                "ضحايا أفراد",
+                "جميع مشاهدي الصفحة"
+              ]
+            },
+            {
+              "en": [
+                "Persistence",
+                "Single request",
+                "Until removed"
+              ],
+              "ar": [
+                "الاستمرارية",
+                "طلب واحد",
+                "حتى الإزالة"
+              ]
+            },
+            {
+              "en": [
+                "Severity",
+                "Medium to High",
+                "High to Critical"
+              ],
+              "ar": [
+                "الخطورة",
+                "متوسطة إلى عالية",
+                "عالية إلى حرجة"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 15,
+          "type": "text",
+          "value": {
+            "en": "Real-world examples of Stored XSS attacks have affected major websites and platforms. Attackers have injected malicious scripts into social media profiles that steal session tokens from anyone viewing the profile. Forum posts containing XSS have spread malware to thousands of users. Online marketplace product descriptions have been exploited to redirect buyers to phishing sites. These attacks demonstrate why proper output encoding is critical for any user-generated content, regardless of how trustworthy users appear to be.",
+            "ar": "أثرت أمثلة واقعية لهجمات XSS المخزن على مواقع ومنصات رئيسية. حقن المهاجمون نصوصاً ضارة في ملفات تعريف وسائل التواصل الاجتماعي تسرق رموز الجلسة من أي شخص يشاهد الملف الشخصي. انتشرت منشورات المنتديات التي تحتوي على XSS برامج ضارة إلى آلاف المستخدمين. تم استغلال أوصاف منتجات السوق عبر الإنترنت لإعادة توجيه المشترين إلى مواقع التصيد الاحتيالي. تُظهر هذه الهجمات لماذا يعد ترميز الإخراج المناسب أمراً حاسماً لأي محتوى ينشئه المستخدم، بغض النظر عن مدى جدارة المستخدمين بالثقة."
+          }
+        },
+        {
+          "id": 16,
+          "type": "hr"
+        },
+        {
+          "id": 17,
+          "type": "title",
+          "value": {
+            "en": "DOM-Based XSS - Client-Side Exploitation",
+            "ar": "XSS القائم على DOM - الاستغلال من جانب العميل"
+          }
+        },
+        {
+          "id": 18,
+          "type": "text",
+          "value": {
+            "en": "DOM-Based XSS is a unique variant where the vulnerability exists in client-side code rather than server-side code. DOM stands for Document Object Model, which is how browsers represent web pages in memory. In DOM-Based XSS, the malicious payload is executed as a result of modifying the DOM environment in the victim's browser. The server's response does not contain the malicious script; instead, legitimate JavaScript code on the page processes user input insecurely, causing the attack. This makes DOM-Based XSS harder to detect with traditional server-side security tools.",
+            "ar": "XSS القائم على DOM هو نوع فريد حيث توجد الثغرة في كود جانب العميل بدلاً من كود جانب الخادم. DOM تعني نموذج كائن المستند، وهي الطريقة التي تمثل بها المتصفحات صفحات الويب في الذاكرة. في XSS القائم على DOM، يتم تنفيذ الحمولة الضارة نتيجة لتعديل بيئة DOM في متصفح الضحية. لا تحتوي استجابة الخادم على النص الضار؛ بدلاً من ذلك، يعالج كود JavaScript الشرعي على الصفحة إدخال المستخدم بشكل غير آمن، مما يسبب الهجوم. هذا يجعل XSS القائم على DOM أصعب في الاكتشاف باستخدام أدوات الأمان التقليدية من جانب الخادم."
+          }
+        },
+        {
+          "id": 19,
+          "type": "text",
+          "value": {
+            "en": "DOM-Based XSS often occurs when JavaScript code reads data from user-controllable sources and writes it to dangerous sinks without proper validation. Sources include URL parameters, the document.location object, or the document.referrer. Dangerous sinks include functions like eval(), innerHTML, document.write(), and similar methods that interpret strings as code or HTML. For example, JavaScript might read a URL parameter and insert it directly into the page using innerHTML. If that parameter contains malicious script, it executes even though the server never processed the malicious content.",
+            "ar": "غالباً ما يحدث XSS القائم على DOM عندما يقرأ كود JavaScript بيانات من مصادر يمكن للمستخدم التحكم فيها ويكتبها في مصارف خطيرة دون التحقق من الصحة المناسب. تشمل المصادر معاملات URL وكائن document.location أو document.referrer. تشمل المصارف الخطيرة وظائف مثل eval() و innerHTML و document.write() وطرق مماثلة تفسر السلاسل ككود أو HTML. على سبيل المثال، قد يقرأ JavaScript معامل URL ويدرجه مباشرة في الصفحة باستخدام innerHTML. إذا احتوى هذا المعامل على نص ضار، فإنه ينفذ حتى لو لم يعالج الخادم المحتوى الضار مطلقاً."
+          }
+        },
+        {
+          "id": 20,
+          "type": "code",
+          "language": "javascript",
+          "value": "// Vulnerable DOM-Based XSS example\n// JavaScript reads from URL and writes to page\n\n// URL: https://example.com/page#name=<img src=x onerror=alert('XSS')>\n\nvar name = location.hash.split('=')[1];\ndocument.getElementById('welcome').innerHTML = 'Hello ' + name;\n\n// The malicious payload executes when written to innerHTML\n// The server never sees or processes the attack payload\n// All the vulnerable code runs in the browser\n\n// Safer alternative:\ndocument.getElementById('welcome').textContent = 'Hello ' + name;\n// textContent treats input as text, not HTML, preventing script execution"
+        },
+        {
+          "id": 1773501757324.5142,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Web%20Security%20Basics/3-3-all%20three%20XSS%20types.webp"
+        },
+        {
+          "id": 22,
+          "type": "title",
+          "value": {
+            "en": "XSS Attack Payloads and Impacts",
+            "ar": "حمولات هجمات XSS وتأثيراتها"
+          }
+        },
+        {
+          "id": 23,
+          "type": "text",
+          "value": {
+            "en": "XSS attacks can accomplish various malicious goals beyond simply displaying alert boxes. Cookie stealing is one of the most common objectives. JavaScript can access session cookies and send them to attacker-controlled servers, allowing session hijacking. Keylogging scripts can capture everything a user types, including passwords and credit card numbers. Page defacement modifies the appearance and content of web pages to spread propaganda or damage reputation. Phishing attacks overlay fake login forms that send credentials to attackers while appearing legitimate.",
+            "ar": "يمكن لهجمات XSS تحقيق أهداف ضارة مختلفة تتجاوز مجرد عرض صناديق التنبيه. سرقة ملفات تعريف الارتباط هي أحد الأهداف الأكثر شيوعاً. يمكن لـ JavaScript الوصول إلى ملفات تعريف ارتباط الجلسة وإرسالها إلى خوادم يتحكم فيها المهاجم، مما يسمح باختطاف الجلسة. يمكن لنصوص تسجيل ضغطات المفاتيح التقاط كل ما يكتبه المستخدم، بما في ذلك كلمات المرور وأرقام بطاقات الائتمان. تشويه الصفحة يعدل مظهر ومحتوى صفحات الويب لنشر الدعاية أو الإضرار بالسمعة. تُغطي هجمات التصيد الاحتيالي نماذج تسجيل دخول مزيفة ترسل بيانات الاعتماد إلى المهاجمين بينما تبدو شرعية."
+          }
+        },
+        {
+          "id": 24,
+          "type": "text",
+          "value": {
+            "en": "More sophisticated XSS attacks can perform actions on behalf of the victim. If a user is logged into a banking website and visits a page with XSS, the malicious script can make fund transfers using the victim's authenticated session. On social media, XSS can post messages, send friend requests, or spread malware to the victim's contacts. In content management systems, XSS can create new administrator accounts or modify existing content. The attack possibilities are limited only by what the legitimate website allows authenticated users to do.",
+            "ar": "يمكن لهجمات XSS الأكثر تطوراً تنفيذ إجراءات نيابة عن الضحية. إذا كان المستخدم مسجلاً الدخول إلى موقع مصرفي وزار صفحة بها XSS، يمكن للنص الضار إجراء تحويلات أموال باستخدام جلسة الضحية المصادق عليها. على وسائل التواصل الاجتماعي، يمكن لـ XSS نشر رسائل أو إرسال طلبات صداقة أو نشر برامج ضارة لجهات اتصال الضحية. في أنظمة إدارة المحتوى، يمكن لـ XSS إنشاء حسابات مسؤول جديدة أو تعديل المحتوى الحالي. تقتصر احتمالات الهجوم فقط على ما يسمح به الموقع الشرعي للمستخدمين المصادق عليهم بالقيام به."
+          }
+        },
+        {
+          "id": 25,
+          "type": "list",
+          "title": {
+            "en": "Common XSS Attack Objectives",
+            "ar": "أهداف هجمات XSS الشائعة"
+          },
+          "items": {
+            "en": [
+              "Session hijacking through cookie theft",
+              "Credential harvesting via fake login forms",
+              "Keylogging to capture sensitive input",
+              "Redirecting users to malicious websites",
+              "Defacing web pages to damage reputation",
+              "Spreading malware or worms to other users",
+              "Performing unauthorized actions as the victim"
+            ],
+            "ar": [
+              "اختطاف الجلسة من خلال سرقة ملفات تعريف الارتباط",
+              "حصاد بيانات الاعتماد عبر نماذج تسجيل دخول مزيفة",
+              "تسجيل ضغطات المفاتيح لالتقاط الإدخال الحساس",
+              "إعادة توجيه المستخدمين إلى مواقع ضارة",
+              "تشويه صفحات الويب للإضرار بالسمعة",
+              "نشر البرامج الضارة أو الديدان للمستخدمين الآخرين",
+              "تنفيذ إجراءات غير مصرح بها كالضحية"
+            ]
+          }
+        },
+        {
+          "id": 26,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "XSS worms can self-propagate by automatically injecting themselves into content created by infected users. Historical examples include social media worms that spread to thousands of users within hours.",
+            "ar": "يمكن لديدان XSS أن تنتشر ذاتياً عن طريق حقن نفسها تلقائياً في المحتوى الذي ينشئه المستخدمون المصابون. تشمل الأمثلة التاريخية ديدان وسائل التواصل الاجتماعي التي انتشرت إلى آلاف المستخدمين في غضون ساعات."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 27,
+          "type": "title",
+          "value": {
+            "en": "Preventing XSS Vulnerabilities",
+            "ar": "الوقاية من ثغرات XSS"
+          }
+        },
+        {
+          "id": 28,
+          "type": "text",
+          "value": {
+            "en": "The fundamental defense against XSS is output encoding, also called escaping. Before displaying any user-supplied data in HTML, encode special characters so browsers treat them as text rather than code. For example, convert < to &lt; and > to &gt;. This ensures that even if user input contains script tags, they display as literal text instead of executing. Different contexts require different encoding: HTML encoding for page content, JavaScript encoding for script blocks, URL encoding for URLs, and CSS encoding for stylesheets. Context-appropriate encoding is crucial.",
+            "ar": "الدفاع الأساسي ضد XSS هو ترميز الإخراج، المسمى أيضاً بالهروب. قبل عرض أي بيانات مقدمة من المستخدم في HTML، قم بترميز الأحرف الخاصة حتى تعامل المتصفحات معها كنص بدلاً من كود. على سبيل المثال، حول < إلى &lt; و > إلى &gt;. هذا يضمن أنه حتى إذا احتوى إدخال المستخدم على علامات نص، فإنها تُعرض كنص حرفي بدلاً من التنفيذ. تتطلب السياقات المختلفة ترميزاً مختلفاً: ترميز HTML لمحتوى الصفحة، وترميز JavaScript لكتل النص، وترميز URL لعناوين URL، وترميز CSS لأوراق الأنماط. الترميز المناسب للسياق أمر حاسم."
+          }
+        },
+        {
+          "id": 29,
+          "type": "text",
+          "value": {
+            "en": "Content Security Policy (CSP) provides an additional layer of XSS protection. CSP is a browser security mechanism that restricts what resources a page can load and from where. By implementing CSP headers, websites can prevent inline scripts from executing, block scripts from unauthorized domains, and control other risky behaviors. Even if an attacker successfully injects XSS, CSP can prevent the malicious script from executing or communicating with external servers. CSP is not a replacement for proper output encoding but serves as defense in depth.",
+            "ar": "توفر سياسة أمان المحتوى (CSP) طبقة حماية إضافية من XSS. CSP هي آلية أمان للمتصفح تقيد الموارد التي يمكن للصفحة تحميلها ومن أين. من خلال تنفيذ رؤوس CSP، يمكن للمواقع منع تنفيذ النصوص المضمنة وحظر النصوص من نطاقات غير مصرح بها والتحكم في السلوكيات المحفوفة بالمخاطر الأخرى. حتى إذا نجح المهاجم في حقن XSS، يمكن لـ CSP منع النص الضار من التنفيذ أو التواصل مع خوادم خارجية. CSP ليست بديلاً لترميز الإخراج المناسب ولكنها تعمل كدفاع في العمق."
+          }
+        },
+        {
+          "id": 30,
+          "type": "orderedList",
+          "title": {
+            "en": "XSS Prevention Best Practices",
+            "ar": "أفضل ممارسات الوقاية من XSS"
+          },
+          "items": [
+            {
+              "subtitle": {
+                "en": "Use Output Encoding",
+                "ar": "استخدم ترميز الإخراج"
+              },
+              "text": {
+                "en": "Encode all user-supplied data before displaying it. Use encoding libraries appropriate for your programming language and framework.",
+                "ar": "قم بترميز جميع البيانات المقدمة من المستخدم قبل عرضها. استخدم مكتبات ترميز مناسبة للغة البرمجة والإطار الخاص بك."
+              },
+              "example": {
+                "en": "Example: Convert < > \" ' & to HTML entities",
+                "ar": "مثال: حول < > \" ' & إلى كيانات HTML"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Implement Content Security Policy",
+                "ar": "نفذ سياسة أمان المحتوى"
+              },
+              "text": {
+                "en": "Configure CSP headers to restrict script sources and prevent inline script execution. Start with restrictive policies and relax only as needed.",
+                "ar": "قم بتكوين رؤوس CSP لتقييد مصادر النصوص ومنع تنفيذ النص المضمن. ابدأ بسياسات مقيدة وخفف فقط حسب الحاجة."
+              },
+              "example": {
+                "en": "Example: Content-Security-Policy: script-src 'self'",
+                "ar": "مثال: Content-Security-Policy: script-src 'self'"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Validate Input",
+                "ar": "تحقق من صحة الإدخال"
+              },
+              "text": {
+                "en": "Validate and sanitize user input against expected formats. Reject input that contains unexpected characters or patterns.",
+                "ar": "تحقق من صحة وعقم إدخال المستخدم مقابل التنسيقات المتوقعة. ارفض الإدخال الذي يحتوي على أحرف أو أنماط غير متوقعة."
+              },
+              "example": {
+                "en": "Example: Email field should only accept valid email formats",
+                "ar": "مثال: يجب أن يقبل حقل البريد الإلكتروني فقط تنسيقات البريد الإلكتروني الصحيحة"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Use Safe JavaScript APIs",
+                "ar": "استخدم واجهات برمجة JavaScript الآمنة"
+              },
+              "text": {
+                "en": "Prefer textContent over innerHTML, and avoid dangerous functions like eval(). Use DOM manipulation methods that treat data as text.",
+                "ar": "فضل textContent على innerHTML، وتجنب الوظائف الخطيرة مثل eval(). استخدم طرق معالجة DOM التي تعامل البيانات كنص."
+              },
+              "example": {
+                "en": "Example: element.textContent = userInput; // Safe",
+                "ar": "مثال: element.textContent = userInput; // آمن"
+              }
+            }
+          ]
+        },
+        {
+          "id": 31,
+          "type": "text",
+          "value": {
+            "en": "Modern web frameworks provide built-in XSS protection mechanisms. Template engines automatically escape output by default. Component-based frameworks separate data from presentation, reducing XSS risks. However, developers can bypass these protections through misuse or when implementing custom functionality. Understanding XSS fundamentals remains essential even when using protective frameworks. Regular security testing, code review, and staying updated on new XSS techniques ensure comprehensive protection against this persistent threat.",
+            "ar": "توفر أطر عمل الويب الحديثة آليات حماية XSS مدمجة. تهرب محركات القوالب الإخراج تلقائياً بشكل افتراضي. تفصل أطر العمل القائمة على المكونات البيانات عن العرض، مما يقلل من مخاطر XSS. ومع ذلك، يمكن للمطورين تجاوز هذه الحمايات من خلال سوء الاستخدام أو عند تنفيذ وظائف مخصصة. يظل فهم أساسيات XSS ضرورياً حتى عند استخدام أطر عمل واقية. يضمن الاختبار الأمني المنتظم ومراجعة الكود والبقاء على اطلاع بتقنيات XSS الجديدة الحماية الشاملة ضد هذا التهديد المستمر."
+          }
+        }
+      ]
+    },
+    {
+      "id": "topic-4",
+      "title": {
+        "en": "Security Headers and HTTP Security",
+        "ar": "رؤوس الأمان وأمان HTTP"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "Understanding HTTP Security Headers",
+            "ar": "فهم رؤوس أمان HTTP"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "HTTP security headers are directives sent by web servers to browsers as part of HTTP responses. These headers instruct browsers on how to handle content, enforce security policies, and protect against various attacks. Security headers act as a communication channel between the server and browser, establishing rules about what the browser should and should not do. When properly configured, security headers provide defense in depth against attacks like XSS, clickjacking, MIME-type confusion, and protocol downgrade attacks. They are one of the simplest yet most effective security controls available to web applications.",
+            "ar": "رؤوس أمان HTTP هي توجيهات ترسلها خوادم الويب إلى المتصفحات كجزء من استجابات HTTP. تُرشد هذه الرؤوس المتصفحات حول كيفية التعامل مع المحتوى وتنفيذ سياسات الأمان والحماية من هجمات مختلفة. تعمل رؤوس الأمان كقناة اتصال بين الخادم والمتصفح، وتضع قواعد حول ما يجب على المتصفح فعله وما لا يجب فعله. عند تكوينها بشكل صحيح، توفر رؤوس الأمان دفاعاً في العمق ضد هجمات مثل XSS والنقر الخادع والارتباك في نوع MIME وهجمات تخفيض البروتوكول. إنها واحدة من أبسط ضوابط الأمان وأكثرها فعالية المتاحة لتطبيقات الويب."
+          }
+        },
+        {
+          "id": 1773501823481.3875,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Web%20Security%20Basics/4-1-HTTP%20headers%20protecting%20a%20browser..webp"
+        },
+        {
+          "id": 4,
+          "type": "text",
+          "value": {
+            "en": "The beauty of security headers is their ease of implementation. Unlike complex code changes, security headers are typically added through web server configuration or application middleware. A single line in a configuration file can enable powerful protections. However, this simplicity can be deceptive. Incorrect header configuration can break website functionality or provide a false sense of security. Understanding what each header does, when to use it, and how it interacts with other security measures is essential for effective implementation. Security headers work best as part of a comprehensive security strategy, not as standalone solutions.",
+            "ar": "جمال رؤوس الأمان يكمن في سهولة تنفيذها. على عكس تغييرات الكود المعقدة، عادة ما تُضاف رؤوس الأمان من خلال تكوين خادم الويب أو برامج وسيطة للتطبيق. يمكن لسطر واحد في ملف تكوين تمكين حمايات قوية. ومع ذلك، يمكن أن تكون هذه البساطة خادعة. يمكن أن يؤدي تكوين الرأس غير الصحيح إلى كسر وظائف الموقع أو توفير شعور زائف بالأمان. فهم ما يفعله كل رأس ومتى يتم استخدامه وكيف يتفاعل مع تدابير الأمان الأخرى أمر ضروري للتنفيذ الفعال. تعمل رؤوس الأمان بشكل أفضل كجزء من استراتيجية أمان شاملة، وليس كحلول مستقلة."
+          }
+        },
+        {
+          "id": 5,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Security headers are sent with every HTTP response. You can view the security headers your website sends using browser developer tools (Network tab) or online scanning tools that analyze header configurations.",
+            "ar": "يتم إرسال رؤوس الأمان مع كل استجابة HTTP. يمكنك عرض رؤوس الأمان التي يرسلها موقعك باستخدام أدوات مطور المتصفح (علامة تبويب الشبكة) أو أدوات المسح عبر الإنترنت التي تحلل تكوينات الرؤوس."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 6,
+          "type": "title",
+          "value": {
+            "en": "Strict-Transport-Security (HSTS) Header",
+            "ar": "رأس أمان النقل الصارم (HSTS)"
+          }
+        },
+        {
+          "id": 7,
+          "type": "text",
+          "value": {
+            "en": "HTTP Strict Transport Security (HSTS) is a security header that forces browsers to only communicate with the server over HTTPS, never over plain HTTP. When a browser receives an HSTS header, it remembers this instruction for a specified duration (max-age). During this period, even if a user types http:// in the address bar or clicks an HTTP link, the browser automatically converts the request to HTTPS before sending it. This prevents protocol downgrade attacks where attackers intercept HTTP connections and prevent the upgrade to HTTPS, allowing them to eavesdrop on or modify traffic.",
+            "ar": "أمان النقل الصارم HTTP (HSTS) هو رأس أمان يجبر المتصفحات على التواصل مع الخادم فقط عبر HTTPS، وليس أبداً عبر HTTP العادي. عندما يتلقى المتصفح رأس HSTS، يتذكر هذا التوجيه لمدة محددة (max-age). خلال هذه الفترة، حتى إذا كتب المستخدم http:// في شريط العنوان أو نقر على رابط HTTP، يحول المتصفح الطلب تلقائياً إلى HTTPS قبل إرساله. هذا يمنع هجمات تخفيض البروتوكول حيث يعترض المهاجمون اتصالات HTTP ويمنعون الترقية إلى HTTPS، مما يسمح لهم بالتنصت على حركة المرور أو تعديلها."
+          }
+        },
+        {
+          "id": 8,
+          "type": "text",
+          "value": {
+            "en": "HSTS addresses a critical vulnerability in the typical HTTPS deployment model. Normally, when users first visit a website by typing the domain name, their browser makes an HTTP request. The server then redirects this to HTTPS. During this initial HTTP request, attackers can perform a man-in-the-middle attack. HSTS eliminates this vulnerability after the first visit. The includeSubDomains directive extends protection to all subdomains, ensuring that subdomain.example.com also uses HTTPS. The preload directive allows websites to be included in browsers' built-in HSTS preload lists, providing protection even on the first visit.",
+            "ar": "يعالج HSTS ثغرة حرجة في نموذج نشر HTTPS النموذجي. عادةً، عندما يزور المستخدمون موقعاً لأول مرة عن طريق كتابة اسم النطاق، يقوم متصفحهم بإجراء طلب HTTP. يعيد الخادم توجيه هذا إلى HTTPS. خلال طلب HTTP الأولي هذا، يمكن للمهاجمين تنفيذ هجوم وسيط. يزيل HSTS هذه الثغرة بعد الزيارة الأولى. يمتد توجيه includeSubDomains الحماية إلى جميع النطاقات الفرعية، مما يضمن أن subdomain.example.com يستخدم أيضاً HTTPS. يسمح توجيه preload بإدراج المواقع في قوائم التحميل المسبق HSTS المدمجة في المتصفحات، مما يوفر الحماية حتى في الزيارة الأولى."
+          }
+        },
+        {
+          "id": 9,
+          "type": "code",
+          "language": "http",
+          "value": "// Basic HSTS header - enforce HTTPS for 1 year\nStrict-Transport-Security: max-age=31536000\n\n// HSTS with subdomain inclusion\nStrict-Transport-Security: max-age=31536000; includeSubDomains\n\n// HSTS with preload (for submission to browser preload lists)\nStrict-Transport-Security: max-age=31536000; includeSubDomains; preload\n\n// Short duration for testing (1 day)\nStrict-Transport-Security: max-age=86400\n\n// To disable HSTS (use with caution!)\nStrict-Transport-Security: max-age=0"
+        },
+        {
+          "id": 1773501849816.6172,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Web%20Security%20Basics/4-2-HTTP%20requests%20with%20and%20without%20HSTS.webp"
+        },
+        {
+          "id": 11,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "Before enabling HSTS with a long max-age, ensure your entire site works correctly over HTTPS, including all subdomains if using includeSubDomains. Once browsers cache the HSTS policy, they will refuse to connect over HTTP even if there are problems.",
+            "ar": "قبل تمكين HSTS بمدة max-age طويلة، تأكد من أن موقعك بالكامل يعمل بشكل صحيح عبر HTTPS، بما في ذلك جميع النطاقات الفرعية إذا كنت تستخدم includeSubDomains. بمجرد أن تخزن المتصفحات سياسة HSTS مؤقتاً، سترفض الاتصال عبر HTTP حتى لو كانت هناك مشاكل."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 12,
+          "type": "title",
+          "value": {
+            "en": "X-Frame-Options and Clickjacking Prevention",
+            "ar": "X-Frame-Options والوقاية من النقر الخادع"
+          }
+        },
+        {
+          "id": 13,
+          "type": "text",
+          "value": {
+            "en": "Clickjacking is an attack where a malicious website tricks users into clicking on something different from what they perceive. The attacker embeds the target website in an invisible iframe overlaid on their malicious page. When users think they are clicking a button on the attacker's page, they are actually clicking on the hidden legitimate website underneath. This can be used to make users unknowingly change settings, authorize payments, or perform actions on sites where they are logged in. The X-Frame-Options header protects against clickjacking by controlling whether a page can be displayed in a frame, iframe, or object.",
+            "ar": "النقر الخادع هو هجوم حيث يخدع موقع ويب ضار المستخدمين للنقر على شيء مختلف عما يدركونه. يضمن المهاجم الموقع المستهدف في إطار iframe غير مرئي مُغطى على صفحته الضارة. عندما يعتقد المستخدمون أنهم ينقرون على زر في صفحة المهاجم، فإنهم في الواقع ينقرون على الموقع الشرعي المخفي تحته. يمكن استخدام هذا لجعل المستخدمين يغيرون الإعدادات عن غير قصد أو يصرحون بالدفعات أو يقومون بإجراءات على مواقع مسجلين فيها. يحمي رأس X-Frame-Options من النقر الخادع عن طريق التحكم في ما إذا كان يمكن عرض الصفحة في إطار أو iframe أو كائن."
+          }
+        },
+        {
+          "id": 14,
+          "type": "text",
+          "value": {
+            "en": "X-Frame-Options has three possible values. DENY prevents the page from being displayed in any frame, providing the strongest protection. SAMEORIGIN allows framing only by pages from the same origin (same domain, protocol, and port), which is useful for websites that need to frame their own content. ALLOW-FROM uri permits framing only from a specific origin, though browser support for this option is limited. Most modern websites should use either DENY or SAMEORIGIN unless they have a specific need to be embedded in other sites. Note that X-Frame-Options is being superseded by the frame-ancestors directive in Content Security Policy, which offers more flexibility.",
+            "ar": "X-Frame-Options له ثلاث قيم محتملة. يمنع DENY عرض الصفحة في أي إطار، مما يوفر أقوى حماية. يسمح SAMEORIGIN بالتأطير فقط من قبل صفحات من نفس الأصل (نفس النطاق والبروتوكول والمنفذ)، وهو مفيد للمواقع التي تحتاج إلى تأطير محتواها الخاص. يسمح ALLOW-FROM uri بالتأطير فقط من أصل محدد، على الرغم من أن دعم المتصفح لهذا الخيار محدود. يجب على معظم المواقع الحديثة استخدام إما DENY أو SAMEORIGIN ما لم يكن لديها حاجة محددة للتضمين في مواقع أخرى. لاحظ أن X-Frame-Options يتم استبداله بتوجيه frame-ancestors في سياسة أمان المحتوى، والتي توفر مزيداً من المرونة."
+          }
+        },
+        {
+          "id": 15,
+          "type": "code",
+          "language": "http",
+          "value": "// Prevent all framing - strongest protection\nX-Frame-Options: DENY\n\n// Allow framing only from same origin\nX-Frame-Options: SAMEORIGIN\n\n// Allow framing from specific site (limited browser support)\nX-Frame-Options: ALLOW-FROM https://trusted-site.com\n\n// Modern alternative using CSP frame-ancestors\nContent-Security-Policy: frame-ancestors 'none'  // equivalent to DENY\nContent-Security-Policy: frame-ancestors 'self'  // equivalent to SAMEORIGIN\nContent-Security-Policy: frame-ancestors https://trusted-site.com  // more flexible"
+        },
+        {
+          "id": 16,
+          "type": "text",
+          "value": {
+            "en": "Clickjacking attacks can be surprisingly sophisticated. Attackers can use CSS opacity to make the iframe nearly invisible, position it precisely over legitimate-looking buttons, and even track mouse movements to dynamically reposition the frame. In some attacks, users are tricked into dragging content, which can be used to extract text selections or upload files. Banking sites, social media platforms, and any site with sensitive actions are prime targets. Real-world clickjacking attacks have been used to trick users into enabling webcams, authorizing financial transactions, and spreading malware through social media shares.",
+            "ar": "يمكن أن تكون هجمات النقر الخادع متطورة بشكل مدهش. يمكن للمهاجمين استخدام شفافية CSS لجعل الإطار iframe غير مرئي تقريباً، ووضعه بدقة فوق أزرار تبدو شرعية، وحتى تتبع حركات الماوس لإعادة وضع الإطار ديناميكياً. في بعض الهجمات، يتم خداع المستخدمين لسحب المحتوى، والذي يمكن استخدامه لاستخراج تحديدات النص أو تحميل الملفات. مواقع البنوك ومنصات التواصل الاجتماعي وأي موقع به إجراءات حساسة هي أهداف رئيسية. تم استخدام هجمات النقر الخادع في العالم الحقيقي لخداع المستخدمين لتمكين كاميرات الويب وتصريح المعاملات المالية ونشر البرامج الضارة من خلال مشاركات وسائل التواصل الاجتماعي."
+          }
+        },
+        {
+          "id": 17,
+          "type": "hr"
+        },
+        {
+          "id": 18,
+          "type": "title",
+          "value": {
+            "en": "X-Content-Type-Options Header",
+            "ar": "رأس X-Content-Type-Options"
+          }
+        },
+        {
+          "id": 19,
+          "type": "text",
+          "value": {
+            "en": "The X-Content-Type-Options header addresses a browser behavior called MIME-type sniffing. Normally, browsers trust the Content-Type header sent by servers to determine how to handle files. However, for security reasons, some browsers also examine file content to guess the actual type, a process called MIME sniffing. This can be exploited by attackers who upload files with misleading Content-Type headers. For example, an attacker might upload a JavaScript file disguised as an image. If the browser sniffs the content and detects JavaScript, it might execute the file instead of displaying it as an image, leading to XSS attacks.",
+            "ar": "يعالج رأس X-Content-Type-Options سلوك متصفح يسمى استنشاق نوع MIME. عادةً، تثق المتصفحات في رأس Content-Type الذي ترسله الخوادم لتحديد كيفية التعامل مع الملفات. ومع ذلك، لأسباب أمنية، تفحص بعض المتصفحات أيضاً محتوى الملف لتخمين النوع الفعلي، وهي عملية تسمى استنشاق MIME. يمكن استغلال هذا من قبل المهاجمين الذين يحملون ملفات برؤوس Content-Type مضللة. على سبيل المثال، قد يحمل المهاجم ملف JavaScript متنكراً كصورة. إذا استنشق المتصفح المحتوى واكتشف JavaScript، فقد ينفذ الملف بدلاً من عرضه كصورة، مما يؤدي إلى هجمات XSS."
+          }
+        },
+        {
+          "id": 20,
+          "type": "text",
+          "value": {
+            "en": "Setting X-Content-Type-Options to nosniff instructs browsers to strictly follow the Content-Type header without attempting to sniff the actual content. This is particularly important for user-uploaded content. Imagine a file upload feature where users can upload profile pictures. An attacker uploads a file containing JavaScript code but names it image.jpg. Without X-Content-Type-Options: nosniff, some browsers might detect the JavaScript content and execute it. With the header in place, browsers will treat it strictly as the declared Content-Type (image/jpeg) and refuse to execute any code. This simple header prevents an entire class of MIME confusion attacks.",
+            "ar": "تعيين X-Content-Type-Options إلى nosniff يُرشد المتصفحات إلى اتباع رأس Content-Type بدقة دون محاولة استنشاق المحتوى الفعلي. هذا مهم بشكل خاص للمحتوى الذي يحمله المستخدم. تخيل ميزة تحميل الملفات حيث يمكن للمستخدمين تحميل صور الملف الشخصي. يحمل المهاجم ملفاً يحتوي على كود JavaScript ولكنه يسميه image.jpg. بدون X-Content-Type-Options: nosniff، قد تكتشف بعض المتصفحات محتوى JavaScript وتنفذه. مع وجود الرأس، ستتعامل المتصفحات معه بدقة كـ Content-Type المعلن (image/jpeg) وترفض تنفيذ أي كود. يمنع هذا الرأس البسيط فئة كاملة من هجمات الارتباك في MIME."
+          }
+        },
+        {
+          "id": 21,
+          "type": "code",
+          "language": "http",
+          "value": "// Enable MIME-type sniffing protection\nX-Content-Type-Options: nosniff\n\n// This is the only valid value for this header\n// No other options exist\n\n// Example with proper Content-Type declaration\nContent-Type: image/jpeg\nX-Content-Type-Options: nosniff\n// Browser will treat this file ONLY as JPEG, never as script\n\n// For scripts\nContent-Type: application/javascript\nX-Content-Type-Options: nosniff\n// Browser will only execute if Content-Type matches"
+        },
+        {
+          "id": 22,
+          "type": "table",
+          "title": {
+            "en": "Essential Security Headers Summary",
+            "ar": "ملخص رؤوس الأمان الأساسية"
+          },
+          "headers": {
+            "en": [
+              "Header",
+              "Purpose",
+              "Recommended Value",
+              "Priority"
+            ],
+            "ar": [
+              "الرأس",
+              "الغرض",
+              "القيمة الموصى بها",
+              "الأولوية"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "Strict-Transport-Security",
+                "Enforce HTTPS",
+                "max-age=31536000; includeSubDomains",
+                "Critical"
+              ],
+              "ar": [
+                "Strict-Transport-Security",
+                "فرض HTTPS",
+                "max-age=31536000; includeSubDomains",
+                "حرج"
+              ]
+            },
+            {
+              "en": [
+                "Content-Security-Policy",
+                "Prevent XSS & injection",
+                "default-src 'self'",
+                "Critical"
+              ],
+              "ar": [
+                "Content-Security-Policy",
+                "منع XSS والحقن",
+                "default-src 'self'",
+                "حرج"
+              ]
+            },
+            {
+              "en": [
+                "X-Frame-Options",
+                "Prevent clickjacking",
+                "DENY or SAMEORIGIN",
+                "High"
+              ],
+              "ar": [
+                "X-Frame-Options",
+                "منع النقر الخادع",
+                "DENY أو SAMEORIGIN",
+                "عالي"
+              ]
+            },
+            {
+              "en": [
+                "X-Content-Type-Options",
+                "Prevent MIME confusion",
+                "nosniff",
+                "High"
+              ],
+              "ar": [
+                "X-Content-Type-Options",
+                "منع ارتباك MIME",
+                "nosniff",
+                "عالي"
+              ]
+            },
+            {
+              "en": [
+                "Referrer-Policy",
+                "Control referrer info",
+                "strict-origin-when-cross-origin",
+                "Medium"
+              ],
+              "ar": [
+                "Referrer-Policy",
+                "التحكم في معلومات المُحيل",
+                "strict-origin-when-cross-origin",
+                "متوسط"
+              ]
+            },
+            {
+              "en": [
+                "Permissions-Policy",
+                "Control browser features",
+                "geolocation=(), camera=()",
+                "Medium"
+              ],
+              "ar": [
+                "Permissions-Policy",
+                "التحكم في ميزات المتصفح",
+                "geolocation=(), camera=()",
+                "متوسط"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 23,
+          "type": "title",
+          "value": {
+            "en": "Referrer-Policy Header",
+            "ar": "رأس Referrer-Policy"
+          }
+        },
+        {
+          "id": 24,
+          "type": "text",
+          "value": {
+            "en": "The Referrer-Policy header controls how much referrer information browsers include when navigating from your site to other sites. By default, when a user clicks a link on your site, their browser sends a Referer header (note the misspelling, which is historical) to the destination site. This header contains the full URL of the page the user came from. While this can be useful for analytics, it can also leak sensitive information. For example, if users are on a page like https://bank.com/account/123456/statements, the account number becomes visible to any site they navigate to from that page.",
+            "ar": "يتحكم رأس Referrer-Policy في مقدار معلومات المُحيل التي تتضمنها المتصفحات عند التنقل من موقعك إلى مواقع أخرى. افتراضياً، عندما ينقر المستخدم على رابط في موقعك، يرسل متصفحه رأس Referer (لاحظ الخطأ الإملائي، وهو تاريخي) إلى الموقع المقصود. يحتوي هذا الرأس على عنوان URL الكامل للصفحة التي جاء منها المستخدم. بينما يمكن أن يكون هذا مفيداً للتحليلات، يمكنه أيضاً تسريب معلومات حساسة. على سبيل المثال، إذا كان المستخدمون على صفحة مثل https://bank.com/account/123456/statements، يصبح رقم الحساب مرئياً لأي موقع ينتقلون إليه من تلك الصفحة."
+          }
+        },
+        {
+          "id": 25,
+          "type": "text",
+          "value": {
+            "en": "Referrer-Policy offers several options to balance functionality and privacy. The no-referrer value sends no referrer information at all, providing maximum privacy but breaking some analytics and security features that rely on referrer data. The origin value sends only the origin (https://example.com) without the full path, protecting sensitive URL parameters while maintaining basic referrer functionality. The strict-origin-when-cross-origin value (recommended default) sends the full URL for same-origin requests but only the origin when navigating to different sites, and sends nothing when downgrading from HTTPS to HTTP. This provides a good balance between functionality and privacy.",
+            "ar": "توفر Referrer-Policy عدة خيارات لموازنة الوظائف والخصوصية. لا ترسل القيمة no-referrer أي معلومات مُحيل على الإطلاق، مما يوفر أقصى قدر من الخصوصية ولكنه يكسر بعض ميزات التحليلات والأمان التي تعتمد على بيانات المُحيل. ترسل القيمة origin الأصل فقط (https://example.com) بدون المسار الكامل، مما يحمي معاملات URL الحساسة مع الحفاظ على وظائف المُحيل الأساسية. ترسل القيمة strict-origin-when-cross-origin (الافتراضية الموصى بها) عنوان URL الكامل لطلبات نفس الأصل ولكن الأصل فقط عند التنقل إلى مواقع مختلفة، ولا ترسل شيئاً عند التخفيض من HTTPS إلى HTTP. هذا يوفر توازناً جيداً بين الوظائف والخصوصية."
+          }
+        },
+        {
+          "id": 26,
+          "type": "code",
+          "language": "http",
+          "value": "// No referrer information sent\nReferrer-Policy: no-referrer\n\n// Send only origin, not full URL\nReferrer-Policy: origin\n\n// Send origin only when crossing origins\nReferrer-Policy: origin-when-cross-origin\n\n// Recommended: Full URL for same-origin, origin for cross-origin\nReferrer-Policy: strict-origin-when-cross-origin\n\n// Full URL always sent (least privacy)\nReferrer-Policy: unsafe-url\n\n// Example scenarios:\n// User on: https://site.com/user/profile?id=secret\n// Clicks link to: https://external.com\n\n// no-referrer → No Referer header sent\n// origin → Referer: https://site.com\n// strict-origin-when-cross-origin → Referer: https://site.com\n// unsafe-url → Referer: https://site.com/user/profile?id=secret"
+        },
+        {
+          "id": 27,
+          "type": "title",
+          "value": {
+            "en": "Permissions-Policy Header",
+            "ar": "رأس Permissions-Policy"
+          }
+        },
+        {
+          "id": 28,
+          "type": "text",
+          "value": {
+            "en": "Permissions-Policy (formerly Feature-Policy) is a security header that allows websites to control which browser features and APIs can be used by the page and any embedded iframes. Modern browsers provide powerful features like geolocation, camera access, microphone, payment APIs, and many others. While these features enable rich web applications, they also present privacy and security risks if misused. Permissions-Policy lets you explicitly declare which features your site needs and deny access to everything else. This follows the principle of least privilege, reducing the attack surface if your site is compromised or contains third-party content.",
+            "ar": "Permissions-Policy (المعروفة سابقاً باسم Feature-Policy) هي رأس أمان يسمح للمواقع بالتحكم في ميزات المتصفح وواجهات برمجة التطبيقات التي يمكن استخدامها بواسطة الصفحة وأي إطارات iframe مضمنة. توفر المتصفحات الحديثة ميزات قوية مثل تحديد الموقع الجغرافي والوصول إلى الكاميرا والميكروفون وواجهات برمجة تطبيقات الدفع والعديد من الميزات الأخرى. بينما تمكن هذه الميزات تطبيقات الويب الغنية، فإنها تقدم أيضاً مخاطر الخصوصية والأمان إذا تم إساءة استخدامها. تتيح لك Permissions-Policy إعلان الميزات التي يحتاجها موقعك صراحةً ورفض الوصول إلى كل شيء آخر. هذا يتبع مبدأ الامتياز الأقل، مما يقلل من سطح الهجوم إذا تم اختراق موقعك أو يحتوي على محتوى طرف ثالث."
+          }
+        },
+        {
+          "id": 29,
+          "type": "text",
+          "value": {
+            "en": "The Permissions-Policy header uses a directive-based syntax where you list features and specify which origins can use them. Using empty parentheses () completely blocks a feature for everyone, including your own site. Using 'self' allows only your origin to use the feature. You can also specify other trusted origins. For example, if you embed videos from a trusted CDN that needs fullscreen access, you can allow that specific origin while blocking all others. Common features to restrict include geolocation (prevents location tracking), camera and microphone (prevents unauthorized recording), payment (prevents unauthorized payment requests), and USB/Bluetooth (prevents device access).",
+            "ar": "يستخدم رأس Permissions-Policy صيغة قائمة على التوجيهات حيث تدرج الميزات وتحدد الأصول التي يمكنها استخدامها. استخدام أقواس فارغة () يحظر الميزة تماماً للجميع، بما في ذلك موقعك الخاص. استخدام 'self' يسمح فقط لأصلك باستخدام الميزة. يمكنك أيضاً تحديد أصول موثوقة أخرى. على سبيل المثال، إذا قمت بتضمين مقاطع فيديو من CDN موثوق يحتاج إلى وصول للشاشة الكاملة، يمكنك السماح بهذا الأصل المحدد مع حظر جميع الأصول الأخرى. تشمل الميزات الشائعة للتقييد تحديد الموقع الجغرافي (يمنع تتبع الموقع) والكاميرا والميكروفون (يمنع التسجيل غير المصرح به) والدفع (يمنع طلبات الدفع غير المصرح بها) و USB/Bluetooth (يمنع الوصول إلى الجهاز)."
+          }
+        },
+        {
+          "id": 30,
+          "type": "code",
+          "language": "http",
+          "value": "// Block all access to camera and microphone\nPermissions-Policy: camera=(), microphone=()\n\n// Allow geolocation only for your site\nPermissions-Policy: geolocation=(self)\n\n// Allow specific trusted origins\nPermissions-Policy: payment=(self \"https://trusted-payment.com\")\n\n// Comprehensive policy blocking multiple features\nPermissions-Policy: camera=(), microphone=(), geolocation=(), \n  payment=(), usb=(), magnetometer=(), gyroscope=()\n\n// Allow your site for multiple features\nPermissions-Policy: camera=(self), microphone=(self), fullscreen=(self)\n\n// Old Feature-Policy syntax (deprecated but still supported)\nFeature-Policy: camera 'none'; microphone 'none'"
+        },
+        {
+          "id": 31,
+          "type": "list",
+          "title": {
+            "en": "Common Features to Control with Permissions-Policy",
+            "ar": "الميزات الشائعة للتحكم بها مع Permissions-Policy"
+          },
+          "items": {
+            "en": [
+              "camera - Webcam access for video recording",
+              "microphone - Audio recording capabilities",
+              "geolocation - GPS and location services",
+              "payment - Payment Request API for transactions",
+              "usb - USB device access",
+              "bluetooth - Bluetooth device connections",
+              "accelerometer / gyroscope / magnetometer - Motion sensors",
+              "fullscreen - Fullscreen mode activation",
+              "autoplay - Automatic media playback",
+              "picture-in-picture - Floating video windows"
+            ],
+            "ar": [
+              "camera - الوصول إلى كاميرا الويب لتسجيل الفيديو",
+              "microphone - قدرات تسجيل الصوت",
+              "geolocation - GPS وخدمات الموقع",
+              "payment - واجهة برمجة تطبيقات طلب الدفع للمعاملات",
+              "usb - الوصول إلى جهاز USB",
+              "bluetooth - اتصالات جهاز Bluetooth",
+              "accelerometer / gyroscope / magnetometer - أجهزة استشعار الحركة",
+              "fullscreen - تنشيط وضع ملء الشاشة",
+              "autoplay - تشغيل الوسائط التلقائي",
+              "picture-in-picture - نوافذ الفيديو العائمة"
+            ]
+          }
+        },
+        {
+          "id": 32,
+          "type": "hr"
+        },
+        {
+          "id": 33,
+          "type": "title",
+          "value": {
+            "en": "Implementing Security Headers in Practice",
+            "ar": "تنفيذ رؤوس الأمان عملياً"
+          }
+        },
+        {
+          "id": 34,
+          "type": "text",
+          "value": {
+            "en": "Implementing security headers varies depending on your web server and technology stack. For Apache servers, headers are typically configured in the .htaccess file or main server configuration using the Header directive from mod_headers module. For Nginx servers, the add_header directive in server or location blocks adds security headers. For application-level implementation, most web frameworks provide middleware or configuration options to set headers. Cloud platforms like Cloudflare, AWS CloudFront, and Azure CDN allow header configuration through their management interfaces, making it easy to apply headers without touching application code.",
+            "ar": "يختلف تنفيذ رؤوس الأمان حسب خادم الويب ومجموعة التقنيات الخاصة بك. بالنسبة لخوادم Apache، يتم تكوين الرؤوس عادةً في ملف .htaccess أو تكوين الخادم الرئيسي باستخدام توجيه Header من وحدة mod_headers. بالنسبة لخوادم Nginx، يضيف توجيه add_header في كتل الخادم أو الموقع رؤوس الأمان. للتنفيذ على مستوى التطبيق، توفر معظم أطر عمل الويب برامج وسيطة أو خيارات تكوين لتعيين الرؤوس. تسمح منصات السحابة مثل Cloudflare و AWS CloudFront و Azure CDN بتكوين الرؤوس من خلال واجهات الإدارة الخاصة بها، مما يسهل تطبيق الرؤوس دون لمس كود التطبيق."
+          }
+        },
+        {
+          "id": 35,
+          "type": "terminal",
+          "label": {
+            "en": "Security Headers Configuration Examples",
+            "ar": "أمثلة تكوين رؤوس الأمان"
+          },
+          "value": "# Apache (.htaccess or httpd.conf)\n<IfModule mod_headers.c>\n  Header always set Strict-Transport-Security \"max-age=31536000; includeSubDomains\"\n  Header always set X-Frame-Options \"DENY\"\n  Header always set X-Content-Type-Options \"nosniff\"\n  Header always set Referrer-Policy \"strict-origin-when-cross-origin\"\n  Header always set Permissions-Policy \"camera=(), microphone=(), geolocation=()\"\n</IfModule>\n\n# Nginx (nginx.conf or site config)\nserver {\n  add_header Strict-Transport-Security \"max-age=31536000; includeSubDomains\" always;\n  add_header X-Frame-Options \"DENY\" always;\n  add_header X-Content-Type-Options \"nosniff\" always;\n  add_header Referrer-Policy \"strict-origin-when-cross-origin\" always;\n  add_header Permissions-Policy \"camera=(), microphone=()\" always;\n}\n\n# Node.js with Express\nconst helmet = require('helmet');\napp.use(helmet());\n\n# Python Flask\nfrom flask_talisman import Talisman\nTalisman(app)"
+        },
+        {
+          "id": 36,
+          "type": "text",
+          "value": {
+            "en": "Testing security headers is essential after implementation. Browser developer tools (Network tab) show response headers for each request. Online security header scanners analyze your site's headers and provide recommendations. Common tools include SecurityHeaders.com, Mozilla Observatory, and SSLLabs. These tools not only check for missing headers but also validate header values and flag potential misconfigurations. Regular testing is important because configuration changes, server updates, or CDN modifications can inadvertently remove or alter security headers. Automated monitoring can alert you if headers disappear or change unexpectedly.",
+            "ar": "اختبار رؤوس الأمان ضروري بعد التنفيذ. تُظهر أدوات مطور المتصفح (علامة تبويب الشبكة) رؤوس الاستجابة لكل طلب. تحلل ماسحات رؤوس الأمان عبر الإنترنت رؤوس موقعك وتقدم توصيات. تشمل الأدوات الشائعة SecurityHeaders.com و Mozilla Observatory و SSLLabs. لا تتحقق هذه الأدوات فقط من الرؤوس المفقودة ولكن أيضاً تتحقق من صحة قيم الرؤوس وتُشير إلى التكوينات الخاطئة المحتملة. الاختبار المنتظم مهم لأن تغييرات التكوين أو تحديثات الخادم أو تعديلات CDN يمكن أن تزيل أو تغير رؤوس الأمان عن غير قصد. يمكن للمراقبة الآلية تنبيهك إذا اختفت الرؤوس أو تغيرت بشكل غير متوقع."
+          }
+        },
+        {
+          "id": 1773501831229.201,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Web%20Security%20Basics/4-3-deployment%20checklist.webp"
+        },
+        {
+          "id": 38,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "Be careful when implementing security headers on production sites. Test thoroughly in development first. Some headers like HSTS and CSP can break functionality if misconfigured. Start with report-only modes where available, then gradually enforce policies.",
+            "ar": "كن حذراً عند تنفيذ رؤوس الأمان على مواقع الإنتاج. اختبر بدقة في التطوير أولاً. بعض الرؤوس مثل HSTS و CSP يمكن أن تكسر الوظائف إذا تم تكوينها بشكل خاطئ. ابدأ بأوضاع الإبلاغ فقط حيثما كانت متاحة، ثم قم بفرض السياسات تدريجياً."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 39,
+          "type": "title",
+          "value": {
+            "en": "Security Headers Best Practices and Common Mistakes",
+            "ar": "أفضل ممارسات رؤوس الأمان والأخطاء الشائعة"
+          }
+        },
+        {
+          "id": 40,
+          "type": "text",
+          "value": {
+            "en": "Start with the most critical headers first: HSTS for HTTPS enforcement, X-Frame-Options or CSP frame-ancestors for clickjacking protection, and X-Content-Type-Options to prevent MIME confusion. These provide immediate security benefits with minimal risk of breaking functionality. Then add Content-Security-Policy incrementally, starting in report-only mode to identify issues. Finally, implement Referrer-Policy and Permissions-Policy based on your site's specific needs. This gradual approach allows you to catch and fix compatibility issues before they affect users.",
+            "ar": "ابدأ بالرؤوس الأكثر أهمية أولاً: HSTS لفرض HTTPS، و X-Frame-Options أو CSP frame-ancestors للحماية من النقر الخادع، و X-Content-Type-Options لمنع ارتباك MIME. توفر هذه فوائد أمنية فورية مع الحد الأدنى من خطر كسر الوظائف. ثم أضف Content-Security-Policy تدريجياً، بدءاً من وضع الإبلاغ فقط لتحديد المشكلات. أخيراً، نفذ Referrer-Policy و Permissions-Policy بناءً على احتياجات موقعك المحددة. يتيح لك هذا النهج التدريجي اكتشاف وإصلاح مشكلات التوافق قبل أن تؤثر على المستخدمين."
+          }
+        },
+        {
+          "id": 41,
+          "type": "orderedList",
+          "title": {
+            "en": "Common Security Header Mistakes to Avoid",
+            "ar": "أخطاء رؤوس الأمان الشائعة التي يجب تجنبها"
+          },
+          "items": [
+            {
+              "subtitle": {
+                "en": "Setting HSTS Before Fully Migrating to HTTPS",
+                "ar": "تعيين HSTS قبل الترحيل الكامل إلى HTTPS"
+              },
+              "text": {
+                "en": "Enabling HSTS with a long max-age before ensuring all content (including subdomains) works over HTTPS can lock users out. Test thoroughly over HTTP first, fix all mixed content warnings, then enable HSTS with a short max-age initially.",
+                "ar": "تمكين HSTS بمدة max-age طويلة قبل التأكد من أن جميع المحتوى (بما في ذلك النطاقات الفرعية) يعمل عبر HTTPS يمكن أن يحظر المستخدمين. اختبر بدقة عبر HTTP أولاً، وأصلح جميع تحذيرات المحتوى المختلط، ثم قم بتمكين HSTS بمدة max-age قصيرة في البداية."
+              },
+              "example": {
+                "en": "Example: Start with max-age=300 (5 minutes) for testing, increase gradually",
+                "ar": "مثال: ابدأ بـ max-age=300 (5 دقائق) للاختبار، وزد تدريجياً"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Using CSP 'unsafe-inline' Unnecessarily",
+                "ar": "استخدام CSP 'unsafe-inline' دون داعٍ"
+              },
+              "text": {
+                "en": "Adding 'unsafe-inline' to CSP script-src defeats much of CSP's XSS protection. Instead, refactor inline scripts to external files or use nonces/hashes for necessary inline scripts. This takes more effort but provides real security.",
+                "ar": "إضافة 'unsafe-inline' إلى CSP script-src يهزم الكثير من حماية CSP ضد XSS. بدلاً من ذلك، أعد هيكلة النصوص المضمنة إلى ملفات خارجية أو استخدم nonces/hashes للنصوص المضمنة الضرورية. هذا يتطلب المزيد من الجهد لكنه يوفر أماناً حقيقياً."
+              },
+              "example": {
+                "en": "Example: Use nonce-based CSP instead of 'unsafe-inline'",
+                "ar": "مثال: استخدم CSP قائماً على nonce بدلاً من 'unsafe-inline'"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Forgetting Headers on Error Pages",
+                "ar": "نسيان الرؤوس على صفحات الخطأ"
+              },
+              "text": {
+                "en": "Custom error pages (404, 500, etc.) often bypass normal application routing and miss security headers. Ensure your error handling includes all security headers, as these pages can still be attack vectors.",
+                "ar": "غالباً ما تتجاوز صفحات الخطأ المخصصة (404، 500، إلخ) التوجيه العادي للتطبيق وتفقد رؤوس الأمان. تأكد من أن معالجة الأخطاء تتضمن جميع رؤوس الأمان، حيث لا تزال هذه الصفحات يمكن أن تكون ناقلات هجوم."
+              },
+              "example": {
+                "en": "Example: Configure headers at web server level, not just application level",
+                "ar": "مثال: كوّن الرؤوس على مستوى خادم الويب، وليس فقط على مستوى التطبيق"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Not Testing Headers After Deployment",
+                "ar": "عدم اختبار الرؤوس بعد النشر"
+              },
+              "text": {
+                "en": "Configuration changes, CDN updates, or caching layers can strip headers. Always verify headers are present and correct in production using online scanners or automated monitoring.",
+                "ar": "يمكن لتغييرات التكوين أو تحديثات CDN أو طبقات التخزين المؤقت إزالة الرؤوس. تحقق دائماً من وجود الرؤوس وصحتها في الإنتاج باستخدام ماسحات عبر الإنترنت أو مراقبة آلية."
+              },
+              "example": {
+                "en": "Example: Use SecurityHeaders.com or Mozilla Observatory to verify",
+                "ar": "مثال: استخدم SecurityHeaders.com أو Mozilla Observatory للتحقق"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Overusing Wildcard Permissions",
+                "ar": "الإفراط في استخدام أذونات البدل"
+              },
+              "text": {
+                "en": "Using wildcard (*) in CSP or Permissions-Policy provides minimal security benefit. Be specific about which origins are trusted. Document why each origin needs access to maintain security over time.",
+                "ar": "استخدام البدل (*) في CSP أو Permissions-Policy يوفر فائدة أمنية قليلة. كن محدداً حول الأصول الموثوقة. وثّق لماذا يحتاج كل أصل إلى الوصول للحفاظ على الأمان مع مرور الوقت."
+              },
+              "example": {
+                "en": "Example: List specific CDNs instead of allowing all origins",
+                "ar": "مثال: أدرج CDNs محددة بدلاً من السماح لجميع الأصول"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Ignoring Browser Compatibility",
+                "ar": "تجاهل توافق المتصفح"
+              },
+              "text": {
+                "en": "Some security headers have limited browser support or different implementations. Check compatibility for your user base. Implement fallback headers where appropriate (e.g., both X-Frame-Options and CSP frame-ancestors).",
+                "ar": "بعض رؤوس الأمان لها دعم محدود للمتصفح أو تطبيقات مختلفة. تحقق من التوافق لقاعدة المستخدمين الخاصة بك. نفذ رؤوساً احتياطية حيثما كان ذلك مناسباً (مثل كل من X-Frame-Options و CSP frame-ancestors)."
+              },
+              "example": {
+                "en": "Example: Use both old and new header formats for maximum compatibility",
+                "ar": "مثال: استخدم كلاً من تنسيقات الرؤوس القديمة والجديدة لأقصى قدر من التوافق"
+              }
+            }
+          ]
+        },
+        {
+          "id": 42,
+          "type": "text",
+          "value": {
+            "en": "Security headers are not a one-time setup but require ongoing maintenance. As your website evolves—adding new features, integrating third-party services, or changing hosting providers—header configurations may need adjustment. New security headers emerge as browsers add features and security researchers discover new attack vectors. Stay informed about security header best practices through security blogs, OWASP documentation, and browser security updates. Regularly audit your headers using automated tools and compare them against current security recommendations. Document your header choices and the reasoning behind specific configurations to help future maintainers understand the security decisions.",
+            "ar": "رؤوس الأمان ليست إعداداً لمرة واحدة ولكنها تتطلب صيانة مستمرة. مع تطور موقعك—إضافة ميزات جديدة أو دمج خدمات طرف ثالث أو تغيير مزودي الاستضافة—قد تحتاج تكوينات الرؤوس إلى تعديل. تظهر رؤوس أمان جديدة مع إضافة المتصفحات لميزات واكتشاف الباحثين الأمنيين لناقلات هجوم جديدة. ابقَ على اطلاع على أفضل ممارسات رؤوس الأمان من خلال مدونات الأمان ووثائق OWASP وتحديثات أمان المتصفح. راجع رؤوسك بانتظام باستخدام أدوات آلية وقارنها بتوصيات الأمان الحالية. وثّق اختيارات الرؤوس والتفكير وراء تكوينات محددة لمساعدة القائمين على الصيانة المستقبلية على فهم القرارات الأمنية."
+          }
+        }
+      ]
+    },
+    {
+      "id": "topic-5",
+      "title": {
+        "en": "Introduction to Burp Suite Tools",
+        "ar": "مقدمة إلى أدوات Burp Suite"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "What is Burp Suite",
+            "ar": "ما هو Burp Suite"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "Burp Suite is the industry-standard toolkit for web application security testing. Developed by PortSwigger, it is used by security professionals worldwide to identify vulnerabilities in web applications. Burp Suite acts as an intercepting proxy, sitting between your browser and target web applications, allowing you to view, analyze, and modify HTTP/HTTPS traffic in real-time. This capability makes it invaluable for penetration testing, security research, and understanding how web applications work at the protocol level. Burp Suite comes in three editions: Community (free), Professional (paid with advanced features), and Enterprise (for automated scanning).",
+            "ar": "Burp Suite هي مجموعة الأدوات القياسية في الصناعة لاختبار أمان تطبيقات الويب. طورتها PortSwigger، وتستخدمها محترفو الأمان في جميع أنحاء العالم لتحديد الثغرات في تطبيقات الويب. يعمل Burp Suite كوكيل اعتراضي، يجلس بين متصفحك وتطبيقات الويب المستهدفة، مما يسمح لك بعرض وتحليل وتعديل حركة HTTP/HTTPS في الوقت الفعلي. تجعل هذه القدرة منه لا يقدر بثمن لاختبار الاختراق والبحث الأمني وفهم كيفية عمل تطبيقات الويب على مستوى البروتوكول. يأتي Burp Suite في ثلاث إصدارات: Community (مجاني)، و Professional (مدفوع مع ميزات متقدمة)، و Enterprise (للمسح الآلي)."
+          }
+        },
+        {
+          "id": 1773503078718.8433,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Web%20Security%20Basics/5-1-Burp%20Suite's%20position%20in%20web%20traffic%20flow.webp"
+        },
+        {
+          "id": 4,
+          "type": "text",
+          "value": {
+            "en": "What makes Burp Suite powerful is its modular architecture. It consists of multiple integrated tools that work together seamlessly. The Proxy tool intercepts traffic, the Repeater allows you to manually modify and resend requests, the Intruder automates customized attacks, the Scanner (Professional edition) automatically detects vulnerabilities, and various other tools provide specialized functionality. Unlike using these capabilities separately, Burp Suite's integration means you can send interesting requests from the Proxy directly to Repeater or Intruder with a single click, maintaining context and improving workflow efficiency.",
+            "ar": "ما يجعل Burp Suite قوياً هو بنيته المعمارية المعيارية. يتكون من أدوات متعددة متكاملة تعمل معاً بسلاسة. أداة Proxy تعترض حركة المرور، ويسمح لك Repeater بتعديل وإعادة إرسال الطلبات يدوياً، ويؤتمت Intruder الهجمات المخصصة، ويكتشف Scanner (إصدار Professional) الثغرات تلقائياً، وتوفر أدوات متنوعة أخرى وظائف متخصصة. على عكس استخدام هذه القدرات بشكل منفصل، فإن تكامل Burp Suite يعني أنه يمكنك إرسال طلبات مثيرة للاهتمام من Proxy مباشرة إلى Repeater أو Intruder بنقرة واحدة، مع الحفاظ على السياق وتحسين كفاءة سير العمل."
+          }
+        },
+        {
+          "id": 5,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "Burp Suite is a powerful tool that can modify and attack web applications. Only use it on applications you own or have explicit written permission to test. Unauthorized testing is illegal and unethical.",
+            "ar": "Burp Suite هي أداة قوية يمكنها تعديل ومهاجمة تطبيقات الويب. استخدمها فقط على التطبيقات التي تملكها أو لديك إذن كتابي صريح لاختبارها. الاختبار غير المصرح به غير قانوني وغير أخلاقي."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 6,
+          "type": "title",
+          "value": {
+            "en": "Setting Up Burp Suite Proxy",
+            "ar": "إعداد وكيل Burp Suite"
+          }
+        },
+        {
+          "id": 7,
+          "type": "text",
+          "value": {
+            "en": "Setting up Burp Suite requires configuring your browser to route traffic through Burp's proxy listener. By default, Burp listens on localhost (127.0.0.1) port 8080. You configure your browser to use this as an HTTP proxy, which causes all web traffic to flow through Burp Suite. For Firefox, this is done in Settings > Network Settings > Manual proxy configuration. For Chrome, you can use browser extensions like FoxyProxy or system-wide proxy settings. Once configured, all HTTP and HTTPS traffic from your browser passes through Burp Suite, where you can inspect, intercept, and modify it.",
+            "ar": "يتطلب إعداد Burp Suite تكوين متصفحك لتوجيه حركة المرور من خلال مستمع وكيل Burp. افتراضياً، يستمع Burp على localhost (127.0.0.1) المنفذ 8080. تقوم بتكوين متصفحك لاستخدام هذا كوكيل HTTP، مما يتسبب في تدفق جميع حركة مرور الويب من خلال Burp Suite. بالنسبة لـ Firefox، يتم ذلك في الإعدادات > إعدادات الشبكة > تكوين الوكيل اليدوي. بالنسبة لـ Chrome، يمكنك استخدام ملحقات المتصفح مثل FoxyProxy أو إعدادات الوكيل على مستوى النظام. بمجرد التكوين، تمر جميع حركة HTTP و HTTPS من متصفحك عبر Burp Suite، حيث يمكنك فحصها واعتراضها وتعديلها."
+          }
+        },
+        {
+          "id": 8,
+          "type": "text",
+          "value": {
+            "en": "For HTTPS traffic, additional setup is required because browsers will not trust Burp's interception of encrypted connections. You must install Burp's CA (Certificate Authority) certificate in your browser. This certificate allows Burp to decrypt HTTPS traffic by performing a man-in-the-middle operation. To install the certificate: first configure your browser's proxy settings to use Burp, then visit http://burp in your browser while Burp is running. This special URL serves Burp's CA certificate. Download it and install it in your browser's certificate store. For Firefox, go to Settings > Privacy & Security > Certificates > View Certificates > Import. Mark the certificate as trusted for identifying websites.",
+            "ar": "بالنسبة لحركة HTTPS، يلزم إعداد إضافي لأن المتصفحات لن تثق باعتراض Burp للاتصالات المشفرة. يجب عليك تثبيت شهادة CA (سلطة الشهادة) الخاصة بـ Burp في متصفحك. تسمح هذه الشهادة لـ Burp بفك تشفير حركة HTTPS عن طريق تنفيذ عملية وسيط. لتثبيت الشهادة: أولاً قم بتكوين إعدادات وكيل متصفحك لاستخدام Burp، ثم قم بزيارة http://burp في متصفحك أثناء تشغيل Burp. يخدم عنوان URL الخاص هذا شهادة CA الخاصة بـ Burp. قم بتنزيلها وتثبيتها في مخزن شهادات متصفحك. بالنسبة لـ Firefox، انتقل إلى الإعدادات > الخصوصية والأمان > الشهادات > عرض الشهادات > استيراد. ضع علامة على الشهادة كموثوقة لتحديد مواقع الويب."
+          }
+        },
+        {
+          "id": 9,
+          "type": "terminal",
+          "label": {
+            "en": "Burp Suite Proxy Configuration Steps",
+            "ar": "خطوات تكوين وكيل Burp Suite"
+          },
+          "value": ""
+        },
+        {
+          "id": 1773503093813.9814,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageMode": "url",
+          "imageUrl": "https://cdn.cyber-labs.tech/Web%20Security%20Basics/5-2-Burp%20Suite%20configuration%20in%20four%20panels.webp"
+        },
+        {
+          "id": 11,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Create a separate browser profile or use a dedicated browser (like Firefox) for Burp Suite. This keeps your security testing separate from normal browsing and makes it easy to switch proxy settings on and off.",
+            "ar": "أنشئ ملف تعريف متصفح منفصل أو استخدم متصفحاً مخصصاً (مثل Firefox) لـ Burp Suite. هذا يحافظ على اختبار الأمان منفصلاً عن التصفح العادي ويجعل من السهل تبديل إعدادات الوكيل وإيقافها."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 12,
+          "type": "hr"
+        },
+        {
+          "id": 13,
+          "type": "title",
+          "value": {
+            "en": "Burp Proxy - Intercepting and Analyzing Traffic",
+            "ar": "وكيل Burp - اعتراض وتحليل حركة المرور"
+          }
+        },
+        {
+          "id": 14,
+          "type": "text",
+          "value": {
+            "en": "The Proxy tool is Burp Suite's core functionality. Once configured, it captures all HTTP/HTTPS requests and responses passing between your browser and target applications. The Proxy tab has two main sub-tabs: Intercept and HTTP history. The Intercept tab allows you to pause requests or responses in real-time, examine their contents, modify them, and then forward them to their destination. This is incredibly powerful for testing how applications handle modified input. The HTTP history tab logs all traffic that has passed through the proxy, allowing you to review past requests and responses at any time.",
+            "ar": "أداة Proxy هي الوظيفة الأساسية لـ Burp Suite. بمجرد تكوينها، تلتقط جميع طلبات واستجابات HTTP/HTTPS التي تمر بين متصفحك والتطبيقات المستهدفة. تحتوي علامة تبويب Proxy على علامتي تبويب فرعيتين رئيسيتين: Intercept وسجل HTTP. تسمح لك علامة تبويب Intercept بإيقاف الطلبات أو الاستجابات مؤقتاً في الوقت الفعلي وفحص محتوياتها وتعديلها ثم إعادة توجيهها إلى وجهتها. هذا قوي بشكل لا يصدق لاختبار كيفية تعامل التطبيقات مع الإدخال المعدل. تسجل علامة تبويب سجل HTTP جميع حركة المرور التي مرت عبر الوكيل، مما يسمح لك بمراجعة الطلبات والاستجابات السابقة في أي وقت."
+          }
+        },
+        {
+          "id": 15,
+          "type": "text",
+          "value": {
+            "en": "Understanding HTTP requests and responses is essential for using Burp Proxy effectively. An HTTP request consists of: the request line (method, URL, HTTP version), headers (metadata like User-Agent, Cookie, Accept), and optionally a body (POST data, JSON payload). An HTTP response consists of: the status line (HTTP version, status code like 200 or 404), headers (Content-Type, Set-Cookie, security headers), and the response body (HTML, JSON, images, etc.). Burp displays all these components in an organized, editable format. You can modify any part of a request before forwarding it, allowing you to test how the application responds to unexpected input.",
+            "ar": "فهم طلبات واستجابات HTTP ضروري لاستخدام وكيل Burp بفعالية. يتكون طلب HTTP من: سطر الطلب (الطريقة، URL، إصدار HTTP)، والرؤوس (البيانات الوصفية مثل User-Agent و Cookie و Accept)، واختيارياً جسم (بيانات POST، حمولة JSON). تتكون استجابة HTTP من: سطر الحالة (إصدار HTTP، رمز الحالة مثل 200 أو 404)، والرؤوس (Content-Type، Set-Cookie، رؤوس الأمان)، وجسم الاستجابة (HTML، JSON، صور، إلخ). يعرض Burp جميع هذه المكونات بتنسيق منظم قابل للتحرير. يمكنك تعديل أي جزء من الطلب قبل إعادة توجيهه، مما يسمح لك باختبار كيفية استجابة التطبيق للإدخال غير المتوقع."
+          }
+        },
+        {
+          "id": 16,
+          "type": "code",
+          "language": "http",
+          "value": "# Example HTTP Request captured in Burp Proxy\nPOST /login HTTP/1.1\nHost: example.com\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64)\nContent-Type: application/x-www-form-urlencoded\nContent-Length: 35\nCookie: session=abc123xyz\n\nusername=admin&password=secret123\n\n# You can modify any part:\n# - Change POST to GET\n# - Add new headers (X-Forwarded-For: 127.0.0.1)\n# - Modify parameters (username=admin' OR '1'='1)\n# - Change cookie values\n# - Add SQL injection or XSS payloads\n\n# Example HTTP Response\nHTTP/1.1 200 OK\nContent-Type: application/json\nSet-Cookie: session=newtoken456; HttpOnly; Secure\nContent-Length: 58\n\n{\"success\":true,\"username\":\"admin\",\"role\":\"administrator\"}"
+        },
+        {
+          "id": 17,
+          "type": "text",
+          "value": {
+            "en": "The Intercept feature gives you granular control over traffic flow. With intercept turned on (the button shows \"Intercept is on\"), Burp pauses each request, allowing you to examine and modify it before it reaches the server. This is useful when you want to test specific manipulations. However, intercepting every request can be tedious when browsing normally. You can configure intercept rules in Proxy > Options > Intercept Client Requests to only intercept requests matching certain criteria (specific hosts, file extensions, or parameter names). You can also selectively intercept server responses using Intercept Server Responses settings. This fine-grained control makes testing efficient.",
+            "ar": "توفر ميزة Intercept تحكماً دقيقاً في تدفق حركة المرور. مع تشغيل الاعتراض (يُظهر الزر \"Intercept is on\")، يوقف Burp كل طلب مؤقتاً، مما يسمح لك بفحصه وتعديله قبل أن يصل إلى الخادم. هذا مفيد عندما تريد اختبار تلاعبات محددة. ومع ذلك، يمكن أن يكون اعتراض كل طلب مملاً عند التصفح بشكل طبيعي. يمكنك تكوين قواعد الاعتراض في Proxy > Options > Intercept Client Requests لاعتراض الطلبات فقط التي تطابق معايير معينة (مضيفين محددين أو امتدادات ملفات أو أسماء معاملات). يمكنك أيضاً اعتراض استجابات الخادم بشكل انتقائي باستخدام إعدادات Intercept Server Responses. هذا التحكم الدقيق يجعل الاختبار فعالاً."
+          }
+        },
+        {
+          "id": 18,
+          "type": "list",
+          "title": {
+            "en": "Common Uses of Burp Proxy Intercept",
+            "ar": "الاستخدامات الشائعة لاعتراض وكيل Burp"
+          },
+          "items": {
+            "en": [
+              "Testing authentication bypass by modifying credentials",
+              "Inserting SQL injection or XSS payloads into parameters",
+              "Changing user IDs to test authorization controls",
+              "Modifying prices or quantities in e-commerce applications",
+              "Adding or removing HTTP headers to test security controls",
+              "Testing hidden form fields by exposing and changing them",
+              "Bypassing client-side validation by removing JavaScript checks",
+              "Testing session management by swapping session tokens",
+              "Examining API calls and modifying JSON payloads"
+            ],
+            "ar": [
+              "اختبار تجاوز المصادقة عن طريق تعديل بيانات الاعتماد",
+              "إدراج حمولات حقن SQL أو XSS في المعاملات",
+              "تغيير معرفات المستخدم لاختبار ضوابط التصريح",
+              "تعديل الأسعار أو الكميات في تطبيقات التجارة الإلكترونية",
+              "إضافة أو إزالة رؤوس HTTP لاختبار ضوابط الأمان",
+              "اختبار حقول النموذج المخفية عن طريق كشفها وتغييرها",
+              "تجاوز التحقق من جانب العميل عن طريق إزالة فحوصات JavaScript",
+              "اختبار إدارة الجلسة عن طريق تبديل رموز الجلسة",
+              "فحص استدعاءات API وتعديل حمولات JSON"
+            ]
+          }
+        },
+        {
+          "id": 19,
+          "type": "title",
+          "value": {
+            "en": "Burp Repeater - Manual Request Testing",
+            "ar": "Burp Repeater - اختبار الطلبات اليدوي"
+          }
+        },
+        {
+          "id": 20,
+          "type": "text",
+          "value": {
+            "en": "Burp Repeater is a tool for manually manipulating and resending individual HTTP requests. When you find an interesting request in Proxy or HTTP history, you can send it to Repeater with a right-click. Repeater provides a dedicated workspace where you can modify the request, send it to the server, and immediately see the response. Unlike Proxy intercept which only gives you one chance to modify a request, Repeater allows unlimited modifications and resubmissions. This iterative testing is essential for exploring vulnerabilities, understanding application behavior, and crafting precise exploits.",
+            "ar": "Burp Repeater هي أداة للتعامل اليدوي مع طلبات HTTP الفردية وإعادة إرسالها. عندما تجد طلباً مثيراً للاهتمام في Proxy أو سجل HTTP، يمكنك إرساله إلى Repeater بنقرة يمين. يوفر Repeater مساحة عمل مخصصة حيث يمكنك تعديل الطلب وإرساله إلى الخادم ورؤية الاستجابة على الفور. على عكس اعتراض Proxy الذي يمنحك فرصة واحدة فقط لتعديل الطلب، يسمح Repeater بتعديلات وإعادة إرسالات غير محدودة. هذا الاختبار التكراري ضروري لاستكشاف الثغرات وفهم سلوك التطبيق وصياغة استغلالات دقيقة."
+          }
+        },
+        {
+          "id": 21,
+          "type": "text",
+          "value": {
+            "en": "Repeater's interface is split into two main panels: Request (left) and Response (right). The Request panel shows the full HTTP request with syntax highlighting for easy editing. You can switch between Raw view (plain text), Params view (organized parameters), Headers view, and Hex view. After modifying the request, clicking the \"Send\" button transmits it to the target server. The Response panel immediately displays the server's response, also with multiple view options. You can have multiple Repeater tabs open simultaneously, each testing different requests. This makes it easy to compare different attack attempts or test multiple endpoints at once.",
+            "ar": "واجهة Repeater مقسمة إلى لوحتين رئيسيتين: الطلب (يسار) والاستجابة (يمين). تُظهر لوحة الطلب طلب HTTP الكامل مع تمييز الصيغة لتسهيل التحرير. يمكنك التبديل بين عرض Raw (نص عادي)، وعرض Params (معاملات منظمة)، وعرض Headers، وعرض Hex. بعد تعديل الطلب، النقر على زر \"Send\" ينقله إلى الخادم المستهدف. تعرض لوحة الاستجابة على الفور استجابة الخادم، أيضاً مع خيارات عرض متعددة. يمكنك فتح علامات تبويب Repeater متعددة في وقت واحد، كل واحدة تختبر طلبات مختلفة. هذا يسهل مقارنة محاولات هجوم مختلفة أو اختبار نقاط نهاية متعددة في وقت واحد."
+          }
+        },
+        {
+          "id": 22,
+          "type": "text",
+          "value": {
+            "en": "Repeater excels at manual vulnerability testing. For SQL injection testing, you can systematically try different payloads, observing how the application responds to each one. For XSS testing, you can insert various script tags and encoding variations. For authentication testing, you can try different username/password combinations or attempt to access restricted resources with modified tokens. Repeater's real-time feedback loop—modify, send, observe—makes it ideal for understanding exactly how applications process input and where vulnerabilities lie. Many security professionals consider Repeater their primary tool for detailed vulnerability analysis.",
+            "ar": "يتفوق Repeater في اختبار الثغرات اليدوي. لاختبار حقن SQL، يمكنك تجربة حمولات مختلفة بشكل منهجي، ومراقبة كيفية استجابة التطبيق لكل واحدة. لاختبار XSS، يمكنك إدراج علامات نص وأشكال ترميز مختلفة. لاختبار المصادقة، يمكنك تجربة مجموعات مختلفة من اسم المستخدم/كلمة المرور أو محاولة الوصول إلى موارد مقيدة برموز معدلة. حلقة التغذية الراجعة في الوقت الفعلي لـ Repeater—تعديل، إرسال، مراقبة—تجعله مثالياً لفهم كيفية معالجة التطبيقات للإدخال بالضبط وأين توجد الثغرات. يعتبر العديد من محترفي الأمان Repeater أداتهم الأساسية لتحليل الثغرات التفصيلي."
+          }
+        },
+        {
+          "id": 23,
+          "type": "terminal",
+          "label": {
+            "en": "Repeater Workflow Example - Testing SQL Injection",
+            "ar": "مثال على سير عمل Repeater - اختبار حقن SQL"
+          },
+          "value": "# Original request captured in Proxy:\nGET /products?id=5 HTTP/1.1\nHost: vulnerable-site.com\n\n# Response: Shows product #5 details\n\n# Send to Repeater, test for SQL injection:\n\n# Test 1: Single quote to trigger error\nGET /products?id=5' HTTP/1.1\nResponse: Database error (vulnerable!)\n\n# Test 2: Boolean-based blind injection\nGET /products?id=5 AND 1=1 HTTP/1.1\nResponse: Normal product page (true condition)\n\nGET /products?id=5 AND 1=2 HTTP/1.1\nResponse: Empty or error (false condition)\n# Different responses confirm SQL injection\n\n# Test 3: Extract database name\nGET /products?id=5 UNION SELECT database(),NULL HTTP/1.1\nResponse: Shows database name in results\n\n# Test 4: Extract table names\nGET /products?id=5 UNION SELECT table_name,NULL FROM information_schema.tables HTTP/1.1\nResponse: Lists database tables\n\n# Each iteration reveals more information\n# Repeater makes this manual exploration efficient"
+        },
+        {
+          "id": 24,
+          "type": "hr"
+        },
+        {
+          "id": 25,
+          "type": "title",
+          "value": {
+            "en": "Burp Intruder - Automated Attack Tool",
+            "ar": "Burp Intruder - أداة الهجوم الآلية"
+          }
+        },
+        {
+          "id": 26,
+          "type": "text",
+          "value": {
+            "en": "Burp Intruder automates customized attacks against web applications. While Repeater is for manual testing, Intruder excels at systematic, automated testing with variations. You select positions in a request where you want to insert payloads, choose an attack type that determines how payloads are combined, load payload lists (usernames, passwords, SQL injection strings, XSS vectors), and let Intruder automatically send hundreds or thousands of requests with different payloads. This is invaluable for brute-force attacks, fuzzing parameters, testing for injection vulnerabilities across multiple inputs, and discovering hidden content.",
+            "ar": "يؤتمت Burp Intruder الهجمات المخصصة ضد تطبيقات الويب. بينما Repeater للاختبار اليدوي، يتفوق Intruder في الاختبار المنهجي الآلي مع الأشكال. تحدد المواضع في الطلب حيث تريد إدراج حمولات، وتختار نوع هجوم يحدد كيفية دمج الحمولات، وتحمل قوائم الحمولات (أسماء المستخدمين، كلمات المرور، سلاسل حقن SQL، ناقلات XSS)، وتدع Intruder يرسل تلقائياً مئات أو آلاف الطلبات بحمولات مختلفة. هذا لا يقدر بثمن لهجمات القوة الغاشمة، وإرباك المعاملات، واختبار ثغرات الحقن عبر مدخلات متعددة، واكتشاف المحتوى المخفي."
+          }
+        },
+        {
+          "id": 27,
+          "type": "text",
+          "value": {
+            "en": "Intruder has four attack types that control how payloads are used. Sniper uses a single payload set and tests each position one at a time—ideal for testing individual parameters. Battering ram uses one payload set but places the same payload in all positions simultaneously—useful when multiple fields need identical values. Pitchfork uses multiple payload sets (one for each position) and iterates through them in parallel—perfect for testing username/password pairs from a list. Cluster bomb uses multiple payload sets and tests all possible combinations—powerful but generates many requests. Understanding which attack type fits your testing scenario is crucial for efficient testing.",
+            "ar": "يحتوي Intruder على أربعة أنواع هجوم تتحكم في كيفية استخدام الحمولات. يستخدم Sniper مجموعة حمولة واحدة ويختبر كل موضع واحداً تلو الآخر—مثالي لاختبار معاملات فردية. يستخدم Battering ram مجموعة حمولة واحدة ولكن يضع نفس الحمولة في جميع المواضع في وقت واحد—مفيد عندما تحتاج حقول متعددة إلى قيم متطابقة. يستخدم Pitchfork مجموعات حمولة متعددة (واحدة لكل موضع) ويتكرر من خلالها بالتوازي—مثالي لاختبار أزواج اسم المستخدم/كلمة المرور من قائمة. يستخدم Cluster bomb مجموعات حمولة متعددة ويختبر جميع التوليفات الممكنة—قوي لكنه يولد العديد من الطلبات. فهم نوع الهجوم المناسب لسيناريو الاختبار الخاص بك أمر بالغ الأهمية للاختبار الفعال."
+          }
+        },
+        {
+          "id": 28,
+          "type": "table",
+          "title": {
+            "en": "Burp Intruder Attack Types",
+            "ar": "أنواع هجوم Burp Intruder"
+          },
+          "headers": {
+            "en": [
+              "Attack Type",
+              "Payload Sets",
+              "How It Works",
+              "Best For"
+            ],
+            "ar": [
+              "نوع الهجوم",
+              "مجموعات الحمولة",
+              "كيف يعمل",
+              "الأفضل لـ"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "Sniper",
+                "1",
+                "Tests each position separately",
+                "Single parameter fuzzing"
+              ],
+              "ar": [
+                "Sniper",
+                "1",
+                "يختبر كل موضع بشكل منفصل",
+                "إرباك معامل واحد"
+              ]
+            },
+            {
+              "en": [
+                "Battering Ram",
+                "1",
+                "Same payload in all positions",
+                "Fields needing identical values"
+              ],
+              "ar": [
+                "Battering Ram",
+                "1",
+                "نفس الحمولة في جميع المواضع",
+                "الحقول التي تحتاج قيماً متطابقة"
+              ]
+            },
+            {
+              "en": [
+                "Pitchfork",
+                "Multiple",
+                "Parallel iteration",
+                "Username/password lists"
+              ],
+              "ar": [
+                "Pitchfork",
+                "متعددة",
+                "تكرار متوازي",
+                "قوائم اسم المستخدم/كلمة المرور"
+              ]
+            },
+            {
+              "en": [
+                "Cluster Bomb",
+                "Multiple",
+                "All combinations",
+                "Testing parameter interactions"
+              ],
+              "ar": [
+                "Cluster Bomb",
+                "متعددة",
+                "جميع التوليفات",
+                "اختبار تفاعلات المعاملات"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 29,
+          "type": "text",
+          "value": {
+            "en": "Intruder's payload options are extensive. You can load payloads from files (common for wordlists), generate them using rules (numbers, dates, character sets), or use built-in payload lists. Payload processing rules allow encoding, hashing, or manipulating payloads before sending. For example, you might Base64-encode each payload or add a prefix/suffix. Grep options let you search responses for specific strings, making it easy to identify successful attacks among thousands of results. For instance, when brute-forcing logins, you can grep for \"Welcome\" or \"Dashboard\" to automatically flag successful authentications. The Results tab displays all responses with sortable columns showing status codes, response length, and grep matches.",
+            "ar": "خيارات حمولة Intruder واسعة النطاق. يمكنك تحميل الحمولات من الملفات (شائع لقوائم الكلمات)، أو توليدها باستخدام القواعد (أرقام، تواريخ، مجموعات أحرف)، أو استخدام قوائم حمولة مدمجة. تسمح قواعد معالجة الحمولة بالترميز أو التجزئة أو التلاعب بالحمولات قبل الإرسال. على سبيل المثال، قد تقوم بترميز كل حمولة بـ Base64 أو إضافة بادئة/لاحقة. تتيح لك خيارات Grep البحث في الاستجابات عن سلاسل محددة، مما يسهل تحديد الهجمات الناجحة من بين آلاف النتائج. على سبيل المثال، عند فرض تسجيل الدخول بالقوة، يمكنك البحث عن \"Welcome\" أو \"Dashboard\" للإشارة تلقائياً إلى المصادقات الناجحة. تعرض علامة تبويب النتائج جميع الاستجابات مع أعمدة قابلة للفرز تُظهر رموز الحالة وطول الاستجابة ومطابقات grep."
+          }
+        },
+        {
+          "id": 30,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "Intruder in Burp Suite Community Edition is rate-limited, sending requests slowly. For professional penetration testing with high-speed attacks, consider Burp Suite Professional or alternative tools like ffuf or wfuzz.",
+            "ar": "Intruder في إصدار Burp Suite Community محدود المعدل، ويرسل الطلبات ببطء. لاختبار الاختراق الاحترافي مع هجمات عالية السرعة، فكر في Burp Suite Professional أو أدوات بديلة مثل ffuf أو wfuzz."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 31,
+          "type": "text",
+          "value": {
+            "en": "Common Intruder use cases include credential stuffing (testing username/password combinations from breach databases), directory brute-forcing (finding hidden files and directories), parameter fuzzing (testing for injection vulnerabilities), API endpoint discovery (finding undocumented API paths), and session token analysis (testing session ID patterns). For example, to brute-force a login form: capture the login request in Proxy, send to Intruder, mark the username and password as payload positions, select Pitchfork attack type, load username list for position 1 and password list for position 2, set grep to match \"Invalid credentials\" (to identify failures), start attack, and sort results by response length or grep matches to find successful logins. This systematic approach finds vulnerabilities that manual testing would miss.",
+            "ar": "تشمل حالات استخدام Intruder الشائعة حشو بيانات الاعتماد (اختبار مجموعات اسم المستخدم/كلمة المرور من قواعد بيانات الاختراق)، وفرض الدليل بالقوة (إيجاد الملفات والأدلة المخفية)، وإرباك المعاملات (اختبار ثغرات الحقن)، واكتشاف نقاط نهاية API (إيجاد مسارات API غير الموثقة)، وتحليل رمز الجلسة (اختبار أنماط معرف الجلسة). على سبيل المثال، لفرض نموذج تسجيل دخول بالقوة: التقط طلب تسجيل الدخول في Proxy، أرسل إلى Intruder، ضع علامة على اسم المستخدم وكلمة المرور كمواضع حمولة، حدد نوع هجوم Pitchfork، حمّل قائمة اسم المستخدم للموضع 1 وقائمة كلمة المرور للموضع 2، عيّن grep لمطابقة \"Invalid credentials\" (لتحديد الإخفاقات)، ابدأ الهجوم، ورتب النتائج حسب طول الاستجابة أو مطابقات grep لإيجاد تسجيلات دخول ناجحة. هذا النهج المنهجي يجد ثغرات سيفوتها الاختبار اليدوي."
+          }
+        }
+      ]
+    },
+    {
+      "id": "topic-6",
+      "title": {
+        "en": "Additional Burp Suite Tools and Workflow",
+        "ar": "أدوات Burp Suite الإضافية وسير العمل"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "Burp Scanner - Automated Vulnerability Detection",
+            "ar": "ماسح Burp - الكشف الآلي عن الثغرات"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "Burp Scanner is an automated vulnerability scanner available in Burp Suite Professional edition. While manual tools like Proxy, Repeater, and Intruder require human guidance, Scanner automatically crawls web applications and tests for a wide range of vulnerabilities including SQL injection, XSS, command injection, path traversal, XXE, and many others. Scanner uses sophisticated detection techniques including active scanning (sending attack payloads and analyzing responses) and passive scanning (analyzing traffic passing through Proxy without sending additional requests). This automation makes it possible to quickly identify common vulnerabilities across large applications.",
+            "ar": "ماسح Burp هو ماسح ثغرات آلي متاح في إصدار Burp Suite Professional. بينما تتطلب الأدوات اليدوية مثل Proxy و Repeater و Intruder توجيهاً بشرياً، يزحف Scanner تلقائياً إلى تطبيقات الويب ويختبر مجموعة واسعة من الثغرات بما في ذلك حقن SQL و XSS وحقن الأوامر واجتياز المسار و XXE والعديد من الثغرات الأخرى. يستخدم Scanner تقنيات كشف متطورة بما في ذلك المسح النشط (إرسال حمولات هجوم وتحليل الاستجابات) والمسح السلبي (تحليل حركة المرور التي تمر عبر Proxy دون إرسال طلبات إضافية). هذه الأتمتة تجعل من الممكن تحديد الثغرات الشائعة بسرعة عبر التطبيقات الكبيرة."
+          }
+        },
+        {
+          "id": 3,
+          "type": "text",
+          "value": {
+            "en": "Scanner operates in two modes that complement each other. Passive scanning analyzes requests and responses passing through the Proxy without sending any additional traffic. It identifies issues like missing security headers, sensitive data exposure in responses, insecure cookie configurations, and suspicious input handling patterns. Passive scanning is safe and non-intrusive—it never modifies application state. Active scanning, on the other hand, sends specially crafted attack payloads to test for vulnerabilities. It might submit SQL injection strings, XSS vectors, command injection attempts, and other malicious inputs. Active scanning is more thorough but also more intrusive and may trigger security alerts or temporarily disrupt application functionality.",
+            "ar": "يعمل Scanner في وضعين يكملان بعضهما البعض. يحلل المسح السلبي الطلبات والاستجابات التي تمر عبر Proxy دون إرسال أي حركة مرور إضافية. يحدد مشكلات مثل رؤوس الأمان المفقودة وتعرض البيانات الحساسة في الاستجابات وتكوينات ملفات تعريف الارتباط غير الآمنة وأنماط معالجة الإدخال المشبوهة. المسح السلبي آمن وغير تدخلي—لا يعدل أبداً حالة التطبيق. من ناحية أخرى، يرسل المسح النشط حمولات هجوم مصنوعة خصيصاً لاختبار الثغرات. قد يقدم سلاسل حقن SQL وناقلات XSS ومحاولات حقن الأوامر ومدخلات ضارة أخرى. المسح النشط أكثر شمولاً ولكنه أيضاً أكثر تدخلاً وقد يؤدي إلى تنبيهات أمنية أو يعطل وظائف التطبيق مؤقتاً."
+          }
+        },
+        {
+          "id": 4,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Burp Scanner is only available in the Professional edition, not the free Community edition. For automated scanning with the free version, consider combining Burp with external tools like OWASP ZAP, Nikto, or SQLMap.",
+            "ar": "ماسح Burp متاح فقط في الإصدار Professional، وليس في إصدار Community المجاني. للمسح الآلي مع الإصدار المجاني، فكر في دمج Burp مع أدوات خارجية مثل OWASP ZAP أو Nikto أو SQLMap."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 5,
+          "type": "title",
+          "value": {
+            "en": "Burp Decoder - Data Transformation Tool",
+            "ar": "Burp Decoder - أداة تحويل البيانات"
+          }
+        },
+        {
+          "id": 6,
+          "type": "text",
+          "value": {
+            "en": "Decoder is a utility for encoding and decoding data in various formats. Web applications use many encoding schemes to represent data: URL encoding for special characters in URLs, Base64 for binary data transmission, HTML entity encoding for displaying special characters safely, and hexadecimal for low-level data representation. Attackers often encode malicious payloads to bypass input filters. Understanding these encodings is essential for effective security testing. Decoder provides a simple interface to quickly transform data between formats, helping you understand obfuscated data or prepare payloads in the correct encoding.",
+            "ar": "Decoder هو أداة مساعدة لترميز وفك ترميز البيانات في تنسيقات مختلفة. تستخدم تطبيقات الويب العديد من مخططات الترميز لتمثيل البيانات: ترميز URL للأحرف الخاصة في عناوين URL، و Base64 لنقل البيانات الثنائية، وترميز كيان HTML لعرض الأحرف الخاصة بأمان، والسداسي عشري للتمثيل منخفض المستوى للبيانات. غالباً ما يقوم المهاجمون بترميز حمولات ضارة لتجاوز مرشحات الإدخال. فهم هذه الترميزات ضروري لاختبار الأمان الفعال. يوفر Decoder واجهة بسيطة لتحويل البيانات بسرعة بين التنسيقات، مما يساعدك على فهم البيانات المبهمة أو إعداد الحمولات في الترميز الصحيح."
+          }
+        },
+        {
+          "id": 7,
+          "type": "text",
+          "value": {
+            "en": "Decoder supports multiple encoding and decoding operations. You can paste data into the input area and apply transformations: URL encode/decode (converting special characters to %XX format), HTML encode/decode (converting to HTML entities like &lt;), Base64 encode/decode (converting binary to text representation), Hex encode/decode (converting to hexadecimal notation), ASCII Hex (converting each character to its hex value), and various hashing functions (MD5, SHA-1, SHA-256). You can chain multiple operations together. For example, you might Base64-decode data, then URL-decode it, then HTML-decode it to reveal the original payload. This layered decoding is common when analyzing complex attack payloads or reverse-engineering application behavior.",
+            "ar": "يدعم Decoder عمليات ترميز وفك ترميز متعددة. يمكنك لصق البيانات في منطقة الإدخال وتطبيق التحويلات: ترميز/فك ترميز URL (تحويل الأحرف الخاصة إلى تنسيق %XX)، ترميز/فك ترميز HTML (التحويل إلى كيانات HTML مثل &lt;)، ترميز/فك ترميز Base64 (تحويل ثنائي إلى تمثيل نصي)، ترميز/فك ترميز Hex (التحويل إلى تدوين سداسي عشري)، ASCII Hex (تحويل كل حرف إلى قيمته السداسية عشرية)، ووظائف تجزئة مختلفة (MD5، SHA-1، SHA-256). يمكنك ربط عمليات متعددة معاً. على سبيل المثال، قد تقوم بفك ترميز Base64 للبيانات، ثم فك ترميز URL، ثم فك ترميز HTML للكشف عن الحمولة الأصلية. فك الترميز المتعدد الطبقات هذا شائع عند تحليل حمولات هجوم معقدة أو الهندسة العكسية لسلوك التطبيق."
+          }
+        },
+        {
+          "id": 8,
+          "type": "code",
+          "language": "text",
+          "value": "# Example encoding/decoding scenarios\n\n# Original XSS payload:\n<script>alert('XSS')</script>\n\n# URL encoded (for URL parameters):\n%3Cscript%3Ealert%28%27XSS%27%29%3C%2Fscript%3E\n\n# HTML entity encoded (bypasses some filters):\n&lt;script&gt;alert(&#x27;XSS&#x27;)&lt;/script&gt;\n\n# Base64 encoded (common in authorization headers):\nPHNjcmlwdD5hbGVydCgnWFNTJyk8L3NjcmlwdD4=\n\n# Double encoding (URL encode twice):\n%253Cscript%253Ealert%2528%2527XSS%2527%2529%253C%252Fscript%253E\n\n# Hex encoding:\n3c7363726970743e616c6572742827585353273c2f7363726970743e\n\n# Decoder helps quickly transform between these formats\n# Essential when applications use multiple encoding layers"
+        },
+        {
+          "id": 9,
+          "type": "hr"
+        },
+        {
+          "id": 10,
+          "type": "title",
+          "value": {
+            "en": "Burp Comparer - Analyzing Differences",
+            "ar": "Burp Comparer - تحليل الاختلافات"
+          }
+        },
+        {
+          "id": 11,
+          "type": "text",
+          "value": {
+            "en": "Comparer is a tool for performing side-by-side comparisons of any two pieces of data. In security testing, subtle differences in responses can reveal vulnerabilities. For example, when testing authentication, successful and failed login attempts might return nearly identical responses with only small differences revealing success or failure. Comparer highlights these differences visually, making them easy to spot. You can send any data to Comparer from other Burp tools—HTTP requests, responses, or arbitrary text. Comparer supports both word-level and byte-level comparisons, showing exactly which bytes differ between two items.",
+            "ar": "Comparer هي أداة لإجراء مقارنات جنباً إلى جنب لأي قطعتين من البيانات. في اختبار الأمان، يمكن أن تكشف الاختلافات الدقيقة في الاستجابات عن ثغرات. على سبيل المثال، عند اختبار المصادقة، قد تُرجع محاولات تسجيل الدخول الناجحة والفاشلة استجابات متطابقة تقريباً مع اختلافات صغيرة فقط تكشف عن النجاح أو الفشل. يبرز Comparer هذه الاختلافات بصرياً، مما يجعل من السهل اكتشافها. يمكنك إرسال أي بيانات إلى Comparer من أدوات Burp الأخرى—طلبات HTTP أو استجابات أو نص عشوائي. يدعم Comparer مقارنات على مستوى الكلمة وعلى مستوى البايت، مما يُظهر بالضبط أي بايتات تختلف بين عنصرين."
+          }
+        },
+        {
+          "id": 12,
+          "type": "text",
+          "value": {
+            "en": "Common use cases for Comparer include analyzing authentication bypass attempts (comparing successful vs failed logins to understand what indicates success), identifying session token patterns (comparing multiple session tokens to find predictable elements), testing access control (comparing responses for authorized vs unauthorized users), analyzing encoding differences (comparing encoded vs decoded data), and detecting blind vulnerabilities (comparing responses to true vs false conditions in blind SQL injection or XXE). For instance, in blind SQL injection testing, you might compare the response to \"AND 1=1\" (always true) with \"AND 1=2\" (always false). Even if both return similar pages, Comparer reveals subtle differences in response length, timing, or specific bytes that confirm the vulnerability.",
+            "ar": "تشمل حالات الاستخدام الشائعة لـ Comparer تحليل محاولات تجاوز المصادقة (مقارنة تسجيلات الدخول الناجحة مقابل الفاشلة لفهم ما يشير إلى النجاح)، وتحديد أنماط رمز الجلسة (مقارنة رموز جلسة متعددة لإيجاد عناصر قابلة للتنبؤ)، واختبار التحكم في الوصول (مقارنة الاستجابات للمستخدمين المصرح لهم مقابل غير المصرح لهم)، وتحليل اختلافات الترميز (مقارنة البيانات المرمزة مقابل المفككة)، واكتشاف الثغرات العمياء (مقارنة الاستجابات للشروط الحقيقية مقابل الخاطئة في حقن SQL الأعمى أو XXE). على سبيل المثال، في اختبار حقن SQL الأعمى، قد تقارن الاستجابة لـ \"AND 1=1\" (صحيح دائماً) مع \"AND 1=2\" (خاطئ دائماً). حتى لو أرجع كلاهما صفحات مماثلة، يكشف Comparer عن اختلافات دقيقة في طول الاستجابة أو التوقيت أو بايتات محددة تؤكد الثغرة."
+          }
+        },
+        {
+          "id": 13,
+          "type": "title",
+          "value": {
+            "en": "Target, Site Map, and Scope Management",
+            "ar": "الهدف وخريطة الموقع وإدارة النطاق"
+          }
+        },
+        {
+          "id": 14,
+          "type": "text",
+          "value": {
+            "en": "The Target tab provides a hierarchical view of all websites and applications you have interacted with through Burp Proxy. The Site map displays a tree structure showing domains, directories, files, and parameters discovered during testing. As you browse target applications through Burp, the site map populates automatically, giving you a visual overview of application structure. This is invaluable for understanding application organization, finding hidden endpoints, and ensuring comprehensive testing coverage. You can manually add items to the site map, annotate interesting findings with comments and highlights, and right-click any item to send it to other tools like Repeater or Intruder.",
+            "ar": "توفر علامة تبويب Target عرضاً هرمياً لجميع مواقع الويب والتطبيقات التي تفاعلت معها من خلال وكيل Burp. تعرض خريطة الموقع بنية شجرية تُظهر النطاقات والأدلة والملفات والمعاملات المكتشفة أثناء الاختبار. عندما تتصفح التطبيقات المستهدفة من خلال Burp، تمتلئ خريطة الموقع تلقائياً، مما يمنحك نظرة عامة مرئية على بنية التطبيق. هذا لا يقدر بثمن لفهم تنظيم التطبيق وإيجاد نقاط نهاية مخفية وضمان تغطية اختبار شاملة. يمكنك إضافة عناصر يدوياً إلى خريطة الموقع، وتوضيح النتائج المثيرة للاهتمام بالتعليقات والتمييزات، والنقر بزر الماوس الأيمن على أي عنصر لإرساله إلى أدوات أخرى مثل Repeater أو Intruder."
+          }
+        },
+        {
+          "id": 15,
+          "type": "text",
+          "value": {
+            "en": "Scope management is crucial for organized testing. Burp's scope defines which items are considered in-scope for your testing engagement. You can add specific URLs, domains, or IP addresses to the scope. Once defined, Burp can filter views to show only in-scope items, preventing confusion when testing multiple applications simultaneously. Many Burp tools respect scope settings—for example, Proxy history can filter to show only in-scope traffic, and Scanner (Professional) can be configured to only scan in-scope items. Proper scope management keeps your testing focused, improves efficiency, and helps prevent accidentally testing unauthorized targets. You define scope in Target tab > Scope, adding include and exclude rules as needed.",
+            "ar": "إدارة النطاق أمر بالغ الأهمية للاختبار المنظم. يحدد نطاق Burp العناصر التي تعتبر ضمن النطاق لمهمة الاختبار الخاصة بك. يمكنك إضافة عناوين URL أو نطاقات أو عناوين IP محددة إلى النطاق. بمجرد تحديده، يمكن لـ Burp تصفية العروض لإظهار العناصر ضمن النطاق فقط، مما يمنع الارتباك عند اختبار تطبيقات متعددة في وقت واحد. تحترم العديد من أدوات Burp إعدادات النطاق—على سبيل المثال، يمكن لسجل Proxy التصفية لإظهار حركة المرور ضمن النطاق فقط، ويمكن تكوين Scanner (Professional) لمسح العناصر ضمن النطاق فقط. تحافظ إدارة النطاق المناسبة على تركيز الاختبار وتحسن الكفاءة وتساعد على منع اختبار أهداف غير مصرح بها عن طريق الخطأ. تحدد النطاق في علامة تبويب Target > Scope، وإضافة قواعد التضمين والاستبعاد حسب الحاجة."
+          }
+        },
+        {
+          "id": 16,
+          "type": "list",
+          "title": {
+            "en": "Best Practices for Burp Suite Workflow",
+            "ar": "أفضل الممارسات لسير عمل Burp Suite"
+          },
+          "items": {
+            "en": [
+              "Always define project scope before starting testing",
+              "Use different browser profiles for Burp testing vs normal browsing",
+              "Save project files regularly to preserve work (Professional edition)",
+              "Use meaningful names when sending items to Repeater/Intruder tabs",
+              "Add comments and highlights to interesting findings in site map",
+              "Start with passive scanning and manual testing before active scanning",
+              "Review and understand each vulnerability before reporting it",
+              "Test in a non-production environment when possible",
+              "Document your testing methodology and findings",
+              "Obtain proper authorization before testing any application"
+            ],
+            "ar": [
+              "حدد دائماً نطاق المشروع قبل بدء الاختبار",
+              "استخدم ملفات تعريف متصفح مختلفة لاختبار Burp مقابل التصفح العادي",
+              "احفظ ملفات المشروع بانتظام للحفاظ على العمل (إصدار Professional)",
+              "استخدم أسماء ذات معنى عند إرسال العناصر إلى علامات تبويب Repeater/Intruder",
+              "أضف تعليقات وتمييزات إلى النتائج المثيرة للاهتمام في خريطة الموقع",
+              "ابدأ بالمسح السلبي والاختبار اليدوي قبل المسح النشط",
+              "راجع وافهم كل ثغرة قبل الإبلاغ عنها",
+              "اختبر في بيئة غير إنتاجية عندما يكون ذلك ممكناً",
+              "وثّق منهجية الاختبار والنتائج الخاصة بك",
+              "احصل على التصريح المناسب قبل اختبار أي تطبيق"
+            ]
+          }
+        },
+        {
+          "id": 17,
+          "type": "hr"
+        },
+        {
+          "id": 18,
+          "type": "title",
+          "value": {
+            "en": "Typical Burp Suite Testing Workflow",
+            "ar": "سير عمل اختبار Burp Suite النموذجي"
+          }
+        },
+        {
+          "id": 19,
+          "type": "orderedList",
+          "title": {
+            "en": "Professional Penetration Testing Process",
+            "ar": "عملية اختبار الاختراق الاحترافية"
+          },
+          "items": [
+            {
+              "subtitle": {
+                "en": "Setup and Reconnaissance",
+                "ar": "الإعداد والاستطلاع"
+              },
+              "text": {
+                "en": "Start Burp Suite, configure browser proxy, install CA certificate, and define project scope. Browse the target application normally while Burp captures all traffic, building the site map. Take note of interesting functionality like login forms, file uploads, API endpoints, and administrative interfaces.",
+                "ar": "ابدأ Burp Suite، وكوّن وكيل المتصفح، وثبّت شهادة CA، وحدد نطاق المشروع. تصفح التطبيق المستهدف بشكل طبيعي بينما يلتقط Burp جميع حركة المرور، وبناء خريطة الموقع. لاحظ الوظائف المثيرة للاهتمام مثل نماذج تسجيل الدخول وتحميلات الملفات ونقاط نهاية API والواجهات الإدارية."
+              },
+              "example": {
+                "en": "Example: Browse login, registration, profile pages, admin panel if accessible",
+                "ar": "مثال: تصفح تسجيل الدخول والتسجيل وصفحات الملف الشخصي ولوحة الإدارة إذا كانت متاحة"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Manual Analysis with Proxy and Repeater",
+                "ar": "التحليل اليدوي مع Proxy و Repeater"
+              },
+              "text": {
+                "en": "Review HTTP history for interesting requests. Use Intercept to modify requests in real-time, testing how the application handles unexpected input. Send important requests to Repeater for detailed manual testing. Try various attack payloads, observe responses, and understand application behavior.",
+                "ar": "راجع سجل HTTP للطلبات المثيرة للاهتمام. استخدم Intercept لتعديل الطلبات في الوقت الفعلي، واختبار كيفية تعامل التطبيق مع الإدخال غير المتوقع. أرسل طلبات مهمة إلى Repeater للاختبار اليدوي التفصيلي. جرب حمولات هجوم مختلفة، ولاحظ الاستجابات، وافهم سلوك التطبيق."
+              },
+              "example": {
+                "en": "Example: Test login with SQL injection, test profile with XSS, test file upload with various file types",
+                "ar": "مثال: اختبر تسجيل الدخول مع حقن SQL، واختبر الملف الشخصي مع XSS، واختبر تحميل الملف بأنواع ملفات مختلفة"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Automated Testing with Intruder",
+                "ar": "الاختبار الآلي مع Intruder"
+              },
+              "text": {
+                "en": "For systematic testing, use Intruder to automate attacks. Test authentication with credential lists, fuzz parameters for injection vulnerabilities, brute-force directories, and test API endpoints. Use appropriate attack types and payloads for each scenario. Review results carefully, focusing on anomalies in response length, status codes, or grep matches.",
+                "ar": "للاختبار المنهجي، استخدم Intruder لأتمتة الهجمات. اختبر المصادقة مع قوائم بيانات الاعتماد، وأربك المعاملات لثغرات الحقن، وأجبر الأدلة بالقوة، واختبر نقاط نهاية API. استخدم أنواع وحمولات هجوم مناسبة لكل سيناريو. راجع النتائج بعناية، مع التركيز على الشذوذ في طول الاستجابة أو رموز الحالة أو مطابقات grep."
+              },
+              "example": {
+                "en": "Example: Fuzz username parameter with SQL injection payloads, test all form inputs",
+                "ar": "مثال: أربك معامل اسم المستخدم مع حمولات حقن SQL، واختبر جميع مدخلات النموذج"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Vulnerability Verification",
+                "ar": "التحقق من الثغرة"
+              },
+              "text": {
+                "en": "When you identify potential vulnerabilities, verify them thoroughly. Use Repeater to confirm that the vulnerability is real and reproducible. Understand the impact—can you extract sensitive data? Execute arbitrary code? Bypass authentication? Document exact steps to reproduce the vulnerability, including requests and responses.",
+                "ar": "عندما تحدد ثغرات محتملة، تحقق منها بدقة. استخدم Repeater لتأكيد أن الثغرة حقيقية وقابلة للتكرار. افهم التأثير—هل يمكنك استخراج بيانات حساسة؟ تنفيذ كود عشوائي؟ تجاوز المصادقة؟ وثّق الخطوات الدقيقة لإعادة إنتاج الثغرة، بما في ذلك الطلبات والاستجابات."
+              },
+              "example": {
+                "en": "Example: Confirm SQL injection by extracting database name, verify XSS by executing alert()",
+                "ar": "مثال: أكد حقن SQL عن طريق استخراج اسم قاعدة البيانات، تحقق من XSS عن طريق تنفيذ alert()"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Documentation and Reporting",
+                "ar": "التوثيق والإبلاغ"
+              },
+              "text": {
+                "en": "Document all findings with detailed descriptions, severity ratings, reproduction steps, and remediation recommendations. Save relevant requests/responses from Burp as evidence. Organize findings by severity (Critical, High, Medium, Low). Include screenshots, code snippets, and proof-of-concept exploits where appropriate.",
+                "ar": "وثّق جميع النتائج بأوصاف مفصلة وتقييمات خطورة وخطوات إعادة الإنتاج وتوصيات المعالجة. احفظ الطلبات/الاستجابات ذات الصلة من Burp كدليل. نظّم النتائج حسب الخطورة (حرج، عالي، متوسط، منخفض). قم بتضمين لقطات الشاشة ومقتطفات الكود وإثباتات مفهوم الاستغلال حيثما كان ذلك مناسباً."
+              },
+              "example": {
+                "en": "Example: Report SQL injection with full request, payload used, and database extracted",
+                "ar": "مثال: أبلغ عن حقن SQL مع الطلب الكامل والحمولة المستخدمة وقاعدة البيانات المستخرجة"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Retest After Remediation",
+                "ar": "إعادة الاختبار بعد المعالجة"
+              },
+              "text": {
+                "en": "After developers fix vulnerabilities, retest to verify that patches are effective and do not introduce new issues. Use Burp to attempt the same exploits that previously worked. Ensure fixes address the root cause, not just the specific example you provided. Confirm that remediation did not break legitimate functionality.",
+                "ar": "بعد أن يصلح المطورون الثغرات، أعد الاختبار للتحقق من أن التصحيحات فعالة ولا تقدم مشكلات جديدة. استخدم Burp لمحاولة نفس الاستغلالات التي نجحت سابقاً. تأكد من أن الإصلاحات تعالج السبب الجذري، وليس فقط المثال المحدد الذي قدمته. أكد أن المعالجة لم تكسر الوظائف الشرعية."
+              },
+              "example": {
+                "en": "Example: Verify SQL injection is fixed by testing all previously vulnerable parameters",
+                "ar": "مثال: تحقق من إصلاح حقن SQL عن طريق اختبار جميع المعاملات الضعيفة سابقاً"
+              }
+            }
+          ]
+        },
+        {
+          "id": 20,
+          "type": "text",
+          "value": {
+            "en": "Mastering Burp Suite takes practice and experimentation. Start by testing intentionally vulnerable applications designed for learning, such as DVWA (Damn Vulnerable Web Application), WebGoat, or HackTheBox challenges. As you gain experience, you will develop efficient workflows, recognize vulnerability patterns quickly, and understand which Burp tools to use for different scenarios. The integration between Burp's tools is its greatest strength—Proxy captures traffic, Repeater allows detailed analysis, Intruder automates testing, and all tools work together seamlessly. Combined with strong web security knowledge, Burp Suite becomes an indispensable tool for identifying and understanding web application vulnerabilities.",
+            "ar": "إتقان Burp Suite يتطلب الممارسة والتجريب. ابدأ باختبار تطبيقات ضعيفة عمداً مصممة للتعلم، مثل DVWA (Damn Vulnerable Web Application) أو WebGoat أو تحديات HackTheBox. مع اكتساب الخبرة، ستطور سير عمل فعال، وتتعرف على أنماط الثغرات بسرعة، وتفهم أي أدوات Burp تستخدم لسيناريوهات مختلفة. التكامل بين أدوات Burp هو أعظم قوتها—يلتقط Proxy حركة المرور، ويسمح Repeater بالتحليل التفصيلي، ويؤتمت Intruder الاختبار، وجميع الأدوات تعمل معاً بسلاسة. جنباً إلى جنب مع معرفة قوية بأمان الويب، يصبح Burp Suite أداة لا غنى عنها لتحديد وفهم ثغرات تطبيقات الويب."
+          }
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "createdAt": "2026-03-14T15:45:50.280Z",
+    "totalTopics": 6,
+    "totalElements": 184
+  }
+}

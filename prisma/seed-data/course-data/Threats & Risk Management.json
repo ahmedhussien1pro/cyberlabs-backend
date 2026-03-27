@@ -1,0 +1,1319 @@
+{
+  "landingData": {
+    "title": {
+      "en": "Threats & Risk Management",
+      "ar": "التهديدات وإدارة المخاطر"
+    },
+    "description": {
+      "en": "Learn to identify different types of cyber threats, understand the difference between vulnerabilities, threats, and risks, and master the basics of risk assessment through real-world attack case studies.",
+      "ar": "تعلم التعرف على أنواع التهديدات السيبرانية المختلفة، وفهم الفرق بين نقاط الضعف والتهديدات والمخاطر، وإتقان أساسيات تقييم المخاطر من خلال دراسات حالة واقعية للهجمات."
+    },
+    "difficulty": {
+      "en": "Beginner",
+      "ar": "مبتدئ"
+    },
+    "duration": {
+      "en": "75 Minutes",
+      "ar": "75 دقيقة"
+    },
+    "instructor": "CyberLab",
+    "rating": 4.9,
+    "students": 250
+  },
+  "topics": [
+    {
+      "id": "topic-1",
+      "title": {
+        "en": "Understanding Cyber Threats: The Foundation",
+        "ar": "فهم التهديدات السيبرانية: الأساسيات"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "What is a Cyber Threat?",
+            "ar": "ما هو التهديد السيبراني؟"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "A cyber threat is any possible danger that can harm your computer systems, networks, or data. Think of it like a storm warning before bad weather arrives. The threat exists whether or not it actually causes damage. Cyber threats come from many sources: criminals who want money, competitors who want secrets, or even accidental mistakes by employees.",
+            "ar": "التهديد السيبراني هو أي خطر محتمل يمكن أن يضر بأنظمة الكمبيوتر أو الشبكات أو البيانات الخاصة بك. فكر فيه مثل تحذير من عاصفة قبل وصول الطقس السيئ. التهديد موجود سواء تسبب في ضرر فعلي أم لا. تأتي التهديدات السيبرانية من مصادر عديدة: مجرمون يريدون المال، أو منافسون يريدون الأسرار، أو حتى أخطاء عرضية من الموظفين."
+          }
+        },
+        {
+          "id": 1771178442123.6387,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageUrl": "https://pub-cb38e65ea6bd411eb827a8641fdcc72d.r2.dev/Threats%20%26%20Risk%20Management/1-What%20is%20a%20Cyber%20Threat.webp"
+        },
+        {
+          "id": 4,
+          "type": "text",
+          "value": {
+            "en": "Understanding threats is the first step in protecting yourself. When you know what dangers exist, you can prepare better defenses. Companies spend millions to identify threats before they become real attacks. Even at home, knowing about phishing emails or weak passwords helps you stay safe online.",
+            "ar": "فهم التهديدات هو الخطوة الأولى لحماية نفسك. عندما تعرف الأخطار الموجودة، يمكنك إعداد دفاعات أفضل. تنفق الشركات الملايين لتحديد التهديدات قبل أن تصبح هجمات حقيقية. حتى في المنزل، معرفة رسائل التصيد الاحتيالي أو كلمات المرور الضعيفة تساعدك على البقاء آمناً عبر الإنترنت."
+          }
+        },
+        {
+          "id": 5,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Professional Tip: Security experts update threat lists daily because new dangers appear constantly. Staying informed is a continuous process, not a one-time task.",
+            "ar": "نصيحة احترافية: يقوم خبراء الأمن بتحديث قوائم التهديدات يومياً لأن أخطاراً جديدة تظهر باستمرار. البقاء على اطلاع هو عملية مستمرة، وليس مهمة لمرة واحدة."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 6,
+          "type": "table",
+          "title": {
+            "en": "Threats in Real Life vs Digital World",
+            "ar": "التهديدات في الحياة الواقعية مقابل العالم الرقمي"
+          },
+          "headers": {
+            "en": [
+              "Real Life Threat",
+              "Digital Threat",
+              "Common Goal"
+            ],
+            "ar": [
+              "تهديد الحياة الواقعية",
+              "التهديد الرقمي",
+              "الهدف المشترك"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "Burglar watching your home",
+                "Hacker scanning your network",
+                "Find weaknesses to exploit"
+              ],
+              "ar": [
+                "لص يراقب منزلك",
+                "قرصان يفحص شبكتك",
+                "إيجاد نقاط ضعف للاستغلال"
+              ]
+            },
+            {
+              "en": [
+                "Fake police officer at door",
+                "Phishing email pretending to be your bank",
+                "Trick you into giving access"
+              ],
+              "ar": [
+                "ضابط شرطة مزيف على الباب",
+                "رسالة تصيد تتظاهر بأنها من البنك",
+                "خداعك لمنح الوصول"
+              ]
+            },
+            {
+              "en": [
+                "Storm warning for your area",
+                "News of new malware spreading",
+                "Prepare before damage occurs"
+              ],
+              "ar": [
+                "تحذير من عاصفة في منطقتك",
+                "أخبار عن برمجية خبيثة تنتشر",
+                "الاستعداد قبل حدوث الضرر"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 7,
+          "type": "hr"
+        },
+        {
+          "id": 8,
+          "type": "title",
+          "value": {
+            "en": "Major Categories of Cyber Threats",
+            "ar": "الفئات الرئيسية للتهديدات السيبرانية"
+          }
+        },
+        {
+          "id": 9,
+          "type": "text",
+          "value": {
+            "en": "Cyber threats fall into several main categories based on their goals and methods. Malware threats aim to damage or control your systems. Social engineering threats trick people into making mistakes. Network attacks target your internet connections and communication. Each category requires different defense strategies.",
+            "ar": "تنقسم التهديدات السيبرانية إلى عدة فئات رئيسية بناءً على أهدافها وأساليبها. تهديدات البرمجيات الخبيثة تهدف إلى إتلاف أو السيطرة على أنظمتك. تهديدات الهندسة الاجتماعية تخدع الأشخاص لارتكاب أخطاء. هجمات الشبكة تستهدف اتصالات الإنترنت والتواصل. كل فئة تتطلب استراتيجيات دفاعية مختلفة."
+          }
+        },
+        {
+          "id": 10,
+          "type": "list",
+          "title": {
+            "en": "Common Threat Categories You Will Encounter",
+            "ar": "فئات التهديدات الشائعة التي ستواجهها"
+          },
+          "items": {
+            "en": [
+              "Malware: Software designed to harm your system or steal data",
+              "Social Engineering: Psychological tricks to manipulate people",
+              "Network Attacks: Direct attempts to break into or disrupt networks",
+              "Insider Threats: Dangers from people who already have access",
+              "Physical Threats: Theft or damage to actual computer equipment"
+            ],
+            "ar": [
+              "البرمجيات الخبيثة: برامج مصممة لإلحاق الضرر بنظامك أو سرقة البيانات",
+              "الهندسة الاجتماعية: حيل نفسية للتلاعب بالأشخاص",
+              "هجمات الشبكة: محاولات مباشرة للاختراق أو تعطيل الشبكات",
+              "التهديدات الداخلية: أخطار من أشخاص لديهم وصول مسبق",
+              "التهديدات المادية: سرقة أو إتلاف معدات الكمبيوتر الفعلية"
+            ]
+          }
+        },
+        {
+          "id": 11,
+          "type": "text",
+          "value": {
+            "en": "Most successful attacks combine multiple threat types. For example, an attacker might send a phishing email that contains malware. When someone clicks the link, the malware installs and opens a door for network attacks. Understanding how threats work together helps you spot complex attack patterns.",
+            "ar": "معظم الهجمات الناجحة تجمع بين أنواع متعددة من التهديدات. على سبيل المثال، قد يرسل المهاجم رسالة تصيد تحتوي على برمجيات خبيثة. عندما ينقر شخص ما على الرابط، تُثبت البرمجيات الخبيثة وتفتح باباً لهجمات الشبكة. فهم كيفية عمل التهديدات معاً يساعدك على اكتشاف أنماط الهجوم المعقدة."
+          }
+        },
+        {
+          "id": 12,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "Warning: Never assume a threat is simple. Attackers often use one threat as a distraction while launching another. Always look for multiple signs of danger.",
+            "ar": "تحذير: لا تفترض أبداً أن التهديد بسيط. غالباً ما يستخدم المهاجمون تهديداً واحداً كإلهاء أثناء إطلاق آخر. ابحث دائماً عن علامات متعددة للخطر."
+          },
+          "link": "",
+          "isLab": false
+        }
+      ]
+    },
+    {
+      "id": "topic-2",
+      "title": {
+        "en": "Vulnerability, Threat, and Risk: Understanding the Differences",
+        "ar": "نقاط الضعف والتهديدات والمخاطر: فهم الفروقات"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "Three Critical Concepts Explained",
+            "ar": "ثلاثة مفاهيم حاسمة موضحة"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "Many beginners confuse vulnerability, threat, and risk. These three concepts are connected but different. A vulnerability is a weakness in your system, like an unlocked door. A threat is someone or something that could use that weakness, like a burglar. Risk is the chance that the threat will actually exploit the vulnerability and cause damage. Understanding these differences helps you prioritize what to fix first.",
+            "ar": "يخلط العديد من المبتدئين بين نقطة الضعف والتهديد والمخاطر. هذه المفاهيم الثلاثة مترابطة لكنها مختلفة. نقطة الضعف هي ضعف في نظامك، مثل باب غير مقفل. التهديد هو شخص أو شيء يمكن أن يستخدم هذا الضعف، مثل لص. المخاطر هي احتمال أن يستغل التهديد فعلياً نقطة الضعف ويتسبب في ضرر. فهم هذه الفروقات يساعدك على تحديد أولويات ما يجب إصلاحه أولاً."
+          }
+        },
+        {
+          "id": 1771178469056.965,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageUrl": "https://pub-cb38e65ea6bd411eb827a8641fdcc72d.r2.dev/Threats%20%26%20Risk%20Management/2-Three%20Critical%20Concepts.webp"
+        },
+        {
+          "id": 4,
+          "type": "table",
+          "title": {
+            "en": "Comparing Vulnerability, Threat, and Risk",
+            "ar": "مقارنة نقطة الضعف والتهديد والمخاطر"
+          },
+          "headers": {
+            "en": [
+              "Concept",
+              "Definition",
+              "Example",
+              "Your Control"
+            ],
+            "ar": [
+              "المفهوم",
+              "التعريف",
+              "مثال",
+              "سيطرتك"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "Vulnerability",
+                "A weakness that can be exploited",
+                "Old software with security holes",
+                "High - you can patch it"
+              ],
+              "ar": [
+                "نقطة الضعف",
+                "ضعف يمكن استغلاله",
+                "برنامج قديم به ثغرات أمنية",
+                "عالية - يمكنك إصلاحها"
+              ]
+            },
+            {
+              "en": [
+                "Threat",
+                "Potential danger that could cause harm",
+                "Hackers looking for targets",
+                "Low - they exist independently"
+              ],
+              "ar": [
+                "التهديد",
+                "خطر محتمل قد يسبب ضرراً",
+                "قراصنة يبحثون عن أهداف",
+                "منخفضة - موجودون بشكل مستقل"
+              ]
+            },
+            {
+              "en": [
+                "Risk",
+                "Likelihood threat exploits vulnerability",
+                "Chance hackers will find your old software",
+                "Medium - reduce with defenses"
+              ],
+              "ar": [
+                "المخاطر",
+                "احتمال استغلال التهديد لنقطة الضعف",
+                "احتمال أن يجد القراصنة برنامجك القديم",
+                "متوسطة - تقلل بالدفاعات"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 5,
+          "type": "hr"
+        },
+        {
+          "id": 6,
+          "type": "title",
+          "value": {
+            "en": "How They Work Together in Real Situations",
+            "ar": "كيف تعمل معاً في المواقف الحقيقية"
+          }
+        },
+        {
+          "id": 7,
+          "type": "text",
+          "value": {
+            "en": "Imagine a bank with an old alarm system that sometimes fails. The failing alarm is the vulnerability. Criminals who know about security systems are the threat. The risk is the probability that criminals will discover this specific bank has a weak alarm and decide to rob it. The bank cannot eliminate all criminals, but it can fix the alarm to reduce risk.",
+            "ar": "تخيل بنكاً لديه نظام إنذار قديم يتعطل أحياناً. الإنذار المعطل هو نقطة الضعف. المجرمون الذين يعرفون عن أنظمة الأمن هم التهديد. المخاطر هي احتمال أن يكتشف المجرمون أن هذا البنك المحدد لديه إنذار ضعيف ويقرروا سرقته. لا يمكن للبنك القضاء على جميع المجرمين، لكن يمكنه إصلاح الإنذار لتقليل المخاطر."
+          }
+        },
+        {
+          "id": 8,
+          "type": "text",
+          "value": {
+            "en": "In cybersecurity, the same logic applies. Your company might use weak passwords for employee accounts. That is the vulnerability. Automated hacking tools that try millions of password combinations are the threat. The risk depends on how valuable your data is and how easy your passwords are to guess. You control the vulnerability by enforcing strong passwords.",
+            "ar": "في الأمن السيبراني، نفس المنطق ينطبق. قد تستخدم شركتك كلمات مرور ضعيفة لحسابات الموظفين. هذه هي نقطة الضعف. أدوات القرصنة الآلية التي تجرب ملايين تركيبات كلمات المرور هي التهديد. المخاطر تعتمد على مدى قيمة بياناتك ومدى سهولة تخمين كلمات المرور الخاصة بك. أنت تتحكم في نقطة الضعف بفرض كلمات مرور قوية."
+          }
+        },
+        {
+          "id": 9,
+          "type": "orderedList",
+          "title": {
+            "en": "Steps to Analyze Any Security Situation",
+            "ar": "خطوات تحليل أي موقف أمني"
+          },
+          "items": [
+            {
+              "subtitle": {
+                "en": "Identify Vulnerabilities",
+                "ar": "تحديد نقاط الضعف"
+              },
+              "text": {
+                "en": "Look for weaknesses in your systems, processes, or people. Check for outdated software, missing security updates, or poor security practices.",
+                "ar": "ابحث عن نقاط الضعف في أنظمتك أو عملياتك أو أشخاصك. تحقق من البرامج القديمة أو التحديثات الأمنية المفقودة أو ممارسات الأمان الضعيفة."
+              },
+              "example": {
+                "en": "Example: Scanning your network to find computers running old operating systems.",
+                "ar": "مثال: فحص شبكتك للعثور على أجهزة كمبيوتر تشغل أنظمة تشغيل قديمة."
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Recognize Threats",
+                "ar": "التعرف على التهديدات"
+              },
+              "text": {
+                "en": "Understand what dangers exist that could exploit your vulnerabilities. Research current attack methods and common hacker tactics.",
+                "ar": "افهم الأخطار الموجودة التي يمكن أن تستغل نقاط ضعفك. ابحث عن أساليب الهجوم الحالية وتكتيكات القراصنة الشائعة."
+              },
+              "example": {
+                "en": "Example: Reading security reports about ransomware targeting companies with poor backup systems.",
+                "ar": "مثال: قراءة تقارير الأمن عن برامج الفدية التي تستهدف الشركات ذات أنظمة النسخ الاحتياطي الضعيفة."
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Calculate Risk",
+                "ar": "حساب المخاطر"
+              },
+              "text": {
+                "en": "Estimate the probability that a threat will exploit a vulnerability. Consider how attractive your assets are to attackers and how easy your vulnerabilities are to exploit.",
+                "ar": "قدر احتمال أن يستغل تهديد نقطة ضعف. ضع في اعتبارك مدى جاذبية أصولك للمهاجمين ومدى سهولة استغلال نقاط ضعفك."
+              },
+              "example": {
+                "en": "Example: A hospital with patient records and weak security has high risk because medical data is valuable.",
+                "ar": "مثال: مستشفى لديه سجلات مرضى وأمن ضعيف لديه مخاطر عالية لأن البيانات الطبية قيمة."
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Prioritize Actions",
+                "ar": "تحديد أولويات الإجراءات"
+              },
+              "text": {
+                "en": "Focus your limited resources on reducing the highest risks first. Fix critical vulnerabilities, implement strong defenses against common threats, and monitor continuously.",
+                "ar": "ركز مواردك المحدودة على تقليل أعلى المخاطر أولاً. أصلح نقاط الضعف الحرجة، ونفذ دفاعات قوية ضد التهديدات الشائعة، وراقب باستمرار."
+              },
+              "example": {
+                "en": "Example: Installing critical security patches before adding new optional features.",
+                "ar": "مثال: تثبيت تحديثات الأمان الحرجة قبل إضافة ميزات اختيارية جديدة."
+              }
+            }
+          ]
+        },
+        {
+          "id": 10,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Professional Insight: Security professionals use risk matrices that combine vulnerability severity with threat likelihood to create clear priority lists. This mathematical approach helps justify security spending to management.",
+            "ar": "رؤية احترافية: يستخدم محترفو الأمن مصفوفات المخاطر التي تجمع بين شدة نقطة الضعف واحتمال التهديد لإنشاء قوائم أولويات واضحة. هذا النهج الرياضي يساعد في تبرير الإنفاق الأمني للإدارة."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 11,
+          "type": "text",
+          "value": {
+            "en": "Remember this simple formula: Risk equals vulnerability multiplied by threat multiplied by impact. If any factor is zero, there is no risk. A severe vulnerability with no threat creates no immediate risk. A dangerous threat with no vulnerability to exploit also creates no risk. Security is about managing this equation effectively.",
+            "ar": "تذكر هذه الصيغة البسيطة: المخاطر تساوي نقطة الضعف مضروبة في التهديد مضروبة في التأثير. إذا كان أي عامل صفراً، فلا توجد مخاطر. نقطة ضعف شديدة بدون تهديد لا تخلق مخاطر فورية. تهديد خطير بدون نقطة ضعف لاستغلالها أيضاً لا يخلق مخاطر. الأمن يتعلق بإدارة هذه المعادلة بفعالية."
+          }
+        }
+      ]
+    },
+    {
+      "id": "topic-3",
+      "title": {
+        "en": "Types of Cyber Threats: Malware and Ransomware",
+        "ar": "أنواع التهديدات السيبرانية: البرمجيات الخبيثة وبرامج الفدية"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "Understanding Malicious Software",
+            "ar": "فهم البرمجيات الضارة"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "Malware is short for malicious software. It is any program designed to harm your computer, steal your information, or give attackers control over your system. Malware comes in many forms with different goals. Some malware steals passwords silently. Other malware destroys files loudly. Understanding the different types helps you recognize warning signs and choose appropriate defenses.",
+            "ar": "البرمجيات الخبيثة هي اختصار للبرامج الضارة. هي أي برنامج مصمم لإلحاق الضرر بجهاز الكمبيوتر الخاص بك، أو سرقة معلوماتك، أو منح المهاجمين السيطرة على نظامك. تأتي البرمجيات الخبيثة في أشكال عديدة بأهداف مختلفة. بعض البرمجيات الخبيثة تسرق كلمات المرور بصمت. برمجيات خبيثة أخرى تدمر الملفات بصخب. فهم الأنواع المختلفة يساعدك على التعرف على علامات التحذير واختيار الدفاعات المناسبة."
+          }
+        },
+        {
+          "id": 1771179706796.8098,
+          "type": "orderedList",
+          "title": {
+            "en": "Common Types of Malware",
+            "ar": "الأنواع الشائعة من البرمجيات الخبيثة"
+          },
+          "items": [
+            {
+              "subtitle": {
+                "en": "Viruses",
+                "ar": "الفيروسات"
+              },
+              "text": {
+                "en": "Attach to legitimate files and spread when users share those files",
+                "ar": " تلتصق بملفات شرعية وتنتشر عندما يشارك المستخدمون تلك الملفات"
+              },
+              "example": null
+            },
+            {
+              "subtitle": {
+                "en": "Worms",
+                "ar": "الديدان"
+              },
+              "text": {
+                "en": "Self-replicating programs that spread across networks automatically",
+                "ar": "برامج ذاتية التكاثر تنتشر عبر الشبكات تلقائياً"
+              },
+              "example": null
+            },
+            {
+              "subtitle": {
+                "en": "Trojans",
+                "ar": "أحصنة طروادة"
+              },
+              "text": {
+                "en": " Disguise themselves as useful software but contain hidden malicious code",
+                "ar": " تتنكر كبرامج مفيدة لكنها تحتوي على كود خبيث مخفي"
+              },
+              "example": null
+            },
+            {
+              "subtitle": {
+                "en": "Spyware",
+                "ar": "برامج التجسس"
+              },
+              "text": {
+                "en": "Secretly monitor your activities and steal sensitive information",
+                "ar": "تراقب أنشطتك سراً وتسرق معلومات حساسة"
+              },
+              "example": null
+            },
+            {
+              "subtitle": {
+                "en": "Ransomware",
+                "ar": "برامج الفدية"
+              },
+              "text": {
+                "en": "Encrypt your files and demand payment for the decryption key",
+                "ar": "تشفر ملفاتك وتطالب بدفع مقابل مفتاح فك التشفير"
+              },
+              "example": null
+            }
+          ]
+        },
+        {
+          "id": 1771178496689.605,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageUrl": "https://pub-cb38e65ea6bd411eb827a8641fdcc72d.r2.dev/Threats%20%26%20Risk%20Management/3-Malicious%20Software.webp"
+        },
+        {
+          "id": 5,
+          "type": "hr"
+        },
+        {
+          "id": 6,
+          "type": "title",
+          "value": {
+            "en": "Ransomware: The Growing Threat",
+            "ar": "برامج الفدية: التهديد المتنامي"
+          }
+        },
+        {
+          "id": 7,
+          "type": "text",
+          "value": {
+            "en": "Ransomware has become one of the most dangerous cyber threats. It works like a digital kidnapping. Attackers encrypt all your important files so you cannot open them. Then they demand payment, usually in cryptocurrency, to give you the decryption key. Many victims pay thousands or even millions of dollars. However, paying does not guarantee you will get your files back. Some criminals take the money and disappear.",
+            "ar": "أصبحت برامج الفدية واحدة من أخطر التهديدات السيبرانية. تعمل مثل اختطاف رقمي. يشفر المهاجمون جميع ملفاتك المهمة حتى لا تتمكن من فتحها. ثم يطالبون بالدفع، عادة بالعملات المشفرة، لإعطائك مفتاح فك التشفير. العديد من الضحايا يدفعون الآلاف أو حتى الملايين من الدولارات. ومع ذلك، الدفع لا يضمن استعادة ملفاتك. بعض المجرمين يأخذون المال ويختفون."
+          }
+        },
+        {
+          "id": 8,
+          "type": "text",
+          "value": {
+            "en": "Ransomware typically enters systems through phishing emails or vulnerable software. An employee might click on a fake invoice attachment. Within hours, every file on the company network becomes encrypted. Modern ransomware spreads quickly and targets backups too. This is why prevention is crucial. Regular backups stored offline provide the best protection against ransomware.",
+            "ar": "عادةً ما تدخل برامج الفدية الأنظمة عبر رسائل التصيد الاحتيالي أو البرامج الضعيفة. قد ينقر موظف على مرفق فاتورة مزيفة. في غضون ساعات، يصبح كل ملف على شبكة الشركة مشفراً. برامج الفدية الحديثة تنتشر بسرعة وتستهدف النسخ الاحتياطية أيضاً. لهذا السبب الوقاية حاسمة. توفر النسخ الاحتياطية المنتظمة المخزنة بدون اتصال أفضل حماية ضد برامج الفدية."
+          }
+        },
+        {
+          "id": 9,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "Warning: Security experts strongly advise against paying ransomware demands. Payment encourages more attacks and funds criminal organizations. Instead, focus on prevention through backups and security training.",
+            "ar": "تحذير: ينصح خبراء الأمن بشدة بعدم دفع مطالب برامج الفدية. الدفع يشجع على المزيد من الهجمات ويمول المنظمات الإجرامية. بدلاً من ذلك، ركز على الوقاية من خلال النسخ الاحتياطية والتدريب الأمني."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 10,
+          "type": "table",
+          "title": {
+            "en": "Ransomware Attack Timeline",
+            "ar": "الجدول الزمني لهجوم برامج الفدية"
+          },
+          "headers": {
+            "en": [
+              "Stage",
+              "What Happens",
+              "Time",
+              "Prevention Point"
+            ],
+            "ar": [
+              "المرحلة",
+              "ما يحدث",
+              "الوقت",
+              "نقطة الوقاية"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "Initial Access",
+                "Employee opens malicious email attachment",
+                "Day 0",
+                "Email filtering and security training"
+              ],
+              "ar": [
+                "الوصول الأولي",
+                "موظف يفتح مرفق بريد إلكتروني خبيث",
+                "اليوم 0",
+                "تصفية البريد الإلكتروني والتدريب الأمني"
+              ]
+            },
+            {
+              "en": [
+                "Malware Installation",
+                "Ransomware silently installs on computer",
+                "Minutes later",
+                "Antivirus and endpoint protection"
+              ],
+              "ar": [
+                "تثبيت البرمجيات الخبيثة",
+                "برامج الفدية تُثبت بصمت على الكمبيوتر",
+                "بعد دقائق",
+                "مضاد الفيروسات وحماية نقطة النهاية"
+              ]
+            },
+            {
+              "en": [
+                "Network Spread",
+                "Ransomware moves to other computers",
+                "Hours",
+                "Network segmentation and monitoring"
+              ],
+              "ar": [
+                "انتشار الشبكة",
+                "برامج الفدية تنتقل إلى أجهزة كمبيوتر أخرى",
+                "ساعات",
+                "تقسيم الشبكة والمراقبة"
+              ]
+            },
+            {
+              "en": [
+                "File Encryption",
+                "All accessible files get encrypted",
+                "1-2 days",
+                "Offline backups and access controls"
+              ],
+              "ar": [
+                "تشفير الملفات",
+                "جميع الملفات المتاحة تُشفر",
+                "1-2 يوم",
+                "نسخ احتياطية غير متصلة وضوابط الوصول"
+              ]
+            },
+            {
+              "en": [
+                "Ransom Demand",
+                "Message appears demanding payment",
+                "Day 2",
+                "Incident response plan ready"
+              ],
+              "ar": [
+                "مطالبة الفدية",
+                "تظهر رسالة تطالب بالدفع",
+                "اليوم 2",
+                "خطة الاستجابة للحوادث جاهزة"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 11,
+          "type": "text",
+          "value": {
+            "en": "The best defense against malware and ransomware combines multiple layers. Keep all software updated to patch vulnerabilities. Use reliable antivirus software. Train employees to recognize suspicious emails. Maintain regular backups on separate systems. Create a response plan before an attack happens. No single defense is perfect, but multiple layers make successful attacks much harder.",
+            "ar": "أفضل دفاع ضد البرمجيات الخبيثة وبرامج الفدية يجمع بين طبقات متعددة. حافظ على تحديث جميع البرامج لإصلاح نقاط الضعف. استخدم برنامج مضاد فيروسات موثوق. درب الموظفين على التعرف على رسائل البريد الإلكتروني المشبوهة. حافظ على نسخ احتياطية منتظمة على أنظمة منفصلة. أنشئ خطة استجابة قبل حدوث هجوم. لا يوجد دفاع واحد مثالي، لكن الطبقات المتعددة تجعل الهجمات الناجحة أصعب بكثير."
+          }
+        },
+        {
+          "id": 12,
+          "type": "code",
+          "language": "python",
+          "value": "# Simple file backup checker example\nimport os\nimport time\n\ndef check_backup_age(backup_path):\n    if os.path.exists(backup_path):\n        age_days = (time.time() - os.path.getmtime(backup_path)) / 86400\n        if age_days > 7:\n            print(\"WARNING: Backup older than 7 days\")\n        else:\n            print(\"Backup is recent and valid\")\n    else:\n        print(\"ERROR: No backup found!\")\n\n# Run backup check\ncheck_backup_age(\"/backups/important_data.zip\")"
+        }
+      ]
+    },
+    {
+      "id": "topic-4",
+      "title": {
+        "en": "Social Engineering and Phishing Attacks",
+        "ar": "الهندسة الاجتماعية وهجمات التصيد الاحتيالي"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "text",
+          "value": {
+            "en": "Social engineering attacks target the human element rather than technical systems. Attackers manipulate people into breaking security procedures or revealing confidential information. These attacks work because they exploit natural human behaviors like trust, fear, curiosity, and desire to help. Even the strongest technical security can fail if an attacker tricks an authorized person into opening the door.",
+            "ar": "هجمات الهندسة الاجتماعية تستهدف العنصر البشري بدلاً من الأنظمة التقنية. يتلاعب المهاجمون بالأشخاص لخرق إجراءات الأمان أو الكشف عن معلومات سرية. هذه الهجمات تعمل لأنها تستغل السلوكيات البشرية الطبيعية مثل الثقة والخوف والفضول والرغبة في المساعدة. حتى أقوى أمان تقني يمكن أن يفشل إذا خدع المهاجم شخصاً مصرحاً له بفتح الباب."
+          }
+        },
+        {
+          "id": 1771178515883.4578,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageUrl": "https://pub-cb38e65ea6bd411eb827a8641fdcc72d.r2.dev/Threats%20%26%20Risk%20Management/4-Social%20engineering%20attacks.webp"
+        },
+        {
+          "id": 3,
+          "type": "title",
+          "value": {
+            "en": "Common Social Engineering Tactics",
+            "ar": "تكتيكات الهندسة الاجتماعية الشائعة"
+          }
+        },
+        {
+          "id": 4,
+          "type": "text",
+          "value": {
+            "en": "Attackers use psychological principles to manipulate victims. They create urgency by claiming your account will close today. They build trust by pretending to be from technical support. They trigger fear by warning about security breaches. They spark curiosity with messages about mysterious packages. Understanding these manipulation techniques is the first step in defending against them.",
+            "ar": "يستخدم المهاجمون المبادئ النفسية للتلاعب بالضحايا. يخلقون الاستعجال بالادعاء بأن حسابك سيُغلق اليوم. يبنون الثقة بالتظاهر بأنهم من الدعم التقني. يثيرون الخوف بالتحذير من خروقات أمنية. يشعلون الفضول برسائل عن طرود غامضة. فهم تقنيات التلاعب هذه هو الخطوة الأولى في الدفاع ضدها."
+          }
+        },
+        {
+          "id": 5,
+          "type": "orderedList",
+          "title": {
+            "en": "Major Social Engineering Methods",
+            "ar": "أساليب الهندسة الاجتماعية الرئيسية"
+          },
+          "items": [
+            {
+              "subtitle": {
+                "en": "Pretexting",
+                "ar": "التظاهر بالهوية"
+              },
+              "text": {
+                "en": "Attacker creates a fabricated scenario to obtain information. They might pretend to be from IT support, a bank employee, or a delivery service. The goal is to establish trust and legitimacy.",
+                "ar": "المهاجم يخلق سيناريو ملفق للحصول على المعلومات. قد يتظاهرون بأنهم من دعم تكنولوجيا المعلومات، أو موظف بنك، أو خدمة توصيل. الهدف هو بناء الثقة والشرعية."
+              },
+              "example": {
+                "en": "Example: Caller claims to be from your bank's fraud department investigating suspicious activity on your account.",
+                "ar": "مثال: متصل يدعي أنه من قسم مكافحة الاحتيال في البنك الخاص بك يحقق في نشاط مشبوه على حسابك."
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Baiting",
+                "ar": "الطُعم"
+              },
+              "text": {
+                "en": "Offering something enticing to lure victims. This could be free software, movie downloads, or a USB drive labeled confidential left in a parking area. When victims take the bait, malware installs.",
+                "ar": "تقديم شيء مغري لجذب الضحايا. قد يكون برنامجاً مجانياً، أو تحميل أفلام، أو محرك USB مُسمى سري تُرك في منطقة وقوف السيارات. عندما يأخذ الضحايا الطُعم، تُثبت البرمجيات الخبيثة."
+              },
+              "example": {
+                "en": "Example: USB drive labeled Company Salaries 2026 left near office entrance. Curious employee plugs it in.",
+                "ar": "مثال: محرك USB مُسمى رواتب الشركة 2026 تُرك بالقرب من مدخل المكتب. موظف فضولي يوصله."
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Quid Pro Quo",
+                "ar": "المقايضة"
+              },
+              "text": {
+                "en": "Attacker offers a service in exchange for information or access. Common approach is fake technical support offering to fix computer problems in exchange for login credentials or remote access.",
+                "ar": "المهاجم يقدم خدمة مقابل معلومات أو وصول. النهج الشائع هو دعم تقني مزيف يعرض إصلاح مشاكل الكمبيوتر مقابل بيانات اعتماد تسجيل الدخول أو الوصول عن بُعد."
+              },
+              "example": {
+                "en": "Example: Email offering free antivirus scan that actually installs spyware when you click the link.",
+                "ar": "مثال: بريد إلكتروني يعرض فحص مضاد فيروسات مجاني يثبت فعلياً برامج تجسس عندما تنقر على الرابط."
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Tailgating",
+                "ar": "التسلل الخلفي"
+              },
+              "text": {
+                "en": "Physical social engineering where attacker follows authorized person through secure entrance. They rely on politeness and social norms. People often hold doors open for others carrying boxes or coffee.",
+                "ar": "هندسة اجتماعية مادية حيث يتبع المهاجم شخصاً مصرحاً له عبر مدخل آمن. يعتمدون على الأدب والأعراف الاجتماعية. غالباً ما يفتح الأشخاص الأبواب للآخرين الذين يحملون صناديق أو قهوة."
+              },
+              "example": {
+                "en": "Example: Person in delivery uniform carrying packages asks employee to hold door open to secure office area.",
+                "ar": "مثال: شخص بزي توصيل يحمل طرود يطلب من موظف أن يمسك الباب مفتوحاً لمنطقة مكتب آمنة."
+              }
+            }
+          ]
+        },
+        {
+          "id": 6,
+          "type": "hr"
+        },
+        {
+          "id": 7,
+          "type": "title",
+          "value": {
+            "en": "Phishing: The Most Common Attack",
+            "ar": "التصيد الاحتيالي: الهجوم الأكثر شيوعاً"
+          }
+        },
+        {
+          "id": 8,
+          "type": "text",
+          "value": {
+            "en": "Phishing is a type of social engineering conducted through electronic communication, primarily email. Attackers send messages that appear to come from trusted sources like banks, online services, or colleagues. The messages contain malicious links or attachments designed to steal credentials or install malware. Phishing works because the fake messages look remarkably similar to legitimate ones.",
+            "ar": "التصيد الاحتيالي هو نوع من الهندسة الاجتماعية يُجرى من خلال الاتصالات الإلكترونية، بشكل أساسي البريد الإلكتروني. يرسل المهاجمون رسائل تبدو كأنها تأتي من مصادر موثوقة مثل البنوك أو الخدمات عبر الإنترنت أو الزملاء. تحتوي الرسائل على روابط أو مرفقات خبيثة مصممة لسرقة بيانات الاعتماد أو تثبيت البرمجيات الخبيثة. التصيد الاحتيالي يعمل لأن الرسائل المزيفة تبدو مشابهة بشكل ملحوظ للرسائل الشرعية."
+          }
+        },
+        {
+          "id": 9,
+          "type": "list",
+          "title": {
+            "en": "Warning Signs of Phishing Emails",
+            "ar": "علامات التحذير من رسائل التصيد الاحتيالي"
+          },
+          "items": {
+            "en": [
+              "Urgent language demanding immediate action or threatening consequences",
+              "Generic greetings like Dear Customer instead of your actual name",
+              "Sender email address that does not exactly match the official domain",
+              "Poor grammar, spelling errors, or awkward phrasing",
+              "Requests for sensitive information like passwords or credit card numbers",
+              "Suspicious links that do not match the claimed destination",
+              "Unexpected attachments, especially executable files"
+            ],
+            "ar": [
+              "لغة عاجلة تطالب بإجراء فوري أو تهدد بعواقب",
+              "تحيات عامة مثل عزيزي العميل بدلاً من اسمك الفعلي",
+              "عنوان بريد المرسل الإلكتروني لا يتطابق تماماً مع النطاق الرسمي",
+              "نحو ضعيف، أخطاء إملائية، أو صياغة محرجة",
+              "طلبات للحصول على معلومات حساسة مثل كلمات المرور أو أرقام بطاقات الائتمان",
+              "روابط مشبوهة لا تتطابق مع الوجهة المزعومة",
+              "مرفقات غير متوقعة، خاصة الملفات القابلة للتنفيذ"
+            ]
+          }
+        },
+        {
+          "id": 10,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "Critical Rule: Legitimate organizations never ask for passwords or sensitive information via email. If you receive such a request, contact the organization directly using official contact information from their website, not from the email.",
+            "ar": "قاعدة حاسمة: المنظمات الشرعية لا تطلب أبداً كلمات المرور أو معلومات حساسة عبر البريد الإلكتروني. إذا تلقيت مثل هذا الطلب، اتصل بالمنظمة مباشرة باستخدام معلومات الاتصال الرسمية من موقعها الإلكتروني، وليس من البريد الإلكتروني."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 11,
+          "type": "text",
+          "value": {
+            "en": "Defense against social engineering requires awareness and skepticism. Always verify unexpected requests through alternative channels. Never provide sensitive information based solely on an email or phone call. Take time to think carefully rather than acting on urgency or emotion. When in doubt, consult with security personnel or IT department. Remember that legitimate organizations understand security concerns and will not pressure you to bypass verification procedures.",
+            "ar": "الدفاع ضد الهندسة الاجتماعية يتطلب الوعي والشك. تحقق دائماً من الطلبات غير المتوقعة من خلال قنوات بديلة. لا تقدم أبداً معلومات حساسة بناءً فقط على بريد إلكتروني أو مكالمة هاتفية. خذ وقتاً للتفكير بعناية بدلاً من التصرف بناءً على الاستعجال أو العاطفة. عند الشك، استشر موظفي الأمن أو قسم تكنولوجيا المعلومات. تذكر أن المنظمات الشرعية تفهم المخاوف الأمنية ولن تضغط عليك لتجاوز إجراءات التحقق."
+          }
+        },
+        {
+          "id": 12,
+          "type": "terminal",
+          "label": {
+            "en": "Email Header Analysis",
+            "ar": "تحليل رأس البريد الإلكتروني"
+          },
+          "value": "user@security:~$ cat email_header.txt\nFrom: support@paypa1-secure.com\nReply-To: hacker@malicious-server.net\nReceived: from unknown-server [185.220.101.45]\nSubject: Urgent: Account Verification Required\n\nWARNING: Sender domain is fake (paypa1 not paypal)\nWARNING: Reply-To does not match From address\nWARNING: Server IP from suspicious location"
+        }
+      ]
+    },
+    {
+      "id": "topic-5",
+      "title": {
+        "en": "Risk Assessment Fundamentals",
+        "ar": "أساسيات تقييم المخاطر"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "What is Risk Assessment?",
+            "ar": "ما هو تقييم المخاطر؟"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "Risk assessment is the systematic process of identifying, analyzing, and evaluating security risks to your organization. Think of it as creating a detailed map of all the ways your systems could be compromised and how much damage each scenario would cause. This process helps you make informed decisions about where to invest your limited security resources. You cannot protect everything perfectly, so you must prioritize based on actual risk levels.",
+            "ar": "تقييم المخاطر هو العملية المنهجية لتحديد وتحليل وتقييم المخاطر الأمنية لمؤسستك. فكر فيه كإنشاء خريطة مفصلة لجميع الطرق التي يمكن بها اختراق أنظمتك ومقدار الضرر الذي سيسببه كل سيناريو. تساعدك هذه العملية على اتخاذ قرارات مستنيرة حول مكان استثمار موارد الأمان المحدودة. لا يمكنك حماية كل شيء بشكل مثالي، لذا يجب أن تحدد الأولويات بناءً على مستويات المخاطر الفعلية."
+          }
+        },
+        {
+          "id": 1771178570869.7122,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageUrl": "https://pub-cb38e65ea6bd411eb827a8641fdcc72d.r2.dev/Threats%20%26%20Risk%20Management/5-What%20is%20Risk%20Assessment.webp"
+        },
+        {
+          "id": 4,
+          "type": "orderedList",
+          "title": {
+            "en": "The Three Core Stages of Risk Assessment",
+            "ar": "المراحل الأساسية الثلاث لتقييم المخاطر"
+          },
+          "items": [
+            {
+              "subtitle": {
+                "en": "Risk Identification",
+                "ar": "تحديد المخاطر"
+              },
+              "text": {
+                "en": "First, you must find and document all potential risks. Examine your assets, identify vulnerabilities in systems and processes, and recognize threats that could exploit those weaknesses. This stage requires thorough investigation of technology, people, and physical security. Create a comprehensive inventory of everything that could go wrong.",
+                "ar": "أولاً، يجب أن تجد وتوثق جميع المخاطر المحتملة. افحص أصولك، حدد نقاط الضعف في الأنظمة والعمليات، واعترف بالتهديدات التي يمكن أن تستغل تلك نقاط الضعف. تتطلب هذه المرحلة تحقيقاً شاملاً في التكنولوجيا والأشخاص والأمن المادي. أنشئ جرداً شاملاً لكل ما يمكن أن يسوء."
+              },
+              "example": {
+                "en": "Example: Discovering that customer database runs on outdated server software with known security vulnerabilities.",
+                "ar": "مثال: اكتشاف أن قاعدة بيانات العملاء تعمل على برنامج خادم قديم به نقاط ضعف أمنية معروفة."
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Risk Analysis",
+                "ar": "تحليل المخاطر"
+              },
+              "text": {
+                "en": "Next, analyze each identified risk to understand its characteristics. Determine the likelihood that the risk will actually occur. Estimate the potential impact if the risk materializes. Consider both financial costs and non-financial consequences like reputation damage or legal penalties. Assign numerical ratings or qualitative labels to make comparison easier.",
+                "ar": "بعد ذلك، حلل كل مخاطر محددة لفهم خصائصها. حدد احتمال حدوث المخاطر فعلياً. قدر التأثير المحتمل إذا تحققت المخاطر. ضع في اعتبارك التكاليف المالية والعواقب غير المالية مثل الضرر بالسمعة أو العقوبات القانونية. عين تقييمات رقمية أو تسميات نوعية لجعل المقارنة أسهل."
+              },
+              "example": {
+                "en": "Example: Rating database breach as high likelihood due to old software and high impact due to sensitive customer data.",
+                "ar": "مثال: تصنيف اختراق قاعدة البيانات على أنه احتمال عالٍ بسبب البرامج القديمة وتأثير عالٍ بسبب بيانات العملاء الحساسة."
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Risk Evaluation",
+                "ar": "تقييم المخاطر"
+              },
+              "text": {
+                "en": "Finally, evaluate analyzed risks to determine priorities. Compare each risk against your organization's risk tolerance. Decide which risks require immediate action, which can be monitored, and which are acceptable. Create a ranked list that guides resource allocation. This evaluation connects technical security findings to business decision-making.",
+                "ar": "أخيراً، قيّم المخاطر المحللة لتحديد الأولويات. قارن كل مخاطر بتحمل المخاطر في مؤسستك. قرر أي المخاطر تتطلب إجراء فورياً، وأيها يمكن مراقبتها، وأيها مقبولة. أنشئ قائمة مرتبة توجه تخصيص الموارد. يربط هذا التقييم نتائج الأمن التقني باتخاذ القرارات التجارية."
+              },
+              "example": {
+                "en": "Example: Prioritizing database server update as critical project because risk exceeds acceptable threshold.",
+                "ar": "مثال: تحديد أولوية تحديث خادم قاعدة البيانات كمشروع حاسم لأن المخاطر تتجاوز العتبة المقبولة."
+              }
+            }
+          ]
+        },
+        {
+          "id": 5,
+          "type": "hr"
+        },
+        {
+          "id": 6,
+          "type": "title",
+          "value": {
+            "en": "Measuring Risk: Likelihood and Impact",
+            "ar": "قياس المخاطر: الاحتمال والتأثير"
+          }
+        },
+        {
+          "id": 7,
+          "type": "text",
+          "value": {
+            "en": "Risk measurement combines two key factors. Likelihood answers the question: How probable is this threat? Impact answers: How much damage would it cause? A threat with high likelihood but low impact might rank lower than a rare threat with catastrophic impact. Organizations typically use rating scales like low, medium, high or numerical scores from one to five. The product of likelihood times impact gives an overall risk score.",
+            "ar": "قياس المخاطر يجمع بين عاملين رئيسيين. الاحتمال يجيب على السؤال: ما مدى احتمال هذا التهديد؟ التأثير يجيب: ما مقدار الضرر الذي سيسببه؟ قد يحصل تهديد باحتمال عالٍ لكن تأثير منخفض على تصنيف أقل من تهديد نادر بتأثير كارثي. تستخدم المنظمات عادةً مقاييس تصنيف مثل منخفض، متوسط، عالٍ أو درجات رقمية من واحد إلى خمسة. ناتج الاحتمال مضروباً في التأثير يعطي درجة مخاطر إجمالية."
+          }
+        },
+        {
+          "id": 8,
+          "type": "table",
+          "title": {
+            "en": "Risk Rating Matrix Example",
+            "ar": "مثال على مصفوفة تصنيف المخاطر"
+          },
+          "headers": {
+            "en": [
+              "Risk Scenario",
+              "Likelihood",
+              "Impact",
+              "Overall Risk",
+              "Priority"
+            ],
+            "ar": [
+              "سيناريو المخاطر",
+              "الاحتمال",
+              "التأثير",
+              "المخاطر الإجمالية",
+              "الأولوية"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "Ransomware attack via phishing",
+                "High",
+                "Critical",
+                "Critical",
+                "Immediate action"
+              ],
+              "ar": [
+                "هجوم برامج فدية عبر التصيد",
+                "عالٍ",
+                "حرج",
+                "حرج",
+                "إجراء فوري"
+              ]
+            },
+            {
+              "en": [
+                "Weak employee passwords",
+                "High",
+                "Medium",
+                "High",
+                "Address soon"
+              ],
+              "ar": [
+                "كلمات مرور ضعيفة للموظفين",
+                "عالٍ",
+                "متوسط",
+                "عالٍ",
+                "معالجة قريباً"
+              ]
+            },
+            {
+              "en": [
+                "Physical theft of laptop",
+                "Medium",
+                "Medium",
+                "Medium",
+                "Standard controls"
+              ],
+              "ar": [
+                "سرقة مادية لجهاز كمبيوتر محمول",
+                "متوسط",
+                "متوسط",
+                "متوسط",
+                "ضوابط قياسية"
+              ]
+            },
+            {
+              "en": [
+                "Power outage affecting office",
+                "Low",
+                "Low",
+                "Low",
+                "Monitor only"
+              ],
+              "ar": [
+                "انقطاع التيار الكهربائي يؤثر على المكتب",
+                "منخفض",
+                "منخفض",
+                "منخفض",
+                "مراقبة فقط"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 9,
+          "type": "text",
+          "value": {
+            "en": "Risk assessment is not a one-time activity. Threats evolve constantly as attackers develop new techniques. Your systems change as you add new technology and services. Business priorities shift, altering what assets are most valuable. Therefore, organizations must conduct risk assessments regularly, typically annually or whenever significant changes occur. Continuous monitoring helps detect new risks as they emerge.",
+            "ar": "تقييم المخاطر ليس نشاطاً لمرة واحدة. تتطور التهديدات باستمرار حيث يطور المهاجمون تقنيات جديدة. تتغير أنظمتك عند إضافة تكنولوجيا وخدمات جديدة. تتحول أولويات العمل، مما يغير الأصول الأكثر قيمة. لذلك، يجب على المنظمات إجراء تقييمات المخاطر بانتظام، عادةً سنوياً أو كلما حدثت تغييرات كبيرة. المراقبة المستمرة تساعد في اكتشاف المخاطر الجديدة عند ظهورها."
+          }
+        },
+        {
+          "id": 10,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Best Practice: Document your risk assessment methodology clearly. Use consistent criteria across all evaluations. This ensures fair comparison between different risks and helps justify security investments to management.",
+            "ar": "أفضل ممارسة: وثق منهجية تقييم المخاطر بوضوح. استخدم معايير متسقة عبر جميع التقييمات. يضمن ذلك مقارنة عادلة بين المخاطر المختلفة ويساعد في تبرير استثمارات الأمن للإدارة."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 11,
+          "type": "list",
+          "title": {
+            "en": "Common Risk Treatment Options",
+            "ar": "خيارات معالجة المخاطر الشائعة"
+          },
+          "items": {
+            "en": [
+              "Risk Mitigation: Implement controls to reduce likelihood or impact",
+              "Risk Transfer: Shift risk to third party through insurance or contracts",
+              "Risk Avoidance: Eliminate the activity that creates the risk",
+              "Risk Acceptance: Acknowledge risk and proceed without additional controls"
+            ],
+            "ar": [
+              "تخفيف المخاطر: تنفيذ ضوابط لتقليل الاحتمال أو التأثير",
+              "نقل المخاطر: نقل المخاطر إلى طرف ثالث من خلال التأمين أو العقود",
+              "تجنب المخاطر: القضاء على النشاط الذي يخلق المخاطر",
+              "قبول المخاطر: الاعتراف بالمخاطر والمضي قدماً دون ضوابط إضافية"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "topic-6",
+      "title": {
+        "en": "Real-World Attack Case Studies",
+        "ar": "دراسات حالة واقعية للهجمات"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "Learning from Actual Security Breaches",
+            "ar": "التعلم من الاختراقات الأمنية الفعلية"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "Studying real cyber attacks teaches lessons that theory alone cannot provide. When you analyze how actual breaches happened, you understand the full chain of events from initial compromise to final impact. These case studies reveal common patterns, show how attackers think, and demonstrate consequences of security failures. Every major breach offers valuable insights that help prevent similar incidents in the future.",
+            "ar": "دراسة الهجمات السيبرانية الحقيقية تعلم دروساً لا يمكن للنظرية وحدها تقديمها. عندما تحلل كيف حدثت الاختراقات الفعلية، تفهم سلسلة الأحداث الكاملة من الاختراق الأولي إلى التأثير النهائي. تكشف دراسات الحالة هذه عن أنماط شائعة، وتُظهر كيف يفكر المهاجمون، وتوضح عواقب الإخفاقات الأمنية. كل اختراق كبير يقدم رؤى قيمة تساعد في منع حوادث مماثلة في المستقبل."
+          }
+        },
+        {
+          "id": 1771178604238.8506,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageUrl": "https://pub-cb38e65ea6bd411eb827a8641fdcc72d.r2.dev/Threats%20%26%20Risk%20Management/6-Actual%20Security%20Breaches.webp"
+        },
+        {
+          "id": 4,
+          "type": "hr"
+        },
+        {
+          "id": 5,
+          "type": "title",
+          "value": {
+            "en": "Case Study: Major Healthcare Data Breach",
+            "ar": "دراسة حالة: اختراق كبير لبيانات الرعاية الصحية"
+          }
+        },
+        {
+          "id": 6,
+          "type": "text",
+          "value": {
+            "en": "A large hospital network experienced a massive data breach affecting millions of patient records. The attack began when an employee opened a phishing email that appeared to come from a medical equipment supplier. The email contained a malicious attachment that installed ransomware. Because the hospital network lacked proper segmentation, the malware spread rapidly from one system to another. Within 48 hours, patient databases, medical imaging systems, and administrative computers were all encrypted.",
+            "ar": "تعرضت شبكة مستشفيات كبيرة لاختراق بيانات ضخم أثر على ملايين سجلات المرضى. بدأ الهجوم عندما فتح موظف بريداً إلكترونياً للتصيد بدا أنه قادم من مورد معدات طبية. احتوى البريد الإلكتروني على مرفق خبيث ثبّت برامج فدية. لأن شبكة المستشفى افتقرت إلى التقسيم المناسب، انتشرت البرمجيات الخبيثة بسرعة من نظام إلى آخر. في غضون 48 ساعة، تم تشفير قواعد بيانات المرضى، وأنظمة التصوير الطبي، وأجهزة الكمبيوتر الإدارية."
+          }
+        },
+        {
+          "id": 7,
+          "type": "text",
+          "value": {
+            "en": "The hospital faced an impossible choice. Patient care was severely disrupted because doctors could not access medical records or test results. The attackers demanded a large ransom payment. Hospital leadership decided not to pay, instead working to restore systems from backups. However, the backup system had also been compromised. Recovery took weeks and cost millions in lost revenue, emergency response, and system rebuilding. This case demonstrates how a single phishing email can cascade into organizational crisis.",
+            "ar": "واجه المستشفى خياراً مستحيلاً. تعطلت رعاية المرضى بشدة لأن الأطباء لم يتمكنوا من الوصول إلى السجلات الطبية أو نتائج الاختبارات. طالب المهاجمون بدفع فدية كبيرة. قررت قيادة المستشفى عدم الدفع، وبدلاً من ذلك عملت على استعادة الأنظمة من النسخ الاحتياطية. ومع ذلك، تم اختراق نظام النسخ الاحتياطي أيضاً. استغرق التعافي أسابيع وكلف ملايين في الإيرادات المفقودة والاستجابة لحالات الطوارئ وإعادة بناء الأنظمة. توضح هذه الحالة كيف يمكن لبريد إلكتروني تصيد واحد أن يتصاعد إلى أزمة تنظيمية."
+          }
+        },
+        {
+          "id": 8,
+          "type": "orderedList",
+          "title": {
+            "en": "Key Lessons from Healthcare Breach",
+            "ar": "الدروس الرئيسية من اختراق الرعاية الصحية"
+          },
+          "items": [
+            {
+              "subtitle": {
+                "en": "Employee Training is Critical",
+                "ar": "تدريب الموظفين حاسم"
+              },
+              "text": {
+                "en": "The breach started because one person clicked a malicious link. Regular security awareness training helps employees recognize phishing attempts. Training should be ongoing, not a one-time session, and include realistic simulations.",
+                "ar": "بدأ الاختراق لأن شخصاً واحداً نقر على رابط خبيث. يساعد التدريب المنتظم على الوعي الأمني الموظفين على التعرف على محاولات التصيد. يجب أن يكون التدريب مستمراً، وليس جلسة لمرة واحدة، ويتضمن محاكاة واقعية."
+              },
+              "example": {
+                "en": "Example: Monthly phishing simulation exercises where security team sends fake phishing emails to test employee responses.",
+                "ar": "مثال: تمارين محاكاة تصيد شهرية حيث يرسل فريق الأمن رسائل تصيد مزيفة لاختبار استجابات الموظفين."
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Network Segmentation Prevents Spread",
+                "ar": "تقسيم الشبكة يمنع الانتشار"
+              },
+              "text": {
+                "en": "Without proper network segmentation, malware moved freely between systems. Dividing networks into isolated segments limits damage. If one segment is compromised, others remain protected behind additional security layers.",
+                "ar": "بدون تقسيم الشبكة المناسب، تحركت البرمجيات الخبيثة بحرية بين الأنظمة. تقسيم الشبكات إلى قطاعات معزولة يحد من الضرر. إذا تم اختراق قطاع واحد، تظل الأخرى محمية خلف طبقات أمنية إضافية."
+              },
+              "example": {
+                "en": "Example: Separating patient database network from general administrative systems with strict firewall rules.",
+                "ar": "مثال: فصل شبكة قاعدة بيانات المرضى عن الأنظمة الإدارية العامة بقواعد جدار حماية صارمة."
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Backup Systems Need Protection",
+                "ar": "أنظمة النسخ الاحتياطي تحتاج حماية"
+              },
+              "text": {
+                "en": "Attackers specifically targeted backup systems to prevent recovery. Backups must be isolated, encrypted, and stored offline. Test restoration procedures regularly to ensure backups actually work when needed.",
+                "ar": "استهدف المهاجمون أنظمة النسخ الاحتياطي على وجه التحديد لمنع التعافي. يجب أن تكون النسخ الاحتياطية معزولة ومشفرة ومخزنة بدون اتصال. اختبر إجراءات الاستعادة بانتظام لضمان عمل النسخ الاحتياطية فعلياً عند الحاجة."
+              },
+              "example": {
+                "en": "Example: Maintaining offline backup copies on external storage kept in secure physical location separate from network.",
+                "ar": "مثال: الاحتفاظ بنسخ احتياطية غير متصلة على تخزين خارجي يُحفظ في موقع مادي آمن منفصل عن الشبكة."
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Incident Response Plans Save Time",
+                "ar": "خطط الاستجابة للحوادث توفر الوقت"
+              },
+              "text": {
+                "en": "The hospital struggled initially because they had no clear incident response plan. Having documented procedures for breach scenarios speeds recovery. Plans should specify roles, communication protocols, and decision-making authority.",
+                "ar": "كافح المستشفى في البداية لأنه لم يكن لديه خطة استجابة واضحة للحوادث. وجود إجراءات موثقة لسيناريوهات الاختراق يسرع التعافي. يجب أن تحدد الخطط الأدوار وبروتوكولات الاتصال وسلطة اتخاذ القرار."
+              },
+              "example": {
+                "en": "Example: Pre-defined emergency contacts, step-by-step response procedures, and authority to shut down systems if needed.",
+                "ar": "مثال: جهات اتصال طوارئ محددة مسبقاً، وإجراءات استجابة خطوة بخطوة، وسلطة إيقاف الأنظمة عند الحاجة."
+              }
+            }
+          ]
+        },
+        {
+          "id": 9,
+          "type": "hr"
+        },
+        {
+          "id": 10,
+          "type": "title",
+          "value": {
+            "en": "Case Study: Retail Company Payment Card Breach",
+            "ar": "دراسة حالة: اختراق بطاقات الدفع لشركة تجزئة"
+          }
+        },
+        {
+          "id": 11,
+          "type": "text",
+          "value": {
+            "en": "A major retail chain suffered a breach that compromised millions of customer credit card numbers. Attackers gained initial access through a third-party vendor who maintained the heating and cooling systems. That vendor had remote network access for maintenance purposes, but their security was weak. Attackers stole the vendor's credentials and used them to access the retail network. Once inside, they installed malware on point-of-sale terminals that captured card data as customers made purchases.",
+            "ar": "تعرضت سلسلة تجزئة كبرى لاختراق اخترق ملايين أرقام بطاقات الائتمان للعملاء. حصل المهاجمون على وصول أولي من خلال بائع طرف ثالث كان يحافظ على أنظمة التدفئة والتبريد. كان لدى ذلك البائع وصول للشبكة عن بُعد لأغراض الصيانة، لكن أمنه كان ضعيفاً. سرق المهاجمون بيانات اعتماد البائع واستخدموها للوصول إلى شبكة التجزئة. بمجرد الدخول، ثبتوا برمجيات خبيثة على محطات نقاط البيع التي التقطت بيانات البطاقة عندما قام العملاء بعمليات الشراء."
+          }
+        },
+        {
+          "id": 12,
+          "type": "text",
+          "value": {
+            "en": "The breach went undetected for months while attackers continuously stole card data. Discovery came only after banks noticed unusual patterns of fraudulent transactions. The retail company faced enormous costs including customer notification, credit monitoring services, legal settlements, regulatory fines, and damaged reputation. This case highlights how third-party vendors create security risks and the importance of monitoring all network access carefully.",
+            "ar": "ظل الاختراق غير مكتشف لأشهر بينما سرق المهاجمون باستمرار بيانات البطاقات. جاء الاكتشاف فقط بعد أن لاحظت البنوك أنماطاً غير عادية من المعاملات الاحتيالية. واجهت شركة التجزئة تكاليف هائلة بما في ذلك إشعار العملاء، وخدمات مراقبة الائتمان، والتسويات القانونية، والغرامات التنظيمية، والسمعة التالفة. توضح هذه الحالة كيف يخلق بائعو الطرف الثالث مخاطر أمنية وأهمية مراقبة جميع الوصول إلى الشبكة بعناية."
+          }
+        },
+        {
+          "id": 13,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "Critical Insight: Your security is only as strong as your weakest vendor. Third parties with network access must meet the same security standards as your internal systems. Regular audits of vendor security practices are essential.",
+            "ar": "رؤية حاسمة: أمنك بقوة أضعف بائع لديك فقط. يجب أن يستوفي الأطراف الثالثة الذين لديهم وصول للشبكة نفس معايير الأمان مثل أنظمتك الداخلية. تعد عمليات التدقيق المنتظمة لممارسات أمان البائعين ضرورية."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 14,
+          "type": "table",
+          "title": {
+            "en": "Common Patterns in Major Breaches",
+            "ar": "الأنماط الشائعة في الاختراقات الكبرى"
+          },
+          "headers": {
+            "en": [
+              "Attack Pattern",
+              "Frequency",
+              "Prevention Strategy",
+              "Detection Method"
+            ],
+            "ar": [
+              "نمط الهجوم",
+              "التكرار",
+              "استراتيجية الوقاية",
+              "طريقة الاكتشاف"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "Phishing as entry point",
+                "Very Common",
+                "Security awareness training",
+                "Email filtering and user reports"
+              ],
+              "ar": [
+                "التصيد كنقطة دخول",
+                "شائع جداً",
+                "تدريب الوعي الأمني",
+                "تصفية البريد الإلكتروني وتقارير المستخدمين"
+              ]
+            },
+            {
+              "en": [
+                "Unpatched vulnerabilities",
+                "Common",
+                "Regular security updates",
+                "Vulnerability scanning"
+              ],
+              "ar": [
+                "نقاط ضعف غير مصححة",
+                "شائع",
+                "تحديثات أمنية منتظمة",
+                "فحص نقاط الضعف"
+              ]
+            },
+            {
+              "en": [
+                "Weak third-party security",
+                "Common",
+                "Vendor security requirements",
+                "Third-party security audits"
+              ],
+              "ar": [
+                "أمن طرف ثالث ضعيف",
+                "شائع",
+                "متطلبات أمان البائعين",
+                "تدقيق أمان الطرف الثالث"
+              ]
+            },
+            {
+              "en": [
+                "Inadequate monitoring",
+                "Very Common",
+                "Security monitoring tools",
+                "Anomaly detection systems"
+              ],
+              "ar": [
+                "مراقبة غير كافية",
+                "شائع جداً",
+                "أدوات المراقبة الأمنية",
+                "أنظمة اكتشاف الشذوذ"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "createdAt": "2026-02-15T18:53:00.949Z",
+    "totalTopics": 6,
+    "totalElements": 72
+  }
+}

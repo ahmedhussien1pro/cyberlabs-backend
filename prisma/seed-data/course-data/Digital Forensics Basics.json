@@ -1,0 +1,1485 @@
+{
+  "landingData": {
+    "title": {
+      "en": "Digital Forensics Basics",
+      "ar": "أساسيات التحقيق الجنائي الرقمي"
+    },
+    "description": {
+      "en": "Beginner-friendly course that explains how digital evidence is found, preserved, analyzed, and reported in real cybercrime and security incidents, using clear language and practical examples.",
+      "ar": "دورة تمهيدية تشرح للمبتدئين كيف يتم العثور على الأدلة الرقمية وحفظها وتحليلها وكتابة التقارير عنها في حوادث الجرائم الإلكترونية وحوادث الأمن السيبراني، بلغة بسيطة وأمثلة عملية."
+    },
+    "difficulty": {
+      "en": "Beginner",
+      "ar": "مبتدئ"
+    },
+    "duration": {
+      "en": "Approx. 6–8 hours",
+      "ar": "حوالي 6–8 ساعات"
+    },
+    "instructor": "CyberLabs",
+    "rating": 4.9,
+    "students": 250
+  },
+  "topics": [
+    {
+      "id": "topic-1",
+      "title": {
+        "en": "Introduction to Digital Forensics",
+        "ar": "مقدمة في التحقيق الجنائي الرقمي"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "What Is Digital Forensics?",
+            "ar": "ما هو التحقيق الجنائي الرقمي؟"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "Digital forensics is a branch of forensic science that focuses on recovering, investigating, examining, and analyzing material found on digital devices such as computers, phones, and servers. It follows a structured process to ensure that evidence keeps its integrity and can be accepted in court or internal investigations. In simple terms, it is like a digital detective job that searches for the truth inside data instead of at a physical crime scene.",
+            "ar": "التحقيق الجنائي الرقمي هو فرع من علوم الأدلة الجنائية يركز على استرجاع وفحص وتحليل البيانات الموجودة في الأجهزة الرقمية مثل الحواسيب والهواتف والخوادم. يتم العمل وفق عملية منظمة لضمان بقاء الأدلة سليمة ويمكن قبولها في المحكمة أو في التحقيقات الداخلية. ببساطة، هو عمل \"محقق رقمي\" يبحث عن الحقيقة داخل البيانات بدلاً من مسرح الجريمة المادي."
+          }
+        },
+        {
+          "id": 3,
+          "type": "text",
+          "value": {
+            "en": "Digital forensics lives inside the wider world of cyber security, which protects the confidentiality, integrity, and availability (CIA) of information. Cyber security tries to stop attacks, while digital forensics explains what happened after an incident. This link is important because a good forensic investigation helps improve future security controls and reduce the impact of new attacks.",
+            "ar": "التحقيق الجنائي الرقمي يعيش داخل العالم الأوسع للأمن السيبراني الذي يهدف لحماية سرية المعلومات وسلامتها وتوافرها (مثلث CIA). الأمن السيبراني يحاول منع الهجمات، بينما التحقيق الجنائي الرقمي يشرح ما حدث بعد وقوع الحادثة. هذا الترابط مهم لأن تحقيقاً جنائياً جيداً يساعد على تحسين ضوابط الأمن في المستقبل وتقليل أثر الهجمات الجديدة."
+          }
+        },
+        {
+          "id": 4,
+          "type": "table",
+          "title": {
+            "en": "Cybercrime vs Digital Crime vs Security Incident",
+            "ar": "الجريمة الإلكترونية مقابل الجريمة الرقمية مقابل حادث أمني"
+          },
+          "headers": {
+            "en": [
+              "Term",
+              "Simple Meaning",
+              "Typical Example"
+            ],
+            "ar": [
+              "المصطلح",
+              "المعنى المبسط",
+              "مثال شائع"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "Cybercrime",
+                "Crime where computers or networks are the main target or weapon.",
+                "Attacker steals online banking password and transfers money."
+              ],
+              "ar": [
+                "جريمة إلكترونية",
+                "جريمة يكون فيها الحاسوب أو الشبكة هو الهدف الرئيسي أو الأداة.",
+                "مهاجم يسرق كلمة مرور الخدمات البنكية الإلكترونية ويحَوِّل المال."
+              ]
+            },
+            {
+              "en": [
+                "Digital Crime",
+                "Any crime that leaves important digital traces or evidence.",
+                "Physical theft of a laptop that contains sensitive company data."
+              ],
+              "ar": [
+                "جريمة رقمية",
+                "أي جريمة تترك آثاراً أو أدلة رقمية مهمة.",
+                "سرقة حاسوب محمول يحتوي على بيانات حساسة للشركة."
+              ]
+            },
+            {
+              "en": [
+                "Security Incident",
+                "Event that threatens confidentiality, integrity, or availability of information.",
+                "Ransomware locks company files but is stopped before data is stolen."
+              ],
+              "ar": [
+                "حادث أمني",
+                "حدث يهدد سرية أو سلامة أو توافر المعلومات.",
+                "برنامج فدية يقوم بتشفير ملفات شركة لكن يتم إيقافه قبل سرقة البيانات."
+              ]
+            }
+          ]
+        },
+        {
+          "id": 5,
+          "type": "text",
+          "value": {
+            "en": "A digital forensic investigator collects and analyzes digital evidence in a careful and repeatable way. In cybercrime cases, they might trace an attack path, recover deleted logs, or link an account to human activity. In business cases, they may support internal investigations, fraud detection, or policy violations by reconstructing user actions on systems.",
+            "ar": "يقوم محقق الأدلة الرقمية بجمع وتحليل الأدلة الرقمية بطريقة دقيقة وقابلة للتكرار. في قضايا الجرائم الإلكترونية قد يتتبع مسار الهجوم أو يسترجع سجلات محذوفة أو يربط حساباً رقمياً بسلوك بشري. في قضايا الشركات يمكن أن يدعم التحقيقات الداخلية أو كشف الاحتيال أو مخالفات السياسات من خلال إعادة بناء تصرفات المستخدمين على الأنظمة."
+          }
+        },
+        {
+          "id": 6,
+          "type": "list",
+          "title": {
+            "en": "Main Types of Digital Forensics",
+            "ar": "أهم أنواع التحقيق الجنائي الرقمي"
+          },
+          "items": {
+            "en": [
+              "Computer forensics: focuses on desktops, laptops, and servers.",
+              "Mobile forensics: focuses on smartphones, tablets, and SIM data.",
+              "Network forensics: analyzes network traffic, logs, and connections.",
+              "Cloud forensics: works with data stored in online cloud services.",
+              "Memory forensics: analyzes RAM to see live processes and volatile data."
+            ],
+            "ar": [
+              "تحقيق الحاسوب: يركز على الحواسيب المكتبية والمحمولة والخوادم.",
+              "تحقيق الهاتف المحمول: يركز على الهواتف الذكية والأجهزة اللوحية وبيانات شرائح الاتصال.",
+              "تحقيق الشبكات: يحلل حركة المرور والسجلات والاتصالات على الشبكة.",
+              "تحقيق الحوسبة السحابية: يتعامل مع البيانات المخزنة في خدمات التخزين السحابي على الإنترنت.",
+              "تحقيق الذاكرة: يحلل ذاكرة الوصول العشوائي RAM لرؤية العمليات الحية والبيانات المتطايرة."
+            ]
+          }
+        },
+        {
+          "id": 7,
+          "type": "text",
+          "value": {
+            "en": "A forensic investigation usually follows clear phases: preparation, identification, collection, examination, analysis, and reporting. During collection, investigators respect the order of volatility, starting with the most easily lost data like RAM and network connections, then moving to disks and backups. This step-by-step thinking helps protect the integrity of evidence and supports reliable conclusions.",
+            "ar": "عادةً ما يتبع التحقيق الجنائي الرقمي مراحل واضحة: التحضير، ثم تحديد الأدلة، ثم جمعها، ثم فحصها وتحليلها، وأخيراً إعداد التقرير. أثناء الجمع يحترم المحققون ترتيب درجة تطاير البيانات، فيبدؤون بالبيانات التي تضيع سريعاً مثل الذاكرة الحية واتصالات الشبكة، ثم ينتقلون إلى الأقراص والنسخ الاحتياطية. هذا التفكير المرحلي يساعد على حماية سلامة الأدلة ودعم استنتاجات موثوقة."
+          }
+        },
+        {
+          "id": 8,
+          "type": "table",
+          "title": {
+            "en": "Volatile vs Non-Volatile Evidence",
+            "ar": "الأدلة المتطايرة مقابل الأدلة غير المتطايرة"
+          },
+          "headers": {
+            "en": [
+              "Type",
+              "Description",
+              "Example Source"
+            ],
+            "ar": [
+              "النوع",
+              "الوصف",
+              "مصدر مثال"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "Volatile Evidence",
+                "Data lost quickly when power is off or system changes.",
+                "Running processes in RAM, active network connections, open chat sessions."
+              ],
+              "ar": [
+                "أدلة متطايرة",
+                "بيانات تضيع بسرعة عند انقطاع الكهرباء أو تغيّر حالة النظام.",
+                "العمليات الجارية في الذاكرة RAM، الاتصالات النشطة على الشبكة، جلسات المحادثة المفتوحة."
+              ]
+            },
+            {
+              "en": [
+                "Non-Volatile Evidence",
+                "Data that normally stays even after shutdown.",
+                "Hard disk files, USB drive contents, system logs stored on disk."
+              ],
+              "ar": [
+                "أدلة غير متطايرة",
+                "بيانات تبقى عادةً حتى بعد إيقاف تشغيل الجهاز.",
+                "ملفات القرص الصلب، محتوى وحدات USB، سجلات النظام المخزنة على القرص."
+              ]
+            }
+          ]
+        },
+        {
+          "id": 9,
+          "type": "text",
+          "value": {
+            "en": "Evidence handling procedures focus on preserving original data and working mainly on forensic copies. Investigators document every action, record timestamps, and use cryptographic hashes to prove that nothing changed. This detailed documentation and careful handling are part of the chain of custody that connects the evidence to people and actions over time.",
+            "ar": "تركز إجراءات التعامل مع الأدلة على حفظ البيانات الأصلية والعمل في الغالب على نسخ جنائية مطابقة. يقوم المحققون بتوثيق كل خطوة وتسجيل الأوقات واستخدام بصمات رقمية (هاش) لإثبات أن شيئاً لم يتغير. هذا التوثيق التفصيلي والتعامل الحذر هو جزء من سلسلة الحيازة التي تربط الدليل بالأشخاص والأحداث عبر الزمن."
+          }
+        },
+        {
+          "id": 10,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "If the chain of custody is weak or incomplete, a judge or manager may reject the digital evidence. Always record who collected the evidence, when, where it was stored, and how it was protected.",
+            "ar": "إذا كانت سلسلة الحيازة ضعيفة أو غير مكتملة فقد يرفض القاضي أو المدير قبول الدليل الرقمي. لذلك يجب دائماً تسجيل من جمع الدليل، ومتى، وأين تم تخزينه، وكيف تمت حمايته."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 11,
+          "type": "text",
+          "value": {
+            "en": "Legal and ethical considerations guide what a digital forensic investigator is allowed to do. They must respect privacy laws, get proper authorization before accessing devices, and avoid searching outside the agreed scope. In companies and governments, clear policies and incident response plans help define roles, escalation paths, and limits to investigative powers.",
+            "ar": "الاعتبارات القانونية والأخلاقية تحدد ما يُسمح لمحقق الأدلة الرقمية أن يفعله. يجب عليه احترام قوانين الخصوصية والحصول على تفويض رسمي قبل الوصول إلى الأجهزة، وتجنب البحث خارج نطاق التحقيق المتفق عليه. في الشركات والجهات الحكومية تساعد السياسات الواضحة وخطط الاستجابة للحوادث على تحديد الأدوار ومسارات التصعيد وحدود صلاحيات التحقيق."
+          }
+        },
+        {
+          "id": 12,
+          "type": "text",
+          "value": {
+            "en": "Forensic readiness means preparing systems, logging, and processes so that useful evidence will exist when an incident happens. Incident response focuses on stopping the damage quickly, while digital forensics focuses on understanding what happened and how. Both teams should cooperate, so actions taken to contain a threat do not destroy important traces that are needed later.",
+            "ar": "الجاهزية الجنائية تعني تجهيز الأنظمة وآليات التسجيل والإجراءات بحيث تتوافر أدلة مفيدة عندما يقع حادث أمني. استجابة الحوادث تركز على إيقاف الضرر بسرعة، بينما يركز التحقيق الجنائي الرقمي على فهم ما حدث وكيف حدث. يجب أن يتعاون الفريقان حتى لا تؤدي إجراءات احتواء الهجوم إلى تدمير آثار مهمة يحتاجونها لاحقاً."
+          }
+        },
+        {
+          "id": 13,
+          "type": "text",
+          "value": {
+            "en": "Forensic imaging is the process of making a bit-by-bit copy of a drive or memory card so analysis can be done on the copy, not the original. Specialized forensic tools help create these images, calculate hashes, parse file systems, and generate reports. This course will later explore disk imaging, memory forensics, timeline analysis, and practical lab investigations in more detail.",
+            "ar": "تصوير الأدلة الجنائي هو عملية إنشاء نسخة طبق الأصل على مستوى البت من قرص أو بطاقة ذاكرة حتى يتم إجراء التحليل على النسخة وليس على الأصل. تساعد أدوات جنائية متخصصة على إنشاء هذه الصور، وحساب قيم الهاش، وقراءة أنظمة الملفات، وإنتاج التقارير. في هذه الدورة سنتعمق لاحقاً في تصوير الأقراص، وتحليل الذاكرة، وتحليل الخط الزمني، وتحقيقات معملية عملية."
+          }
+        },
+        {
+          "id": 1774303965218.7537,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageUrl": "https://cdn.cyber-labs.tech/Digital%20Forensics%20Basics/digital%20forensic%20process.webp"
+        }
+      ]
+    },
+    {
+      "id": "topic-2",
+      "title": {
+        "en": "Disk Imaging and Evidence Acquisition",
+        "ar": "تصوير الأقراص وجمع الأدلة"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "Why Disk Imaging Matters",
+            "ar": "لماذا يُعَد تصوير الأقراص مهماً؟"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "Disk imaging creates a complete bit-by-bit copy of a storage device so that investigators can work safely on the copy. This protects the original evidence from accidental changes and helps maintain legal integrity. In cyber security incidents, good imaging allows teams to analyze malware, recover files, and understand attacker actions without touching the live system.",
+            "ar": "تصوير القرص يعني إنشاء نسخة كاملة على مستوى البِت من وسيط التخزين حتى يتمكن المحققون من العمل بأمان على النسخة. هذا يحمي الدليل الأصلي من التغيير غير المقصود ويساعد على الحفاظ على سلامته القانونية. في حوادث الأمن السيبراني يسمح التصوير الجيد للفرق بتحليل البرمجيات الخبيثة واسترجاع الملفات وفهم تصرفات المهاجم دون لمس النظام الحي."
+          }
+        },
+        {
+          "id": 3,
+          "type": "text",
+          "value": {
+            "en": "Logical acquisition copies visible files and folders through the file system, while physical acquisition copies every sector including deleted and hidden data. Logical imaging is faster and lighter, but physical imaging gives deeper forensic value. A beginner should learn when a simple logical copy is enough and when a full physical image is required for court-level investigations.",
+            "ar": "الاستخراج المنطقي ينسخ الملفات والمجلدات الظاهرة من خلال نظام الملفات، بينما الاستخراج الفيزيائي ينسخ كل القطاعات بما فيها البيانات المحذوفة والمخفية. التصوير المنطقي أسرع وأخف، لكن التصوير الفيزيائي يوفر قيمة جنائية أعمق. يجب على المبتدئ أن يتعلم متى تكفي نسخة منطقية بسيطة، ومتى يكون من الضروري أخذ صورة فيزيائية كاملة لتحقيقات قد تُعرَض في المحكمة."
+          }
+        },
+        {
+          "id": 4,
+          "type": "table",
+          "title": {
+            "en": "Logical vs Physical vs Targeted Acquisition",
+            "ar": "الاستخراج المنطقي مقابل الفيزيائي مقابل الموجّه"
+          },
+          "headers": {
+            "en": [
+              "Method",
+              "What It Copies",
+              "Typical Use"
+            ],
+            "ar": [
+              "الطريقة",
+              "ما الذي يتم نسخه",
+              "الاستخدام المعتاد"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "Logical Acquisition",
+                "Files and folders seen by the operating system.",
+                "Quick triage of a user profile or small incident."
+              ],
+              "ar": [
+                "استخراج منطقي",
+                "الملفات والمجلدات التي يراها نظام التشغيل.",
+                "فحص سريع لحساب مستخدم أو حادث بسيط."
+              ]
+            },
+            {
+              "en": [
+                "Physical Acquisition",
+                "All sectors, including deleted and unallocated space.",
+                "Full forensic investigation that may go to court."
+              ],
+              "ar": [
+                "استخراج فيزيائي",
+                "جميع القطاعات بما فيها المساحة المحذوفة وغير المخصصة.",
+                "تحقيق جنائي كامل قد يُعرَض في المحكمة."
+              ]
+            },
+            {
+              "en": [
+                "Targeted Acquisition",
+                "Selected locations like specific folders or partitions.",
+                "Focused collection when time or access is limited."
+              ],
+              "ar": [
+                "استخراج موجّه",
+                "مواقع محددة مثل مجلدات أو أقسام معيّنة.",
+                "جمع مركّز عندما يكون الوقت أو الوصول محدوداً."
+              ]
+            }
+          ]
+        },
+        {
+          "id": 5,
+          "type": "text",
+          "value": {
+            "en": "Live acquisition happens while the system is still running, which can capture RAM and live logs but may change some data. Dead acquisition is done after powering off or isolating the device, which is safer for integrity but cannot see live memory. Investigators must balance urgency, risk to evidence, and business needs when choosing live or dead acquisition.",
+            "ar": "الاستخراج الحي يتم بينما النظام ما زال يعمل، وهذا يسمح بالتقاط الذاكرة الحية والسجلات الجارية لكنه قد يغيّر بعض البيانات. الاستخراج الميت يتم بعد إطفاء الجهاز أو عزله، وهو أكثر أماناً لسلامة الدليل لكنه لا يرى الذاكرة الحية. على المحققين أن يوازنوا بين الاستعجال وخطر تغيير الأدلة واحتياجات العمل عند اختيار الاستخراج الحي أو الميت."
+          }
+        },
+        {
+          "id": 6,
+          "type": "list",
+          "title": {
+            "en": "Common Disk Image Formats",
+            "ar": "أكثر صيغ صور الأقراص شيوعاً"
+          },
+          "items": {
+            "en": [
+              "RAW (dd): simple sector-by-sector image with no compression.",
+              "E01: expert witness format that supports compression and metadata.",
+              "AFF: advanced forensic format designed for flexibility and integrity checks."
+            ],
+            "ar": [
+              "صيغة RAW (dd): صورة قطاع بقطاع بسيطة بدون ضغط.",
+              "صيغة E01: صيغة تستخدم في التحقيقات وتدعم الضغط وتخزين بيانات إضافية عن الدليل.",
+              "صيغة AFF: صيغة جنائية متقدمة مصممة للمرونة والتحقق من سلامة البيانات."
+            ]
+          }
+        },
+        {
+          "id": 7,
+          "type": "text",
+          "value": {
+            "en": "Hashing uses functions like MD5, SHA1, or SHA256 to create a unique fingerprint for a disk or file. Investigators calculate hashes before and after imaging to prove that the copy exactly matches the original. Even a tiny change in data will produce a very different hash, which makes integrity verification simple but powerful.",
+            "ar": "التجزئة (Hashing) تستخدم دوال مثل MD5 أو SHA1 أو SHA256 لإنشاء بصمة فريدة للقرص أو الملف. يحسب المحققون قيمة الهاش قبل وبعد التصوير لإثبات أن النسخة تطابق الأصل تماماً. حتى التغيير البسيط جداً في البيانات ينتج قيمة هاش مختلفة تماماً، وهذا يجعل التحقق من السلامة بسيطاً لكنه قوي."
+          }
+        },
+        {
+          "id": 8,
+          "type": "code",
+          "language": "python",
+          "value": "import hashlib\n\n# Simple example: calculate SHA-256 hash of an image file\nimage_path = \"case001_sda.img\"\n\nhasher = hashlib.sha256()\nwith open(image_path, \"rb\") as f:\n    for chunk in iter(lambda: f.read(8192), b\"\"):\n        hasher.update(chunk)\n\nimage_hash = hasher.hexdigest()\nprint(\"SHA256:\", image_hash)\n\n# In practice, compare this value with the hash recorded during acquisition\nknown_hash = \"<hash_from_acquisition_log>\"\nif image_hash == known_hash:\n    print(\"Image integrity verified\")\nelse:\n    print(\"WARNING: hash mismatch, possible alteration\")"
+        },
+        {
+          "id": 9,
+          "type": "terminal",
+          "label": {
+            "en": "Imaging with dd (Linux example)",
+            "ar": "تصوير القرص باستخدام dd (مثال لينكس)"
+          },
+          "value": "investigator@lab:~$ sudo dd if=/dev/sda of=/evidence/case001_sda.img bs=4M conv=noerror,sync\ninvestigator@lab:~$ sha256sum /evidence/case001_sda.img > case001_sda.img.sha256\ninvestigator@lab:~$ cat case001_sda.img.sha256\n3f2b...c91d  /evidence/case001_sda.img"
+        },
+        {
+          "id": 10,
+          "type": "text",
+          "value": {
+            "en": "Write blockers are devices or software configurations that allow reading from a drive but block any write operations. Using a write blocker reduces the risk of the operating system or tools changing timestamps or metadata on the suspect disk. In many labs, connecting a drive without a write blocker is considered a serious mistake.",
+            "ar": "أدوات منع الكتابة هي أجهزة أو إعدادات برمجية تسمح بقراءة القرص لكنها تمنع أي عمليات كتابة عليه. استخدام أداة منع الكتابة يقلل خطر أن يقوم نظام التشغيل أو الأدوات بتغيير الطوابع الزمنية أو بيانات التعريف على القرص المشتبه به. في كثير من المعامل يُعتَبر توصيل قرص بدون أداة منع كتابة خطأً خطيراً."
+          }
+        },
+        {
+          "id": 11,
+          "type": "orderedList",
+          "title": {
+            "en": "Disk Imaging Process Step-by-Step",
+            "ar": "خطوات عملية تصوير القرص خطوة بخطوة"
+          },
+          "items": [
+            {
+              "subtitle": {
+                "en": "1. Prepare the environment",
+                "ar": "1. تجهيز البيئة"
+              },
+              "text": {
+                "en": "Label evidence, set up a clean forensic workstation, and check storage space for images.",
+                "ar": "قم بوسم الأدلة، وجهِّز محطة عمل جنائية نظيفة، وتأكد من وجود مساحة كافية لتخزين الصور."
+              },
+              "example": {
+                "en": "e.g. Create a dedicated folder like /evidence/case001 on an isolated disk.",
+                "ar": "مثال: إنشاء مجلد مخصص مثل ‎/evidence/case001 على قرص معزول."
+              }
+            },
+            {
+              "subtitle": {
+                "en": "2. Connect using a write blocker",
+                "ar": "2. توصيل القرص عبر أداة منع كتابة"
+              },
+              "text": {
+                "en": "Attach the suspect disk through a hardware or software write blocker to the lab machine.",
+                "ar": "قم بتوصيل القرص المشتبه به عبر أداة منع كتابة عتادية أو برمجية إلى جهاز المختبر."
+              },
+              "example": {
+                "en": "e.g. Use a USB write blocking dock instead of a direct SATA cable.",
+                "ar": "مثال: استخدام قاعدة توصيل USB مع منع كتابة بدلاً من كابل SATA مباشر."
+              }
+            },
+            {
+              "subtitle": {
+                "en": "3. Identify source and destination",
+                "ar": "3. تحديد المصدر والوجهة"
+              },
+              "text": {
+                "en": "Carefully note device names for the source drive and the image file location.",
+                "ar": "سجّل بعناية أسماء الأجهزة لمصدر القرص وموقع ملف الصورة."
+              },
+              "example": {
+                "en": "e.g. Source /dev/sda to image file /evidence/case001_sda.img.",
+                "ar": "مثال: المصدر ‎/dev/sda وملف الصورة ‎/evidence/case001_sda.img."
+              }
+            },
+            {
+              "subtitle": {
+                "en": "4. Acquire the image",
+                "ar": "4. تنفيذ عملية التصوير"
+              },
+              "text": {
+                "en": "Run the imaging tool with appropriate block size and error handling options.",
+                "ar": "شغِّل أداة التصوير مع اختيار حجم البلوك المناسب وخيارات التعامل مع الأخطاء."
+              },
+              "example": {
+                "en": "e.g. Use dd, dc3dd, or a GUI forensic tool to capture the full disk.",
+                "ar": "مثال: استخدام dd أو dc3dd أو أداة رسومية جنائية لالتقاط القرص بالكامل."
+              }
+            },
+            {
+              "subtitle": {
+                "en": "5. Verify integrity",
+                "ar": "5. التحقق من سلامة الصورة"
+              },
+              "text": {
+                "en": "Calculate hashes of both the original disk and the image and compare them.",
+                "ar": "احسب قيم الهاش لكل من القرص الأصلي والصورة وقارن بينهما."
+              },
+              "example": {
+                "en": "e.g. Matching SHA256 hashes show that the image is an exact copy.",
+                "ar": "مثال: تطابق قيم SHA256 يعني أن الصورة نسخة مطابقة تماماً."
+              }
+            },
+            {
+              "subtitle": {
+                "en": "6. Document acquisition details",
+                "ar": "6. توثيق تفاصيل عملية التصوير"
+              },
+              "text": {
+                "en": "Record date, time, tool used, settings, hashes, and who performed each step.",
+                "ar": "سجّل التاريخ والوقت والأداة المستخدمة وإعداداتها وقيم الهاش ومن نفذ كل خطوة."
+              },
+              "example": {
+                "en": "e.g. Add all information to the case log and chain-of-custody form.",
+                "ar": "مثال: إضافة كل المعلومات إلى سجل القضية ونموذج سلسلة الحيازة."
+              }
+            }
+          ]
+        },
+        {
+          "id": 12,
+          "type": "text",
+          "value": {
+            "en": "After imaging, investigators often mount the forensic image as read-only to explore files and folders. This mounting is done on the copy, not the original disk, which keeps evidence safe. Some tools can mount images in a way that simulates a normal drive, making it easier for beginners to navigate and search.",
+            "ar": "بعد التصوير يقوم المحققون غالباً بتركيب صورة القرص في وضع القراءة فقط لاستكشاف الملفات والمجلدات. يتم هذا التركيب على النسخة وليس على القرص الأصلي، مما يحافظ على سلامة الدليل. بعض الأدوات يمكنها تركيب الصورة بحيث تبدو كأنها قرص عادي، وهذا يسهل على المبتدئين التصفح والبحث."
+          }
+        },
+        {
+          "id": 13,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "In a basic lab exercise, you can practice imaging a small USB drive, calculating its hash, and verifying that the hash stays the same after multiple analyses. This builds good habits for real investigations.",
+            "ar": "في تمرين معمل بسيط يمكنك التدرب على تصوير وحدة USB صغيرة وحساب قيمة الهاش لها ثم التحقق من بقاء نفس القيمة بعد تحليلات متعددة. هذا التمرين يبني عادات جيدة للتحقيقات الحقيقية."
+          },
+          "link": "",
+          "isLab": true
+        },
+        {
+          "id": 14,
+          "type": "text",
+          "value": {
+            "en": "Remote acquisition, USB and external drives, and RAID systems add extra complexity because of network latency, multiple disks, or special controllers. Beginners should start with simple single-disk imaging before moving to these advanced cases. The same principles still apply: protect the original, record hashes, and document every action clearly.",
+            "ar": "الاستخراج عن بُعد، ووحدات USB والأقراص الخارجية، وأنظمة RAID تضيف تعقيداً إضافياً بسبب التأخير في الشبكة أو تعدد الأقراص أو وحدات التحكم الخاصة. من الأفضل أن يبدأ المبتدئون بتصوير أقراص بسيطة مفردة قبل الانتقال إلى هذه الحالات المتقدمة. ومع ذلك تبقى نفس المبادئ: حماية الأصل، وتسجيل قيم الهاش، وتوثيق كل خطوة بوضوح."
+          }
+        },
+        {
+          "id": 1774304033565.094,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageUrl": "https://cdn.cyber-labs.tech/Digital%20Forensics%20Basics/disk%20imaging%20workflow.webp"
+        }
+      ]
+    },
+    {
+      "id": "topic-3",
+      "title": {
+        "en": "File Systems and File Recovery Techniques",
+        "ar": "أنظمة الملفات وتقنيات استرجاع الملفات"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "Understanding File Systems",
+            "ar": "فهم أنظمة الملفات"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "A file system is the way an operating system organizes and tracks data on a disk, similar to how a library organizes books on shelves. Common examples include FAT, NTFS, and EXT families, each with its own rules and structures. Forensic investigators study these structures to locate files, recover deleted data, and understand how users and attackers interacted with the system.",
+            "ar": "نظام الملفات هو الطريقة التي ينظم بها نظام التشغيل البيانات على القرص ويتتبعها، مثلما تنظم المكتبة الكتب على الرفوف. من الأمثلة الشائعة أنظمة FAT و NTFS وعائلة EXT، ولكل منها قواعد وبُنى خاصة. يدرس المحققون الجنائيون هذه البُنى للعثور على الملفات واسترجاع البيانات المحذوفة وفهم كيفية تفاعل المستخدمين أو المهاجمين مع النظام."
+          }
+        },
+        {
+          "id": 3,
+          "type": "table",
+          "title": {
+            "en": "FAT32 vs NTFS vs EXT4 (High-Level View)",
+            "ar": "نظرة عامة على FAT32 و NTFS و EXT4"
+          },
+          "headers": {
+            "en": [
+              "File System",
+              "Common Use",
+              "Forensic Note"
+            ],
+            "ar": [
+              "نظام الملفات",
+              "الاستخدام الشائع",
+              "ملاحظة جنائية"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "FAT32",
+                "Older USB drives and memory cards.",
+                "Simpler structure but limited features and file sizes."
+              ],
+              "ar": [
+                "FAT32",
+                "وحدات USB القديمة وبطاقات الذاكرة.",
+                "بُنى أبسط لكنها محدودة في المزايا وحجم الملفات."
+              ]
+            },
+            {
+              "en": [
+                "NTFS",
+                "Modern Windows systems and large internal disks.",
+                "Rich metadata and features like permissions and Alternate Data Streams."
+              ],
+              "ar": [
+                "NTFS",
+                "أنظمة ويندوز الحديثة والأقراص الداخلية الكبيرة.",
+                "بيانات وصفية غنية وميزات مثل الصلاحيات وتيارات البيانات البديلة."
+              ]
+            },
+            {
+              "en": [
+                "EXT4",
+                "Many Linux distributions for servers and desktops.",
+                "Widely used in Linux investigations with strong journaling support."
+              ],
+              "ar": [
+                "EXT4",
+                "توزيعات لينكس كثيرة للخوادم وأجهزة المكتب.",
+                "شائع في تحقيقات لينكس مع دعم قوي لجداول السجلات."
+              ]
+            }
+          ]
+        },
+        {
+          "id": 4,
+          "type": "text",
+          "value": {
+            "en": "Every file has structure and metadata, such as name, size, timestamps, and permissions. Investigators read this metadata to build timelines and see who accessed what and when. Even if content is damaged, metadata can still reveal user behavior, potential insider threats, or attacker activity.",
+            "ar": "كل ملف له بُنية وبيانات وصفية مثل الاسم والحجم والطوابع الزمنية والصلاحيات. يقرأ المحققون هذه البيانات الوصفية لبناء جداول زمنية ورؤية من وصل إلى ماذا ومتى. حتى لو تضرر محتوى الملف يمكن أن تكشف البيانات الوصفية عن سلوك المستخدم أو تهديدات من الداخل أو نشاط المهاجم."
+          }
+        },
+        {
+          "id": 5,
+          "type": "text",
+          "value": {
+            "en": "When a user deletes a file, many systems only mark the space as free without erasing the actual content immediately. The data remains in unallocated space until it is overwritten by new files. Forensic tools take advantage of this behavior to recover deleted files or fragments, especially when the action was recent.",
+            "ar": "عندما يحذف المستخدم ملفاً فإن كثيراً من الأنظمة تكتفي بوضع علامة على المساحة بأنها فارغة دون مسح المحتوى فعلياً فوراً. تبقى البيانات في المساحة غير المخصصة حتى تُكتب فوقها ملفات جديدة. تستفيد الأدوات الجنائية من هذا السلوك لاسترجاع الملفات أو الأجزاء المحذوفة، خصوصاً عندما يكون الحذف حديثاً."
+          }
+        },
+        {
+          "id": 6,
+          "type": "text",
+          "value": {
+            "en": "File carving is a technique that searches raw disk data for known file signatures, such as specific headers and footers. It can recover files even when file system entries are missing, but results may be incomplete or corrupted. Investigators must validate carved files carefully and note any limitations in their reports.",
+            "ar": "تجزئة الملفات (File Carving) هي تقنية تبحث في بيانات القرص الخام عن تواقيع معروفة للملفات مثل رؤوس ونهايات محددة. يمكنها استرجاع ملفات حتى لو كانت سجلات نظام الملفات مفقودة، لكن قد تكون النتائج ناقصة أو تالفة. لذلك يجب على المحققين التحقق بعناية من الملفات المستخرجة وذكر أي قيود في تقاريرهم."
+          }
+        },
+        {
+          "id": 7,
+          "type": "list",
+          "title": {
+            "en": "Common Sources of Recoverable Data",
+            "ar": "مصادر شائعة للبيانات القابلة للاسترجاع"
+          },
+          "items": {
+            "en": [
+              "Unallocated space that still contains remnants of old files.",
+              "Slack space at the end of disk clusters that holds leftover data.",
+              "System caches and temporary folders used by applications and browsers.",
+              "Backup copies or older file versions stored by the operating system."
+            ],
+            "ar": [
+              "المساحة غير المخصصة التي ما زالت تحتوي بقايا ملفات قديمة.",
+              "مساحة Slack في نهاية الكتل على القرص التي تحتفظ ببيانات زائدة.",
+              "الذاكرة المؤقتة ومجلدات الملفات المؤقتة التي تستخدمها التطبيقات والمتصفحات.",
+              "النسخ الاحتياطية أو إصدارات الملفات الأقدم التي يخزنها نظام التشغيل."
+            ]
+          }
+        },
+        {
+          "id": 8,
+          "type": "text",
+          "value": {
+            "en": "On Windows, the Recycle Bin stores deleted files in a special location and tracks original names and paths. Recycle Bin forensics can show which user deleted which file and from where, even if the file itself is already emptied. This is useful in cases of accidental deletion and in cases where someone tries to hide evidence by quickly deleting folders.",
+            "ar": "في نظام ويندوز يخزن \"سلة المحذوفات\" الملفات المحذوفة في مكان خاص وتحتفظ بالأسماء والمسارات الأصلية. يمكن لتحليل سلة المحذوفات أن يوضح أي مستخدم حذف أي ملف ومن أي مسار، حتى لو كانت الملفات قد حُذفت من السلة لاحقاً. يفيد ذلك في حالات الحذف عن طريق الخطأ وكذلك عندما يحاول شخص إخفاء دليل بحذف مجلدات بسرعة."
+          }
+        },
+        {
+          "id": 9,
+          "type": "text",
+          "value": {
+            "en": "Hidden files and Alternate Data Streams (ADS) allow data to exist without being obvious in normal folder views. Attackers may hide tools or notes in ADS on NTFS or use system folders with misleading names. Forensic investigators use specialized tools to list hidden content and compare file size and metadata with what the user interface shows.",
+            "ar": "الملفات المخفية وتيارات البيانات البديلة (ADS) تسمح بوجود بيانات لا تظهر بوضوح في عرض المجلدات العادي. قد يخفي المهاجمون أدوات أو ملاحظات داخل ADS في نظام NTFS أو يستخدمون مجلدات نظام بأسماء مضللة. يستخدم المحققون أدوات متخصصة لإظهار المحتوى المخفي ومقارنة حجم الملف وبياناته الوصفية بما يظهر في واجهة المستخدم."
+          }
+        },
+        {
+          "id": 10,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "Never perform recovery directly on the only copy of evidence, because failed attempts or partial overwrites can destroy important data forever. Always work on a verified forensic image and keep at least one untouched backup in safe storage.",
+            "ar": "لا تقم أبداً بعملية الاسترجاع على النسخة الوحيدة من الدليل، لأن المحاولات الفاشلة أو الكتابة الجزئية قد تدمر بيانات مهمة إلى الأبد. يجب دائماً العمل على صورة جنائية موثوقة والاحتفاظ بنسخة احتياطية واحدة على الأقل دون لمسها في مكان آمن."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 11,
+          "type": "orderedList",
+          "title": {
+            "en": "Basic Steps in a File Recovery Lab",
+            "ar": "الخطوات الأساسية في معمل استرجاع الملفات"
+          },
+          "items": [
+            {
+              "subtitle": {
+                "en": "1. Work on a forensic image",
+                "ar": "1. العمل على صورة جنائية"
+              },
+              "text": {
+                "en": "Mount the verified disk image as read-only and confirm hashes before starting.",
+                "ar": "قم بتركيب صورة القرص الموثوقة في وضع القراءة فقط وتحقق من قيم الهاش قبل البدء."
+              },
+              "example": {
+                "en": "e.g. Use a lab workstation to mount case001_sda.img read-only for analysis.",
+                "ar": "مثال: تركيب ملف case001_sda.img في جهاز المختبر بوضع القراءة فقط لتحليله."
+              }
+            },
+            {
+              "subtitle": {
+                "en": "2. Identify the file system and area of interest",
+                "ar": "2. تحديد نظام الملفات ومنطقة الاهتمام"
+              },
+              "text": {
+                "en": "Determine whether the partition uses FAT, NTFS, or EXT and note where the missing data should be.",
+                "ar": "حدِّد ما إذا كان القسم يستخدم FAT أو NTFS أو EXT وسجّل أين يُفترض أن تكون البيانات المفقودة."
+              },
+              "example": {
+                "en": "e.g. Focus on a user documents folder that was recently deleted.",
+                "ar": "مثال: التركيز على مجلد مستندات مستخدم حُذف حديثاً."
+              }
+            },
+            {
+              "subtitle": {
+                "en": "3. Scan for deleted entries and file signatures",
+                "ar": "3. فحص الإدخالات المحذوفة وتواقيع الملفات"
+              },
+              "text": {
+                "en": "Use forensic tools to list deleted records and carve files based on known signatures.",
+                "ar": "استخدم أدوات جنائية لعرض السجلات المحذوفة واستخراج الملفات بناءً على تواقيع معروفة."
+              },
+              "example": {
+                "en": "e.g. Recover recently deleted photos by scanning unallocated space for JPEG signatures.",
+                "ar": "مثال: استرجاع صور حُذفت حديثاً عن طريق فحص المساحة غير المخصصة للبحث عن تواقيع ملفات JPEG."
+              }
+            },
+            {
+              "subtitle": {
+                "en": "4. Validate and label recovered files",
+                "ar": "4. التحقق من الملفات المسترجعة ووَسْمها"
+              },
+              "text": {
+                "en": "Open previews when safe, check hashes, and label each item with its source and recovery method.",
+                "ar": "افتح معاينات عندما يكون ذلك آمناً، وافحص قيم الهاش، ووسِم كل ملف بمصدره وطريقة استرجاعه."
+              },
+              "example": {
+                "en": "e.g. Mark a document as carved from unallocated space with partial content.",
+                "ar": "مثال: وسم مستند بأنه مستخرج من المساحة غير المخصصة مع ملاحظة أن المحتوى جزئي."
+              }
+            },
+            {
+              "subtitle": {
+                "en": "5. Document limitations and findings",
+                "ar": "5. توثيق القيود والنتائج"
+              },
+              "text": {
+                "en": "Record what was fully recovered, what is partial, and what appears irrecoverable, and explain possible reasons.",
+                "ar": "سجّل ما تم استرجاعه بالكامل، وما هو جزئي، وما يبدو غير قابل للاسترجاع، ووضّح الأسباب المحتملة."
+              },
+              "example": {
+                "en": "e.g. Note that some files were overwritten by new user activity after the incident.",
+                "ar": "مثال: توضيح أن بعض الملفات تمت الكتابة فوقها بسبب نشاط مستخدم جديد بعد الحادث."
+              }
+            }
+          ]
+        },
+        {
+          "id": 12,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "A simple file recovery lab can use a small test disk where you create, modify, and delete sample files, then practice finding them again. This safe environment lets you make mistakes and learn how different file systems behave when data changes.",
+            "ar": "يمكن تنفيذ معمل استرجاع ملفات بسيط باستخدام قرص تجريبي صغير تقوم عليه بإنشاء ملفات وتعديلها وحذفها ثم تحاول العثور عليها من جديد. يتيح لك هذا البيئة الآمنة أن تخطئ وتتعلم كيف تتصرف أنظمة الملفات المختلفة عند تغيّر البيانات."
+          },
+          "link": "",
+          "isLab": true
+        },
+        {
+          "id": 13,
+          "type": "text",
+          "value": {
+            "en": "Partition recovery focuses on restoring access when partition tables or volume records are damaged, while damaged file recovery tries to salvage content from broken or partially overwritten files. Both tasks require patience and clear reporting about what is reliable and what may be incomplete. Good communication helps managers and courts understand the strength and limits of the recovered evidence. Source: https://www.exterro.com/basics-of-digital-forensics/chapter-1-what-is-digital-forensics",
+            "ar": "استعادة الأقسام تركز على إعادة الوصول عندما تتلف جداول الأقسام أو سجلات وحدات التخزين، بينما يهدف استرجاع الملفات التالفة إلى إنقاذ أكبر قدر ممكن من المحتوى من ملفات مكسورة أو كُتب فوق جزء منها. كلتا المهمتين تحتاجان إلى صبر وتقرير واضح يشرح ما هو موثوق وما قد يكون غير مكتمل. يساعد التواصل الجيد المديرين والمحاكم على فهم قوة وحدود الأدلة المسترجعة. المصدر: https://www.exterro.com/basics-of-digital-forensics/chapter-1-what-is-digital-forensics"
+          }
+        },
+        {
+          "id": 14,
+          "type": "hr"
+        },
+        {
+          "id": 15,
+          "type": "text",
+          "value": {
+            "en": "File signature analysis compares the real internal signature of a file, such as the first bytes, with its extension to detect tampering. Attackers may rename malware from exe to jpg, but the internal header still shows an executable format. This check helps investigators spot disguised files and avoid trusting names alone.",
+            "ar": "تحليل تواقيع الملفات يقارن التوقيع الداخلي الحقيقي للملف مثل أول بضع بايتات مع الامتداد الظاهر لاكتشاف العبث. قد يعيد المهاجم تسمية ملف خبيث من exe إلى jpg، لكن الرأس الداخلي ما زال يشير إلى ملف تنفيذي. هذا الفحص يساعد المحققين على اكتشاف الملفات المتنكرة وعدم الاعتماد على الاسم فقط."
+          }
+        },
+        {
+          "id": 16,
+          "type": "text",
+          "value": {
+            "en": "Slack space analysis looks at the unused bytes at the end of allocated clusters where fragments of previous data may still exist. These remnants can contain parts of documents, chat logs, or images that were not fully overwritten. In sensitive investigations, even a small recovered phrase can confirm the presence of illegal or policy-violating content.",
+            "ar": "تحليل مساحة Slack يركز على البايتات غير المستخدمة في نهاية الكتل المخصصة حيث قد تبقى أجزاء من بيانات سابقة. يمكن أن تحتوي هذه البقايا على أجزاء من مستندات أو سجلات محادثة أو صور لم تُكتب فوقها بالكامل. في التحقيقات الحساسة قد تؤكد عبارة صغيرة مسترجعة وجود محتوى غير قانوني أو مخالف للسياسة."
+          }
+        },
+        {
+          "id": 17,
+          "type": "text",
+          "value": {
+            "en": "Unallocated space analysis scans the parts of the disk that the file system sees as free but that still hold historical data. This is especially valuable in long-running insider threat cases, where users may have deleted files over time. By examining this area, investigators can often reconstruct at least part of the missing story.",
+            "ar": "تحليل المساحة غير المخصصة يفحص الأجزاء التي يعتبرها نظام الملفات فارغة لكنها لا تزال تحتوي على بيانات قديمة. يكون هذا التحليل قيماً بشكل خاص في حالات التهديدات الداخلية طويلة المدى، حيث يقوم المستخدمون بحذف ملفات عبر الزمن. من خلال فحص هذه المنطقة يمكن للمحققين غالباً إعادة بناء جزء على الأقل من القصة المفقودة."
+          }
+        },
+        {
+          "id": 18,
+          "type": "text",
+          "value": {
+            "en": "File recovery tools range from simple undelete utilities to advanced forensic suites that support multiple file systems and carving. Beginners should start with lab exercises, intentionally deleting harmless test data and then attempting to recover it. Over time, they learn how success depends on timing, file system type, and later disk use.",
+            "ar": "تتدرج أدوات استرجاع الملفات من برامج بسيطة لإلغاء الحذف إلى حزم جنائية متقدمة تدعم أنظمة ملفات متعددة وتقنيات التجزئة. من الأفضل أن يبدأ المبتدئون بتمارين معملية حيث يحذفون بيانات تجريبية غير مهمة ثم يحاولون استرجاعها. مع الوقت يتعلمون كيف يعتمد النجاح على عامل الزمن ونوع نظام الملفات واستخدام القرص اللاحق."
+          }
+        },
+        {
+          "id": 19,
+          "type": "text",
+          "value": {
+            "en": "In cyber security investigations, recovered files and fragments support the wider analysis of threats, vulnerabilities, and attacks. They may confirm that malware executed, that sensitive documents were accessed, or that human error caused data loss. Linking these findings to the CIA triad helps non-technical stakeholders understand the real impact on confidentiality, integrity, and availability.",
+            "ar": "في تحقيقات الأمن السيبراني تدعم الملفات والأجزاء المسترجعة التحليل الأوسع للتهديدات ونقاط الضعف والهجمات. قد تؤكد هذه الأدلة تنفيذ برمجيات خبيثة أو الوصول إلى مستندات حساسة أو أن الخطأ البشري سبب فقدان البيانات. ربط هذه النتائج بمثلث CIA يساعد أصحاب المصلحة غير التقنيين على فهم الأثر الحقيقي على السرية والسلامة والتوافر."
+          }
+        },
+        {
+          "id": 1774304118809.032,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageUrl": "https://cdn.cyber-labs.tech/Digital%20Forensics%20Basics/system%20structures.webp"
+        }
+      ]
+    },
+    {
+      "id": "topic-4",
+      "title": {
+        "en": "Memory Forensics",
+        "ar": "التحقيق الجنائي في الذاكرة"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "What Is Memory Forensics?",
+            "ar": "ما هو التحقيق الجنائي في الذاكرة؟"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "Memory forensics focuses on capturing and analyzing the contents of RAM to see what was happening on a system while it was running. RAM contains running processes, active network connections, encryption keys, and sometimes passwords that do not always appear on disk. This makes memory analysis a powerful partner to disk forensics in modern cyber security investigations.",
+            "ar": "يركز التحقيق الجنائي في الذاكرة على التقاط محتوى ذاكرة الوصول العشوائي RAM وتحليله لمعرفة ما كان يحدث على النظام أثناء تشغيله. تحتوي الذاكرة على العمليات الجارية والاتصالات النشطة ومفاتيح التشفير وأحياناً كلمات المرور التي لا تظهر دائماً على القرص. لذلك أصبح تحليل الذاكرة شريكاً قوياً لتحقيقات الأقراص في الأمن السيبراني الحديث."
+          }
+        },
+        {
+          "id": 3,
+          "type": "text",
+          "value": {
+            "en": "Unlike disks, RAM is volatile, meaning its content changes quickly and disappears when power is lost. Because of this, investigators try to capture memory as early as possible during an incident, often before shutting down a compromised machine. Captured memory images become key evidence for understanding advanced attacks that leave few traces on disk, such as fileless malware.",
+            "ar": "على عكس الأقراص فإن الذاكرة متطايرة، أي أن محتواها يتغير بسرعة ويختفي عند انقطاع الطاقة. بسبب ذلك يحاول المحققون التقاط صورة للذاكرة في أقرب وقت ممكن أثناء الحادث، وغالباً قبل إيقاف تشغيل الجهاز المخترق. تصبح صور الذاكرة الملتقطة دليلاً رئيسياً لفهم الهجمات المتقدمة التي لا تترك أثراً كبيراً على القرص مثل البرمجيات الخبيثة عديمة الملفات."
+          }
+        },
+        {
+          "id": 4,
+          "type": "table",
+          "title": {
+            "en": "Disk Forensics vs Memory Forensics",
+            "ar": "التحقيق في الأقراص مقابل التحقيق في الذاكرة"
+          },
+          "headers": {
+            "en": [
+              "Aspect",
+              "Disk Forensics",
+              "Memory Forensics"
+            ],
+            "ar": [
+              "العنصر",
+              "التحقيق في الأقراص",
+              "التحقيق في الذاكرة"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "Main Focus",
+                "Files, file systems, long-term storage.",
+                "Running processes, live activity, volatile data."
+              ],
+              "ar": [
+                "التركيز الرئيسي",
+                "الملفات وأنظمة الملفات والتخزين طويل الأمد.",
+                "العمليات الجارية والنشاط الحي والبيانات المتطايرة."
+              ]
+            },
+            {
+              "en": [
+                "Evidence Lifetime",
+                "Persistent, remains after shutdown.",
+                "Short-lived, disappears or changes quickly."
+              ],
+              "ar": [
+                "عمر الدليل",
+                "دائم نسبياً ويبقى بعد إيقاف التشغيل.",
+                "قصير العمر ويختفي أو يتغير بسرعة."
+              ]
+            },
+            {
+              "en": [
+                "Best For",
+                "Historical analysis and long-term behavior.",
+                "Recent activity, fileless attacks, in-memory malware."
+              ],
+              "ar": [
+                "أفضل استخدام",
+                "التحليل التاريخي والسلوك طويل المدى.",
+                "النشاط الحديث والهجمات عديمة الملفات والبرمجيات الخبيثة في الذاكرة."
+              ]
+            }
+          ]
+        },
+        {
+          "id": 5,
+          "type": "list",
+          "title": {
+            "en": "Typical Data Found in RAM",
+            "ar": "بيانات نموذجية توجد في الذاكرة"
+          },
+          "items": {
+            "en": [
+              "Running processes and their command lines.",
+              "Loaded modules and DLLs used by applications.",
+              "Network connections and open ports.",
+              "Decrypted content such as documents or chat messages.",
+              "Usernames, tokens, and sometimes passwords in plain or encoded form.",
+              "Injected or hidden code used by advanced malware. "
+            ],
+            "ar": [
+              "العمليات الجارية وسطور الأوامر الخاصة بها.",
+              "الوحدات والدوال الديناميكية (DLLs) المحمّلة بواسطة التطبيقات.",
+              "اتصالات الشبكة والمنافذ المفتوحة.",
+              "محتوى مفكوك التشفير مثل المستندات أو رسائل الدردشة.",
+              "أسماء مستخدمين ورموز صلاحيات وأحياناً كلمات مرور بشكل صريح أو مشفر.",
+              "شيفرات مخفية أو محقونة تستخدمها برمجيات خبيثة متقدمة."
+            ]
+          }
+        },
+        {
+          "id": 6,
+          "type": "text",
+          "value": {
+            "en": "The RAM structure is organized into regions holding kernel data, user processes, cached files, and memory-mapped areas. Forensic tools use operating system profiles to interpret these structures correctly. Choosing the right profile is important; a wrong one can hide processes or mislabel artifacts, leading to wrong conclusions.",
+            "ar": "تُنظَّم الذاكرة في مناطق تحتوي على بيانات النواة وعمليات المستخدم والملفات المخزنة مؤقتاً والمناطق المرتبطة بالذاكرة. تستخدم الأدوات الجنائية ملفات تعريف خاصة بأنظمة التشغيل لقراءة هذه البُنى بشكل صحيح. اختيار الملف التعريفي الصحيح أمر مهم، فاختيار ملف خاطئ قد يخفي عمليات أو يضع تسميات خاطئة للآثار، مما يقود إلى استنتاجات غير صحيحة."
+          }
+        },
+        {
+          "id": 7,
+          "type": "terminal",
+          "label": {
+            "en": "Sample Volatility Commands",
+            "ar": "أوامر نموذجية في Volatility"
+          },
+          "value": "investigator@lab:~$ volatility -f suspect.mem imageinfo\nSuggested Profile(s) : Win7SP1x64, Win2008R2SP1x64\n\ninvestigator@lab:~$ volatility -f suspect.mem --profile=Win7SP1x64 pslist\n\ninvestigator@lab:~$ volatility -f suspect.mem --profile=Win7SP1x64 netscan\n\ninvestigator@lab:~$ volatility -f suspect.mem --profile=Win7SP1x64 malfind"
+        },
+        {
+          "id": 8,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "In beginner labs you can use small memory images provided by instructors instead of capturing RAM yourself. This removes legal risk and lets you focus on learning analysis steps and common patterns first.",
+            "ar": "في معامل المبتدئين يمكنك استخدام صور ذاكرة صغيرة يوفرها المدربون بدلاً من التقاط الذاكرة بنفسك. هذا يقلل المخاطر القانونية ويسمح لك بالتركيز أولاً على تعلم خطوات التحليل والأنماط الشائعة."
+          },
+          "link": "",
+          "isLab": true
+        },
+        {
+          "id": 9,
+          "type": "text",
+          "value": {
+            "en": "Capturing memory is usually done with specialized tools that create a raw or structured memory dump. To avoid changing too much data, investigators run capture tools from external media and avoid launching new applications during acquisition. Once captured, the memory image is hashed and stored like any other piece of digital evidence.",
+            "ar": "يتم التقاط الذاكرة عادةً باستخدام أدوات متخصصة تنشئ ملف تفريغ للذاكرة بصيغة خام أو بصيغ منظمة. لتجنب تغيير كمية كبيرة من البيانات يشغّل المحققون أدوات الالتقاط من وسيط خارجي ويتجنبون فتح تطبيقات جديدة أثناء العملية. بعد الالتقاط تُحسب قيمة هاش لصورة الذاكرة وتُخزَّن مثل أي دليل رقمي آخر."
+          }
+        },
+        {
+          "id": 10,
+          "type": "hr"
+        },
+        {
+          "id": 11,
+          "type": "orderedList",
+          "title": {
+            "en": "Simple Memory Analysis Workflow",
+            "ar": "سير عمل مبسط لتحليل الذاكرة"
+          },
+          "items": [
+            {
+              "subtitle": {
+                "en": "1. Identify the image profile",
+                "ar": "1. تحديد ملف التعريف لصورة الذاكرة"
+              },
+              "text": {
+                "en": "Use an analysis tool to guess which operating system and version the memory image belongs to.",
+                "ar": "استخدم أداة التحليل لتخمين نظام التشغيل والإصدار الذي تنتمي إليه صورة الذاكرة."
+              },
+              "example": {
+                "en": "e.g. Run imageinfo in Volatility and choose the recommended profile.",
+                "ar": "مثال: تشغيل أمر imageinfo في Volatility واختيار الملف التعريفي المقترح."
+              }
+            },
+            {
+              "subtitle": {
+                "en": "2. List running processes",
+                "ar": "2. عرض العمليات الجارية"
+              },
+              "text": {
+                "en": "Generate a process list and look for unusual names, paths, or parent–child relationships.",
+                "ar": "أنشئ قائمة بالعمليات الجارية وابحث عن أسماء أو مسارات أو علاقات أب–ابن غير معتادة."
+              },
+              "example": {
+                "en": "e.g. A browser process with an unexpected parent like cmd.exe can be suspicious.",
+                "ar": "مثال: عملية متصفح يكون الأب لها برنامج cmd.exe قد تكون مثيرة للشك."
+              }
+            },
+            {
+              "subtitle": {
+                "en": "3. Review network connections",
+                "ar": "3. مراجعة اتصالات الشبكة"
+              },
+              "text": {
+                "en": "Check which processes opened outbound connections and to which IP addresses.",
+                "ar": "افحص أي العمليات فتحت اتصالات خارجية وإلى أي عناوين IP."
+              },
+              "example": {
+                "en": "e.g. A service contacting a rare foreign IP on an unusual port may indicate command and control.",
+                "ar": "مثال: خدمة تتصل بعنوان IP غريب في دولة أخرى وعلى منفذ غير معتاد قد تشير إلى خادم تحكم وسيطرة."
+              }
+            },
+            {
+              "subtitle": {
+                "en": "4. Hunt for injected or hidden code",
+                "ar": "4. البحث عن الشيفرات المحقونة أو المخفية"
+              },
+              "text": {
+                "en": "Use plugins that scan memory regions for suspicious executable pages inside legitimate processes.",
+                "ar": "استخدم إضافات تفحص مناطق الذاكرة بحثاً عن صفحات تنفيذية مريبة داخل عمليات شرعية."
+              },
+              "example": {
+                "en": "e.g. malfind in Volatility can highlight possible code injections.",
+                "ar": "مثال: إضافة malfind في Volatility يمكن أن تبرز أماكن حقن الشيفرة المحتملة."
+              }
+            },
+            {
+              "subtitle": {
+                "en": "5. Extract useful artifacts",
+                "ar": "5. استخراج الآثار المفيدة"
+              },
+              "text": {
+                "en": "Dump interesting processes, strings, or decrypted content for deeper analysis in other tools.",
+                "ar": "قم بتفريغ العمليات المهمة أو السلاسل النصية أو المحتوى المفكوك التشفير لتحليله بعمق في أدوات أخرى."
+              },
+              "example": {
+                "en": "e.g. Export a suspicious process and analyze it with a malware sandbox.",
+                "ar": "مثال: تصدير عملية مشبوهة وتحليلها في بيئة تحليل برمجيات خبيثة."
+              }
+            },
+            {
+              "subtitle": {
+                "en": "6. Correlate with logs and disk evidence",
+                "ar": "6. الربط مع السجلات وأدلة القرص"
+              },
+              "text": {
+                "en": "Match memory findings with timestamps in logs and file system events to build a clear story.",
+                "ar": "طابِق نتائج الذاكرة مع الطوابع الزمنية في السجلات وأحداث نظام الملفات لبناء قصة واضحة."
+              },
+              "example": {
+                "en": "e.g. Connect a malicious process start time with a phishing email received minutes earlier.",
+                "ar": "مثال: ربط وقت بدء عملية خبيثة برسالة تصيّد وصلت قبلها بدقائق."
+              }
+            }
+          ]
+        },
+        {
+          "id": 12,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "Shutting down a compromised system before capturing memory can erase crucial volatile evidence. In many incident response playbooks, RAM capture is one of the first technical steps after isolating the device.",
+            "ar": "إيقاف تشغيل نظام مخترق قبل التقاط الذاكرة يمكن أن يمسح أدلة متطايرة حاسمة. في كثير من خطط الاستجابة للحوادث يكون التقاط الذاكرة من أولى الخطوات التقنية بعد عزل الجهاز."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 13,
+          "type": "text",
+          "value": {
+            "en": "Memory forensics is especially valuable against fileless attacks and advanced persistent threats that operate mainly in RAM. By examining live processes and connections, investigators can expose stealthy techniques that bypass traditional antivirus and simple log reviews.",
+            "ar": "يكون التحقيق الجنائي في الذاكرة ذا قيمة خاصة ضد الهجمات عديمة الملفات والتهديدات المستمرة المتقدمة التي تعمل أساساً داخل الذاكرة. من خلال فحص العمليات الحية والاتصالات يمكن للمحققين كشف أساليب تخفٍّ تتجاوز برامج مكافحة الفيروسات التقليدية ومراجعات السجلات البسيطة."
+          }
+        },
+        {
+          "id": 14,
+          "type": "text",
+          "value": {
+            "en": "Human errors, such as running unknown attachments or disabling security tools, often create the initial foothold that attackers exploit. Memory analysis then helps show exactly which process executed the malicious payload and what it did. This clarity supports both technical remediation and user awareness training.",
+            "ar": "الأخطاء البشرية مثل تشغيل مرفقات غير معروفة أو تعطيل أدوات الحماية غالباً ما تخلق نقطة الدخول الأولى التي يستغلها المهاجمون. يساعد تحليل الذاكرة بعد ذلك على إظهار أي عملية نفذت الحمولة الخبيثة وماذا فعلت بالضبط. هذا الوضوح يدعم كلاً من الإصلاح التقني وتوعية المستخدمين."
+          }
+        },
+        {
+          "id": 15,
+          "type": "text",
+          "value": {
+            "en": "From a CIA triad view, memory forensics mainly helps investigate integrity and confidentiality issues during attacks. It can reveal manipulation of processes, unauthorized access to data in use, and attempts to steal credentials. When combined with disk and network forensics, it gives a more complete picture of how an incident unfolded.",
+            "ar": "من منظور مثلث CIA يساعد التحقيق في الذاكرة بشكل أساسي على فحص مشكلات السلامة والسرية أثناء الهجوم. يمكنه كشف العبث بالعمليات والوصول غير المصرح به للبيانات أثناء استخدامها ومحاولات سرقة بيانات الاعتماد. وعند دمجه مع تحقيقات القرص والشبكة يعطي صورة أكثر اكتمالاً لكيفية تطور الحادث."
+          }
+        },
+        {
+          "id": 16,
+          "type": "text",
+          "value": {
+            "en": "A beginner-friendly lab might use a memory image taken after running a simple malware sample in a sandbox. Students practice listing processes, finding the malicious one, seeing its connections, and documenting the timeline. This hands-on work builds confidence before moving to real-world cases.",
+            "ar": "يمكن أن يستخدم معمل مناسب للمبتدئين صورة ذاكرة ملتقطة بعد تشغيل عينة برمجية خبيثة بسيطة في بيئة معزولة. يتدرّب الطلاب على عرض العمليات والعثور على العملية الخبيثة ورؤية اتصالاتها وتوثيق التسلسل الزمني. هذا العمل العملي يبني الثقة قبل الانتقال إلى حالات من العالم الحقيقي."
+          }
+        },
+        {
+          "id": 1774304191466.51,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageUrl": "https://cdn.cyber-labs.tech/Digital%20Forensics%20Basics/disk%20and%20memory%20forensics.webp"
+        },
+        {
+          "id": 18,
+          "type": "code",
+          "language": "python",
+          "value": "import subprocess\n\n# Simple pseudo-example: call an external tool to run basic memory analysis commands\nmemory_image = \"suspect.mem\"\nprofile = \"Win7SP1x64\"\n\ncommands = [\n    [\"volatility\", \"-f\", memory_image, \"imageinfo\"],\n    [\"volatility\", \"-f\", memory_image, f\"--profile={profile}\", \"pslist\"],\n    [\"volatility\", \"-f\", memory_image, f\"--profile={profile}\", \"netscan\"],\n]\n\nfor cmd in commands:\n    print(\"Running:\", \" \".join(cmd))\n    try:\n        result = subprocess.run(cmd, capture_output=True, text=True, check=True)\n        print(result.stdout[:500])  # In a real lab, send full output to a log file.\n    except FileNotFoundError:\n        print(\"Tool not installed on this system. Use this code as a logical example only.\")"
+        },
+        {
+          "id": 19,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "In real organizations, memory forensics is usually part of a wider incident response process, not a stand-alone action. Findings from RAM are combined with identity logs, firewall alerts, and disk evidence to decide if assets are safe or if the attacker still has a foothold.",
+            "ar": "في المؤسسات الحقيقية يكون التحقيق في الذاكرة عادةً جزءاً من عملية استجابة للحوادث أوسع وليس خطوة منفردة. تُدمج النتائج المستخرجة من الذاكرة مع سجلات الهوية، وتنبيهات جدران الحماية، وأدلة الأقراص لاتخاذ قرار بشأن سلامة الأصول أو استمرار وجود موطئ قدم للمهاجم."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 20,
+          "type": "text",
+          "value": {
+            "en": "Learning memory forensics helps beginners think like defenders who watch live activity, not only stored files. This mindset supports safer daily behavior, such as avoiding suspicious links and reporting strange system behavior early, because they understand how quickly volatile evidence can appear and disappear.",
+            "ar": "تعليم التحقيق في الذاكرة يساعد المبتدئين على التفكير كمدافعين يراقبون النشاط الحي وليس الملفات المخزنة فقط. هذا الأسلوب يدعم سلوكاً يومياً أكثر أماناً مثل تجنب الروابط المشبوهة والإبلاغ مبكراً عن سلوك غريب للجهاز، لأنهم يفهمون كيف يمكن أن تظهر الأدلة المتطايرة وتختفي بسرعة."
+          }
+        }
+      ]
+    },
+    {
+      "id": "topic-5",
+      "title": {
+        "en": "Timeline Analysis and Investigation",
+        "ar": "تحليل الخط الزمني والتحقيق"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "What Is Timeline Analysis?",
+            "ar": "ما هو تحليل الخط الزمني؟"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "Timeline analysis is the process of arranging digital events in time order to see how an incident unfolded. Investigators combine file timestamps, logs, browser history, and memory artifacts into a single view. This helps them answer key questions: what happened first, what happened next, and how long the attacker stayed in the environment.",
+            "ar": "تحليل الخط الزمني هو عملية ترتيب الأحداث الرقمية حسب الزمن لرؤية كيف تطور الحادث. يجمع المحققون الطوابع الزمنية للملفات والسجلات وسجل التصفح وآثار الذاكرة في رؤية واحدة. يساعدهم ذلك على الإجابة عن أسئلة أساسية: ماذا حدث أولاً، وماذا حدث بعده، وكم بقي المهاجم داخل البيئة."
+          }
+        },
+        {
+          "id": 3,
+          "type": "text",
+          "value": {
+            "en": "The basic building block of a timeline is often called an event, which has at least a timestamp, source, action, and target. For example, \"2026-03-21 10:15:23, Windows log, login success, user=Ali\" is a simple event. When thousands of such entries are lined up, patterns like repeated failed logins or sudden bursts of file access become visible.",
+            "ar": "غالباً ما يُسمَّى المكوّن الأساسي للخط الزمني \"حدثاً\" ويحتوي على الأقل على طابع زمني ومصدر وفعل وهدف. على سبيل المثال: \"2026-03-21 10:15:23، سجل ويندوز، تسجيل دخول ناجح، المستخدم=علي\" هو حدث بسيط. عند ترتيب آلاف من هذه الإدخالات تظهر أنماط مثل تكرار محاولات الدخول الفاشلة أو زيادة مفاجئة في الوصول إلى الملفات."
+          }
+        },
+        {
+          "id": 4,
+          "type": "table",
+          "title": {
+            "en": "Examples of Timeline Data Sources",
+            "ar": "أمثلة على مصادر بيانات الخط الزمني"
+          },
+          "headers": {
+            "en": [
+              "Source",
+              "Type of Events",
+              "Simple Example"
+            ],
+            "ar": [
+              "المصدر",
+              "نوع الأحداث",
+              "مثال مبسط"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "File System MAC Times",
+                "File created, modified, accessed actions.",
+                "User edits a document at 09:05 and saves it at 09:07."
+              ],
+              "ar": [
+                "طوابع MAC لنظام الملفات",
+                "أحداث إنشاء وتعديل ووصول للملفات.",
+                "يقوم المستخدم بتعديل مستند في 09:05 ويحفظه في 09:07."
+              ]
+            },
+            {
+              "en": [
+                "Windows Event Logs",
+                "Logon events, policy changes, errors, and warnings.",
+                "Multiple failed logins followed by one success from same IP."
+              ],
+              "ar": [
+                "سجلات أحداث ويندوز",
+                "أحداث تسجيل الدخول وتغييرات السياسات والأخطاء والتحذيرات.",
+                "عدة محاولات دخول فاشلة ثم دخول واحد ناجح من نفس عنوان IP."
+              ]
+            },
+            {
+              "en": [
+                "Browser History",
+                "Visited websites, downloads, and form submissions.",
+                "User visits a phishing site just before account compromise."
+              ],
+              "ar": [
+                "سجل المتصفح",
+                "المواقع التي تمت زيارتها والتنزيلات وإرسال النماذج.",
+                "يزور المستخدم موقع تصيّد قبل وقت قصير من اختراق حسابه."
+              ]
+            }
+          ]
+        },
+        {
+          "id": 5,
+          "type": "list",
+          "title": {
+            "en": "Why Timeline Analysis Is Important",
+            "ar": "أهمية تحليل الخط الزمني"
+          },
+          "items": {
+            "en": [
+              "Shows the full story instead of isolated technical details.",
+              "Helps separate normal behavior from suspicious spikes in activity.",
+              "Supports decisions about when the attacker first entered and last acted.",
+              "Connects human actions, such as opening an email, to technical events.",
+              "Provides an easy narrative for managers, lawyers, and non-technical staff."
+            ],
+            "ar": [
+              "يُظهر القصة الكاملة بدلاً من تفاصيل تقنية منفصلة.",
+              "يساعد على فصل السلوك الطبيعي عن الزيادات المشبوهة في النشاط.",
+              "يدعم قرارات حول متى دخل المهاجم لأول مرة ومتى كان آخر نشاط له.",
+              "يربط تصرفات البشر مثل فتح بريد إلكتروني بأحداث تقنية.",
+              "يوفر سرداً بسيطاً لمديرين ومحامين وموظفين غير تقنيين."
+            ]
+          }
+        },
+        {
+          "id": 6,
+          "type": "text",
+          "value": {
+            "en": "MAC times refer to Modified, Accessed, and Created timestamps stored by many file systems. Attackers can sometimes change these times to confuse investigators, but log files, backups, and memory artifacts often reveal the real sequence. A good analyst never trusts a single timestamp alone.",
+            "ar": "تشير طوابع MAC إلى أوقات التعديل والوصول والإنشاء التي تخزنها كثير من أنظمة الملفات. يمكن للمهاجمين أحياناً تغيير هذه الأوقات لإرباك المحققين، لكن سجلات الأحداث والنسخ الاحتياطية وآثار الذاكرة تكشف غالباً التسلسل الحقيقي. لذلك لا يثق المحلل الجيد في طابع زمني واحد بمفرده."
+          }
+        },
+        {
+          "id": 7,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "Working with mixed time zones and daylight saving changes is a common source of mistakes. Always convert events to a single reference time, such as UTC, and clearly note the chosen standard in your report.",
+            "ar": "يُعد التعامل مع مناطق زمنية مختلفة وتغييرات التوقيت الصيفي من أكثر مصادر الأخطاء شيوعاً. حوّل دائماً الأحداث إلى وقت مرجعي واحد مثل UTC واذكر هذا المعيار بوضوح في تقريرك."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 8,
+          "type": "hr"
+        },
+        {
+          "id": 9,
+          "type": "orderedList",
+          "title": {
+            "en": "Basic Steps to Build a Timeline",
+            "ar": "خطوات أساسية لبناء خط زمني"
+          },
+          "items": [
+            {
+              "subtitle": {
+                "en": "1. Define the time window",
+                "ar": "1. تحديد الإطار الزمني"
+              },
+              "text": {
+                "en": "Decide which date and time range is relevant based on the first alert or user complaint.",
+                "ar": "قرّر أي مدى زمني للتواريخ والأوقات مناسب بناءً على أول تنبيه أو شكوى من المستخدم."
+              },
+              "example": {
+                "en": "e.g. From one day before the suspicious email until three days after the incident.",
+                "ar": "مثال: من يوم قبل البريد الإلكتروني المشبوه وحتى ثلاثة أيام بعد الحادث."
+              }
+            },
+            {
+              "subtitle": {
+                "en": "2. Collect events from multiple sources",
+                "ar": "2. جمع الأحداث من مصادر متعددة"
+              },
+              "text": {
+                "en": "Export logs, file system metadata, and browser history, and if available, memory and network traces.",
+                "ar": "قم بتصدير السجلات وبيانات ملفات النظام وسجل المتصفح، وإذا توفر، آثار الذاكرة والشبكة."
+              },
+              "example": {
+                "en": "e.g. Use built-in tools to export Windows event logs and browser history files.",
+                "ar": "مثال: استخدام أدوات مدمجة لتصدير سجلات أحداث ويندوز وملفات سجل المتصفح."
+              }
+            },
+            {
+              "subtitle": {
+                "en": "3. Normalize timestamps",
+                "ar": "3. توحيد الطوابع الزمنية"
+              },
+              "text": {
+                "en": "Convert all times to a single format and time zone so they can be compared directly.",
+                "ar": "حوّل جميع الأوقات إلى تنسيق واحد ومنطقة زمنية واحدة حتى يمكن مقارنتها مباشرة."
+              },
+              "example": {
+                "en": "e.g. Store all times in UTC, while keeping a note of the original local zone.",
+                "ar": "مثال: تخزين جميع الأوقات بصيغة UTC مع الاحتفاظ بملاحظة عن المنطقة الزمنية الأصلية."
+              }
+            },
+            {
+              "subtitle": {
+                "en": "4. Merge and sort events",
+                "ar": "4. دمج الأحداث وترتيبها"
+              },
+              "text": {
+                "en": "Combine all data into one table or file and sort by timestamp ascending.",
+                "ar": "ادمج جميع البيانات في جدول أو ملف واحد ثم رتّب الأحداث تصاعدياً حسب الطابع الزمني."
+              },
+              "example": {
+                "en": "e.g. Use a spreadsheet or script to sort thousands of log entries.",
+                "ar": "مثال: استخدام برنامج جداول بيانات أو سكربت لفرز آلاف سجلات الأحداث."
+              }
+            },
+            {
+              "subtitle": {
+                "en": "5. Highlight key actions",
+                "ar": "5. تمييز الأفعال الرئيسية"
+              },
+              "text": {
+                "en": "Mark events that represent attacker steps, security controls, or user actions that changed risk.",
+                "ar": "قم بوضع علامات على الأحداث التي تمثل خطوات المهاجم أو ضوابط الأمن أو تصرفات المستخدم التي غيّرت مستوى المخاطر."
+              },
+              "example": {
+                "en": "e.g. Color-code attacker login, malware execution, and data exfiltration events.",
+                "ar": "مثال: تلوين أحداث تسجيل الدخول للمهاجم وتشغيل البرمجية الخبيثة وتسريب البيانات بألوان مختلفة."
+              }
+            },
+            {
+              "subtitle": {
+                "en": "6. Build a narrative",
+                "ar": "6. بناء رواية واضحة"
+              },
+              "text": {
+                "en": "Translate the technical sequence into a human-readable story that explains what, how, and why.",
+                "ar": "حوّل التسلسل التقني إلى قصة مفهومة تشرح ماذا حدث وكيف ولماذا."
+              },
+              "example": {
+                "en": "e.g. \"Attacker used stolen password at 10:10, installed tool at 10:15, and copied files at 10:20.\"",
+                "ar": "مثال: \"استخدم المهاجم كلمة مرور مسروقة في 10:10، ثم ثبّت أداة في 10:15، ونسخ الملفات في 10:20.\""
+              }
+            }
+          ]
+        },
+        {
+          "id": 10,
+          "type": "code",
+          "language": "python",
+          "value": "import csv\nfrom datetime import datetime, timezone\n\n# Simple example: merge events from two CSV files into a unified UTC timeline\n\ndef parse_time(ts):\n    # Assume input like '2026-03-21 10:15:23+02:00'\n    return datetime.fromisoformat(ts).astimezone(timezone.utc)\n\nall_events = []\n\nfor filename, source in [(\"fs_events.csv\", \"filesystem\"), (\"winlog_events.csv\", \"winlog\")]:\n    with open(filename, newline=\"\", encoding=\"utf-8\") as f:\n        reader = csv.DictReader(f)\n        for row in reader:\n            event_time = parse_time(row[\"timestamp\"])\n            all_events.append({\n                \"time_utc\": event_time,\n                \"source\": source,\n                \"action\": row.get(\"action\", \"\"),\n                \"details\": row.get(\"details\", \"\"),\n            })\n\nall_events.sort(key=lambda e: e[\"time_utc\"])\n\nwith open(\"merged_timeline.csv\", \"w\", newline=\"\", encoding=\"utf-8\") as f:\n    fieldnames = [\"time_utc\", \"source\", \"action\", \"details\"]\n    writer = csv.DictWriter(f, fieldnames=fieldnames)\n    writer.writeheader()\n    for e in all_events:\n        writer.writerow({\n            \"time_utc\": e[\"time_utc\"].isoformat(),\n            \"source\": e[\"source\"],\n            \"action\": e[\"action\"],\n            \"details\": e[\"details\"],\n        })"
+        },
+        {
+          "id": 11,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Even a simple spreadsheet-based timeline is powerful when combined with screenshots and short explanations. Beginners should start small, build a clear sequence for one workstation, and only then scale to multiple systems.",
+            "ar": "حتى الخط الزمني البسيط في جدول بيانات يمكن أن يكون قوياً عند دمجه مع لقطات شاشة وشرح مختصر. من الأفضل أن يبدأ المبتدئون بحالة صغيرة لجهاز واحد ثم ينتقلوا إلى أنظمة متعددة بعد فهم الأساسيات."
+          },
+          "link": "",
+          "isLab": true
+        },
+        {
+          "id": 12,
+          "type": "text",
+          "value": {
+            "en": "Browser history analysis is a key part of many timelines in phishing and fraud cases. It can show when a user visited a fake banking site, downloaded a malicious file, or entered credentials into a suspicious form. Combined with email headers and server logs, this helps confirm how social engineering led to technical compromise.",
+            "ar": "يُعد تحليل سجل المتصفح جزءاً رئيسياً من كثير من الخطوط الزمنية في قضايا التصيّد والاحتيال. يمكنه أن يبيّن متى زار المستخدم موقعاً مصرفياً مزيفاً أو نزّل ملفاً خبيثاً أو أدخل بيانات اعتماد في نموذج مشبوه. وعند دمجه مع رؤوس البريد الإلكتروني وسجلات الخوادم يساعد ذلك على تأكيد كيف أدت الهندسة الاجتماعية إلى الاختراق التقني."
+          }
+        },
+        {
+          "id": 13,
+          "type": "text",
+          "value": {
+            "en": "USB device history on a workstation can reveal when external drives were connected and removed. In insider theft cases, investigators look for patterns where a sensitive folder was accessed shortly before a USB device appeared. Such correlations strengthen the argument that data was copied out of the organization.",
+            "ar": "يمكن لسجل أجهزة USB على محطة العمل أن يكشف متى تم توصيل وحدات تخزين خارجية وفصلها. في قضايا سرقة البيانات من الداخل يبحث المحققون عن أنماط يتزامن فيها الوصول إلى مجلد حساس مع ظهور جهاز USB بعده مباشرة. تعزز هذه الروابط الاحتمال بأن البيانات نُسِخت إلى خارج المؤسسة."
+          }
+        },
+        {
+          "id": 14,
+          "type": "text",
+          "value": {
+            "en": "Email forensics adds sent and received messages to the timeline, showing when phishing, fraud, or internal policy violations occurred. Investigators examine subjects, senders, links, and attachments, and then match them with endpoint events. This joined view shows both human decisions and their technical consequences.",
+            "ar": "يضيف تحليل البريد الإلكتروني الرسائل المرسلة والمستلمة إلى الخط الزمني، موضحاً متى حدث التصيّد أو الاحتيال أو مخالفات السياسات الداخلية. يفحص المحققون العناوين والمرسلين والروابط والمرفقات ثم يطابقونها مع أحداث على أجهزة المستخدمين. هذه الرؤية المشتركة تُظهر قرارات البشر ونتائجها التقنية معاً."
+          }
+        },
+        {
+          "id": 15,
+          "type": "text",
+          "value": {
+            "en": "From a cyber security perspective, timelines help link threats, vulnerabilities, and attacks to real impact on assets. For example, they can show that an unpatched system (vulnerability) was scanned (threat activity), exploited (attack), and then used to steal money or data. This clarity supports better risk assessments and future defense planning.",
+            "ar": "من منظور الأمن السيبراني تساعد الجداول الزمنية على ربط التهديدات ونقاط الضعف والهجمات بالأثر الحقيقي على الأصول. على سبيل المثال يمكن أن تُظهر أن نظاماً غير محدّث (ثغرة) تم فحصه (نشاط تهديد) ثم استغلاله (هجوم) ثم استُخدم لسرقة المال أو البيانات. هذا الوضوح يدعم تقييمات مخاطر أفضل وتخطيطاً أحسن للدفاع مستقبلاً."
+          }
+        },
+        {
+          "id": 16,
+          "type": "text",
+          "value": {
+            "en": "In real-world breaches, timelines also capture response actions such as firewall blocks or account resets. Analysts compare how fast defenders reacted with how fast attackers moved laterally. Lessons learned from these comparisons often lead to improved monitoring, faster playbooks, and better user training.",
+            "ar": "في الاختراقات الواقعية تسجّل الجداول الزمنية أيضاً إجراءات الاستجابة مثل حجب العناوين من جدار الحماية أو إعادة ضبط الحسابات. يقارن المحللون سرعة استجابة المدافعين بسرعة تحرك المهاجمين بين الأنظمة. تؤدي الدروس المستفادة من هذه المقارنات غالباً إلى تحسين المراقبة وتسريع إجراءات الاستجابة وتطوير تدريب المستخدمين."
+          }
+        },
+        {
+          "id": 17,
+          "type": "text",
+          "value": {
+            "en": "Human error shows up clearly on timelines, such as clicking on unknown links, using weak passwords, or ignoring warnings. Seeing these moments on a visual line helps staff realize how one small mistake can start a larger incident. This awareness is an important part of building a strong security culture.",
+            "ar": "يظهر الخطأ البشري بوضوح على الخطوط الزمنية، مثل الضغط على روابط مجهولة أو استخدام كلمات مرور ضعيفة أو تجاهل التحذيرات. رؤية هذه اللحظات على خط بصري يساعد الموظفين على إدراك كيف يمكن أن يؤدي خطأ صغير إلى حادث كبير. هذه الوعي جزء مهم من بناء ثقافة أمنية قوية."
+          }
+        },
+        {
+          "id": 18,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "Avoid adding too much low-value detail to your timeline, because it can hide the key attacker actions. Focus on events that changed risk, such as new access, privilege escalation, malware execution, and data movement.",
+            "ar": "تجنب إضافة تفاصيل كثيرة قليلة القيمة إلى الخط الزمني، لأنها قد تخفي الأفعال الرئيسية للمهاجم. ركّز على الأحداث التي غيّرت مستوى المخاطر مثل وصول جديد، أو تصعيد صلاحيات، أو تشغيل برمجية خبيثة، أو نقل بيانات."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 1774304274997.1843,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageUrl": "https://cdn.cyber-labs.tech/Digital%20Forensics%20Basics/simple%20incident.webp"
+        },
+        {
+          "id": 20,
+          "type": "text",
+          "value": {
+            "en": "A beginner lab for timeline analysis can use a pre-built set of logs and file metadata from a small simulated attack. Students import them into a spreadsheet or script, build the timeline, and present the story to the class. This exercise strengthens both technical skills and communication, which are both critical for real digital forensic work.",
+            "ar": "يمكن أن يستخدم معمل للمبتدئين في تحليل الخط الزمني مجموعة جاهزة من السجلات وبيانات الملفات من هجوم بسيط مُحاكى. يقوم الطلاب باستيرادها إلى جدول بيانات أو سكربت، وبناء الخط الزمني، ثم عرض القصة لباقي الزملاء. يعزز هذا التمرين المهارات التقنية ومهارات التواصل معاً، وهما أمران حاسمان في عمل التحقيق الجنائي الرقمي الحقيقي."
+          }
+        }
+      ]
+    }
+  ]
+}

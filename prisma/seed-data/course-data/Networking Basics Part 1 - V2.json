@@ -1,0 +1,1357 @@
+{
+  "landingData": {
+    "title": {
+      "en": "Networking Basics Part 1",
+      "ar": "أساسيات الشبكات - الجزء الأول"
+    },
+    "description": {
+      "en": "Master the fundamental concepts of computer networks. Learn network types, understand the OSI and TCP/IP models, and explore essential network devices used in modern infrastructures.",
+      "ar": "أتقن المفاهيم الأساسية لشبكات الكمبيوتر. تعلم أنواع الشبكات، وافهم نماذج OSI و TCP/IP، واستكشف أجهزة الشبكات الأساسية المستخدمة في البنى التحتية الحديثة."
+    },
+    "difficulty": {
+      "en": "Beginner",
+      "ar": "مبتدئ"
+    },
+    "duration": {
+      "en": "90 Minutes",
+      "ar": "90 دقيقة"
+    },
+    "instructor": "CyberLab",
+    "rating": 4.9,
+    "students": 250
+  },
+  "topics": [
+    {
+      "id": "topic-1",
+      "title": {
+        "en": "Introduction to Computer Networks",
+        "ar": "مقدمة إلى شبكات الكمبيوتر"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "What is a Computer Network?",
+            "ar": "ما هي شبكة الكمبيوتر؟"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "A computer network is a collection of devices connected together to share resources and communicate. These devices include computers, servers, printers, and smartphones. Networks allow people to send emails, share files, and access websites. Without networks, each device would work alone with no way to exchange information.",
+            "ar": "شبكة الكمبيوتر هي مجموعة من الأجهزة المتصلة معًا لمشاركة الموارد والتواصل. تشمل هذه الأجهزة الحواسيب والخوادم والطابعات والهواتف الذكية. تسمح الشبكات للأشخاص بإرسال البريد الإلكتروني ومشاركة الملفات والوصول إلى المواقع الإلكترونية. بدون الشبكات، سيعمل كل جهاز بمفرده دون أي طريقة لتبادل المعلومات."
+          }
+        },
+        {
+          "id": 1771269710053.667,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageUrl": "https://pub-cb38e65ea6bd411eb827a8641fdcc72d.r2.dev/Networking%20Basics%20Part%201/1-Computer%20Network.webp"
+        },
+        {
+          "id": 4,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Think of a network like a postal system. Just as the post office connects houses to deliver letters, a network connects devices to deliver data.",
+            "ar": "فكر في الشبكة مثل نظام البريد. تمامًا كما يربط مكتب البريد المنازل لتسليم الرسائل، تربط الشبكة الأجهزة لتسليم البيانات."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 5,
+          "type": "text",
+          "value": {
+            "en": "Networks come in different sizes and serve different purposes. A small home network might connect just a few devices in one house. A large company network might connect thousands of devices across multiple buildings or even different cities. Understanding network types helps you choose the right solution for your needs.",
+            "ar": "تأتي الشبكات بأحجام مختلفة وتخدم أغراضًا مختلفة. قد تربط شبكة منزلية صغيرة بضعة أجهزة فقط في منزل واحد. قد تربط شبكة شركة كبيرة آلاف الأجهزة عبر مباني متعددة أو حتى مدن مختلفة. فهم أنواع الشبكات يساعدك على اختيار الحل المناسب لاحتياجاتك."
+          }
+        },
+        {
+          "id": 6,
+          "type": "title",
+          "value": {
+            "en": "Why Networks Matter in Cybersecurity",
+            "ar": "لماذا تهم الشبكات في الأمن السيبراني"
+          }
+        },
+        {
+          "id": 7,
+          "type": "text",
+          "value": {
+            "en": "Networks are the foundation of cybersecurity. When devices connect, they can share not only useful information but also security risks. A security problem on one device can spread to others through the network. Hackers often target networks to gain access to many devices at once. This is why understanding how networks work is the first step in protecting them.",
+            "ar": "الشبكات هي أساس الأمن السيبراني. عندما تتصل الأجهزة، يمكنها مشاركة المعلومات المفيدة وأيضًا المخاطر الأمنية. يمكن لمشكلة أمنية على جهاز واحد أن تنتشر إلى أجهزة أخرى عبر الشبكة. غالبًا ما يستهدف المتسللون الشبكات للوصول إلى العديد من الأجهزة في وقت واحد. لهذا السبب فإن فهم كيفية عمل الشبكات هو الخطوة الأولى في حمايتها."
+          }
+        },
+        {
+          "id": 9,
+          "type": "table",
+          "title": {
+            "en": "Network Benefits vs Security Challenges",
+            "ar": "فوائد الشبكات مقابل التحديات الأمنية"
+          },
+          "headers": {
+            "en": [
+              "Network Benefit",
+              "Security Challenge"
+            ],
+            "ar": [
+              "فائدة الشبكة",
+              "التحدي الأمني"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "Share files easily",
+                "Unauthorized access to files"
+              ],
+              "ar": [
+                "مشاركة الملفات بسهولة",
+                "الوصول غير المصرح به للملفات"
+              ]
+            },
+            {
+              "en": [
+                "Connect many devices",
+                "More entry points for attacks"
+              ],
+              "ar": [
+                "توصيل العديد من الأجهزة",
+                "المزيد من نقاط الدخول للهجمات"
+              ]
+            },
+            {
+              "en": [
+                "Access internet anywhere",
+                "Data interception possible"
+              ],
+              "ar": [
+                "الوصول إلى الإنترنت في أي مكان",
+                "اعتراض البيانات ممكن"
+              ]
+            },
+            {
+              "en": [
+                "Remote work enabled",
+                "Need to secure remote connections"
+              ],
+              "ar": [
+                "تمكين العمل عن بُعد",
+                "حاجة لتأمين الاتصالات البعيدة"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 10,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "Remember: Every device you add to a network is a potential security risk. Always use strong passwords and keep software updated.",
+            "ar": "تذكر: كل جهاز تضيفه إلى الشبكة هو خطر أمني محتمل. استخدم دائمًا كلمات مرور قوية وحافظ على تحديث البرامج."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 1771269808317.0293,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageUrl": "https://pub-cb38e65ea6bd411eb827a8641fdcc72d.r2.dev/Networking%20Basics%20Part%201/3-Summary%20image.webp"
+        }
+      ]
+    },
+    {
+      "id": "topic-2",
+      "title": {
+        "en": "Network Types and Their Uses",
+        "ar": "أنواع الشبكات واستخداماتها"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "Understanding Network Classifications",
+            "ar": "فهم تصنيفات الشبكات"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "Networks are classified by their size and geographic coverage. Each type serves different needs and has different security requirements. The four main types are PAN, LAN, MAN, and WAN. Learning these types helps you understand how data travels and where security controls are needed most.",
+            "ar": "تُصنف الشبكات حسب حجمها وتغطيتها الجغرافية. كل نوع يخدم احتياجات مختلفة وله متطلبات أمنية مختلفة. الأنواع الأربعة الرئيسية هي PAN وLAN وMAN وWAN. تعلم هذه الأنواع يساعدك على فهم كيفية انتقال البيانات وأين تكون ضوابط الأمان أكثر أهمية."
+          }
+        },
+        {
+          "id": 1771269848980.098,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageUrl": "https://pub-cb38e65ea6bd411eb827a8641fdcc72d.r2.dev/Networking%20Basics%20Part%201/4-Network%20Classifications.webp"
+        },
+        {
+          "id": 4,
+          "type": "hr"
+        },
+        {
+          "id": 5,
+          "type": "title",
+          "value": {
+            "en": "PAN - Personal Area Network",
+            "ar": "PAN - شبكة المنطقة الشخصية"
+          }
+        },
+        {
+          "id": 6,
+          "type": "text",
+          "value": {
+            "en": "A PAN connects devices within a very short range, typically around one person. Examples include connecting your phone to wireless headphones or your laptop to a wireless mouse. The range is usually just a few meters. PANs often use Bluetooth or USB connections. Security risks in PANs include unauthorized Bluetooth access and data theft from nearby attackers.",
+            "ar": "تربط شبكة PAN الأجهزة ضمن مدى قصير جدًا، عادةً حول شخص واحد. تشمل الأمثلة توصيل هاتفك بسماعات لاسلكية أو كمبيوترك المحمول بماوس لاسلكي. يكون المدى عادة بضعة أمتار فقط. غالبًا ما تستخدم شبكات PAN اتصالات البلوتوث أو USB. تشمل المخاطر الأمنية في شبكات PAN الوصول غير المصرح به عبر البلوتوث وسرقة البيانات من المهاجمين القريبين."
+          }
+        },
+        {
+          "id": 7,
+          "type": "title",
+          "value": {
+            "en": "LAN - Local Area Network",
+            "ar": "LAN - شبكة المنطقة المحلية"
+          }
+        },
+        {
+          "id": 8,
+          "type": "text",
+          "value": {
+            "en": "A LAN connects devices within a small geographic area like a home, office, or school building. LANs typically cover up to one kilometer. They use Ethernet cables or WiFi for connections. Most home and office networks are LANs. In a LAN, devices can share printers, files, and internet connections. Security in LANs is critical because one infected device can quickly spread malware to all connected devices.",
+            "ar": "تربط شبكة LAN الأجهزة ضمن منطقة جغرافية صغيرة مثل منزل أو مكتب أو مبنى مدرسة. تغطي شبكات LAN عادةً ما يصل إلى كيلومتر واحد. تستخدم كابلات إيثرنت أو WiFi للاتصالات. معظم الشبكات المنزلية والمكتبية هي شبكات LAN. في شبكة LAN، يمكن للأجهزة مشاركة الطابعات والملفات واتصالات الإنترنت. الأمان في شبكات LAN أمر بالغ الأهمية لأن جهازًا واحدًا مصابًا يمكن أن ينشر البرامج الضارة بسرعة إلى جميع الأجهزة المتصلة."
+          }
+        },
+        {
+          "id": 9,
+          "type": "title",
+          "value": {
+            "en": "MAN - Metropolitan Area Network",
+            "ar": "MAN - شبكة المنطقة الحضرية"
+          }
+        },
+        {
+          "id": 10,
+          "type": "text",
+          "value": {
+            "en": "A MAN covers a larger area than a LAN, typically spanning a city or large campus. Universities with multiple buildings often use MANs to connect all locations. Government offices across a city might also use a MAN. MANs can cover distances up to 50 kilometers. They require more complex security because they connect multiple LANs and cover public spaces where attackers might intercept signals.",
+            "ar": "تغطي شبكة MAN منطقة أكبر من LAN، وتمتد عادةً عبر مدينة أو حرم جامعي كبير. غالبًا ما تستخدم الجامعات ذات المباني المتعددة شبكات MAN لربط جميع المواقع. قد تستخدم المكاتب الحكومية عبر المدينة أيضًا شبكة MAN. يمكن لشبكات MAN تغطية مسافات تصل إلى 50 كيلومترًا. تتطلب أمانًا أكثر تعقيدًا لأنها تربط شبكات LAN متعددة وتغطي مساحات عامة حيث قد يعترض المهاجمون الإشارات."
+          }
+        },
+        {
+          "id": 11,
+          "type": "title",
+          "value": {
+            "en": "WAN - Wide Area Network",
+            "ar": "WAN - شبكة المنطقة الواسعة"
+          }
+        },
+        {
+          "id": 12,
+          "type": "text",
+          "value": {
+            "en": "A WAN connects networks across large geographic distances, even across countries or continents. The internet itself is the largest WAN in the world. Companies with offices in different cities or countries use WANs to connect their networks. WANs use technologies like satellites, fiber optic cables, and leased telephone lines. Security in WANs is extremely important because data travels through public infrastructure where many points can be attacked.",
+            "ar": "تربط شبكة WAN الشبكات عبر مسافات جغرافية كبيرة، حتى عبر البلدان أو القارات. الإنترنت نفسه هو أكبر شبكة WAN في العالم. تستخدم الشركات التي لديها مكاتب في مدن أو بلدان مختلفة شبكات WAN لربط شبكاتها. تستخدم شبكات WAN تقنيات مثل الأقمار الصناعية وكابلات الألياف البصرية وخطوط الهاتف المؤجرة. الأمان في شبكات WAN مهم للغاية لأن البيانات تنتقل عبر البنية التحتية العامة حيث يمكن مهاجمة العديد من النقاط."
+          }
+        },
+        {
+          "id": 1771269916064.193,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageUrl": "https://pub-cb38e65ea6bd411eb827a8641fdcc72d.r2.dev/Networking%20Basics%20Part%201/5-Wide%20Area%20Network.webp"
+        },
+        {
+          "id": 14,
+          "type": "table",
+          "title": {
+            "en": "Network Type Security Priorities",
+            "ar": "أولويات الأمان لأنواع الشبكات"
+          },
+          "headers": {
+            "en": [
+              "Network Type",
+              "Main Security Focus",
+              "Common Threat"
+            ],
+            "ar": [
+              "نوع الشبكة",
+              "التركيز الأمني الرئيسي",
+              "التهديد الشائع"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "PAN",
+                "Bluetooth security",
+                "Unauthorized pairing"
+              ],
+              "ar": [
+                "PAN",
+                "أمان البلوتوث",
+                "الاقتران غير المصرح به"
+              ]
+            },
+            {
+              "en": [
+                "LAN",
+                "WiFi encryption",
+                "Internal malware spread"
+              ],
+              "ar": [
+                "LAN",
+                "تشفير WiFi",
+                "انتشار البرامج الضارة الداخلية"
+              ]
+            },
+            {
+              "en": [
+                "MAN",
+                "Connection between LANs",
+                "Signal interception"
+              ],
+              "ar": [
+                "MAN",
+                "الاتصال بين شبكات LAN",
+                "اعتراض الإشارة"
+              ]
+            },
+            {
+              "en": [
+                "WAN",
+                "Data in transit",
+                "Multiple attack points"
+              ],
+              "ar": [
+                "WAN",
+                "البيانات أثناء النقل",
+                "نقاط هجوم متعددة"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 15,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Professional tip: Larger networks need stronger security. As you move from PAN to WAN, the complexity and number of security controls must increase.",
+            "ar": "نصيحة احترافية: الشبكات الأكبر تحتاج إلى أمان أقوى. عندما تنتقل من PAN إلى WAN، يجب أن تزداد التعقيد وعدد ضوابط الأمان."
+          },
+          "link": "",
+          "isLab": false
+        }
+      ]
+    },
+    {
+      "id": "topic-3",
+      "title": {
+        "en": "The OSI Model - Seven Layers Explained",
+        "ar": "نموذج OSI - شرح الطبقات السبع"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "Introduction to the OSI Model",
+            "ar": "مقدمة إلى نموذج OSI"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "The OSI Model stands for Open Systems Interconnection Model. It is a framework that explains how data travels from one computer to another across a network. The model divides this process into seven distinct layers. Each layer has a specific job and talks only to the layers directly above and below it. Understanding the OSI Model helps security professionals identify where attacks happen and how to defend each layer.",
+            "ar": "نموذج OSI يرمز إلى نموذج الربط البيني للأنظمة المفتوحة. إنه إطار عمل يشرح كيف تنتقل البيانات من كمبيوتر إلى آخر عبر الشبكة. يقسم النموذج هذه العملية إلى سبع طبقات متميزة. كل طبقة لها وظيفة محددة وتتحدث فقط مع الطبقات الموجودة مباشرة فوقها وتحتها. فهم نموذج OSI يساعد محترفي الأمن على تحديد أين تحدث الهجمات وكيفية الدفاع عن كل طبقة."
+          }
+        },
+        {
+          "id": 1771269977750.5146,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageUrl": "https://pub-cb38e65ea6bd411eb827a8641fdcc72d.r2.dev/Networking%20Basics%20Part%201/6-OSI%20Model.webp"
+        },
+        {
+          "id": 4,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Remember the OSI layers from top to bottom using this phrase: All People Seem To Need Data Processing. Each word represents one layer.",
+            "ar": "تذكر طبقات OSI من الأعلى إلى الأسفل باستخدام هذه العبارة: All People Seem To Need Data Processing. كل كلمة تمثل طبقة واحدة."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 5,
+          "type": "title",
+          "value": {
+            "en": "Layer 7 - Application Layer",
+            "ar": "الطبقة 7 - طبقة التطبيقات"
+          }
+        },
+        {
+          "id": 6,
+          "type": "text",
+          "value": {
+            "en": "The Application Layer is where users interact with the network. This layer includes the programs you use every day like web browsers, email clients, and file transfer applications. It provides network services directly to user applications. Security threats at this layer include phishing emails, malicious websites, and infected downloads. Protecting this layer means using antivirus software, being careful with email attachments, and visiting only trusted websites.",
+            "ar": "طبقة التطبيقات هي المكان الذي يتفاعل فيه المستخدمون مع الشبكة. تتضمن هذه الطبقة البرامج التي تستخدمها كل يوم مثل متصفحات الويب وعملاء البريد الإلكتروني وتطبيقات نقل الملفات. توفر خدمات الشبكة مباشرة لتطبيقات المستخدم. تشمل التهديدات الأمنية في هذه الطبقة رسائل البريد الإلكتروني الاحتيالية والمواقع الضارة والتنزيلات المصابة. حماية هذه الطبقة تعني استخدام برامج مكافحة الفيروسات، والحذر مع مرفقات البريد الإلكتروني، وزيارة المواقع الموثوقة فقط."
+          }
+        },
+        {
+          "id": 7,
+          "type": "title",
+          "value": {
+            "en": "Layer 6 - Presentation Layer",
+            "ar": "الطبقة 6 - طبقة العرض"
+          }
+        },
+        {
+          "id": 8,
+          "type": "text",
+          "value": {
+            "en": "The Presentation Layer translates data between the application and the network. It handles data formatting, encryption, and compression. For example, when you visit a secure website with HTTPS, this layer encrypts your data before sending it. It also converts images, videos, and text into formats that both sender and receiver understand. Security features like SSL and TLS encryption happen at this layer to protect data from being read by attackers.",
+            "ar": "طبقة العرض تترجم البيانات بين التطبيق والشبكة. تتعامل مع تنسيق البيانات والتشفير والضغط. على سبيل المثال، عندما تزور موقعًا آمنًا باستخدام HTTPS، تقوم هذه الطبقة بتشفير بياناتك قبل إرسالها. تقوم أيضًا بتحويل الصور ومقاطع الفيديو والنص إلى تنسيقات يفهمها كل من المرسل والمستقبل. تحدث ميزات الأمان مثل تشفير SSL و TLS في هذه الطبقة لحماية البيانات من قراءتها بواسطة المهاجمين."
+          }
+        },
+        {
+          "id": 9,
+          "type": "title",
+          "value": {
+            "en": "Layer 5 - Session Layer",
+            "ar": "الطبقة 5 - طبقة الجلسة"
+          }
+        },
+        {
+          "id": 10,
+          "type": "text",
+          "value": {
+            "en": "The Session Layer manages connections between applications. It opens, maintains, and closes communication sessions. Think of it like a phone call that must be established before you talk and ended when you finish. This layer ensures that if a connection is interrupted, it can be restored without losing data. Security issues here include session hijacking, where an attacker takes over an active session to impersonate a legitimate user.",
+            "ar": "طبقة الجلسة تدير الاتصالات بين التطبيقات. تفتح وتحافظ على وتغلق جلسات الاتصال. فكر في الأمر مثل مكالمة هاتفية يجب إنشاؤها قبل أن تتحدث وإنهاؤها عند الانتهاء. تضمن هذه الطبقة أنه في حالة انقطاع الاتصال، يمكن استعادته دون فقدان البيانات. تشمل المشكلات الأمنية هنا اختطاف الجلسة، حيث يستولي المهاجم على جلسة نشطة لانتحال شخصية مستخدم شرعي."
+          }
+        },
+        {
+          "id": 11,
+          "type": "title",
+          "value": {
+            "en": "Layer 4 - Transport Layer",
+            "ar": "الطبقة 4 - طبقة النقل"
+          }
+        },
+        {
+          "id": 12,
+          "type": "text",
+          "value": {
+            "en": "The Transport Layer ensures reliable data delivery between devices. It breaks large messages into smaller segments and makes sure all segments arrive in the correct order. The two main protocols at this layer are TCP (reliable, slower) and UDP (faster, less reliable). TCP checks if data arrived correctly and resends lost segments. Security concerns include denial of service attacks that flood this layer with too many connection requests.",
+            "ar": "طبقة النقل تضمن تسليم البيانات الموثوق بين الأجهزة. تقسم الرسائل الكبيرة إلى أجزاء أصغر وتتأكد من وصول جميع الأجزاء بالترتيب الصحيح. البروتوكولان الرئيسيان في هذه الطبقة هما TCP (موثوق، أبطأ) و UDP (أسرع، أقل موثوقية). يتحقق TCP مما إذا كانت البيانات قد وصلت بشكل صحيح ويعيد إرسال الأجزاء المفقودة. تشمل المخاوف الأمنية هجمات رفض الخدمة التي تغمر هذه الطبقة بعدد كبير جدًا من طلبات الاتصال."
+          }
+        },
+        {
+          "id": 13,
+          "type": "hr"
+        },
+        {
+          "id": 14,
+          "type": "title",
+          "value": {
+            "en": "Layer 3 - Network Layer",
+            "ar": "الطبقة 3 - طبقة الشبكة"
+          }
+        },
+        {
+          "id": 15,
+          "type": "text",
+          "value": {
+            "en": "The Network Layer handles routing and forwarding of data packets across different networks. It determines the best path for data to travel from source to destination. IP addresses work at this layer. Routers operate primarily at Layer 3, reading IP addresses to decide where to send packets next. Attacks at this layer include IP spoofing, where attackers fake their IP address to hide their identity or bypass security controls.",
+            "ar": "طبقة الشبكة تتعامل مع توجيه وإعادة توجيه حزم البيانات عبر شبكات مختلفة. تحدد أفضل مسار لانتقال البيانات من المصدر إلى الوجهة. تعمل عناوين IP في هذه الطبقة. تعمل أجهزة الراوتر بشكل أساسي في الطبقة 3، حيث تقرأ عناوين IP لتقرر أين ترسل الحزم بعد ذلك. تشمل الهجمات في هذه الطبقة انتحال IP، حيث يزيف المهاجمون عنوان IP الخاص بهم لإخفاء هويتهم أو تجاوز ضوابط الأمان."
+          }
+        },
+        {
+          "id": 16,
+          "type": "title",
+          "value": {
+            "en": "Layer 2 - Data Link Layer",
+            "ar": "الطبقة 2 - طبقة ربط البيانات"
+          }
+        },
+        {
+          "id": 17,
+          "type": "text",
+          "value": {
+            "en": "The Data Link Layer manages direct connections between devices on the same network segment. It uses MAC addresses, which are unique hardware identifiers burned into network cards. Switches work at Layer 2, using MAC addresses to forward data to the correct device. This layer also detects and sometimes corrects errors that occur in the Physical Layer. Security threats include MAC address spoofing and ARP poisoning attacks.",
+            "ar": "طبقة ربط البيانات تدير الاتصالات المباشرة بين الأجهزة على نفس جزء الشبكة. تستخدم عناوين MAC، وهي معرفات أجهزة فريدة محفورة في بطاقات الشبكة. تعمل أجهزة السويتش في الطبقة 2، باستخدام عناوين MAC لإعادة توجيه البيانات إلى الجهاز الصحيح. تكتشف هذه الطبقة وأحيانًا تصحح الأخطاء التي تحدث في الطبقة الفيزيائية. تشمل التهديدات الأمنية انتحال عنوان MAC وهجمات تسميم ARP."
+          }
+        },
+        {
+          "id": 18,
+          "type": "title",
+          "value": {
+            "en": "Layer 1 - Physical Layer",
+            "ar": "الطبقة 1 - الطبقة الفيزيائية"
+          }
+        },
+        {
+          "id": 19,
+          "type": "text",
+          "value": {
+            "en": "The Physical Layer is the actual hardware that transmits raw data bits. This includes cables, wireless signals, network cards, and electrical voltages. It converts digital data into physical signals and vice versa. Security at this layer involves physical security: protecting cables from being cut, preventing unauthorized access to network equipment, and securing wireless signals from interception. An attacker with physical access can bypass many software security controls.",
+            "ar": "الطبقة الفيزيائية هي الأجهزة الفعلية التي تنقل بتات البيانات الخام. يشمل ذلك الكابلات والإشارات اللاسلكية وبطاقات الشبكة والجهد الكهربائي. تحول البيانات الرقمية إلى إشارات فيزيائية والعكس. الأمان في هذه الطبقة يتضمن الأمن المادي: حماية الكابلات من القطع، ومنع الوصول غير المصرح به إلى معدات الشبكة، وتأمين الإشارات اللاسلكية من الاعتراض. يمكن للمهاجم الذي لديه وصول فعلي تجاوز العديد من ضوابط الأمان البرمجية."
+          }
+        },
+        {
+          "id": 1771269999296.7642,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageUrl": "https://pub-cb38e65ea6bd411eb827a8641fdcc72d.r2.dev/Networking%20Basics%20Part%201/7-OSI%20Layer%20Summary%20with%20Security%20Focus.webp"
+        },
+        {
+          "id": 21,
+          "type": "table",
+          "title": {
+            "en": "OSI Layer Summary with Security Focus",
+            "ar": "ملخص طبقات OSI مع التركيز الأمني"
+          },
+          "headers": {
+            "en": [
+              "Layer",
+              "Name",
+              "Main Function",
+              "Security Concern"
+            ],
+            "ar": [
+              "الطبقة",
+              "الاسم",
+              "الوظيفة الرئيسية",
+              "المخاوف الأمنية"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "7",
+                "Application",
+                "User programs",
+                "Malware, phishing"
+              ],
+              "ar": [
+                "7",
+                "التطبيقات",
+                "برامج المستخدم",
+                "البرامج الضارة، التصيد"
+              ]
+            },
+            {
+              "en": [
+                "6",
+                "Presentation",
+                "Data format, encryption",
+                "Weak encryption"
+              ],
+              "ar": [
+                "6",
+                "العرض",
+                "تنسيق البيانات، التشفير",
+                "تشفير ضعيف"
+              ]
+            },
+            {
+              "en": [
+                "5",
+                "Session",
+                "Connection management",
+                "Session hijacking"
+              ],
+              "ar": [
+                "5",
+                "الجلسة",
+                "إدارة الاتصال",
+                "اختطاف الجلسة"
+              ]
+            },
+            {
+              "en": [
+                "4",
+                "Transport",
+                "Reliable delivery",
+                "DoS attacks"
+              ],
+              "ar": [
+                "4",
+                "النقل",
+                "تسليم موثوق",
+                "هجمات رفض الخدمة"
+              ]
+            },
+            {
+              "en": [
+                "3",
+                "Network",
+                "Routing, IP addressing",
+                "IP spoofing"
+              ],
+              "ar": [
+                "3",
+                "الشبكة",
+                "التوجيه، عنونة IP",
+                "انتحال IP"
+              ]
+            },
+            {
+              "en": [
+                "2",
+                "Data Link",
+                "MAC addressing, switches",
+                "MAC spoofing"
+              ],
+              "ar": [
+                "2",
+                "ربط البيانات",
+                "عنونة MAC، السويتشات",
+                "انتحال MAC"
+              ]
+            },
+            {
+              "en": [
+                "1",
+                "Physical",
+                "Hardware, cables, signals",
+                "Physical tampering"
+              ],
+              "ar": [
+                "1",
+                "الفيزيائية",
+                "الأجهزة، الكابلات، الإشارات",
+                "العبث المادي"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 22,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "Common mistake: Many beginners think security is only about antivirus software at Layer 7. Real security requires protection at ALL seven layers.",
+            "ar": "خطأ شائع: يعتقد العديد من المبتدئين أن الأمان يتعلق فقط ببرامج مكافحة الفيروسات في الطبقة 7. الأمان الحقيقي يتطلب الحماية في جميع الطبقات السبع."
+          },
+          "link": "",
+          "isLab": false
+        }
+      ]
+    },
+    {
+      "id": "topic-4",
+      "title": {
+        "en": "The TCP/IP Model - Four Layers",
+        "ar": "نموذج TCP/IP - أربع طبقات"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "Understanding TCP/IP Model",
+            "ar": "فهم نموذج TCP/IP"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "The TCP/IP Model is a simpler, more practical networking model used in real-world internet communications. It has only four layers instead of seven. The model is named after its two most important protocols: TCP (Transmission Control Protocol) and IP (Internet Protocol). While the OSI Model is theoretical and used for teaching, the TCP/IP Model is what actually runs the internet and most networks today.",
+            "ar": "نموذج TCP/IP هو نموذج شبكات أبسط وأكثر عملية يُستخدم في اتصالات الإنترنت الواقعية. لديه أربع طبقات فقط بدلاً من سبع. سُمي النموذج على اسم بروتوكولاته الأكثر أهمية: TCP (بروتوكول التحكم في النقل) و IP (بروتوكول الإنترنت). بينما نموذج OSI نظري ويُستخدم للتعليم، فإن نموذج TCP/IP هو ما يشغل الإنترنت ومعظم الشبكات اليوم فعليًا."
+          }
+        },
+        {
+          "id": 1771270072718.8174,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageUrl": "https://pub-cb38e65ea6bd411eb827a8641fdcc72d.r2.dev/Networking%20Basics%20Part%201/8-TCP%20VS%20OSI%20Model.webp"
+        },
+        {
+          "id": 4,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Key difference: OSI has 7 layers and is used for teaching concepts. TCP/IP has 4 layers and is used in actual network implementations.",
+            "ar": "الفرق الرئيسي: OSI لديه 7 طبقات ويُستخدم لتعليم المفاهيم. TCP/IP لديه 4 طبقات ويُستخدم في تنفيذات الشبكات الفعلية."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 5,
+          "type": "title",
+          "value": {
+            "en": "Layer 4 - Application Layer",
+            "ar": "الطبقة 4 - طبقة التطبيقات"
+          }
+        },
+        {
+          "id": 6,
+          "type": "text",
+          "value": {
+            "en": "The Application Layer in TCP/IP combines the functions of OSI layers 7, 6, and 5. It handles everything related to user applications and their protocols. This layer includes protocols like HTTP for websites, SMTP for email, FTP for file transfer, and DNS for domain name resolution. When you type a website address, DNS at this layer converts it to an IP address. Security at this layer involves using HTTPS instead of HTTP, securing email with encryption, and protecting against application-level attacks.",
+            "ar": "طبقة التطبيقات في TCP/IP تجمع وظائف طبقات OSI 7 و6 و5. تتعامل مع كل ما يتعلق بتطبيقات المستخدم وبروتوكولاتها. تتضمن هذه الطبقة بروتوكولات مثل HTTP لمواقع الويب، وSMTP للبريد الإلكتروني، وFTP لنقل الملفات، وDNS لحل أسماء النطاقات. عندما تكتب عنوان موقع ويب، يقوم DNS في هذه الطبقة بتحويله إلى عنوان IP. يتضمن الأمان في هذه الطبقة استخدام HTTPS بدلاً من HTTP، وتأمين البريد الإلكتروني بالتشفير، والحماية من الهجمات على مستوى التطبيق."
+          }
+        },
+        {
+          "id": 7,
+          "type": "title",
+          "value": {
+            "en": "Layer 3 - Transport Layer",
+            "ar": "الطبقة 3 - طبقة النقل"
+          }
+        },
+        {
+          "id": 8,
+          "type": "text",
+          "value": {
+            "en": "The Transport Layer corresponds to OSI Layer 4 and handles end-to-end communication. The two main protocols are TCP and UDP. TCP is connection-oriented, meaning it establishes a connection before sending data and ensures all data arrives correctly. UDP is connectionless and faster but does not guarantee delivery. TCP is used for activities requiring accuracy like file downloads and web pages. UDP is used for activities where speed matters more, like video streaming and online gaming.",
+            "ar": "طبقة النقل تقابل طبقة OSI 4 وتتعامل مع الاتصال من نهاية إلى نهاية. البروتوكولان الرئيسيان هما TCP و UDP . اما ال TCP موجه بالاتصال، مما يعني أنه ينشئ اتصالاً قبل إرسال البيانات ويضمن وصول جميع البيانات بشكل صحيح. UDP غير موجه بالاتصال وأسرع لكنه لا يضمن التسليم. يُستخدم TCP للأنشطة التي تتطلب الدقة مثل تنزيلات الملفات وصفحات الويب. يُستخدم UDP للأنشطة التي تهم فيها السرعة أكثر، مثل بث الفيديو والألعاب عبر الإنترنت."
+          }
+        },
+        {
+          "id": 1771270093524.8733,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageUrl": "https://pub-cb38e65ea6bd411eb827a8641fdcc72d.r2.dev/Networking%20Basics%20Part%201/9-Transport%20Layer.webp"
+        },
+        {
+          "id": 10,
+          "type": "table",
+          "title": {
+            "en": "TCP vs UDP Comparison",
+            "ar": "مقارنة TCP مقابل UDP"
+          },
+          "headers": {
+            "en": [
+              "Feature",
+              "TCP",
+              "UDP"
+            ],
+            "ar": [
+              "الميزة",
+              "TCP",
+              "UDP"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "Connection",
+                "Connection-oriented",
+                "Connectionless"
+              ],
+              "ar": [
+                "الاتصال",
+                "موجه بالاتصال",
+                "غير موجه بالاتصال"
+              ]
+            },
+            {
+              "en": [
+                "Reliability",
+                "Guarantees delivery",
+                "No guarantee"
+              ],
+              "ar": [
+                "الموثوقية",
+                "يضمن التسليم",
+                "لا ضمان"
+              ]
+            },
+            {
+              "en": [
+                "Speed",
+                "Slower (more checks)",
+                "Faster (fewer checks)"
+              ],
+              "ar": [
+                "السرعة",
+                "أبطأ (فحوصات أكثر)",
+                "أسرع (فحوصات أقل)"
+              ]
+            },
+            {
+              "en": [
+                "Use cases",
+                "Web, email, file transfer",
+                "Video, gaming, DNS"
+              ],
+              "ar": [
+                "حالات الاستخدام",
+                "الويب، البريد، نقل الملفات",
+                "الفيديو، الألعاب، DNS"
+              ]
+            },
+            {
+              "en": [
+                "Error checking",
+                "Yes, resends lost data",
+                "No error recovery"
+              ],
+              "ar": [
+                "فحص الأخطاء",
+                "نعم، يعيد إرسال البيانات المفقودة",
+                "لا استرداد للأخطاء"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 11,
+          "type": "title",
+          "value": {
+            "en": "Layer 2 - Internet Layer",
+            "ar": "الطبقة 2 - طبقة الإنترنت"
+          }
+        },
+        {
+          "id": 12,
+          "type": "text",
+          "value": {
+            "en": "The Internet Layer corresponds to OSI Layer 3 and handles logical addressing and routing. The main protocol here is IP (Internet Protocol), which assigns unique addresses to devices. There are two versions: IPv4 uses addresses like 192.168.1.1, and IPv6 uses longer addresses to support more devices. This layer also includes ICMP for error messages and diagnostics. The ping command uses ICMP to test if a device is reachable. Security concerns include IP address spoofing and routing attacks.",
+            "ar": "طبقة الإنترنت تقابل طبقة OSI 3 وتتعامل مع العنونة المنطقية والتوجيه. البروتوكول الرئيسي هنا هو IP (بروتوكول الإنترنت)، الذي يعين عناوين فريدة للأجهزة. هناك إصداران: IPv4 يستخدم عناوين مثل 192.168.1.1، و IPv6 يستخدم عناوين أطول لدعم المزيد من الأجهزة. تتضمن هذه الطبقة أيضًا ICMP لرسائل الخطأ والتشخيص. يستخدم أمر ping بروتوكول ICMP لاختبار ما إذا كان الجهاز قابلاً للوصول. تشمل المخاوف الأمنية انتحال عنوان IP وهجمات التوجيه."
+          }
+        },
+        {
+          "id": 13,
+          "type": "terminal",
+          "label": {
+            "en": "Testing Network Connectivity with Ping",
+            "ar": "اختبار اتصال الشبكة باستخدام Ping"
+          },
+          "value": "user@system:~$ ping 8.8.8.8\nPING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.\n64 bytes from 8.8.8.8: icmp_seq=1 ttl=117 time=15.2 ms\n64 bytes from 8.8.8.8: icmp_seq=2 ttl=117 time=14.8 ms\n64 bytes from 8.8.8.8: icmp_seq=3 ttl=117 time=15.1 ms\n\n--- 8.8.8.8 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss"
+        },
+        {
+          "id": 14,
+          "type": "title",
+          "value": {
+            "en": "Layer 1 - Network Access Layer",
+            "ar": "الطبقة 1 - طبقة وصول الشبكة"
+          }
+        },
+        {
+          "id": 15,
+          "type": "text",
+          "value": {
+            "en": "The Network Access Layer combines OSI layers 1 and 2, handling both physical transmission and direct device-to-device communication on the same network. It includes protocols like Ethernet for wired networks and WiFi standards for wireless networks. This layer deals with MAC addresses, network interface cards, cables, and wireless signals. Security here involves protecting physical infrastructure, securing wireless networks with strong passwords, and using MAC address filtering when appropriate.",
+            "ar": "طبقة وصول الشبكة تجمع طبقات OSI 1 و2، حيث تتعامل مع النقل الفيزيائي والاتصال المباشر من جهاز إلى جهاز على نفس الشبكة. تتضمن بروتوكولات مثل إيثرنت للشبكات السلكية ومعايير WiFi للشبكات اللاسلكية. تتعامل هذه الطبقة مع عناوين MAC وبطاقات واجهة الشبكة والكابلات والإشارات اللاسلكية. يتضمن الأمان هنا حماية البنية التحتية المادية، وتأمين الشبكات اللاسلكية بكلمات مرور قوية، واستخدام تصفية عنوان MAC عند الاقتضاء."
+          }
+        },
+        {
+          "id": 16,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "Security tip: Always secure your WiFi with WPA3 or at minimum WPA2 encryption. Never leave your wireless network open without a password.",
+            "ar": "نصيحة أمنية: قم دائمًا بتأمين WiFi الخاص بك باستخدام تشفير WPA3 أو على الأقل WPA2. لا تترك شبكتك اللاسلكية مفتوحة بدون كلمة مرور أبدًا."
+          },
+          "link": "",
+          "isLab": false
+        }
+      ]
+    },
+    {
+      "id": "topic-5",
+      "title": {
+        "en": "Essential Network Devices",
+        "ar": "أجهزة الشبكات الأساسية"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "Network Infrastructure Components",
+            "ar": "مكونات البنية التحتية للشبكة"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "Network devices are the hardware components that connect, manage, and secure network traffic. Each device has a specific role and operates at specific OSI layers. Understanding these devices helps you design secure networks and troubleshoot problems. The main devices you will encounter are routers, switches, hubs, firewalls, and modems. Knowing when to use each device is essential for building efficient and secure networks.",
+            "ar": "أجهزة الشبكة هي مكونات الأجهزة التي تربط وتدير وتؤمن حركة مرور الشبكة. كل جهاز له دور محدد ويعمل في طبقات OSI محددة. فهم هذه الأجهزة يساعدك على تصميم شبكات آمنة واستكشاف المشاكل وإصلاحها. الأجهزة الرئيسية التي ستواجهها هي أجهزة الراوتر والسويتش والهاب وجدران الحماية والمودم. معرفة متى تستخدم كل جهاز أمر ضروري لبناء شبكات فعالة وآمنة."
+          }
+        },
+        {
+          "id": 1771270147796.654,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageUrl": "https://pub-cb38e65ea6bd411eb827a8641fdcc72d.r2.dev/Networking%20Basics%20Part%201/10-Network%20Infrastructure%20Components.webp"
+        },
+        {
+          "id": 4,
+          "type": "hr"
+        },
+        {
+          "id": 5,
+          "type": "title",
+          "value": {
+            "en": "Router - The Network Gateway",
+            "ar": "الراوتر - بوابة الشبكة"
+          }
+        },
+        {
+          "id": 6,
+          "type": "text",
+          "value": {
+            "en": "A router connects different networks together and directs traffic between them. It operates at Layer 3 (Network Layer) using IP addresses. Your home router connects your local network to the internet. Routers examine the destination IP address of each packet and determine the best path to send it. They also perform Network Address Translation (NAT), which allows multiple devices to share a single public IP address. This provides basic security by hiding internal IP addresses from the internet.",
+            "ar": "جهاز الراوتر يربط شبكات مختلفة معًا ويوجه الحركة بينها. يعمل في الطبقة 3 (طبقة الشبكة) باستخدام عناوين IP. راوتر منزلك يربط شبكتك المحلية بالإنترنت. تفحص أجهزة الراوتر عنوان IP الوجهة لكل حزمة وتحدد أفضل مسار لإرسالها. تقوم أيضًا بإجراء ترجمة عنوان الشبكة (NAT)، والتي تسمح لأجهزة متعددة بمشاركة عنوان IP عام واحد. يوفر هذا أمانًا أساسيًا من خلال إخفاء عناوين IP الداخلية عن الإنترنت."
+          }
+        },
+        {
+          "id": 7,
+          "type": "list",
+          "title": {
+            "en": "Router Security Best Practices",
+            "ar": "أفضل ممارسات أمان الراوتر"
+          },
+          "items": {
+            "en": [
+              "Change the default admin password immediately",
+              "Update router firmware regularly to patch vulnerabilities",
+              "Disable remote management unless absolutely needed",
+              "Use strong WiFi encryption (WPA3 or WPA2)",
+              "Change the default network name (SSID) to avoid advertising router model"
+            ],
+            "ar": [
+              "قم بتغيير كلمة مرور المسؤول الافتراضية على الفور",
+              "قم بتحديث البرنامج الثابت للراوتر بانتظام لإصلاح الثغرات الأمنية",
+              "قم بتعطيل الإدارة عن بُعد ما لم تكن هناك حاجة ماسة",
+              "استخدم تشفير WiFi قوي (WPA3 أو WPA2)",
+              "قم بتغيير اسم الشبكة الافتراضي (SSID) لتجنب الإعلان عن طراز الراوتر"
+            ]
+          }
+        },
+        {
+          "id": 8,
+          "type": "title",
+          "value": {
+            "en": "Switch - Intelligent Traffic Director",
+            "ar": "السويتش - موجه الحركة الذكي"
+          }
+        },
+        {
+          "id": 9,
+          "type": "text",
+          "value": {
+            "en": "A switch connects devices within the same network and forwards data between them. It operates at Layer 2 (Data Link Layer) using MAC addresses. Unlike a hub, a switch is intelligent: it learns which devices are connected to which ports and sends data only to the intended recipient. This improves both performance and security. For example, if Computer A sends data to Computer B, the switch sends it only to port B, not to all ports. Switches are essential in modern LANs.",
+            "ar": "السويتش يربط الأجهزة داخل نفس الشبكة ويعيد توجيه البيانات بينها. يعمل في الطبقة 2 (طبقة ربط البيانات) باستخدام عناوين MAC. على عكس الهاب، السويتش ذكي: يتعلم أي أجهزة متصلة بأي منافذ ويرسل البيانات فقط إلى المستلم المقصود. هذا يحسن الأداء والأمان. على سبيل المثال، إذا أرسل الكمبيوتر A بيانات إلى الكمبيوتر B، فإن السويتش يرسلها فقط إلى المنفذ B، وليس إلى جميع المنافذ. السويتشات ضرورية في شبكات LAN الحديثة."
+          }
+        },
+        {
+          "id": 10,
+          "type": "title",
+          "value": {
+            "en": "Hub - Simple but Insecure (Obsolete)",
+            "ar": "الهاب - بسيط لكن غير آمن (قديم)"
+          }
+        },
+        {
+          "id": 11,
+          "type": "text",
+          "value": {
+            "en": "A hub is an older device that connects multiple devices in a network. It operates at Layer 1 (Physical Layer) and is very simple: when it receives data, it broadcasts it to ALL connected devices, not just the intended recipient. This creates security risks because every device can see all network traffic. Hubs also cause network congestion and collisions. Modern networks have replaced hubs with switches. You should never use a hub in a security-conscious environment.",
+            "ar": "الهاب هو جهاز قديم يربط أجهزة متعددة في الشبكة. يعمل في الطبقة 1 (الطبقة الفيزيائية) وهو بسيط جدًا: عندما يستقبل بيانات، يبثها إلى جميع الأجهزة المتصلة، وليس فقط المستلم المقصود. هذا يخلق مخاطر أمنية لأن كل جهاز يمكنه رؤية جميع حركة مرور الشبكة. تسبب الهابات أيضًا ازدحامًا في الشبكة وتصادمات. استبدلت الشبكات الحديثة الهابات بالسويتشات. يجب ألا تستخدم هاب أبدًا في بيئة واعية بالأمان."
+          }
+        },
+        {
+          "id": 1771270167634.8337,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageUrl": "https://pub-cb38e65ea6bd411eb827a8641fdcc72d.r2.dev/Networking%20Basics%20Part%201/11-Hub%20-%20Simple%20but%20Insecure.webp"
+        },
+        {
+          "id": 13,
+          "type": "hr"
+        },
+        {
+          "id": 14,
+          "type": "title",
+          "value": {
+            "en": "Firewall - The Security Guard",
+            "ar": "جدار الحماية - حارس الأمن"
+          }
+        },
+        {
+          "id": 15,
+          "type": "text",
+          "value": {
+            "en": "A firewall is a security device that monitors and controls network traffic based on security rules. It acts as a barrier between your trusted internal network and untrusted external networks like the internet. Firewalls can be hardware devices or software programs. They inspect incoming and outgoing traffic and block anything that does not match the security policy. For example, a firewall can block unauthorized access attempts, malware downloads, and data leaks. Modern firewalls also detect and prevent advanced attacks.",
+            "ar": "جدار الحماية هو جهاز أمني يراقب ويتحكم في حركة مرور الشبكة بناءً على قواعد الأمان. يعمل كحاجز بين شبكتك الداخلية الموثوقة والشبكات الخارجية غير الموثوقة مثل الإنترنت. يمكن أن تكون جدران الحماية أجهزة أجهزة أو برامج برمجية. تفحص حركة المرور الواردة والصادرة وتحظر أي شيء لا يتطابق مع سياسة الأمان. على سبيل المثال، يمكن لجدار الحماية حظر محاولات الوصول غير المصرح بها، وتنزيلات البرامج الضارة، وتسريبات البيانات. تكتشف جدران الحماية الحديثة أيضًا وتمنع الهجمات المتقدمة."
+          }
+        },
+        {
+          "id": 16,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Think of a firewall like a security guard at a building entrance. The guard checks everyone entering and leaving, allows authorized people, and blocks suspicious individuals.",
+            "ar": "فكر في جدار الحماية مثل حارس أمن عند مدخل المبنى. يفحص الحارس كل من يدخل ويخرج، ويسمح للأشخاص المصرح لهم، ويحظر الأفراد المشبوهين."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 17,
+          "type": "title",
+          "value": {
+            "en": "Modem - Internet Connection Device",
+            "ar": "المودم - جهاز اتصال الإنترنت"
+          }
+        },
+        {
+          "id": 18,
+          "type": "text",
+          "value": {
+            "en": "A modem (modulator-demodulator) converts digital signals from your network into analog signals for transmission over telephone or cable lines, and vice versa. It is your physical connection to your Internet Service Provider (ISP). The modem receives internet signals from outside and converts them so your devices can use them. Many home users have a combined modem-router device. While modems themselves do not provide security, they are the entry point for internet traffic, making them an important consideration in network security.",
+            "ar": "المودم (المعدل ومزيل التعديل) يحول الإشارات الرقمية من شبكتك إلى إشارات تناظرية للنقل عبر خطوط الهاتف أو الكابل، والعكس. إنه اتصالك المادي بمزود خدمة الإنترنت (ISP). يستقبل المودم إشارات الإنترنت من الخارج ويحولها حتى تتمكن أجهزتك من استخدامها. لدى العديد من المستخدمين المنزليين جهاز مودم-راوتر مدمج. بينما لا توفر المودمات نفسها أمانًا، فهي نقطة الدخول لحركة مرور الإنترنت، مما يجعلها اعتبارًا مهمًا في أمان الشبكة."
+          }
+        },
+        {
+          "id": 19,
+          "type": "table",
+          "title": {
+            "en": "Network Devices Comparison",
+            "ar": "مقارنة أجهزة الشبكة"
+          },
+          "headers": {
+            "en": [
+              "Device",
+              "OSI Layer",
+              "Main Function",
+              "Security Role"
+            ],
+            "ar": [
+              "الجهاز",
+              "طبقة OSI",
+              "الوظيفة الرئيسية",
+              "الدور الأمني"
+            ]
+          },
+          "rows": [
+            {
+              "en": [
+                "Router",
+                "Layer 3",
+                "Connect different networks",
+                "NAT, routing rules"
+              ],
+              "ar": [
+                "الراوتر",
+                "الطبقة 3",
+                "ربط شبكات مختلفة",
+                "NAT، قواعد التوجيه"
+              ]
+            },
+            {
+              "en": [
+                "Switch",
+                "Layer 2",
+                "Connect devices in same network",
+                "Isolates traffic"
+              ],
+              "ar": [
+                "السويتش",
+                "الطبقة 2",
+                "ربط أجهزة في نفس الشبكة",
+                "يعزل الحركة"
+              ]
+            },
+            {
+              "en": [
+                "Hub",
+                "Layer 1",
+                "Connect devices (obsolete)",
+                "No security (broadcasts all)"
+              ],
+              "ar": [
+                "الهاب",
+                "الطبقة 1",
+                "ربط أجهزة (قديم)",
+                "لا أمان (يبث الكل)"
+              ]
+            },
+            {
+              "en": [
+                "Firewall",
+                "Multiple Layers",
+                "Filter traffic by rules",
+                "Primary security device"
+              ],
+              "ar": [
+                "جدار الحماية",
+                "طبقات متعددة",
+                "تصفية الحركة حسب القواعد",
+                "جهاز الأمان الأساسي"
+              ]
+            },
+            {
+              "en": [
+                "Modem",
+                "Layer 1",
+                "Convert signals for ISP",
+                "Entry point (secure it)"
+              ],
+              "ar": [
+                "المودم",
+                "الطبقة 1",
+                "تحويل الإشارات لمزود الخدمة",
+                "نقطة دخول (قم بتأمينها)"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 20,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "Critical mistake: Many people never change default passwords on routers and modems. This is one of the easiest ways for attackers to break into your network. Always change defaults immediately.",
+            "ar": "خطأ حرج: لا يغير العديد من الأشخاص كلمات المرور الافتراضية على أجهزة الراوتر والمودم أبدًا. هذه واحدة من أسهل الطرق للمهاجمين للاختراق إلى شبكتك. قم دائمًا بتغيير الإعدادات الافتراضية على الفور."
+          },
+          "link": "",
+          "isLab": false
+        }
+      ]
+    },
+    {
+      "id": "topic-6",
+      "title": {
+        "en": "Practical Network Security Basics",
+        "ar": "أساسيات الأمان العملي للشبكات"
+      },
+      "elements": [
+        {
+          "id": 1,
+          "type": "title",
+          "value": {
+            "en": "Applying What You Learned",
+            "ar": "تطبيق ما تعلمته"
+          }
+        },
+        {
+          "id": 2,
+          "type": "text",
+          "value": {
+            "en": "Now that you understand network types, models, and devices, it is time to apply this knowledge to protect real networks. Network security is not just about technology; it also involves following best practices and maintaining good habits. Even the most expensive security devices cannot protect a network if users make careless mistakes. This topic covers practical steps you can take immediately to improve network security.",
+            "ar": "الآن بعد أن فهمت أنواع الشبكات والنماذج والأجهزة، حان الوقت لتطبيق هذه المعرفة لحماية الشبكات الحقيقية. أمان الشبكات لا يتعلق فقط بالتكنولوجيا؛ يتضمن أيضًا اتباع أفضل الممارسات والحفاظ على عادات جيدة. حتى أغلى أجهزة الأمان لا يمكنها حماية شبكة إذا ارتكب المستخدمون أخطاء إهمال. يغطي هذا الموضوع الخطوات العملية التي يمكنك اتخاذها على الفور لتحسين أمان الشبكة."
+          }
+        },
+        {
+          "id": 4,
+          "type": "title",
+          "value": {
+            "en": "Securing Your Home Network",
+            "ar": "تأمين شبكتك المنزلية"
+          }
+        },
+        {
+          "id": 5,
+          "type": "orderedList",
+          "title": {
+            "en": "Essential Home Network Security Steps",
+            "ar": "خطوات أمان الشبكة المنزلية الأساسية"
+          },
+          "items": [
+            {
+              "subtitle": {
+                "en": "Change Default Credentials",
+                "ar": "تغيير بيانات الاعتماد الافتراضية"
+              },
+              "text": {
+                "en": "Replace the default username and password on your router immediately. Default credentials are publicly available online, making your network an easy target. Use a strong, unique password with uppercase, lowercase, numbers, and symbols.",
+                "ar": "استبدل اسم المستخدم وكلمة المرور الافتراضيين على راوترك على الفور. بيانات الاعتماد الافتراضية متاحة للجمهور عبر الإنترنت، مما يجعل شبكتك هدفًا سهلاً. استخدم كلمة مرور قوية وفريدة مع أحرف كبيرة وصغيرة وأرقام ورموز."
+              },
+              "example": {
+                "en": "Example: Instead of 'admin/admin', use a password like 'Hm$Network2024!'",
+                "ar": "مثال: بدلاً من 'admin/admin'، استخدم كلمة مرور مثل 'Hm$Network2024!'"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Enable WPA3 or WPA2 Encryption",
+                "ar": "تفعيل تشفير WPA3 أو WPA2"
+              },
+              "text": {
+                "en": "Configure your WiFi to use the strongest available encryption. WPA3 is the newest and most secure. If your router does not support WPA3, use WPA2. Never use WEP or leave your network open without encryption.",
+                "ar": "قم بتكوين WiFi الخاص بك لاستخدام أقوى تشفير متاح. WPA3 هو الأحدث والأكثر أمانًا. إذا كان راوترك لا يدعم WPA3، استخدم WPA2. لا تستخدم WEP أبدًا أو تترك شبكتك مفتوحة بدون تشفير."
+              },
+              "example": {
+                "en": "Example: In router settings, select 'Security Mode: WPA3-Personal' or 'WPA2-Personal (AES)'",
+                "ar": "مثال: في إعدادات الراوتر، اختر 'وضع الأمان: WPA3-Personal' أو 'WPA2-Personal (AES)'"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Update Firmware Regularly",
+                "ar": "تحديث البرنامج الثابت بانتظام"
+              },
+              "text": {
+                "en": "Check for router firmware updates monthly. Manufacturers release updates to fix security vulnerabilities. Enable automatic updates if your router supports this feature. Outdated firmware is a common entry point for attackers.",
+                "ar": "تحقق من تحديثات البرنامج الثابت للراوتر شهريًا. يصدر المصنعون تحديثات لإصلاح الثغرات الأمنية. قم بتفعيل التحديثات التلقائية إذا كان راوترك يدعم هذه الميزة. البرامج الثابتة القديمة هي نقطة دخول شائعة للمهاجمين."
+              },
+              "example": {
+                "en": "Example: Log into router admin panel monthly and check 'Firmware Update' section",
+                "ar": "مثال: سجل الدخول إلى لوحة إدارة الراوتر شهريًا وتحقق من قسم 'تحديث البرنامج الثابت'"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Disable WPS",
+                "ar": "تعطيل WPS"
+              },
+              "text": {
+                "en": "WiFi Protected Setup (WPS) was designed for easy connection but has serious security flaws. Attackers can exploit WPS to break into networks within hours. Turn off WPS in your router settings unless you have a specific need for it.",
+                "ar": "تم تصميم إعداد WiFi المحمي (WPS) للاتصال السهل لكن لديه عيوب أمنية خطيرة. يمكن للمهاجمين استغلال WPS للاختراق إلى الشبكات في غضون ساعات. قم بإيقاف تشغيل WPS في إعدادات الراوتر ما لم يكن لديك حاجة محددة له."
+              },
+              "example": {
+                "en": "Example: In router settings under 'Wireless', find 'WPS' and set to 'Disabled'",
+                "ar": "مثال: في إعدادات الراوتر تحت 'اللاسلكي'، ابحث عن 'WPS' واضبطه على 'معطل'"
+              }
+            },
+            {
+              "subtitle": {
+                "en": "Change Default SSID",
+                "ar": "تغيير SSID الافتراضي"
+              },
+              "text": {
+                "en": "The SSID is your network name that appears when people search for WiFi. Change it from the default to something that does not reveal your router model or personal information. Avoid using your name, address, or other identifying details.",
+                "ar": "SSID هو اسم شبكتك الذي يظهر عندما يبحث الناس عن WiFi. قم بتغييره من الافتراضي إلى شيء لا يكشف عن طراز راوترك أو معلومات شخصية. تجنب استخدام اسمك أو عنوانك أو تفاصيل تعريف أخرى."
+              },
+              "example": {
+                "en": "Example: Instead of 'Linksys_5GHz' or 'JohnSmith_WiFi', use a neutral name like 'Home_Network'",
+                "ar": "مثال: بدلاً من 'Linksys_5GHz' أو 'JohnSmith_WiFi'، استخدم اسمًا محايدًا مثل 'Home_Network'"
+              }
+            }
+          ]
+        },
+        {
+          "id": 6,
+          "type": "hr"
+        },
+        {
+          "id": 7,
+          "type": "title",
+          "value": {
+            "en": "Network Segmentation for Better Security",
+            "ar": "تقسيم الشبكة لأمان أفضل"
+          }
+        },
+        {
+          "id": 8,
+          "type": "text",
+          "value": {
+            "en": "Network segmentation means dividing your network into separate zones with different security levels. This limits damage if one part is compromised. For example, create a guest network for visitors separate from your main network. Put smart home devices (IoT devices like cameras and smart speakers) on a separate network segment. If an IoT device gets hacked, the attacker cannot reach your computers and personal files. Modern routers make this easy with guest network features.",
+            "ar": "تقسيم الشبكة يعني تقسيم شبكتك إلى مناطق منفصلة بمستويات أمان مختلفة. هذا يحد من الضرر إذا تم اختراق جزء واحد. على سبيل المثال، أنشئ شبكة ضيوف للزوار منفصلة عن شبكتك الرئيسية. ضع أجهزة المنزل الذكية (أجهزة IoT مثل الكاميرات ومكبرات الصوت الذكية) على جزء شبكة منفصل. إذا تم اختراق جهاز IoT، لا يمكن للمهاجم الوصول إلى حواسيبك وملفاتك الشخصية. تجعل أجهزة الراوتر الحديثة هذا سهلاً مع ميزات شبكة الضيوف."
+          }
+        },
+        {
+          "id": 1771270541596.3188,
+          "type": "image",
+          "srcKey": "",
+          "size": "medium",
+          "imageUrl": "https://pub-cb38e65ea6bd411eb827a8641fdcc72d.r2.dev/Networking%20Basics%20Part%201/12-Network%20Segmentation.webp"
+        },
+        {
+          "id": 10,
+          "type": "title",
+          "value": {
+            "en": "Monitoring Your Network",
+            "ar": "مراقبة شبكتك"
+          }
+        },
+        {
+          "id": 11,
+          "type": "text",
+          "value": {
+            "en": "Regular monitoring helps you detect problems early. Check which devices are connected to your network weekly. If you see unknown devices, investigate immediately and change your WiFi password. Many routers have mobile apps that show connected devices and send alerts for new connections. Enable logging in your router to track security events. Review logs monthly for suspicious activity like repeated failed login attempts or unusual traffic patterns.",
+            "ar": "المراقبة المنتظمة تساعدك على اكتشاف المشاكل مبكرًا. تحقق من الأجهزة المتصلة بشبكتك أسبوعيًا. إذا رأيت أجهزة غير معروفة، حقق على الفور وقم بتغيير كلمة مرور WiFi الخاصة بك. لدى العديد من أجهزة الراوتر تطبيقات محمولة تعرض الأجهزة المتصلة وترسل تنبيهات للاتصالات الجديدة. قم بتفعيل التسجيل في راوترك لتتبع أحداث الأمان. راجع السجلات شهريًا للنشاط المشبوه مثل محاولات تسجيل الدخول الفاشلة المتكررة أو أنماط الحركة غير العادية."
+          }
+        },
+        {
+          "id": 12,
+          "type": "note",
+          "noteType": "info",
+          "value": {
+            "en": "Professional tip: Create a list of all devices that should be on your network. Review this list when checking connected devices to quickly spot unauthorized access.",
+            "ar": "نصيحة احترافية: أنشئ قائمة بجميع الأجهزة التي يجب أن تكون على شبكتك. راجع هذه القائمة عند فحص الأجهزة المتصلة لاكتشاف الوصول غير المصرح به بسرعة."
+          },
+          "link": "",
+          "isLab": false
+        },
+        {
+          "id": 13,
+          "type": "title",
+          "value": {
+            "en": "What to Do When Security Issues Occur",
+            "ar": "ما يجب فعله عند حدوث مشاكل أمنية"
+          }
+        },
+        {
+          "id": 14,
+          "type": "list",
+          "title": {
+            "en": "Incident Response Steps",
+            "ar": "خطوات الاستجابة للحوادث"
+          },
+          "items": {
+            "en": [
+              "Disconnect the compromised device from the network immediately to prevent spread",
+              "Change all network passwords including router admin, WiFi, and device passwords",
+              "Run antivirus scans on all devices to detect malware",
+              "Check router logs to identify how the breach occurred",
+              "Update firmware on all network devices to patch vulnerabilities",
+              "Monitor network traffic closely for the next few weeks for suspicious activity"
+            ],
+            "ar": [
+              "افصل الجهاز المخترق من الشبكة فورًا لمنع الانتشار",
+              "قم بتغيير جميع كلمات مرور الشبكة بما في ذلك مسؤول الراوتر وWiFi وكلمات مرور الأجهزة",
+              "قم بإجراء فحوصات مكافحة الفيروسات على جميع الأجهزة لاكتشاف البرامج الضارة",
+              "تحقق من سجلات الراوتر لتحديد كيف حدث الاختراق",
+              "قم بتحديث البرنامج الثابت على جميع أجهزة الشبكة لإصلاح الثغرات",
+              "راقب حركة مرور الشبكة عن كثب للأسابيع القليلة القادمة للنشاط المشبوه"
+            ]
+          }
+        },
+        {
+          "id": 15,
+          "type": "note",
+          "noteType": "warning",
+          "value": {
+            "en": "Warning: If you discover a serious breach involving financial information or sensitive personal data, report it to your bank and consider filing a police report.",
+            "ar": "تحذير: إذا اكتشفت خرقًا خطيرًا يتضمن معلومات مالية أو بيانات شخصية حساسة، أبلغ مصرفك وفكر في تقديم بلاغ للشرطة."
+          },
+          "link": "",
+          "isLab": false
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "createdAt": "2026-02-16T20:14:46.940Z",
+    "totalTopics": 6,
+    "totalElements": 97
+  }
+}
