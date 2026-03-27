@@ -21,10 +21,10 @@ export async function seedCourses(prisma: PrismaClient) {
   if (!instructor) throw new Error('❌ No user found — seed users first.');
 
   const instructorId = SYSTEM_INSTRUCTOR_ID;
-  const baseDir     = join(process.cwd(), 'prisma/seed-data/course-data');
+  const baseDir = join(process.cwd(), 'prisma/seed-data/course-data');
 
-  let seeded     = 0;
-  let skipped    = 0;
+  let seeded = 0;
+  let skipped = 0;
   let comingSoon = 0;
 
   for (const meta of COURSES_META) {
@@ -33,13 +33,13 @@ export async function seedCourses(prisma: PrismaClient) {
     if (meta.isComingSoon) {
       try {
         await prisma.course.upsert({
-          where:  { slug: meta.slug },
+          where: { slug: meta.slug },
           update: {
-            color:          meta.color          as any,
-            difficulty:     meta.difficulty      as any,
-            access:         meta.access          as any,
-            contentType:    meta.contentType     as any,
-            category:       meta.category        as any,
+            color:          meta.color       as any,
+            difficulty:     meta.difficulty  as any,
+            access:         meta.access      as any,
+            contentType:    meta.contentType as any,
+            category:       meta.category    as any,
             estimatedHours: meta.estimatedHours,
             isPublished:    false,
             isNew:          meta.isNew      ?? false,
@@ -50,15 +50,15 @@ export async function seedCourses(prisma: PrismaClient) {
           },
           create: {
             slug:           meta.slug,
-            title:          meta.slug.replace(/-/g, ' '),   // placeholder title
-            color:          meta.color          as any,
-            difficulty:     meta.difficulty      as any,
-            access:         meta.access          as any,
-            contentType:    meta.contentType     as any,
-            category:       meta.category        as any,
+            title:          meta.slug.replace(/-/g, ' '),
+            color:          meta.color       as any,
+            difficulty:     meta.difficulty  as any,
+            access:         meta.access      as any,
+            contentType:    meta.contentType as any,
+            category:       meta.category    as any,
             estimatedHours: meta.estimatedHours,
             duration:       meta.estimatedHours * 60,
-            state:          'DRAFT'             as any,
+            state:          'DRAFT'          as any,
             isPublished:    false,
             isNew:          meta.isNew      ?? false,
             isFeatured:     meta.isFeatured ?? false,
@@ -105,19 +105,15 @@ export async function seedCourses(prisma: PrismaClient) {
     const descEn: string | undefined =
       typeof ld.description === 'object' ? ld.description?.en : ld.description;
     const descAr: string | undefined =
-      typeof ld.description === 'object'
-        ? ld.description?.ar
-        : ld.ar_description;
+      typeof ld.description === 'object' ? ld.description?.ar : ld.ar_description;
 
     const topicsArr: any[] = raw.topics ?? [];
-    const totalTopics      = topicsArr.length;
+    const totalTopics = topicsArr.length;
 
     const topicsList: string[] =
       meta.topics ??
       topicsArr
-        .map((t: any) =>
-          (typeof t.title === 'object' ? t.title?.en : t.title) ?? '',
-        )
+        .map((t: any) => (typeof t.title === 'object' ? t.title?.en : t.title) ?? '')
         .filter(Boolean);
 
     const ar_topicsList: string[] =
@@ -131,14 +127,14 @@ export async function seedCourses(prisma: PrismaClient) {
       ar_title:       titleAr,
       description:    descEn,
       ar_description: descAr,
-      color:          meta.color          as any,
-      difficulty:     meta.difficulty      as any,
-      access:         meta.access          as any,
-      contentType:    meta.contentType     as any,
-      category:       meta.category        as any,
+      color:          meta.color       as any,
+      difficulty:     meta.difficulty  as any,
+      access:         meta.access      as any,
+      contentType:    meta.contentType as any,
+      category:       meta.category    as any,
       estimatedHours: meta.estimatedHours,
       duration:       meta.estimatedHours * 60,
-      state:          'PUBLISHED'          as any,
+      state:          'PUBLISHED'      as any,
       isPublished:    true,
       isNew:          meta.isNew      ?? false,
       isFeatured:     meta.isFeatured ?? false,
@@ -182,14 +178,13 @@ export async function seedCourses(prisma: PrismaClient) {
   );
 }
 
-// ───────────────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
 async function linkCourseToLabs(
   prisma:   PrismaClient,
   courseId: string,
   labSlugs: string[],
 ) {
   await (prisma as any).courseLab.deleteMany({ where: { courseId } });
-
   for (let i = 0; i < labSlugs.length; i++) {
     const lab = await prisma.lab.findUnique({
       where:  { slug: labSlugs[i] },
@@ -207,7 +202,7 @@ async function linkCourseToLabs(
   }
 }
 
-// ───────────────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
 async function seedCourseSections(
   prisma:   PrismaClient,
   courseId: string,
@@ -255,8 +250,25 @@ async function seedCourseSections(
 
     const elements: any[] = topic.elements ?? topic.lessons ?? [];
 
+    // ── Sentinel lesson (order=0): stores full elements JSON ────────────────
+    // getCurriculum reads this to restore all rich content (text, video, etc.)
+    await prisma.lesson.create({
+      data: {
+        courseId,
+        sectionId: section.id,
+        moduleId:  mod.id,
+        title:     sTitle,
+        ar_title:  sTitleAr,
+        order:     0,
+        type:      'ARTICLE',
+        duration:  0,
+        content:   JSON.stringify(elements),
+      },
+    });
+
+    // ── Individual lesson rows per element (for progress tracking) ──────────
     for (let eIdx = 0; eIdx < elements.length; eIdx++) {
-      const el          = elements[eIdx];
+      const el = elements[eIdx];
       const lessonOrder = safeNumber(el.order, eIdx + 1);
 
       const lTitle =
