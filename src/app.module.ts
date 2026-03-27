@@ -32,6 +32,7 @@ import { PathsModule } from './modules/paths/paths.module';
 import { BadgesModule } from './modules/badges/badges.module';
 import { CertificatesModule } from './modules/certificates/certificates.module';
 import { TrackingModule } from './modules/tracking/tracking.module';
+import { SearchModule } from './modules/search';
 
 // Admin Module
 import { AdminModule } from './modules/admin';
@@ -57,28 +58,25 @@ import { MailModule } from './core/mail';
       },
     }),
 
-    // ── Global Rate Limiter ────────────────────────────────────────────
-    // Default: 100 req / 60s  (overridden per-endpoint with @Throttle)
-    // Lab submit endpoint overrides to: 5 req / 60s
     ThrottlerModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ([
         {
           name: 'default',
-          ttl: (config.get<number>('rateLimit.ttl') ?? 60) * 1000, // ms
+          ttl: (config.get<number>('rateLimit.ttl') ?? 60) * 1000,
           limit: config.get<number>('rateLimit.limit') ?? 100,
         },
       ]),
     }),
 
-    // Core Modules
+    // Core
     DatabaseModule,
     LoggerModule,
     SecurityModule,
     MailModule,
     StorageModule,
 
-    // Feature Modules
+    // Features
     AuthModule,
     UsersModule,
     EnrollmentsModule,
@@ -92,12 +90,13 @@ import { MailModule } from './core/mail';
     CoursesModule,
     PricingModule,
     PathsModule,
+    SearchModule,
 
     // Gamification
     BadgesModule,
     CertificatesModule,
 
-    // Tracking & Referral
+    // Tracking
     TrackingModule,
 
     // Admin
@@ -106,16 +105,8 @@ import { MailModule } from './core/mail';
   controllers: [AppController],
   providers: [
     AppService,
-    // JWT guard — applied globally (ThrottlerGuard is also applied globally below)
-    {
-      provide: APP_GUARD,
-      useClass: JwtAuthGuard,
-    },
-    // ✔ Global throttler guard — enforces rate limits on all endpoints
-    {
-      provide: APP_GUARD,
-      useClass: ThrottlerGuard,
-    },
+    { provide: APP_GUARD, useClass: JwtAuthGuard },
+    { provide: APP_GUARD, useClass: ThrottlerGuard },
   ],
 })
 export class AppModule {}
