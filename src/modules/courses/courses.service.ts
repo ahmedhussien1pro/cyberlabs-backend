@@ -43,7 +43,7 @@ export class CoursesService {
             order: true,
             lessons: {
               orderBy: { order: 'asc' as const },
-              where: { order: { gt: 0 } }, // skip sentinel lessons (order=0)
+              // include ALL lessons: order=0 (sentinel with full JSON) + order>0 (video rows)
               select: {
                 id: true,
                 title: true,
@@ -64,16 +64,25 @@ export class CoursesService {
     const topics = ((dbCourse?.sections ?? []) as any[]).map((sec: any) => {
       const lessons: any[] = sec.lessons ?? [];
 
-      const elements = lessons.map((l: any) => ({
-        id: l.id,
-        type:
-          (l.type ?? 'ARTICLE').toLowerCase() === 'video' ? 'video' : 'text',
-        url: l.videoUrl ?? undefined,
-        value: l.videoUrl ? undefined : { en: l.content ?? '', ar: '' },
-        title: { en: l.title ?? '', ar: l.ar_title ?? '' },
-        duration: l.duration ?? 0,
-        isPreview: l.isPreview ?? false,
-      }));
+      // sentinel lesson (order=0) holds full elements JSON from saveCurriculum
+      const sentinel = lessons.find((l: any) => l.order === 0);
+      let elements: any[];
+
+      if (sentinel?.content) {
+        try {
+          const parsed = JSON.parse(sentinel.content);
+          if (Array.isArray(parsed)) {
+            elements = parsed;
+          } else {
+            elements = buildElementsFromLessons(lessons.filter((l: any) => l.order !== 0));
+          }
+        } catch {
+          elements = buildElementsFromLessons(lessons.filter((l: any) => l.order !== 0));
+        }
+      } else {
+        // no sentinel — seeded courses: build elements from regular lessons
+        elements = buildElementsFromLessons(lessons.filter((l: any) => l.order !== 0));
+      }
 
       return {
         id: sec.id,
@@ -232,7 +241,6 @@ export class CoursesService {
             order: true,
             lessons: {
               orderBy: { order: 'asc' as const },
-              where: { order: { gt: 0 } },
               select: {
                 id: true,
                 title: true,
@@ -250,20 +258,30 @@ export class CoursesService {
       },
     });
 
-    const topics = ((dbCourse?.sections ?? []) as any[]).map((sec: any) => ({
-      id: sec.id,
-      title: { en: sec.title ?? '', ar: sec.ar_title ?? '' },
-      elements: (sec.lessons ?? []).map((l: any) => ({
-        id: l.id,
-        type:
-          (l.type ?? 'ARTICLE').toLowerCase() === 'video' ? 'video' : 'text',
-        url: l.videoUrl ?? undefined,
-        value: l.videoUrl ? undefined : { en: l.content ?? '', ar: '' },
-        title: { en: l.title ?? '', ar: l.ar_title ?? '' },
-        duration: l.duration ?? 0,
-        isPreview: l.isPreview ?? false,
-      })),
-    }));
+    const topics = ((dbCourse?.sections ?? []) as any[]).map((sec: any) => {
+      const lessons: any[] = sec.lessons ?? [];
+      const sentinel = lessons.find((l: any) => l.order === 0);
+      let elements: any[];
+
+      if (sentinel?.content) {
+        try {
+          const parsed = JSON.parse(sentinel.content);
+          elements = Array.isArray(parsed)
+            ? parsed
+            : buildElementsFromLessons(lessons.filter((l: any) => l.order !== 0));
+        } catch {
+          elements = buildElementsFromLessons(lessons.filter((l: any) => l.order !== 0));
+        }
+      } else {
+        elements = buildElementsFromLessons(lessons.filter((l: any) => l.order !== 0));
+      }
+
+      return {
+        id: sec.id,
+        title: { en: sec.title ?? '', ar: sec.ar_title ?? '' },
+        elements,
+      };
+    });
 
     return {
       courseId: course.id,
@@ -541,4 +559,19 @@ export class CoursesService {
 
     return { courseId: course.id, labs };
   }
+}
+
+// ── Helpers ──────────────────────────────────────────────────────────
+
+/** Build elements array from individual DB lessons (fallback for seeded courses) */
+function buildElementsFromLessons(lessons: any[]): any[] {
+  return lessons.map((l: any) => ({
+    id: l.id,
+    type: (l.type ?? 'ARTICLE').toLowerCase() === 'video' ? 'video' : 'text',
+    url: l.videoUrl ?? undefined,
+    value: l.videoUrl ? undefined : { en: l.content ?? '', ar: '' },
+    title: { en: l.title ?? '', ar: l.ar_title ?? '' },
+    duration: l.duration ?? 0,
+    isPreview: l.isPreview ?? false,
+  }));
 }
