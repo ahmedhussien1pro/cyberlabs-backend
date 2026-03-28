@@ -21,6 +21,17 @@ const hashToken = (token: string): string =>
 
 const REFRESH_TTL_MS = 7 * 24 * 60 * 60 * 1000;
 
+/** Fields returned to the frontend for every auth response */
+const USER_SELECT = {
+  id: true,
+  email: true,
+  name: true,
+  avatarUrl: true,
+  role: true,
+  isEmailVerified: true,
+  isActive: true,
+} as const;
+
 @Injectable()
 export class AuthService {
   private readonly accessExpirySeconds: number;
@@ -35,7 +46,6 @@ export class AuthService {
     private readonly notifications: NotificationsService,
   ) {
     this.logger.setContext('AuthService');
-    // ✅ يقرأ 'jwt.accessExpiry' — الاسم الموحد بعد تصحيح configuration.ts
     const raw = this.configService.get<string>('jwt.accessExpiry') ?? '15m';
     this.accessExpirySeconds = this.parseExpiryToSeconds(raw);
   }
@@ -189,10 +199,7 @@ export class AuthService {
 
   async refreshToken(token: string, meta?: { ip?: string; userAgent?: string }) {
     try {
-      // 1) تحقق من الـ JWT signature
       const payload = this.jwtService.verifyRefreshToken(token);
-
-      // 2) تحقق من DB — الـ refreshToken لازم يكون موجود وغير مبطل
       const stored = await this.validateRefreshTokenInDb(payload.sub, token);
 
       const user = await this.prisma.user.findUnique({
@@ -203,10 +210,8 @@ export class AuthService {
       if (!user) throw new UnauthorizedException('User not found');
       if (!user.isActive) throw new UnauthorizedException('Account is deactivated');
 
-      // 3) ابطل الـ token القديم (token rotation)
       await this.revokeRefreshToken(stored.id);
 
-      // 4) أنشئ tokens جديدة واحفظ الـ refreshToken الجديد في DB
       const newAccessToken = this.jwtService.generateAccessToken(user.id, user.email, user.role as UserRole);
       const newRefreshToken = this.jwtService.generateRefreshToken(user.id);
       await this.saveRefreshToken(user.id, newRefreshToken, meta);
@@ -225,13 +230,10 @@ export class AuthService {
   }
 
   async oauthLogin(profile: OAuthProfile, meta?: { ip?: string; userAgent?: string }) {
-    let oauthAccount = await this.prisma.oAuthAccount.findUnique({
+    // ── Case 1: OAuth account already linked → return platform data directly ──
+    const oauthAccount = await this.prisma.oAuthAccount.findUnique({
       where: { provider_providerId: { provider: profile.provider, providerId: profile.providerId } },
-      include: {
-        user: {
-          select: { id: true, email: true, name: true, avatarUrl: true, role: true, isEmailVerified: true, isActive: true },
-        },
-      },
+      include: { user: { select: USER_SELECT } },
     });
 
     let user: any;
@@ -240,30 +242,47 @@ export class AuthService {
     if (oauthAccount) {
       user = oauthAccount.user;
       if (!user.isActive) throw new UnauthorizedException('Account is deactivated');
-    } else {
-      const existingUser = await this.prisma.user.findUnique({ where: { email: profile.email } });
-      const existingName = await this.prisma.user.findUnique({ where: { name: `${profile.firstName} ${profile.lastName}` } });
 
-      if (existingName) throw new ConflictException('Name already registered');
+    } else {
+      // ── Case 2: Same email exists on platform → link OAuth, keep platform data ──
+      const existingUser = await this.prisma.user.findUnique({
+        where: { email: profile.email },
+        select: USER_SELECT,
+      });
 
       if (existingUser) {
+        // Link this provider to the existing account
         await this.prisma.oAuthAccount.create({
           data: { provider: profile.provider, providerId: profile.providerId, userId: existingUser.id },
         });
+        // ✅ Return platform name/avatar — NOT Google's data
         user = existingUser;
+        this.logger.log(
+          `Linked ${profile.provider} OAuth to existing account: ${existingUser.email}`,
+        );
+
       } else {
+        // ── Case 3: Brand new user via OAuth ──
+        // Only check name conflict for NEW users (not for existing email match)
+        const googleName = `${profile.firstName} ${profile.lastName}`;
+        const nameTaken = await this.prisma.user.findUnique({ where: { name: googleName } });
+        // If name is taken, append a short suffix to avoid conflict
+        const finalName = nameTaken ? `${googleName}_${profile.providerId.slice(-4)}` : googleName;
+
         user = await this.prisma.user.create({
           data: {
             email: profile.email,
-            name: `${profile.firstName} ${profile.lastName}`,
+            name: finalName,
             avatarUrl: profile.avatar || null,
             password: '',
             role: UserRole.STUDENT,
             isEmailVerified: true,
             isActive: true,
-            oauthAccounts: { create: { provider: profile.provider, providerId: profile.providerId } },
+            oauthAccounts: {
+              create: { provider: profile.provider, providerId: profile.providerId },
+            },
           },
-          select: { id: true, email: true, name: true, avatarUrl: true, role: true, isEmailVerified: true, isActive: true },
+          select: USER_SELECT,
         });
         isNewUser = true;
         this.logger.log(`New user registered via ${profile.provider}: ${user.email}`);
