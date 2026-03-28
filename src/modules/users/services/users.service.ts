@@ -88,7 +88,6 @@ const PUBLIC_PROFILE_SELECT = {
       id: true, awardedAt: true, context: true,
       badge: {
         select: {
-          // FIX: Badge model uses `code` not `slug`
           code: true, title: true, ar_title: true, description: true,
           iconUrl: true, type: true, xpReward: true,
         },
@@ -249,8 +248,6 @@ export class UsersService {
   }
 
   // ── Upsert Education ───────────────────────────────────────────────────
-  // FIX: Education schema has `degree String` and `field String` (required, not nullable).
-  // We use empty string '' as fallback instead of null.
   async upsertEducation(userId: string, dto: UpsertEducationDto) {
     const user = await this.prisma.user.findUnique({ where: { id: userId } });
     if (!user) throw new NotFoundException('User not found');
@@ -268,7 +265,6 @@ export class UsersService {
             data: {
               institution: item.institution,
               ar_institution: item.ar_institution ?? null,
-              // required String fields → fallback to ''
               degree: item.degree ?? '',
               field: item.field ?? '',
               startYear: item.startYear ?? 0,
@@ -382,13 +378,27 @@ export class UsersService {
     const enrollments = await this.prisma.enrollment.findMany({
       where: { userId },
       include: {
-        course: { select: { id: true, title: true, ar_title: true, thumbnail: true, difficulty: true, duration: true } },
+        course: {
+          select: {
+            id: true,
+            title: true,
+            ar_title: true,
+            thumbnail: true,
+            difficulty: true,
+            duration: true,
+            slug: true,   // ← fix: was missing, caused /courses/undefined
+          },
+        },
       },
       orderBy: { enrolledAt: 'desc' },
     });
     return enrollments.map((e) => ({
-      id: e.id, course: e.course, progress: e.progress,
-      isCompleted: e.isCompleted, enrolledAt: e.enrolledAt, lastAccessedAt: e.lastAccessedAt,
+      id: e.id,
+      course: e.course,
+      progress: e.progress,
+      isCompleted: e.isCompleted,
+      enrolledAt: e.enrolledAt,
+      lastAccessedAt: e.lastAccessedAt,
     }));
   }
 
