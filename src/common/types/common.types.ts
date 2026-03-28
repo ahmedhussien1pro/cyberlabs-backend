@@ -49,6 +49,10 @@ export type RequestUser = {
   isEmailVerified: boolean;
   isActive: boolean;
   isPremium?: boolean;
+  /** Platform display name (from users table, not from OAuth provider) */
+  name?: string;
+  /** Platform avatar URL (from users table, not from OAuth provider) */
+  avatarUrl?: string | null;
 };
 
 // ==================== OAuth ====================

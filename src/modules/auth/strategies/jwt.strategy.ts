@@ -26,16 +26,14 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
       select: {
         id: true,
         email: true,
+        name: true,        // ← ADDED: platform display name
+        avatarUrl: true,   // ← ADDED: platform avatar
         role: true,
         isEmailVerified: true,
         isActive: true,
         subscriptions: {
-          where: {
-            isActive: true,
-          },
-          select: {
-            isActive: true,
-          },
+          where: { isActive: true },
+          select: { isActive: true },
           take: 1,
         },
       },
@@ -50,13 +48,14 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     }
 
     return {
-      id: user.id,
-      email: user.email,
-      role: user.role as UserRole,
+      id:              user.id,
+      email:           user.email,
+      name:            user.name,
+      avatarUrl:       user.avatarUrl,
+      role:            user.role as UserRole,
       isEmailVerified: user.isEmailVerified,
-      isActive: user.isActive,
-      isPremium:
-        user.subscriptions.length > 0 && user.subscriptions[0].isActive,
+      isActive:        user.isActive,
+      isPremium:       user.subscriptions.length > 0 && user.subscriptions[0].isActive,
     };
   }
 }
