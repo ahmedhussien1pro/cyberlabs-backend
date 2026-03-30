@@ -1,0 +1,45 @@
+{
+  "name": "BankDash — Clickjacking via Invisible iframe Overlay",
+  "slug": "clickjacking",
+  "vulnerability_type": "CLICKJACKING",
+  "domain": "WEB_SECURITY",
+  "educational_objective": "يتعلم الطالب كيف يمكن لمهاجم أن يُضمّن صفحة ويب حساسة داخل iframe شفاف فوق صفحة وهمية، مما يخدع المستخدم ليضغط على زر حساس (مثل تأكيد تحويل مالي) ظاناً أنه يضغط على شيء آخر. الطالب يُنشئ PoC HTML يُظهر الهجوم بشكل مرئي.",
+  "ar_educational_objective": "يتعلم الطالب كيف يمكن لمهاجم أن يُضمّن صفحة ويب حساسة داخل iframe شفاف فوق صفحة وهمية، مما يخدع المستخدم ليضغط على زر حساس ظاناً أنه يضغط على شيء آخر.",
+  "prerequisites": ["http-basics", "html-basics"],
+  "hints_metadata": [
+    {
+      "order": 1,
+      "type": "conceptual",
+      "content": "BankDash's transfer confirmation page is missing X-Frame-Options and CSP frame-ancestors headers. This means it can be embedded in an iframe by any website. Think: how can you trick a logged-in user into clicking 'Confirm Transfer' without knowing?",
+      "ar_content": "صفحة تأكيد التحويل في BankDash لا تحتوي على X-Frame-Options أو CSP frame-ancestors. هذا يعني أنها يمكن تضمينها في iframe من أي موقع. فكّر: كيف يمكنك خداع مستخدم مسجّل الدخول للضغط على 'Confirm Transfer' دون علمه؟",
+      "penalty": 10
+    },
+    {
+      "order": 2,
+      "type": "narrowing",
+      "content": "Create an HTML page with: <iframe src='http://bankdash.lab/transfer/confirm' style='opacity:0.01; position:absolute; z-index:9999; top:0; left:0; width:100%; height:100%;'></iframe> and a fake button underneath. Position the iframe so 'Confirm' overlaps with the fake button.",
+      "ar_content": "أنشئ صفحة HTML تحتوي على: <iframe src='http://bankdash.lab/transfer/confirm' style='opacity:0.01; position:absolute; z-index:9999;'></iframe> وزر وهمي تحته. اضبط موضع الـ iframe بحيث يتطابق زر 'Confirm' مع الزر الوهمي.",
+      "penalty": 20
+    },
+    {
+      "order": 3,
+      "type": "final_push",
+      "content": "Submit your PoC HTML via POST /api/clickjacking/submit-poc with body { html: '<your-poc>' }. If the iframe correctly overlays the confirm button (validated server-side), the flag is returned in the response.",
+      "ar_content": "أرسل PoC HTML عبر POST /api/clickjacking/submit-poc مع body { html: '<your-poc>' }. إذا تطابق الـ iframe مع زر التأكيد (يتحقق منه الـ server)، سيُرجَع الـ flag في الـ response.",
+      "penalty": 30
+    }
+  ],
+  "scoring_rules": {
+    "base_points": 400,
+    "base_xp": 150,
+    "hint_penalty_mode": "PERCENTAGE",
+    "time_bonus": false
+  },
+  "flag_validation": {
+    "policy": "PER_USER_PER_LAB",
+    "format": "FLAG{CJ_[USER_HASH]_IFRAME_OVERLAY}",
+    "dynamic": true
+  },
+  "environment_template": "web-app-node-express",
+  "hidden_solution_path": "admin/solutions/clickjacking-bankdash.md"
+}

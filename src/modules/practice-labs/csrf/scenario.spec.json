@@ -1,0 +1,45 @@
+{
+  "name": "SocialPulse — CSRF: Forced Account Email Change",
+  "slug": "csrf",
+  "vulnerability_type": "CSRF",
+  "domain": "WEB_SECURITY",
+  "educational_objective": "يتعلم الطالب كيف تعمل هجمات CSRF: صفحة خارجية تُرسل request باسم المستخدم المُسجَّل لأن الـ browser يُرفق الـ cookies تلقائياً. الطالب يُنشئ HTML form يُغيّر email الضحية دون علمه، مستغلاً غياب CSRF token على الـ endpoint.",
+  "ar_educational_objective": "يتعلم الطالب كيف تعمل CSRF: صفحة خارجية ترسل request باسم المستخدم لأن الـ browser يُرفق cookies تلقائياً. يُنشئ HTML form يغيّر email الضحية دون علمه.",
+  "prerequisites": ["http-basics", "html-basics", "cookies-basics"],
+  "hints_metadata": [
+    {
+      "order": 1,
+      "type": "conceptual",
+      "content": "The POST /api/account/update-email endpoint changes a user's email. Inspect its request — does it require a CSRF token or Origin validation? What happens if you send this request from a different origin while the user is logged in?",
+      "ar_content": "الـ POST /api/account/update-email يغيّر email المستخدم. افحص الـ request — هل يطلب CSRF token أو يتحقق من Origin؟ ماذا يحدث لو أرسلت هذا الـ request من origin مختلف بينما المستخدم مسجّل الدخول؟",
+      "penalty": 10
+    },
+    {
+      "order": 2,
+      "type": "narrowing",
+      "content": "Build an HTML page with: <form action='http://socialpulse.lab/api/account/update-email' method='POST'><input name='email' value='attacker@evil.com'><input type='submit'></form> and auto-submit it with JavaScript onload. Host it on the attacker's domain.",
+      "ar_content": "ابنِ صفحة HTML تحتوي على form يُرسل POST لـ /api/account/update-email مع email='attacker@evil.com' ويُرسَل تلقائياً بـ JavaScript onload. استضفها على domain المهاجم.",
+      "penalty": 20
+    },
+    {
+      "order": 3,
+      "type": "final_push",
+      "content": "Submit your attack page HTML via POST /api/csrf/submit-attack with body { html: '<your-form>' }. If the form correctly targets the email endpoint without CSRF protection, the server confirms the attack and returns the flag.",
+      "ar_content": "أرسل HTML صفحة الهجوم عبر POST /api/csrf/submit-attack مع body { html: '<your-form>' }. إذا كان الـ form يستهدف email endpoint بدون CSRF protection، الـ server يؤكد الهجوم ويُرجع الـ flag.",
+      "penalty": 30
+    }
+  ],
+  "scoring_rules": {
+    "base_points": 450,
+    "base_xp": 175,
+    "hint_penalty_mode": "PERCENTAGE",
+    "time_bonus": false
+  },
+  "flag_validation": {
+    "policy": "PER_USER_PER_LAB",
+    "format": "FLAG{CSRF_[USER_HASH]_EMAIL_HIJACKED}",
+    "dynamic": true
+  },
+  "environment_template": "web-app-node-express",
+  "hidden_solution_path": "admin/solutions/csrf-socialpulse.md"
+}

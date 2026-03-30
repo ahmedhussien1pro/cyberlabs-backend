@@ -1,0 +1,45 @@
+{
+  "name": "AdminVault — Cookie Attribute Abuse & Session Theft Simulation",
+  "slug": "cookies-lab",
+  "vulnerability_type": "COOKIE_SECURITY",
+  "domain": "WEB_SECURITY",
+  "educational_objective": "يتعلم الطالب الفرق العملي بين الـ cookie attributes (HttpOnly, Secure, SameSite, Domain, Path, Expires) وكيف أن غيابها يُهيّئ لهجمات مثل XSS session theft أو CSRF. الطالب يُشخّص 4 cookies مختلفة الإعدادات ويُحدّد أيها آمن وأيها مثبوط.",
+  "ar_educational_objective": "يتعلم الطالب الفرق العملي بين cookie attributes وكيف أن غيابها يُهيّئ لهجمات XSS session theft أو CSRF. يُشخّص 4 cookies ويُحدّد أيها آمن.",
+  "prerequisites": ["http-basics", "browser-devtools"],
+  "hints_metadata": [
+    {
+      "order": 1,
+      "type": "conceptual",
+      "content": "Open DevTools → Application → Cookies. You'll see 4 cookies for this domain. One cookie named 'admin_session' is missing the HttpOnly flag. What does that mean? Can JavaScript read it?",
+      "ar_content": "افتح DevTools ← Application ← Cookies. ستجد 4 cookies. واحد اسمه 'admin_session' لا يحتوي على HttpOnly. ماذا يعني ذلك؟ هل يمكن لـ JavaScript قراءته؟",
+      "penalty": 10
+    },
+    {
+      "order": 2,
+      "type": "narrowing",
+      "content": "In the browser console, run: document.cookie — you'll see 'admin_session=<value>'. Copy the value. Now make a GET request to /api/admin/flag with header Cookie: admin_session=<value> using Burp Repeater.",
+      "ar_content": "في console المتصفح نفّذ: document.cookie — ستجد 'admin_session=<value>'. انسخ القيمة. الآن أرسل GET /api/admin/flag مع header Cookie: admin_session=<value> عبر Burp Repeater.",
+      "penalty": 20
+    },
+    {
+      "order": 3,
+      "type": "final_push",
+      "content": "GET /api/admin/flag with the stolen admin_session cookie value in the Cookie header. The server will validate the session and return the flag if the cookie belongs to the admin account.",
+      "ar_content": "أرسل GET /api/admin/flag مع قيمة admin_session المسروقة في الـ Cookie header. الـ server سيتحقق من الـ session ويُرجع الـ flag إذا كانت الـ cookie تخص حساب admin.",
+      "penalty": 30
+    }
+  ],
+  "scoring_rules": {
+    "base_points": 350,
+    "base_xp": 130,
+    "hint_penalty_mode": "PERCENTAGE",
+    "time_bonus": false
+  },
+  "flag_validation": {
+    "policy": "PER_USER_PER_LAB",
+    "format": "FLAG{COOKIE_[USER_HASH]_SESSION_STOLEN}",
+    "dynamic": true
+  },
+  "environment_template": "web-app-node-express",
+  "hidden_solution_path": "admin/solutions/cookies-lab-adminvault.md"
+}

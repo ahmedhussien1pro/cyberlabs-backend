@@ -1,0 +1,45 @@
+{
+  "name": "InvoiceHub — IDOR: Access Other Users' Financial Records",
+  "slug": "idor",
+  "vulnerability_type": "IDOR",
+  "domain": "WEB_SECURITY",
+  "educational_objective": "يتعلم الطالب كيف تنشأ ثغرة IDOR (Insecure Direct Object Reference) عندما يُستخدَم معرّف قابل للتخمين (مثل رقم الفاتورة) للوصول لمورد حساس بدون التحقق من ملكية المستخدم. الطالب يُغيّر رقم الفاتورة في الـ URL ليصل لفواتير مستخدمين آخرين.",
+  "ar_educational_objective": "يتعلم الطالب كيف تنشأ IDOR عندما يُستخدَم معرّف قابل للتخمين للوصول لمورد حساس بدون التحقق من ملكية المستخدم. يغيّر رقم الفاتورة في الـ URL للوصول لفواتير آخرين.",
+  "prerequisites": ["http-basics", "burpsuite-intro"],
+  "hints_metadata": [
+    {
+      "order": 1,
+      "type": "conceptual",
+      "content": "After logging in, navigate to your invoice at /api/invoices/YOUR_ID. Notice the ID in the URL. Is it sequential (1, 2, 3...) or random (UUID)? Does the server verify that the invoice belongs to the logged-in user?",
+      "ar_content": "بعد تسجيل الدخول، انتقل لفاتورتك في /api/invoices/YOUR_ID. لاحظ الـ ID في الـ URL. هل هو تسلسلي (1, 2, 3...) أم عشوائي (UUID)؟ هل الـ server يتحقق أن الفاتورة تخص المستخدم المسجّل؟",
+      "penalty": 10
+    },
+    {
+      "order": 2,
+      "type": "narrowing",
+      "content": "Your invoice ID is 1042. Try changing it in Burp: GET /api/invoices/1001, /api/invoices/1002, etc. If the server returns another user's invoice data without a 403, IDOR is confirmed.",
+      "ar_content": "رقم فاتورتك هو 1042. جرّب تغييره في Burp: GET /api/invoices/1001, /api/invoices/1002, إلخ. إذا أرجع الـ server بيانات فاتورة مستخدم آخر بدون 403، فالـ IDOR مؤكّد.",
+      "penalty": 20
+    },
+    {
+      "order": 3,
+      "type": "final_push",
+      "content": "Send GET /api/invoices/1000 — this is the system admin's internal invoice. The response JSON contains a 'confidential_note' field that holds the flag.",
+      "ar_content": "أرسل GET /api/invoices/1000 — هذه هي فاتورة الـ system admin الداخلية. الـ response JSON يحتوي على حقل 'confidential_note' الذي يخزّن الـ flag.",
+      "penalty": 30
+    }
+  ],
+  "scoring_rules": {
+    "base_points": 450,
+    "base_xp": 175,
+    "hint_penalty_mode": "PERCENTAGE",
+    "time_bonus": false
+  },
+  "flag_validation": {
+    "policy": "PER_USER_PER_LAB",
+    "format": "FLAG{IDOR_[USER_HASH]_INVOICE_EXPOSED}",
+    "dynamic": true
+  },
+  "environment_template": "web-app-node-express",
+  "hidden_solution_path": "admin/solutions/idor-invoicehub.md"
+}

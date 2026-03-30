@@ -1,0 +1,45 @@
+{
+  "name": "DocReader Pro — Local File Inclusion via Language Parameter",
+  "slug": "file-inclusion",
+  "vulnerability_type": "LFI_FILE_INCLUSION",
+  "domain": "WEB_SECURITY",
+  "educational_objective": "يتعلم الطالب كيف تنشأ ثغرة LFI عندما يُمرَّر اسم ملف من URL parameter مباشرةً لدالة include() أو readFileSync() بدون تنقية. الطالب يستخدم path traversal (../../) لقراءة ملفات حساسة خارج الـ web root مثل /etc/passwd أو ملف الـ flag.",
+  "ar_educational_objective": "يتعلم الطالب كيف تنشأ LFI عندما يُمرَّر اسم ملف من URL parameter لدالة include بدون تنقية. يستخدم path traversal لقراءة ملفات حساسة.",
+  "prerequisites": ["http-basics", "linux-basics"],
+  "hints_metadata": [
+    {
+      "order": 1,
+      "type": "conceptual",
+      "content": "DocReader loads documentation pages via: GET /docs?page=intro. Notice the 'page' parameter is a filename. What happens if you try a filename that points outside the docs directory? Think about relative paths.",
+      "ar_content": "DocReader يُحمّل الصفحات عبر: GET /docs?page=intro. لاحظ أن الـ 'page' parameter هو اسم ملف. ماذا يحدث لو جرّبت اسم ملف يشير خارج مجلد docs؟ فكّر في relative paths.",
+      "penalty": 10
+    },
+    {
+      "order": 2,
+      "type": "narrowing",
+      "content": "Try: GET /docs?page=../../etc/passwd — if you see Linux user accounts in the response, LFI is confirmed. The server is reading arbitrary files from the filesystem.",
+      "ar_content": "جرّب: GET /docs?page=../../etc/passwd — إذا ظهر محتوى ملف Linux users في الـ response، فالـ LFI مؤكّد. الـ server يقرأ ملفات عشوائية من الـ filesystem.",
+      "penalty": 20
+    },
+    {
+      "order": 3,
+      "type": "final_push",
+      "content": "Send: GET /docs?page=../../var/secret/flag.txt — the flag file is stored at that path on the server. The full file content will be rendered in the docs page body.",
+      "ar_content": "أرسل: GET /docs?page=../../var/secret/flag.txt — ملف الـ flag مخزَّن في هذا المسار على الـ server. محتوى الملف سيظهر في الصفحة.",
+      "penalty": 30
+    }
+  ],
+  "scoring_rules": {
+    "base_points": 500,
+    "base_xp": 200,
+    "hint_penalty_mode": "PERCENTAGE",
+    "time_bonus": false
+  },
+  "flag_validation": {
+    "policy": "PER_USER_PER_LAB",
+    "format": "FLAG{LFI_[USER_HASH]_FILE_READ}",
+    "dynamic": true
+  },
+  "environment_template": "linux-web-app",
+  "hidden_solution_path": "admin/solutions/file-inclusion-docreader.md"
+}

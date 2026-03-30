@@ -1,0 +1,45 @@
+{
+  "name": "NodeCart — Insecure Deserialization via Tampered Session Object",
+  "slug": "insecure-deserialization",
+  "vulnerability_type": "INSECURE_DESERIALIZATION",
+  "domain": "WEB_SECURITY",
+  "educational_objective": "يتعلم الطالب كيف يمكن استغلال Insecure Deserialization في تطبيق Node.js يُخزّن بيانات الـ session كـ serialized object في الـ cookie. بتعديل الـ cookie لحقن payload يُغيّر الـ isAdmin field، يحصل المهاجم على صلاحيات admin دون أن يُنفّذ كوداً تعسفياً (logic-only deserialization attack).",
+  "ar_educational_objective": "يتعلم الطالب كيف يستغل Insecure Deserialization في Node.js: يُعدّل serialized session cookie لحقن payload يُغيّر isAdmin=true، مما يمنحه صلاحيات admin.",
+  "prerequisites": ["http-basics", "cookies-basics", "javascript-basics"],
+  "hints_metadata": [
+    {
+      "order": 1,
+      "type": "conceptual",
+      "content": "After login, inspect the 'session' cookie value. It looks like a base64 string. Decode it — what format is the data inside? Is it a serialized object? What fields does it contain?",
+      "ar_content": "بعد تسجيل الدخول، افحص قيمة cookie اسمها 'session'. تبدو كـ base64 string. افكّها — ما تنسيق البيانات بداخلها؟ هل هي serialized object؟ ما الـ fields التي تحتويها؟",
+      "penalty": 10
+    },
+    {
+      "order": 2,
+      "type": "narrowing",
+      "content": "The decoded cookie is: {\"userId\":55,\"username\":\"alice\",\"isAdmin\":false}. Change isAdmin to true, re-encode to base64, and set it as the session cookie. The server deserializes it without integrity verification.",
+      "ar_content": "الـ cookie المفكوكة هي: {\"userId\":55,\"username\":\"alice\",\"isAdmin\":false}. غيّر isAdmin لـ true، أعد التشفير لـ base64، وضعها كـ session cookie. الـ server يُفكّكها بدون التحقق من السلامة.",
+      "penalty": 20
+    },
+    {
+      "order": 3,
+      "type": "final_push",
+      "content": "Set the forged session cookie and send GET /api/admin/config. The server deserializes the cookie, sees isAdmin=true, and returns the admin configuration page which contains the flag in the 'secret_key' field.",
+      "ar_content": "ضبط الـ session cookie المزوّرة وأرسل GET /api/admin/config. الـ server يُفكّك الـ cookie، يرى isAdmin=true، ويُرجع صفحة إعدادات admin التي تحتوي على الـ flag في حقل 'secret_key'.",
+      "penalty": 30
+    }
+  ],
+  "scoring_rules": {
+    "base_points": 600,
+    "base_xp": 250,
+    "hint_penalty_mode": "PERCENTAGE",
+    "time_bonus": false
+  },
+  "flag_validation": {
+    "policy": "PER_USER_PER_LAB",
+    "format": "FLAG{DESER_[USER_HASH]_ADMIN_FORGED}",
+    "dynamic": true
+  },
+  "environment_template": "web-app-node-express",
+  "hidden_solution_path": "admin/solutions/insecure-deserialization-nodecart.md"
+}

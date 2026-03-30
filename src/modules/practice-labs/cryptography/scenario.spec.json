@@ -1,0 +1,45 @@
+{
+  "name": "LockBox Messenger — Weak Encryption & Hash Cracking",
+  "slug": "cryptography",
+  "vulnerability_type": "CRYPTOGRAPHY_WEAK",
+  "domain": "CRYPTOGRAPHY",
+  "educational_objective": "يتعلم الطالب لماذا MD5 و SHA1 غير آمنين لتخزين كلمات المرور، وكيف يمكن كسر hash مُخزَّن عبر rainbow table أو wordlist attack باستخدام hashcat أو john. الطالب يكسر hash مسرَّب من DB dump ويستخدم كلمة المرور للدخول كـ admin.",
+  "ar_educational_objective": "يتعلم الطالب لماذا MD5 وSHA1 غير آمنين لتخزين كلمات المرور، وكيف يكسر hash مُخزَّن عبر rainbow table أو wordlist attack.",
+  "prerequisites": ["linux-basics", "cryptography-basics"],
+  "hints_metadata": [
+    {
+      "order": 1,
+      "type": "conceptual",
+      "content": "You found a leaked DB export at /api/admin/db-export (accessible without auth). It contains: admin:5f4dcc3b5aa765d61d8327deb882cf99. What hashing algorithm produces a 32-character hex string?",
+      "ar_content": "وجدت تسريب DB في /api/admin/db-export (يمكن الوصول إليه بدون auth). يحتوي على: admin:5f4dcc3b5aa765d61d8327deb882cf99. أي خوارزمية تشفير تُنتج 32 حرفاً hex؟",
+      "penalty": 10
+    },
+    {
+      "order": 2,
+      "type": "narrowing",
+      "content": "The hash 5f4dcc3b5aa765d61d8327deb882cf99 is MD5. Use an online rainbow table (crackstation.net) or run: echo '5f4dcc3b5aa765d61d8327deb882cf99' | hashcat -m 0 -a 0 rockyou.txt to crack it.",
+      "ar_content": "الـ hash 5f4dcc3b5aa765d61d8327deb882cf99 هو MD5. استخدم rainbow table على crackstation.net أو نفّذ: hashcat -m 0 -a 0 rockyou.txt لكسره.",
+      "penalty": 20
+    },
+    {
+      "order": 3,
+      "type": "final_push",
+      "content": "The cracked password is 'password'. Log in via POST /api/auth/login with { username: 'admin', password: 'password' }. The response JWT gives access to /admin/inbox where the flag is stored.",
+      "ar_content": "كلمة المرور المكسورة هي 'password'. سجّل الدخول عبر POST /api/auth/login مع { username: 'admin', password: 'password' }. الـ JWT المُرجَع يفتح /admin/inbox حيث يوجد الـ flag.",
+      "penalty": 30
+    }
+  ],
+  "scoring_rules": {
+    "base_points": 500,
+    "base_xp": 200,
+    "hint_penalty_mode": "PERCENTAGE",
+    "time_bonus": false
+  },
+  "flag_validation": {
+    "policy": "PER_USER_PER_LAB",
+    "format": "FLAG{CRYPTO_[USER_HASH]_MD5_CRACKED}",
+    "dynamic": true
+  },
+  "environment_template": "web-app-node-express",
+  "hidden_solution_path": "admin/solutions/cryptography-lockbox.md"
+}

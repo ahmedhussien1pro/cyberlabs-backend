@@ -1,0 +1,45 @@
+{
+  "name": "TrackMe Analytics — Persistent Cookie Forgery for Privilege Access",
+  "slug": "cookies",
+  "vulnerability_type": "COOKIE_FORGERY",
+  "domain": "WEB_SECURITY",
+  "educational_objective": "يتعلم الطالب كيف أن تخزين بيانات المصادقة (مثل role=user) في cookie غير موقّعة يُمكّن أي مستخدم من تعديلها يدوياً للحصول على صلاحيات أعلى. الطالب يعدّل قيمة الـ cookie مباشرةً في DevTools أو Burp لتغيير role=user إلى role=admin.",
+  "ar_educational_objective": "يتعلم الطالب كيف أن تخزين role في cookie غير موقّعة يُمكّن تعديلها يدوياً للحصول على صلاحيات admin. يعدّل الـ cookie في DevTools أو Burp.",
+  "prerequisites": ["http-basics", "browser-devtools"],
+  "hints_metadata": [
+    {
+      "order": 1,
+      "type": "conceptual",
+      "content": "After logging in, open DevTools → Application → Cookies. Inspect the cookie named 'user_prefs'. It looks like a plain JSON string. Is it signed or encrypted? What happens if you change its content?",
+      "ar_content": "بعد تسجيل الدخول، افتح DevTools ← Application ← Cookies. افحص الـ cookie اسمها 'user_prefs'. تبدو كـ plain JSON string. هل هي موقّعة أو مشفّرة؟ ماذا يحدث لو غيّرت محتواها؟",
+      "penalty": 10
+    },
+    {
+      "order": 2,
+      "type": "narrowing",
+      "content": "The cookie value is base64-encoded JSON: {\"userId\": 42, \"role\": \"user\"}. Decode it, change role to \"admin\", re-encode to base64, and replace the cookie value in DevTools. Then refresh the page.",
+      "ar_content": "قيمة الـ cookie هي base64 JSON: {\"userId\": 42, \"role\": \"user\"}. افكّ التشفير، غيّر role لـ \"admin\"، أعد التشفير إلى base64، وضع القيمة الجديدة في DevTools. ثم أعد تحميل الصفحة.",
+      "penalty": 20
+    },
+    {
+      "order": 3,
+      "type": "final_push",
+      "content": "After setting the forged cookie, navigate to /admin/reports. The server will read the cookie without signature verification and grant admin access — the flag is displayed at the top of the reports page.",
+      "ar_content": "بعد ضبط الـ cookie المزوّرة، انتقل لـ /admin/reports. الـ server يقرأ الـ cookie بدون التحقق من التوقيع ويمنح صلاحيات admin — الـ flag يظهر في أعلى صفحة التقارير.",
+      "penalty": 30
+    }
+  ],
+  "scoring_rules": {
+    "base_points": 400,
+    "base_xp": 150,
+    "hint_penalty_mode": "PERCENTAGE",
+    "time_bonus": false
+  },
+  "flag_validation": {
+    "policy": "PER_USER_PER_LAB",
+    "format": "FLAG{COOKIES_[USER_HASH]_ROLE_FORGED}",
+    "dynamic": true
+  },
+  "environment_template": "web-app-node-express",
+  "hidden_solution_path": "admin/solutions/cookies-trackme.md"
+}
