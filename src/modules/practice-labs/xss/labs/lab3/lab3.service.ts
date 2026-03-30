@@ -1,42 +1,49 @@
+// src/modules/practice-labs/xss/labs/lab3/lab3.service.ts
+// Refactored (PR #3):
+//  - Removed local isXSSPayload() → XssDetectorEngine.isPayload()
+//  - Removed hardcoded flag → FlagPolicyEngine.generate()
+//  - Improved: empty msg now returns a proper validation error
+//  - FlagRecordService wired in
+
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../../../../../core/database';
 import { PracticeLabStateService } from '../../../shared/services/practice-lab-state.service';
+import { FlagRecordService } from '../../../shared/services/flag-record.service';
+import { FlagPolicyEngine } from '../../../shared/engines/flag-policy.engine';
+import { XssDetectorEngine } from '../../../shared/engines/xss-detector.engine';
+
+const LAB_SECRET  = 'xss_lab3_d0m_sink_sprintboard_2025';
+const FLAG_PREFIX = 'XSS_LAB3';
 
 @Injectable()
 export class Lab3Service {
   constructor(
     private prisma: PrismaService,
     private stateService: PracticeLabStateService,
+    private flagRecord: FlagRecordService,
   ) {}
 
   async initLab(userId: string, labId: string) {
-    return this.stateService.initializeState(userId, labId);
+    const state = await this.stateService.initializeState(userId, labId);
+    const flag = FlagPolicyEngine.generate(userId, labId, LAB_SECRET, FLAG_PREFIX);
+    await this.flagRecord.generateAndStore(userId, labId, 'attempt-1', flag);
+    return state;
   }
 
-  // ❌ الثغرة: msg يُعاد raw — الـ frontend يضعه في innerHTML (DOM sink)
   async getDashboard(userId: string, labId: string, msg: string) {
     const tasks = await this.prisma.labGenericContent.findMany({
       where: { userId, labId },
     });
-
     return {
       success: true,
-      // ❌ msg يُرجَع كما هو بدون أي encoding
-      // Frontend: notificationBanner.innerHTML = data.notification
       notification: msg || null,
-      // LabGenericContent fields: id, title, body, isPublic, author, fileUrl
       tasks: tasks.map((t) => ({
-        id: t.id,
-        title: t.title,
-        status: t.body,
-        isPublic: t.isPublic,
-        assignedTo: t.author,
-        link: t.fileUrl,
+        id: t.id, title: t.title, status: t.body,
+        isPublic: t.isPublic, assignedTo: t.author, link: t.fileUrl,
       })),
     };
   }
 
-  // المتعلم يرسل الـ URL المصمّم — نستخرج msg ونتحقق من الـ payload
   async verifyPayload(userId: string, labId: string, craftedUrl: string) {
     if (!craftedUrl) throw new BadRequestException('Crafted URL is required');
 
@@ -54,26 +61,26 @@ export class Lab3Service {
     }
 
     if (!msg) {
-      return {
-        success: false,
-        exploited: false,
-        message: 'No msg parameter found in the URL.',
-      };
+      throw new BadRequestException(
+        'No msg parameter found in the crafted URL. ' +
+        'Your URL must include ?msg=<your-xss-payload>',
+      );
     }
 
-    if (this.isXSSPayload(msg)) {
+    const detection = XssDetectorEngine.detect(msg);
+
+    if (detection.detected) {
+      const flag = FlagPolicyEngine.generate(userId, labId, LAB_SECRET, FLAG_PREFIX);
       return {
-        success: true,
-        exploited: true,
-        craftedUrl,
+        success: true, exploited: true, craftedUrl,
         extractedPayload: msg,
-        injectionContext:
-          "document.getElementById('notification-banner').innerHTML = msg",
+        matchedVector: detection.matchedVector,
+        injectionContext: "document.getElementById('notification-banner').innerHTML = msg",
         simulation:
           'The server never processed this payload — it was handled entirely ' +
           'by the browser JavaScript reading window.location.search. ' +
           'This is the defining characteristic of DOM-Based XSS: no server involvement.',
-        flag: 'FLAG{XSS_DOM_SINK_INNERHTML_EXPLOIT_344}',
+        flag,
         fix:
           'Replace innerHTML with textContent, or use ' +
           'DOMPurify.sanitize(msg) before innerHTML assignment.',
@@ -81,25 +88,11 @@ export class Lab3Service {
     }
 
     return {
-      success: false,
-      exploited: false,
+      success: false, exploited: false,
       extractedPayload: msg,
       message:
         'No valid XSS payload in the msg parameter. ' +
         'Remember: <script> tags do NOT execute via innerHTML. Use event handlers.',
     };
-  }
-
-  private isXSSPayload(input: string): boolean {
-    const patterns = [
-      /<script[\s>]/i,
-      /on\w+\s*=/i,
-      /javascript:/i,
-      /<img[^>]*>/i,
-      /<svg[\s>]/i,
-      /<iframe[\s>]/i,
-      /<details[\s>]/i,
-    ];
-    return patterns.some((p) => p.test(input));
   }
 }

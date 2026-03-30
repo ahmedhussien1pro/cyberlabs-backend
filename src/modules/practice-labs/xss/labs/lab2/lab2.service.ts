@@ -1,46 +1,45 @@
+// src/modules/practice-labs/xss/labs/lab2/lab2.service.ts
+// Refactored (PR #3):
+//  - Removed local isXSSPayload() → XssDetectorEngine.isPayload()
+//  - Removed hardcoded flag → FlagPolicyEngine.generate() (dynamic per-user)
+//  - FlagRecordService wired in
+
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../../../../../core/database';
 import { PracticeLabStateService } from '../../../shared/services/practice-lab-state.service';
+import { FlagRecordService } from '../../../shared/services/flag-record.service';
+import { FlagPolicyEngine } from '../../../shared/engines/flag-policy.engine';
+import { XssDetectorEngine } from '../../../shared/engines/xss-detector.engine';
+
+const LAB_SECRET  = 'xss_lab2_st0red_techmart_review_2025';
+const FLAG_PREFIX = 'XSS_LAB2';
 
 @Injectable()
 export class Lab2Service {
   constructor(
     private prisma: PrismaService,
     private stateService: PracticeLabStateService,
+    private flagRecord: FlagRecordService,
   ) {}
 
   async initLab(userId: string, labId: string) {
     await this.stateService.initializeState(userId, labId);
+    const flag = FlagPolicyEngine.generate(userId, labId, LAB_SECRET, FLAG_PREFIX);
+    await this.flagRecord.generateAndStore(userId, labId, 'attempt-1', flag);
 
-    // نزرع reviews شرعية مبدئية
     await this.prisma.labGenericLog.createMany({
       data: [
         {
-          userId,
-          labId,
-          type: 'REVIEW',
-          action: 'SUBMIT',
-          meta: {
-            productId: 'techmart-dock-07',
-            author: 'verified_buyer_99',
-            content:
-              'Excellent build quality! Works perfectly with my MacBook Pro.',
-            rating: 5,
-            status: 'pending',
-          },
+          userId, labId, type: 'REVIEW', action: 'SUBMIT',
+          meta: { productId: 'techmart-dock-07', author: 'verified_buyer_99',
+            content: 'Excellent build quality! Works perfectly with my MacBook Pro.',
+            rating: 5, status: 'pending' },
         },
         {
-          userId,
-          labId,
-          type: 'REVIEW',
-          action: 'SUBMIT',
-          meta: {
-            productId: 'techmart-dock-07',
-            author: 'alice_buyer',
+          userId, labId, type: 'REVIEW', action: 'SUBMIT',
+          meta: { productId: 'techmart-dock-07', author: 'alice_buyer',
             content: 'Fast shipping. The product matches the description.',
-            rating: 4,
-            status: 'pending',
-          },
+            rating: 4, status: 'pending' },
         },
       ],
     });
@@ -48,28 +47,14 @@ export class Lab2Service {
     return { status: 'success', message: 'Lab environment initialized' };
   }
 
-  // ✅ التخزين يبدو آمنًا — لكن content مخزّن raw بدون sanitization
-  async submitReview(
-    userId: string,
-    labId: string,
-    content: string,
-    rating: number,
-  ) {
+  async submitReview(userId: string, labId: string, content: string, rating: number) {
     if (!content) throw new BadRequestException('Review content is required');
 
     await this.prisma.labGenericLog.create({
       data: {
-        userId,
-        labId,
-        type: 'REVIEW',
-        action: 'SUBMIT',
-        meta: {
-          productId: 'techmart-dock-07',
-          author: 'current_user',
-          content, // ❌ مخزّن raw بدون تعقيم
-          rating: rating ?? 1,
-          status: 'pending',
-        },
+        userId, labId, type: 'REVIEW', action: 'SUBMIT',
+        meta: { productId: 'techmart-dock-07', author: 'current_user',
+          content, rating: rating ?? 1, status: 'pending' },
       },
     });
 
@@ -86,19 +71,12 @@ export class Lab2Service {
       where: { userId, labId, type: 'REVIEW' },
       orderBy: { createdAt: 'desc' },
     });
-
     return {
       success: true,
-      // ❌ content يُرجَع raw — الـ frontend يعرضه بـ dangerouslySetInnerHTML
-      reviews: reviews.map((r) => ({
-        id: r.id,
-        ...(r.meta as any),
-        createdAt: r.createdAt,
-      })),
+      reviews: reviews.map((r) => ({ id: r.id, ...(r.meta as any), createdAt: r.createdAt })),
     };
   }
 
-  // ❌ الثغرة: Admin يعرض review.content بـ innerHTML في لوحة التحكم
   async adminModerate(userId: string, labId: string) {
     const reviews = await this.prisma.labGenericLog.findMany({
       where: { userId, labId, type: 'REVIEW' },
@@ -106,21 +84,20 @@ export class Lab2Service {
 
     const maliciousReview = reviews.find((r) => {
       const meta = r.meta as any;
-      return meta?.content && this.isXSSPayload(meta.content);
+      return meta?.content && XssDetectorEngine.isPayload(meta.content);
     });
 
     if (maliciousReview) {
       const meta = maliciousReview.meta as any;
+      const flag = FlagPolicyEngine.generate(userId, labId, LAB_SECRET, FLAG_PREFIX);
       return {
-        success: true,
-        exploited: true,
+        success: true, exploited: true,
         adminAction: 'Admin opened the Review Moderation Dashboard',
         maliciousContent: meta.content,
         simulation:
           'The stored payload executed inside the admin browser context. ' +
           'The admin session cookie has been captured.',
-        adminSessionToken: 'FLAG{XSS_STORED_ADMIN_SESSION_HIJACKED_772}',
-        flag: 'FLAG{XSS_STORED_ADMIN_SESSION_HIJACKED_772}',
+        flag,
         fix:
           'Sanitize all user-generated content before inserting into innerHTML. ' +
           'Use DOMPurify or a server-side sanitizer like sanitize-html.',
@@ -129,26 +106,10 @@ export class Lab2Service {
     }
 
     return {
-      success: true,
-      exploited: false,
-      adminAction:
-        'Admin opened Moderation Dashboard — no XSS payload detected.',
+      success: true, exploited: false,
+      adminAction: 'Admin opened Moderation Dashboard — no XSS payload detected.',
       hint: 'Submit a review containing an XSS payload first, then trigger admin moderation.',
       reviews: reviews.map((r) => ({ id: r.id, ...(r.meta as any) })),
     };
-  }
-
-  private isXSSPayload(input: string): boolean {
-    const patterns = [
-      /<script[\s>]/i,
-      /<\/script>/i,
-      /on\w+\s*=/i,
-      /javascript:/i,
-      /<img[^>]*>/i,
-      /<svg[\s>]/i,
-      /<iframe[\s>]/i,
-      /<details[\s>]/i,
-    ];
-    return patterns.some((p) => p.test(input));
   }
 }
