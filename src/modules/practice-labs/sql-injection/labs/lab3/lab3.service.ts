@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../../../../core/database';
 import { PracticeLabStateService } from '../../../shared/services/practice-lab-state.service';
 
-const LAB_SLUG = 'sqli-blind-boolean';
+const LAB_SLUG       = 'sqli-blind-boolean';
 const ADMIN_PASSWORD = 'secr3t!X'; // 8 chars
 
 @Injectable()
@@ -17,7 +17,12 @@ export class Lab3Service {
     return this.stateService.initializeState(userId, labIdOrSlug);
   }
 
-  // ─── Get Step Progress ───────────────────────────────────────────────────────
+  async resetLab(userId: string, labIdOrSlug: string) {
+    const labId = await this.stateService.resolveLabId(labIdOrSlug);
+    await this.prisma.labGenericLog.deleteMany({ where: { userId, labId } });
+    return { success: true, message: 'Lab progress reset.' };
+  }
+
   async getProgress(userId: string, labIdOrSlug: string) {
     const labId = await this.stateService.resolveLabId(labIdOrSlug);
     const logs = await this.prisma.labGenericLog.findMany({
@@ -25,110 +30,113 @@ export class Lab3Service {
       select: { type: true },
     });
     const completedSteps = [...new Set(logs.map((l) => l.type))];
-    return {
-      completedSteps,
-      currentStep: this.resolveCurrentStep(completedSteps),
-      totalSteps: 3,
-    };
+    return { completedSteps, currentStep: this.resolveCurrentStep(completedSteps), totalSteps: 3 };
   }
 
   async getArticle(userId: string, labIdOrSlug: string, idParam: string) {
     const labId = await this.stateService.resolveLabId(labIdOrSlug);
-    const raw = idParam ?? '';
+    const raw   = (idParam ?? '').trim();
 
-    // Confirm boolean injection: AND 1=1 or AND 1=2
-    if (/and\s+1\s*=\s*[12]/i.test(raw)) {
-      await this.recordStep(userId, labId, 'STEP_1_CONFIRM');
-      const isTrue = /and\s+1\s*=\s*1/i.test(raw);
-      if (isTrue) {
-        return {
-          found: true,
-          article: { id: 5, title: 'Getting Started with Node.js', content: 'Node.js is a JavaScript runtime...' },
-          stepCompleted: 'STEP_1_CONFIRM',
-          feedback: 'TRUE condition → article found. Injection confirmed!',
-          ar_feedback: 'الشرط صحيح → المقالة موجودة. تأكّد الحقن!',
-        };
-      }
-      return {
-        found: false,
-        stepCompleted: 'STEP_1_CONFIRM',
-        feedback: 'FALSE condition → article not found. Injection confirmed!',
-        ar_feedback: 'الشرط خاطئ → المقالة غير موجودة. تأكّد الحقن!',
-      };
-    }
-
-    // Length enumeration
-    const lengthMatch = raw.match(/length\s*\(.*?\)\s*=\s*(\d+)/i);
-    if (lengthMatch) {
-      await this.recordStep(userId, labId, 'STEP_2_LENGTH');
-      const guessed = parseInt(lengthMatch[1]);
-      const correct = guessed === ADMIN_PASSWORD.length;
-      return {
-        found: correct,
-        stepCompleted: correct ? 'STEP_2_LENGTH' : undefined,
-        feedback: correct
-          ? `Length = ${ADMIN_PASSWORD.length} ✓ Now extract each character!`
-          : `Length ${guessed} is wrong. Keep trying.`,
-        ar_feedback: correct
-          ? `الطول = ${ADMIN_PASSWORD.length} ✓ الآن استخرج كل حرف!`
-          : `الطول ${guessed} غير صحيح. استمر في المحاولة.`,
-      };
-    }
-
-    // ASCII character extraction
-    const asciiMatch = raw.match(/ascii\s*\(\s*substring\s*\(.*?,(\d+),\s*1\s*\)\s*\)\s*=\s*(\d+)/i);
+    // ──────────────────────────────────────────────────────────
+    // STEP 3 — ASCII(SUBSTRING(…)) character extraction
+    // ──────────────────────────────────────────────────────────
+    const asciiMatch = raw.match(
+      /ascii\s*\(\s*substring\s*\(.*?,(\d+),\s*1\s*\)\s*\)\s*([><=!]+)\s*(\d+)/i,
+    );
     if (asciiMatch) {
-      await this.recordStep(userId, labId, 'STEP_3_EXTRACT');
-      const pos = parseInt(asciiMatch[1]) - 1;
-      const ascii = parseInt(asciiMatch[2]);
-      const correct = pos < ADMIN_PASSWORD.length && ADMIN_PASSWORD.charCodeAt(pos) === ascii;
+      const pos    = parseInt(asciiMatch[1]) - 1; // 0-indexed
+      const op     = asciiMatch[2];
+      const tested = parseInt(asciiMatch[3]);
+      const actual = pos < ADMIN_PASSWORD.length ? ADMIN_PASSWORD.charCodeAt(pos) : -1;
+      const result = this.evalOp(actual, op, tested);
 
-      // All chars extracted?
-      const logs = await this.prisma.labGenericLog.findMany({
-        where: { userId, labId, type: 'STEP_3_EXTRACT' },
-      });
+      if (result) await this.recordStep(userId, labId, 'STEP_3_EXTRACT');
 
-      if (correct && logs.length >= ADMIN_PASSWORD.length) {
-        const flag = this.stateService.generateDynamicFlag(
-          `FLAG{${LAB_SLUG.toUpperCase().replace(/-/g, '_')}`,
-          userId,
-          labId,
-        );
-        return {
-          found: true,
-          stepCompleted: 'STEP_3_EXTRACT',
-          exploited: true,
-          flag,
-          message: 'Full password extracted!',
-          ar_message: 'تم استخراج كلمة المرور الكاملة!',
-        };
+      // Check if the full password has been brute-forced (exact equality hits for every position)
+      const exactHit = op === '=' && actual === tested;
+      if (exactHit) {
+        const logs = await this.prisma.labGenericLog.findMany({
+          where: { userId, labId, type: 'STEP_3_EXTRACT' },
+        });
+        if (logs.length >= ADMIN_PASSWORD.length) {
+          await this.recordStep(userId, labId, 'STEP_3_COMPLETE');
+          const flag = this.stateService.generateDynamicFlag(
+            `FLAG{${LAB_SLUG.toUpperCase().replace(/-/g, '_')}`,
+            userId,
+            labId,
+          );
+          return { found: true, stepCompleted: 'STEP_3_COMPLETE', exploited: true, flag };
+        }
       }
 
-      return {
-        found: correct,
-        stepCompleted: correct ? 'STEP_3_EXTRACT' : undefined,
-        feedback: correct
-          ? `Position ${pos + 1} confirmed ✓`
-          : `Wrong ASCII at position ${pos + 1}`,
-        ar_feedback: correct
-          ? `الموضع ${pos + 1} صحيح ✓`
-          : `ASCII خاطئ في الموضع ${pos + 1}`,
-      };
+      return { found: result, stepCompleted: result ? 'STEP_3_EXTRACT' : undefined };
     }
 
-    // Normal article lookup
+    // ──────────────────────────────────────────────────────────
+    // STEP 2 — LENGTH / generic numeric probe
+    // ──────────────────────────────────────────────────────────
+    const lengthMatch = raw.match(
+      /length\s*\(.*?\)\s*([><=!]+)\s*(\d+)/i,
+    );
+    if (lengthMatch) {
+      const op     = lengthMatch[1];
+      const tested = parseInt(lengthMatch[2]);
+      const result = this.evalOp(ADMIN_PASSWORD.length, op, tested);
+      if (result) await this.recordStep(userId, labId, 'STEP_2_LENGTH');
+      return { found: result, stepCompleted: result ? 'STEP_2_LENGTH' : undefined };
+    }
+
+    // ──────────────────────────────────────────────────────────
+    // STEP 1 — Boolean oracle confirmation (AND 1=1 / AND 1=2 / AND 1>0 etc.)
+    // ──────────────────────────────────────────────────────────
+    const boolMatch = raw.match(/and\s+(\d+)\s*([><=!]+)\s*(\d+)/i);
+    if (boolMatch) {
+      const a      = parseInt(boolMatch[1]);
+      const op     = boolMatch[2];
+      const b      = parseInt(boolMatch[3]);
+      const result = this.evalOp(a, op, b);
+      await this.recordStep(userId, labId, 'STEP_1_CONFIRM');
+      if (result) {
+        return {
+          found: true,
+          article: { id: 5, title: 'Getting Started with Docker', content: 'Docker lets you ship applications in containers...' },
+          stepCompleted: 'STEP_1_CONFIRM',
+        };
+      }
+      return { found: false, stepCompleted: 'STEP_1_CONFIRM' };
+    }
+
+    // ──────────────────────────────────────────────────────────
+    // Plain article lookup
+    // ──────────────────────────────────────────────────────────
     const numId = parseInt(raw);
     if (numId === 5) {
-      return { found: true, article: { id: 5, title: 'Getting Started with Node.js', content: 'Node.js is a JavaScript runtime...' } };
+      return {
+        found:   true,
+        article: { id: 5, title: 'Getting Started with Docker', content: 'Docker lets you ship applications in containers...' },
+      };
     }
     return { found: false };
   }
 
-  // ─── Helpers ─────────────────────────────────────────────────────────────────
+  // ── Helpers ───────────────────────────────────────────────────────────
+  private evalOp(a: number, op: string, b: number): boolean {
+    switch (op) {
+      case '>':  return a > b;
+      case '<':  return a < b;
+      case '>=': return a >= b;
+      case '<=': return a <= b;
+      case '=':  return a === b;
+      case '!=': case '<>': return a !== b;
+      default:   return false;
+    }
+  }
+
   private resolveCurrentStep(completedSteps: string[]): number {
-    if (completedSteps.includes('STEP_3_EXTRACT')) return 3;
-    if (completedSteps.includes('STEP_2_LENGTH')) return 3;
-    if (completedSteps.includes('STEP_1_CONFIRM')) return 2;
+    if (completedSteps.includes('STEP_3_COMPLETE') ||
+        completedSteps.includes('STEP_3_EXTRACT'))  return 3;
+    if (completedSteps.includes('STEP_2_LENGTH'))    return 3;
+    if (completedSteps.includes('STEP_1_CONFIRM'))   return 2;
     return 1;
   }
 
