@@ -107,15 +107,16 @@ async function main() {
   console.log('═'.repeat(50));
 
   try {
+    
     // await seedSubscriptionPlans(prisma);
     // await seedLabs(prisma);
     // await seedModuleLabs();
-    await seedCourses(prisma);
-    await seedPaths(prisma);
+    // await seedCourses(prisma);
+    // await seedPaths(prisma);
 
-    // for (const category of LAB_CATEGORIES) {
-    //   await seedCategoryLabs(prisma, category);
-    // }
+    for (const category of LAB_CATEGORIES) {
+      await seedCategoryLabs(prisma, category);
+    }
 
     // ✅ Always seed badges (idempotent — skips existing)
     // await seedBadges(prisma);
