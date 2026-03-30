@@ -3,10 +3,8 @@ import { DatabaseModule } from '../../../core/database';
 import { PracticeLabStateService } from './services/practice-lab-state.service';
 import { LabProgressService } from './services/lab-progress.service';
 import { LabValidationService } from './services/lab-validation.service';
-// ── PR #3 engines (were missing from DI — caused 500 on startup) ──────────────
-import { FlagPolicyEngine } from './engines/flag-policy.engine';
-import { XssDetectorEngine } from './engines/xss-detector.engine';
-import { CsrfDetectorEngine } from './engines/csrf-detector.engine';
+import { FlagRecordService } from './services/flag-record.service';
+import { HintPenaltyService } from './services/hint-penalty.service';
 
 @Module({
   imports: [DatabaseModule],
@@ -14,19 +12,15 @@ import { CsrfDetectorEngine } from './engines/csrf-detector.engine';
     PracticeLabStateService,
     LabProgressService,
     LabValidationService,
-    // Engines
-    FlagPolicyEngine,
-    XssDetectorEngine,
-    CsrfDetectorEngine,
+    FlagRecordService,
+    HintPenaltyService,
   ],
   exports: [
     PracticeLabStateService,
     LabProgressService,
     LabValidationService,
-    // Engines
-    FlagPolicyEngine,
-    XssDetectorEngine,
-    CsrfDetectorEngine,
+    FlagRecordService,
+    HintPenaltyService,
   ],
 })
 export class SharedModule {}
