@@ -10,28 +10,25 @@ import { Lab2Service } from './lab2.service';
 export class Lab2Controller {
   constructor(private readonly lab2: Lab2Service) {}
 
-  // ── init (legacy GET) ────────────────────────────────────────────────────
   @SkipThrottle()
   @Get('init')
   init(@GetUser('id') userId: string) {
     return this.lab2.initLab(userId, 'sqli-union-extract');
   }
 
-  // ── start (POST alias expected by frontend useLabBase) ───────────────────
   @SkipThrottle()
   @Post('start')
   start(@GetUser('id') userId: string) {
     return this.lab2.initLab(userId, 'sqli-union-extract');
   }
 
-  // ── reset ────────────────────────────────────────────────────────────────
+  // ── reset: wipes DB steps so progress truly resets ─────────────────────
   @Throttle({ default: { limit: 5, ttl: 60000 } })
   @Post('reset')
   reset(@GetUser('id') userId: string) {
-    return this.lab2.initLab(userId, 'sqli-union-extract');
+    return this.lab2.resetLab(userId, 'sqli-union-extract');
   }
 
-  // ── progress ─────────────────────────────────────────────────────────────
   @SkipThrottle()
   @Get('progress')
   getProgress(
@@ -41,8 +38,6 @@ export class Lab2Controller {
     return this.lab2.getProgress(userId, labId ?? 'sqli-union-extract');
   }
 
-  // ── vulnerable endpoint ───────────────────────────────────────────────────
-  // ❌ UNION-based SQLi: q injected directly into raw SQL query
   @Throttle({ default: { limit: 20, ttl: 60000 } })
   @Get('search')
   search(@GetUser('id') userId: string, @Query('q') q: string) {

@@ -1,10 +1,4 @@
 // src/modules/practice-labs/xss/labs/lab1/lab1.service.ts
-// Refactored (PR #3):
-//  - Removed local isXSSPayload() → now uses XssDetectorEngine.isPayload()
-//  - Removed hardcoded flag → now uses FlagPolicyEngine.generate() (dynamic per-user)
-//  - FlagRecordService.generateAndStore() called on lab init (idempotent)
-//  - Detection coverage improved (body, video, audio vectors now covered)
-
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../../../../../core/database';
 import { PracticeLabStateService } from '../../../shared/services/practice-lab-state.service';
@@ -12,7 +6,7 @@ import { FlagRecordService } from '../../../shared/services/flag-record.service'
 import { FlagPolicyEngine } from '../../../shared/engines/flag-policy.engine';
 import { XssDetectorEngine } from '../../../shared/engines/xss-detector.engine';
 
-const LAB_ID    = 'xss-lab1';
+const LAB_SLUG   = 'xss-asset-search-reflect';
 const LAB_SECRET = 'xss_lab1_s3cr3t_assettrack_reflect_2025';
 const FLAG_PREFIX = 'XSS_LAB1';
 
@@ -26,19 +20,20 @@ export class Lab1Service {
 
   async initLab(userId: string, labId: string) {
     const state = await this.stateService.initializeState(userId, labId);
-    // Pre-generate & store the dynamic flag for this user
-    const flag = FlagPolicyEngine.generate(userId, labId, LAB_SECRET, FLAG_PREFIX);
-    await this.flagRecord.generateAndStore(userId, labId, 'attempt-1', flag);
+    const flag = FlagPolicyEngine.generate(userId, state.labId, LAB_SECRET, FLAG_PREFIX);
+    await this.flagRecord.generateAndStore(userId, state.labId, 'attempt-1', flag);
     return state;
   }
 
   async search(userId: string, labId: string, query: string) {
     if (!query) throw new BadRequestException('Search query is required');
 
+    const state = await this.stateService.resolveLabId(labId);
+
     const results = await this.prisma.labGenericContent.findMany({
       where: {
         userId,
-        labId,
+        labId: state,
         OR: [
           { title: { contains: query, mode: 'insensitive' } },
           { body:  { contains: query, mode: 'insensitive' } },
@@ -50,7 +45,7 @@ export class Lab1Service {
     const detection = XssDetectorEngine.detect(query);
 
     if (detection.detected) {
-      const flag = FlagPolicyEngine.generate(userId, labId, LAB_SECRET, FLAG_PREFIX);
+      const flag = FlagPolicyEngine.generate(userId, state, LAB_SECRET, FLAG_PREFIX);
       return {
         success: true,
         exploited: true,
