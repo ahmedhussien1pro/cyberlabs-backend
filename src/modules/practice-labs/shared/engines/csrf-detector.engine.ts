@@ -76,16 +76,19 @@ export class CsrfDetectorEngine {
   /**
    * Lab 4-style: CORS wildcard subdomain misconfiguration.
    * Exploited when origin is a trusted subdomain but NOT the app itself.
+   *
+   * Fix: optional chaining on ctx.origin returns `string | undefined`;
+   * we normalise with `?? false` so `exploited` is always `boolean`.
    */
   static corsWildcardSubdomain(
     ctx: CsrfContext,
     appOrigin: string,
   ): CsrfExploitResult {
-    const isTrustedSubdomain =
-      !!ctx.origin?.endsWith(`.${ctx.trustedDomain}`) ||
-      ctx.origin?.endsWith(ctx.trustedDomain);
+    const isTrustedSubdomain: boolean =
+      (ctx.origin?.endsWith(`.${ctx.trustedDomain}`) ?? false) ||
+      (ctx.origin?.endsWith(ctx.trustedDomain) ?? false);
     const isAppItself = ctx.origin === appOrigin;
-    const exploited = isTrustedSubdomain && !isAppItself;
+    const exploited: boolean = isTrustedSubdomain && !isAppItself;
 
     return {
       exploited,
@@ -104,7 +107,7 @@ export class CsrfDetectorEngine {
     targetUserId: string,
     tokenValid: boolean,
   ): CsrfExploitResult {
-    const exploited = tokenValid && requestingUserId !== targetUserId;
+    const exploited: boolean = tokenValid && requestingUserId !== targetUserId;
     return {
       exploited,
       reason: exploited
