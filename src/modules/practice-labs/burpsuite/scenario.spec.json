@@ -1,0 +1,45 @@
+{
+  "name": "ShopFast — Burp Suite Intercepting & Modifying Requests",
+  "slug": "burpsuite",
+  "vulnerability_type": "TOOLS_BURPSUITE",
+  "domain": "TOOLS_AND_TECHNIQUES",
+  "educational_objective": "يتعلم الطالب الاستخدام الحقيقي لـ Burp Suite كـ intercepting proxy: كيف يُعدّل الـ HTTP requests قبل وصولها للـ server، وكيف يستخدم Repeater لإرسال طلبات متعددة، وكيف يكتشف سلوكاً مختلفاً يكشف ثغرة.",
+  "ar_educational_objective": "يتعلم الطالب استخدام Burp Suite كـ intercepting proxy: تعديل HTTP requests قبل وصولها للـ server، استخدام Repeater، واكتشاف الثغرات عبر ملاحظة الاختلاف في الـ responses.",
+  "prerequisites": ["http-basics"],
+  "hints_metadata": [
+    {
+      "order": 1,
+      "type": "conceptual",
+      "content": "Set up Burp Suite as your browser proxy (127.0.0.1:8080). Browse to the lab and add an item to cart. Intercept the checkout POST request — what fields does it contain? Can any of them be manipulated?",
+      "ar_content": "اضبط Burp Suite كـ proxy للمتصفح (127.0.0.1:8080). افتح الـ lab وأضف منتجاً للسلة. التقط الـ checkout POST request — ما هي الـ fields التي يحتوي عليها؟ هل يمكن التلاعب بأي منها؟",
+      "penalty": 10
+    },
+    {
+      "order": 2,
+      "type": "narrowing",
+      "content": "The checkout request contains { product_id, quantity, price }. The server trusts the 'price' field from the client. Use Burp Intercept to change price to 0.01 before forwarding.",
+      "ar_content": "الـ checkout request يحتوي { product_id, quantity, price }. الـ server يثق بـ 'price' من الـ client. استخدم Burp Intercept لتغيير الـ price إلى 0.01 قبل الإرسال.",
+      "penalty": 20
+    },
+    {
+      "order": 3,
+      "type": "final_push",
+      "content": "Intercept the checkout POST, change price to 0.01, forward the request. The order will be accepted with the manipulated price, and the confirmation page will display the flag.",
+      "ar_content": "التقط الـ checkout POST، غيّر الـ price إلى 0.01، أرسل الـ request. سيُقبَل الطلب بالسعر المعدَّل، وصفحة التأكيد ستعرض الـ flag.",
+      "penalty": 30
+    }
+  ],
+  "scoring_rules": {
+    "base_points": 300,
+    "base_xp": 100,
+    "hint_penalty_mode": "PERCENTAGE",
+    "time_bonus": false
+  },
+  "flag_validation": {
+    "policy": "PER_USER_PER_LAB",
+    "format": "FLAG{BURP_[USER_HASH]_PRICE_MANIPULATED}",
+    "dynamic": true
+  },
+  "environment_template": "web-app-node-express",
+  "hidden_solution_path": "admin/solutions/burpsuite-shopfast.md"
+}

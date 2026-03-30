@@ -1,0 +1,45 @@
+{
+  "name": "NetDiag Tool — OS Command Injection via Ping Utility",
+  "slug": "command-injection",
+  "vulnerability_type": "COMMAND_INJECTION",
+  "domain": "WEB_SECURITY",
+  "educational_objective": "يتعلم الطالب كيف يمكن لـ web application يُنفّذ OS commands بناءً على مُدخلات المستخدم أن يُستغَل عبر حقن أوامر إضافية باستخدام metacharacters مثل ; أو && أو |. الطالب يتعلم الانتقال من ping بسيط لتنفيذ أوامر تعسفية على الـ server.",
+  "ar_educational_objective": "يتعلم الطالب كيف يُستغَل الـ web app الذي يُنفّذ OS commands من مُدخلات المستخدم عبر حقن أوامر باستخدام ; أو && أو | للانتقال من ping بسيط لتنفيذ أوامر تعسفية.",
+  "prerequisites": ["http-basics", "linux-basics"],
+  "hints_metadata": [
+    {
+      "order": 1,
+      "type": "conceptual",
+      "content": "The network diagnostic tool runs: ping -c 4 [YOUR_INPUT]. What happens in the OS when you use ; after a command? Think about OS command chaining metacharacters.",
+      "ar_content": "أداة التشخيص تُنفّذ: ping -c 4 [YOUR_INPUT]. ماذا يحدث في الـ OS عند استخدام ; بعد الأمر؟ فكّر في metacharacters دمج الأوامر في Linux.",
+      "penalty": 10
+    },
+    {
+      "order": 2,
+      "type": "narrowing",
+      "content": "Try entering: 127.0.0.1; whoami in the target field. If the response shows a username, command injection is confirmed. Now try: 127.0.0.1; ls /",
+      "ar_content": "جرب إدخال: 127.0.0.1; whoami في حقل الـ target. إذا ظهر اسم مستخدم في الـ response، فالـ command injection مؤكد. الآن جرب: 127.0.0.1; ls /",
+      "penalty": 20
+    },
+    {
+      "order": 3,
+      "type": "final_push",
+      "content": "Enter: 127.0.0.1; cat /flag.txt in the target field and submit. The flag file content will appear in the diagnostic output section of the page.",
+      "ar_content": "أدخل: 127.0.0.1; cat /flag.txt في حقل الـ target وأرسل. محتوى ملف الـ flag سيظهر في قسم الـ diagnostic output في الصفحة.",
+      "penalty": 30
+    }
+  ],
+  "scoring_rules": {
+    "base_points": 550,
+    "base_xp": 220,
+    "hint_penalty_mode": "PERCENTAGE",
+    "time_bonus": false
+  },
+  "flag_validation": {
+    "policy": "PER_USER_PER_LAB",
+    "format": "FLAG{CMDI_[USER_HASH]_RCE_ACHIEVED}",
+    "dynamic": true
+  },
+  "environment_template": "linux-web-app",
+  "hidden_solution_path": "admin/solutions/command-injection-netdiag.md"
+}

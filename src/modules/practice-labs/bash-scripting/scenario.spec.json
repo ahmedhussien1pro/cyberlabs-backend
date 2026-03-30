@@ -1,0 +1,45 @@
+{
+  "name": "SysAdmin Rescue — Bash Automation & Log Analysis",
+  "slug": "bash-scripting",
+  "vulnerability_type": "BASH_SCRIPTING",
+  "domain": "TOOLS_AND_TECHNIQUES",
+  "educational_objective": "يتعلم الطالب كتابة Bash script يقوم بتحليل ملف log ضخم، استخراج IP addresses المشبوهة التي تجاوزت حد معين من الطلبات، وإخراج النتيجة بصيغة محددة. الـ lab يُعلّم الطالب pipes, grep, awk, sort, uniq في سياق تحليل حقيقي.",
+  "ar_educational_objective": "يتعلم الطالب كتابة Bash script لتحليل ملف log ضخم، استخراج IP addresses المشبوهة، وإخراج النتيجة بصيغة محددة مستخدماً pipes وgrep وawk وsort وuniq.",
+  "prerequisites": ["linux-basics"],
+  "hints_metadata": [
+    {
+      "order": 1,
+      "type": "conceptual",
+      "content": "The log file at /var/log/access.log has lines formatted as: [IP] [DATE] [METHOD] [STATUS]. You need to extract the first column (IP) and count occurrences. Think: which commands count repeated lines?",
+      "ar_content": "ملف الـ log في /var/log/access.log يحتوي أسطر بالصيغة: [IP] [DATE] [METHOD] [STATUS]. تحتاج استخراج العمود الأول (IP) وعدّ تكراراته. فكّر: أي commands تعدّ الأسطر المكررة؟",
+      "penalty": 10
+    },
+    {
+      "order": 2,
+      "type": "narrowing",
+      "content": "Use: cat /var/log/access.log | awk '{print $1}' | sort | uniq -c | sort -rn to get IPs sorted by request count. Any IP with count > 500 is suspicious.",
+      "ar_content": "استخدم: cat /var/log/access.log | awk '{print $1}' | sort | uniq -c | sort -rn للحصول على IPs مرتبة حسب عدد الطلبات. أي IP بعدد > 500 مشبوه.",
+      "penalty": 20
+    },
+    {
+      "order": 3,
+      "type": "final_push",
+      "content": "Write the suspicious IP to /tmp/result.txt then run: cat /tmp/flag.txt. The flag file unlocks only after your script correctly identifies the top offending IP (192.168.10.44).",
+      "ar_content": "اكتب الـ IP المشبوه في /tmp/result.txt ثم نفّذ: cat /tmp/flag.txt. ملف الـ flag يُفتح فقط بعد تحديد الـ IP الصحيح (192.168.10.44).",
+      "penalty": 30
+    }
+  ],
+  "scoring_rules": {
+    "base_points": 350,
+    "base_xp": 130,
+    "hint_penalty_mode": "PERCENTAGE",
+    "time_bonus": false
+  },
+  "flag_validation": {
+    "policy": "PER_USER_PER_LAB",
+    "format": "FLAG{BASH_[USER_HASH]_LOG_ANALYST}",
+    "dynamic": true
+  },
+  "environment_template": "linux-terminal",
+  "hidden_solution_path": "admin/solutions/bash-scripting-sysadmin.md"
+}

@@ -1,0 +1,45 @@
+{
+  "name": "HRPortal — Broken Access Control (Role Escalation)",
+  "slug": "ac-vuln",
+  "vulnerability_type": "BROKEN_ACCESS_CONTROL",
+  "domain": "WEB_SECURITY",
+  "educational_objective": "يتعلم الطالب كيف أن الـ server يعتمد على role مُرسَلة من الـ client في الـ request body بدلاً من التحقق منها من الـ session، مما يُمكّن أي مستخدم عادي من ترقية نفسه لـ admin عبر تعديل قيمة واحدة في الـ request.",
+  "ar_educational_objective": "يتعلم الطالب كيف أن الـ server يعتمد على role مُرسَلة من الـ client في الـ request body بدلاً من التحقق منها من الـ session، مما يُمكّن أي مستخدم عادي من ترقية نفسه لـ admin عبر تعديل قيمة واحدة في الـ request.",
+  "prerequisites": ["http-basics", "burpsuite-intro"],
+  "hints_metadata": [
+    {
+      "order": 1,
+      "type": "conceptual",
+      "content": "The employee profile update endpoint accepts a JSON body. Inspect all fields being sent — is there any field the server shouldn't trust from the client?",
+      "ar_content": "الـ endpoint الخاص بتحديث بيانات الموظف يقبل JSON body. افحص كل الـ fields المُرسَلة — هل هناك field لا يجب أن يثق بها الـ server من الـ client؟",
+      "penalty": 10
+    },
+    {
+      "order": 2,
+      "type": "narrowing",
+      "content": "The PATCH /api/employees/profile request contains a 'role' field. Try changing its value from 'employee' to 'admin' in Burp Suite and observe the server's response.",
+      "ar_content": "الـ PATCH /api/employees/profile request يحتوي على field اسمه 'role'. جرب تغيير قيمته من 'employee' إلى 'admin' في Burp Suite وراقب الـ response.",
+      "penalty": 20
+    },
+    {
+      "order": 3,
+      "type": "final_push",
+      "content": "Send: PATCH /api/employees/profile with body { \"name\": \"yourname\", \"role\": \"admin\" }. After the server accepts, navigate to /admin/dashboard — the flag will be displayed.",
+      "ar_content": "أرسل: PATCH /api/employees/profile مع body { \"name\": \"yourname\", \"role\": \"admin\" }. بعد قبول الـ server، انتقل لـ /admin/dashboard وستجد الـ flag.",
+      "penalty": 30
+    }
+  ],
+  "scoring_rules": {
+    "base_points": 400,
+    "base_xp": 150,
+    "hint_penalty_mode": "PERCENTAGE",
+    "time_bonus": false
+  },
+  "flag_validation": {
+    "policy": "PER_USER_PER_LAB",
+    "format": "FLAG{AC_[USER_HASH]_ROLE_ESCALATED}",
+    "dynamic": true
+  },
+  "environment_template": "web-app-node-express",
+  "hidden_solution_path": "admin/solutions/ac-vuln-hrportal.md"
+}

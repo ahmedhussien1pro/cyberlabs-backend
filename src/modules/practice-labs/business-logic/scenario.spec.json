@@ -1,0 +1,45 @@
+{
+  "name": "CouponKing — Business Logic Abuse (Discount Stacking)",
+  "slug": "business-logic",
+  "vulnerability_type": "BUSINESS_LOGIC",
+  "domain": "WEB_SECURITY",
+  "educational_objective": "يتعلم الطالب كيف تنشأ ثغرات Business Logic من افتراضات خاطئة يفعلها المطور — هنا: افتراض أن كود الخصم يُطبَّق مرة واحدة فقط، لكن الـ server لا يتحقق من ذلك بشكل صحيح. الطالب يكتشف طريقة تطبيق نفس الكود عدة مرات في نفس الـ session.",
+  "ar_educational_objective": "يتعلم الطالب كيف تنشأ ثغرات Business Logic من افتراضات خاطئة — مثل الافتراض أن كود الخصم يُطبَّق مرة واحدة فقط دون تحقق صحيح من الـ server.",
+  "prerequisites": ["http-basics", "burpsuite-intro"],
+  "hints_metadata": [
+    {
+      "order": 1,
+      "type": "conceptual",
+      "content": "Apply the promo code SAVE20 to your cart. It works. Now try applying it a second time — what does the server respond? Is the check done server-side or client-side?",
+      "ar_content": "طبّق كود الخصم SAVE20 على سلتك. نجح. الآن جرب تطبيقه مرة ثانية — ماذا يردّ الـ server؟ هل التحقق يتم server-side أم client-side؟",
+      "penalty": 10
+    },
+    {
+      "order": 2,
+      "type": "narrowing",
+      "content": "The UI blocks reapplication, but the API POST /api/cart/coupon doesn't. Intercept the request in Burp and send it 5 times in Repeater. Check the cart total after each send.",
+      "ar_content": "الـ UI يمنع إعادة التطبيق، لكن الـ API POST /api/cart/coupon لا يمنع. التقط الـ request في Burp وأرسله 5 مرات في Repeater. راقب إجمالي السلة بعد كل إرسال.",
+      "penalty": 20
+    },
+    {
+      "order": 3,
+      "type": "final_push",
+      "content": "Send POST /api/cart/coupon with { code: 'SAVE20' } exactly 10 times. The cart total will drop below $1. Complete the checkout and the order confirmation page reveals the flag.",
+      "ar_content": "أرسل POST /api/cart/coupon مع { code: 'SAVE20' } عشر مرات بالضبط. إجمالي السلة سيقل عن $1. أكمل الـ checkout وصفحة التأكيد ستكشف الـ flag.",
+      "penalty": 30
+    }
+  ],
+  "scoring_rules": {
+    "base_points": 450,
+    "base_xp": 175,
+    "hint_penalty_mode": "PERCENTAGE",
+    "time_bonus": false
+  },
+  "flag_validation": {
+    "policy": "PER_USER_PER_LAB",
+    "format": "FLAG{BL_[USER_HASH]_COUPON_STACKED}",
+    "dynamic": true
+  },
+  "environment_template": "web-app-node-express",
+  "hidden_solution_path": "admin/solutions/business-logic-couponking.md"
+}

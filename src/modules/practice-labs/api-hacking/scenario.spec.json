@@ -1,0 +1,45 @@
+{
+  "name": "DeliveryTrack — API Enumeration & BOLA",
+  "slug": "api-hacking",
+  "vulnerability_type": "BOLA_API_HACKING",
+  "domain": "WEB_SECURITY",
+  "educational_objective": "يتعلم الطالب كيفية استكشاف نقاط نهاية API غير موثقة (undocumented endpoints) عبر فحص ملف OpenAPI/Swagger المكشوف، ثم استغلال BOLA (Broken Object Level Authorization) للوصول لبيانات شحنات مستخدمين آخرين بتغيير shipment ID في الـ URL.",
+  "ar_educational_objective": "يتعلم الطالب كيفية استكشاف نقاط نهاية API غير موثقة عبر فحص ملف OpenAPI/Swagger المكشوف، ثم استغلال BOLA للوصول لبيانات شحنات مستخدمين آخرين.",
+  "prerequisites": ["http-basics", "rest-api-basics", "burpsuite-intro"],
+  "hints_metadata": [
+    {
+      "order": 1,
+      "type": "conceptual",
+      "content": "Navigate to /api/docs or /swagger.json — many APIs expose their full schema publicly. Look for endpoints that return data by ID.",
+      "ar_content": "انتقل لـ /api/docs أو /swagger.json — كثير من الـ APIs تكشف الـ schema العامة. ابحث عن endpoints تُرجع بيانات بالـ ID.",
+      "penalty": 10
+    },
+    {
+      "order": 2,
+      "type": "narrowing",
+      "content": "You found GET /api/shipments/{id}. Your own shipment ID is visible in the dashboard. Try incrementing or decrementing the ID value to access another user's shipment.",
+      "ar_content": "وجدت GET /api/shipments/{id}. رقم شحنتك ظاهر في الـ dashboard. جرب زيادة أو تقليل الـ ID للوصول لشحنة مستخدم آخر.",
+      "penalty": 20
+    },
+    {
+      "order": 3,
+      "type": "final_push",
+      "content": "Send GET /api/shipments/1001 (admin's internal shipment). The response body will contain the flag inside the 'tracking_notes' field.",
+      "ar_content": "أرسل GET /api/shipments/1001 (شحنة الـ admin الداخلية). الـ response body ستحتوي على الـ flag داخل حقل 'tracking_notes'.",
+      "penalty": 30
+    }
+  ],
+  "scoring_rules": {
+    "base_points": 500,
+    "base_xp": 200,
+    "hint_penalty_mode": "PERCENTAGE",
+    "time_bonus": false
+  },
+  "flag_validation": {
+    "policy": "PER_USER_PER_LAB",
+    "format": "FLAG{API_BOLA_[USER_HASH]_SHIPMENT_EXPOSED}",
+    "dynamic": true
+  },
+  "environment_template": "web-app-node-express",
+  "hidden_solution_path": "admin/solutions/api-hacking-deliverytrack.md"
+}

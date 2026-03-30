@@ -1,0 +1,45 @@
+{
+  "name": "VoteStream — CAPTCHA Bypass via API Parameter Removal",
+  "slug": "captcha-bypass",
+  "vulnerability_type": "CAPTCHA_BYPASS",
+  "domain": "WEB_SECURITY",
+  "educational_objective": "يتعلم الطالب أن كثيراً من تطبيقات الـ CAPTCHA تفشل لأن الـ server لا يتحقق فعلياً من نتيجة الـ CAPTCHA — فقط الـ client يتحقق. بإزالة أو تزوير حقل الـ captcha_token من الـ API request، يمكن إرسال طلبات تلقائية بدون أي تحقق.",
+  "ar_educational_objective": "يتعلم الطالب أن الـ CAPTCHA كثيراً ما يفشل لأن الـ server لا يتحقق فعلياً من نتيجته — فقط الـ client. بإزالة حقل captcha_token من الـ API request يمكن تجاوزه كلياً.",
+  "prerequisites": ["http-basics", "burpsuite-intro"],
+  "hints_metadata": [
+    {
+      "order": 1,
+      "type": "conceptual",
+      "content": "Submit a vote normally with CAPTCHA solved. Intercept the request in Burp. What fields are sent? Is there a field related to CAPTCHA validation? What happens if you remove it?",
+      "ar_content": "صوّت بشكل طبيعي مع حل الـ CAPTCHA. التقط الـ request في Burp. ما الـ fields المُرسَلة؟ هل هناك field متعلق بالـ CAPTCHA؟ ماذا يحدث لو حذفته؟",
+      "penalty": 10
+    },
+    {
+      "order": 2,
+      "type": "narrowing",
+      "content": "The POST /api/vote request body contains { candidate_id, captcha_token }. Remove the captcha_token field entirely and resend — the server accepts the vote without verification.",
+      "ar_content": "الـ POST /api/vote body يحتوي { candidate_id, captcha_token }. احذف حقل captcha_token كلياً وأعد الإرسال — الـ server يقبل التصويت بدون تحقق.",
+      "penalty": 20
+    },
+    {
+      "order": 3,
+      "type": "final_push",
+      "content": "Use Burp Intruder to send POST /api/vote (without captcha_token) 100 times for candidate_id=2. When the vote threshold is reached, the admin dashboard shows the flag.",
+      "ar_content": "استخدم Burp Intruder لإرسال POST /api/vote (بدون captcha_token) 100 مرة لـ candidate_id=2. عند الوصول للحد المطلوب، الـ admin dashboard سيعرض الـ flag.",
+      "penalty": 30
+    }
+  ],
+  "scoring_rules": {
+    "base_points": 400,
+    "base_xp": 150,
+    "hint_penalty_mode": "PERCENTAGE",
+    "time_bonus": false
+  },
+  "flag_validation": {
+    "policy": "PER_USER_PER_LAB",
+    "format": "FLAG{CAPTCHA_[USER_HASH]_BYPASS_SUCCESS}",
+    "dynamic": true
+  },
+  "environment_template": "web-app-node-express",
+  "hidden_solution_path": "admin/solutions/captcha-bypass-votestream.md"
+}

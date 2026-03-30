@@ -1,0 +1,45 @@
+{
+  "name": "MedClinic Portal — Password Reset Token Hijack",
+  "slug": "broken-auth",
+  "vulnerability_type": "BROKEN_AUTHENTICATION",
+  "domain": "WEB_SECURITY",
+  "educational_objective": "يتعلم الطالب كيف أن الـ password reset tokens القصيرة أو القابلة للتخمين تُمكّن المهاجم من اختراق حساب أي مستخدم. الـ lab يُعلّم brute-force للـ numeric token في نافذة زمنية محدودة بدون rate-limiting حقيقي على الـ reset endpoint.",
+  "ar_educational_objective": "يتعلم الطالب كيف أن الـ password reset tokens القصيرة أو القابلة للتخمين تُمكّن المهاجم من اختراق حساب أي مستخدم عبر brute-force في غياب rate-limiting.",
+  "prerequisites": ["http-basics", "burpsuite-intro"],
+  "hints_metadata": [
+    {
+      "order": 1,
+      "type": "conceptual",
+      "content": "Trigger a password reset for victim@medclinic.lab. Intercept the reset URL in Burp. How many digits is the token? Is there any limit on how many times you can try a wrong token?",
+      "ar_content": "شغّل password reset لـ victim@medclinic.lab. التقط الـ reset URL في Burp. كم عدد أرقام الـ token؟ هل هناك حد لعدد المحاولات الخاطئة؟",
+      "penalty": 10
+    },
+    {
+      "order": 2,
+      "type": "narrowing",
+      "content": "The reset token is 6 digits (000000–999999). Use Burp Intruder with a Sniper attack on the token parameter in POST /api/auth/reset-verify. Set payload type: Numbers from 000000 to 999999.",
+      "ar_content": "الـ reset token من 6 أرقام (000000–999999). استخدم Burp Intruder مع Sniper attack على الـ token parameter في POST /api/auth/reset-verify. اضبط payload: Numbers من 000000 إلى 999999.",
+      "penalty": 20
+    },
+    {
+      "order": 3,
+      "type": "final_push",
+      "content": "When Intruder finds a 200 response, the token is correct. Use it to reset the password, log in as the victim, and navigate to /patient/records — the flag is in the first record.",
+      "ar_content": "عندما يجد Intruder استجابة 200، يكون الـ token صحيحاً. استخدمه لإعادة تعيين كلمة المرور، سجّل دخولك كالضحية، وانتقل لـ /patient/records — الـ flag في أول سجل.",
+      "penalty": 30
+    }
+  ],
+  "scoring_rules": {
+    "base_points": 500,
+    "base_xp": 200,
+    "hint_penalty_mode": "PERCENTAGE",
+    "time_bonus": false
+  },
+  "flag_validation": {
+    "policy": "PER_USER_PER_LAB",
+    "format": "FLAG{BAUTH_[USER_HASH]_TOKEN_BRUTEFORCED}",
+    "dynamic": true
+  },
+  "environment_template": "web-app-node-express",
+  "hidden_solution_path": "admin/solutions/broken-auth-medclinic.md"
+}
