@@ -1,0 +1,113 @@
+===========================================================================================================================================
+                                  Cybersecurity Hashing Task
+                                  ------------------------------
+                                  Welcome to the Cybersecurity Hashing Task!
+===========================================================================================================================================
+
+=======================
+Provided Data:
+=======================
+
+Hashed Word 1:
+f28b28d536f2db2de59da8a4c1351a49
+
+Hashed Word 2:
+6c78a2d3f4cf0521e1f5d29932c1e4f6b9eddb68
+
+Hashed Word 3:
+ee3a31c0a78bbf35e24bb9bc3d94aaf7e60d7003f0ddefb4b625b415c73b1b2a
+
+Hashed Word 4:
+39f44049b8b5c6c66e981712e4c1395e
+
+Hashed Word 5:
+daff8f8c907f7e26a8a029d4b3521f3023f0ad7c
+
+Hashed Word 6:
+7b53d3e15313f1b67a967344c89efb41
+
+Hashed Word 7:
+4d72b7edca2b84c8da8d9ae9c64712cd9b010fe4e9f3e91f682c96d79b0a9e9f
+
+Hashed Word 8:
+57c2b58ef9e62cd535b9e2a45fc43d86
+
+Hashed Word 9:
+75c2a1e4c576db53b5c732d3b7fd61c12e4f50e90b16f61dfaf29d415ff16a88
+
+Hashed Word 10:
+631b46e57c0811cc5fa3b0cc12b374bd
+
+Hashed Word 11:
+dc3d0ff517c6598c1c7c39263a9e2debd16adf33
+
+Hashed Word 12:
+9cc9c4b1609026d84995bead4c0d41c0
+
+Hashed Word 13:
+0cc3cdd2d4673f8e1b9ef2b42632db0ee5ad43c8b29a385be8aef86f9ec48144
+
+Hashed Word 14:
+5e29c2c04d5194c0c79b91f95f62d070
+
+Hashed Word 15:
+78129514b076baef32bc7bc198c592433545625b
+
+Hashed Word 16:
+132b9e1b8c702dc69c3e30f89fba7cf68e03e69916d1b432672b688f99ff9a98
+
+Hashed Word 17:
+0a3b2e17d098855d3a54928a34c8f255
+
+Hashed Word 18:
+afc223e6ad8da3b91b3486491be169317e8fcfc8
+
+Hashed Word 19:
+8c6d9e4f073c4f7d167c2217a7b0a13e
+
+Hashed Word 20:
+9b8fca3ef6f4c516b3a573f3f12d20760f8fd79a72bfe68e94cdb94ad84a09b7
+
+=======================
+                      Required Answer Format:
+=======================
+
+{
+  "data": [
+    {
+      "word": "original_word",
+      "hashed_algorithm": "MD5/SHA-1/SHA-256"
+    },
+    {
+      "word": "original_word",
+      "hashed_algorithm": "MD5/SHA-1/SHA-256"
+    },
+    ...
+  ]
+}
+
+Note: The above format is called **JSON**.
+
+===============================
+Instructions for the Trainer:
+===============================
+
+1. **Look at each hash** and identify which algorithm was used (MD5, SHA-1, or SHA-256).
+2. **Write down the original word** and the corresponding hashing algorithm.
+3. **Organize the answers** in the format shown above (JSON format).
+
+===========================
+  ==> Once the task is complete, please **submit the answers**.
+=========================================================
+
+
+
+===================================================================================================================================================================
+
+                                             CCCC   Y   Y  BBBBB   EEEEE  RRRR        L         AAAAA      BBBBB       SSSS
+                                            C        Y Y   B    B  E      R   R       L        A     A     B    B    S
+                                            C         Y    BBBBB   EEEE   RRRR        L        AAAAAAA     BBBBB       SSSS
+                                            C         Y    B    B  E      R  R        L        A     A     B    B           S
+                                             CCCC     Y    BBBBB   EEEEE  R   R       LLLLL    A     A     BBBBB       SSSS
+
+===================================================================================================================================================================
