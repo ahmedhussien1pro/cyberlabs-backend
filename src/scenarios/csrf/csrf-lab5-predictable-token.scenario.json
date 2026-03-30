@@ -1,0 +1,70 @@
+{
+  "lab_id": "csrf-lab5-predictable-token",
+  "name": "CSRF — Predictable Token Forgery",
+  "vulnerability_type": "CSRF",
+  "domain": "Cross-Site Request Forgery",
+  "db_field_map": {
+    "title": "CSRF — Predictable Token Forgery",
+    "ar_title": "CSRF — تزوير Token قابل للتنبؤ",
+    "category": "CSRF",
+    "difficulty": "ADVANCED",
+    "slug": "csrf-lab5-predictable-token",
+    "environmentType": "SIMULATED",
+    "executionMode": "INTERACTIVE",
+    "duration": 45,
+    "xpReward": 250,
+    "pointsReward": 125,
+    "hintPenaltyMode": "PERCENTAGE"
+  },
+  "educational_objective": "Understand that a CSRF token is only effective if it is cryptographically unpredictable. A token generated as MD5(userId + date) can be forged by any attacker who knows the userId (often public) and the current date.",
+  "scenario": "ProfileHub — the CSRF token for /profile/update is generated server-side as MD5(userId + YYYY-MM-DD). The userId is visible in the public profile URL. An attacker who knows the formula and userId can generate a valid token without ever reading the victim's DOM.",
+  "ar_scenario": "ProfileHub تُولّد CSRF token بالمعادلة MD5(userId + date). userId ظاهر في رابط الملف الشخصي — المهاجم يستطيع تزوير Token صالح.",
+  "prerequisites": ["CSRF Labs 1-4", "Hash functions vs CSPRNG", "What makes a token unpredictable", "MD5 weaknesses"],
+  "hints_metadata": [
+    {
+      "order": 1,
+      "level": "broad",
+      "content": "A CSRF token protects you only if the attacker cannot predict it. What information is used to generate this token? Is any of it public or guessable?",
+      "ar_content": "CSRF token يحميك فقط إذا كان المهاجم لا يستطيع تنبّؤه. ما المعلومات المستخدمة لتوليده؟ هل أيٌّ منها عام؟",
+      "xpCost": 0,
+      "penaltyPercent": 10
+    },
+    {
+      "order": 2,
+      "level": "narrowing",
+      "content": "The token formula is MD5(userId + YYYY-MM-DD). The userId appears in the profile URL. Today's date is known. You have all the inputs needed to compute a valid token independently.",
+      "ar_content": "معادلة الـ token هي MD5(userId + YYYY-MM-DD). userId ظاهر في الرابط. التاريخ معروف. لديك كل المدخلات.",
+      "xpCost": 0,
+      "penaltyPercent": 20
+    },
+    {
+      "order": 3,
+      "level": "final_push",
+      "content": "Click 'Forge Token + Submit' — the UI computes MD5(userId + today) client-side and submits it to /profile/update. The server validates it as legitimate. Token forged. CSRF executed.",
+      "ar_content": "اضغط 'Forge Token + Submit' — الـ UI يحسب MD5(userId + today) ويُرسله لـ /profile/update. السيرفر يقبله. Token مزوَّر. CSRF مُنفَّذ.",
+      "xpCost": 0,
+      "penaltyPercent": 30
+    }
+  ],
+  "scoring_rules": {
+    "base_points": 125,
+    "base_xp": 250,
+    "hint_penalty_mode": "PERCENTAGE",
+    "hint_penalties": [10, 20, 30],
+    "time_bonus": false
+  },
+  "flag_validation": {
+    "type": "dynamic",
+    "scoped": "session",
+    "format": "FLAG{csrf5-<uuid_prefix>}",
+    "note": "Returned from /profile/update when forged predictable token passes server validation"
+  },
+  "environment_template": "simulated-web-app",
+  "hidden_solution_path": {
+    "admin_only": true,
+    "db_field": "scenarioAdmin + solution",
+    "exploit_path": "Read userId from profile URL → compute MD5(userId + YYYY-MM-DD) → POST /profile/update with forged token → server validates token → CSRF succeeds",
+    "key_insight": "Predictable token = no token. CSRF token must use CSPRNG, be session-bound, and single-use.",
+    "fix_summary": "Use crypto.randomBytes(32) or equivalent CSPRNG; bind token to session ID; rotate on each use"
+  }
+}

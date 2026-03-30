@@ -1,0 +1,69 @@
+{
+  "lab_id": "csrf-lab2-content-type",
+  "name": "CSRF — Content-Type Bypass",
+  "vulnerability_type": "CSRF",
+  "domain": "Cross-Site Request Forgery",
+  "db_field_map": {
+    "title": "CSRF — Content-Type Bypass",
+    "ar_title": "CSRF — تجاوز نوع المحتوى",
+    "category": "CSRF",
+    "difficulty": "BEGINNER",
+    "slug": "csrf-lab2-content-type",
+    "environmentType": "SIMULATED",
+    "executionMode": "INTERACTIVE",
+    "duration": 25,
+    "xpReward": 120,
+    "pointsReward": 60,
+    "hintPenaltyMode": "PERCENTAGE"
+  },
+  "educational_objective": "Understand that some developers think checking Content-Type: application/json prevents CSRF. In reality, a form POST with application/x-www-form-urlencoded can carry the same payload, and the browser sends it cross-origin without preflight.",
+  "scenario": "PayStream API — the /payment/execute endpoint was 'hardened' by requiring JSON body. However, the server parses both JSON and form-encoded bodies without strict Content-Type enforcement, making it bypassable via a simple form POST.",
+  "ar_scenario": "PayStream API تفترض أن JSON فقط يعني أمان. لكن السيرفر يقبل form-encoded أيضاً — مما يسمح بتجاوز CSRF.",
+  "prerequisites": ["CSRF basics (Lab 1)", "HTTP Content-Type header", "CORS preflight rules", "Simple vs preflighted requests"],
+  "hints_metadata": [
+    {
+      "order": 1,
+      "level": "broad",
+      "content": "The endpoint claims to require JSON. But does the server actually reject non-JSON bodies? And does the browser send a preflight for form-encoded requests?",
+      "ar_content": "النقطة تدّعي أنها تتطلب JSON. لكن هل السيرفر يرفض فعلاً الطلبات غير JSON؟",
+      "xpCost": 0,
+      "penaltyPercent": 10
+    },
+    {
+      "order": 2,
+      "level": "narrowing",
+      "content": "application/x-www-form-urlencoded is a 'simple' content type — no CORS preflight. The browser sends it cross-origin directly. The server parses it even when expecting JSON.",
+      "ar_content": "application/x-www-form-urlencoded نوع 'بسيط' — لا يحتاج preflight. المتصفح يُرسله cross-origin مباشرةً.",
+      "xpCost": 0,
+      "penaltyPercent": 20
+    },
+    {
+      "order": 3,
+      "level": "final_push",
+      "content": "Click 'Simulate Victim' — this sends a form-encoded POST to /payment/execute. The server accepts it, processes the payment, and returns the flag.",
+      "ar_content": "اضغط 'Simulate Victim' — يُرسل POST بـ form-encoded. السيرفر يقبله ويعالج الدفع.",
+      "xpCost": 0,
+      "penaltyPercent": 30
+    }
+  ],
+  "scoring_rules": {
+    "base_points": 60,
+    "base_xp": 120,
+    "hint_penalty_mode": "PERCENTAGE",
+    "hint_penalties": [10, 20, 30],
+    "time_bonus": false
+  },
+  "flag_validation": {
+    "type": "dynamic",
+    "scoped": "session",
+    "format": "FLAG{csrf2-<uuid_prefix>}",
+    "note": "Returned when form-encoded body bypasses JSON-only assumption"
+  },
+  "environment_template": "simulated-web-app",
+  "hidden_solution_path": {
+    "admin_only": true,
+    "db_field": "scenarioAdmin + solution",
+    "exploit_path": "form POST application/x-www-form-urlencoded to /payment/execute → no preflight → server parses body → processes payment",
+    "fix_summary": "Strictly validate Content-Type server-side; check Origin/Referer headers; add CSRF token regardless of content type"
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "lab_id": "csrf-lab1-no-token",
+  "name": "CSRF — No Token Protection",
+  "vulnerability_type": "CSRF",
+  "domain": "Cross-Site Request Forgery",
+  "db_field_map": {
+    "title": "CSRF — No Token Protection",
+    "ar_title": "CSRF — بدون حماية Token",
+    "category": "CSRF",
+    "difficulty": "BEGINNER",
+    "slug": "csrf-lab1-no-token",
+    "environmentType": "SIMULATED",
+    "executionMode": "INTERACTIVE",
+    "duration": 20,
+    "xpReward": 100,
+    "pointsReward": 50,
+    "hintPenaltyMode": "PERCENTAGE"
+  },
+  "educational_objective": "Understand the fundamental CSRF attack: a cross-origin POST request sent from an attacker page is automatically accompanied by the victim's cookies, allowing state-changing actions without the victim's knowledge.",
+  "scenario": "BankPortal v1.0 — a basic online banking interface. The /transfer endpoint accepts POST requests with amount and recipient fields. No CSRF token is required. The browser automatically attaches the session cookie on any same-origin or cross-origin POST.",
+  "ar_scenario": "بوابة BankPortal تقبل طلبات POST للتحويل بدون CSRF token. المتصفح يُرفق الكوكي تلقائياً مع أي طلب.",
+  "prerequisites": ["HTTP cookies and sessions", "Same-origin policy basics", "What is a state-changing request"],
+  "hints_metadata": [
+    {
+      "order": 1,
+      "level": "broad",
+      "content": "The transfer endpoint doesn't check whether the request originated from the legitimate site. What does the browser send automatically with every request to a domain?",
+      "ar_content": "نقطة نهاية التحويل لا تتحقق من مصدر الطلب. ما الذي يُرسله المتصفح تلقائياً مع كل طلب للنطاق؟",
+      "xpCost": 0,
+      "penaltyPercent": 10
+    },
+    {
+      "order": 2,
+      "level": "narrowing",
+      "content": "An attacker page on a different origin can submit a form that POSTs to BankPortal. The victim's browser will include their session cookie automatically — no JavaScript needed.",
+      "ar_content": "صفحة المهاجم يمكنها إرسال نموذج POST لـ BankPortal. متصفح الضحية سيُرفق الكوكي تلقائياً.",
+      "xpCost": 0,
+      "penaltyPercent": 20
+    },
+    {
+      "order": 3,
+      "level": "final_push",
+      "content": "Click 'Simulate Victim Click' — this triggers a cross-origin POST to /transfer. The server processes it as legitimate because the session cookie is present. That's CSRF.",
+      "ar_content": "اضغط 'Simulate Victim Click' — سيُطلق POST عبر origins. السيرفر يعتبره شرعياً لوجود الكوكي.",
+      "xpCost": 0,
+      "penaltyPercent": 30
+    }
+  ],
+  "scoring_rules": {
+    "base_points": 50,
+    "base_xp": 100,
+    "hint_penalty_mode": "PERCENTAGE",
+    "hint_penalties": [10, 20, 30],
+    "time_bonus": false
+  },
+  "flag_validation": {
+    "type": "dynamic",
+    "scoped": "session",
+    "format": "FLAG{csrf1-<uuid_prefix>}",
+    "note": "Returned from /simulate-victim endpoint on successful cross-origin POST exploit"
+  },
+  "environment_template": "simulated-web-app",
+  "hidden_solution_path": {
+    "admin_only": true,
+    "db_field": "scenarioAdmin + solution",
+    "exploit_path": "Attacker page → form POST /transfer amount=9999 recipient=attacker → victim browser auto-attaches session cookie → server processes transfer",
+    "fix_summary": "Add CSRF token to every state-changing form; validate token server-side; set SameSite=Strict on session cookies"
+  }
+}

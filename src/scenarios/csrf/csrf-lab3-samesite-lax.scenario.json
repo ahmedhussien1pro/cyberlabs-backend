@@ -1,0 +1,69 @@
+{
+  "lab_id": "csrf-lab3-samesite-lax",
+  "name": "CSRF — SameSite=Lax Bypass",
+  "vulnerability_type": "CSRF",
+  "domain": "Cross-Site Request Forgery",
+  "db_field_map": {
+    "title": "CSRF — SameSite=Lax Bypass",
+    "ar_title": "CSRF — تجاوز SameSite=Lax",
+    "category": "CSRF",
+    "difficulty": "INTERMEDIATE",
+    "slug": "csrf-lab3-samesite-lax",
+    "environmentType": "SIMULATED",
+    "executionMode": "INTERACTIVE",
+    "duration": 30,
+    "xpReward": 150,
+    "pointsReward": 75,
+    "hintPenaltyMode": "PERCENTAGE"
+  },
+  "educational_objective": "Understand that SameSite=Lax protects against cross-site POST requests, but still allows cookies on top-level GET navigations. If a state-changing action uses GET, SameSite=Lax provides zero protection.",
+  "scenario": "AccountHub — a user account management portal. The admin configured SameSite=Lax on session cookies, thinking it prevents all CSRF. However, the /account/role-update endpoint accepts GET requests, making it vulnerable to top-level navigation CSRF.",
+  "ar_scenario": "AccountHub تستخدم SameSite=Lax على الكوكي. لكن /account/role-update يقبل GET — مما يجعله ضعيفاً أمام CSRF عبر top-level navigation.",
+  "prerequisites": ["CSRF Lab 1 + 2", "SameSite cookie attribute", "HTTP GET vs POST semantics", "Top-level navigation"],
+  "hints_metadata": [
+    {
+      "order": 1,
+      "level": "broad",
+      "content": "SameSite=Lax blocks cross-site POST but allows GET on top-level navigations. Does any sensitive endpoint accept GET requests?",
+      "ar_content": "SameSite=Lax يمنع POST عبر cross-site لكن يسمح بـ GET في top-level navigations. هل هناك نقطة حساسة تقبل GET؟",
+      "xpCost": 0,
+      "penaltyPercent": 10
+    },
+    {
+      "order": 2,
+      "level": "narrowing",
+      "content": "The /account/role-update?role=admin endpoint performs a state change via GET. A top-level navigation (like window.location redirect) carries the SameSite=Lax cookie.",
+      "ar_content": "نقطة /account/role-update?role=admin تُجري تغييراً عبر GET. التنقل على مستوى أعلى يحمل كوكي SameSite=Lax.",
+      "xpCost": 0,
+      "penaltyPercent": 20
+    },
+    {
+      "order": 3,
+      "level": "final_push",
+      "content": "Click 'Simulate Victim Navigation' — this triggers a top-level GET to /account/role-update?role=admin. The Lax cookie is sent, the role is updated. That's the bypass.",
+      "ar_content": "اضغط 'Simulate Victim Navigation' — يُطلق GET على المستوى الأعلى لـ /account/role-update. كوكي Lax يُرسل والـ role يتغيّر.",
+      "xpCost": 0,
+      "penaltyPercent": 30
+    }
+  ],
+  "scoring_rules": {
+    "base_points": 75,
+    "base_xp": 150,
+    "hint_penalty_mode": "PERCENTAGE",
+    "hint_penalties": [10, 20, 30],
+    "time_bonus": false
+  },
+  "flag_validation": {
+    "type": "dynamic",
+    "scoped": "session",
+    "format": "FLAG{csrf3-<uuid_prefix>}",
+    "note": "Returned from /simulate-victim-navigation when GET-based state change is triggered cross-site"
+  },
+  "environment_template": "simulated-web-app",
+  "hidden_solution_path": {
+    "admin_only": true,
+    "db_field": "scenarioAdmin + solution",
+    "exploit_path": "Attacker page → window.location = 'https://accounthub.corp/account/role-update?role=admin' → top-level nav → Lax cookie sent → role updated",
+    "fix_summary": "Use SameSite=Strict; never perform state changes on GET; add CSRF token on all mutating endpoints"
+  }
+}

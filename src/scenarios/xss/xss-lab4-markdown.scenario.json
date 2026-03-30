@@ -1,0 +1,69 @@
+{
+  "lab_id": "xss-lab4-markdown",
+  "name": "XSS via Markdown",
+  "vulnerability_type": "XSS",
+  "domain": "Client-Side Injection",
+  "db_field_map": {
+    "title": "XSS via Markdown",
+    "ar_title": "XSS عبر Markdown",
+    "category": "XSS",
+    "difficulty": "INTERMEDIATE",
+    "slug": "xss-lab4-markdown",
+    "environmentType": "SIMULATED",
+    "executionMode": "INTERACTIVE",
+    "duration": 35,
+    "xpReward": 175,
+    "pointsReward": 90,
+    "hintPenaltyMode": "PERCENTAGE"
+  },
+  "educational_objective": "Understand how Markdown renderers (specifically marked.js without sanitisation) can be abused to inject live HTML into a page, and why rendering user content always requires a sanitisation layer regardless of the input format.",
+  "scenario": "DevConnect — a developer social platform. User bios are written in Markdown and rendered via marked.js with no DOMPurify pass. The rendered HTML is injected into profile pages. When an admin opens the profile moderation panel, the bio executes in the admin's browser context.",
+  "ar_scenario": "منصة DevConnect تُصيّر بيو المستخدمين كـ Markdown عبر marked.js بدون DOMPurify. أي HTML يُحقن في البيو يُنفَّذ في متصفح الأدمن.",
+  "prerequisites": ["Stored XSS", "Markdown syntax", "How marked.js renders HTML", "innerHTML vs textContent"],
+  "hints_metadata": [
+    {
+      "order": 1,
+      "level": "broad",
+      "content": "The bio is rendered as Markdown. Markdown is converted to HTML before display. Does the renderer strip HTML tags from the input?",
+      "ar_content": "البيو يُعرض كـ Markdown. Markdown يتحوّل إلى HTML قبل العرض. هل المُصيّر يُزيل وسوم HTML؟",
+      "xpCost": 0,
+      "penaltyPercent": 10
+    },
+    {
+      "order": 2,
+      "level": "narrowing",
+      "content": "marked.js passes raw HTML through by default. Try embedding an HTML tag directly inside the Markdown bio — it will be included in the rendered output.",
+      "ar_content": "marked.js يمرّر HTML الخام دون تغيير افتراضياً. جرّب تضمين وسم HTML مباشرةً في البيو.",
+      "xpCost": 0,
+      "penaltyPercent": 20
+    },
+    {
+      "order": 3,
+      "level": "final_push",
+      "content": "Write bio: <img src=x onerror=alert(document.cookie)> — save it, then click 'Trigger Admin Review'. The admin panel renders your bio via innerHTML — payload fires.",
+      "ar_content": "اكتب في البيو: <img src=x onerror=alert(document.cookie)> ثم احفظ واضغط 'Trigger Admin Review'.",
+      "xpCost": 0,
+      "penaltyPercent": 30
+    }
+  ],
+  "scoring_rules": {
+    "base_points": 90,
+    "base_xp": 175,
+    "hint_penalty_mode": "PERCENTAGE",
+    "hint_penalties": [10, 20, 30],
+    "time_bonus": false
+  },
+  "flag_validation": {
+    "type": "dynamic",
+    "scoped": "session",
+    "format": "FLAG{xss4-<uuid_prefix>}",
+    "note": "Returned from /admin/review-profile endpoint when XSS payload is detected in bio rendering"
+  },
+  "environment_template": "simulated-web-app",
+  "hidden_solution_path": {
+    "admin_only": true,
+    "db_field": "scenarioAdmin + solution",
+    "exploit_path": "POST /profile/bio body={bio:'<img src=x onerror=...>'} → stored → POST /admin/review-profile → marked.js renders bio → innerHTML → onerror fires",
+    "fix_summary": "Pass all marked.js output through DOMPurify.sanitize(); alternatively use a safe Markdown renderer with HTML disabled"
+  }
+}

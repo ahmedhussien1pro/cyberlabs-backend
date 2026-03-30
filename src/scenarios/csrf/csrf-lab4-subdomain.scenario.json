@@ -1,0 +1,70 @@
+{
+  "lab_id": "csrf-lab4-subdomain",
+  "name": "CSRF — Subdomain CORS Wildcard",
+  "vulnerability_type": "CSRF",
+  "domain": "Cross-Site Request Forgery",
+  "db_field_map": {
+    "title": "CSRF — Subdomain CORS Wildcard",
+    "ar_title": "CSRF — نطاق فرعي مع CORS Wildcard",
+    "category": "CSRF",
+    "difficulty": "ADVANCED",
+    "slug": "csrf-lab4-subdomain",
+    "environmentType": "SIMULATED",
+    "executionMode": "INTERACTIVE",
+    "duration": 40,
+    "xpReward": 200,
+    "pointsReward": 100,
+    "hintPenaltyMode": "PERCENTAGE"
+  },
+  "educational_objective": "Understand that a wildcard CORS policy (Access-Control-Allow-Origin: *.corp.com) combined with Access-Control-Allow-Credentials: true means any compromised subdomain can make authenticated cross-origin requests — turning a subdomain XSS into a full CSRF chain.",
+  "scenario": "CorpApp API uses Access-Control-Allow-Origin: *.corp.com with credentials: true. A marketing subdomain (promo.corp.com) has a stored XSS. An attacker chains: XSS on promo → credentialed fetch to api.corp.com → CSRF attack executed silently.",
+  "ar_scenario": "CorpApp API يستخدم CORS wildcard *.corp.com مع credentials. أي XSS في نطاق فرعي يمكنه تنفيذ طلبات مصادق عليها لـ API.",
+  "prerequisites": ["CSRF Labs 1-3", "CORS headers", "Wildcard CORS risks", "XSS chaining", "fetch with credentials"],
+  "hints_metadata": [
+    {
+      "order": 1,
+      "level": "broad",
+      "content": "The API accepts requests from any *.corp.com subdomain with credentials. What happens if one of those subdomains has an XSS vulnerability?",
+      "ar_content": "الـ API يقبل طلبات من أي نطاق فرعي *.corp.com مع credentials. ماذا يحدث لو كان أحد هذه النطاقات يعاني من XSS؟",
+      "xpCost": 0,
+      "penaltyPercent": 10
+    },
+    {
+      "order": 2,
+      "level": "narrowing",
+      "content": "Use the XSS on promo.corp.com to inject a fetch() call that sends a credentialed request to api.corp.com/admin/action. The CORS wildcard means the browser will include the victim's cookies.",
+      "ar_content": "استخدم XSS على promo.corp.com لحقن fetch() يُرسل طلباً مصادقاً لـ api.corp.com/admin/action.",
+      "xpCost": 0,
+      "penaltyPercent": 20
+    },
+    {
+      "order": 3,
+      "level": "final_push",
+      "content": "Click 'Simulate Subdomain XSS + CSRF Chain' — the exploit: XSS on promo → fetch to api with credentials → api allows it (wildcard CORS) → action executed → flag returned.",
+      "ar_content": "اضغط 'Simulate Subdomain XSS + CSRF Chain' — الاستغلال: XSS → fetch مصادق → API يقبل → action يُنفَّذ.",
+      "xpCost": 0,
+      "penaltyPercent": 30
+    }
+  ],
+  "scoring_rules": {
+    "base_points": 100,
+    "base_xp": 200,
+    "hint_penalty_mode": "PERCENTAGE",
+    "hint_penalties": [10, 20, 30],
+    "time_bonus": false
+  },
+  "flag_validation": {
+    "type": "dynamic",
+    "scoped": "session",
+    "format": "FLAG{csrf4-<uuid_prefix>}",
+    "note": "Returned from /simulate-subdomain when full XSS→CSRF chain is executed"
+  },
+  "environment_template": "simulated-web-app",
+  "hidden_solution_path": {
+    "admin_only": true,
+    "db_field": "scenarioAdmin + solution",
+    "exploit_path": "XSS on promo.corp.com → fetch('https://api.corp.com/admin/action', {credentials:'include'}) → wildcard CORS allows → action executes",
+    "key_insight": "Wildcard CORS + credentials = any subdomain compromise = full API access",
+    "fix_summary": "Use explicit origin allowlist; never combine wildcard CORS with credentials:true; fix XSS on all subdomains"
+  }
+}

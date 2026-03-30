@@ -1,0 +1,69 @@
+{
+  "lab_id": "xss-lab1-reflected",
+  "name": "Reflected XSS",
+  "vulnerability_type": "XSS",
+  "domain": "Client-Side Injection",
+  "db_field_map": {
+    "title": "Reflected XSS",
+    "ar_title": "XSS الانعكاسي",
+    "category": "XSS",
+    "difficulty": "BEGINNER",
+    "slug": "xss-lab1-reflected",
+    "environmentType": "SIMULATED",
+    "executionMode": "INTERACTIVE",
+    "duration": 20,
+    "xpReward": 100,
+    "pointsReward": 50,
+    "hintPenaltyMode": "PERCENTAGE"
+  },
+  "educational_objective": "Understand how unsanitised URL parameters are reflected into HTML responses, enabling script injection that executes in the victim's browser without any persistence.",
+  "scenario": "AssetManager v2.3 — an internal IT asset inventory tool. The search endpoint at /assets?q= reflects the query string directly into the HTML response inside a <div id='results'> block. No output encoding is applied server-side.",
+  "ar_scenario": "أداة AssetManager الداخلية تعكس معامل البحث ?q= مباشرةً في استجابة HTML دون أي ترميز للمخرجات.",
+  "prerequisites": ["HTML basics", "How browsers parse and execute scripts", "URL encoding"],
+  "hints_metadata": [
+    {
+      "order": 1,
+      "level": "broad",
+      "content": "The search field reflects exactly what you type back into the page. What happens if your input contains HTML tags?",
+      "ar_content": "حقل البحث يعكس ما تكتبه مباشرةً. ماذا يحدث لو كان مدخلك يحتوي على وسوم HTML؟",
+      "xpCost": 0,
+      "penaltyPercent": 10
+    },
+    {
+      "order": 2,
+      "level": "narrowing",
+      "content": "Try injecting a <script> tag or an event handler attribute like onerror= inside an img tag. The server returns them unmodified.",
+      "ar_content": "جرّب حقن وسم <script> أو معالج حدث مثل onerror= داخل وسم img.",
+      "xpCost": 0,
+      "penaltyPercent": 20
+    },
+    {
+      "order": 3,
+      "level": "final_push",
+      "content": "Use: <img src=x onerror=alert(1)> — the img src fails, onerror fires immediately. The flag appears in the response when XSS is confirmed.",
+      "ar_content": "استخدم: <img src=x onerror=alert(1)> — src تفشل، onerror ينفّذ فوراً.",
+      "xpCost": 0,
+      "penaltyPercent": 30
+    }
+  ],
+  "scoring_rules": {
+    "base_points": 50,
+    "base_xp": 100,
+    "hint_penalty_mode": "PERCENTAGE",
+    "hint_penalties": [10, 20, 30],
+    "time_bonus": false
+  },
+  "flag_validation": {
+    "type": "dynamic",
+    "scoped": "session",
+    "format": "FLAG{xss1-<uuid_prefix>}",
+    "note": "Generated per lab session, validated server-side in xss/lab1 service"
+  },
+  "environment_template": "simulated-web-app",
+  "hidden_solution_path": {
+    "admin_only": true,
+    "db_field": "scenarioAdmin + solution",
+    "exploit_path": "GET /assets?q=<img+src%3Dx+onerror%3Dalert(1)> → server reflects unencoded → browser executes onerror handler",
+    "fix_summary": "HTML-encode all reflected parameters server-side using he.encode() or equivalent"
+  }
+}

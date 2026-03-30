@@ -1,0 +1,69 @@
+{
+  "lab_id": "xss-lab2-stored",
+  "name": "Stored XSS",
+  "vulnerability_type": "XSS",
+  "domain": "Client-Side Injection",
+  "db_field_map": {
+    "title": "Stored XSS",
+    "ar_title": "XSS المخزّن",
+    "category": "XSS",
+    "difficulty": "BEGINNER",
+    "slug": "xss-lab2-stored",
+    "environmentType": "SIMULATED",
+    "executionMode": "INTERACTIVE",
+    "duration": 25,
+    "xpReward": 120,
+    "pointsReward": 60,
+    "hintPenaltyMode": "PERCENTAGE"
+  },
+  "educational_objective": "Understand how user-supplied content stored in a database can execute as JavaScript when rendered by a privileged user, without any crafted URL required.",
+  "scenario": "ShopReview — a product review platform. The review text field accepts HTML and stores it directly to the database. When the admin opens the moderation panel, all reviews are rendered via innerHTML — executing any stored script payload.",
+  "ar_scenario": "منصة ShopReview تخزّن نص المراجعة مباشرةً في قاعدة البيانات وتعرضه عبر innerHTML في لوحة الإشراف للأدمن.",
+  "prerequisites": ["Reflected XSS basics", "Understanding of stored vs reflected injection", "Browser DOM model"],
+  "hints_metadata": [
+    {
+      "order": 1,
+      "level": "broad",
+      "content": "The review you submit is stored and later displayed in the admin panel. Think about what gets rendered, not just what gets stored.",
+      "ar_content": "المراجعة التي تُرسلها تُخزَّن وتُعرض لاحقاً في لوحة الأدمن. فكّر فيما يُعرض وليس فقط ما يُخزَّن.",
+      "xpCost": 0,
+      "penaltyPercent": 10
+    },
+    {
+      "order": 2,
+      "level": "narrowing",
+      "content": "Submit a review that contains an HTML tag with a JavaScript event handler. The review text is not sanitised before storage or render.",
+      "ar_content": "أرسل مراجعة تحتوي على وسم HTML مع معالج حدث JavaScript.",
+      "xpCost": 0,
+      "penaltyPercent": 20
+    },
+    {
+      "order": 3,
+      "level": "final_push",
+      "content": "Submit: <img src=x onerror=alert(document.cookie)> as the review text, then click 'Trigger Admin Review'. The payload fires in the admin context.",
+      "ar_content": "أرسل <img src=x onerror=alert(document.cookie)> كنص المراجعة، ثم اضغط 'Trigger Admin Review'.",
+      "xpCost": 0,
+      "penaltyPercent": 30
+    }
+  ],
+  "scoring_rules": {
+    "base_points": 60,
+    "base_xp": 120,
+    "hint_penalty_mode": "PERCENTAGE",
+    "hint_penalties": [10, 20, 30],
+    "time_bonus": false
+  },
+  "flag_validation": {
+    "type": "dynamic",
+    "scoped": "session",
+    "format": "FLAG{xss2-<uuid_prefix>}",
+    "note": "Generated per lab session on /start, returned from adminReview endpoint on exploit"
+  },
+  "environment_template": "simulated-web-app",
+  "hidden_solution_path": {
+    "admin_only": true,
+    "db_field": "scenarioAdmin + solution",
+    "exploit_path": "POST /reviews body={text:'<img src=x onerror=...>'} → stored in DB → POST /admin/review-trigger → admin panel innerHTML renders payload → fires",
+    "fix_summary": "Sanitise stored content at render time with DOMPurify; never trust DB data as safe HTML"
+  }
+}
