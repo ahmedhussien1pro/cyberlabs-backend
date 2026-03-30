@@ -5,6 +5,17 @@ import { PracticeLabStateService } from '../../../shared/services/practice-lab-s
 
 const LAB_SLUG = 'sqli-union-extract';
 
+const PRODUCTS = [
+  { id: 1, name: 'Laptop Pro',          price: 999 },
+  { id: 2, name: 'Wireless Mouse',      price: 29  },
+  { id: 3, name: 'Mechanical Keyboard', price: 89  },
+];
+
+/** True when the input looks like an injection attempt (not a plain search) */
+function looksLikeInjection(q: string): boolean {
+  return /order\s+by|union\s+select|select\s+|insert\s+|drop\s+|--|\'|information_schema/i.test(q);
+}
+
 @Injectable()
 export class Lab2Service {
   constructor(
@@ -16,14 +27,12 @@ export class Lab2Service {
     return this.stateService.initializeState(userId, labIdOrSlug);
   }
 
-  // ── Reset: wipe all step logs for this user+lab ───────────────────────────
   async resetLab(userId: string, labIdOrSlug: string) {
     const labId = await this.stateService.resolveLabId(labIdOrSlug);
     await this.prisma.labGenericLog.deleteMany({ where: { userId, labId } });
     return { success: true, message: 'Lab progress reset.' };
   }
 
-  // ── Get Step Progress ───────────────────────────────────────────────
   async getProgress(userId: string, labIdOrSlug: string) {
     const labId = await this.stateService.resolveLabId(labIdOrSlug);
     const logs = await this.prisma.labGenericLog.findMany({
@@ -31,66 +40,15 @@ export class Lab2Service {
       select: { type: true },
     });
     const completedSteps = [...new Set(logs.map((l) => l.type))];
-    return {
-      completedSteps,
-      currentStep: this.resolveCurrentStep(completedSteps),
-      totalSteps: 3,
-    };
+    return { completedSteps, currentStep: this.resolveCurrentStep(completedSteps), totalSteps: 3 };
   }
 
   async search(userId: string, labIdOrSlug: string, query: string) {
     const labId = await this.stateService.resolveLabId(labIdOrSlug);
 
-    // ── STEP 1: ORDER BY enumeration
-    // Only complete the step when ORDER BY causes an error (num > 3),
-    // meaning the student proved there are exactly 3 columns.
-    if (/order\s+by\s+\d/i.test(query)) {
-      const match = query.match(/order\s+by\s+(\d+)/i);
-      const num = match ? parseInt(match[1]) : 0;
-
-      if (num > 3) {
-        // ✔ Step complete: student discovered column count
-        await this.recordStep(userId, labId, 'STEP_1_COLUMN_COUNT');
-        return {
-          success: false,
-          error: `ORDER BY ${num} — column out of range`,
-          stepCompleted: 'STEP_1_COLUMN_COUNT',
-          step: 1,
-          feedback: `Error at ORDER BY ${num} — the query has exactly ${num - 1} columns. Now use UNION SELECT with ${num - 1} values.`,
-          ar_feedback: `خطأ عند ORDER BY ${num} — الاستعلام يحتوي على ${num - 1} أعمدة. استخدم UNION SELECT مع ${num - 1} قيمة.`,
-        };
-      }
-
-      // Still probing — no step logged yet
-      return {
-        success: true,
-        results: [],
-        feedback: `ORDER BY ${num} works — try a higher number until it breaks.`,
-        ar_feedback: `ORDER BY ${num} يعمل — جرّب رقماً أكبر حتى يحدث خطأ.`,
-      };
-    }
-
-    // ── STEP 2: UNION SELECT + find string column
-    if (/union\s+select/i.test(query) && /null|'[^']+'/i.test(query) && !/secrets/i.test(query)) {
-      await this.recordStep(userId, labId, 'STEP_2_STRING_COLUMN');
-      const normalized = query.replace(/\s+/g, ' ').toLowerCase();
-      // Column 2 is the visible one: pattern is <anything>, 'test', <anything>
-      const hasStringInCol2 = /null\s*,\s*'[^']+'\s*,\s*(null|\d)/i.test(normalized);
-      return {
-        success: true,
-        results: hasStringInCol2 ? [{ id: null, name: 'test', price: null }] : [],
-        stepCompleted: 'STEP_2_STRING_COLUMN',
-        step: 2,
-        feedback: hasStringInCol2
-          ? "String appeared in column 2 — that's your extraction column!"
-          : 'Try replacing each NULL with a string one at a time to find the visible column.',
-        ar_feedback: hasStringInCol2
-          ? 'ظهر النص في العمود 2 — هذا هو عمود الاستخراج!'
-          : 'جرّب استبدال كل NULL بقيمة نصية واحدةً لإيجاد العمود الظاهر.',
-      };
-    }
-
-    // ── STEP 3: UNION SELECT from secrets table
+    // ───────────────────────────────────────────────────────────
+    // STEP 3 — UNION SELECT … FROM secrets  (check before step 2)
+    // ───────────────────────────────────────────────────────────
     if (/union\s+select/i.test(query) && /secrets/i.test(query)) {
       await this.recordStep(userId, labId, 'STEP_3_EXTRACT');
       const flag = this.stateService.generateDynamicFlag(
@@ -99,45 +57,110 @@ export class Lab2Service {
         labId,
       );
       return {
-        success: true,
-        results: [{ id: null, name: flag, price: null }],
+        success:       true,
+        results:       [{ id: null, name: flag, price: null }],
         stepCompleted: 'STEP_3_EXTRACT',
-        step: 3,
-        exploited: true,
+        step:          3,
+        exploited:     true,
         flag,
-        message: 'UNION injection successful! Secret data extracted.',
-        ar_message: 'حقن UNION ناجح! تم استخراج البيانات السرية.',
+        message:       'UNION injection successful! Secret data extracted.',
       };
     }
 
-    // ── Syntax error (unmatched quote without comment)
-    if ((query.match(/'/g) || []).length % 2 !== 0 && !/--/.test(query)) {
+    // ───────────────────────────────────────────────────────────
+    // STEP 2 — UNION SELECT … NULL / string probing
+    // ───────────────────────────────────────────────────────────
+    if (/union\s+select/i.test(query)) {
+      await this.recordStep(userId, labId, 'STEP_2_STRING_COLUMN');
+      const norm = query.replace(/\s+/g, ' ').toLowerCase();
+      // Check if the 2nd positional value is a quoted string (col 2 = name)
+      const col2IsString = /union\s+select\s+(null|\d+)\s*,\s*'[^']*'\s*,/i.test(norm);
       return {
-        success: false,
-        error: 'syntax error at or near "\'"',
-        feedback: 'SQL syntax broken — you\'re injecting! Add -- to comment out the rest.',
-        ar_feedback: 'قواعد SQL مكسورة — أنت تحقن! أضف -- لتعليق الباقي.',
+        success:       true,
+        results:       col2IsString ? [{ id: null, name: 'test', price: null }] : [],
+        stepCompleted: 'STEP_2_STRING_COLUMN',
+        step:          2,
+        feedback:      col2IsString
+          ? "Column 2 reflects text — that's your extraction point."
+          : 'Adjust your UNION SELECT column positions.',
       };
     }
 
-    // ── Normal search
-    const lq = query.toLowerCase();
-    const products = [
-      { id: 1, name: 'Laptop Pro',          price: 999 },
-      { id: 2, name: 'Wireless Mouse',      price: 29  },
-      { id: 3, name: 'Mechanical Keyboard', price: 89  },
-    ];
+    // ───────────────────────────────────────────────────────────
+    // STEP 1 — ORDER BY column count enumeration
+    // ───────────────────────────────────────────────────────────
+    if (/order\s+by/i.test(query)) {
+      const match = query.match(/order\s+by\s+(\d+)/i);
+
+      // ORDER BY without a number — incomplete / typo
+      if (!match) {
+        return {
+          success:  false,
+          error:    'syntax error: ORDER BY requires a column number',
+          feedback: 'Add a number after ORDER BY, e.g. ORDER BY 1 --',
+        };
+      }
+
+      const num = parseInt(match[1]);
+
+      if (num > 3) {
+        // ✔ Column count confirmed
+        await this.recordStep(userId, labId, 'STEP_1_COLUMN_COUNT');
+        return {
+          success:       false,
+          error:         `ORDER BY ${num} — Unknown column`,
+          stepCompleted: 'STEP_1_COLUMN_COUNT',
+          step:          1,
+          feedback:      `Error at ORDER BY ${num} — the table has exactly ${num - 1} columns.`,
+        };
+      }
+
+      // num ≤ 3: still valid, keep probing
+      return {
+        success:  true,
+        results:  PRODUCTS, // real rows returned — ORDER BY doesn’t break the query
+        feedback: `ORDER BY ${num} — query still works. Try a higher number.`,
+      };
+    }
+
+    // ───────────────────────────────────────────────────────────
+    // Unmatched quote — syntax error feedback
+    // ───────────────────────────────────────────────────────────
+    if ((query.match(/'/g) || []).length % 2 !== 0) {
+      return {
+        success:  false,
+        error:    'syntax error at or near "\'"',
+        feedback: 'Unmatched quote — the query broke. Add -- to close it.',
+      };
+    }
+
+    // ───────────────────────────────────────────────────────────
+    // Any other injection keyword that slipped through — generic SQL error
+    // ───────────────────────────────────────────────────────────
+    if (looksLikeInjection(query)) {
+      return {
+        success:  false,
+        error:    'syntax error near unexpected token',
+        feedback: 'SQL error detected.',
+      };
+    }
+
+    // ───────────────────────────────────────────────────────────
+    // Normal product search
+    // ───────────────────────────────────────────────────────────
+    const lq = query.toLowerCase().trim();
     return {
       success: true,
-      results: products.filter((p) => p.name.toLowerCase().includes(lq.replace(/[^a-z0-9 ]/g, ''))),
+      results: lq
+        ? PRODUCTS.filter((p) => p.name.toLowerCase().includes(lq))
+        : PRODUCTS,
     };
   }
 
-  // ── Helpers ─────────────────────────────────────────────────────────────
   private resolveCurrentStep(completedSteps: string[]): number {
-    if (completedSteps.includes('STEP_3_EXTRACT'))      return 3;
-    if (completedSteps.includes('STEP_2_STRING_COLUMN')) return 3;
-    if (completedSteps.includes('STEP_1_COLUMN_COUNT')) return 2;
+    if (completedSteps.includes('STEP_3_EXTRACT'))       return 3;
+    if (completedSteps.includes('STEP_2_STRING_COLUMN'))  return 3;
+    if (completedSteps.includes('STEP_1_COLUMN_COUNT'))   return 2;
     return 1;
   }
 
