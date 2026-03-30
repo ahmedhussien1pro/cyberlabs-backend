@@ -5,54 +5,44 @@ import { JwtAuthGuard } from '../../../../../common/guards';
 import { GetUser } from '../../../shared/decorators/get-user.decorator';
 import { Lab2Service } from './lab2.service';
 
+const LAB_SLUG = 'xss-review-moderation-stored';
+
 @Controller('practice-labs/xss/lab2')
 @UseGuards(JwtAuthGuard)
 export class Lab2Controller {
   constructor(private lab2Service: Lab2Service) {}
 
-  // ── read-only / init ─────────────────────────────────────────────────────
   @SkipThrottle()
   @Post('start')
-  async startLab(@GetUser('id') userId: string, @Body('labId') labId: string) {
-    return this.lab2Service.initLab(userId, labId);
+  async startLab(@GetUser('id') userId: string) {
+    return this.lab2Service.initLab(userId, LAB_SLUG);
   }
 
   @SkipThrottle()
   @Post('reviews')
-  async getReviews(
-    @GetUser('id') userId: string,
-    @Body('labId') labId: string,
-  ) {
-    return this.lab2Service.getReviews(userId, labId);
+  async getReviews(@GetUser('id') userId: string) {
+    return this.lab2Service.getReviews(userId, LAB_SLUG);
   }
 
-  // ── reset ────────────────────────────────────────────────────────────────
   @Throttle({ default: { limit: 5, ttl: 60000 } })
   @Post('reset')
-  async resetLab(@GetUser('id') userId: string, @Body('labId') labId: string) {
-    return this.lab2Service.initLab(userId, labId);
+  async resetLab(@GetUser('id') userId: string) {
+    return this.lab2Service.initLab(userId, LAB_SLUG);
   }
 
-  // ── vulnerable endpoints ──────────────────────────────────────────────────
-  // Step 1: submit review — stored raw without sanitization
   @Throttle({ default: { limit: 15, ttl: 60000 } })
   @Post('review')
   async submitReview(
     @GetUser('id') userId: string,
-    @Body('labId') labId: string,
     @Body('content') content: string,
     @Body('rating') rating: number,
   ) {
-    return this.lab2Service.submitReview(userId, labId, content, rating);
+    return this.lab2Service.submitReview(userId, LAB_SLUG, content, rating);
   }
 
-  // Step 2: admin moderation — triggers stored XSS in admin context
   @Throttle({ default: { limit: 10, ttl: 60000 } })
   @Post('admin/moderate')
-  async adminModerate(
-    @GetUser('id') userId: string,
-    @Body('labId') labId: string,
-  ) {
-    return this.lab2Service.adminModerate(userId, labId);
+  async adminModerate(@GetUser('id') userId: string) {
+    return this.lab2Service.adminModerate(userId, LAB_SLUG);
   }
 }
