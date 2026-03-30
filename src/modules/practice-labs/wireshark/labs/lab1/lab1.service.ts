@@ -4,7 +4,7 @@ import { PrismaService } from '../../../../../core/database';
 import { PracticeLabStateService } from '../../../shared/services/practice-lab-state.service';
 import { FlagRecordService } from '../../../shared/services/flag-record.service';
 
-const FLAG_PREFIX = 'FLAG{WIRESHARK-LAB1-HTTP-CREDENTIALS';
+const FLAG_PREFIX = 'FLAG{WIRESHARK-LAB1-HTTP-CREDS';
 
 @Injectable()
 export class Lab1Service {
@@ -14,10 +14,8 @@ export class Lab1Service {
     private flagRecord: FlagRecordService,
   ) {}
 
-  // ─── initLab ─────────────────────────────────────────────────────────
   async initLab(userId: string, labId: string) {
     const result = await this.stateService.initializeState(userId, labId);
-
     await this.flagRecord.generateAndStore(
       userId,
       result.labId,
@@ -25,64 +23,115 @@ export class Lab1Service {
       result.dynamicFlag,
       24,
     );
-
     return { status: 'success', message: 'Lab environment initialized', labId: result.labId };
   }
 
-  // ─── getCapture ────────────────────────────────────────────────────────
   async getCapture(userId: string, labId: string) {
     const resolvedLabId = await this.stateService.resolveLabId(labId);
     const dynamicFlag = this.stateService.generateDynamicFlag(FLAG_PREFIX, userId, resolvedLabId);
 
+    // Flag is embedded as the password value — student must read the POST body
     const packets = [
       {
         no: 1,
         time: '0.000000',
-        source: '192.168.1.5',
+        source: '192.168.1.12',
         destination: '192.168.1.1',
         protocol: 'TCP',
-        info: '54321 → 80 [SYN]',
+        length: 74,
+        info: '52841 → 80 [SYN] Seq=0 Win=64240 Len=0',
       },
       {
         no: 2,
-        time: '0.001200',
+        time: '0.000812',
         source: '192.168.1.1',
-        destination: '192.168.1.5',
+        destination: '192.168.1.12',
         protocol: 'TCP',
-        info: '80 → 54321 [SYN, ACK]',
+        length: 74,
+        info: '80 → 52841 [SYN, ACK] Seq=0 Ack=1 Win=65535 Len=0',
       },
       {
         no: 3,
-        time: '0.002100',
-        source: '192.168.1.5',
+        time: '0.001204',
+        source: '192.168.1.12',
         destination: '192.168.1.1',
-        protocol: 'HTTP',
-        info: 'POST /login HTTP/1.1',
-        httpData: {
-          method: 'POST',
-          uri: '/login',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            Host: '192.168.1.1',
-          },
-          body: `username=admin&password=${dynamicFlag}`,
-        },
+        protocol: 'TCP',
+        length: 66,
+        info: '52841 → 80 [ACK] Seq=1 Ack=1 Win=64240 Len=0',
       },
       {
         no: 4,
-        time: '0.015000',
-        source: '192.168.1.1',
-        destination: '192.168.1.5',
+        time: '0.001990',
+        source: '192.168.1.12',
+        destination: '192.168.1.1',
         protocol: 'HTTP',
-        info: 'HTTP/1.1 200 OK',
-        httpData: { status: 200, body: '{"message":"Login successful"}' },
+        length: 312,
+        info: 'POST /portal/auth/login HTTP/1.1',
+        httpData: {
+          method: 'POST',
+          uri: '/portal/auth/login',
+          version: 'HTTP/1.1',
+          headers: {
+            Host: '192.168.1.1',
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Content-Length': '47',
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
+            Connection: 'keep-alive',
+          },
+          body: `username=j.henderson&password=${dynamicFlag}`,
+        },
+      },
+      {
+        no: 5,
+        time: '0.014600',
+        source: '192.168.1.1',
+        destination: '192.168.1.12',
+        protocol: 'HTTP',
+        length: 218,
+        info: 'HTTP/1.1 302 Found',
+        httpData: {
+          status: 302,
+          headers: {
+            Location: '/portal/dashboard',
+            'Set-Cookie': 'session=eyJ1c2VyIjoiai5oZW5kZXJzb24ifQ==; Path=/; HttpOnly',
+          },
+        },
+      },
+      {
+        no: 6,
+        time: '0.015100',
+        source: '192.168.1.12',
+        destination: '192.168.1.1',
+        protocol: 'HTTP',
+        length: 284,
+        info: 'GET /portal/dashboard HTTP/1.1',
+        httpData: {
+          method: 'GET',
+          uri: '/portal/dashboard',
+          headers: {
+            Host: '192.168.1.1',
+            Cookie: 'session=eyJ1c2VyIjoiai5oZW5kZXJzb24ifQ==',
+          },
+        },
+      },
+      {
+        no: 7,
+        time: '0.028400',
+        source: '192.168.1.1',
+        destination: '192.168.1.12',
+        protocol: 'HTTP',
+        length: 6204,
+        info: 'HTTP/1.1 200 OK (text/html)',
+        httpData: {
+          status: 200,
+          headers: { 'Content-Type': 'text/html; charset=utf-8', 'Content-Length': '6138' },
+        },
       },
     ];
 
     return { packets };
   }
 
-  // ─── getProgress — يستخدمه useLabBase.syncProgress() ──────────────────────────
   async getProgress(userId: string, labId: string) {
     try {
       const resolvedLabId = await this.stateService.resolveLabId(labId);
@@ -98,17 +147,14 @@ export class Lab1Service {
         completedAt: progress?.completedAt ?? null,
       };
     } catch {
-      // لو فيه حاجة مش متوقعة — نرجع حالة فارغة بدل ما يطلع 500
       return { step: 'RUNNING', flagSubmitted: false, hintsUsed: 0 };
     }
   }
 
-  // ─── submitFlag ─────────────────────────────────────────────────────────
   async submitFlag(userId: string, labId: string, submittedFlag: string) {
     if (!submittedFlag?.trim()) throw new BadRequestException('flag is required');
 
     const resolvedLabId = await this.stateService.resolveLabId(labId);
-
     const result = await this.flagRecord.verifyAndConsume(
       userId,
       resolvedLabId,
@@ -120,24 +166,16 @@ export class Lab1Service {
       return {
         success: true,
         flag: submittedFlag.trim(),
-        message: 'Correct! You found the credentials exposed in plain HTTP traffic.',
+        message: 'Access confirmed.',
         explanation:
-          'HTTP (not HTTPS) transmits data in plaintext. Anyone on the same network ' +
-          'can capture login credentials using tools like Wireshark. Always use HTTPS.',
+          'HTTP transmits all data in plaintext including credentials. ' +
+          'Anyone on the same network segment can capture login credentials ' +
+          'using a passive sniffer. Enforce HTTPS with HSTS.',
       };
     }
+    if (result === 'already_used') return { success: false, message: 'Already submitted.' };
+    if (result === 'expired') return { success: false, message: 'Session expired. Restart lab.' };
 
-    if (result === 'already_used') {
-      return { success: false, message: 'Flag already submitted. Well done — lab is solved!' };
-    }
-
-    if (result === 'expired') {
-      return { success: false, message: 'Session expired. Please restart the lab.' };
-    }
-
-    return {
-      success: false,
-      message: 'Incorrect. Look at packet #3 — expand the HTTP POST body.',
-    };
+    return { success: false, message: 'Incorrect flag.' };
   }
 }
