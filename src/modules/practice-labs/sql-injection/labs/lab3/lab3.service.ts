@@ -4,7 +4,55 @@ import { PrismaService } from '../../../../../core/database';
 import { PracticeLabStateService } from '../../../shared/services/practice-lab-state.service';
 
 const LAB_SLUG       = 'sqli-blind-boolean';
-const ADMIN_PASSWORD = 'secr3t!X'; // 8 chars
+const ADMIN_PASSWORD = 'secr3t!X'; // 8 chars — students extract this
+
+const ARTICLES = [
+  {
+    id: 1,
+    title: 'Getting Started with Docker',
+    content:
+      'Docker lets you package applications and their dependencies into lightweight containers. ' +
+      'Unlike virtual machines, containers share the host OS kernel, making them faster to start ' +
+      'and far more resource-efficient. A single Dockerfile describes your environment, and ' +
+      '`docker build` + `docker run` gets you from code to running service in seconds.',
+  },
+  {
+    id: 2,
+    title: 'TypeScript Generics Explained',
+    content:
+      'Generics let you write functions and classes that work over a variety of types while ' +
+      'still enforcing type safety. Instead of using `any`, you parameterise the type: ' +
+      '`function identity<T>(arg: T): T { return arg; }`. The compiler infers `T` at the ' +
+      'call-site, catching type mismatches before runtime.',
+  },
+  {
+    id: 3,
+    title: 'PostgreSQL Query Optimisation',
+    content:
+      'Slow queries almost always come down to missing indexes or full sequential scans. ' +
+      'Start with `EXPLAIN ANALYZE` to see exactly what the planner does. Add a B-tree index ' +
+      'on high-cardinality filter columns, use partial indexes for sparse conditions, and ' +
+      'keep statistics up-to-date with regular `ANALYZE` runs.',
+  },
+  {
+    id: 4,
+    title: 'Understanding JWT Authentication',
+    content:
+      'A JSON Web Token carries three Base64-encoded parts: header, payload, and signature. ' +
+      'The server signs the payload with a secret key; any tampering invalidates the signature. ' +
+      'Keep tokens short-lived, store them in memory rather than localStorage, and always ' +
+      'validate the `alg` header — never accept `"alg": "none"`.',
+  },
+  {
+    id: 5,
+    title: 'CI/CD Pipelines with GitHub Actions',
+    content:
+      'GitHub Actions lets you define workflows as YAML files inside `.github/workflows/`. ' +
+      'A workflow triggers on events like `push` or `pull_request`, spins up runners, and ' +
+      'executes jobs in parallel or sequentially. Cache dependencies between runs to slash ' +
+      'build times, and use environment secrets for anything sensitive.',
+  },
+];
 
 @Injectable()
 export class Lab3Service {
@@ -25,7 +73,7 @@ export class Lab3Service {
 
   async getProgress(userId: string, labIdOrSlug: string) {
     const labId = await this.stateService.resolveLabId(labIdOrSlug);
-    const logs = await this.prisma.labGenericLog.findMany({
+    const logs  = await this.prisma.labGenericLog.findMany({
       where: { userId, labId },
       select: { type: true },
     });
@@ -38,13 +86,13 @@ export class Lab3Service {
     const raw   = (idParam ?? '').trim();
 
     // ──────────────────────────────────────────────────────────
-    // STEP 3 — ASCII(SUBSTRING(…)) character extraction
+    // STEP 3 — ASCII character extraction
     // ──────────────────────────────────────────────────────────
     const asciiMatch = raw.match(
       /ascii\s*\(\s*substring\s*\(.*?,(\d+),\s*1\s*\)\s*\)\s*([><=!]+)\s*(\d+)/i,
     );
     if (asciiMatch) {
-      const pos    = parseInt(asciiMatch[1]) - 1; // 0-indexed
+      const pos    = parseInt(asciiMatch[1]) - 1;
       const op     = asciiMatch[2];
       const tested = parseInt(asciiMatch[3]);
       const actual = pos < ADMIN_PASSWORD.length ? ADMIN_PASSWORD.charCodeAt(pos) : -1;
@@ -52,9 +100,8 @@ export class Lab3Service {
 
       if (result) await this.recordStep(userId, labId, 'STEP_3_EXTRACT');
 
-      // Check if the full password has been brute-forced (exact equality hits for every position)
-      const exactHit = op === '=' && actual === tested;
-      if (exactHit) {
+      // flag when all positions confirmed with exact equality
+      if (op === '=' && actual === tested) {
         const logs = await this.prisma.labGenericLog.findMany({
           where: { userId, labId, type: 'STEP_3_EXTRACT' },
         });
@@ -68,16 +115,13 @@ export class Lab3Service {
           return { found: true, stepCompleted: 'STEP_3_COMPLETE', exploited: true, flag };
         }
       }
-
       return { found: result, stepCompleted: result ? 'STEP_3_EXTRACT' : undefined };
     }
 
     // ──────────────────────────────────────────────────────────
-    // STEP 2 — LENGTH / generic numeric probe
+    // STEP 2 — LENGTH probe
     // ──────────────────────────────────────────────────────────
-    const lengthMatch = raw.match(
-      /length\s*\(.*?\)\s*([><=!]+)\s*(\d+)/i,
-    );
+    const lengthMatch = raw.match(/length\s*\(.*?\)\s*([><=!]+)\s*(\d+)/i);
     if (lengthMatch) {
       const op     = lengthMatch[1];
       const tested = parseInt(lengthMatch[2]);
@@ -87,7 +131,7 @@ export class Lab3Service {
     }
 
     // ──────────────────────────────────────────────────────────
-    // STEP 1 — Boolean oracle confirmation (AND 1=1 / AND 1=2 / AND 1>0 etc.)
+    // STEP 1 — Boolean oracle confirmation
     // ──────────────────────────────────────────────────────────
     const boolMatch = raw.match(/and\s+(\d+)\s*([><=!]+)\s*(\d+)/i);
     if (boolMatch) {
@@ -97,38 +141,30 @@ export class Lab3Service {
       const result = this.evalOp(a, op, b);
       await this.recordStep(userId, labId, 'STEP_1_CONFIRM');
       if (result) {
-        return {
-          found: true,
-          article: { id: 5, title: 'Getting Started with Docker', content: 'Docker lets you ship applications in containers...' },
-          stepCompleted: 'STEP_1_CONFIRM',
-        };
+        const article = ARTICLES.find((a) => a.id === 5)!;
+        return { found: true, article, stepCompleted: 'STEP_1_CONFIRM' };
       }
       return { found: false, stepCompleted: 'STEP_1_CONFIRM' };
     }
 
     // ──────────────────────────────────────────────────────────
-    // Plain article lookup
+    // Plain article lookup by numeric id (1–5)
     // ──────────────────────────────────────────────────────────
-    const numId = parseInt(raw);
-    if (numId === 5) {
-      return {
-        found:   true,
-        article: { id: 5, title: 'Getting Started with Docker', content: 'Docker lets you ship applications in containers...' },
-      };
-    }
+    const numId   = parseInt(raw);
+    const article = ARTICLES.find((a) => a.id === numId);
+    if (article) return { found: true, article };
     return { found: false };
   }
 
-  // ── Helpers ───────────────────────────────────────────────────────────
   private evalOp(a: number, op: string, b: number): boolean {
     switch (op) {
-      case '>':  return a > b;
-      case '<':  return a < b;
-      case '>=': return a >= b;
-      case '<=': return a <= b;
-      case '=':  return a === b;
+      case '>':         return a > b;
+      case '<':         return a < b;
+      case '>=':        return a >= b;
+      case '<=':        return a <= b;
+      case '=':         return a === b;
       case '!=': case '<>': return a !== b;
-      default:   return false;
+      default:          return false;
     }
   }
 
