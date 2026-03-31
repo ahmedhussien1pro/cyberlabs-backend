@@ -4,7 +4,7 @@ import { PrismaService } from '../../../../../core/database';
 import { PracticeLabStateService } from '../../../shared/services/practice-lab-state.service';
 
 const LAB_SLUG       = 'sqli-blind-boolean';
-const ADMIN_PASSWORD = 'secr3t!X'; // 8 chars — students extract this
+const ADMIN_PASSWORD = 'secr3t!X'; // 8 chars — students extract char by char
 
 const ARTICLES = [
   {
@@ -87,51 +87,71 @@ export class Lab3Service {
 
     // ──────────────────────────────────────────────────────────
     // STEP 3 — ASCII character extraction
+    // Match: 5 AND ASCII(SUBSTRING(...,pos,1))=ascii_val--
     // ──────────────────────────────────────────────────────────
     const asciiMatch = raw.match(
       /ascii\s*\(\s*substring\s*\(.*?,(\d+),\s*1\s*\)\s*\)\s*([><=!]+)\s*(\d+)/i,
     );
     if (asciiMatch) {
-      const pos    = parseInt(asciiMatch[1]) - 1;
+      const pos    = parseInt(asciiMatch[1]) - 1;   // 0-based
       const op     = asciiMatch[2];
       const tested = parseInt(asciiMatch[3]);
-      const actual = pos < ADMIN_PASSWORD.length ? ADMIN_PASSWORD.charCodeAt(pos) : -1;
+      const actual = pos >= 0 && pos < ADMIN_PASSWORD.length
+        ? ADMIN_PASSWORD.charCodeAt(pos)
+        : -1;
       const result = this.evalOp(actual, op, tested);
 
-      if (result) await this.recordStep(userId, labId, 'STEP_3_EXTRACT');
+      // Only record on exact equality (=) so we track confirmed positions
+      if (result && op === '=') {
+        // Each position stored as a separate log entry with a unique type key
+        await this.recordStepOnce(userId, labId, `STEP_3_POS_${pos}`);
+        // Also mark the general step for progress display
+        await this.recordStepOnce(userId, labId, 'STEP_3_EXTRACT');
 
-      // flag when all positions confirmed with exact equality
-      if (op === '=' && actual === tested) {
-        const logs = await this.prisma.labGenericLog.findMany({
-          where: { userId, labId, type: 'STEP_3_EXTRACT' },
+        // Check how many unique positions have been confirmed
+        const confirmed = await this.prisma.labGenericLog.count({
+          where: { userId, labId, type: { startsWith: 'STEP_3_POS_' } },
         });
-        if (logs.length >= ADMIN_PASSWORD.length) {
-          await this.recordStep(userId, labId, 'STEP_3_COMPLETE');
+
+        if (confirmed >= ADMIN_PASSWORD.length) {
+          await this.recordStepOnce(userId, labId, 'STEP_3_COMPLETE');
           const flag = this.stateService.generateDynamicFlag(
             `FLAG{${LAB_SLUG.toUpperCase().replace(/-/g, '_')}`,
             userId,
             labId,
           );
-          return { found: true, stepCompleted: 'STEP_3_COMPLETE', exploited: true, flag };
+          return {
+            found:         true,
+            stepCompleted: 'STEP_3_COMPLETE',
+            exploited:     true,
+            message:       `Password is "${ADMIN_PASSWORD}" — all characters extracted.`,
+            flag,
+          };
         }
+
+        return { found: true, stepCompleted: 'STEP_3_EXTRACT' };
       }
-      return { found: result, stepCompleted: result ? 'STEP_3_EXTRACT' : undefined };
+
+      // Non-equality probes (> / <) just return the boolean, no step record
+      return { found: result };
     }
 
     // ──────────────────────────────────────────────────────────
     // STEP 2 — LENGTH probe
+    // Match: 5 AND LENGTH(...)>7--
     // ──────────────────────────────────────────────────────────
     const lengthMatch = raw.match(/length\s*\(.*?\)\s*([><=!]+)\s*(\d+)/i);
     if (lengthMatch) {
       const op     = lengthMatch[1];
       const tested = parseInt(lengthMatch[2]);
       const result = this.evalOp(ADMIN_PASSWORD.length, op, tested);
-      if (result) await this.recordStep(userId, labId, 'STEP_2_LENGTH');
+      if (result) await this.recordStepOnce(userId, labId, 'STEP_2_LENGTH');
       return { found: result, stepCompleted: result ? 'STEP_2_LENGTH' : undefined };
     }
 
     // ──────────────────────────────────────────────────────────
     // STEP 1 — Boolean oracle confirmation
+    // Match: 5 AND 1=1-- or 5 AND 1=2--
     // ──────────────────────────────────────────────────────────
     const boolMatch = raw.match(/and\s+(\d+)\s*([><=!]+)\s*(\d+)/i);
     if (boolMatch) {
@@ -139,7 +159,7 @@ export class Lab3Service {
       const op     = boolMatch[2];
       const b      = parseInt(boolMatch[3]);
       const result = this.evalOp(a, op, b);
-      await this.recordStep(userId, labId, 'STEP_1_CONFIRM');
+      await this.recordStepOnce(userId, labId, 'STEP_1_CONFIRM');
       if (result) {
         const article = ARTICLES.find((a) => a.id === 5)!;
         return { found: true, article, stepCompleted: 'STEP_1_CONFIRM' };
@@ -156,28 +176,34 @@ export class Lab3Service {
     return { found: false };
   }
 
+  // ── helpers ──────────────────────────────────────────────────
+
   private evalOp(a: number, op: string, b: number): boolean {
     switch (op) {
-      case '>':         return a > b;
-      case '<':         return a < b;
-      case '>=':        return a >= b;
-      case '<=':        return a <= b;
-      case '=':         return a === b;
-      case '!=': case '<>': return a !== b;
-      default:          return false;
+      case '>':              return a > b;
+      case '<':              return a < b;
+      case '>=':             return a >= b;
+      case '<=':             return a <= b;
+      case '=':              return a === b;
+      case '!=': case '<>':  return a !== b;
+      default:               return false;
     }
   }
 
   private resolveCurrentStep(completedSteps: string[]): number {
-    if (completedSteps.includes('STEP_3_COMPLETE') ||
-        completedSteps.includes('STEP_3_EXTRACT'))  return 3;
-    if (completedSteps.includes('STEP_2_LENGTH'))    return 3;
-    if (completedSteps.includes('STEP_1_CONFIRM'))   return 2;
+    if (completedSteps.some((s) => s.startsWith('STEP_3'))) return 3;
+    if (completedSteps.includes('STEP_2_LENGTH'))           return 3;
+    if (completedSteps.includes('STEP_1_CONFIRM'))          return 2;
     return 1;
   }
 
-  private async recordStep(userId: string, labId: string, stepType: string) {
-    const exists = await this.prisma.labGenericLog.findFirst({ where: { userId, labId, type: stepType } });
-    if (!exists) await this.prisma.labGenericLog.create({ data: { userId, labId, type: stepType } });
+  /** Insert a log row only if this (userId, labId, type) doesn't already exist */
+  private async recordStepOnce(userId: string, labId: string, stepType: string) {
+    const exists = await this.prisma.labGenericLog.findFirst({
+      where: { userId, labId, type: stepType },
+    });
+    if (!exists) {
+      await this.prisma.labGenericLog.create({ data: { userId, labId, type: stepType } });
+    }
   }
 }
