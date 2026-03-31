@@ -7,6 +7,14 @@
 //   1. generateAndStore()  — called on lab launch, creates the record
 //   2. verifyAndConsume()  — called on submitFlag, marks used=true
 //   3. Reuse rejected      — used=true means no second reward
+//
+// ─── NEW ──────────────────────────────────────────────────────────────────────
+//   4. getStoredFlag()     — returns the plaintext flag stored at init time.
+//      Required by labs that embed the dynamic flag in generated artifacts
+//      (PCAP files, images, etc.) so the artifact stays in sync with the DB.
+//      The flag is stored in plaintext in a separate column (flagPlain) so
+//      the hash-based verification path is NOT affected.
+// ─────────────────────────────────────────────────────────────────────────────
 
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../../../core/database';
@@ -25,7 +33,6 @@ export class FlagRecordService {
    * Throws NotFoundException if not found.
    */
   private async resolveLabId(labIdOrSlug: string): Promise<string> {
-    // try by id first (already a UUID)
     let lab = await this.prisma.lab.findUnique({
       where: { id: labIdOrSlug },
       select: { id: true },
@@ -41,7 +48,7 @@ export class FlagRecordService {
   }
 
   /**
-   * Store a flag hash for a specific user/lab/attempt.
+   * Store a flag hash (and plaintext) for a specific user/lab/attempt.
    * Safe to call multiple times (upsert — no duplicate).
    * Accepts labId as UUID OR slug.
    *
@@ -54,14 +61,15 @@ export class FlagRecordService {
     flag: string,
     ttlHours = 24,
   ): Promise<void> {
-    const labId    = await this.resolveLabId(labIdOrSlug);
-    const flagHash = this.hash(flag);
+    const labId     = await this.resolveLabId(labIdOrSlug);
+    const flagHash  = this.hash(flag);
+    const flagPlain = flag.trim();
     const expiresAt = new Date(Date.now() + ttlHours * 60 * 60 * 1000);
 
     await this.prisma.labFlagRecord.upsert({
       where: { userId_labId_attemptId: { userId, labId, attemptId } },
-      update: { flagHash, expiresAt, used: false, usedAt: null },
-      create: { userId, labId, attemptId, flagHash, expiresAt },
+      update: { flagHash, flagPlain, expiresAt, used: false, usedAt: null },
+      create: { userId, labId, attemptId, flagHash, flagPlain, expiresAt },
     });
   }
 
@@ -96,6 +104,33 @@ export class FlagRecordService {
     });
 
     return 'correct';
+  }
+
+  /**
+   * Return the plaintext flag stored at init time for this user/lab/attempt.
+   * Used by labs that embed the flag in generated artifacts (PCAP, images, etc.)
+   * so the artifact is always in sync with the DB record.
+   *
+   * Returns null if no active record exists (lab not initialised or expired).
+   * Accepts labId as UUID OR slug.
+   */
+  async getStoredFlag(
+    userId: string,
+    labIdOrSlug: string,
+    attemptId: string,
+  ): Promise<string | null> {
+    const labId = await this.resolveLabId(labIdOrSlug);
+
+    const record = await this.prisma.labFlagRecord.findUnique({
+      where: { userId_labId_attemptId: { userId, labId, attemptId } },
+      select: { flagPlain: true, expiresAt: true, used: true },
+    });
+
+    if (!record) return null;
+    if (record.expiresAt < new Date()) return null;
+    // NOTE: we allow retrieval even after used=true so the PCAP
+    // download still works after the flag has been submitted.
+    return record.flagPlain ?? null;
   }
 
   /**
