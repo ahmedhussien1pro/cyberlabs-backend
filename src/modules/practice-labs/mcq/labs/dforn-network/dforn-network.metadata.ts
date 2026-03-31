@@ -3,7 +3,7 @@ import type { MCQLabMetadata } from '../../../types/mcq-lab-metadata.type';
 
 export const dfornNetworkMCQMetadata: MCQLabMetadata = {
   slug:          'mcq-dforn-network',
-  jsonFile:      'labs_assets/MCQ-data/digital_Forn/Network.json',
+  jsonFile:      'digital_Forn/Network.json',
   questionCount: 20,
   passingScore:  70,
 

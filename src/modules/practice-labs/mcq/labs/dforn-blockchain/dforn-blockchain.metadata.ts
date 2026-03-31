@@ -3,7 +3,7 @@ import type { MCQLabMetadata } from '../../../types/mcq-lab-metadata.type';
 
 export const dfornBlockchainMCQMetadata: MCQLabMetadata = {
   slug:          'mcq-dforn-blockchain',
-  jsonFile:      'labs_assets/MCQ-data/digital_Forn/BlockchainAndCryptocurrency.json',
+  jsonFile:      'digital_Forn/BlockchainAndCryptocurrency.json',
   questionCount: 20,
   passingScore:  70,
 

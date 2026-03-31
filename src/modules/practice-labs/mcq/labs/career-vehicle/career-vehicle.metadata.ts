@@ -3,7 +3,7 @@ import type { MCQLabMetadata } from '../../../types/mcq-lab-metadata.type';
 
 export const careerVehicleMCQMetadata: MCQLabMetadata = {
   slug:          'mcq-career-vehicle-security',
-  jsonFile:      'labs_assets/MCQ-data/career_in_Cyber/Vehicle.json',
+  jsonFile:      'career_in_Cyber/Vehicle.json',
   questionCount: 20,
   passingScore:  70,
 

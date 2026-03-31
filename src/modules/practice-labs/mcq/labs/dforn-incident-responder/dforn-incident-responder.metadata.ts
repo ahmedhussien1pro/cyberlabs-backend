@@ -3,7 +3,7 @@ import type { MCQLabMetadata } from '../../../types/mcq-lab-metadata.type';
 
 export const dfornIncidentResponderMCQMetadata: MCQLabMetadata = {
   slug:          'mcq-dforn-incident-responder',
-  jsonFile:      'labs_assets/MCQ-data/digital_Forn/IncidentResponder.json',
+  jsonFile:      'digital_Forn/IncidentResponder.json',
   questionCount: 20,
   passingScore:  70,
 

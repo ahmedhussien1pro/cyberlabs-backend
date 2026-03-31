@@ -3,7 +3,7 @@ import type { MCQLabMetadata } from '../../../types/mcq-lab-metadata.type';
 
 export const careerSecurityAnalystMCQMetadata: MCQLabMetadata = {
   slug:          'mcq-career-security-analyst',
-  jsonFile:      'labs_assets/MCQ-data/career_in_Cyber/SecurityAnalyst.json',
+  jsonFile:      'career_in_Cyber/SecurityAnalyst.json',
   questionCount: 20,
   passingScore:  70,
 

@@ -3,7 +3,7 @@ import type { MCQLabMetadata } from '../../../types/mcq-lab-metadata.type';
 
 export const dfornMobileMCQMetadata: MCQLabMetadata = {
   slug:          'mcq-dforn-mobile',
-  jsonFile:      'labs_assets/MCQ-data/digital_Forn/Mobile.json',
+  jsonFile:      'digital_Forn/Mobile.json',
   questionCount: 20,
   passingScore:  70,
 

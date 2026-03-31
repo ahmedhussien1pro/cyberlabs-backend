@@ -3,7 +3,7 @@ import type { MCQLabMetadata } from '../../../types/mcq-lab-metadata.type';
 
 export const regexMCQMetadata: MCQLabMetadata = {
   slug:          'mcq-regex',
-  jsonFile:      'labs_assets/MCQ-data/Regex.json',
+  jsonFile:      'Regex.json',
   questionCount: 20,
   passingScore:  70,
 

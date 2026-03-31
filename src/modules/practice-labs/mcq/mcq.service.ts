@@ -12,6 +12,12 @@ interface RawQuestion {
   answer:   string;
 }
 
+// Base directory where the compiled mcq.service.js lives at runtime.
+// In dev  : <root>/src/modules/practice-labs/mcq/
+// In prod : <root>/dist/modules/practice-labs/mcq/
+// The JSON files are co-located in ./data/ relative to this file.
+const MCQ_DATA_DIR = path.resolve(__dirname, 'data');
+
 @Injectable()
 export class MCQService {
   constructor(
@@ -21,8 +27,6 @@ export class MCQService {
 
   // ──────────────────────────────────────────────────────────
   // POST /practice-labs/mcq/:slug/start
-  // MCQ labs have no environment to spin up — resolve the DB
-  // labId and return immediately so useLabBase is satisfied.
   // ──────────────────────────────────────────────────────────
   async startLab(slug: string, _userId: string) {
     const labId = await this.stateService.resolveLabId(slug);
@@ -35,15 +39,12 @@ export class MCQService {
   async getQuestions(slug: string) {
     const meta = await this.resolveMeta(slug);
     const raw  = this.loadJson(meta.jsonFile);
-
-    // Strip the answer field before sending to the client
     const questions = raw.map(({ id, question, options }) => ({ id, question, options }));
     return { questions };
   }
 
   // ──────────────────────────────────────────────────────────
   // POST /practice-labs/mcq/:slug/submit
-  // body: { labId: string, answers: Record<number, string> }
   // ──────────────────────────────────────────────────────────
   async submitAnswers(
     slug:    string,
@@ -55,7 +56,6 @@ export class MCQService {
     const raw     = this.loadJson(meta.jsonFile);
     const ptsEach = meta.pointsPerQuestion;
 
-    // Grade
     let correct = 0;
     const feedback = raw.map((q) => {
       const given   = answers[q.id] ?? '';
@@ -69,7 +69,6 @@ export class MCQService {
     const percentage = Math.round((score / maxScore) * 100);
     const passed     = percentage >= meta.passingScore;
 
-    // Record attempt
     const resolvedLabId = await this.stateService.resolveLabId(slug);
     await this.recordAttempt(userId, resolvedLabId, percentage, passed);
 
@@ -108,10 +107,14 @@ export class MCQService {
     };
   }
 
+  /**
+   * jsonFile is stored in DB as a relative path from the data/ folder.
+   * e.g. "API_Hacking.json" or "career_in_Cyber/PenetrationTester.json"
+   */
   private loadJson(jsonFile: string): RawQuestion[] {
-    const abs = path.resolve(process.cwd(), jsonFile);
+    const abs = path.resolve(MCQ_DATA_DIR, jsonFile);
     if (!fs.existsSync(abs)) {
-      throw new NotFoundException(`Question bank not found: ${jsonFile}`);
+      throw new NotFoundException(`Question bank not found: ${abs}`);
     }
     const raw = JSON.parse(fs.readFileSync(abs, 'utf-8'));
     return (raw.questions ?? raw) as RawQuestion[];

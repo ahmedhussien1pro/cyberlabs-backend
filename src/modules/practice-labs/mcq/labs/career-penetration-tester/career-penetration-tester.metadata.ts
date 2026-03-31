@@ -3,7 +3,7 @@ import type { MCQLabMetadata } from '../../../types/mcq-lab-metadata.type';
 
 export const careerPentestMCQMetadata: MCQLabMetadata = {
   slug:          'mcq-career-penetration-tester',
-  jsonFile:      'labs_assets/MCQ-data/career_in_Cyber/PenetrationTester.json',
+  jsonFile:      'career_in_Cyber/PenetrationTester.json',
   questionCount: 20,
   passingScore:  70,
 

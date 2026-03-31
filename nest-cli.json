@@ -6,8 +6,7 @@
     "deleteOutDir": true,
     "assets": [
       {
-        "include": "../labs_assets/**/*",
-        "outDir": "dist/labs_assets",
+        "include": "modules/practice-labs/mcq/data/**/*",
         "watchAssets": true
       }
     ]

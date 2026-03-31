@@ -3,7 +3,7 @@ import type { MCQLabMetadata } from '../../../types/mcq-lab-metadata.type';
 
 export const dfornExaminerMCQMetadata: MCQLabMetadata = {
   slug:          'mcq-dforn-examiner',
-  jsonFile:      'labs_assets/MCQ-data/digital_Forn/DigitalForensicsExaminer.json',
+  jsonFile:      'digital_Forn/DigitalForensicsExaminer.json',
   questionCount: 20,
   passingScore:  70,
 

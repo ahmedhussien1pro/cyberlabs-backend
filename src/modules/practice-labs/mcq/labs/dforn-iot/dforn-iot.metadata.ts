@@ -3,7 +3,7 @@ import type { MCQLabMetadata } from '../../../types/mcq-lab-metadata.type';
 
 export const dfornIotMCQMetadata: MCQLabMetadata = {
   slug:          'mcq-dforn-iot',
-  jsonFile:      'labs_assets/MCQ-data/digital_Forn/IoT.json',
+  jsonFile:      'digital_Forn/IoT.json',
   questionCount: 20,
   passingScore:  70,
 

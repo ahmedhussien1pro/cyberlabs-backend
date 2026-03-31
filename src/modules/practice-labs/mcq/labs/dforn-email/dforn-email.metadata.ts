@@ -3,7 +3,7 @@ import type { MCQLabMetadata } from '../../../types/mcq-lab-metadata.type';
 
 export const dfornEmailMCQMetadata: MCQLabMetadata = {
   slug:          'mcq-dforn-email',
-  jsonFile:      'labs_assets/MCQ-data/digital_Forn/Email.json',
+  jsonFile:      'digital_Forn/Email.json',
   questionCount: 20,
   passingScore:  70,
 

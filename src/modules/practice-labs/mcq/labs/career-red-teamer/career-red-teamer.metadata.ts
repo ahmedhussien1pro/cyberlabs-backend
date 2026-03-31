@@ -3,7 +3,7 @@ import type { MCQLabMetadata } from '../../../types/mcq-lab-metadata.type';
 
 export const careerRedTeamerMCQMetadata: MCQLabMetadata = {
   slug:          'mcq-career-red-teamer',
-  jsonFile:      'labs_assets/MCQ-data/career_in_Cyber/RedTeamer.json',
+  jsonFile:      'career_in_Cyber/RedTeamer.json',
   questionCount: 20,
   passingScore:  70,
 

@@ -3,7 +3,7 @@ import type { MCQLabMetadata } from '../../../types/mcq-lab-metadata.type';
 
 export const dfornDataRecoveryMCQMetadata: MCQLabMetadata = {
   slug:          'mcq-dforn-data-recovery',
-  jsonFile:      'labs_assets/MCQ-data/digital_Forn/DataRecovery.json',
+  jsonFile:      'digital_Forn/DataRecovery.json',
   questionCount: 20,
   passingScore:  70,
 

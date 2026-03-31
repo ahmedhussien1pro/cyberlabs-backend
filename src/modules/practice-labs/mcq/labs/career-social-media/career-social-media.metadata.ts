@@ -3,7 +3,7 @@ import type { MCQLabMetadata } from '../../../types/mcq-lab-metadata.type';
 
 export const careerSocialMediaMCQMetadata: MCQLabMetadata = {
   slug:          'mcq-career-social-media',
-  jsonFile:      'labs_assets/MCQ-data/career_in_Cyber/SocialMedia.json',
+  jsonFile:      'career_in_Cyber/SocialMedia.json',
   questionCount: 20,
   passingScore:  70,
 
