@@ -1,0 +1,224 @@
+{
+    "questions": [
+        {
+            "id": 1,
+            "question": "What is the primary focus of Mobile Forensics?",
+            "options": [
+                "Analyzing computers and hard drives",
+                "Extracting data from smartphones, tablets, and wearable devices",
+                "Investigating network traffic for anomalies",
+                "Recovering data from cloud platforms"
+            ],
+            "correct_answer": "Extracting data from smartphones, tablets, and wearable devices"
+        },
+        {
+            "id": 2,
+            "question": "Which of the following data types is commonly recovered in mobile forensics investigations?",
+            "options": [
+                "GPS data",
+                "Call logs",
+                "Text messages",
+                "All of the above"
+            ],
+            "correct_answer": "All of the above"
+        },
+        {
+            "id": 3,
+            "question": "Which tool is commonly used for mobile forensics?",
+            "options": [
+                "FTK Imager",
+                "Cellebrite UFED",
+                "Wireshark",
+                "Autopsy"
+            ],
+            "correct_answer": "Cellebrite UFED"
+        },
+        {
+            "id": 4,
+            "question": "Which of the following is a challenge in mobile forensics?",
+            "options": [
+                "Encrypted devices",
+                "Deleted app data",
+                "Physical damage to devices",
+                "All of the above"
+            ],
+            "correct_answer": "All of the above"
+        },
+        {
+            "id": 5,
+            "question": "What is a common method for extracting data from mobile devices in forensics?",
+            "options": [
+                "JTAG (Joint Test Action Group)",
+                "USB cable connection",
+                "Over-the-air (OTA) extraction",
+                "All of the above"
+            ],
+            "correct_answer": "All of the above"
+        },
+        {
+            "id": 6,
+            "question": "What does 'logical extraction' refer to in mobile forensics?",
+            "options": [
+                "Extracting raw data from the device's memory",
+                "Extracting data from the file system of the mobile device",
+                "Rebuilding fragmented files",
+                "Decrypting encrypted mobile data"
+            ],
+            "correct_answer": "Extracting data from the file system of the mobile device"
+        },
+        {
+            "id": 7,
+            "question": "What does 'physical extraction' in mobile forensics involve?",
+            "options": [
+                "Extracting the entire content of the mobile device's storage",
+                "Extracting app data from the device's file system",
+                "Decrypting data from cloud storage",
+                "Extracting only call logs and messages"
+            ],
+            "correct_answer": "Extracting the entire content of the mobile device's storage"
+        },
+        {
+            "id": 8,
+            "question": "Which mobile operating system is most commonly examined in mobile forensics?",
+            "options": [
+                "Android",
+                "Windows Phone",
+                "iOS",
+                "All of the above"
+            ],
+            "correct_answer": "All of the above"
+        },
+        {
+            "id": 9,
+            "question": "What type of data can be recovered from a mobile device during an investigation?",
+            "options": [
+                "App data",
+                "Email and social media activity",
+                "GPS and location history",
+                "All of the above"
+            ],
+            "correct_answer": "All of the above"
+        },
+        {
+            "id": 10,
+            "question": "Which of the following is a mobile forensics tool used for extracting data from iOS devices?",
+            "options": [
+                "Cellebrite UFED",
+                "XRY",
+                "Oxygen Forensic Detective",
+                "All of the above"
+            ],
+            "correct_answer": "All of the above"
+        },
+        {
+            "id": 11,
+            "question": "What is the main advantage of 'over-the-air' (OTA) extraction in mobile forensics?",
+            "options": [
+                "No physical connection is required",
+                "It is faster than USB-based extraction",
+                "It can bypass device encryption",
+                "It does not require user consent"
+            ],
+            "correct_answer": "No physical connection is required"
+        },
+        {
+            "id": 12,
+            "question": "What does 'chip-off' extraction involve in mobile forensics?",
+            "options": [
+                "Accessing the mobile device's memory chip directly",
+                "Extracting data via USB cable",
+                "Recovering deleted messages",
+                "Forensically copying the device's storage to another device"
+            ],
+            "correct_answer": "Accessing the mobile device's memory chip directly"
+        },
+        {
+            "id": 13,
+            "question": "Which type of mobile device data can be the hardest to recover during an investigation?",
+            "options": [
+                "Deleted call logs",
+                "Encrypted data",
+                "App data",
+                "GPS data"
+            ],
+            "correct_answer": "Encrypted data"
+        },
+        {
+            "id": 14,
+            "question": "Which of the following is NOT a type of mobile forensics extraction?",
+            "options": [
+                "Logical extraction",
+                "Physical extraction",
+                "Cloud extraction",
+                "Data encryption"
+            ],
+            "correct_answer": "Data encryption"
+        },
+        {
+            "id": 15,
+            "question": "What is the significance of call logs in mobile forensics?",
+            "options": [
+                "They can provide evidence of communications during a crime",
+                "They are not useful for forensic investigations",
+                "They are typically encrypted and cannot be retrieved",
+                "They are stored only in cloud backups"
+            ],
+            "correct_answer": "They can provide evidence of communications during a crime"
+        },
+        {
+            "id": 16,
+            "question": "What can 'app data' recovery provide in mobile forensics investigations?",
+            "options": [
+                "Evidence of communications within apps",
+                "Encrypted passwords",
+                "Device location history",
+                "Deleted call logs"
+            ],
+            "correct_answer": "Evidence of communications within apps"
+        },
+        {
+            "id": 17,
+            "question": "Which is a common technique used to recover data from damaged mobile devices?",
+            "options": [
+                "Chip-off extraction",
+                "Password cracking",
+                "Network analysis",
+                "Mobile device cloning"
+            ],
+            "correct_answer": "Chip-off extraction"
+        },
+        {
+            "id": 18,
+            "question": "What does 'cloud extraction' refer to in mobile forensics?",
+            "options": [
+                "Recovering data from the device's memory chip",
+                "Extracting data stored on cloud services linked to the mobile device",
+                "Accessing deleted files in the device's storage",
+                "Monitoring real-time device communication"
+            ],
+            "correct_answer": "Extracting data stored on cloud services linked to the mobile device"
+        },
+        {
+            "id": 19,
+            "question": "Which of the following is a legal concern during mobile forensics investigations?",
+            "options": [
+                "Obtaining user consent for data extraction",
+                "Accessing encrypted data without proper authorization",
+                "Bypassing security measures without court orders",
+                "All of the above"
+            ],
+            "correct_answer": "All of the above"
+        },
+        {
+            "id": 20,
+            "question": "Which of the following is a limitation of mobile forensics?",
+            "options": [
+                "Data can be recovered from most devices without issues",
+                "Encrypted devices may block access to critical data",
+                "Cloud data extraction is always possible",
+                "Mobile device data is always backed up"
+            ],
+            "correct_answer": "Encrypted devices may block access to critical data"
+        }
+    ]
+}

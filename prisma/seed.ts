@@ -20,17 +20,17 @@ const MODULE_LABS = [
 
 const LAB_CATEGORIES: string[] = [
   // ─── Existing categories ───────────────────────────────────────────────────
-  // 'wireshark',
+  // 'sql-injection',
+  // 'csrf',
+  // 'xss',
+  'wireshark',
   // 'cookies-lab',
   // 'bash-scripting',
 
-  'sql-injection',
   // 'ac-vuln',
   // 'business-logic',
   // 'jwt',
-  // 'xss',
   // 'idor',
-  // 'csrf',
   // 'broken-auth',
   // 'command-injection',
   // 'file-inclusion',

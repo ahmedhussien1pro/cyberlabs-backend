@@ -1,0 +1,224 @@
+{
+    "questions": [
+        {
+            "id": 1,
+            "question": "What is the main purpose of forensic data recovery?",
+            "options": [
+                "To retrieve lost or corrupted data from storage devices",
+                "To analyze the file system",
+                "To recover deleted emails",
+                "To prevent data breaches"
+            ],
+            "correct_answer": "To retrieve lost or corrupted data from storage devices"
+        },
+        {
+            "id": 2,
+            "question": "Which technique is used to extract files from unallocated space on a storage device?",
+            "options": [
+                "File System Analysis",
+                "Data Carving",
+                "File Recovery",
+                "Data Sanitization"
+            ],
+            "correct_answer": "Data Carving"
+        },
+        {
+            "id": 3,
+            "question": "What is the primary goal of maintaining the chain of custody during forensic data recovery?",
+            "options": [
+                "To preserve data integrity and admissibility in court",
+                "To recover the most data possible",
+                "To prevent data loss",
+                "To enhance data encryption"
+            ],
+            "correct_answer": "To preserve data integrity and admissibility in court"
+        },
+        {
+            "id": 4,
+            "question": "Which of the following is NOT a common file system analyzed during forensic data recovery?",
+            "options": [
+                "FAT",
+                "NTFS",
+                "EXT4",
+                "JPG"
+            ],
+            "correct_answer": "JPG"
+        },
+        {
+            "id": 5,
+            "question": "What should be done immediately when a storage device is found to be damaged or corrupted in a forensic investigation?",
+            "options": [
+                "Recover the data without taking a backup",
+                "Make a bit-for-bit image of the device",
+                "Try to repair the device before imaging",
+                "Only recover deleted files"
+            ],
+            "correct_answer": "Make a bit-for-bit image of the device"
+        },
+        {
+            "id": 6,
+            "question": "Which of the following tools is commonly used for forensic data recovery?",
+            "options": [
+                "FTK Imager",
+                "Wireshark",
+                "Metasploit",
+                "Kali Linux"
+            ],
+            "correct_answer": "FTK Imager"
+        },
+        {
+            "id": 7,
+            "question": "In forensic data recovery, what is the importance of a bit-for-bit image?",
+            "options": [
+                "It creates a copy of the data in an encrypted format",
+                "It preserves the original data without any modifications",
+                "It speeds up the recovery process",
+                "It prevents data corruption"
+            ],
+            "correct_answer": "It preserves the original data without any modifications"
+        },
+        {
+            "id": 8,
+            "question": "What type of data is most likely to be recovered through data carving?",
+            "options": [
+                "Structured database records",
+                "Deleted files from unallocated space",
+                "Data from cloud storage",
+                "Live system memory"
+            ],
+            "correct_answer": "Deleted files from unallocated space"
+        },
+        {
+            "id": 9,
+            "question": "What does data sanitization involve in forensic data recovery?",
+            "options": [
+                "Recovering deleted files",
+                "Making the recovered data unreadable",
+                "Encrypting recovered files",
+                "Shredding sensitive data"
+            ],
+            "correct_answer": "Making the recovered data unreadable"
+        },
+        {
+            "id": 10,
+            "question": "Which of the following is a common cause of data corruption in forensic investigations?",
+            "options": [
+                "Mechanical failure of storage devices",
+                "File system errors",
+                "Virus attacks",
+                "All of the above"
+            ],
+            "correct_answer": "All of the above"
+        },
+        {
+            "id": 11,
+            "question": "What is the first step in forensic data recovery from a hard drive?",
+            "options": [
+                "Run a virus scan on the drive",
+                "Create a forensic image of the drive",
+                "Attempt data repair",
+                "Format the drive"
+            ],
+            "correct_answer": "Create a forensic image of the drive"
+        },
+        {
+            "id": 12,
+            "question": "Which of the following is a feature of NTFS that aids in forensic data recovery?",
+            "options": [
+                "File allocation tables",
+                "Master file table (MFT)",
+                "Temporary file systems",
+                "Cloud storage integration"
+            ],
+            "correct_answer": "Master file table (MFT)"
+        },
+        {
+            "id": 13,
+            "question": "What does the term 'file slack' refer to in the context of forensic data recovery?",
+            "options": [
+                "Unused space in a file's allocated clusters",
+                "Encrypted data",
+                "Data fragmentation",
+                "Space taken by hidden files"
+            ],
+            "correct_answer": "Unused space in a file's allocated clusters"
+        },
+        {
+            "id": 14,
+            "question": "What is the purpose of using a write blocker during forensic data recovery?",
+            "options": [
+                "To prevent accidental deletion of files during recovery",
+                "To enhance the recovery speed",
+                "To protect the original device from data modification",
+                "To recover encrypted files"
+            ],
+            "correct_answer": "To protect the original device from data modification"
+        },
+        {
+            "id": 15,
+            "question": "Which type of damage to a storage device is most difficult to recover from?",
+            "options": [
+                "Logical damage",
+                "Mechanical failure",
+                "File system corruption",
+                "Corruption due to malware"
+            ],
+            "correct_answer": "Mechanical failure"
+        },
+        {
+            "id": 16,
+            "question": "What is an example of a file format commonly recovered in forensic data recovery?",
+            "options": [
+                "HTML",
+                "JPG",
+                "TXT",
+                "All of the above"
+            ],
+            "correct_answer": "All of the above"
+        },
+        {
+            "id": 17,
+            "question": "What does 'RAID recovery' refer to in the context of forensic data recovery?",
+            "options": [
+                "Recovering data from redundant arrays of independent disks",
+                "Recovering data from external hard drives",
+                "Recovering cloud-based data",
+                "Recovering malware files"
+            ],
+            "correct_answer": "Recovering data from redundant arrays of independent disks"
+        },
+        {
+            "id": 18,
+            "question": "What is a forensic investigator's role when dealing with corrupted data?",
+            "options": [
+                "To recreate the deleted files using metadata",
+                "To immediately restore the device to its factory settings",
+                "To maintain a strict chain of custody and ensure data integrity",
+                "To bypass the file system for quicker access"
+            ],
+            "correct_answer": "To maintain a strict chain of custody and ensure data integrity"
+        },
+        {
+            "id": 19,
+            "question": "What type of data is NOT typically recoverable in forensic data recovery?",
+            "options": [
+                "Deleted files",
+                "Files overwritten by new data",
+                "Data from cloud services",
+                "Data from corrupted partitions"
+            ],
+            "correct_answer": "Files overwritten by new data"
+        },
+        {
+            "id": 20,
+            "question": "Which recovery method is most useful when dealing with a physically damaged storage device?",
+            "options": [
+                "Software recovery tools",
+                "File carving",
+                "Disk imaging",
+                "Data extraction in a controlled lab environment"
+            ],
+            "correct_answer": "Data extraction in a controlled lab environment"
+        }
+    ]
+}

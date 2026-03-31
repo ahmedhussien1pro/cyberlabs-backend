@@ -1,0 +1,224 @@
+{
+    "questions": [
+        {
+            "id": 1,
+            "question": "What is the primary goal of blockchain forensics?",
+            "options": [
+                "Tracking cryptocurrency wallets",
+                "Identifying blockchain vulnerabilities",
+                "Tracking illicit activities within the blockchain",
+                "Enhancing transaction speed"
+            ],
+            "correct_answer": "Tracking illicit activities within the blockchain"
+        },
+        {
+            "id": 2,
+            "question": "Which of the following is NOT a commonly used cryptocurrency in forensic investigations?",
+            "options": [
+                "Bitcoin",
+                "Ethereum",
+                "Litecoin",
+                "Fiat money"
+            ],
+            "correct_answer": "Fiat money"
+        },
+        {
+            "id": 3,
+            "question": "What is the primary method of tracing cryptocurrency transactions?",
+            "options": [
+                "Transaction analysis tools",
+                "Forensic data recovery",
+                "Cryptographic hashing",
+                "Analyzing IP addresses"
+            ],
+            "correct_answer": "Transaction analysis tools"
+        },
+        {
+            "id": 4,
+            "question": "What is the significance of a public ledger in blockchain forensics?",
+            "options": [
+                "It ensures transparency of all transactions",
+                "It encrypts all user data",
+                "It hides transaction histories",
+                "It restricts access to transaction information"
+            ],
+            "correct_answer": "It ensures transparency of all transactions"
+        },
+        {
+            "id": 5,
+            "question": "Which cryptocurrency is most commonly associated with illegal activities, according to blockchain forensics?",
+            "options": [
+                "Bitcoin",
+                "Ethereum",
+                "Monero",
+                "Ripple"
+            ],
+            "correct_answer": "Monero"
+        },
+        {
+            "id": 6,
+            "question": "What is a 'wallet address' in cryptocurrency forensics?",
+            "options": [
+                "An encrypted key used for transactions",
+                "A unique identifier for a user's cryptocurrency holdings",
+                "A method of securing a blockchain ledger",
+                "The transaction fee required for a transfer"
+            ],
+            "correct_answer": "A unique identifier for a user's cryptocurrency holdings"
+        },
+        {
+            "id": 7,
+            "question": "Which of the following blockchain analysis tools is used for cryptocurrency forensics?",
+            "options": [
+                "Chainalysis",
+                "Bitcoin Core",
+                "Solidity",
+                "Trezor"
+            ],
+            "correct_answer": "Chainalysis"
+        },
+        {
+            "id": 8,
+            "question": "What is the role of 'hashing' in blockchain forensics?",
+            "options": [
+                "It encrypts transaction data to protect privacy",
+                "It validates the integrity of blockchain data",
+                "It tracks the sender of cryptocurrency transactions",
+                "It facilitates faster transaction processing"
+            ],
+            "correct_answer": "It validates the integrity of blockchain data"
+        },
+        {
+            "id": 9,
+            "question": "What is a 'smart contract' in the context of blockchain forensics?",
+            "options": [
+                "A contract that requires human validation",
+                "A self-executing contract with the terms directly written into code",
+                "A contract that stores personal data on the blockchain",
+                "A paper-based contract used for cryptocurrency exchanges"
+            ],
+            "correct_answer": "A self-executing contract with the terms directly written into code"
+        },
+        {
+            "id": 10,
+            "question": "What is the main purpose of blockchain analysis in cryptocurrency forensics?",
+            "options": [
+                "To mine cryptocurrencies",
+                "To prevent illegal transactions and money laundering",
+                "To improve blockchain efficiency",
+                "To enhance cryptocurrency investment strategies"
+            ],
+            "correct_answer": "To prevent illegal transactions and money laundering"
+        },
+        {
+            "id": 11,
+            "question": "Which of the following is a major challenge in cryptocurrency forensics?",
+            "options": [
+                "Transparency of blockchain transactions",
+                "Identifying the parties behind pseudonymous wallet addresses",
+                "Slow transaction speeds",
+                "Lack of regulation"
+            ],
+            "correct_answer": "Identifying the parties behind pseudonymous wallet addresses"
+        },
+        {
+            "id": 12,
+            "question": "Which cryptocurrency transaction feature is often scrutinized in forensic investigations?",
+            "options": [
+                "Transaction speed",
+                "Transaction history and wallet addresses",
+                "Transaction fees",
+                "Number of confirmations"
+            ],
+            "correct_answer": "Transaction history and wallet addresses"
+        },
+        {
+            "id": 13,
+            "question": "What does the 'block' in a blockchain represent?",
+            "options": [
+                "A single transaction in a cryptocurrency network",
+                "A set of cryptocurrency transactions grouped together",
+                "A type of cryptocurrency wallet",
+                "A network validation algorithm"
+            ],
+            "correct_answer": "A set of cryptocurrency transactions grouped together"
+        },
+        {
+            "id": 14,
+            "question": "What does 'de-anonymization' mean in the context of blockchain forensics?",
+            "options": [
+                "Identifying the physical location of blockchain users",
+                "Revealing the identities behind pseudonymous cryptocurrency transactions",
+                "Tracking the mining process of a cryptocurrency",
+                "Encrypting transaction data for privacy"
+            ],
+            "correct_answer": "Revealing the identities behind pseudonymous cryptocurrency transactions"
+        },
+        {
+            "id": 15,
+            "question": "How do forensic experts track illicit transactions on a blockchain?",
+            "options": [
+                "By using transaction graph analysis",
+                "By monitoring cryptocurrency exchanges",
+                "By observing miner behavior",
+                "By analyzing mining rewards"
+            ],
+            "correct_answer": "By using transaction graph analysis"
+        },
+        {
+            "id": 16,
+            "question": "Which cryptocurrency has a reputation for offering enhanced privacy and is often used for illegal activities?",
+            "options": [
+                "Bitcoin",
+                "Ethereum",
+                "Monero",
+                "Litecoin"
+            ],
+            "correct_answer": "Monero"
+        },
+        {
+            "id": 17,
+            "question": "Which organization commonly uses blockchain forensics to trace cryptocurrency transactions in law enforcement?",
+            "options": [
+                "FBI",
+                "Interpol",
+                "Europol",
+                "All of the above"
+            ],
+            "correct_answer": "All of the above"
+        },
+        {
+            "id": 18,
+            "question": "Which aspect of cryptocurrency transactions is most important in forensic investigations?",
+            "options": [
+                "Transaction amounts",
+                "Transaction times",
+                "Wallet addresses",
+                "Transaction fees"
+            ],
+            "correct_answer": "Wallet addresses"
+        },
+        {
+            "id": 19,
+            "question": "What is the purpose of the 'proof-of-work' consensus mechanism in blockchain?",
+            "options": [
+                "To validate transactions and secure the network",
+                "To increase transaction fees",
+                "To ensure privacy of transactions",
+                "To validate cryptocurrency mining results"
+            ],
+            "correct_answer": "To validate transactions and secure the network"
+        },
+        {
+            "id": 20,
+            "question": "How can blockchain forensics help prevent money laundering in cryptocurrency networks?",
+            "options": [
+                "By monitoring the speed of transactions",
+                "By tracking and identifying the origin of suspicious transactions",
+                "By restricting access to cryptocurrency exchanges",
+                "By lowering transaction fees"
+            ],
+            "correct_answer": "By tracking and identifying the origin of suspicious transactions"
+        }
+    ]
+}

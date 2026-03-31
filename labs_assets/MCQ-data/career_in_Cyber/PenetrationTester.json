@@ -1,0 +1,204 @@
+{
+  "questions": [
+    {
+      "id": 1,
+      "question": "What is the primary role of a Penetration Tester?",
+      "options": [
+        "A. Identifying security vulnerabilities",
+        "B. Managing security policies",
+        "C. Developing encryption algorithms",
+        "D. Configuring network firewalls"
+      ],
+      "correct_answer": "A"
+    },
+    {
+      "id": 2,
+      "question": "Which phase of penetration testing involves gathering information about the target?",
+      "options": [
+        "A. Reconnaissance",
+        "B. Exploitation",
+        "C. Privilege Escalation",
+        "D. Reporting"
+      ],
+      "correct_answer": "A"
+    },
+    {
+      "id": 3,
+      "question": "What is the primary purpose of privilege escalation in penetration testing?",
+      "options": [
+        "A. Gaining higher-level access to the system",
+        "B. Installing additional security patches",
+        "C. Blocking unauthorized access",
+        "D. Encrypting sensitive data"
+      ],
+      "correct_answer": "A"
+    },
+    {
+      "id": 4,
+      "question": "Which tool is commonly used for network scanning?",
+      "options": ["A. Nmap", "B. Burp Suite", "C. Metasploit", "D. Wireshark"],
+      "correct_answer": "A"
+    },
+    {
+      "id": 5,
+      "question": "What type of penetration test simulates an insider attack?",
+      "options": [
+        "A. Gray box testing",
+        "B. Black box testing",
+        "C. White box testing",
+        "D. Red teaming"
+      ],
+      "correct_answer": "A"
+    },
+    {
+      "id": 6,
+      "question": "Which tool is widely used for web application penetration testing?",
+      "options": [
+        "A. Burp Suite",
+        "B. Nessus",
+        "C. Snort",
+        "D. Cuckoo Sandbox"
+      ],
+      "correct_answer": "A"
+    },
+    {
+      "id": 7,
+      "question": "What is the purpose of a vulnerability assessment?",
+      "options": [
+        "A. Identifying potential security weaknesses",
+        "B. Exploiting security flaws",
+        "C. Blocking incoming traffic",
+        "D. Preventing DDoS attacks"
+      ],
+      "correct_answer": "A"
+    },
+    {
+      "id": 8,
+      "question": "What is social engineering in the context of penetration testing?",
+      "options": [
+        "A. Manipulating people to gain access to systems",
+        "B. Hacking into a secure database",
+        "C. Writing exploit code",
+        "D. Conducting a phishing campaign"
+      ],
+      "correct_answer": "A"
+    },
+    {
+      "id": 9,
+      "question": "Which technique is used to test password security?",
+      "options": [
+        "A. Brute force attack",
+        "B. SQL injection",
+        "C. Cross-site scripting (XSS)",
+        "D. DNS spoofing"
+      ],
+      "correct_answer": "A"
+    },
+    {
+      "id": 10,
+      "question": "Which of the following is NOT a step in penetration testing?",
+      "options": [
+        "A. Firewall configuration",
+        "B. Reconnaissance",
+        "C. Exploitation",
+        "D. Reporting"
+      ],
+      "correct_answer": "A"
+    },
+    {
+      "id": 11,
+      "question": "What is the purpose of a honeypot in cybersecurity?",
+      "options": [
+        "A. Detecting and analyzing attacks",
+        "B. Encrypting network traffic",
+        "C. Preventing malware infections",
+        "D. Blocking phishing emails"
+      ],
+      "correct_answer": "A"
+    },
+    {
+      "id": 12,
+      "question": "What is the main advantage of black box penetration testing?",
+      "options": [
+        "A. Simulating real-world attack scenarios",
+        "B. Testing known vulnerabilities only",
+        "C. Providing full access to source code",
+        "D. Reducing testing costs"
+      ],
+      "correct_answer": "A"
+    },
+    {
+      "id": 13,
+      "question": "Which tool is commonly used to exploit vulnerabilities in penetration testing?",
+      "options": ["A. Metasploit", "B. OpenVAS", "C. Nikto", "D. Aircrack-ng"],
+      "correct_answer": "A"
+    },
+    {
+      "id": 14,
+      "question": "What is the final step in penetration testing?",
+      "options": [
+        "A. Reporting findings",
+        "B. Exploitation",
+        "C. Privilege escalation",
+        "D. Reconnaissance"
+      ],
+      "correct_answer": "A"
+    },
+    {
+      "id": 15,
+      "question": "Which technique is used to capture network traffic?",
+      "options": [
+        "A. Packet sniffing",
+        "B. Port scanning",
+        "C. SQL injection",
+        "D. Phishing"
+      ],
+      "correct_answer": "A"
+    },
+    {
+      "id": 16,
+      "question": "Which type of testing involves evaluating security from a hacker’s perspective?",
+      "options": [
+        "A. Ethical hacking",
+        "B. Code review",
+        "C. Security compliance audit",
+        "D. Configuration management"
+      ],
+      "correct_answer": "A"
+    },
+    {
+      "id": 17,
+      "question": "What is the purpose of SQL injection testing?",
+      "options": [
+        "A. Identifying vulnerabilities in database queries",
+        "B. Testing encryption algorithms",
+        "C. Scanning for open ports",
+        "D. Analyzing network traffic"
+      ],
+      "correct_answer": "A"
+    },
+    {
+      "id": 18,
+      "question": "Which protocol is often targeted during wireless penetration testing?",
+      "options": ["A. WPA2", "B. HTTPS", "C. TCP/IP", "D. ICMP"],
+      "correct_answer": "A"
+    },
+    {
+      "id": 19,
+      "question": "Which scripting language is commonly used for penetration testing?",
+      "options": ["A. Python", "B. Java", "C. Swift", "D. SQL"],
+      "correct_answer": "A"
+    },
+    {
+      "id": 20,
+      "question": "What is the purpose of lateral movement in penetration testing?",
+      "options": [
+        "A. Moving between systems after gaining access",
+        "B. Encrypting sensitive data",
+        "C. Blocking incoming traffic",
+        "D. Testing password policies"
+      ],
+      "correct_answer": "A"
+    }
+  ]
+}

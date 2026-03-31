@@ -1,0 +1,224 @@
+{
+    "questions": [
+        {
+            "id": 1,
+            "question": "What is the primary function of an Event Data Recorder (EDR) in vehicles?",
+            "options": [
+                "Tracking vehicle speed",
+                "Recording crash-related data",
+                "Monitoring fuel consumption",
+                "Controlling engine performance"
+            ],
+            "correct_answer": "Recording crash-related data"
+        },
+        {
+            "id": 2,
+            "question": "Which of the following systems is commonly used to retrieve data from a vehicle during a forensic investigation?",
+            "options": [
+                "OBD II scanner",
+                "GPS receiver",
+                "Car radio",
+                "Air conditioning system"
+            ],
+            "correct_answer": "OBD II scanner"
+        },
+        {
+            "id": 3,
+            "question": "What type of data can be retrieved from an On-Board Diagnostics (OBD) system?",
+            "options": [
+                "Engine performance data",
+                "Fuel efficiency",
+                "Vehicle speed",
+                "All of the above"
+            ],
+            "correct_answer": "All of the above"
+        },
+        {
+            "id": 4,
+            "question": "Which of the following can be used to track a vehicle's location during an investigation?",
+            "options": [
+                "GPS system",
+                "Infotainment system",
+                "Event Data Recorder",
+                "All of the above"
+            ],
+            "correct_answer": "GPS system"
+        },
+        {
+            "id": 5,
+            "question": "What does the data from an Event Data Recorder (EDR) typically include?",
+            "options": [
+                "Vehicle speed before a crash",
+                "Seatbelt status",
+                "Airbag deployment",
+                "All of the above"
+            ],
+            "correct_answer": "All of the above"
+        },
+        {
+            "id": 6,
+            "question": "What kind of data can be retrieved from a vehicle’s infotainment system?",
+            "options": [
+                "Navigation history",
+                "Communication logs",
+                "Driver behavior analysis",
+                "All of the above"
+            ],
+            "correct_answer": "All of the above"
+        },
+        {
+            "id": 7,
+            "question": "Which system records data such as the vehicle’s speed, acceleration, and braking force?",
+            "options": [
+                "Event Data Recorder (EDR)",
+                "Infotainment system",
+                "Airbag system",
+                "Traction control system"
+            ],
+            "correct_answer": "Event Data Recorder (EDR)"
+        },
+        {
+            "id": 8,
+            "question": "In vehicle forensics, what does the term ‘black box’ refer to?",
+            "options": [
+                "Event Data Recorder",
+                "On-Board Diagnostics (OBD) system",
+                "Vehicle GPS system",
+                "Infotainment system"
+            ],
+            "correct_answer": "Event Data Recorder"
+        },
+        {
+            "id": 9,
+            "question": "Which of the following can be used to analyze vehicle crash data?",
+            "options": [
+                "Vehicle black box data",
+                "OBD system data",
+                "GPS tracking data",
+                "All of the above"
+            ],
+            "correct_answer": "Vehicle black box data"
+        },
+        {
+            "id": 10,
+            "question": "What type of data is typically not stored by On-Board Diagnostics (OBD) systems?",
+            "options": [
+                "Engine fault codes",
+                "Vehicle’s location",
+                "Vehicle speed",
+                "Fuel consumption data"
+            ],
+            "correct_answer": "Vehicle’s location"
+        },
+        {
+            "id": 11,
+            "question": "Which system in a modern vehicle captures data about airbag deployment?",
+            "options": [
+                "Event Data Recorder (EDR)",
+                "OBD system",
+                "GPS system",
+                "Infotainment system"
+            ],
+            "correct_answer": "Event Data Recorder (EDR)"
+        },
+        {
+            "id": 12,
+            "question": "What data is typically stored in the GPS system of a vehicle?",
+            "options": [
+                "Current location",
+                "Route history",
+                "Speed",
+                "All of the above"
+            ],
+            "correct_answer": "All of the above"
+        },
+        {
+            "id": 13,
+            "question": "Which forensic method can be used to retrieve data from the vehicle's OBD system?",
+            "options": [
+                "OBD II scanner",
+                "Data acquisition tool",
+                "Infotainment analyzer",
+                "GPS logger"
+            ],
+            "correct_answer": "OBD II scanner"
+        },
+        {
+            "id": 14,
+            "question": "What is one of the key uses of vehicle forensics in criminal investigations?",
+            "options": [
+                "To determine the cause of a traffic accident",
+                "To retrieve stolen vehicle data",
+                "To analyze tire wear patterns",
+                "To track fuel consumption"
+            ],
+            "correct_answer": "To determine the cause of a traffic accident"
+        },
+        {
+            "id": 15,
+            "question": "What is the purpose of retrieving data from a vehicle's infotainment system during an investigation?",
+            "options": [
+                "To analyze the driver's route history",
+                "To determine the vehicle's speed",
+                "To collect audio recordings",
+                "To evaluate airbag deployment"
+            ],
+            "correct_answer": "To analyze the driver's route history"
+        },
+        {
+            "id": 16,
+            "question": "Which of the following systems in a vehicle may provide valuable evidence in a hit-and-run investigation?",
+            "options": [
+                "Event Data Recorder (EDR)",
+                "GPS system",
+                "OBD system",
+                "All of the above"
+            ],
+            "correct_answer": "All of the above"
+        },
+        {
+            "id": 17,
+            "question": "In vehicle forensics, which of the following data is typically stored in the vehicle's event data recorder (EDR)?",
+            "options": [
+                "Airbag deployment data",
+                "Vehicle speed and braking information",
+                "Seatbelt status",
+                "All of the above"
+            ],
+            "correct_answer": "All of the above"
+        },
+        {
+            "id": 18,
+            "question": "Which of the following is an important piece of evidence retrieved from a vehicle’s OBD system during forensic investigations?",
+            "options": [
+                "Vehicle fault codes",
+                "GPS tracking data",
+                "Driver identity information",
+                "All of the above"
+            ],
+            "correct_answer": "Vehicle fault codes"
+        },
+        {
+            "id": 19,
+            "question": "What is the role of a GPS system in vehicle forensics?",
+            "options": [
+                "To track the vehicle's real-time location",
+                "To record fuel usage data",
+                "To monitor engine temperature",
+                "To control vehicle speed"
+            ],
+            "correct_answer": "To track the vehicle's real-time location"
+        },
+        {
+            "id": 20,
+            "question": "Which of the following forensic tools is used to analyze data retrieved from vehicle GPS systems?",
+            "options": [
+                "Data extraction tool",
+                "GPS logger",
+                "OBD II scanner",
+                "Infotainment system analyzer"
+            ],
+            "correct_answer": "GPS logger"
+        }
+    ]
+}

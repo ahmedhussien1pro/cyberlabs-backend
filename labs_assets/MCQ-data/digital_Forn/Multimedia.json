@@ -1,0 +1,224 @@
+{
+    "questions": [
+        {
+            "id": 1,
+            "question": "What is the primary focus of multimedia forensics?",
+            "options": [
+                "Creating multimedia files",
+                "Analyzing and verifying the authenticity of multimedia content",
+                "Sharing multimedia files securely",
+                "Editing multimedia files"
+            ],
+            "correct_answer": "Analyzing and verifying the authenticity of multimedia content"
+        },
+        {
+            "id": 2,
+            "question": "Which of the following is an example of multimedia data analyzed in forensics?",
+            "options": [
+                "Images",
+                "Audio",
+                "Video",
+                "All of the above"
+            ],
+            "correct_answer": "All of the above"
+        },
+        {
+            "id": 3,
+            "question": "What is one common goal of image forensics?",
+            "options": [
+                "To detect image compression",
+                "To verify the authenticity of digital images",
+                "To increase image resolution",
+                "To create photorealistic images"
+            ],
+            "correct_answer": "To verify the authenticity of digital images"
+        },
+        {
+            "id": 4,
+            "question": "Which of the following techniques is used in audio forensics?",
+            "options": [
+                "Voice comparison",
+                "Signal enhancement",
+                "Noise reduction",
+                "All of the above"
+            ],
+            "correct_answer": "All of the above"
+        },
+        {
+            "id": 5,
+            "question": "In video forensics, what is a common indicator of tampering?",
+            "options": [
+                "Unusual frame rate",
+                "Inconsistent lighting or shadows",
+                "Distorted audio",
+                "All of the above"
+            ],
+            "correct_answer": "All of the above"
+        },
+        {
+            "id": 6,
+            "question": "Which of the following is a method used to detect image manipulation?",
+            "options": [
+                "Error Level Analysis (ELA)",
+                "Color grading analysis",
+                "Image resizing",
+                "None of the above"
+            ],
+            "correct_answer": "Error Level Analysis (ELA)"
+        },
+        {
+            "id": 7,
+            "question": "What is the role of metadata in multimedia forensics?",
+            "options": [
+                "To provide information about the device used to capture the media",
+                "To help verify the authenticity of multimedia files",
+                "To track timestamps and locations",
+                "All of the above"
+            ],
+            "correct_answer": "All of the above"
+        },
+        {
+            "id": 8,
+            "question": "Which of the following is a type of video forensic analysis?",
+            "options": [
+                "Frame analysis",
+                "Audio signal analysis",
+                "Geospatial data extraction",
+                "All of the above"
+            ],
+            "correct_answer": "Frame analysis"
+        },
+        {
+            "id": 9,
+            "question": "What does the term 'splicing' refer to in image forensics?",
+            "options": [
+                "Joining two images together",
+                "Cropping parts of an image",
+                "Enhancing the image quality",
+                "None of the above"
+            ],
+            "correct_answer": "Joining two images together"
+        },
+        {
+            "id": 10,
+            "question": "What is an example of a tool used in multimedia forensics?",
+            "options": [
+                "EnCase",
+                "FTK Imager",
+                "FotoForensics",
+                "Wireshark"
+            ],
+            "correct_answer": "FotoForensics"
+        },
+        {
+            "id": 11,
+            "question": "What is a common challenge in multimedia forensics?",
+            "options": [
+                "Detecting very high-quality image manipulations",
+                "Recovering deleted multimedia files",
+                "Handling metadata corruption",
+                "All of the above"
+            ],
+            "correct_answer": "All of the above"
+        },
+        {
+            "id": 12,
+            "question": "What is the primary purpose of using Error Level Analysis (ELA) in image forensics?",
+            "options": [
+                "To detect image compression artifacts",
+                "To detect image manipulation by comparing pixel-level error rates",
+                "To identify the camera used to capture the image",
+                "To enhance image resolution"
+            ],
+            "correct_answer": "To detect image manipulation by comparing pixel-level error rates"
+        },
+        {
+            "id": 13,
+            "question": "Which of the following forensic methods is used to identify tampered video frames?",
+            "options": [
+                "Frame-by-frame analysis",
+                "Audio matching",
+                "Visual cryptography",
+                "Text watermarking"
+            ],
+            "correct_answer": "Frame-by-frame analysis"
+        },
+        {
+            "id": 14,
+            "question": "Which of the following can help in authenticating the source of an image in multimedia forensics?",
+            "options": [
+                "Analyzing EXIF metadata",
+                "Performing file signature analysis",
+                "Identifying file compression techniques",
+                "All of the above"
+            ],
+            "correct_answer": "All of the above"
+        },
+        {
+            "id": 15,
+            "question": "What type of data can be recovered from audio forensics?",
+            "options": [
+                "Hidden messages embedded in audio files",
+                "Time-stamped speech recordings",
+                "Background noise removal",
+                "All of the above"
+            ],
+            "correct_answer": "All of the above"
+        },
+        {
+            "id": 16,
+            "question": "What is the challenge of verifying the authenticity of multimedia files?",
+            "options": [
+                "The ability to easily manipulate digital content",
+                "The constant evolution of multimedia editing software",
+                "The difficulty in detecting sophisticated alterations",
+                "All of the above"
+            ],
+            "correct_answer": "All of the above"
+        },
+        {
+            "id": 17,
+            "question": "What role do video timestamps play in forensic investigations?",
+            "options": [
+                "They help establish the timeline of events",
+                "They can be altered to mislead investigators",
+                "They can serve as crucial evidence for verifying authenticity",
+                "All of the above"
+            ],
+            "correct_answer": "All of the above"
+        },
+        {
+            "id": 18,
+            "question": "What is 'video frame interpolation' used for in video forensics?",
+            "options": [
+                "To increase video resolution",
+                "To detect fake video frames",
+                "To improve video frame rate",
+                "None of the above"
+            ],
+            "correct_answer": "To detect fake video frames"
+        },
+        {
+            "id": 19,
+            "question": "In multimedia forensics, what is often the first step in verifying a digital file’s authenticity?",
+            "options": [
+                "Checking the file's checksum",
+                "Analyzing file metadata",
+                "Running a virus scan",
+                "Performing file recovery"
+            ],
+            "correct_answer": "Analyzing file metadata"
+        },
+        {
+            "id": 20,
+            "question": "Which technique is used to analyze the compression artifacts in digital images?",
+            "options": [
+                "JPEG Compression Analysis",
+                "Audio fingerprinting",
+                "Time-series analysis",
+                "Pixelation analysis"
+            ],
+            "correct_answer": "JPEG Compression Analysis"
+        }
+    ]
+}
