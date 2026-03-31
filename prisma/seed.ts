@@ -3,11 +3,12 @@ import { PrismaClient } from '@prisma/client';
 import { Prisma } from '@prisma/client';
 
 import { seedSubscriptionPlans } from './seed-data/subscription-plans';
-import { seedLabs } from './seed-data/seed-labs';
-import { seedCourses } from './seed-data/course-data/seed-courses';
-import { seedPaths } from './seed-data/seed-paths';
-import { seedCategoryLabs } from './seed-data/seed-category-labs';
-import { seedBadges } from './seed-data/seed-badges';
+import { seedLabs }              from './seed-data/seed-labs';
+import { seedCourses }           from './seed-data/course-data/seed-courses';
+import { seedPaths }             from './seed-data/seed-paths';
+import { seedCategoryLabs }      from './seed-data/seed-category-labs';
+import { seedBadges }            from './seed-data/seed-badges';
+import { seedMCQLabs }           from './seed-data/mcq-labs/seed-mcq-labs';
 
 import { lab1Metadata } from '../src/modules/practice-labs/sql-injection/labs/lab1/lab1.metadata';
 
@@ -55,44 +56,44 @@ async function seedModuleLabs() {
 
   for (const meta of MODULE_LABS) {
     const shared = {
-      title: meta.title,
-      ar_title: meta.ar_title,
-      description: meta.description,
+      title:          meta.title,
+      ar_title:       meta.ar_title,
+      description:    meta.description,
       ar_description: meta.ar_description,
-      difficulty: meta.difficulty as any,
-      category: meta.category as any,
-      executionMode: meta.executionMode as any,
-      skills: meta.skills,
-      xpReward: meta.xpReward,
-      pointsReward: meta.pointsReward,
-      duration: meta.duration,
-      isPublished: meta.isPublished,
-      imageUrl: meta.imageUrl ?? null,
-      goal: meta.goal,
-      ar_goal: meta.ar_goal,
-      briefing: toJson(meta.briefing),
-      stepsOverview: toJson(meta.stepsOverview),
-      solution: toJson(meta.solution),
-      postSolve: toJson(meta.postSolve),
-      flagAnswer: meta.flagAnswer,
-      initialState: toJson(meta.initialState) ?? {},
+      difficulty:     meta.difficulty as any,
+      category:       meta.category   as any,
+      executionMode:  meta.executionMode as any,
+      skills:         meta.skills,
+      xpReward:       meta.xpReward,
+      pointsReward:   meta.pointsReward,
+      duration:       meta.duration,
+      isPublished:    meta.isPublished,
+      imageUrl:       meta.imageUrl ?? null,
+      goal:           meta.goal,
+      ar_goal:        meta.ar_goal,
+      briefing:       toJson(meta.briefing),
+      stepsOverview:  toJson(meta.stepsOverview),
+      solution:       toJson(meta.solution),
+      postSolve:      toJson(meta.postSolve),
+      flagAnswer:     meta.flagAnswer,
+      initialState:   toJson(meta.initialState) ?? {},
     };
 
     const lab = await prisma.lab.upsert({
-      where: { slug: meta.slug },
+      where:  { slug: meta.slug },
       update: shared,
       create: { ...shared, slug: meta.slug },
     });
 
     for (const hint of meta.hints ?? []) {
       await prisma.labHint.upsert({
-        where: { labId_order: { labId: lab.id, order: hint.order } },
+        where:  { labId_order: { labId: lab.id, order: hint.order } },
         update: { content: hint.content, xpCost: hint.xpCost },
         create: {
-          labId: lab.id,
-          order: hint.order,
+          labId:   lab.id,
+          order:   hint.order,
           content: hint.content,
-          xpCost: hint.xpCost,
+          xpCost:  hint.xpCost,
         },
       });
     }
@@ -116,6 +117,9 @@ async function main() {
     for (const category of LAB_CATEGORIES) {
       await seedCategoryLabs(prisma, category);
     }
+
+    // ─── MCQ Labs ─────────────────────────────────────────────────────────────
+    await seedMCQLabs(prisma);
 
     // ✅ Always seed badges (idempotent — skips existing)
     // await seedBadges(prisma);
