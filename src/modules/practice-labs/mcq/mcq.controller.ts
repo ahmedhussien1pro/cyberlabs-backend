@@ -4,7 +4,7 @@ import {
   UseGuards, Req,
 } from '@nestjs/common';
 import { MCQService }   from './mcq.service';
-import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
+import { JwtAuthGuard } from '../../../common/guards';
 
 @Controller('practice-labs/mcq')
 @UseGuards(JwtAuthGuard)

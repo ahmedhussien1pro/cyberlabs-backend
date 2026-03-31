@@ -127,8 +127,9 @@ export class MCQService {
       data: {
         userId,
         labId,
-        type: passed ? 'MCQ_PASSED' : 'MCQ_ATTEMPTED',
-        data: String(score),
+        type:   passed ? 'MCQ_PASSED' : 'MCQ_ATTEMPTED',
+        value:  score,
+        action: String(score),
       },
     });
   }
