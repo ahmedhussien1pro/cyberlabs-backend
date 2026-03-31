@@ -9,216 +9,133 @@
 //   The flag is the value of X-Auth-Token — visible only by inspecting the RESPONSE headers.
 //   The POST body contains REAL-LOOKING credentials (no flag there).
 //
-// Flag sync guarantee:
-//   Both the simulation (getCapture) and the downloadable PCAP (streamPcap)
-//   read the flag from FlagRecordService.getStoredFlag() — the exact same
-//   value that was stored at initLab() time and is used for verification.
-//   This eliminates any mismatch between what the student sees and what the
-//   server expects.
+// Flag determinism guarantee (no schema change):
+//   generateDynamicFlag(prefix, userId, resolvedLabId) is a pure HMAC function.
+//   As long as we always pass the RESOLVED UUID (not the slug) as labId,
+//   the output is identical everywhere: initLab, getCapture, streamPcap.
+//   The single fix: call stateService.resolveLabId() ONCE and reuse the UUID.
+
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { Response } from 'express';
 import { PrismaService } from '../../../../../core/database';
 import { PracticeLabStateService } from '../../../shared/services/practice-lab-state.service';
 import { FlagRecordService } from '../../../shared/services/flag-record.service';
 
+const FLAG_PREFIX = 'FLAG{WIRESHARK-LAB1-HTTP-CREDS';
 const ATTEMPT_ID  = 'lab1-attempt';
 const PCAP_FILE   = 'lab1_http_creds.pcap';
 
-// ─── PCAP builder ────────────────────────────────────────────────────────────────
+// ─── minimal PCAP builder (pure Node — no dependencies) ───────────────────────
 //
-// Builds a valid libpcap (little-endian) buffer in memory containing
-// 7 hand-crafted Ethernet+IP+TCP (+HTTP payload) frames that mirror
-// the packet list returned by getCapture().
-//
-// Frame layout:
-//   1 – Client SYN
-//   2 – Server SYN-ACK
-//   3 – Client ACK
-//   4 – Client HTTP POST (username=j.henderson&password=Henderson@2024!)
-//   5 – Server HTTP 302  (X-Auth-Token: <dynamicFlag>)  ← FLAG IS HERE
-//   6 – Client GET /portal/dashboard
-//   7 – Server HTTP 200 OK
-//
-// The .pcap is intentionally minimal but fully parseable by Wireshark
-// and tshark without warnings.
+// Builds a valid libpcap (little-endian) buffer containing 7 Ethernet+IP+TCP
+// frames that mirror the simulated packet list. Frame 5 embeds the flag in
+// the HTTP/1.1 302 response X-Auth-Token header.
 
-function buildU16LE(v: number): Buffer {
-  const b = Buffer.alloc(2);
-  b.writeUInt16LE(v, 0);
-  return b;
-}
-function buildU32LE(v: number): Buffer {
-  const b = Buffer.alloc(4);
-  b.writeUInt32LE(v, 0);
-  return b;
+function u16le(v: number): Buffer { const b = Buffer.alloc(2); b.writeUInt16LE(v); return b; }
+function u32le(v: number): Buffer { const b = Buffer.alloc(4); b.writeUInt32LE(v); return b; }
+
+function csum(buf: Buffer): number {
+  let s = 0;
+  for (let i = 0; i < buf.length - 1; i += 2) s += buf.readUInt16BE(i);
+  if (buf.length & 1) s += buf[buf.length - 1] << 8;
+  while (s >> 16) s = (s & 0xffff) + (s >> 16);
+  return (~s) & 0xffff;
 }
 
-/** Minimal Internet Checksum (RFC 1071) */
-function checksum(buf: Buffer): number {
-  let sum = 0;
-  for (let i = 0; i < buf.length - 1; i += 2) sum += buf.readUInt16BE(i);
-  if (buf.length % 2) sum += buf[buf.length - 1] << 8;
-  while (sum >> 16) sum = (sum & 0xffff) + (sum >> 16);
-  return ~sum & 0xffff;
-}
-
-/**
- * Build a complete Ethernet II + IPv4 + TCP frame.
- * @param srcIp   source IPv4 as dotted-decimal
- * @param dstIp   destination IPv4
- * @param srcPort TCP source port
- * @param dstPort TCP destination port
- * @param seq     TCP sequence number
- * @param ack     TCP acknowledgement number
- * @param flags   TCP flags byte (e.g. 0x02=SYN, 0x12=SYN+ACK, 0x10=ACK, 0x18=PSH+ACK)
- * @param payload TCP payload (application data)
- */
-function buildFrame(
-  srcIp: string,
-  dstIp: string,
-  srcPort: number,
-  dstPort: number,
-  seq: number,
-  ack: number,
-  flags: number,
+function frame(
+  si: string, di: string,
+  sp: number, dp: number,
+  seq: number, ack: number,
+  fl: number,
   payload: Buffer = Buffer.alloc(0),
 ): Buffer {
-  // ─ Ethernet header (14 bytes) ─
-  // src MAC: aa:bb:cc:dd:ee:ff  dst MAC: 11:22:33:44:55:66  EtherType: 0x0800 (IPv4)
-  const eth = Buffer.from([0x11,0x22,0x33,0x44,0x55,0x66, 0xaa,0xbb,0xcc,0xdd,0xee,0xff, 0x08,0x00]);
+  // Ethernet (14)
+  const eth = Buffer.from([0x11,0x22,0x33,0x44,0x55,0x66,0xaa,0xbb,0xcc,0xdd,0xee,0xff,0x08,0x00]);
 
-  // ─ IPv4 header (20 bytes, no options) ─
-  const totalLen = 20 + 20 + payload.length;
-  const ipBuf = Buffer.alloc(20, 0);
-  ipBuf[0]  = 0x45;                          // version=4, IHL=5
-  ipBuf[1]  = 0x00;                          // DSCP/ECN
-  ipBuf.writeUInt16BE(totalLen, 2);           // Total Length
-  ipBuf.writeUInt16BE(0xabcd, 4);            // Identification
-  ipBuf.writeUInt16BE(0x4000, 6);            // Flags=DF, Fragment Offset=0
-  ipBuf[8]  = 64;                            // TTL
-  ipBuf[9]  = 6;                             // Protocol=TCP
-  // checksum placeholder 0x0000 at bytes 10-11
-  srcIp.split('.').forEach((o, i) => { ipBuf[12 + i] = parseInt(o, 10); });
-  dstIp.split('.').forEach((o, i) => { ipBuf[16 + i] = parseInt(o, 10); });
-  const ipCsum = checksum(ipBuf);
-  ipBuf.writeUInt16BE(ipCsum, 10);
+  // IPv4 (20)
+  const ip = Buffer.alloc(20);
+  ip[0] = 0x45; ip[1] = 0;
+  ip.writeUInt16BE(20 + 20 + payload.length, 2);
+  ip.writeUInt16BE(0xabcd, 4); ip.writeUInt16BE(0x4000, 6);
+  ip[8] = 64; ip[9] = 6;
+  si.split('.').forEach((o, i) => { ip[12 + i] = +o; });
+  di.split('.').forEach((o, i) => { ip[16 + i] = +o; });
+  ip.writeUInt16BE(csum(ip), 10);
 
-  // ─ TCP header (20 bytes, no options) ─
-  const tcpBuf = Buffer.alloc(20, 0);
-  tcpBuf.writeUInt16BE(srcPort, 0);
-  tcpBuf.writeUInt16BE(dstPort, 2);
-  tcpBuf.writeUInt32BE(seq,      4);
-  tcpBuf.writeUInt32BE(ack,      8);
-  tcpBuf[12] = 0x50;                         // Data offset=5 (20 bytes), reserved=0
-  tcpBuf[13] = flags;
-  tcpBuf.writeUInt16BE(64240, 14);           // Window size
-  // checksum computed via pseudo-header
-  const pseudoHeader = Buffer.alloc(12);
-  srcIp.split('.').forEach((o, i) => { pseudoHeader[i] = parseInt(o, 10); });
-  dstIp.split('.').forEach((o, i) => { pseudoHeader[4 + i] = parseInt(o, 10); });
-  pseudoHeader[9]  = 6;                      // Protocol=TCP
-  pseudoHeader.writeUInt16BE(20 + payload.length, 10);
-  const tcpCsumBuf = Buffer.concat([pseudoHeader, tcpBuf, payload]);
-  tcpBuf.writeUInt16BE(checksum(tcpCsumBuf), 16);
+  // TCP (20)
+  const tcp = Buffer.alloc(20);
+  tcp.writeUInt16BE(sp, 0); tcp.writeUInt16BE(dp, 2);
+  tcp.writeUInt32BE(seq, 4); tcp.writeUInt32BE(ack, 8);
+  tcp[12] = 0x50; tcp[13] = fl;
+  tcp.writeUInt16BE(64240, 14);
+  const ph = Buffer.alloc(12);
+  si.split('.').forEach((o, i) => { ph[i] = +o; });
+  di.split('.').forEach((o, i) => { ph[4 + i] = +o; });
+  ph[9] = 6; ph.writeUInt16BE(20 + payload.length, 10);
+  tcp.writeUInt16BE(csum(Buffer.concat([ph, tcp, payload])), 16);
 
-  return Buffer.concat([eth, ipBuf, tcpBuf, payload]);
+  return Buffer.concat([eth, ip, tcp, payload]);
 }
 
-/** Wrap a frame in a libpcap record header (16 bytes). */
-function pcapRecord(frame: Buffer, ts_sec: number, ts_usec: number): Buffer {
-  const hdr = Buffer.alloc(16);
-  hdr.writeUInt32LE(ts_sec,        0);
-  hdr.writeUInt32LE(ts_usec,       4);
-  hdr.writeUInt32LE(frame.length,  8);   // captured length
-  hdr.writeUInt32LE(frame.length, 12);   // original length
-  return Buffer.concat([hdr, frame]);
+function pcapRec(f: Buffer, sec: number, usec: number): Buffer {
+  const h = Buffer.alloc(16);
+  h.writeUInt32LE(sec, 0); h.writeUInt32LE(usec, 4);
+  h.writeUInt32LE(f.length, 8); h.writeUInt32LE(f.length, 12);
+  return Buffer.concat([h, f]);
 }
 
-/**
- * Build a complete libpcap file buffer containing all 7 frames.
- * The dynamic flag is embedded in the X-Auth-Token response header of frame 5.
- */
 function buildPcap(dynamicFlag: string): Buffer {
-  // ─ Global header (24 bytes) ─
-  const globalHeader = Buffer.concat([
-    buildU32LE(0xa1b2c3d4),   // magic number (little-endian timestamps)
-    buildU16LE(2),             // major version
-    buildU16LE(4),             // minor version
-    buildU32LE(0),             // GMT offset
-    buildU32LE(0),             // timestamp accuracy
-    buildU32LE(65535),         // snapshot length
-    buildU32LE(1),             // link-layer type: Ethernet
+  const hdr = Buffer.concat([
+    u32le(0xa1b2c3d4), u16le(2), u16le(4),
+    u32le(0), u32le(0), u32le(65535), u32le(1),
   ]);
 
-  const CLIENT = '192.168.1.12';
-  const SERVER = '192.168.1.1';
-  const CPORT  = 52841;
-  const SPORT  = 80;
+  const C = '192.168.1.12', S = '192.168.1.1', CP = 52841, SP = 80;
+  const BASE = 1700000000;
+  const SESSION = 'eyJ1c2VyIjoiai5oZW5kZXJzb24ifQ==';
 
-  // Frame 1 – SYN
-  const f1 = buildFrame(CLIENT, SERVER, CPORT, SPORT, 0, 0, 0x02);
-  // Frame 2 – SYN-ACK
-  const f2 = buildFrame(SERVER, CLIENT, SPORT, CPORT, 0, 1, 0x12);
-  // Frame 3 – ACK
-  const f3 = buildFrame(CLIENT, SERVER, CPORT, SPORT, 1, 1, 0x10);
+  const f1 = frame(C, S, CP, SP, 0, 0, 0x02);
+  const f2 = frame(S, C, SP, CP, 0, 1, 0x12);
+  const f3 = frame(C, S, CP, SP, 1, 1, 0x10);
 
-  // Frame 4 – HTTP POST
-  const postBody   = 'username=j.henderson&password=Henderson@2024!';
-  const postReq    =
-    `POST /portal/auth/login HTTP/1.1\r\n` +
-    `Host: 192.168.1.1\r\n` +
+  const postBody = 'username=j.henderson&password=Henderson@2024!';
+  const postReq  = Buffer.from(
+    `POST /portal/auth/login HTTP/1.1\r\nHost: ${S}\r\n` +
     `Content-Type: application/x-www-form-urlencoded\r\n` +
     `Content-Length: ${postBody.length}\r\n` +
     `User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64)\r\n` +
-    `Connection: keep-alive\r\n` +
-    `\r\n` +
-    postBody;
-  const f4 = buildFrame(CLIENT, SERVER, CPORT, SPORT, 1, 1, 0x18, Buffer.from(postReq, 'ascii'));
+    `Connection: keep-alive\r\n\r\n${postBody}`, 'ascii');
+  const f4 = frame(C, S, CP, SP, 1, 1, 0x18, postReq);
 
-  // Frame 5 – HTTP 302 (FLAG in X-Auth-Token)
-  const sessionCookie = 'eyJ1c2VyIjoiai5oZW5kZXJzb24ifQ==';
-  const resp302 =
-    `HTTP/1.1 302 Found\r\n` +
-    `Location: /portal/dashboard\r\n` +
+  // ← FLAG embedded here
+  const resp302 = Buffer.from(
+    `HTTP/1.1 302 Found\r\nLocation: /portal/dashboard\r\n` +
     `X-Auth-Token: ${dynamicFlag}\r\n` +
-    `Set-Cookie: session=${sessionCookie}; Path=/; HttpOnly\r\n` +
-    `Cache-Control: no-store\r\n` +
-    `Content-Length: 0\r\n` +
-    `\r\n`;
-  const f5 = buildFrame(SERVER, CLIENT, SPORT, CPORT, 1, f4.length - 54 + 1, 0x18, Buffer.from(resp302, 'ascii'));
+    `Set-Cookie: session=${SESSION}; Path=/; HttpOnly\r\n` +
+    `Cache-Control: no-store\r\nContent-Length: 0\r\n\r\n`, 'ascii');
+  const f5 = frame(S, C, SP, CP, 1, postReq.length + 1, 0x18, resp302);
 
-  // Frame 6 – GET /portal/dashboard
-  const getReq =
-    `GET /portal/dashboard HTTP/1.1\r\n` +
-    `Host: 192.168.1.1\r\n` +
-    `Cookie: session=${sessionCookie}\r\n` +
-    `Connection: keep-alive\r\n` +
-    `\r\n`;
-  const f6 = buildFrame(CLIENT, SERVER, CPORT, SPORT, f4.length - 54 + 1, resp302.length + 1, 0x18, Buffer.from(getReq, 'ascii'));
+  const getReq = Buffer.from(
+    `GET /portal/dashboard HTTP/1.1\r\nHost: ${S}\r\n` +
+    `Cookie: session=${SESSION}\r\nConnection: keep-alive\r\n\r\n`, 'ascii');
+  const f6 = frame(C, S, CP, SP, postReq.length + 1, resp302.length + 1, 0x18, getReq);
 
-  // Frame 7 – HTTP 200 OK
   const htmlBody = '<html><body><h1>Welcome, j.henderson</h1></body></html>';
-  const resp200  =
-    `HTTP/1.1 200 OK\r\n` +
-    `Content-Type: text/html; charset=utf-8\r\n` +
-    `Content-Length: ${htmlBody.length}\r\n` +
-    `\r\n` +
-    htmlBody;
-  const f7 = buildFrame(SERVER, CLIENT, SPORT, CPORT, resp302.length + 1, getReq.length + f4.length - 54 + 1, 0x18, Buffer.from(resp200, 'ascii'));
+  const resp200  = Buffer.from(
+    `HTTP/1.1 200 OK\r\nContent-Type: text/html; charset=utf-8\r\n` +
+    `Content-Length: ${htmlBody.length}\r\n\r\n${htmlBody}`, 'ascii');
+  const f7 = frame(S, C, SP, CP, resp302.length + 1, getReq.length + postReq.length + 1, 0x18, resp200);
 
-  // Timestamps (base: epoch 1700000000 ≈ Nov 2023)
-  const BASE = 1700000000;
-  const records = Buffer.concat([
-    pcapRecord(f1,      BASE,       0),
-    pcapRecord(f2,      BASE,    8120),
-    pcapRecord(f3,      BASE,   12040),
-    pcapRecord(f4,      BASE,   19900),
-    pcapRecord(f5,      BASE,  146000),
-    pcapRecord(f6,      BASE,  151000),
-    pcapRecord(f7,      BASE,  284000),
+  return Buffer.concat([
+    hdr,
+    pcapRec(f1, BASE,      0),
+    pcapRec(f2, BASE,   8120),
+    pcapRec(f3, BASE,  12040),
+    pcapRec(f4, BASE,  19900),
+    pcapRec(f5, BASE, 146000),
+    pcapRec(f6, BASE, 151000),
+    pcapRec(f7, BASE, 284000),
   ]);
-
-  return Buffer.concat([globalHeader, records]);
 }
 
 // ─── Service ─────────────────────────────────────────────────────────────────────
@@ -233,6 +150,7 @@ export class Lab1Service {
 
   // ──────────────────────────────────────────────────────────────────────
   async initLab(userId: string, labId: string) {
+    // initializeState() resolves slug→UUID internally and returns the UUID
     const result = await this.stateService.initializeState(userId, labId);
     await this.flagRecord.generateAndStore(
       userId, result.labId, ATTEMPT_ID, result.dynamicFlag, 24,
@@ -242,20 +160,16 @@ export class Lab1Service {
 
   // ──────────────────────────────────────────────────────────────────────
   /**
-   * Returns the simulated packet list for the in-browser Wireshark UI.
-   * The dynamic flag is read from the DB (stored at initLab time) so it
-   * is always identical to what verifyAndConsume() will check.
+   * Simulated packet list for the in-browser Wireshark UI.
+   *
+   * KEY FIX: resolveLabId() is called once, producing the same UUID that
+   * initializeState() used. generateDynamicFlag(prefix, userId, UUID) is
+   * therefore always deterministic and matches what verifyAndConsume() checks.
    */
   async getCapture(userId: string, labId: string) {
+    // ← resolve ONCE to UUID — this is the only labId passed forward
     const resolvedLabId = await this.stateService.resolveLabId(labId);
-
-    // ← Single source of truth: read from DB, never re-generate
-    const dynamicFlag = await this.flagRecord.getStoredFlag(userId, resolvedLabId, ATTEMPT_ID);
-    if (!dynamicFlag) {
-      throw new BadRequestException(
-        'Lab session not found or expired. Please click “Start Lab” first.',
-      );
-    }
+    const dynamicFlag   = this.stateService.generateDynamicFlag(FLAG_PREFIX, userId, resolvedLabId);
 
     const packets = [
       {
@@ -282,9 +196,7 @@ export class Lab1Service {
         protocol: 'HTTP', length: 312,
         info: 'POST /portal/auth/login HTTP/1.1',
         httpData: {
-          method: 'POST',
-          uri: '/portal/auth/login',
-          version: 'HTTP/1.1',
+          method: 'POST', uri: '/portal/auth/login', version: 'HTTP/1.1',
           headers: {
             Host: '192.168.1.1',
             'Content-Type': 'application/x-www-form-urlencoded',
@@ -296,7 +208,7 @@ export class Lab1Service {
         },
       },
       {
-        // ← FLAG is here: X-Auth-Token response header
+        // ← FLAG lives here
         no: 5, time: '0.014600',
         source: '192.168.1.1', destination: '192.168.1.12',
         protocol: 'HTTP', length: 248,
@@ -305,7 +217,7 @@ export class Lab1Service {
           status: 302,
           headers: {
             Location: '/portal/dashboard',
-            'X-Auth-Token': dynamicFlag,   // ← from DB — always correct
+            'X-Auth-Token': dynamicFlag,
             'Set-Cookie': 'session=eyJ1c2VyIjoiai5oZW5kZXJzb24ifQ==; Path=/; HttpOnly',
             'Cache-Control': 'no-store',
           },
@@ -317,8 +229,7 @@ export class Lab1Service {
         protocol: 'HTTP', length: 284,
         info: 'GET /portal/dashboard HTTP/1.1',
         httpData: {
-          method: 'GET',
-          uri: '/portal/dashboard',
+          method: 'GET', uri: '/portal/dashboard',
           headers: {
             Host: '192.168.1.1',
             Cookie: 'session=eyJ1c2VyIjoiai5oZW5kZXJzb24ifQ==',
@@ -332,10 +243,7 @@ export class Lab1Service {
         info: 'HTTP/1.1 200 OK (text/html)',
         httpData: {
           status: 200,
-          headers: {
-            'Content-Type': 'text/html; charset=utf-8',
-            'Content-Length': '55',
-          },
+          headers: { 'Content-Type': 'text/html; charset=utf-8', 'Content-Length': '55' },
         },
       },
     ];
@@ -349,25 +257,16 @@ export class Lab1Service {
 
   // ──────────────────────────────────────────────────────────────────────
   /**
-   * Stream a dynamically generated .pcap file to the client.
+   * Stream a dynamically generated .pcap to the client.
    *
-   * The PCAP is built in memory on every request using the stored flag
-   * from the DB — no static file on disk is required. The generated
-   * file is fully parseable by Wireshark and tshark.
-   *
-   * Frame 5 of the PCAP contains the same dynamic flag as the simulation
-   * inside the HTTP/1.1 302 response's X-Auth-Token header.
+   * Built in-memory on every request — no static file required on disk.
+   * Passes the SAME resolvedLabId (UUID) to generateDynamicFlag() that
+   * initLab() used, guaranteeing the embedded flag matches the DB record.
    */
   async streamPcap(userId: string, labId: string, res: Response) {
+    // ← same resolution path as getCapture — same UUID — same flag
     const resolvedLabId = await this.stateService.resolveLabId(labId);
-
-    // Read the stored flag — same source of truth as getCapture()
-    const dynamicFlag = await this.flagRecord.getStoredFlag(userId, resolvedLabId, ATTEMPT_ID);
-    if (!dynamicFlag) {
-      throw new BadRequestException(
-        'Lab session not found or expired. Please click “Start Lab” first.',
-      );
-    }
+    const dynamicFlag   = this.stateService.generateDynamicFlag(FLAG_PREFIX, userId, resolvedLabId);
 
     const pcapBuffer = buildPcap(dynamicFlag);
 
