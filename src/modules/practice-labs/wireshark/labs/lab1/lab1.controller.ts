@@ -1,5 +1,6 @@
 // src/modules/practice-labs/wireshark/labs/lab1/lab1.controller.ts
-import { Controller, Post, Get, Body, Query, UseGuards } from '@nestjs/common';
+import { Controller, Post, Get, Body, Query, Res, UseGuards } from '@nestjs/common';
+import { Response } from 'express';
 import { JwtAuthGuard } from '../../../../../common/guards';
 import { GetUser } from '../../../shared/decorators/get-user.decorator';
 import { Lab1Service } from './lab1.service';
@@ -22,7 +23,15 @@ export class Lab1Controller {
     return this.lab1Service.getCapture(userId, labId);
   }
 
-  // بيستخدمه useLabBase.syncProgress() — لازم يتجنب الـ 404
+  @Get('download')
+  async downloadCapture(
+    @GetUser('id') userId: string,
+    @Query('labId') labId: string,
+    @Res() res: Response,
+  ) {
+    return this.lab1Service.streamPcap(userId, labId, res);
+  }
+
   @Get('progress')
   async getProgress(
     @GetUser('id') userId: string,
