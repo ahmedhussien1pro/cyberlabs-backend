@@ -1,15 +1,28 @@
 // src/modules/practice-labs/mcq/mcq.controller.ts
 import {
-  Controller, Get, Post, Param, Body, Query,
+  Controller, Get, Post, Param, Body,
   UseGuards, Req,
 } from '@nestjs/common';
-import { MCQService }  from './mcq.service';
+import { MCQService }   from './mcq.service';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 
 @Controller('practice-labs/mcq')
 @UseGuards(JwtAuthGuard)
 export class MCQController {
   constructor(private readonly mcqService: MCQService) {}
+
+  /**
+   * POST /practice-labs/mcq/:slug/start
+   * Called by useLabBase.startLab() before any lab renders.
+   * MCQ labs need no Docker/VM — we just resolve the labId and return immediately.
+   */
+  @Post(':slug/start')
+  startLab(
+    @Param('slug') slug: string,
+    @Req()         req:  any,
+  ) {
+    return this.mcqService.startLab(slug, req.user.sub ?? req.user.id);
+  }
 
   /**
    * GET /practice-labs/mcq/:slug/questions
@@ -27,9 +40,9 @@ export class MCQController {
    */
   @Post(':slug/submit')
   submitAnswers(
-    @Param('slug') slug:  string,
-    @Req()         req:   any,
-    @Body()        body:  { labId: string; answers: Record<number, string> },
+    @Param('slug') slug: string,
+    @Req()         req:  any,
+    @Body()        body: { labId: string; answers: Record<number, string> },
   ) {
     return this.mcqService.submitAnswers(
       slug,
