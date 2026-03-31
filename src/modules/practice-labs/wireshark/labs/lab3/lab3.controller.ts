@@ -1,5 +1,6 @@
 // src/modules/practice-labs/wireshark/labs/lab3/lab3.controller.ts
-import { Controller, Post, Get, Body, Query, UseGuards } from '@nestjs/common';
+import { Controller, Post, Get, Body, Query, Res, UseGuards } from '@nestjs/common';
+import { Response } from 'express';
 import { JwtAuthGuard } from '../../../../../common/guards';
 import { GetUser } from '../../../shared/decorators/get-user.decorator';
 import { Lab3Service } from './lab3.service';
@@ -15,18 +16,21 @@ export class Lab3Controller {
   }
 
   @Get('capture')
-  async getCapture(
-    @GetUser('id') userId: string,
-    @Query('labId') labId: string,
-  ) {
+  async getCapture(@GetUser('id') userId: string, @Query('labId') labId: string) {
     return this.lab3Service.getCapture(userId, labId);
   }
 
-  @Get('progress')
-  async getProgress(
+  @Get('download')
+  async downloadCapture(
     @GetUser('id') userId: string,
     @Query('labId') labId: string,
+    @Res() res: Response,
   ) {
+    return this.lab3Service.streamPcap(userId, labId, res);
+  }
+
+  @Get('progress')
+  async getProgress(@GetUser('id') userId: string, @Query('labId') labId: string) {
     return this.lab3Service.getProgress(userId, labId);
   }
 

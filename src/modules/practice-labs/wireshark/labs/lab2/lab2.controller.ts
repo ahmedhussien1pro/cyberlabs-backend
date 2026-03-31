@@ -1,5 +1,6 @@
 // src/modules/practice-labs/wireshark/labs/lab2/lab2.controller.ts
-import { Controller, Post, Get, Body, Query, UseGuards } from '@nestjs/common';
+import { Controller, Post, Get, Body, Query, Res, UseGuards } from '@nestjs/common';
+import { Response } from 'express';
 import { JwtAuthGuard } from '../../../../../common/guards';
 import { GetUser } from '../../../shared/decorators/get-user.decorator';
 import { Lab2Service } from './lab2.service';
@@ -17,6 +18,15 @@ export class Lab2Controller {
   @Get('capture')
   async getCapture(@GetUser('id') userId: string, @Query('labId') labId: string) {
     return this.lab2Service.getCapture(userId, labId);
+  }
+
+  @Get('download')
+  async downloadCapture(
+    @GetUser('id') userId: string,
+    @Query('labId') labId: string,
+    @Res() res: Response,
+  ) {
+    return this.lab2Service.streamPcap(userId, labId, res);
   }
 
   @Get('progress')

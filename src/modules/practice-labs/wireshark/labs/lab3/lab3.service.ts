@@ -1,14 +1,19 @@
 // src/modules/practice-labs/wireshark/labs/lab3/lab3.service.ts
 // LAB 3 — ARP Spoofing Detection
 // Flag hidden as Base64 inside arpData.vendor of the attacker gratuitous packet.
-import { Injectable, BadRequestException } from '@nestjs/common';
+import * as fs from 'fs';
+import * as path from 'path';
+import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
+import { Response } from 'express';
 import { PrismaService } from '../../../../../core/database';
 import { PracticeLabStateService } from '../../../shared/services/practice-lab-state.service';
 import { FlagRecordService } from '../../../shared/services/flag-record.service';
 
-const FLAG_PREFIX = 'FLAG{WIRESHARK-LAB3-ARP-SPOOF';
+const FLAG_PREFIX  = 'FLAG{WIRESHARK-LAB3-ARP-SPOOF';
 const ATTACKER_MAC = 'de:ad:be:ef:13:37';
 const GATEWAY_MAC  = '00:aa:bb:cc:dd:01';
+const PCAP_FILE    = 'lab3_arp_spoof.pcap';
+const PCAP_PATH    = path.resolve(process.cwd(), 'labs_assets', 'WireShark', PCAP_FILE);
 
 @Injectable()
 export class Lab3Service {
@@ -93,7 +98,21 @@ export class Lab3Service {
       },
     ];
 
-    return { packets };
+    return {
+      packets,
+      downloadUrl: `/practice-labs/wireshark/lab3/download?labId=${resolvedLabId}`,
+      fileName: PCAP_FILE,
+    };
+  }
+
+  async streamPcap(_userId: string, _labId: string, res: Response) {
+    if (!fs.existsSync(PCAP_PATH)) {
+      throw new NotFoundException('Capture file not found.');
+    }
+    res.setHeader('Content-Type', 'application/vnd.tcpdump.pcap');
+    res.setHeader('Content-Disposition', `attachment; filename="${PCAP_FILE}"`);
+    res.setHeader('Content-Length', fs.statSync(PCAP_PATH).size);
+    fs.createReadStream(PCAP_PATH).pipe(res);
   }
 
   async getProgress(userId: string, labId: string) {
