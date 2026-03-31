@@ -1,9 +1,6 @@
 // src/modules/practice-labs/wireshark/labs/lab3/lab3.service.ts
-// LAB 3 — ARP Spoofing Detection (Easy)
-// Scenario: Gratuitous ARP storm on LAN — attacker claiming gateway IP.
-// Flag is the dynamic flag embedded inside the gratuitous ARP arpData.vendor field
-// (not labeled as "flag" — student must spot the anomaly: duplicate IP + different MAC,
-//  inspect that packet, find the encoded value in vendor field, decode and submit).
+// LAB 3 — ARP Spoofing Detection
+// Flag hidden as Base64 inside arpData.vendor of the attacker gratuitous packet.
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../../../../../core/database';
 import { PracticeLabStateService } from '../../../shared/services/practice-lab-state.service';
@@ -23,159 +20,76 @@ export class Lab3Service {
 
   async initLab(userId: string, labId: string) {
     const result = await this.stateService.initializeState(userId, labId);
-    await this.flagRecord.generateAndStore(
-      userId,
-      result.labId,
-      'lab3-arp-attempt',
-      result.dynamicFlag,
-      24,
-    );
+    await this.flagRecord.generateAndStore(userId, result.labId, 'lab3-arp-attempt', result.dynamicFlag, 24);
     return { status: 'success', message: 'ARP lab environment initialized', labId: result.labId };
   }
 
   async getCapture(userId: string, labId: string) {
     const resolvedLabId = await this.stateService.resolveLabId(labId);
     const dynamicFlag   = this.stateService.generateDynamicFlag(FLAG_PREFIX, userId, resolvedLabId);
-
-    // Flag hidden in arpData.oui of the attacker gratuitous packet
-    // Student must spot duplicate IP claim → inspect that packet → find oui field → it's the flag
-    const flagEncoded = Buffer.from(dynamicFlag).toString('base64');
+    const flagEncoded   = Buffer.from(dynamicFlag).toString('base64');
 
     const packets = [
       {
-        no: 1,
-        time: '0.000000',
-        source: '00:11:22:33:44:aa',
-        destination: 'Broadcast (ff:ff:ff:ff:ff:ff)',
-        protocol: 'ARP',
-        length: 42,
+        no: 1, time: '0.000000',
+        source: '00:11:22:33:44:aa', destination: 'Broadcast (ff:ff:ff:ff:ff:ff)',
+        protocol: 'ARP', length: 42,
         info: 'Who has 192.168.0.1? Tell 192.168.0.14',
-        arpData: {
-          opcode: 'request',
-          senderIp: '192.168.0.14',
-          senderMac: '00:11:22:33:44:aa',
-          targetIp: '192.168.0.1',
-          targetMac: '00:00:00:00:00:00',
-        },
+        arpData: { opcode: 'request', senderIp: '192.168.0.14', senderMac: '00:11:22:33:44:aa', targetIp: '192.168.0.1', targetMac: '00:00:00:00:00:00' },
       },
       {
-        no: 2,
-        time: '0.001380',
-        source: GATEWAY_MAC,
-        destination: '00:11:22:33:44:aa',
-        protocol: 'ARP',
-        length: 42,
+        no: 2, time: '0.001380',
+        source: GATEWAY_MAC, destination: '00:11:22:33:44:aa',
+        protocol: 'ARP', length: 42,
         info: '192.168.0.1 is at 00:aa:bb:cc:dd:01',
-        arpData: {
-          opcode: 'reply',
-          senderIp: '192.168.0.1',
-          senderMac: GATEWAY_MAC,
-          targetIp: '192.168.0.14',
-          targetMac: '00:11:22:33:44:aa',
-          vendor: 'Cisco Systems, Inc.',
-        },
+        arpData: { opcode: 'reply', senderIp: '192.168.0.1', senderMac: GATEWAY_MAC, targetIp: '192.168.0.14', targetMac: '00:11:22:33:44:aa', vendor: 'Cisco Systems, Inc.' },
       },
       {
-        no: 3,
-        time: '0.019200',
-        source: '00:55:66:77:88:bb',
-        destination: 'Broadcast (ff:ff:ff:ff:ff:ff)',
-        protocol: 'ARP',
-        length: 42,
+        no: 3, time: '0.019200',
+        source: '00:55:66:77:88:bb', destination: 'Broadcast (ff:ff:ff:ff:ff:ff)',
+        protocol: 'ARP', length: 42,
         info: 'Who has 192.168.0.1? Tell 192.168.0.31',
-        arpData: {
-          opcode: 'request',
-          senderIp: '192.168.0.31',
-          senderMac: '00:55:66:77:88:bb',
-          targetIp: '192.168.0.1',
-          targetMac: '00:00:00:00:00:00',
-        },
+        arpData: { opcode: 'request', senderIp: '192.168.0.31', senderMac: '00:55:66:77:88:bb', targetIp: '192.168.0.1', targetMac: '00:00:00:00:00:00' },
       },
       {
-        no: 4,
-        time: '0.020600',
-        source: GATEWAY_MAC,
-        destination: 'Broadcast (ff:ff:ff:ff:ff:ff)',
-        protocol: 'ARP',
-        length: 42,
+        no: 4, time: '0.020600',
+        source: GATEWAY_MAC, destination: 'Broadcast (ff:ff:ff:ff:ff:ff)',
+        protocol: 'ARP', length: 42,
         info: '192.168.0.1 is at 00:aa:bb:cc:dd:01',
-        arpData: {
-          opcode: 'reply',
-          senderIp: '192.168.0.1',
-          senderMac: GATEWAY_MAC,
-          targetIp: '192.168.0.31',
-          targetMac: '00:55:66:77:88:bb',
-          vendor: 'Cisco Systems, Inc.',
-        },
+        arpData: { opcode: 'reply', senderIp: '192.168.0.1', senderMac: GATEWAY_MAC, targetIp: '192.168.0.31', targetMac: '00:55:66:77:88:bb', vendor: 'Cisco Systems, Inc.' },
       },
-      // ⚠ Gratuitous ARP — attacker claiming gateway IP with different MAC
       {
-        no: 5,
-        time: '0.044810',
-        source: ATTACKER_MAC,
-        destination: 'Broadcast (ff:ff:ff:ff:ff:ff)',
-        protocol: 'ARP',
-        length: 42,
+        no: 5, time: '0.044810',
+        source: ATTACKER_MAC, destination: 'Broadcast (ff:ff:ff:ff:ff:ff)',
+        protocol: 'ARP', length: 42,
         info: `192.168.0.1 is at ${ATTACKER_MAC}`,
         arpData: {
           opcode: 'gratuitous',
-          senderIp: '192.168.0.1',
-          senderMac: ATTACKER_MAC,
-          targetIp: '192.168.0.1',
-          targetMac: ATTACKER_MAC,
-          // oui field — vendor lookup result — flag hidden here as base64
+          senderIp: '192.168.0.1', senderMac: ATTACKER_MAC,
+          targetIp: '192.168.0.1', targetMac: ATTACKER_MAC,
           vendor: `Unknown (${flagEncoded})`,
         },
       },
       {
-        no: 6,
-        time: '0.044950',
-        source: ATTACKER_MAC,
-        destination: 'Broadcast (ff:ff:ff:ff:ff:ff)',
-        protocol: 'ARP',
-        length: 42,
+        no: 6, time: '0.044950',
+        source: ATTACKER_MAC, destination: 'Broadcast (ff:ff:ff:ff:ff:ff)',
+        protocol: 'ARP', length: 42,
         info: `192.168.0.1 is at ${ATTACKER_MAC}`,
-        arpData: {
-          opcode: 'gratuitous',
-          senderIp: '192.168.0.1',
-          senderMac: ATTACKER_MAC,
-          targetIp: '192.168.0.1',
-          targetMac: ATTACKER_MAC,
-          vendor: 'Unknown',
-        },
+        arpData: { opcode: 'gratuitous', senderIp: '192.168.0.1', senderMac: ATTACKER_MAC, targetIp: '192.168.0.1', targetMac: ATTACKER_MAC, vendor: 'Unknown' },
       },
       {
-        no: 7,
-        time: '0.060000',
-        source: '00:11:22:33:44:aa',
-        destination: 'Broadcast (ff:ff:ff:ff:ff:ff)',
-        protocol: 'ARP',
-        length: 42,
+        no: 7, time: '0.060000',
+        source: '00:11:22:33:44:aa', destination: 'Broadcast (ff:ff:ff:ff:ff:ff)',
+        protocol: 'ARP', length: 42,
         info: 'Who has 192.168.0.1? Tell 192.168.0.14',
-        arpData: {
-          opcode: 'request',
-          senderIp: '192.168.0.14',
-          senderMac: '00:11:22:33:44:aa',
-          targetIp: '192.168.0.1',
-          targetMac: '00:00:00:00:00:00',
-        },
+        arpData: { opcode: 'request', senderIp: '192.168.0.14', senderMac: '00:11:22:33:44:aa', targetIp: '192.168.0.1', targetMac: '00:00:00:00:00:00' },
       },
       {
-        no: 8,
-        time: '0.061200',
-        source: ATTACKER_MAC,
-        destination: '00:11:22:33:44:aa',
-        protocol: 'ARP',
-        length: 42,
+        no: 8, time: '0.061200',
+        source: ATTACKER_MAC, destination: '00:11:22:33:44:aa',
+        protocol: 'ARP', length: 42,
         info: `192.168.0.1 is at ${ATTACKER_MAC}`,
-        arpData: {
-          opcode: 'reply',
-          senderIp: '192.168.0.1',
-          senderMac: ATTACKER_MAC,
-          targetIp: '192.168.0.14',
-          targetMac: '00:11:22:33:44:aa',
-          vendor: 'Unknown',
-        },
+        arpData: { opcode: 'reply', senderIp: '192.168.0.1', senderMac: ATTACKER_MAC, targetIp: '192.168.0.14', targetMac: '00:11:22:33:44:aa', vendor: 'Unknown' },
       },
     ];
 
@@ -203,30 +117,18 @@ export class Lab3Service {
 
   async submitFlag(userId: string, labId: string, submittedFlag: string) {
     if (!submittedFlag?.trim()) throw new BadRequestException('flag is required');
-
     const resolvedLabId = await this.stateService.resolveLabId(labId);
-    const result = await this.flagRecord.verifyAndConsume(
-      userId,
-      resolvedLabId,
-      'lab3-arp-attempt',
-      submittedFlag.trim(),
-    );
-
+    const result = await this.flagRecord.verifyAndConsume(userId, resolvedLabId, 'lab3-arp-attempt', submittedFlag.trim());
     if (result === 'correct') {
       return {
-        success: true,
-        flag: submittedFlag.trim(),
-        message: 'Access confirmed.',
+        success: true, flag: submittedFlag.trim(), message: 'Access confirmed.',
         explanation:
-          'ARP Spoofing (Poisoning) is a MITM technique where an attacker sends Gratuitous ARP ' +
-          'replies to poison ARP caches and redirect traffic. ' +
-          'Detection: look for duplicate IP claims from different MACs. ' +
+          'ARP Spoofing: attacker sends Gratuitous ARP replies claiming gateway IP with different MAC. ' +
           'Defense: Dynamic ARP Inspection (DAI) on managed switches.',
       };
     }
     if (result === 'already_used') return { success: false, message: 'Already submitted.' };
     if (result === 'expired') return { success: false, message: 'Session expired. Restart lab.' };
-
     return { success: false, message: 'Incorrect flag.' };
   }
 }

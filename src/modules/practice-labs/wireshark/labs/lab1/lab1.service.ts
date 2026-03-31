@@ -30,42 +30,29 @@ export class Lab1Service {
     const resolvedLabId = await this.stateService.resolveLabId(labId);
     const dynamicFlag = this.stateService.generateDynamicFlag(FLAG_PREFIX, userId, resolvedLabId);
 
-    // Flag is embedded as the password value — student must read the POST body
     const packets = [
       {
-        no: 1,
-        time: '0.000000',
-        source: '192.168.1.12',
-        destination: '192.168.1.1',
-        protocol: 'TCP',
-        length: 74,
+        no: 1, time: '0.000000',
+        source: '192.168.1.12', destination: '192.168.1.1',
+        protocol: 'TCP', length: 74,
         info: '52841 → 80 [SYN] Seq=0 Win=64240 Len=0',
       },
       {
-        no: 2,
-        time: '0.000812',
-        source: '192.168.1.1',
-        destination: '192.168.1.12',
-        protocol: 'TCP',
-        length: 74,
+        no: 2, time: '0.000812',
+        source: '192.168.1.1', destination: '192.168.1.12',
+        protocol: 'TCP', length: 74,
         info: '80 → 52841 [SYN, ACK] Seq=0 Ack=1 Win=65535 Len=0',
       },
       {
-        no: 3,
-        time: '0.001204',
-        source: '192.168.1.12',
-        destination: '192.168.1.1',
-        protocol: 'TCP',
-        length: 66,
+        no: 3, time: '0.001204',
+        source: '192.168.1.12', destination: '192.168.1.1',
+        protocol: 'TCP', length: 66,
         info: '52841 → 80 [ACK] Seq=1 Ack=1 Win=64240 Len=0',
       },
       {
-        no: 4,
-        time: '0.001990',
-        source: '192.168.1.12',
-        destination: '192.168.1.1',
-        protocol: 'HTTP',
-        length: 312,
+        no: 4, time: '0.001990',
+        source: '192.168.1.12', destination: '192.168.1.1',
+        protocol: 'HTTP', length: 312,
         info: 'POST /portal/auth/login HTTP/1.1',
         httpData: {
           method: 'POST',
@@ -82,12 +69,9 @@ export class Lab1Service {
         },
       },
       {
-        no: 5,
-        time: '0.014600',
-        source: '192.168.1.1',
-        destination: '192.168.1.12',
-        protocol: 'HTTP',
-        length: 218,
+        no: 5, time: '0.014600',
+        source: '192.168.1.1', destination: '192.168.1.12',
+        protocol: 'HTTP', length: 218,
         info: 'HTTP/1.1 302 Found',
         httpData: {
           status: 302,
@@ -98,12 +82,9 @@ export class Lab1Service {
         },
       },
       {
-        no: 6,
-        time: '0.015100',
-        source: '192.168.1.12',
-        destination: '192.168.1.1',
-        protocol: 'HTTP',
-        length: 284,
+        no: 6, time: '0.015100',
+        source: '192.168.1.12', destination: '192.168.1.1',
+        protocol: 'HTTP', length: 284,
         info: 'GET /portal/dashboard HTTP/1.1',
         httpData: {
           method: 'GET',
@@ -115,12 +96,9 @@ export class Lab1Service {
         },
       },
       {
-        no: 7,
-        time: '0.028400',
-        source: '192.168.1.1',
-        destination: '192.168.1.12',
-        protocol: 'HTTP',
-        length: 6204,
+        no: 7, time: '0.028400',
+        source: '192.168.1.1', destination: '192.168.1.12',
+        protocol: 'HTTP', length: 6204,
         info: 'HTTP/1.1 200 OK (text/html)',
         httpData: {
           status: 200,
@@ -153,15 +131,10 @@ export class Lab1Service {
 
   async submitFlag(userId: string, labId: string, submittedFlag: string) {
     if (!submittedFlag?.trim()) throw new BadRequestException('flag is required');
-
     const resolvedLabId = await this.stateService.resolveLabId(labId);
     const result = await this.flagRecord.verifyAndConsume(
-      userId,
-      resolvedLabId,
-      'lab1-attempt',
-      submittedFlag.trim(),
+      userId, resolvedLabId, 'lab1-attempt', submittedFlag.trim(),
     );
-
     if (result === 'correct') {
       return {
         success: true,
@@ -175,7 +148,6 @@ export class Lab1Service {
     }
     if (result === 'already_used') return { success: false, message: 'Already submitted.' };
     if (result === 'expired') return { success: false, message: 'Session expired. Restart lab.' };
-
     return { success: false, message: 'Incorrect flag.' };
   }
 }

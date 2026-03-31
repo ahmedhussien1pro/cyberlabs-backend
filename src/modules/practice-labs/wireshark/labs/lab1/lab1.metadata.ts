@@ -20,6 +20,19 @@ export const lab1Metadata: LabMetadata = {
     en: 'During a routine audit on CorpNet-04, a packet capture was taken on VLAN 10. A workstation at 192.168.1.12 made an outbound connection to the internal portal. Analyze the traffic.',
     ar: 'خلال تدقيق روتيني على CorpNet-04، تم التقاط حركة شبكة على VLAN 10. قامت محطة عمل على 192.168.1.12 باتصال بالبوابة الداخلية. حلّل حركة المرور.',
   },
+  // stepsOverview — admin/seed only, not shown to student during lab
+  stepsOverview: {
+    en: [
+      'Filter by protocol = HTTP',
+      'Find POST /portal/auth/login packet',
+      'Expand httpData.body → password field is the flag',
+    ],
+    ar: [
+      'صفّي بـ protocol=HTTP',
+      'ابحث عن حزمة POST /portal/auth/login',
+      'وسّع httpData.body → حقل password هو الـ flag',
+    ],
+  },
   solution: {
     context: 'HTTP POST /portal/auth/login sends credentials in plaintext. Filter by HTTP and look for the POST request.',
     vulnerableCode: 'POST /portal/auth/login HTTP/1.1\nContent-Type: application/x-www-form-urlencoded\n\nusername=j.henderson&password=<FLAG>',
@@ -45,10 +58,12 @@ export const lab1Metadata: LabMetadata = {
     },
     fix: ['Enforce HTTPS everywhere.', 'Use HSTS headers.', 'Enable certificate pinning for mobile clients.'],
   },
-  initialState: {},
   hints: [
     { order: 1, content: 'Not all protocols send data in plaintext — focus on which one does.', xpCost: 5 },
     { order: 2, content: 'Web login forms submit data using a specific HTTP method.', xpCost: 10 },
     { order: 3, content: 'Expand the packet details — credentials are in the request body.', xpCost: 20 },
   ],
+  // flagAnswer is a placeholder — actual flag is dynamic per session (generated at runtime)
+  flagAnswer: 'FLAG{WIRESHARK-LAB1-HTTP-CREDS-DYNAMIC}',
+  initialState: {},
 };

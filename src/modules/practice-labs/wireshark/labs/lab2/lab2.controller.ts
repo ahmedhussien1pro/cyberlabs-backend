@@ -15,18 +15,12 @@ export class Lab2Controller {
   }
 
   @Get('capture')
-  async getCapture(
-    @GetUser('id') userId: string,
-    @Query('labId') labId: string,
-  ) {
+  async getCapture(@GetUser('id') userId: string, @Query('labId') labId: string) {
     return this.lab2Service.getCapture(userId, labId);
   }
 
   @Get('progress')
-  async getProgress(
-    @GetUser('id') userId: string,
-    @Query('labId') labId: string,
-  ) {
+  async getProgress(@GetUser('id') userId: string, @Query('labId') labId: string) {
     return this.lab2Service.getProgress(userId, labId);
   }
 
