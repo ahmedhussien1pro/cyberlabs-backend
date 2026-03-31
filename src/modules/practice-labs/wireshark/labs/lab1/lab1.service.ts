@@ -1,10 +1,15 @@
 // src/modules/practice-labs/wireshark/labs/lab1/lab1.service.ts
-import { Injectable, BadRequestException } from '@nestjs/common';
+import * as fs from 'fs';
+import * as path from 'path';
+import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
+import { Response } from 'express';
 import { PrismaService } from '../../../../../core/database';
 import { PracticeLabStateService } from '../../../shared/services/practice-lab-state.service';
 import { FlagRecordService } from '../../../shared/services/flag-record.service';
 
-const FLAG_PREFIX = 'FLAG{WIRESHARK-LAB1-HTTP-CREDS';
+const FLAG_PREFIX  = 'FLAG{WIRESHARK-LAB1-HTTP-CREDS';
+const PCAP_FILE    = 'lab1_http_creds.pcap';
+const PCAP_PATH    = path.resolve(process.cwd(), 'labs_assets', 'WireShark', PCAP_FILE);
 
 @Injectable()
 export class Lab1Service {
@@ -17,18 +22,14 @@ export class Lab1Service {
   async initLab(userId: string, labId: string) {
     const result = await this.stateService.initializeState(userId, labId);
     await this.flagRecord.generateAndStore(
-      userId,
-      result.labId,
-      'lab1-attempt',
-      result.dynamicFlag,
-      24,
+      userId, result.labId, 'lab1-attempt', result.dynamicFlag, 24,
     );
     return { status: 'success', message: 'Lab environment initialized', labId: result.labId };
   }
 
   async getCapture(userId: string, labId: string) {
     const resolvedLabId = await this.stateService.resolveLabId(labId);
-    const dynamicFlag = this.stateService.generateDynamicFlag(FLAG_PREFIX, userId, resolvedLabId);
+    const dynamicFlag   = this.stateService.generateDynamicFlag(FLAG_PREFIX, userId, resolvedLabId);
 
     const packets = [
       {
@@ -107,7 +108,21 @@ export class Lab1Service {
       },
     ];
 
-    return { packets };
+    return {
+      packets,
+      downloadUrl: `/practice-labs/wireshark/lab1/download?labId=${resolvedLabId}`,
+      fileName: PCAP_FILE,
+    };
+  }
+
+  async streamPcap(_userId: string, _labId: string, res: Response) {
+    if (!fs.existsSync(PCAP_PATH)) {
+      throw new NotFoundException('Capture file not found.');
+    }
+    res.setHeader('Content-Type', 'application/vnd.tcpdump.pcap');
+    res.setHeader('Content-Disposition', `attachment; filename="${PCAP_FILE}"`);
+    res.setHeader('Content-Length', fs.statSync(PCAP_PATH).size);
+    fs.createReadStream(PCAP_PATH).pipe(res);
   }
 
   async getProgress(userId: string, labId: string) {
