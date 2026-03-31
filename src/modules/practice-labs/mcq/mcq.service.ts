@@ -1,6 +1,5 @@
 // src/modules/practice-labs/mcq/mcq.service.ts
 import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
-import * as fs   from 'fs';
 import * as path from 'path';
 import { PracticeLabStateService } from '../shared/services/practice-lab-state.service';
 import { PrismaService }           from '../../../core/database';
@@ -11,12 +10,6 @@ interface RawQuestion {
   options:  string[];
   answer:   string;
 }
-
-// Base directory where the compiled mcq.service.js lives at runtime.
-// In dev  : <root>/src/modules/practice-labs/mcq/
-// In prod : <root>/dist/modules/practice-labs/mcq/
-// The JSON files are co-located in ./data/ relative to this file.
-const MCQ_DATA_DIR = path.resolve(__dirname, 'data');
 
 @Injectable()
 export class MCQService {
@@ -108,16 +101,43 @@ export class MCQService {
   }
 
   /**
-   * jsonFile is stored in DB as a relative path from the data/ folder.
-   * e.g. "API_Hacking.json" or "career_in_Cyber/PenetrationTester.json"
+   * Load a question-bank JSON.
+   *
+   * Strategy:
+   *  1. Try require() — works on Vercel because webpack bundles the JSON
+   *     file into the serverless function at build time.
+   *  2. Fall back to an absolute fs path (local dev / plain node).
+   *
+   * `jsonFile` is stored in the DB as a path relative to the data/ folder,
+   * e.g. "API_Hacking.json" or "digital_Forn/Network.json".
    */
   private loadJson(jsonFile: string): RawQuestion[] {
-    const abs = path.resolve(MCQ_DATA_DIR, jsonFile);
-    if (!fs.existsSync(abs)) {
-      throw new NotFoundException(`Question bank not found: ${abs}`);
+    // Resolve absolute path relative to this compiled file's directory.
+    // In dev  → <root>/src/modules/practice-labs/mcq/
+    // In prod → <root>/dist/modules/practice-labs/mcq/
+    const abs = path.resolve(__dirname, 'data', jsonFile);
+
+    let parsed: any;
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      parsed = require(abs);
+    } catch {
+      // require() failed (file not bundled) — try raw fs read as fallback
+      try {
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
+        const fs = require('fs') as typeof import('fs');
+        if (!fs.existsSync(abs)) {
+          throw new NotFoundException(`Question bank not found: ${jsonFile}`);
+        }
+        parsed = JSON.parse(fs.readFileSync(abs, 'utf-8'));
+      } catch (inner) {
+        if (inner instanceof NotFoundException) throw inner;
+        throw new NotFoundException(`Question bank not found: ${jsonFile}`);
+      }
     }
-    const raw = JSON.parse(fs.readFileSync(abs, 'utf-8'));
-    return (raw.questions ?? raw) as RawQuestion[];
+
+    const questions = parsed.questions ?? parsed;
+    return questions as RawQuestion[];
   }
 
   private async recordAttempt(
