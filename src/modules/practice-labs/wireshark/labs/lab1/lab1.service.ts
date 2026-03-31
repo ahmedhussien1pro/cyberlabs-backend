@@ -1,4 +1,18 @@
 // src/modules/practice-labs/wireshark/labs/lab1/lab1.service.ts
+// LAB 1 — HTTP Credentials in Plaintext
+//
+// Challenge design:
+//   The student opens the .pcap in Wireshark (or uses the simulation).
+//   They see a normal POST /portal/auth/login — username/password look like real creds.
+//   The LOGIN SUCCEEDS (302 redirect).
+//   The 302 response sets a session cookie AND a custom X-Auth-Token header.
+//   The flag is the value of X-Auth-Token — visible only by inspecting the RESPONSE headers.
+//   The POST body contains REAL-LOOKING credentials (no flag there).
+//
+// Why this is harder than the original:
+//   - Student must look at the response, not just the request.
+//   - Flag is not labelled "flag" — it looks like a real auth token.
+//   - Requires "Follow TCP Stream" or packet inspector to read response headers.
 import * as fs from 'fs';
 import * as path from 'path';
 import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
@@ -7,9 +21,9 @@ import { PrismaService } from '../../../../../core/database';
 import { PracticeLabStateService } from '../../../shared/services/practice-lab-state.service';
 import { FlagRecordService } from '../../../shared/services/flag-record.service';
 
-const FLAG_PREFIX  = 'FLAG{WIRESHARK-LAB1-HTTP-CREDS';
-const PCAP_FILE    = 'lab1_http_creds.pcap';
-const PCAP_PATH    = path.resolve(process.cwd(), 'labs_assets', 'WireShark', PCAP_FILE);
+const FLAG_PREFIX = 'FLAG{WIRESHARK-LAB1-HTTP-CREDS';
+const PCAP_FILE   = 'lab1_http_creds.pcap';
+const PCAP_PATH   = path.resolve(process.cwd(), 'labs_assets', 'WireShark', PCAP_FILE);
 
 @Injectable()
 export class Lab1Service {
@@ -31,6 +45,9 @@ export class Lab1Service {
     const resolvedLabId = await this.stateService.resolveLabId(labId);
     const dynamicFlag   = this.stateService.generateDynamicFlag(FLAG_PREFIX, userId, resolvedLabId);
 
+    // ── Packet list ──────────────────────────────────────────────────────────
+    // Flag is ONLY in packet 5 (server 302 response), inside X-Auth-Token header.
+    // The POST body (packet 4) has realistic-looking credentials — NO flag there.
     const packets = [
       {
         no: 1, time: '0.000000',
@@ -51,6 +68,7 @@ export class Lab1Service {
         info: '52841 → 80 [ACK] Seq=1 Ack=1 Win=64240 Len=0',
       },
       {
+        // POST body has real-looking creds — flag is NOT here
         no: 4, time: '0.001990',
         source: '192.168.1.12', destination: '192.168.1.1',
         protocol: 'HTTP', length: 312,
@@ -62,23 +80,28 @@ export class Lab1Service {
           headers: {
             Host: '192.168.1.1',
             'Content-Type': 'application/x-www-form-urlencoded',
-            'Content-Length': '47',
+            'Content-Length': '39',
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
             Connection: 'keep-alive',
           },
-          body: `username=j.henderson&password=${dynamicFlag}`,
+          // Real-looking credentials — NOT the flag
+          body: 'username=j.henderson&password=Henderson@2024!',
         },
       },
       {
+        // ← FLAG is here: X-Auth-Token response header
         no: 5, time: '0.014600',
         source: '192.168.1.1', destination: '192.168.1.12',
-        protocol: 'HTTP', length: 218,
+        protocol: 'HTTP', length: 248,
         info: 'HTTP/1.1 302 Found',
         httpData: {
           status: 302,
           headers: {
             Location: '/portal/dashboard',
+            // Flag lives here — student must inspect response headers
+            'X-Auth-Token': dynamicFlag,
             'Set-Cookie': 'session=eyJ1c2VyIjoiai5oZW5kZXJzb24ifQ==; Path=/; HttpOnly',
+            'Cache-Control': 'no-store',
           },
         },
       },
@@ -103,7 +126,10 @@ export class Lab1Service {
         info: 'HTTP/1.1 200 OK (text/html)',
         httpData: {
           status: 200,
-          headers: { 'Content-Type': 'text/html; charset=utf-8', 'Content-Length': '6138' },
+          headers: {
+            'Content-Type': 'text/html; charset=utf-8',
+            'Content-Length': '6138',
+          },
         },
       },
     ];
@@ -156,13 +182,13 @@ export class Lab1Service {
         flag: submittedFlag.trim(),
         message: 'Access confirmed.',
         explanation:
-          'HTTP transmits all data in plaintext including credentials. ' +
-          'Anyone on the same network segment can capture login credentials ' +
-          'using a passive sniffer. Enforce HTTPS with HSTS.',
+          'HTTP transmits all data in plaintext — including response headers. ' +
+          'A passive sniffer on the same network can capture sensitive tokens like X-Auth-Token. ' +
+          'Enforce HTTPS with HSTS to prevent credential interception.',
       };
     }
     if (result === 'already_used') return { success: false, message: 'Already submitted.' };
-    if (result === 'expired') return { success: false, message: 'Session expired. Restart lab.' };
+    if (result === 'expired')      return { success: false, message: 'Session expired. Restart lab.' };
     return { success: false, message: 'Incorrect flag.' };
   }
 }
