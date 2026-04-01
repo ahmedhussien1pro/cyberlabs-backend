@@ -1,7 +1,10 @@
 // src/modules/practice-labs/types/mcq-lab-metadata.type.ts
-// Lightweight metadata interface used by all MCQ labs.
-// Each MCQ lab embeds its questions directly in DB initialState.
-// No file-system reads needed at runtime — safe for Vercel Serverless.
+//
+// DESIGN:
+// - questions? is OPTIONAL — metadata files that don't embed questions are valid.
+// - The seed script is the only place that reads JSON files (via fs).
+// - mcq.service reads questions from DB initialState.questions at runtime.
+// - Zero filesystem I/O on Vercel Serverless runtime.
 
 export type MCQDifficulty = 'BEGINNER' | 'INTERMEDIATE' | 'ADVANCED';
 
@@ -39,28 +42,29 @@ export interface MCQLabMetadata {
   ar_goal: string;
 
   difficulty: MCQDifficulty;
-  category: MCQCategory;
+  category:   MCQCategory;
 
   /** Skills / tags shown on the card */
   skills: string[];
 
   /**
-   * Relative path from data/ folder — kept for backwards compat
-   * and local dev reference. NOT read at runtime.
+   * Path to the JSON file relative to prisma/seed-data/mcq-labs/data/.
+   * Used ONLY by the seed script (fs.readFileSync) — never at runtime.
    */
   jsonFile: string;
 
   /**
-   * Full question bank embedded directly in the metadata.
-   * Seed script writes these into DB initialState.questions.
-   * mcq.service reads from DB — zero filesystem I/O on Vercel.
+   * OPTIONAL inline question bank.
+   * If provided → seed uses these directly.
+   * If omitted  → seed reads from jsonFile automatically.
+   * mcq.service ALWAYS reads from DB — never from this field.
    */
-  questions: MCQQuestion[];
+  questions?: MCQQuestion[];
 
-  /** Number of questions (derived from questions.length, kept for display) */
+  /** Total number of questions (used for display / scoring calc) */
   questionCount: number;
 
-  /** Minimum percentage (0–100) to earn the flag */
+  /** Minimum pass percentage (0–100) to earn the flag */
   passingScore: number;
 
   /** XP awarded on completion */
