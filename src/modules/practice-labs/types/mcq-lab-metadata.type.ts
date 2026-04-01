@@ -1,7 +1,7 @@
 // src/modules/practice-labs/types/mcq-lab-metadata.type.ts
 // Lightweight metadata interface used by all MCQ labs.
-// Every MCQ lab = one JSON file in labs_assets/MCQ-data/**/*.json
-// Only these fields differ between labs; everything else is template-driven.
+// Each MCQ lab embeds its questions directly in DB initialState.
+// No file-system reads needed at runtime — safe for Vercel Serverless.
 
 export type MCQDifficulty = 'BEGINNER' | 'INTERMEDIATE' | 'ADVANCED';
 
@@ -15,8 +15,15 @@ export type MCQCategory =
   | 'FUNDAMENTALS'
   | 'TOOLS_AND_TECHNIQUES';
 
+export interface MCQQuestion {
+  id:       number;
+  question: string;
+  options:  string[];
+  answer:   string;
+}
+
 export interface MCQLabMetadata {
-  /** Unique DB slug — used as the route key and JSON file locator */
+  /** Unique DB slug — used as the route key */
   slug: string;
 
   /** Display title shown on the lab card and inside the quiz */
@@ -37,13 +44,23 @@ export interface MCQLabMetadata {
   /** Skills / tags shown on the card */
   skills: string[];
 
-  /** Relative path from the repo root to the source JSON */
+  /**
+   * Relative path from data/ folder — kept for backwards compat
+   * and local dev reference. NOT read at runtime.
+   */
   jsonFile: string;
 
-  /** Number of questions in the JSON (for seed metadata display) */
+  /**
+   * Full question bank embedded directly in the metadata.
+   * Seed script writes these into DB initialState.questions.
+   * mcq.service reads from DB — zero filesystem I/O on Vercel.
+   */
+  questions: MCQQuestion[];
+
+  /** Number of questions (derived from questions.length, kept for display) */
   questionCount: number;
 
-  /** Minimum correct answers (percentage 0–100) to earn the flag */
+  /** Minimum percentage (0–100) to earn the flag */
   passingScore: number;
 
   /** XP awarded on completion */

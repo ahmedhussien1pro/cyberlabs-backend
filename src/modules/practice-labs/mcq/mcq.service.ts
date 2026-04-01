@@ -1,6 +1,7 @@
 // src/modules/practice-labs/mcq/mcq.service.ts
+// All question data is read from DB initialState.questions.
+// Zero filesystem I/O — fully Vercel Serverless compatible.
 import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
-import * as path from 'path';
 import { PracticeLabStateService } from '../shared/services/practice-lab-state.service';
 import { PrismaService }           from '../../../core/database';
 
@@ -9,6 +10,15 @@ interface RawQuestion {
   question: string;
   options:  string[];
   answer:   string;
+}
+
+interface MCQInitialState {
+  type:              string;
+  jsonFile?:         string;
+  questionCount:     number;
+  passingScore:      number;
+  pointsPerQuestion: number;
+  questions:         RawQuestion[];
 }
 
 @Injectable()
@@ -28,16 +38,18 @@ export class MCQService {
 
   // ──────────────────────────────────────────────────────────
   // GET /practice-labs/mcq/:slug/questions
+  // Returns question list WITHOUT the answer field.
   // ──────────────────────────────────────────────────────────
   async getQuestions(slug: string) {
-    const meta = await this.resolveMeta(slug);
-    const raw  = this.loadJson(meta.jsonFile);
-    const questions = raw.map(({ id, question, options }) => ({ id, question, options }));
-    return { questions };
+    const { questions } = await this.resolveMeta(slug);
+    return {
+      questions: questions.map(({ id, question, options }) => ({ id, question, options })),
+    };
   }
 
   // ──────────────────────────────────────────────────────────
   // POST /practice-labs/mcq/:slug/submit
+  // Body: { labId: string, answers: Record<number, string> }
   // ──────────────────────────────────────────────────────────
   async submitAnswers(
     slug:    string,
@@ -45,22 +57,21 @@ export class MCQService {
     labId:   string,
     answers: Record<number, string>,
   ) {
-    const meta    = await this.resolveMeta(slug);
-    const raw     = this.loadJson(meta.jsonFile);
-    const ptsEach = meta.pointsPerQuestion;
+    const meta = await this.resolveMeta(slug);
+    const { questions, pointsPerQuestion, passingScore } = meta;
 
     let correct = 0;
-    const feedback = raw.map((q) => {
-      const given   = answers[q.id] ?? '';
-      const isRight = given.trim() === q.answer.trim();
+    const feedback = questions.map((q) => {
+      const given   = (answers[q.id] ?? '').trim();
+      const isRight = given === q.answer.trim();
       if (isRight) correct++;
       return { id: q.id, correct: isRight, correctAnswer: q.answer, given };
     });
 
-    const score      = correct * ptsEach;
-    const maxScore   = raw.length * ptsEach;
+    const score      = correct * pointsPerQuestion;
+    const maxScore   = questions.length * pointsPerQuestion;
     const percentage = Math.round((score / maxScore) * 100);
-    const passed     = percentage >= meta.passingScore;
+    const passed     = percentage >= passingScore;
 
     const resolvedLabId = await this.stateService.resolveLabId(slug);
     await this.recordAttempt(userId, resolvedLabId, percentage, passed);
@@ -74,70 +85,50 @@ export class MCQService {
       );
     }
 
-    return { score, maxScore, percentage, passed, correct, total: raw.length, flag, feedback };
+    return { score, maxScore, percentage, passed, correct, total: questions.length, flag, feedback };
   }
 
   // ── helpers ────────────────────────────────────────────────
 
-  private async resolveMeta(slug: string) {
+  /**
+   * Loads lab config from DB.
+   * Validates type === 'MCQ' and that questions array is present.
+   * Throws descriptive errors so frontend shows a clear message.
+   */
+  private async resolveMeta(slug: string): Promise<MCQInitialState & { labId: string }> {
     const lab = await this.prisma.lab.findUnique({
       where:  { slug },
       select: { id: true, initialState: true },
     });
-    if (!lab) throw new NotFoundException(`MCQ lab not found: ${slug}`);
+
+    if (!lab) {
+      throw new NotFoundException(`MCQ lab not found: ${slug}`);
+    }
 
     const state = lab.initialState as any;
+
     if (state?.type !== 'MCQ') {
-      throw new BadRequestException(`Lab "${slug}" is not an MCQ lab`);
+      throw new BadRequestException(`Lab "${slug}" is not an MCQ lab (type=${state?.type})`);
+    }
+
+    const questions: RawQuestion[] = state.questions ?? [];
+
+    if (questions.length === 0) {
+      throw new NotFoundException(
+        `No questions found for lab "${slug}". ` +
+        `Please run the seed script to embed questions into the database.`,
+      );
     }
 
     return {
       labId:             lab.id,
-      jsonFile:          state.jsonFile          as string,
-      questionCount:     state.questionCount      as number,
-      passingScore:      state.passingScore       as number,
-      pointsPerQuestion: state.pointsPerQuestion  as number,
+      type:              state.type,
+      jsonFile:          state.jsonFile,
+      questionCount:     state.questionCount  ?? questions.length,
+      passingScore:      state.passingScore   ?? 70,
+      pointsPerQuestion: state.pointsPerQuestion ?? 5,
+      questions,
     };
-  }
-
-  /**
-   * Load a question-bank JSON.
-   *
-   * Strategy:
-   *  1. Try require() — works on Vercel because webpack bundles the JSON
-   *     file into the serverless function at build time.
-   *  2. Fall back to an absolute fs path (local dev / plain node).
-   *
-   * `jsonFile` is stored in the DB as a path relative to the data/ folder,
-   * e.g. "API_Hacking.json" or "digital_Forn/Network.json".
-   */
-  private loadJson(jsonFile: string): RawQuestion[] {
-    // Resolve absolute path relative to this compiled file's directory.
-    // In dev  → <root>/src/modules/practice-labs/mcq/
-    // In prod → <root>/dist/modules/practice-labs/mcq/
-    const abs = path.resolve(__dirname, 'data', jsonFile);
-
-    let parsed: any;
-    try {
-      // eslint-disable-next-line @typescript-eslint/no-var-requires
-      parsed = require(abs);
-    } catch {
-      // require() failed (file not bundled) — try raw fs read as fallback
-      try {
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
-        const fs = require('fs') as typeof import('fs');
-        if (!fs.existsSync(abs)) {
-          throw new NotFoundException(`Question bank not found: ${jsonFile}`);
-        }
-        parsed = JSON.parse(fs.readFileSync(abs, 'utf-8'));
-      } catch (inner) {
-        if (inner instanceof NotFoundException) throw inner;
-        throw new NotFoundException(`Question bank not found: ${jsonFile}`);
-      }
-    }
-
-    const questions = parsed.questions ?? parsed;
-    return questions as RawQuestion[];
   }
 
   private async recordAttempt(

@@ -1,6 +1,7 @@
 // prisma/seed-data/mcq-labs/seed-mcq-labs.ts
 // Upserts all MCQ labs into the Lab table.
-// Each entry maps 1-to-1 with a JSON file in labs_assets/MCQ-data/.
+// Questions are embedded directly in initialState — NO JSON files read at runtime.
+// This makes the backend fully Vercel-compatible (no fs / __dirname needed).
 
 import { PrismaClient } from '@prisma/client';
 import type { MCQLabMetadata } from '../../../src/modules/practice-labs/types/mcq-lab-metadata.type';
@@ -10,12 +11,12 @@ import { apiHackingMCQMetadata }   from '../../../src/modules/practice-labs/mcq/
 import { regexMCQMetadata }        from '../../../src/modules/practice-labs/mcq/labs/regex/regex.metadata';
 
 // ─── Career in Cyber ─────────────────────────────────────────────────────────
-import { careerPentestMCQMetadata }         from '../../../src/modules/practice-labs/mcq/labs/career-penetration-tester/career-penetration-tester.metadata';
-import { careerRedTeamerMCQMetadata }       from '../../../src/modules/practice-labs/mcq/labs/career-red-teamer/career-red-teamer.metadata';
-import { careerSecurityAnalystMCQMetadata } from '../../../src/modules/practice-labs/mcq/labs/career-security-analyst/career-security-analyst.metadata';
-import { careerSecurityEngineerMCQMetadata }from '../../../src/modules/practice-labs/mcq/labs/career-security-engineer/career-security-engineer.metadata';
-import { careerSocialMediaMCQMetadata }     from '../../../src/modules/practice-labs/mcq/labs/career-social-media/career-social-media.metadata';
-import { careerVehicleMCQMetadata }         from '../../../src/modules/practice-labs/mcq/labs/career-vehicle/career-vehicle.metadata';
+import { careerPentestMCQMetadata }          from '../../../src/modules/practice-labs/mcq/labs/career-penetration-tester/career-penetration-tester.metadata';
+import { careerRedTeamerMCQMetadata }        from '../../../src/modules/practice-labs/mcq/labs/career-red-teamer/career-red-teamer.metadata';
+import { careerSecurityAnalystMCQMetadata }  from '../../../src/modules/practice-labs/mcq/labs/career-security-analyst/career-security-analyst.metadata';
+import { careerSecurityEngineerMCQMetadata } from '../../../src/modules/practice-labs/mcq/labs/career-security-engineer/career-security-engineer.metadata';
+import { careerSocialMediaMCQMetadata }      from '../../../src/modules/practice-labs/mcq/labs/career-social-media/career-social-media.metadata';
+import { careerVehicleMCQMetadata }          from '../../../src/modules/practice-labs/mcq/labs/career-vehicle/career-vehicle.metadata';
 
 // ─── Digital Forensics ───────────────────────────────────────────────────────
 import { dfornBlockchainMCQMetadata }        from '../../../src/modules/practice-labs/mcq/labs/dforn-blockchain/dforn-blockchain.metadata';
@@ -69,9 +70,11 @@ const ALL_MCQ_LABS: MCQLabMetadata[] = [
 
 export async function seedMCQLabs(prisma: PrismaClient): Promise<void> {
   if (ALL_MCQ_LABS.length === 0) return;
-  console.log('\n📝 Seeding MCQ labs...');
+  console.log('\n📝 Seeding MCQ labs (DB-embedded questions)...');
 
   for (const meta of ALL_MCQ_LABS) {
+    const ptsPerQ = Math.floor(meta.pointsReward / meta.questionCount);
+
     const shared = {
       title:          meta.title,
       ar_title:       meta.ar_title,
@@ -88,12 +91,17 @@ export async function seedMCQLabs(prisma: PrismaClient): Promise<void> {
       imageUrl:       null,
       goal:           meta.goal,
       ar_goal:        meta.ar_goal,
+      // ─────────────────────────────────────────────────────────────────────
+      // questions[] lives here — mcq.service.ts reads from this field only.
+      // No JSON files, no __dirname, no fs — works on Vercel Serverless.
+      // ─────────────────────────────────────────────────────────────────────
       initialState: {
         type:              'MCQ',
-        jsonFile:          meta.jsonFile,
+        jsonFile:          meta.jsonFile,   // kept for reference only
         questionCount:     meta.questionCount,
         passingScore:      meta.passingScore,
-        pointsPerQuestion: Math.floor(meta.pointsReward / meta.questionCount),
+        pointsPerQuestion: ptsPerQ,
+        questions:         meta.questions,  // ← THE FIX
       },
       briefing:      { en: meta.goal, ar: meta.ar_goal },
       stepsOverview: { en: [], ar: [] },
@@ -112,9 +120,10 @@ export async function seedMCQLabs(prisma: PrismaClient): Promise<void> {
       `  ✅ MCQ lab: ${meta.slug.padEnd(40)} | ` +
       `${String(meta.questionCount).padStart(2)} Qs | ` +
       `${meta.passingScore}% pass | ` +
+      `${ptsPerQ} pts/Q | ` +
       `${meta.difficulty}`,
     );
   }
 
-  console.log(`  → ${ALL_MCQ_LABS.length} MCQ lab(s) seeded.`);
+  console.log(`  → ${ALL_MCQ_LABS.length} MCQ lab(s) seeded with embedded questions.`);
 }
