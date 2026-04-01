@@ -10,7 +10,7 @@ import { VmInstanceStatus, VmLabEventType } from '@prisma/client';
 import * as crypto from 'crypto';
 import { VmPoolService } from './vm-pool.service';
 
-// ─── State Machine: allowed transitions ────────────────────────────────────────
+// ─── State Machine: allowed transitions ──────────────────────────────────────────────
 // Inspired by CyberRanger vm_service.py state machine
 const ALLOWED_TRANSITIONS: Record<VmInstanceStatus, VmInstanceStatus[]> = {
   QUEUED:       [VmInstanceStatus.PROVISIONING, VmInstanceStatus.STOPPED],
@@ -24,6 +24,11 @@ const ALLOWED_TRANSITIONS: Record<VmInstanceStatus, VmInstanceStatus[]> = {
   EXPIRED:      [VmInstanceStatus.STOPPED],
 };
 
+/** Returns true if the instance is already in a terminal state (no further action needed). */
+function isTerminal(status: VmInstanceStatus): boolean {
+  return status === VmInstanceStatus.STOPPED || status === VmInstanceStatus.EXPIRED;
+}
+
 @Injectable()
 export class VmLabsOrchestratorService {
   private readonly logger = new Logger(VmLabsOrchestratorService.name);
@@ -33,7 +38,7 @@ export class VmLabsOrchestratorService {
     private readonly poolService: VmPoolService,
   ) {}
 
-  // ─── Start / Provision ────────────────────────────────────────────────────
+  // ─── Start / Provision ──────────────────────────────────────────────────
 
   async startLab(userId: string, labTemplateId: string): Promise<any> {
     const template = await this.prisma.vmLabTemplate.findUnique({
@@ -98,7 +103,7 @@ export class VmLabsOrchestratorService {
     });
   }
 
-  // ─── Stop ─────────────────────────────────────────────────────────────────
+  // ─── Stop ──────────────────────────────────────────────────────────────
 
   async stopLab(userId: string, instanceId: string): Promise<void> {
     const instance = await this._getOwnedInstance(userId, instanceId);
@@ -106,7 +111,7 @@ export class VmLabsOrchestratorService {
     await this._transitionStatus(instanceId, VmInstanceStatus.STOPPED, userId);
   }
 
-  // ─── Get / List ───────────────────────────────────────────────────────────
+  // ─── Get / List ──────────────────────────────────────────────────────────
 
   async getInstance(userId: string, instanceId: string) {
     return this._getOwnedInstance(userId, instanceId);
@@ -143,7 +148,7 @@ export class VmLabsOrchestratorService {
     return { expiresAt: newExpiry };
   }
 
-  // ─── Submit Flag ──────────────────────────────────────────────────────────
+  // ─── Submit Flag ───────────────────────────────────────────────────────────
 
   async submitFlag(userId: string, instanceId: string, submittedFlag: string) {
     const instance = await this._getOwnedInstance(userId, instanceId);
@@ -246,7 +251,7 @@ export class VmLabsOrchestratorService {
     };
   }
 
-  // ─── Admin ────────────────────────────────────────────────────────────────
+  // ─── Admin ───────────────────────────────────────────────────────────────
 
   async adminListInstances(
     status?: VmInstanceStatus,
@@ -281,10 +286,12 @@ export class VmLabsOrchestratorService {
       where: { id: instanceId },
     });
     if (!instance) throw new NotFoundException('Instance not found');
-    // Admin can terminate any non-terminal state
-    if ([VmInstanceStatus.STOPPED, VmInstanceStatus.EXPIRED].includes(instance.status)) {
+
+    // fix: use isTerminal() helper instead of .includes() to avoid TS2345
+    if (isTerminal(instance.status)) {
       throw new BadRequestException('Instance is already stopped.');
     }
+
     await this.prisma.vmLabInstance.update({
       where: { id: instanceId },
       data: { status: VmInstanceStatus.STOPPED, stoppedAt: new Date() },
@@ -305,7 +312,7 @@ export class VmLabsOrchestratorService {
     return this.prisma.vmLabTemplate.update({ where: { id }, data: { isActive } });
   }
 
-  // ─── Private helpers ──────────────────────────────────────────────────────
+  // ─── Private helpers ────────────────────────────────────────────────────────
 
   private async _getOwnedInstance(userId: string, instanceId: string) {
     const instance = await this.prisma.vmLabInstance.findUnique({
@@ -334,7 +341,6 @@ export class VmLabsOrchestratorService {
     status: VmInstanceStatus,
     _actorId: string,
   ): Promise<void> {
-    // Fetch current status to validate transition
     const current = await this.prisma.vmLabInstance.findUnique({
       where: { id: instanceId },
       select: { status: true },
