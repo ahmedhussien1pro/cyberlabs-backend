@@ -37,6 +37,9 @@ import { SearchModule } from './modules/search';
 // Admin Module
 import { AdminModule } from './modules/admin';
 
+// VM Labs Module
+import { VmLabsModule } from './modules/vm-labs';
+
 // Guards
 import { JwtAuthGuard } from './common/guards';
 
@@ -101,6 +104,9 @@ import { MailModule } from './core/mail';
 
     // Admin
     AdminModule,
+
+    // VM Labs
+    VmLabsModule,
   ],
   controllers: [AppController],
   providers: [
