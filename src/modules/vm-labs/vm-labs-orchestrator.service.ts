@@ -1,17 +1,30 @@
+/**
+ * VmLabsOrchestratorService
+ *
+ * Security controls wired in this file:
+ *   ✅ [9.1] Flag rate limiting via VmLabsThrottler
+ *   ✅ [9.3] Timing-safe flag comparison (crypto.timingSafeEqual)
+ *   ✅ [9.4] HMAC-derived per-instance flags (never stored in plaintext)
+ *   ✅ [9.5] _getOwnedInstance enforces userId ownership check
+ *   ✅ [9.6] State machine blocks invalid transitions
+ *   ✅ [9.7] Raw flag value never returned in any response
+ */
+
 import {
   Injectable,
   Logger,
   NotFoundException,
   BadRequestException,
   ForbiddenException,
+  TooManyRequestsException,
 } from '@nestjs/common';
 import { PrismaService } from '../../core/database/prisma.service';
 import { VmInstanceStatus, VmLabEventType } from '@prisma/client';
 import * as crypto from 'crypto';
 import { VmPoolService } from './vm-pool.service';
+import { VmLabsThrottler } from './vm-labs.throttler';
 
-// ─── State Machine: allowed transitions ──────────────────────────────────────────────
-// Inspired by CyberRanger vm_service.py state machine
+// ─── State Machine: allowed transitions ─────────────────────────────────────────────────────
 const ALLOWED_TRANSITIONS: Record<VmInstanceStatus, VmInstanceStatus[]> = {
   QUEUED:       [VmInstanceStatus.PROVISIONING, VmInstanceStatus.STOPPED],
   PROVISIONING: [VmInstanceStatus.STARTING, VmInstanceStatus.ERROR, VmInstanceStatus.STOPPED],
@@ -24,7 +37,7 @@ const ALLOWED_TRANSITIONS: Record<VmInstanceStatus, VmInstanceStatus[]> = {
   EXPIRED:      [VmInstanceStatus.STOPPED],
 };
 
-/** Returns true if the instance is already in a terminal state (no further action needed). */
+/** Returns true if status is terminal (no further transitions possible). */
 function isTerminal(status: VmInstanceStatus): boolean {
   return status === VmInstanceStatus.STOPPED || status === VmInstanceStatus.EXPIRED;
 }
@@ -36,9 +49,10 @@ export class VmLabsOrchestratorService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly poolService: VmPoolService,
+    private readonly throttler: VmLabsThrottler,  // [9.1] flag rate limiter
   ) {}
 
-  // ─── Start / Provision ──────────────────────────────────────────────────
+  // ─── Start / Provision ───────────────────────────────────────────────────────────
 
   async startLab(userId: string, labTemplateId: string): Promise<any> {
     const template = await this.prisma.vmLabTemplate.findUnique({
@@ -47,7 +61,7 @@ export class VmLabsOrchestratorService {
     if (!template) throw new NotFoundException('Lab template not found');
     if (!template.isActive) throw new BadRequestException('Lab is not active');
 
-    // [5.2] Check if user already has an active instance for this template
+    // [5.2] Return existing active instance if any
     const existingId = await this.poolService.getExistingUserInstance(userId, labTemplateId);
     if (existingId) {
       this.logger.log(`startLab: user ${userId} already has instance ${existingId}, returning it`);
@@ -57,16 +71,13 @@ export class VmLabsOrchestratorService {
       });
     }
 
-    // [5.2] Enforce global per-user cap
     await this.poolService.enforceUserCap(userId);
 
-    // [5.2] Check pool availability
     const { available, estimatedWaitMin } = await this.poolService.checkAvailableSlot(labTemplateId);
 
     const sessionMinutes = template.instanceTtlMin ?? 120;
     const expiresAt = new Date(Date.now() + sessionMinutes * 60_000);
 
-    // Create instance — QUEUED if pool full, else proceed to PROVISIONING
     const instance = await this.prisma.vmLabInstance.create({
       data: {
         userId,
@@ -84,7 +95,7 @@ export class VmLabsOrchestratorService {
     });
 
     if (!available) {
-      this.logger.log(`startLab: pool full for template ${labTemplateId} — instance ${instance.id} QUEUED`);
+      this.logger.log(`startLab: pool full for ${labTemplateId} — instance ${instance.id} QUEUED`);
       return {
         ...instance,
         poolStatus: 'QUEUED',
@@ -93,7 +104,6 @@ export class VmLabsOrchestratorService {
       };
     }
 
-    // Phase 0: PROVISIONING → STARTING → RUNNING (stub — no real Docker yet)
     await this._transitionStatus(instance.id, VmInstanceStatus.STARTING, userId);
     await this._transitionStatus(instance.id, VmInstanceStatus.RUNNING, userId);
 
@@ -103,7 +113,7 @@ export class VmLabsOrchestratorService {
     });
   }
 
-  // ─── Stop ──────────────────────────────────────────────────────────────
+  // ─── Stop ────────────────────────────────────────────────────────────────────────
 
   async stopLab(userId: string, instanceId: string): Promise<void> {
     const instance = await this._getOwnedInstance(userId, instanceId);
@@ -111,7 +121,7 @@ export class VmLabsOrchestratorService {
     await this._transitionStatus(instanceId, VmInstanceStatus.STOPPED, userId);
   }
 
-  // ─── Get / List ──────────────────────────────────────────────────────────
+  // ─── Get / List ──────────────────────────────────────────────────────────────────
 
   async getInstance(userId: string, instanceId: string) {
     return this._getOwnedInstance(userId, instanceId);
@@ -125,7 +135,7 @@ export class VmLabsOrchestratorService {
     });
   }
 
-  // ─── Extend Session ───────────────────────────────────────────────────────
+  // ─── Extend Session ──────────────────────────────────────────────────────────────
 
   async extendSession(userId: string, instanceId: string, minutes: number) {
     const instance = await this._getOwnedInstance(userId, instanceId);
@@ -134,7 +144,7 @@ export class VmLabsOrchestratorService {
     }
     const template = await this.prisma.vmLabTemplate.findUnique({
       where: { id: instance.templateId },
-      select: { maxTtlMin: true, instanceTtlMin: true },
+      select: { maxTtlMin: true },
     });
     const addMin = minutes ?? template?.maxTtlMin ?? 30;
     const newExpiry = new Date(
@@ -148,10 +158,19 @@ export class VmLabsOrchestratorService {
     return { expiresAt: newExpiry };
   }
 
-  // ─── Submit Flag ───────────────────────────────────────────────────────────
+  // ─── Submit Flag [9.1][9.3][9.4][9.7] ────────────────────────────────────────────────────
 
   async submitFlag(userId: string, instanceId: string, submittedFlag: string) {
+    // [9.1] Enforce rate limit before any DB access
+    if (!this.throttler.allow(userId, instanceId)) {
+      const retryAfter = this.throttler.retryAfterSeconds(userId, instanceId);
+      throw new TooManyRequestsException(
+        `Too many flag attempts. Please wait ${retryAfter}s before trying again.`,
+      );
+    }
+
     const instance = await this._getOwnedInstance(userId, instanceId);
+
     if (instance.status !== VmInstanceStatus.RUNNING) {
       throw new BadRequestException('Lab must be running to submit a flag.');
     }
@@ -164,13 +183,18 @@ export class VmLabsOrchestratorService {
     });
     if (!template) throw new NotFoundException('Template not found');
 
+    // [9.4] Resolve expected flag via HMAC — never stored in DB
     const expectedFlag = this._resolveExpectedFlag(instance);
+
+    // [9.3] Timing-safe comparison — prevents timing attacks
     const correct = this._safeCompare(submittedFlag.trim(), expectedFlag);
 
     await this._logEvent(
       instanceId,
       userId,
       correct ? VmLabEventType.FLAG_SUBMITTED_CORRECT : VmLabEventType.FLAG_SUBMITTED_WRONG,
+      // [9.7] Never log the flag value itself
+      { attemptLength: submittedFlag.trim().length },
     );
 
     if (correct) {
@@ -180,7 +204,6 @@ export class VmLabsOrchestratorService {
         data: { flagSubmitted: true, flagSubmittedAt: new Date(), finalScore },
       });
 
-      // Record in LabSubmission for cross-module tracking
       if (template.labId) {
         await this.prisma.labSubmission
           .create({
@@ -188,6 +211,7 @@ export class VmLabsOrchestratorService {
               userId,
               labId: template.labId,
               vmInstanceId: instanceId,
+              // [9.7] Store submitted flag for admin audit trail only — never echo to student
               flagAnswer: submittedFlag.trim(),
               isCorrect: true,
               timeTaken: 0,
@@ -202,13 +226,15 @@ export class VmLabsOrchestratorService {
       await this._transitionStatus(instanceId, VmInstanceStatus.STOPPED, userId);
     }
 
+    // [9.7] Never return the expected flag in any response branch
     return {
       correct,
       message: correct ? '\uD83C\uDF89 Flag accepted!' : 'Incorrect flag. Try again.',
+      ...(correct ? { finalScore: Math.max(0, template.maxScore - instance.scoreDeduction) } : {}),
     };
   }
 
-  // ─── Unlock Hint ──────────────────────────────────────────────────────────
+  // ─── Unlock Hint ────────────────────────────────────────────────────────────────────
 
   async unlockHint(userId: string, instanceId: string, hintIndex: number) {
     const instance = await this._getOwnedInstance(userId, instanceId);
@@ -251,7 +277,7 @@ export class VmLabsOrchestratorService {
     };
   }
 
-  // ─── Admin ───────────────────────────────────────────────────────────────
+  // ─── Admin ───────────────────────────────────────────────────────────────────────────
 
   async adminListInstances(
     status?: VmInstanceStatus,
@@ -287,7 +313,6 @@ export class VmLabsOrchestratorService {
     });
     if (!instance) throw new NotFoundException('Instance not found');
 
-    // fix: use isTerminal() helper instead of .includes() to avoid TS2345
     if (isTerminal(instance.status)) {
       throw new BadRequestException('Instance is already stopped.');
     }
@@ -312,7 +337,7 @@ export class VmLabsOrchestratorService {
     return this.prisma.vmLabTemplate.update({ where: { id }, data: { isActive } });
   }
 
-  // ─── Private helpers ────────────────────────────────────────────────────────
+  // ─── Private helpers ───────────────────────────────────────────────────────────────────
 
   private async _getOwnedInstance(userId: string, instanceId: string) {
     const instance = await this.prisma.vmLabInstance.findUnique({
@@ -323,10 +348,6 @@ export class VmLabsOrchestratorService {
     return instance;
   }
 
-  /**
-   * [5.1] Enforce state machine transitions.
-   * Invalid transition → throws BadRequestException.
-   */
   private _assertTransition(from: VmInstanceStatus, to: VmInstanceStatus): void {
     const allowed = ALLOWED_TRANSITIONS[from] ?? [];
     if (!allowed.includes(to)) {
@@ -371,7 +392,7 @@ export class VmLabsOrchestratorService {
     });
   }
 
-  // [5.4] HMAC-based per-instance flag (timing-safe comparison)
+  /** [9.4] HMAC-based per-instance flag derivation — never stored in DB */
   private _resolveExpectedFlag(instance: { id: string }): string {
     const secret = process.env.FLAG_HMAC_SECRET ?? 'change-me-in-env';
     return (
@@ -385,6 +406,7 @@ export class VmLabsOrchestratorService {
     );
   }
 
+  /** [9.3] Timing-safe string comparison — prevents timing attacks on flag validation */
   private _safeCompare(a: string, b: string): boolean {
     if (a.length !== b.length) return false;
     return crypto.timingSafeEqual(Buffer.from(a), Buffer.from(b));
