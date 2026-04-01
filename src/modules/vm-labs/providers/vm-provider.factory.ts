@@ -5,32 +5,35 @@ import { DockerProvider } from './docker.provider';
 
 /**
  * VmProviderFactory — resolves the correct IVmProvider implementation
- * for a given VmProviderType enum value.
+ * based on the VmProviderType enum value from the database.
  *
- * To add a new cloud provider:
- *   1. Create `providers/digital-ocean.provider.ts` implementing IVmProvider
- *   2. Register it in `vm-labs.module.ts` providers array
- *   3. Inject it in this factory and add a case below
+ * Add new providers here as the platform grows.
  */
 @Injectable()
 export class VmProviderFactory {
-  constructor(private readonly dockerProvider: DockerProvider) {}
+  constructor(private readonly docker: DockerProvider) {}
 
-  resolve(providerType: VmProviderType): IVmProvider {
+  /**
+   * Accept VmProviderType enum OR raw string (for pool.provider values
+   * that arrive as strings from Prisma JSON includes).
+   */
+  resolve(providerType: VmProviderType | string): IVmProvider {
     switch (providerType) {
       case VmProviderType.DOCKER_LOCAL:
-        return this.dockerProvider;
+      case 'DOCKER_LOCAL':
+        return this.docker;
 
-      // TODO: add when DigitalOceanProvider is built
-      // case VmProviderType.DIGITAL_OCEAN:
-      //   return this.digitalOceanProvider;
+      case VmProviderType.DIGITAL_OCEAN:
+      case 'DIGITAL_OCEAN':
+        // TODO: inject and return DigitalOceanProvider when implemented
+        throw new Error('DigitalOcean provider not yet implemented');
 
       case VmProviderType.CUSTOM:
-        // Fall through to Docker as default until custom provider is configured
-        return this.dockerProvider;
+      case 'CUSTOM':
+        throw new Error('Custom provider requires manual registration');
 
       default:
-        return this.dockerProvider;
+        throw new Error(`Unknown VM provider type: ${String(providerType)}`);
     }
   }
 }
