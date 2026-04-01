@@ -9,10 +9,8 @@ import { PrismaService } from '../../core/database/prisma.service';
 import { VmInstanceStatus, VmLabEventType } from '@prisma/client';
 import * as crypto from 'crypto';
 
-// ─── Constants ────────────────────────────────────────────────────────────────
 const DEFAULT_SESSION_MINUTES = 60;
 const MAX_CONCURRENT_PER_USER = 2;
-const FULL_SOLVE_SCORE_PCT = 0.2; // 20% cap when using full solution
 
 @Injectable()
 export class VmLabsOrchestratorService {
@@ -20,7 +18,7 @@ export class VmLabsOrchestratorService {
 
   constructor(private readonly prisma: PrismaService) {}
 
-  // ─── Start / Provision ─────────────────────────────────────────────────────
+  // ─── Start / Provision ────────────────────────────────────────────────────────────────
 
   async startLab(userId: string, labTemplateId: string): Promise<any> {
     const template = await this.prisma.vmLabTemplate.findUnique({
@@ -31,7 +29,10 @@ export class VmLabsOrchestratorService {
 
     // Enforce concurrent cap
     const running = await this.prisma.vmLabInstance.count({
-      where: { userId, status: { in: ['QUEUED', 'PROVISIONING', 'STARTING', 'RUNNING'] } },
+      where: {
+        userId,
+        status: { in: ['QUEUED', 'PROVISIONING', 'STARTING', 'RUNNING'] },
+      },
     });
     if (running >= MAX_CONCURRENT_PER_USER) {
       throw new BadRequestException(
@@ -39,9 +40,9 @@ export class VmLabsOrchestratorService {
       );
     }
 
-    const expiresAt = new Date(
-      Date.now() + (template.defaultSessionMinutes ?? DEFAULT_SESSION_MINUTES) * 60_000,
-    );
+    // instanceTtlMin is the schema field (not defaultSessionMinutes)
+    const sessionMinutes = template.instanceTtlMin ?? DEFAULT_SESSION_MINUTES;
+    const expiresAt = new Date(Date.now() + sessionMinutes * 60_000);
 
     const instance = await this.prisma.vmLabInstance.create({
       data: {
@@ -49,16 +50,14 @@ export class VmLabsOrchestratorService {
         templateId: labTemplateId,
         status: 'QUEUED',
         expiresAt,
-        hintsUsed: [],
-        flagsSubmitted: 0,
-        currentScore: template.maxScore ?? 100,
+        hintsUsed: 0,       // Int field in schema
+        scoreDeduction: 0,  // Int field in schema
       },
     });
 
     await this._logEvent(instance.id, userId, 'INSTANCE_CREATED');
 
-    // In a real system this would enqueue a Kubernetes/Docker job.
-    // For Phase 0 (local/Docker) we transition directly to RUNNING.
+    // Phase 0: transition directly to RUNNING (no real Docker orchestration yet)
     await this._transitionStatus(instance.id, 'RUNNING', userId);
 
     return this.prisma.vmLabInstance.findUnique({
@@ -77,19 +76,18 @@ export class VmLabsOrchestratorService {
     await this._transitionStatus(instanceId, 'STOPPED', userId);
   }
 
-  // ─── Get Instance (user) ────────────────────────────────────────────────────
+  // ─── Get / List (user) ───────────────────────────────────────────────────────
 
   async getInstance(userId: string, instanceId: string) {
     return this._getOwnedInstance(userId, instanceId);
   }
 
-  // ─── List user instances ────────────────────────────────────────────────────
-
   async listUserInstances(userId: string) {
     return this.prisma.vmLabInstance.findMany({
       where: { userId },
       orderBy: { createdAt: 'desc' },
-      include: { template: { select: { title: true, difficulty: true } } },
+      // NOTE: VmLabTemplate has no "difficulty" field → use osType instead
+      include: { template: { select: { title: true, osType: true } } },
     });
   }
 
@@ -100,7 +98,9 @@ export class VmLabsOrchestratorService {
     if (instance.status !== 'RUNNING') {
       throw new BadRequestException('Can only extend a running session.');
     }
-    const newExpiry = new Date((instance.expiresAt?.getTime() ?? Date.now()) + minutes * 60_000);
+    const newExpiry = new Date(
+      (instance.expiresAt?.getTime() ?? Date.now()) + minutes * 60_000,
+    );
     await this.prisma.vmLabInstance.update({
       where: { id: instanceId },
       data: { expiresAt: newExpiry },
@@ -122,30 +122,43 @@ export class VmLabsOrchestratorService {
     });
     if (!template) throw new NotFoundException('Template not found');
 
-    // Resolve expected flag: per-user dynamic or static
     const expectedFlag = await this._resolveExpectedFlag(instance, template);
     const correct = this._safeCompare(submittedFlag.trim(), expectedFlag);
 
-    await this.prisma.vmLabInstance.update({
-      where: { id: instanceId },
-      data: { flagsSubmitted: { increment: 1 } },
-    });
+    // Use the correct schema field: flagSubmitted (Boolean)
+    if (correct) {
+      await this.prisma.vmLabInstance.update({
+        where: { id: instanceId },
+        data: {
+          flagSubmitted: true,
+          flagSubmittedAt: new Date(),
+        },
+      });
+    }
 
-    await this.prisma.vmFlagSubmission.create({
-      data: {
-        instanceId,
-        userId,
-        submittedFlag: submittedFlag.trim(),
-        isCorrect: correct,
-      },
-    });
-
+    // Log to VmLabEvent (the audit model in schema)
     await this._logEvent(
       instanceId,
       userId,
       correct ? 'FLAG_SUBMITTED_CORRECT' : 'FLAG_SUBMITTED_WRONG',
       { flag: submittedFlag.trim() },
     );
+
+    // Record in LabSubmission for cross-module tracking
+    await this.prisma.labSubmission.create({
+      data: {
+        userId,
+        labId: template.labId ?? '', // requires linked Lab; guard below
+        vmInstanceId: instanceId,
+        flagAnswer: submittedFlag.trim(),
+        isCorrect: correct,
+        timeTaken: 0,
+        pointsEarned: correct ? (template.maxScore - instance.scoreDeduction) : 0,
+      },
+    }).catch(() => {
+      // LabSubmission.labId is required — skip if no linked lab
+      this.logger.warn(`submitFlag: no linked Lab for template ${template.id}, skipping LabSubmission`);
+    });
 
     if (correct) {
       await this._transitionStatus(instanceId, 'STOPPED', userId);
@@ -163,33 +176,45 @@ export class VmLabsOrchestratorService {
     });
     if (!template) throw new NotFoundException('Template not found');
 
-    const hints: any[] = (template.hints as any[]) ?? [];
+    // hints are stored in scenarioConfig JSON: { hints: [{text, penaltyPct}] }
+    const config = template.scenarioConfig as any;
+    const hints: { text: string; penaltyPct: number }[] = config?.hints ?? [];
+
     if (hintIndex < 0 || hintIndex >= hints.length) {
       throw new BadRequestException('Invalid hint index.');
     }
 
-    const alreadyUsed: number[] = (instance.hintsUsed as number[]) ?? [];
-    if (alreadyUsed.includes(hintIndex)) {
-      return { hint: hints[hintIndex]?.text ?? '', alreadyUnlocked: true };
+    // Check if already used via VmLabHintUsage (proper relation model)
+    const existing = await this.prisma.vmLabHintUsage.findUnique({
+      where: { instanceId_hintIndex: { instanceId, hintIndex } },
+    });
+    if (existing) {
+      return { hint: hints[hintIndex].text, alreadyUnlocked: true, penalty: 0 };
     }
 
-    const penalty = hints[hintIndex]?.penaltyPct ?? 10;
-    const newScore = Math.max(0, (instance.currentScore ?? 100) - penalty);
+    const penaltyPct = hints[hintIndex].penaltyPct ?? 10;
+    const penalty = Math.round((template.maxScore * penaltyPct) / 100);
 
+    // Record hint usage
+    await this.prisma.vmLabHintUsage.create({
+      data: { instanceId, userId, hintIndex, penalty },
+    });
+
+    // Update instance: increment hintsUsed counter + add to scoreDeduction
     await this.prisma.vmLabInstance.update({
       where: { id: instanceId },
       data: {
-        hintsUsed: [...alreadyUsed, hintIndex],
-        currentScore: newScore,
+        hintsUsed: { increment: 1 },
+        scoreDeduction: { increment: penalty },
       },
     });
 
-    await this._logEvent(instanceId, userId, 'HINT_UNLOCKED', { hintIndex, penalty, newScore });
+    await this._logEvent(instanceId, userId, 'HINT_UNLOCKED', { hintIndex, penalty });
 
     return {
-      hint: hints[hintIndex]?.text ?? '',
+      hint: hints[hintIndex].text,
       penaltyApplied: penalty,
-      newScore,
+      newScore: Math.max(0, template.maxScore - instance.scoreDeduction - penalty),
       alreadyUnlocked: false,
     };
   }
@@ -226,25 +251,21 @@ export class VmLabsOrchestratorService {
     return { success: true };
   }
 
-  // ─── Admin: create template ─────────────────────────────────────────────────
+  // ─── Admin: template CRUD ──────────────────────────────────────────────────
 
   async adminCreateTemplate(dto: any) {
     return this.prisma.vmLabTemplate.create({ data: dto });
   }
 
-  // ─── Admin: list templates ───────────────────────────────────────────────────
-
   async adminListTemplates() {
     return this.prisma.vmLabTemplate.findMany({ orderBy: { createdAt: 'desc' } });
   }
-
-  // ─── Admin: toggle template active ──────────────────────────────────────────
 
   async adminToggleTemplate(id: string, isActive: boolean) {
     return this.prisma.vmLabTemplate.update({ where: { id }, data: { isActive } });
   }
 
-  // ─── Helpers ─────────────────────────────────────────────────────────────────
+  // ─── Private helpers ────────────────────────────────────────────────────────────
 
   private async _getOwnedInstance(userId: string, instanceId: string) {
     const instance = await this.prisma.vmLabInstance.findUnique({
@@ -258,7 +279,7 @@ export class VmLabsOrchestratorService {
   private async _transitionStatus(
     instanceId: string,
     status: VmInstanceStatus,
-    actorId: string,
+    _actorId: string,
   ) {
     await this.prisma.vmLabInstance.update({
       where: { id: instanceId },
@@ -268,32 +289,37 @@ export class VmLabsOrchestratorService {
         ...(status === 'STOPPED' || status === 'EXPIRED' ? { stoppedAt: new Date() } : {}),
       },
     });
-    this.logger.log(`Instance ${instanceId} → ${status} by ${actorId}`);
+    this.logger.log(`Instance ${instanceId} → ${status}`);
   }
 
+  // Uses VmLabEvent (the correct audit model) — NOT vmLabAuditLog
   private async _logEvent(
     instanceId: string,
-    actorId: string,
+    userId: string,
     eventType: VmLabEventType,
     meta?: object,
   ) {
-    await this.prisma.vmLabAuditLog.create({
-      data: {
-        instanceId,
-        actorId,
-        eventType,
-        meta: meta ?? {},
-      },
+    await this.prisma.vmLabEvent.create({
+      data: { instanceId, userId, eventType, meta: meta ?? {} },
     });
   }
 
   private async _resolveExpectedFlag(instance: any, template: any): Promise<string> {
-    if (template.flagPolicy === 'STATIC') {
-      return template.staticFlag ?? '';
+    if (template.flagPolicyType === 'STATIC') {
+      const config = template.scenarioConfig as any;
+      return config?.staticFlag ?? '';
     }
-    // Per-user deterministic flag derived from instanceId + secret
+    // Per-user deterministic flag derived from instanceId + HMAC secret
     const secret = process.env.FLAG_HMAC_SECRET ?? 'change-me-in-env';
-    return 'FLAG{' + crypto.createHmac('sha256', secret).update(instance.id).digest('hex').slice(0, 24) + '}';
+    return (
+      'FLAG{' +
+      crypto
+        .createHmac('sha256', secret)
+        .update(instance.id)
+        .digest('hex')
+        .slice(0, 24) +
+      '}'
+    );
   }
 
   private _safeCompare(a: string, b: string): boolean {
