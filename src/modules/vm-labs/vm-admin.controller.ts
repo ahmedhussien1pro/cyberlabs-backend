@@ -24,7 +24,7 @@ import { CurrentUser } from '../../common/decorators';
 import { UserRole } from '../../common/enums/common.enums';
 import { VmLabsOrchestratorService } from './vm-labs-orchestrator.service';
 import { VmPoolService } from './vm-pool.service';
-import { AdminListInstancesDto } from './dto/admin-list-instances.dto';
+import { AdminListInstancesDTO } from './dto/admin-list-instances.dto'; // fix: was AdminListInstancesDto
 
 @ApiTags('Admin — VM Labs')
 @ApiBearerAuth()
@@ -42,7 +42,7 @@ export class VmAdminController {
   @Get('instances')
   @ApiOperation({ summary: '[Admin] List all instances (filterable)' })
   @ApiResponse({ status: 200, description: 'Paginated list of all VM instances' })
-  listInstances(@Query() query: AdminListInstancesDto) {
+  listInstances(@Query() query: AdminListInstancesDTO) {
     return this.orchestrator.adminListInstances(
       query.status,
       query.templateId,
