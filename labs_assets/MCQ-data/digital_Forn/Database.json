@@ -1,0 +1,224 @@
+{
+    "questions": [
+        {
+            "id": 1,
+            "question": "What is the primary focus of Database Forensics?",
+            "options": [
+                "Analyzing cloud logs for evidence",
+                "Investigating database systems for evidence of tampering or unauthorized access",
+                "Extracting data from mobile devices",
+                "Monitoring network traffic for suspicious activity"
+            ],
+            "correct_answer": "Investigating database systems for evidence of tampering or unauthorized access"
+        },
+        {
+            "id": 2,
+            "question": "Which of the following database events can be analyzed in Database Forensics?",
+            "options": [
+                "SQL injection attacks",
+                "Data access and modification",
+                "Unauthorized database queries",
+                "All of the above"
+            ],
+            "correct_answer": "All of the above"
+        },
+        {
+            "id": 3,
+            "question": "What is the purpose of analyzing SQL logs in Database Forensics?",
+            "options": [
+                "To recover deleted files",
+                "To track unauthorized access or tampering in databases",
+                "To identify malicious software",
+                "To analyze network traffic"
+            ],
+            "correct_answer": "To track unauthorized access or tampering in databases"
+        },
+        {
+            "id": 4,
+            "question": "What type of database-related attack can be detected using Database Forensics?",
+            "options": [
+                "SQL injection attacks",
+                "Denial-of-service attacks",
+                "Phishing attacks",
+                "Malware infections"
+            ],
+            "correct_answer": "SQL injection attacks"
+        },
+        {
+            "id": 5,
+            "question": "Which of the following tools can be used for Database Forensics investigations?",
+            "options": [
+                "DBFS (Database Forensic Suite)",
+                "Wireshark",
+                "Autopsy",
+                "X1 Social Discovery"
+            ],
+            "correct_answer": "DBFS (Database Forensic Suite)"
+        },
+        {
+            "id": 6,
+            "question": "What does the process of database recovery in forensics involve?",
+            "options": [
+                "Recovering lost data from corrupted databases",
+                "Restoring system backups",
+                "Restoring data after a SQL injection",
+                "All of the above"
+            ],
+            "correct_answer": "All of the above"
+        },
+        {
+            "id": 7,
+            "question": "Which database feature is important in Database Forensics for tracking user activity?",
+            "options": [
+                "Audit trails",
+                "Data encryption",
+                "Data backup",
+                "Indexes"
+            ],
+            "correct_answer": "Audit trails"
+        },
+        {
+            "id": 8,
+            "question": "What type of data is often analyzed in Database Forensics?",
+            "options": [
+                "Deleted records",
+                "Modified records",
+                "Database logs",
+                "All of the above"
+            ],
+            "correct_answer": "All of the above"
+        },
+        {
+            "id": 9,
+            "question": "What is one of the main challenges in Database Forensics?",
+            "options": [
+                "Recovering encrypted data",
+                "Determining database schema changes",
+                "Tracking unauthorized user activity",
+                "Accessing cloud-based databases"
+            ],
+            "correct_answer": "Determining database schema changes"
+        },
+        {
+            "id": 10,
+            "question": "Which of the following types of database systems are commonly involved in Database Forensics?",
+            "options": [
+                "Relational databases",
+                "NoSQL databases",
+                "Distributed databases",
+                "All of the above"
+            ],
+            "correct_answer": "All of the above"
+        },
+        {
+            "id": 11,
+            "question": "What can database audit logs help investigators identify in Database Forensics?",
+            "options": [
+                "User authentication attempts",
+                "Unauthorized database queries",
+                "Schema changes",
+                "All of the above"
+            ],
+            "correct_answer": "All of the above"
+        },
+        {
+            "id": 12,
+            "question": "What is the significance of timestamp data in Database Forensics?",
+            "options": [
+                "It helps to track when data was modified",
+                "It helps to recover deleted data",
+                "It determines the database version",
+                "It identifies the user who made changes"
+            ],
+            "correct_answer": "It helps to track when data was modified"
+        },
+        {
+            "id": 13,
+            "question": "Which of the following is a potential evidence source in a Database Forensics investigation?",
+            "options": [
+                "Database logs",
+                "File system logs",
+                "Web server logs",
+                "All of the above"
+            ],
+            "correct_answer": "All of the above"
+        },
+        {
+            "id": 14,
+            "question": "What is a common method used to detect unauthorized access in Database Forensics?",
+            "options": [
+                "Analyzing user login patterns",
+                "Reviewing database backup logs",
+                "Identifying database schema changes",
+                "All of the above"
+            ],
+            "correct_answer": "All of the above"
+        },
+        {
+            "id": 15,
+            "question": "What role do triggers play in Database Forensics?",
+            "options": [
+                "They track database modifications",
+                "They store encrypted data",
+                "They handle user authentication",
+                "They encrypt backup files"
+            ],
+            "correct_answer": "They track database modifications"
+        },
+        {
+            "id": 16,
+            "question": "Which of the following types of attack can be identified using Database Forensics?",
+            "options": [
+                "SQL injection",
+                "Cross-site scripting (XSS)",
+                "Buffer overflow",
+                "Denial of service"
+            ],
+            "correct_answer": "SQL injection"
+        },
+        {
+            "id": 17,
+            "question": "How can Database Forensics be useful in detecting insider threats?",
+            "options": [
+                "By analyzing access logs for unusual behavior",
+                "By detecting external network intrusions",
+                "By monitoring the physical security of the database servers",
+                "By tracking the status of network firewalls"
+            ],
+            "correct_answer": "By analyzing access logs for unusual behavior"
+        },
+        {
+            "id": 18,
+            "question": "What is the first step in a Database Forensics investigation?",
+            "options": [
+                "Identifying compromised data",
+                "Securing database servers to preserve evidence",
+                "Rebuilding the database",
+                "Encrypting sensitive data"
+            ],
+            "correct_answer": "Securing database servers to preserve evidence"
+        },
+        {
+            "id": 19,
+            "question": "What is one of the key advantages of database backups in Database Forensics?",
+            "options": [
+                "They can help restore lost data after an attack",
+                "They contain encrypted copies of sensitive data",
+                "They track unauthorized database queries",
+                "They help monitor network traffic"
+            ],
+            "correct_answer": "They can help restore lost data after an attack"
+        },
+        {
+            "id": 20,
+            "question": "Which of the following best describes the concept of 'data provenance' in Database Forensics?",
+            "options": [
+                "The process of determining the source and history of data",
+                "The encryption of data to protect it from unauthorized access",
+                "The process of recovering deleted records from a database",
+                "The method of monitoring database queries for malicious activity"
+            ],
+            "correct_answer": "The process of determining the source and history of data"
+        }
+    ]
+}

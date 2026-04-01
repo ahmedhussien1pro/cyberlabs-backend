@@ -1,0 +1,214 @@
+{
+  "questions": [
+    {
+      "id": 1,
+      "question": "What is the primary objective of a Red Team engagement?",
+      "options": [
+        "A. Identifying security vulnerabilities",
+        "B. Testing incident response capabilities",
+        "C. Configuring firewalls",
+        "D. Performing compliance audits"
+      ],
+      "correct_answer": "B"
+    },
+    {
+      "id": 2,
+      "question": "Which phase of a Red Team operation involves gathering intelligence on the target organization?",
+      "options": [
+        "A. Reconnaissance",
+        "B. Exploitation",
+        "C. Post-exploitation",
+        "D. Reporting"
+      ],
+      "correct_answer": "A"
+    },
+    {
+      "id": 3,
+      "question": "What differentiates a Red Team from a traditional penetration test?",
+      "options": [
+        "A. Red Teams simulate real-world adversaries",
+        "B. Penetration tests focus on compliance",
+        "C. Red Teams use only automated tools",
+        "D. Penetration tests always involve social engineering"
+      ],
+      "correct_answer": "A"
+    },
+    {
+      "id": 4,
+      "question": "Which tool is commonly used in Red Team operations for command and control (C2)?",
+      "options": [
+        "A. Cobalt Strike",
+        "B. Burp Suite",
+        "C. Nessus",
+        "D. Wireshark"
+      ],
+      "correct_answer": "A"
+    },
+    {
+      "id": 5,
+      "question": "What is the primary goal of a Red Team during an engagement?",
+      "options": [
+        "A. Evading detection and persisting in the environment",
+        "B. Identifying all security vulnerabilities",
+        "C. Ensuring compliance with security policies",
+        "D. Preventing cyber attacks"
+      ],
+      "correct_answer": "A"
+    },
+    {
+      "id": 6,
+      "question": "Which technique is commonly used by Red Teams to bypass authentication mechanisms?",
+      "options": [
+        "A. Credential stuffing",
+        "B. Firewall tuning",
+        "C. Patch management",
+        "D. Data encryption"
+      ],
+      "correct_answer": "A"
+    },
+    {
+      "id": 7,
+      "question": "What is lateral movement in the context of Red Teaming?",
+      "options": [
+        "A. Moving between systems after initial access",
+        "B. Exploiting wireless networks",
+        "C. Conducting vulnerability scans",
+        "D. Encrypting sensitive data"
+      ],
+      "correct_answer": "A"
+    },
+    {
+      "id": 8,
+      "question": "Which social engineering technique is most commonly used by Red Teams?",
+      "options": [
+        "A. Phishing",
+        "B. Port scanning",
+        "C. SQL injection",
+        "D. Buffer overflow"
+      ],
+      "correct_answer": "A"
+    },
+    {
+      "id": 9,
+      "question": "Which term refers to the defensive security team that responds to Red Team attacks?",
+      "options": [
+        "A. Blue Team",
+        "B. Purple Team",
+        "C. Incident Response Team",
+        "D. SOC Analysts"
+      ],
+      "correct_answer": "A"
+    },
+    {
+      "id": 10,
+      "question": "What is an assumed breach scenario in Red Teaming?",
+      "options": [
+        "A. Starting with initial access already granted",
+        "B. Testing only external perimeter defenses",
+        "C. Simulating a firewall misconfiguration",
+        "D. Deploying honeypots"
+      ],
+      "correct_answer": "A"
+    },
+    {
+      "id": 11,
+      "question": "What is the purpose of a persistence mechanism in Red Teaming?",
+      "options": [
+        "A. Maintaining long-term access to a compromised system",
+        "B. Removing logs after an attack",
+        "C. Ensuring compliance with regulations",
+        "D. Blocking incoming network traffic"
+      ],
+      "correct_answer": "A"
+    },
+    {
+      "id": 12,
+      "question": "Which technique helps Red Teams evade endpoint detection and response (EDR) solutions?",
+      "options": [
+        "A. Process injection",
+        "B. Network segmentation",
+        "C. SSL encryption",
+        "D. Two-factor authentication"
+      ],
+      "correct_answer": "A"
+    },
+    {
+      "id": 13,
+      "question": "Which framework provides guidelines for Red Team operations?",
+      "options": [
+        "A. MITRE ATT&CK",
+        "B. OWASP Top 10",
+        "C. GDPR",
+        "D. ISO 27001"
+      ],
+      "correct_answer": "A"
+    },
+    {
+      "id": 14,
+      "question": "What is the purpose of exfiltration in a Red Team exercise?",
+      "options": [
+        "A. Stealing data from a target network",
+        "B. Blocking incoming connections",
+        "C. Encrypting sensitive files",
+        "D. Preventing malware infections"
+      ],
+      "correct_answer": "A"
+    },
+    {
+      "id": 15,
+      "question": "Which term describes a collaborative exercise between Red and Blue Teams?",
+      "options": [
+        "A. Purple Teaming",
+        "B. Black Box Testing",
+        "C. Incident Response",
+        "D. Code Review"
+      ],
+      "correct_answer": "A"
+    },
+    {
+      "id": 16,
+      "question": "What is the main goal of initial access in a Red Team operation?",
+      "options": [
+        "A. Gaining entry into a target system",
+        "B. Encrypting network traffic",
+        "C. Configuring security policies",
+        "D. Conducting forensic analysis"
+      ],
+      "correct_answer": "A"
+    },
+    {
+      "id": 17,
+      "question": "Which attack method is commonly used to escalate privileges?",
+      "options": [
+        "A. Kernel exploitation",
+        "B. Network segmentation",
+        "C. Data encryption",
+        "D. Password hashing"
+      ],
+      "correct_answer": "A"
+    },
+    {
+      "id": 18,
+      "question": "Which scripting language is commonly used in Red Team operations?",
+      "options": ["A. PowerShell", "B. Swift", "C. Kotlin", "D. HTML"],
+      "correct_answer": "A"
+    },
+    {
+      "id": 19,
+      "question": "Which type of attack is commonly used to exploit Active Directory?",
+      "options": [
+        "A. Kerberoasting",
+        "B. SQL Injection",
+        "C. Clickjacking",
+        "D. Cross-site scripting (XSS)"
+      ],
+      "correct_answer": "A"
+    },
+    {
+      "id": 20,
+      "question": "Which protocol is often targeted to intercept sensitive data during Red Team engagements?",
+      "options": ["A. SMB", "B. HTTPS", "C. ICMP", "D. FTP"],
+      "correct_answer": "A"
+    }
+  ]
+}

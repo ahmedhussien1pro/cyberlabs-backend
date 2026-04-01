@@ -1,0 +1,179 @@
+{
+  "questions": [
+    {
+      "id": 1,
+      "question": "Match all of the following characters: c, o, g",
+      "correctAnswer": "Characters c, o, g",
+      "regex": "[cog]",
+      "hint": "Match any of the characters c, o, or g"
+    },
+    {
+      "id": 2,
+      "question": "Match all of the following words: cat, fat, hat",
+      "correctAnswer": "Words cat, fat, hat",
+      "regex": "\\b[cfh]at\\b",
+      "hint": "Match any word starting with c, f, or h followed by 'at'"
+    },
+    {
+      "id": 3,
+      "question": "Match all of the following words: Cat, cat, Hat, hat",
+      "correctAnswer": "Words Cat, cat, Hat, hat",
+      "regex": "\\b[cC][aA][tT]\\b|\\b[hH][aA][tT]\\b",
+      "hint": "Match the words Cat or Hat, case insensitive"
+    },
+    {
+      "id": 4,
+      "question": "Match all of the filenames: File1, File2, file3, file4, file5, File7, file9",
+      "correctAnswer": "Filenames File1 to File9 (File and file variants)",
+      "regex": "file\\d|File\\d",
+      "hint": "Match filenames starting with 'file' or 'File' followed by a digit"
+    },
+    {
+      "id": 5,
+      "question": "Match all of the filenames of question 4, except 'File7' (use the hat symbol)",
+      "correctAnswer": "All filenames except File7",
+      "regex": "file\\d|File[1-6|8-9]",
+      "hint": "Match filenames starting with 'file' or 'File' followed by a digit, excluding 'File7'"
+    },
+    {
+      "id": 6,
+      "question": "Match all of the following words: Cat, fat, hat, rat",
+      "correctAnswer": "Words Cat, fat, hat, rat",
+      "regex": "\\b[cfhr]at\\b",
+      "hint": "Match any word starting with c, f, h, or r followed by 'at'"
+    },
+    {
+      "id": 7,
+      "question": "Match all of the following words: Cat, cats",
+      "correctAnswer": "Words Cat, cats",
+      "regex": "\\b[cf]ats?\\b",
+      "hint": "Match the words Cat or cats"
+    },
+    {
+      "id": 8,
+      "question": "Match the following domain name: cat.xyz",
+      "correctAnswer": "Domain name cat.xyz",
+      "regex": "\\bcat\\.xyz\\b",
+      "hint": "Match the exact domain cat.xyz"
+    },
+    {
+      "id": 9,
+      "question": "Match all of the following domain names: cat.xyz, cats.xyz, hats.xyz",
+      "correctAnswer": "Domain names cat.xyz, cats.xyz, hats.xyz",
+      "regex": "\\b[cfh]ats?\\.xyz\\b",
+      "hint": "Match domain names ending with .xyz and starting with c, f, or h"
+    },
+    {
+      "id": 10,
+      "question": "Match every 4-letter string that doesn't end in any letter from n to z",
+      "correctAnswer": "4-letter strings not ending with n-z",
+      "regex": "\\b[a-m]{3}[a-m]\\b",
+      "hint": "Match a 4-letter string where the last letter is not from n to z"
+    },
+    {
+      "id": 11,
+      "question": "Match bat, bats, hat, hats, but not rat or rats (use the hat symbol)",
+      "correctAnswer": "Words bat, bats, hat, hats, not rat, rats",
+      "regex": "\\b[h]ats?\\b|\\b[b]ats?\\b",
+      "hint": "Match bat and hat variants, not rat"
+    },
+    {
+      "id": 12,
+      "question": "Match the following word: catssss",
+      "correctAnswer": "Exact word catssss",
+      "regex": "\\bcatssss\\b",
+      "hint": "Match the exact word 'catssss'"
+    },
+    {
+      "id": 13,
+      "question": "Match all of the following words (use the * sign): Cat, cats, catsss",
+      "correctAnswer": "Words Cat, cats, catsss",
+      "regex": "\\bcat\\S*\\b",
+      "hint": "Match 'cat' followed by any number of characters"
+    },
+    {
+      "id": 14,
+      "question": "Match all of the following sentences (use the + sign): regex go br, regex go brrrrrr",
+      "correctAnswer": "Sentences regex go br, regex go brrrrrr",
+      "regex": "regex go br+",
+      "hint": "Match 'regex go br' followed by one or more r's"
+    },
+    {
+      "id": 15,
+      "question": "Match all of the following filenames: ab0001, bb0000, abc1000, cba0110, c0000 (don't use a metacharacter)",
+      "correctAnswer": "Filenames ab0001, bb0000, abc1000, cba0110, c0000",
+      "regex": "^[a-z]{2}\\d{4}$",
+      "hint": "Match filenames with two lowercase letters followed by four digits"
+    },
+    {
+      "id": 16,
+      "question": "Match all of the following filenames: File01, File2, file12, File20, File99",
+      "correctAnswer": "Filenames File01, File2, file12, File20, File99",
+      "regex": "File\\d{1,2}|file\\d{2}",
+      "hint": "Match filenames starting with 'File' or 'file' followed by one or two digits"
+    },
+    {
+      "id": 17,
+      "question": "Match all of the following folder names: kali tools, kali     tools",
+      "correctAnswer": "Folder names kali tools, kali     tools",
+      "regex": "kali\\s+tools",
+      "hint": "Match the phrase 'kali tools' with one or more spaces"
+    },
+    {
+      "id": 18,
+      "question": "Match all of the following filenames: notes~, stuff@, gtfob#, lmaoo!",
+      "correctAnswer": "Filenames notes~, stuff@, gtfob#, lmaoo!",
+      "regex": "^[\\w\\S]+[~@#!]$",
+      "hint": "Match filenames containing a symbol (~, @, #, or !) at the end"
+    },
+    {
+      "id": 19,
+      "question": "Match the string in quotes (use the * sign and the \\s, \\S metacharacters): \"2f0h@f0j0%!     a)K!F49h!FFOK\"",
+      "correctAnswer": "Exact string in quotes",
+      "regex": "\"\\S*\\s*\\S*\"",
+      "hint": "Match a string in quotes with any number of non-whitespace and whitespace characters"
+    },
+    {
+      "id": 20,
+      "question": "Match every 9-character string (with letters, numbers, and symbols) that doesn't end in a \"!\" sign",
+      "correctAnswer": "9-character strings not ending in !",
+      "regex": "[\\w\\S]{8}[^!]",
+      "hint": "Match a 9-character string not ending with '!'"
+    },
+    {
+      "id": 21,
+      "question": "Match all of these filenames (use the + symbol): .bash_rc, .unnecessarily_long_filename, and note1",
+      "correctAnswer": "Filenames .bash_rc, .unnecessarily_long_filename, and note1",
+      "regex": "\\.[\\w_]+(_[\\w_]+)+",
+      "hint": "Match filenames starting with '.' followed by one or more alphanumeric characters"
+    },
+    {
+      "id": 22,
+      "question": "Match every string that starts with \"Password:\" followed by any 10 characters excluding \"0\"",
+      "correctAnswer": "String starting with 'Password:' followed by 10 characters excluding '0'",
+      "regex": "^Password:[^0]{10}$",
+      "hint": "Match strings starting with 'Password:' followed by 10 non-zero characters"
+    },
+    {
+      "id": 23,
+      "question": "Match \"username: \" in the beginning of a line (note the space!)",
+      "correctAnswer": "String starting with 'username: '",
+      "regex": "^username: ",
+      "hint": "Match the string 'username: ' at the start of a line"
+    },
+    {
+      "id": 24,
+      "question": "Match every line that doesn't start with a digit (use a metacharacter)",
+      "correctAnswer": "Lines that do not start with a digit",
+      "regex": "^[^\\d]",
+      "hint": "Match lines that do not start with a digit"
+    },
+    {
+      "id": 25,
+      "question": "Match this string at the end of a line: EOF$",
+      "correctAnswer": "String 'EOF' at the end of a line",
+      "regex": "EOF$",
+      "hint": "Match 'EOF' at the end of the line"
+    }
+  ]
+}

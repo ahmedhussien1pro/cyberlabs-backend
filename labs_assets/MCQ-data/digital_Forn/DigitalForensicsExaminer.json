@@ -1,0 +1,194 @@
+{
+  "questions": [
+    {
+      "id": 1,
+      "question": "What is the primary role of a Digital Forensics Examiner?",
+      "options": [
+        "A. Investigating and analyzing digital evidence",
+        "B. Developing cybersecurity software",
+        "C. Managing IT infrastructure",
+        "D. Conducting physical security audits"
+      ],
+      "correct_answer": "A"
+    },
+    {
+      "id": 2,
+      "question": "Which of the following is a key goal of digital forensics?",
+      "options": [
+        "A. Identifying and preserving electronic evidence",
+        "B. Encrypting all corporate data",
+        "C. Preventing all cyberattacks",
+        "D. Developing new network protocols"
+      ],
+      "correct_answer": "A"
+    },
+    {
+      "id": 3,
+      "question": "What is the first step in the digital forensic process?",
+      "options": [
+        "A. Preservation",
+        "B. Collection",
+        "C. Identification",
+        "D. Reporting"
+      ],
+      "correct_answer": "C"
+    },
+    {
+      "id": 4,
+      "question": "Which of the following file systems is commonly analyzed in digital forensics?",
+      "options": ["A. NTFS", "B. HTTP", "C. TCP/IP", "D. SMTP"],
+      "correct_answer": "A"
+    },
+    {
+      "id": 5,
+      "question": "Which tool is commonly used for disk imaging in digital forensics?",
+      "options": ["A. Autopsy", "B. EnCase", "C. Metasploit", "D. Wireshark"],
+      "correct_answer": "B"
+    },
+    {
+      "id": 6,
+      "question": "What is the purpose of hashing in digital forensics?",
+      "options": [
+        "A. To verify the integrity of digital evidence",
+        "B. To encrypt sensitive files",
+        "C. To compress large datasets",
+        "D. To generate random passwords"
+      ],
+      "correct_answer": "A"
+    },
+    {
+      "id": 7,
+      "question": "Which legal principle ensures the integrity of collected digital evidence?",
+      "options": [
+        "A. Chain of custody",
+        "B. Encryption",
+        "C. Firewall implementation",
+        "D. Social engineering awareness"
+      ],
+      "correct_answer": "A"
+    },
+    {
+      "id": 8,
+      "question": "Which type of digital evidence is stored in volatile memory?",
+      "options": [
+        "A. RAM contents",
+        "B. Hard disk files",
+        "C. Archived emails",
+        "D. USB backups"
+      ],
+      "correct_answer": "A"
+    },
+    {
+      "id": 9,
+      "question": "What is steganography used for?",
+      "options": [
+        "A. Hiding data within other files",
+        "B. Encrypting email communications",
+        "C. Generating complex passwords",
+        "D. Scanning networks for vulnerabilities"
+      ],
+      "correct_answer": "A"
+    },
+    {
+      "id": 10,
+      "question": "Which organization provides guidelines for digital forensic investigations?",
+      "options": ["A. NIST", "B. FDA", "C. WHO", "D. NASA"],
+      "correct_answer": "A"
+    },
+    {
+      "id": 11,
+      "question": "Which forensic tool is widely used for mobile device investigations?",
+      "options": ["A. Cellebrite", "B. Nessus", "C. Snort", "D. Burp Suite"],
+      "correct_answer": "A"
+    },
+    {
+      "id": 12,
+      "question": "What is live forensics?",
+      "options": [
+        "A. Analyzing data on a running system",
+        "B. Investigating physical security breaches",
+        "C. Conducting forensic interviews",
+        "D. Creating forensic reports after case closure"
+      ],
+      "correct_answer": "A"
+    },
+    {
+      "id": 13,
+      "question": "Which of the following is an example of an anti-forensics technique?",
+      "options": [
+        "A. File wiping",
+        "B. Disk imaging",
+        "C. Log analysis",
+        "D. Memory dump collection"
+      ],
+      "correct_answer": "A"
+    },
+    {
+      "id": 14,
+      "question": "What is the goal of forensic data carving?",
+      "options": [
+        "A. Recovering deleted files",
+        "B. Encrypting sensitive documents",
+        "C. Compressing large datasets",
+        "D. Blocking unauthorized access"
+      ],
+      "correct_answer": "A"
+    },
+    {
+      "id": 15,
+      "question": "Which protocol is commonly analyzed in network forensics?",
+      "options": ["A. TCP/IP", "B. JPEG", "C. HTML", "D. PDF"],
+      "correct_answer": "A"
+    },
+    {
+      "id": 16,
+      "question": "Which forensic tool is used to analyze Windows registry data?",
+      "options": ["A. RegRipper", "B. Nmap", "C. Aircrack-ng", "D. Nikto"],
+      "correct_answer": "A"
+    },
+    {
+      "id": 17,
+      "question": "What type of evidence is obtained from browser history analysis?",
+      "options": [
+        "A. User activity on the internet",
+        "B. Password hashes",
+        "C. Encrypted network traffic",
+        "D. Firewall logs"
+      ],
+      "correct_answer": "A"
+    },
+    {
+      "id": 18,
+      "question": "Which of the following is an example of metadata?",
+      "options": [
+        "A. File creation date",
+        "B. Email content",
+        "C. Passwords",
+        "D. Decryption keys"
+      ],
+      "correct_answer": "A"
+    },
+    {
+      "id": 19,
+      "question": "What is the primary objective of forensic reporting?",
+      "options": [
+        "A. Documenting and presenting findings in a legal manner",
+        "B. Selling forensic tools",
+        "C. Marketing cybersecurity services",
+        "D. Developing encryption software"
+      ],
+      "correct_answer": "A"
+    },
+    {
+      "id": 20,
+      "question": "Which type of analysis is performed to identify hidden data within a file?",
+      "options": [
+        "A. File signature analysis",
+        "B. Vulnerability scanning",
+        "C. Phishing detection",
+        "D. Network penetration testing"
+      ],
+      "correct_answer": "A"
+    }
+  ]
+}

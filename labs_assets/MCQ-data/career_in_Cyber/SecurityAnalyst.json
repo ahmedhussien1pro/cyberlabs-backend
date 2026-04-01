@@ -1,0 +1,204 @@
+{
+  "questions": [
+    {
+      "id": 1,
+      "question": "What is the primary responsibility of a Security Analyst?",
+      "options": [
+        "A. Developing software applications",
+        "B. Monitoring and analyzing security threats",
+        "C. Designing network architectures",
+        "D. Managing databases"
+      ],
+      "correct_answer": "B"
+    },
+    {
+      "id": 2,
+      "question": "Which of the following is a common tool used by Security Analysts for intrusion detection?",
+      "options": ["A. Wireshark", "B. Photoshop", "C. Excel", "D. Illustrator"],
+      "correct_answer": "A"
+    },
+    {
+      "id": 3,
+      "question": "What does SIEM stand for?",
+      "options": [
+        "A. Security Information and Event Management",
+        "B. System Integration and Event Monitoring",
+        "C. Secure Internet and Email Management",
+        "D. Security Incident and Event Monitoring"
+      ],
+      "correct_answer": "A"
+    },
+    {
+      "id": 4,
+      "question": "Which of the following is NOT a type of malware?",
+      "options": [
+        "A. Trojan Horse",
+        "B. Firewall",
+        "C. Ransomware",
+        "D. Spyware"
+      ],
+      "correct_answer": "B"
+    },
+    {
+      "id": 5,
+      "question": "What is the purpose of a firewall in cybersecurity?",
+      "options": [
+        "A. To filter and monitor incoming and outgoing network traffic",
+        "B. To detect and remove malware from a system",
+        "C. To encrypt network communication",
+        "D. To analyze suspicious files for vulnerabilities"
+      ],
+      "correct_answer": "A"
+    },
+    {
+      "id": 6,
+      "question": "Which of the following is an example of a social engineering attack?",
+      "options": [
+        "A. Phishing",
+        "B. SQL Injection",
+        "C. Denial of Service",
+        "D. Man-in-the-Middle Attack"
+      ],
+      "correct_answer": "A"
+    },
+    {
+      "id": 7,
+      "question": "What is the primary goal of penetration testing?",
+      "options": [
+        "A. To enhance software performance",
+        "B. To evaluate security defenses by simulating attacks",
+        "C. To identify system usability issues",
+        "D. To monitor employee activity"
+      ],
+      "correct_answer": "B"
+    },
+    {
+      "id": 8,
+      "question": "Which protocol is commonly used to encrypt web traffic?",
+      "options": ["A. HTTP", "B. FTP", "C. TLS/SSL", "D. DNS"],
+      "correct_answer": "C"
+    },
+    {
+      "id": 9,
+      "question": "Which of the following is a key principle of the CIA triad?",
+      "options": [
+        "A. Compatibility",
+        "B. Integrity",
+        "C. Accountability",
+        "D. Redundancy"
+      ],
+      "correct_answer": "B"
+    },
+    {
+      "id": 10,
+      "question": "What does an IDS (Intrusion Detection System) do?",
+      "options": [
+        "A. Blocks malicious traffic",
+        "B. Detects and alerts on suspicious activity",
+        "C. Encrypts network traffic",
+        "D. Manages user authentication"
+      ],
+      "correct_answer": "B"
+    },
+    {
+      "id": 11,
+      "question": "What is the main difference between IDS and IPS?",
+      "options": [
+        "A. IDS blocks traffic, while IPS only monitors it",
+        "B. IDS only detects threats, while IPS can take action to prevent them",
+        "C. IDS works offline, while IPS requires an internet connection",
+        "D. IDS is software-based, while IPS is hardware-based"
+      ],
+      "correct_answer": "B"
+    },
+    {
+      "id": 12,
+      "question": "Which of the following is a common encryption algorithm?",
+      "options": ["A. AES", "B. HTML", "C. CSS", "D. SMTP"],
+      "correct_answer": "A"
+    },
+    {
+      "id": 13,
+      "question": "What is the primary function of a VPN?",
+      "options": [
+        "A. To improve internet speed",
+        "B. To create a secure encrypted connection over a public network",
+        "C. To block malware",
+        "D. To monitor network traffic"
+      ],
+      "correct_answer": "B"
+    },
+    {
+      "id": 14,
+      "question": "What is a zero-day vulnerability?",
+      "options": [
+        "A. A vulnerability that has been known for years",
+        "B. A security flaw that is unknown to the vendor and has no available fix",
+        "C. A cyberattack that lasts for a single day",
+        "D. A virus that spreads in a single day"
+      ],
+      "correct_answer": "B"
+    },
+    {
+      "id": 15,
+      "question": "Which attack involves intercepting and altering communication between two parties?",
+      "options": [
+        "A. Man-in-the-Middle (MitM)",
+        "B. Denial of Service (DoS)",
+        "C. Phishing",
+        "D. Ransomware"
+      ],
+      "correct_answer": "A"
+    },
+    {
+      "id": 16,
+      "question": "Which regulation focuses on data protection and privacy for individuals in the European Union?",
+      "options": ["A. GDPR", "B. HIPAA", "C. PCI DSS", "D. FERPA"],
+      "correct_answer": "A"
+    },
+    {
+      "id": 17,
+      "question": "What type of attack exploits vulnerabilities in web applications to inject malicious SQL statements?",
+      "options": [
+        "A. Cross-Site Scripting (XSS)",
+        "B. SQL Injection",
+        "C. Buffer Overflow",
+        "D. Brute Force Attack"
+      ],
+      "correct_answer": "B"
+    },
+    {
+      "id": 18,
+      "question": "What is the purpose of multi-factor authentication (MFA)?",
+      "options": [
+        "A. To improve network speed",
+        "B. To add an extra layer of security by requiring multiple forms of verification",
+        "C. To encrypt files",
+        "D. To detect malware"
+      ],
+      "correct_answer": "B"
+    },
+    {
+      "id": 19,
+      "question": "Which of the following is an open-source security tool used for penetration testing?",
+      "options": [
+        "A. Metasploit",
+        "B. WordPress",
+        "C. GitHub",
+        "D. Windows Defender"
+      ],
+      "correct_answer": "A"
+    },
+    {
+      "id": 20,
+      "question": "What is the main objective of an incident response plan?",
+      "options": [
+        "A. To prevent all cyberattacks",
+        "B. To provide a structured approach for handling security incidents",
+        "C. To improve software performance",
+        "D. To manage employee behavior"
+      ],
+      "correct_answer": "B"
+    }
+  ]
+}

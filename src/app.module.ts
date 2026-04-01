@@ -63,13 +63,13 @@ import { MailModule } from './core/mail';
 
     ThrottlerModule.forRootAsync({
       inject: [ConfigService],
-      useFactory: (config: ConfigService) => ([
+      useFactory: (config: ConfigService) => [
         {
           name: 'default',
           ttl: (config.get<number>('rateLimit.ttl') ?? 60) * 1000,
           limit: config.get<number>('rateLimit.limit') ?? 100,
         },
-      ]),
+      ],
     }),
 
     // Core

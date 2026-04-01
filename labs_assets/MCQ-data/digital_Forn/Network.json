@@ -1,0 +1,224 @@
+{
+    "questions": [
+        {
+            "id": 1,
+            "question": "What is the primary focus of Network Forensics?",
+            "options": [
+                "Investigating cloud storage breaches",
+                "Monitoring and analyzing network traffic to detect anomalies or breaches",
+                "Recovering data from damaged storage devices",
+                "Analyzing social media activities"
+            ],
+            "correct_answer": "Monitoring and analyzing network traffic to detect anomalies or breaches"
+        },
+        {
+            "id": 2,
+            "question": "Which of the following is a key task in network forensics?",
+            "options": [
+                "Decrypting encrypted files",
+                "Examining email headers for spam detection",
+                "Analyzing network traffic for suspicious activities",
+                "Recovering deleted database entries"
+            ],
+            "correct_answer": "Analyzing network traffic for suspicious activities"
+        },
+        {
+            "id": 3,
+            "question": "What type of tool is commonly used for capturing and analyzing network traffic?",
+            "options": [
+                "Wireshark",
+                "Cellebrite UFED",
+                "XRY",
+                "FTK Imager"
+            ],
+            "correct_answer": "Wireshark"
+        },
+        {
+            "id": 4,
+            "question": "Which protocol is commonly monitored in network forensics investigations for signs of data exfiltration?",
+            "options": [
+                "HTTP",
+                "FTP",
+                "SMTP",
+                "All of the above"
+            ],
+            "correct_answer": "All of the above"
+        },
+        {
+            "id": 5,
+            "question": "Which network event can be an indicator of a breach during network forensics investigations?",
+            "options": [
+                "Large amounts of data leaving the network unexpectedly",
+                "Normal patterns of user login activity",
+                "Routine updates and patches",
+                "Internal network traffic to the web server"
+            ],
+            "correct_answer": "Large amounts of data leaving the network unexpectedly"
+        },
+        {
+            "id": 6,
+            "question": "What is a common technique used in network forensics for traffic analysis?",
+            "options": [
+                "Packet sniffing",
+                "File system forensics",
+                "Social media analysis",
+                "Chip-off extraction"
+            ],
+            "correct_answer": "Packet sniffing"
+        },
+        {
+            "id": 7,
+            "question": "Which of the following types of network traffic can be analyzed in network forensics?",
+            "options": [
+                "DNS queries",
+                "HTTP requests",
+                "TCP/IP packets",
+                "All of the above"
+            ],
+            "correct_answer": "All of the above"
+        },
+        {
+            "id": 8,
+            "question": "What can a network forensics investigation reveal about unauthorized access?",
+            "options": [
+                "Which devices were compromised",
+                "How the attacker accessed the system",
+                "When the attack occurred",
+                "All of the above"
+            ],
+            "correct_answer": "All of the above"
+        },
+        {
+            "id": 9,
+            "question": "Which of the following best describes the role of a firewall in network forensics?",
+            "options": [
+                "Encrypting sensitive data",
+                "Monitoring incoming and outgoing network traffic",
+                "Protecting against malware",
+                "Filtering email traffic"
+            ],
+            "correct_answer": "Monitoring incoming and outgoing network traffic"
+        },
+        {
+            "id": 10,
+            "question": "What does network forensics aim to detect in the case of denial-of-service (DoS) attacks?",
+            "options": [
+                "Abnormal traffic patterns",
+                "Normal system usage",
+                "Encrypted file transfers",
+                "Internal network logins"
+            ],
+            "correct_answer": "Abnormal traffic patterns"
+        },
+        {
+            "id": 11,
+            "question": "Which tool is often used in network forensics to perform deep packet inspection?",
+            "options": [
+                "Wireshark",
+                "Nmap",
+                "Cain and Abel",
+                "Kali Linux"
+            ],
+            "correct_answer": "Wireshark"
+        },
+        {
+            "id": 12,
+            "question": "What type of data is typically gathered in a network forensics investigation?",
+            "options": [
+                "Log files",
+                "Packet data",
+                "Session records",
+                "All of the above"
+            ],
+            "correct_answer": "All of the above"
+        },
+        {
+            "id": 13,
+            "question": "Which of the following is an example of an event that could be detected during network forensics analysis?",
+            "options": [
+                "Unusual outbound traffic to an external IP",
+                "Routine software updates",
+                "Standard login attempts",
+                "Internal device communication"
+            ],
+            "correct_answer": "Unusual outbound traffic to an external IP"
+        },
+        {
+            "id": 14,
+            "question": "What does 'traffic analysis' in network forensics primarily focus on?",
+            "options": [
+                "Monitoring bandwidth usage",
+                "Analyzing the flow of data between devices",
+                "Checking the integrity of file systems",
+                "Identifying email spam"
+            ],
+            "correct_answer": "Analyzing the flow of data between devices"
+        },
+        {
+            "id": 15,
+            "question": "What is the purpose of analyzing the session layer in network forensics?",
+            "options": [
+                "To identify file transfers",
+                "To monitor active connections and sessions",
+                "To inspect encrypted packets",
+                "To detect malicious DNS queries"
+            ],
+            "correct_answer": "To monitor active connections and sessions"
+        },
+        {
+            "id": 16,
+            "question": "What does a packet capture allow a network forensics expert to do?",
+            "options": [
+                "Capture encrypted communications",
+                "Monitor unencrypted traffic",
+                "Recover deleted data",
+                "Analyze cloud storage logs"
+            ],
+            "correct_answer": "Monitor unencrypted traffic"
+        },
+        {
+            "id": 17,
+            "question": "What is the significance of monitoring DNS queries in network forensics?",
+            "options": [
+                "To detect unauthorized data access",
+                "To analyze internal network traffic",
+                "To trace requests to malicious websites",
+                "To monitor social media activity"
+            ],
+            "correct_answer": "To trace requests to malicious websites"
+        },
+        {
+            "id": 18,
+            "question": "Which of the following is a critical step in a network forensics investigation?",
+            "options": [
+                "Capturing and storing network traffic",
+                "Recovering deleted files from storage devices",
+                "Decrypting database information",
+                "None of the above"
+            ],
+            "correct_answer": "Capturing and storing network traffic"
+        },
+        {
+            "id": 19,
+            "question": "Which layer of the OSI model is most closely associated with network forensics?",
+            "options": [
+                "Application Layer",
+                "Network Layer",
+                "Data Link Layer",
+                "Physical Layer"
+            ],
+            "correct_answer": "Network Layer"
+        },
+        {
+            "id": 20,
+            "question": "What is the importance of monitoring protocol usage in network forensics?",
+            "options": [
+                "To detect vulnerabilities in network protocols",
+                "To track user activity on social media",
+                "To monitor cloud storage traffic",
+                "To analyze encrypted email exchanges"
+            ],
+            "correct_answer": "To detect vulnerabilities in network protocols"
+        }
+    ]
+}

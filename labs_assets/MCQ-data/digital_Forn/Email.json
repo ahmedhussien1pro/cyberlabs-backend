@@ -1,0 +1,224 @@
+{
+    "questions": [
+        {
+            "id": 1,
+            "question": "What is the primary objective of email forensics?",
+            "options": [
+                "Recovering lost emails",
+                "Analyzing email metadata for fraud detection",
+                "Managing email servers",
+                "Designing secure email systems"
+            ],
+            "correct_answer": "Analyzing email metadata for fraud detection"
+        },
+        {
+            "id": 2,
+            "question": "What is one of the key pieces of information extracted during email header analysis?",
+            "options": [
+                "Email content",
+                "Sender's IP address",
+                "Email encryption keys",
+                "Recipient's location"
+            ],
+            "correct_answer": "Sender's IP address"
+        },
+        {
+            "id": 3,
+            "question": "What does email header analysis help investigators identify?",
+            "options": [
+                "The exact time an email was sent",
+                "The device used to send the email",
+                "The server path taken by the email",
+                "All of the above"
+            ],
+            "correct_answer": "The server path taken by the email"
+        },
+        {
+            "id": 4,
+            "question": "Which email forensic tool is commonly used for email content extraction and analysis?",
+            "options": [
+                "Wireshark",
+                "FTK Imager",
+                "Autopsy",
+                "X1 Social Discovery"
+            ],
+            "correct_answer": "X1 Social Discovery"
+        },
+        {
+            "id": 5,
+            "question": "What is email spoofing?",
+            "options": [
+                "Sending a fake email with a forged sender address",
+                "Encrypting the email for privacy",
+                "Forwarding emails from an unknown sender",
+                "Compressing attachments for faster delivery"
+            ],
+            "correct_answer": "Sending a fake email with a forged sender address"
+        },
+        {
+            "id": 6,
+            "question": "Which of the following is often used to detect phishing in email forensics?",
+            "options": [
+                "Analysis of email body content and links",
+                "Checking the encryption method used",
+                "Verifying the recipient’s email address",
+                "Examining the sender’s physical address"
+            ],
+            "correct_answer": "Analysis of email body content and links"
+        },
+        {
+            "id": 7,
+            "question": "In email forensics, what does 'time-stamping' refer to?",
+            "options": [
+                "Recording the time an email is delivered",
+                "Verifying the time the email was created or received",
+                "Tracking the time spent composing an email",
+                "Sending time-sensitive emails"
+            ],
+            "correct_answer": "Verifying the time the email was created or received"
+        },
+        {
+            "id": 8,
+            "question": "What does the term 'chain of custody' refer to in email forensics?",
+            "options": [
+                "The method of encrypting emails",
+                "The process of transferring emails from one server to another",
+                "The legal documentation ensuring the integrity of email evidence",
+                "The analysis of email servers for forensic purposes"
+            ],
+            "correct_answer": "The legal documentation ensuring the integrity of email evidence"
+        },
+        {
+            "id": 9,
+            "question": "Which of the following could be an indicator of email fraud during forensic analysis?",
+            "options": [
+                "Unusual sender’s IP address",
+                "Broken links in email body",
+                "Suspicious attachments or file types",
+                "All of the above"
+            ],
+            "correct_answer": "All of the above"
+        },
+        {
+            "id": 10,
+            "question": "What type of email metadata is crucial for tracing the origin of an email?",
+            "options": [
+                "Subject line",
+                "Sender’s IP address",
+                "Body text",
+                "Recipient’s email address"
+            ],
+            "correct_answer": "Sender’s IP address"
+        },
+        {
+            "id": 11,
+            "question": "What is the function of the 'Return-Path' in an email header?",
+            "options": [
+                "Indicates the email’s source",
+                "Provides the physical address of the sender",
+                "Points to the email’s destination",
+                "Tracks the number of times the email is opened"
+            ],
+            "correct_answer": "Indicates the email’s source"
+        },
+        {
+            "id": 12,
+            "question": "Which forensic technique is commonly used to identify altered email content?",
+            "options": [
+                "Analyzing email headers",
+                "Content hashing",
+                "Time-stamping",
+                "Network traffic analysis"
+            ],
+            "correct_answer": "Content hashing"
+        },
+        {
+            "id": 13,
+            "question": "What type of email forensic evidence is often critical in criminal investigations?",
+            "options": [
+                "Subject lines",
+                "Metadata and attachments",
+                "Emails from spam accounts",
+                "Encrypted email content"
+            ],
+            "correct_answer": "Metadata and attachments"
+        },
+        {
+            "id": 14,
+            "question": "Which of the following could suggest that an email is part of a phishing scam?",
+            "options": [
+                "The sender's email address is misspelled",
+                "The email contains an attachment with a suspicious file extension",
+                "The email prompts the recipient to click a link to verify personal information",
+                "All of the above"
+            ],
+            "correct_answer": "All of the above"
+        },
+        {
+            "id": 15,
+            "question": "What is the purpose of forensic email analysis in legal investigations?",
+            "options": [
+                "To extract and present email evidence in court",
+                "To manage email servers",
+                "To track spam and junk emails",
+                "To verify email addresses"
+            ],
+            "correct_answer": "To extract and present email evidence in court"
+        },
+        {
+            "id": 16,
+            "question": "Which technique can help in identifying forged email addresses?",
+            "options": [
+                "Analyzing email header information",
+                "Decrypting email attachments",
+                "Using email signature verification tools",
+                "Examining email body text"
+            ],
+            "correct_answer": "Analyzing email header information"
+        },
+        {
+            "id": 17,
+            "question": "In email forensics, what is 'content-based analysis' focused on?",
+            "options": [
+                "Checking if email content is encrypted",
+                "Verifying the sender’s physical location",
+                "Analyzing email body and attachments for malicious links or malware",
+                "Analyzing the email header for IP addresses"
+            ],
+            "correct_answer": "Analyzing email body and attachments for malicious links or malware"
+        },
+        {
+            "id": 18,
+            "question": "What is the role of an email forensic investigator?",
+            "options": [
+                "To design email servers",
+                "To analyze and recover email evidence",
+                "To block spam emails",
+                "To maintain email security settings"
+            ],
+            "correct_answer": "To analyze and recover email evidence"
+        },
+        {
+            "id": 19,
+            "question": "Which of the following is a common forensic tool used to extract data from email servers?",
+            "options": [
+                "EnCase",
+                "Google Vault",
+                "Wireshark",
+                "All of the above"
+            ],
+            "correct_answer": "EnCase"
+        },
+        {
+            "id": 20,
+            "question": "Which of the following is important when conducting email forensics in a corporate setting?",
+            "options": [
+                "Accessing private email servers without permission",
+                "Maintaining proper documentation and chain of custody",
+                "Ignoring encryption methods to expedite analysis",
+                "Using unauthorized forensic tools"
+            ],
+            "correct_answer": "Maintaining proper documentation and chain of custody"
+        }
+    ]
+}

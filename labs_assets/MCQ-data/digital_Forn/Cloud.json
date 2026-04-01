@@ -1,0 +1,224 @@
+{
+    "questions": [
+        {
+            "id": 1,
+            "question": "What is the primary focus of Cloud Forensics?",
+            "options": [
+                "Analyzing data from local devices",
+                "Investigating cloud-based platforms, virtual environments, and data stored in cloud systems",
+                "Recovering deleted files from hard drives",
+                "Monitoring network traffic for suspicious activity"
+            ],
+            "correct_answer": "Investigating cloud-based platforms, virtual environments, and data stored in cloud systems"
+        },
+        {
+            "id": 2,
+            "question": "Which of the following is a key challenge in Cloud Forensics?",
+            "options": [
+                "Recovering data from physical devices",
+                "Accessing encrypted data stored in the cloud",
+                "Monitoring internal network traffic",
+                "Tracking DNS requests"
+            ],
+            "correct_answer": "Accessing encrypted data stored in the cloud"
+        },
+        {
+            "id": 3,
+            "question": "What type of data is typically analyzed in Cloud Forensics investigations?",
+            "options": [
+                "Cloud logs",
+                "Data movement logs",
+                "Access and modification records",
+                "All of the above"
+            ],
+            "correct_answer": "All of the above"
+        },
+        {
+            "id": 4,
+            "question": "Which cloud service model provides the most direct control over virtual machines and storage?",
+            "options": [
+                "Software as a Service (SaaS)",
+                "Platform as a Service (PaaS)",
+                "Infrastructure as a Service (IaaS)",
+                "None of the above"
+            ],
+            "correct_answer": "Infrastructure as a Service (IaaS)"
+        },
+        {
+            "id": 5,
+            "question": "Which of the following tools can be used in Cloud Forensics to analyze cloud logs?",
+            "options": [
+                "AWS CloudTrail",
+                "Wireshark",
+                "Cellebrite UFED",
+                "FTK Imager"
+            ],
+            "correct_answer": "AWS CloudTrail"
+        },
+        {
+            "id": 6,
+            "question": "Which cloud service provides a method for tracking and auditing user activity?",
+            "options": [
+                "Amazon S3",
+                "AWS CloudTrail",
+                "Google Drive",
+                "Microsoft OneDrive"
+            ],
+            "correct_answer": "AWS CloudTrail"
+        },
+        {
+            "id": 7,
+            "question": "What is one of the first steps in Cloud Forensics investigations?",
+            "options": [
+                "Capturing network traffic",
+                "Securing the cloud environment to preserve evidence",
+                "Reinstalling affected systems",
+                "Decrypting cloud data"
+            ],
+            "correct_answer": "Securing the cloud environment to preserve evidence"
+        },
+        {
+            "id": 8,
+            "question": "Which of the following can Cloud Forensics help track in cloud environments?",
+            "options": [
+                "Unauthorized data access",
+                "File transfers",
+                "Malicious actions taken by insiders",
+                "All of the above"
+            ],
+            "correct_answer": "All of the above"
+        },
+        {
+            "id": 9,
+            "question": "In Cloud Forensics, which type of log file is most commonly used to track user activity?",
+            "options": [
+                "Application logs",
+                "Audit logs",
+                "System logs",
+                "Firewall logs"
+            ],
+            "correct_answer": "Audit logs"
+        },
+        {
+            "id": 10,
+            "question": "Which of the following is NOT a typical challenge in Cloud Forensics investigations?",
+            "options": [
+                "Jurisdiction issues",
+                "Data volume",
+                "Access to real-time logs",
+                "Encryption and data privacy"
+            ],
+            "correct_answer": "Access to real-time logs"
+        },
+        {
+            "id": 11,
+            "question": "What is the role of metadata in Cloud Forensics?",
+            "options": [
+                "It helps in identifying deleted files",
+                "It provides information about file access, modification, and creation",
+                "It helps in tracking IP addresses of users",
+                "It enables real-time monitoring of data"
+            ],
+            "correct_answer": "It provides information about file access, modification, and creation"
+        },
+        {
+            "id": 12,
+            "question": "What is the primary objective of preserving evidence in Cloud Forensics?",
+            "options": [
+                "To ensure data integrity and prevent tampering",
+                "To recover deleted files",
+                "To monitor employee activity",
+                "To track cloud service usage"
+            ],
+            "correct_answer": "To ensure data integrity and prevent tampering"
+        },
+        {
+            "id": 13,
+            "question": "Which of the following cloud service providers offer cloud forensics tools and logs?",
+            "options": [
+                "Google Cloud",
+                "Amazon Web Services (AWS)",
+                "Microsoft Azure",
+                "All of the above"
+            ],
+            "correct_answer": "All of the above"
+        },
+        {
+            "id": 14,
+            "question": "What is a significant advantage of cloud computing in the context of Cloud Forensics?",
+            "options": [
+                "Access to unlimited data storage",
+                "Automatic backup of forensic data",
+                "Centralized logging and monitoring",
+                "Control over all hardware components"
+            ],
+            "correct_answer": "Centralized logging and monitoring"
+        },
+        {
+            "id": 15,
+            "question": "Which of the following is a critical step in cloud forensics after identifying a breach?",
+            "options": [
+                "Isolating the affected cloud resources",
+                "Reinstalling the operating system",
+                "Sending a report to the cloud service provider",
+                "Enabling encryption on all devices"
+            ],
+            "correct_answer": "Isolating the affected cloud resources"
+        },
+        {
+            "id": 16,
+            "question": "Which of the following challenges can complicate Cloud Forensics investigations?",
+            "options": [
+                "Jurisdictional issues across multiple countries",
+                "Data retention policies",
+                "Encryption of cloud data",
+                "All of the above"
+            ],
+            "correct_answer": "All of the above"
+        },
+        {
+            "id": 17,
+            "question": "Which data storage system is commonly used in cloud environments for forensics investigations?",
+            "options": [
+                "Block Storage",
+                "Object Storage",
+                "File Storage",
+                "All of the above"
+            ],
+            "correct_answer": "All of the above"
+        },
+        {
+            "id": 18,
+            "question": "What type of information can cloud logs provide during a forensic investigation?",
+            "options": [
+                "Timestamp of user logins",
+                "File and user access data",
+                "Network traffic data",
+                "All of the above"
+            ],
+            "correct_answer": "All of the above"
+        },
+        {
+            "id": 19,
+            "question": "Which aspect of cloud computing can hinder forensic investigations?",
+            "options": [
+                "Multi-tenancy",
+                "Data retention policies",
+                "Data encryption",
+                "All of the above"
+            ],
+            "correct_answer": "All of the above"
+        },
+        {
+            "id": 20,
+            "question": "Which tool is commonly used for data analysis and log review in Cloud Forensics?",
+            "options": [
+                "AWS CloudTrail",
+                "Splunk",
+                "ElasticSearch",
+                "All of the above"
+            ],
+            "correct_answer": "All of the above"
+        }
+    ]
+}

@@ -1,0 +1,224 @@
+{
+    "questions": [
+        {
+            "id": 1,
+            "question": "What is the primary objective of social media forensics?",
+            "options": [
+                "To monitor social media accounts",
+                "To analyze social media content for criminal evidence",
+                "To create social media profiles",
+                "To design social media platforms"
+            ],
+            "correct_answer": "To analyze social media content for criminal evidence"
+        },
+        {
+            "id": 2,
+            "question": "Which of the following is often examined during social media forensic investigations?",
+            "options": [
+                "User posts and comments",
+                "Profiles and friends lists",
+                "Messages and chats",
+                "All of the above"
+            ],
+            "correct_answer": "All of the above"
+        },
+        {
+            "id": 3,
+            "question": "In social media forensics, what is metadata used for?",
+            "options": [
+                "To verify the authenticity of posts",
+                "To track the location of the post's origin",
+                "To analyze timestamps and geolocation data",
+                "All of the above"
+            ],
+            "correct_answer": "All of the above"
+        },
+        {
+            "id": 4,
+            "question": "What tool is commonly used to collect and analyze social media data in forensic investigations?",
+            "options": [
+                "EnCase",
+                "X1 Social Discovery",
+                "Wireshark",
+                "FTK Imager"
+            ],
+            "correct_answer": "X1 Social Discovery"
+        },
+        {
+            "id": 5,
+            "question": "What can social media forensics reveal about a user’s online behavior?",
+            "options": [
+                "Recent purchases made by the user",
+                "Patterns in posts, interactions, and connections",
+                "User's private banking information",
+                "None of the above"
+            ],
+            "correct_answer": "Patterns in posts, interactions, and connections"
+        },
+        {
+            "id": 6,
+            "question": "What does the term 'content recovery' refer to in social media forensics?",
+            "options": [
+                "Retrieving deleted posts and comments",
+                "Backing up social media data",
+                "Deleting old content",
+                "Archiving social media profiles"
+            ],
+            "correct_answer": "Retrieving deleted posts and comments"
+        },
+        {
+            "id": 7,
+            "question": "Which of the following is NOT typically analyzed in social media forensics?",
+            "options": [
+                "Posts and images",
+                "Metadata such as timestamps and location",
+                "Profile encryption keys",
+                "User interactions with others"
+            ],
+            "correct_answer": "Profile encryption keys"
+        },
+        {
+            "id": 8,
+            "question": "What is a common challenge in social media forensics?",
+            "options": [
+                "Collecting live data in real time",
+                "Finding digital footprints for public posts",
+                "Accessing deleted or hidden content",
+                "All of the above"
+            ],
+            "correct_answer": "All of the above"
+        },
+        {
+            "id": 9,
+            "question": "Why is analyzing the friends list of a social media user important in forensics?",
+            "options": [
+                "To find suspicious individuals in the user's network",
+                "To investigate potential collusion or conspiracies",
+                "To track interactions between the user and other suspects",
+                "All of the above"
+            ],
+            "correct_answer": "All of the above"
+        },
+        {
+            "id": 10,
+            "question": "Which of the following forensic techniques can be used to track deleted content on social media?",
+            "options": [
+                "Recovering cached data",
+                "Analyzing browser history",
+                "Using forensic tools to access server backups",
+                "All of the above"
+            ],
+            "correct_answer": "All of the above"
+        },
+        {
+            "id": 11,
+            "question": "What is often a key indicator of suspicious behavior on social media platforms?",
+            "options": [
+                "Excessive posting of personal information",
+                "Frequent interactions with unknown or suspicious accounts",
+                "Posting threatening or harmful content",
+                "All of the above"
+            ],
+            "correct_answer": "All of the above"
+        },
+        {
+            "id": 12,
+            "question": "In social media forensics, what is 'link analysis' used for?",
+            "options": [
+                "Analyzing the connection between a user and their friends",
+                "Determining the speed of content sharing",
+                "Investigating the geographic location of posts",
+                "None of the above"
+            ],
+            "correct_answer": "Analyzing the connection between a user and their friends"
+        },
+        {
+            "id": 13,
+            "question": "What type of data is typically preserved in social media forensics for legal purposes?",
+            "options": [
+                "Post content and comments",
+                "User metadata including timestamps and location",
+                "Interaction history and message logs",
+                "All of the above"
+            ],
+            "correct_answer": "All of the above"
+        },
+        {
+            "id": 14,
+            "question": "Which of the following is a common forensic challenge related to the use of social media?",
+            "options": [
+                "The anonymity of users",
+                "The rapid speed at which content is shared",
+                "The potential for data to be deleted or concealed",
+                "All of the above"
+            ],
+            "correct_answer": "All of the above"
+        },
+        {
+            "id": 15,
+            "question": "What is the purpose of 'hashing' in social media forensics?",
+            "options": [
+                "To encrypt user passwords",
+                "To verify the integrity of data and ensure authenticity",
+                "To recover deleted posts",
+                "To identify phishing attempts"
+            ],
+            "correct_answer": "To verify the integrity of data and ensure authenticity"
+        },
+        {
+            "id": 16,
+            "question": "Which of the following is a legal concern in social media forensics?",
+            "options": [
+                "Violating user privacy rights",
+                "Improper handling of evidence",
+                "Ensuring compliance with data protection laws",
+                "All of the above"
+            ],
+            "correct_answer": "All of the above"
+        },
+        {
+            "id": 17,
+            "question": "What forensic method is used to preserve evidence in social media investigations?",
+            "options": [
+                "Creating a digital copy of the content",
+                "Encrypting the collected data",
+                "Using chain of custody protocols",
+                "All of the above"
+            ],
+            "correct_answer": "All of the above"
+        },
+        {
+            "id": 18,
+            "question": "Which of the following is a potential use of social media forensics in criminal investigations?",
+            "options": [
+                "Tracking criminal activities through online behavior",
+                "Gathering evidence for cyberbullying or harassment cases",
+                "Investigating online fraud and scams",
+                "All of the above"
+            ],
+            "correct_answer": "All of the above"
+        },
+        {
+            "id": 19,
+            "question": "What is a key challenge in analyzing social media content?",
+            "options": [
+                "The sheer volume of data",
+                "The rapid evolution of social media platforms",
+                "The difficulty in accessing private or encrypted accounts",
+                "All of the above"
+            ],
+            "correct_answer": "All of the above"
+        },
+        {
+            "id": 20,
+            "question": "Which of the following is an example of evidence found in social media forensics?",
+            "options": [
+                "Email headers",
+                "User profile information and activity logs",
+                "Deleted social media posts",
+                "All of the above"
+            ],
+            "correct_answer": "User profile information and activity logs"
+        }
+    ]
+}

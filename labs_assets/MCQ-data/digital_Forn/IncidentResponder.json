@@ -1,0 +1,204 @@
+{
+  "questions": [
+    {
+      "id": 1,
+      "question": "What is the primary role of an Incident Responder?",
+      "options": [
+        "A. Developing software applications",
+        "B. Detecting, analyzing, and responding to security incidents",
+        "C. Managing company finances",
+        "D. Writing marketing content"
+      ],
+      "correct_answer": "B"
+    },
+    {
+      "id": 2,
+      "question": "Which of the following is a key responsibility of an Incident Responder?",
+      "options": [
+        "A. Conducting security training",
+        "B. Investigating security breaches and mitigating threats",
+        "C. Designing company logos",
+        "D. Managing customer support tickets"
+      ],
+      "correct_answer": "B"
+    },
+    {
+      "id": 3,
+      "question": "What is the first phase of an incident response process?",
+      "options": [
+        "A. Eradication",
+        "B. Identification",
+        "C. Preparation",
+        "D. Containment"
+      ],
+      "correct_answer": "C"
+    },
+    {
+      "id": 4,
+      "question": "Which tool is commonly used for incident detection?",
+      "options": ["A. Wireshark", "B. Photoshop", "C. Excel", "D. WordPress"],
+      "correct_answer": "A"
+    },
+    {
+      "id": 5,
+      "question": "What does SIEM stand for?",
+      "options": [
+        "A. Security Information and Event Management",
+        "B. System Integration and Event Monitoring",
+        "C. Secure Internet and Email Management",
+        "D. Security Incident and Event Monitoring"
+      ],
+      "correct_answer": "A"
+    },
+    {
+      "id": 6,
+      "question": "What is the primary goal of incident containment?",
+      "options": [
+        "A. To improve software performance",
+        "B. To prevent further damage and limit the scope of an attack",
+        "C. To increase network speed",
+        "D. To delete all affected files"
+      ],
+      "correct_answer": "B"
+    },
+    {
+      "id": 7,
+      "question": "Which of the following is an example of a containment strategy?",
+      "options": [
+        "A. Disconnecting a compromised system from the network",
+        "B. Upgrading hardware components",
+        "C. Sending a company-wide email",
+        "D. Closing all running applications"
+      ],
+      "correct_answer": "A"
+    },
+    {
+      "id": 8,
+      "question": "Which phase of the incident response process involves determining the root cause of an incident?",
+      "options": [
+        "A. Preparation",
+        "B. Eradication",
+        "C. Recovery",
+        "D. Identification"
+      ],
+      "correct_answer": "B"
+    },
+    {
+      "id": 9,
+      "question": "What is a common tool used for digital forensic investigations?",
+      "options": ["A. EnCase", "B. Illustrator", "C. Google Docs", "D. Trello"],
+      "correct_answer": "A"
+    },
+    {
+      "id": 10,
+      "question": "Which of the following is a key component of an incident response plan?",
+      "options": [
+        "A. Budget planning",
+        "B. Defined roles and responsibilities",
+        "C. Marketing strategy",
+        "D. Graphic design guidelines"
+      ],
+      "correct_answer": "B"
+    },
+    {
+      "id": 11,
+      "question": "Which framework is commonly used for incident response?",
+      "options": ["A. NIST", "B. Agile", "C. DevOps", "D. PRINCE2"],
+      "correct_answer": "A"
+    },
+    {
+      "id": 12,
+      "question": "What is the primary purpose of log analysis in incident response?",
+      "options": [
+        "A. To improve website speed",
+        "B. To detect and investigate security incidents",
+        "C. To manage team workflows",
+        "D. To create marketing reports"
+      ],
+      "correct_answer": "B"
+    },
+    {
+      "id": 13,
+      "question": "Which of the following is a post-incident activity?",
+      "options": [
+        "A. Recovery",
+        "B. Root cause analysis and lessons learned",
+        "C. Containment",
+        "D. Eradication"
+      ],
+      "correct_answer": "B"
+    },
+    {
+      "id": 14,
+      "question": "What is the purpose of forensic imaging in an investigation?",
+      "options": [
+        "A. To create a copy of digital evidence for analysis",
+        "B. To delete malicious files",
+        "C. To enhance image quality",
+        "D. To compress files for storage"
+      ],
+      "correct_answer": "A"
+    },
+    {
+      "id": 15,
+      "question": "What is a common indicator of compromise (IOC)?",
+      "options": [
+        "A. Unusual network traffic",
+        "B. High CPU usage from normal applications",
+        "C. Regular file access patterns",
+        "D. Scheduled system updates"
+      ],
+      "correct_answer": "A"
+    },
+    {
+      "id": 16,
+      "question": "Which organization provides guidelines for cybersecurity incident handling?",
+      "options": ["A. NIST", "B. FDA", "C. FAA", "D. EPA"],
+      "correct_answer": "A"
+    },
+    {
+      "id": 17,
+      "question": "What is the primary goal of an incident recovery process?",
+      "options": [
+        "A. To restore normal operations and prevent recurrence",
+        "B. To permanently shut down affected systems",
+        "C. To increase network speed",
+        "D. To notify customers of price changes"
+      ],
+      "correct_answer": "A"
+    },
+    {
+      "id": 18,
+      "question": "Which action is critical for effective incident reporting?",
+      "options": [
+        "A. Documenting all findings and actions taken",
+        "B. Deleting all logs to protect privacy",
+        "C. Ignoring minor security incidents",
+        "D. Blocking all external network traffic"
+      ],
+      "correct_answer": "A"
+    },
+    {
+      "id": 19,
+      "question": "Which attack technique commonly triggers incident response procedures?",
+      "options": [
+        "A. Phishing",
+        "B. Graphic design",
+        "C. Video editing",
+        "D. Web development"
+      ],
+      "correct_answer": "A"
+    },
+    {
+      "id": 20,
+      "question": "What is a critical aspect of an incident response playbook?",
+      "options": [
+        "A. Step-by-step response procedures",
+        "B. Social media engagement",
+        "C. Product advertisement",
+        "D. Employee salary details"
+      ],
+      "correct_answer": "A"
+    }
+  ]
+}
