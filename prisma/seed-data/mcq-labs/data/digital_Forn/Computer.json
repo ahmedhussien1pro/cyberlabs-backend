@@ -1,0 +1,224 @@
+{
+    "questions": [
+        {
+            "id": 1,
+            "question": "What is the main focus of Computer Forensics?",
+            "options": [
+                "Analyzing smartphones and mobile devices",
+                "Monitoring network traffic for anomalies",
+                "Analyzing computers, hard drives, and storage devices",
+                "Investigating cloud-based platforms"
+            ],
+            "correct_answer": "Analyzing computers, hard drives, and storage devices"
+        },
+        {
+            "id": 2,
+            "question": "Which of the following is a key application of Computer Forensics?",
+            "options": [
+                "Recovering deleted files from hard drives",
+                "Monitoring network packets for cyber attacks",
+                "Extracting data from mobile apps",
+                "Analyzing social media activity"
+            ],
+            "correct_answer": "Recovering deleted files from hard drives"
+        },
+        {
+            "id": 3,
+            "question": "What is the primary goal of analyzing a file system in computer forensics?",
+            "options": [
+                "Identify the operating system used",
+                "Recover encrypted files",
+                "Determine user activity and file access",
+                "Identify physical storage errors"
+            ],
+            "correct_answer": "Determine user activity and file access"
+        },
+        {
+            "id": 4,
+            "question": "Which of the following tools is commonly used for computer forensics?",
+            "options": [
+                "Wireshark",
+                "FTK Imager",
+                "ExifTool",
+                "Tshark"
+            ],
+            "correct_answer": "FTK Imager"
+        },
+        {
+            "id": 5,
+            "question": "What is typically the first step in a computer forensics investigation?",
+            "options": [
+                "Analyzing network traffic",
+                "Creating a forensic image of the device",
+                "Investigating malware",
+                "Recovering deleted emails"
+            ],
+            "correct_answer": "Creating a forensic image of the device"
+        },
+        {
+            "id": 6,
+            "question": "What does the term 'chain of custody' refer to in computer forensics?",
+            "options": [
+                "The sequence of software used to recover data",
+                "The tracking of evidence from collection to presentation in court",
+                "The physical security of the computer during analysis",
+                "The authentication of digital tools used in the investigation"
+            ],
+            "correct_answer": "The tracking of evidence from collection to presentation in court"
+        },
+        {
+            "id": 7,
+            "question": "What is the significance of metadata in computer forensics?",
+            "options": [
+                "It helps identify the user who created the file",
+                "It contains hidden data for criminal investigations",
+                "It allows data recovery from corrupted files",
+                "It provides information about file creation, modification, and access"
+            ],
+            "correct_answer": "It provides information about file creation, modification, and access"
+        },
+        {
+            "id": 8,
+            "question": "Which type of data is most commonly recovered during a computer forensics investigation?",
+            "options": [
+                "Data from cloud-based platforms",
+                "Data from smartphones",
+                "Deleted files from hard drives",
+                "Social media posts"
+            ],
+            "correct_answer": "Deleted files from hard drives"
+        },
+        {
+            "id": 9,
+            "question": "What is the primary purpose of creating a forensic image in computer forensics?",
+            "options": [
+                "To recover deleted files",
+                "To make a duplicate of the device for analysis",
+                "To hide sensitive information",
+                "To monitor device activity in real-time"
+            ],
+            "correct_answer": "To make a duplicate of the device for analysis"
+        },
+        {
+            "id": 10,
+            "question": "Which of the following is NOT a common method for recovering data in computer forensics?",
+            "options": [
+                "File carving",
+                "Data deduplication",
+                "Raw disk analysis",
+                "Keyword search"
+            ],
+            "correct_answer": "Data deduplication"
+        },
+        {
+            "id": 11,
+            "question": "Which tool is used for creating a forensic image of a hard drive?",
+            "options": [
+                "Autopsy",
+                "FTK Imager",
+                "Wireshark",
+                "ExifTool"
+            ],
+            "correct_answer": "FTK Imager"
+        },
+        {
+            "id": 12,
+            "question": "Which type of file system is commonly examined in computer forensics?",
+            "options": [
+                "FAT32",
+                "NTFS",
+                "ext4",
+                "All of the above"
+            ],
+            "correct_answer": "All of the above"
+        },
+        {
+            "id": 13,
+            "question": "What is the first principle of digital forensics?",
+            "options": [
+                "Preserve evidence integrity",
+                "Recover deleted files",
+                "Decrypt encrypted data",
+                "Rebuild file systems"
+            ],
+            "correct_answer": "Preserve evidence integrity"
+        },
+        {
+            "id": 14,
+            "question": "What is the role of hashing in computer forensics?",
+            "options": [
+                "To recover deleted files",
+                "To ensure the integrity of evidence",
+                "To encrypt sensitive data",
+                "To monitor real-time file access"
+            ],
+            "correct_answer": "To ensure the integrity of evidence"
+        },
+        {
+            "id": 15,
+            "question": "Which of the following is a potential challenge in computer forensics investigations?",
+            "options": [
+                "Recovering data from old physical storage",
+                "Preserving evidence integrity",
+                "Legal compliance",
+                "All of the above"
+            ],
+            "correct_answer": "All of the above"
+        },
+        {
+            "id": 16,
+            "question": "What does 'file carving' refer to in computer forensics?",
+            "options": [
+                "The process of restoring damaged files",
+                "The process of recovering deleted files by identifying file signatures",
+                "The process of hiding files in unallocated space",
+                "The process of decoding encrypted files"
+            ],
+            "correct_answer": "The process of recovering deleted files by identifying file signatures"
+        },
+        {
+            "id": 17,
+            "question": "What is the role of 'write blockers' in computer forensics?",
+            "options": [
+                "Prevent writing to the source drive during analysis",
+                "Encrypt the recovered data",
+                "Ensure that deleted files are recovered",
+                "Improve data recovery speed"
+            ],
+            "correct_answer": "Prevent writing to the source drive during analysis"
+        },
+        {
+            "id": 18,
+            "question": "Which type of evidence is commonly examined in computer forensics investigations?",
+            "options": [
+                "Emails and chat logs",
+                "Video surveillance footage",
+                "Social media activity",
+                "All of the above"
+            ],
+            "correct_answer": "All of the above"
+        },
+        {
+            "id": 19,
+            "question": "What is the purpose of 'file system analysis' in computer forensics?",
+            "options": [
+                "To track system errors",
+                "To recover deleted files from unallocated space",
+                "To monitor real-time device activity",
+                "To detect malware"
+            ],
+            "correct_answer": "To recover deleted files from unallocated space"
+        },
+        {
+            "id": 20,
+            "question": "What does 'chain of custody' ensure in computer forensics investigations?",
+            "options": [
+                "That data recovery is done correctly",
+                "That evidence is protected and documented properly",
+                "That tools used are authenticated",
+                "That data is encrypted"
+            ],
+            "correct_answer": "That evidence is protected and documented properly"
+        }
+    ]
+}

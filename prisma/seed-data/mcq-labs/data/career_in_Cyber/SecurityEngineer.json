@@ -1,0 +1,199 @@
+{
+  "questions": [
+    {
+      "id": 1,
+      "question": "What is the primary role of a Security Engineer?",
+      "options": [
+        "A. Developing security policies",
+        "B. Designing and implementing security solutions",
+        "C. Managing corporate finances",
+        "D. Writing marketing content"
+      ],
+      "correct_answer": "B"
+    },
+    {
+      "id": 2,
+      "question": "Which of the following is a key responsibility of a Security Engineer?",
+      "options": [
+        "A. Conducting security audits and assessments",
+        "B. Managing employee payroll",
+        "C. Designing graphic user interfaces",
+        "D. Handling customer complaints"
+      ],
+      "correct_answer": "A"
+    },
+    {
+      "id": 3,
+      "question": "Which encryption protocol is commonly used for securing wireless networks?",
+      "options": ["A. WEP", "B. WPA2", "C. FTP", "D. HTTP"],
+      "correct_answer": "B"
+    },
+    {
+      "id": 4,
+      "question": "What is the main function of a VPN in cybersecurity?",
+      "options": [
+        "A. Enhancing network speed",
+        "B. Creating a secure encrypted connection over a public network",
+        "C. Blocking malware",
+        "D. Monitoring employee activity"
+      ],
+      "correct_answer": "B"
+    },
+    {
+      "id": 5,
+      "question": "Which security model focuses on enforcing access control based on classification levels?",
+      "options": [
+        "A. Bell-LaPadula Model",
+        "B. Biba Model",
+        "C. Clark-Wilson Model",
+        "D. Brewer-Nash Model"
+      ],
+      "correct_answer": "A"
+    },
+    {
+      "id": 6,
+      "question": "What does IDS stand for in cybersecurity?",
+      "options": [
+        "A. Internet Defense System",
+        "B. Intrusion Detection System",
+        "C. Information Data Security",
+        "D. Internal Data Storage"
+      ],
+      "correct_answer": "B"
+    },
+    {
+      "id": 7,
+      "question": "Which of the following is an example of a network security protocol?",
+      "options": ["A. HTTPS", "B. SMTP", "C. POP3", "D. IMAP"],
+      "correct_answer": "A"
+    },
+    {
+      "id": 8,
+      "question": "What is the main goal of penetration testing?",
+      "options": [
+        "A. To assess and identify security vulnerabilities",
+        "B. To increase internet speed",
+        "C. To train employees on software usage",
+        "D. To improve graphic design skills"
+      ],
+      "correct_answer": "A"
+    },
+    {
+      "id": 9,
+      "question": "Which of the following is a fundamental aspect of secure coding?",
+      "options": [
+        "A. Using hardcoded credentials",
+        "B. Validating user input",
+        "C. Ignoring error handling",
+        "D. Storing passwords in plain text"
+      ],
+      "correct_answer": "B"
+    },
+    {
+      "id": 10,
+      "question": "What is a common method used to protect against DDoS attacks?",
+      "options": [
+        "A. Load balancing",
+        "B. Disabling firewalls",
+        "C. Allowing open ports",
+        "D. Ignoring traffic logs"
+      ],
+      "correct_answer": "A"
+    },
+    {
+      "id": 11,
+      "question": "Which tool is commonly used for network vulnerability scanning?",
+      "options": ["A. Nmap", "B. Photoshop", "C. Excel", "D. WordPress"],
+      "correct_answer": "A"
+    },
+    {
+      "id": 12,
+      "question": "What is the purpose of a security incident response plan?",
+      "options": [
+        "A. To guide an organization in handling security breaches",
+        "B. To optimize website performance",
+        "C. To manage employee leave schedules",
+        "D. To develop marketing strategies"
+      ],
+      "correct_answer": "A"
+    },
+    {
+      "id": 13,
+      "question": "Which of the following best describes zero-trust security?",
+      "options": [
+        "A. Assuming that all network traffic is secure",
+        "B. Granting unrestricted access to employees",
+        "C. Verifying every access request, regardless of origin",
+        "D. Disabling multi-factor authentication"
+      ],
+      "correct_answer": "C"
+    },
+    {
+      "id": 14,
+      "question": "What type of attack exploits software vulnerabilities before they are patched?",
+      "options": [
+        "A. Zero-day attack",
+        "B. Brute force attack",
+        "C. Social engineering attack",
+        "D. Man-in-the-middle attack"
+      ],
+      "correct_answer": "A"
+    },
+    {
+      "id": 15,
+      "question": "Which of the following is an example of an access control mechanism?",
+      "options": [
+        "A. Role-Based Access Control (RBAC)",
+        "B. Distributed Denial of Service (DDoS)",
+        "C. Network Address Translation (NAT)",
+        "D. Phishing attack"
+      ],
+      "correct_answer": "A"
+    },
+    {
+      "id": 16,
+      "question": "What is the main purpose of endpoint security?",
+      "options": [
+        "A. Protecting devices from cyber threats",
+        "B. Increasing internet speed",
+        "C. Managing user accounts",
+        "D. Encrypting email messages"
+      ],
+      "correct_answer": "A"
+    },
+    {
+      "id": 17,
+      "question": "Which of the following is a commonly used hashing algorithm?",
+      "options": ["A. SHA-256", "B. FTP", "C. SMTP", "D. DHCP"],
+      "correct_answer": "A"
+    },
+    {
+      "id": 18,
+      "question": "Which security principle ensures that data is not altered without authorization?",
+      "options": [
+        "A. Integrity",
+        "B. Availability",
+        "C. Confidentiality",
+        "D. Authenticity"
+      ],
+      "correct_answer": "A"
+    },
+    {
+      "id": 19,
+      "question": "What does SOC stand for in cybersecurity?",
+      "options": [
+        "A. Security Operations Center",
+        "B. Secure Online Connection",
+        "C. System Optimization Control",
+        "D. Service-Oriented Computing"
+      ],
+      "correct_answer": "A"
+    },
+    {
+      "id": 20,
+      "question": "Which law regulates data protection and privacy in the European Union?",
+      "options": ["A. GDPR", "B. HIPAA", "C. PCI DSS", "D. FERPA"],
+      "correct_answer": "A"
+    }
+  ]
+}

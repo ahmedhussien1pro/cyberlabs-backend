@@ -1,0 +1,224 @@
+{
+    "questions": [
+        {
+            "id": 1,
+            "question": "What is the primary purpose of gaming forensics?",
+            "options": [
+                "To investigate cheating and illicit activities in video games",
+                "To improve the performance of games",
+                "To enhance user experience",
+                "To develop video game software"
+            ],
+            "correct_answer": "To investigate cheating and illicit activities in video games"
+        },
+        {
+            "id": 2,
+            "question": "Which of the following is commonly analyzed in gaming forensics to detect cheating?",
+            "options": [
+                "Game logs",
+                "Graphics rendering algorithms",
+                "Game soundtrack",
+                "User interface design"
+            ],
+            "correct_answer": "Game logs"
+        },
+        {
+            "id": 3,
+            "question": "In gaming forensics, what type of digital evidence is most commonly extracted from gaming consoles?",
+            "options": [
+                "Game-related files and save data",
+                "Game updates",
+                "User accounts and profiles",
+                "All of the above"
+            ],
+            "correct_answer": "All of the above"
+        },
+        {
+            "id": 4,
+            "question": "What type of activity is gaming forensics primarily concerned with?",
+            "options": [
+                "Game development",
+                "Player behavior analysis",
+                "Account manipulation and cheating",
+                "Game marketing"
+            ],
+            "correct_answer": "Account manipulation and cheating"
+        },
+        {
+            "id": 5,
+            "question": "Which method is used to analyze user behavior patterns within online gaming environments?",
+            "options": [
+                "Behavioral analysis",
+                "Encryption cracking",
+                "Reverse engineering",
+                "File system recovery"
+            ],
+            "correct_answer": "Behavioral analysis"
+        },
+        {
+            "id": 6,
+            "question": "What is the purpose of analyzing game server logs in gaming forensics?",
+            "options": [
+                "To detect cheating and exploit attempts",
+                "To improve server performance",
+                "To update game content",
+                "To fix server bugs"
+            ],
+            "correct_answer": "To detect cheating and exploit attempts"
+        },
+        {
+            "id": 7,
+            "question": "What is often examined to identify whether game save data has been tampered with?",
+            "options": [
+                "Game patches",
+                "Encryption keys",
+                "Memory dumps",
+                "Game saves and backups"
+            ],
+            "correct_answer": "Game saves and backups"
+        },
+        {
+            "id": 8,
+            "question": "Which tool is commonly used in gaming forensics to analyze console memory dumps?",
+            "options": [
+                "Game Modders",
+                "Hex editors",
+                "Network analyzers",
+                "Encryption software"
+            ],
+            "correct_answer": "Hex editors"
+        },
+        {
+            "id": 9,
+            "question": "Which activity does gaming forensics investigate when analyzing multiplayer game environments?",
+            "options": [
+                "Player-to-player communication",
+                "Weapon balance",
+                "Player cheating or unfair advantage",
+                "Game development trends"
+            ],
+            "correct_answer": "Player cheating or unfair advantage"
+        },
+        {
+            "id": 10,
+            "question": "In gaming forensics, what kind of information can game server logs provide?",
+            "options": [
+                "Player actions and interactions",
+                "Game version history",
+                "Game revenue",
+                "Player preferences"
+            ],
+            "correct_answer": "Player actions and interactions"
+        },
+        {
+            "id": 11,
+            "question": "What type of evidence is often collected from gaming hardware in gaming forensics?",
+            "options": [
+                "Device configurations",
+                "Gaming account passwords",
+                "Encrypted game files",
+                "Network traffic logs"
+            ],
+            "correct_answer": "Device configurations"
+        },
+        {
+            "id": 12,
+            "question": "Which aspect of online gaming does gaming forensics typically NOT focus on?",
+            "options": [
+                "Tracking cheating attempts",
+                "Monitoring in-game behavior",
+                "Preventing server overloads",
+                "Investigating fraudulent transactions"
+            ],
+            "correct_answer": "Preventing server overloads"
+        },
+        {
+            "id": 13,
+            "question": "What role does reverse engineering play in gaming forensics?",
+            "options": [
+                "Reversing the game's code to detect hacks and cheats",
+                "Improving game graphics",
+                "Designing new game features",
+                "Speeding up game performance"
+            ],
+            "correct_answer": "Reversing the game's code to detect hacks and cheats"
+        },
+        {
+            "id": 14,
+            "question": "Which of the following is a typical sign of cheating in online games?",
+            "options": [
+                "Unusual player movements",
+                "Excessive in-game purchases",
+                "High server latency",
+                "Frequent software updates"
+            ],
+            "correct_answer": "Unusual player movements"
+        },
+        {
+            "id": 15,
+            "question": "What forensic technique is used to detect the use of aimbots in a first-person shooter game?",
+            "options": [
+                "Memory forensics",
+                "Behavioral analysis",
+                "Game file integrity checks",
+                "Network traffic analysis"
+            ],
+            "correct_answer": "Behavioral analysis"
+        },
+        {
+            "id": 16,
+            "question": "What kind of information does a gaming console's firmware provide in a forensic investigation?",
+            "options": [
+                "Game progress and achievements",
+                "Device settings and configurations",
+                "In-game transactions",
+                "Player login details"
+            ],
+            "correct_answer": "Device settings and configurations"
+        },
+        {
+            "id": 17,
+            "question": "How can forensic investigators verify if a game save file has been altered?",
+            "options": [
+                "By comparing the hash of the file with a trusted source",
+                "By analyzing player behavior",
+                "By examining game server logs",
+                "By reviewing game developer patches"
+            ],
+            "correct_answer": "By comparing the hash of the file with a trusted source"
+        },
+        {
+            "id": 18,
+            "question": "Which of the following can be considered evidence in a gaming forensics investigation?",
+            "options": [
+                "Game server logs",
+                "Player device history",
+                "Cheat detection software logs",
+                "All of the above"
+            ],
+            "correct_answer": "All of the above"
+        },
+        {
+            "id": 19,
+            "question": "What is one of the most common reasons for conducting a gaming forensics investigation?",
+            "options": [
+                "Recovering lost player data",
+                "Identifying unauthorized software modifications",
+                "Developing new game features",
+                "Enhancing game graphics"
+            ],
+            "correct_answer": "Identifying unauthorized software modifications"
+        },
+        {
+            "id": 20,
+            "question": "What is a key consideration when handling digital evidence in gaming forensics?",
+            "options": [
+                "Preserving the integrity and authenticity of the data",
+                "Modifying the evidence to confirm suspicions",
+                "Making the evidence accessible to the public",
+                "Selling the recovered data"
+            ],
+            "correct_answer": "Preserving the integrity and authenticity of the data"
+        }
+    ]
+}

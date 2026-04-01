@@ -1,0 +1,224 @@
+{
+    "questions": [
+        {
+            "id": 1,
+            "question": "What is the primary purpose of an API?",
+            "options": [
+                "To store data on the server",
+                "To provide a way for software applications to communicate with each other",
+                "To design the user interface",
+                "To manage databases"
+            ],
+            "answer": "To provide a way for software applications to communicate with each other"
+        },
+        {
+            "id": 2,
+            "question": "Which of the following best describes an API endpoint?",
+            "options": [
+                "A function that encrypts data",
+                "A URL where the API receives requests and sends responses",
+                "A hardware device for API testing",
+                "A log of API interactions"
+            ],
+            "answer": "A URL where the API receives requests and sends responses"
+        },
+        {
+            "id": 3,
+            "question": "Which protocol is commonly used by APIs for communication?",
+            "options": [
+                "HTTP/HTTPS",
+                "FTP",
+                "SMTP",
+                "SSH"
+            ],
+            "answer": "HTTP/HTTPS"
+        },
+        {
+            "id": 4,
+            "question": "What is the role of JSON in APIs?",
+            "options": [
+                "To structure API requests and responses",
+                "To secure APIs with encryption",
+                "To log API errors",
+                "To manage API tokens"
+            ],
+            "answer": "To structure API requests and responses"
+        },
+        {
+            "id": 5,
+            "question": "What does REST in REST API stand for?",
+            "options": [
+                "Representational State Transfer",
+                "Recursive Software Testing",
+                "Reliable Secure Transactions",
+                "Random Endpoint System"
+            ],
+            "answer": "Representational State Transfer"
+        },
+        {
+            "id": 6,
+            "question": "Which HTTP method is used to send data to an API to create a new resource?",
+            "options": [
+                "GET",
+                "POST",
+                "PUT",
+                "DELETE"
+            ],
+            "answer": "POST"
+        },
+        {
+            "id": 7,
+            "question": "What is the purpose of the HTTP DELETE method?",
+            "options": [
+                "To create a new resource",
+                "To delete an existing resource",
+                "To update an existing resource",
+                "To retrieve data"
+            ],
+            "answer": "To delete an existing resource"
+        },
+        {
+            "id": 8,
+            "question": "Which HTTP method is idempotent and used to update an existing resource?",
+            "options": [
+                "GET",
+                "POST",
+                "PUT",
+                "DELETE"
+            ],
+            "answer": "PUT"
+        },
+        {
+            "id": 9,
+            "question": "What is the difference between PUT and PATCH HTTP methods?",
+            "options": [
+                "PUT updates the entire resource, while PATCH modifies parts of it.",
+                "PATCH is used for creating resources, while PUT deletes them.",
+                "PUT works with JSON only, while PATCH supports XML.",
+                "PATCH is faster than PUT in all cases."
+            ],
+            "answer": "PUT updates the entire resource, while PATCH modifies parts of it."
+        },
+        {
+            "id": 10,
+            "question": "What is API authentication?",
+            "options": [
+                "A process to log API errors",
+                "A method to secure an API by verifying the user's identity",
+                "A technique to optimize API speed",
+                "A way to improve data storage in APIs"
+            ],
+            "answer": "A method to secure an API by verifying the user's identity"
+        },
+        {
+            "id": 11,
+            "question": "Which of the following is used for secure API communication?",
+            "options": [
+                "HTTP",
+                "HTTPS",
+                "FTP",
+                "SMTP"
+            ],
+            "answer": "HTTPS"
+        },
+        {
+            "id": 12,
+            "question": "What is the purpose of an API key?",
+            "options": [
+                "To encrypt data",
+                "To identify and authenticate the user or application accessing the API",
+                "To generate API documentation",
+                "To validate API responses"
+            ],
+            "answer": "To identify and authenticate the user or application accessing the API"
+        },
+        {
+            "id": 13,
+            "question": "Which type of attack involves manipulating API input to execute malicious SQL commands?",
+            "options": [
+                "SQL Injection",
+                "Cross-Site Scripting (XSS)",
+                "Man-in-the-Middle Attack",
+                "Denial-of-Service (DoS)"
+            ],
+            "answer": "SQL Injection"
+        },
+        {
+            "id": 14,
+            "question": "What is API testing primarily used for?",
+            "options": [
+                "To test user interfaces",
+                "To test API functionality, performance, and security",
+                "To monitor API traffic",
+                "To create database schemas"
+            ],
+            "answer": "To test API functionality, performance, and security"
+        },
+        {
+            "id": 15,
+            "question": "Which of the following is a tool commonly used for API testing?",
+            "options": [
+                "Postman",
+                "Excel",
+                "Photoshop",
+                "Jenkins"
+            ],
+            "answer": "Postman"
+        },
+        {
+            "id": 16,
+            "question": "What does a 200 HTTP status code indicate during API testing?",
+            "options": [
+                "Bad Request",
+                "Internal Server Error",
+                "OK (Request was successful)",
+                "Unauthorized"
+            ],
+            "answer": "OK (Request was successful)"
+        },
+        {
+            "id": 17,
+            "question": "What is the purpose of rate limiting in APIs?",
+            "options": [
+                "To restrict the speed of API responses",
+                "To limit the number of requests a client can make in a given time period",
+                "To reduce API documentation size",
+                "To increase API request sizes"
+            ],
+            "answer": "To limit the number of requests a client can make in a given time period"
+        },
+        {
+            "id": 18,
+            "question": "What does a 404 HTTP status code mean?",
+            "options": [
+                "Unauthorized",
+                "Resource not found",
+                "Internal server error",
+                "Too many requests"
+            ],
+            "answer": "Resource not found"
+        },
+        {
+            "id": 19,
+            "question": "What is GraphQL?",
+            "options": [
+                "A query language for APIs that allows clients to specify the data they need",
+                "A database management system",
+                "A tool for monitoring API traffic",
+                "A programming language for web development"
+            ],
+            "answer": "A query language for APIs that allows clients to specify the data they need"
+        },
+        {
+            "id": 20,
+            "question": "What does API rate limiting protect against?",
+            "options": [
+                "Cross-Site Scripting (XSS)",
+                "SQL Injection",
+                "Denial-of-Service (DoS) attacks",
+                "Both B and C"
+            ],
+            "answer": "Denial-of-Service (DoS) attacks"
+        }
+    ]
+}

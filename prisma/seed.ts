@@ -21,28 +21,27 @@ const MODULE_LABS = [
 
 const LAB_CATEGORIES: string[] = [
   // ─── Existing categories ───────────────────────────────────────────────────
-  'sql-injection',
-  'csrf',
-  'xss',
-  'wireshark',
-  'cookies-lab',
-  'bash-scripting',
-
-  'ac-vuln',
-  'business-logic',
-  'jwt',
-  'idor',
-  'broken-auth',
-  'command-injection',
-  'file-inclusion',
-  'file-upload',
-  'ssti',
-  'race-condition',
-  'captcha-bypass',
-  'api-hacking',
-  'cryptography',
-  'obfuscation',
-  'linux',
+  // 'sql-injection',
+  // 'csrf',
+  // 'xss',
+  // 'wireshark',
+  // 'cookies-lab',
+  // 'bash-scripting',
+  // 'ac-vuln',
+  // 'business-logic',
+  // 'jwt',
+  // 'idor',
+  // 'broken-auth',
+  // 'command-injection',
+  // 'file-inclusion',
+  // 'file-upload',
+  // 'ssti',
+  // 'race-condition',
+  // 'captcha-bypass',
+  // 'api-hacking',
+  // 'cryptography',
+  // 'obfuscation',
+  // 'linux',
 ];
 
 function toJson(val: unknown): Prisma.InputJsonValue | undefined {
@@ -114,9 +113,9 @@ async function main() {
     // await seedCourses(prisma);
     // await seedPaths(prisma);
 
-    for (const category of LAB_CATEGORIES) {
-      await seedCategoryLabs(prisma, category);
-    }
+    // for (const category of LAB_CATEGORIES) {
+    //   await seedCategoryLabs(prisma, category);
+    // }
 
     // ─── MCQ Labs ─────────────────────────────────────────────────────────────
     await seedMCQLabs(prisma);

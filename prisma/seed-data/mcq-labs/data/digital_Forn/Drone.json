@@ -1,0 +1,224 @@
+{
+    "questions": [
+        {
+            "id": 1,
+            "question": "What is the primary goal of drone forensics?",
+            "options": [
+                "Tracking drone sales",
+                "Investigating criminal activities involving drones",
+                "Improving drone design",
+                "Regulating drone usage"
+            ],
+            "correct_answer": "Investigating criminal activities involving drones"
+        },
+        {
+            "id": 2,
+            "question": "Which of the following data is commonly retrieved during a drone forensic investigation?",
+            "options": [
+                "Flight logs",
+                "Video footage",
+                "GPS data",
+                "All of the above"
+            ],
+            "correct_answer": "All of the above"
+        },
+        {
+            "id": 3,
+            "question": "What type of data does a drone's flight log typically contain?",
+            "options": [
+                "Flight duration and speed",
+                "Altitude and flight path",
+                "Battery usage",
+                "All of the above"
+            ],
+            "correct_answer": "All of the above"
+        },
+        {
+            "id": 4,
+            "question": "Which system records the location of a drone during flight?",
+            "options": [
+                "GPS system",
+                "Flight log",
+                "Telemetry system",
+                "All of the above"
+            ],
+            "correct_answer": "GPS system"
+        },
+        {
+            "id": 5,
+            "question": "What is the significance of analyzing onboard cameras in drone forensics?",
+            "options": [
+                "It provides video evidence of the drone's activities",
+                "It helps determine the drone's battery life",
+                "It can track the drone's speed",
+                "It stores flight path data"
+            ],
+            "correct_answer": "It provides video evidence of the drone's activities"
+        },
+        {
+            "id": 6,
+            "question": "Which of the following is NOT typically found in a drone’s telemetry data?",
+            "options": [
+                "Flight altitude",
+                "Drone speed",
+                "Camera footage",
+                "Battery level"
+            ],
+            "correct_answer": "Camera footage"
+        },
+        {
+            "id": 7,
+            "question": "What is the role of GPS data in drone forensics?",
+            "options": [
+                "To track the drone’s location during flight",
+                "To record battery usage",
+                "To monitor the drone's camera usage",
+                "To improve flight stability"
+            ],
+            "correct_answer": "To track the drone’s location during flight"
+        },
+        {
+            "id": 8,
+            "question": "What type of communication data might be analyzed in a drone forensic investigation?",
+            "options": [
+                "Signal strength between drone and operator",
+                "Commands sent from the operator to the drone",
+                "Data transfer rate between drone and operator",
+                "All of the above"
+            ],
+            "correct_answer": "All of the above"
+        },
+        {
+            "id": 9,
+            "question": "Which of the following is often used to extract data from a drone’s internal systems?",
+            "options": [
+                "Forensic data retrieval tools",
+                "Drone-specific software",
+                "Mobile phone apps",
+                "All of the above"
+            ],
+            "correct_answer": "Forensic data retrieval tools"
+        },
+        {
+            "id": 10,
+            "question": "What can be inferred from analyzing the video footage of a drone?",
+            "options": [
+                "The drone's location",
+                "The drone's speed",
+                "The drone’s activities and target areas",
+                "The battery life of the drone"
+            ],
+            "correct_answer": "The drone’s activities and target areas"
+        },
+        {
+            "id": 11,
+            "question": "What is the primary purpose of analyzing the drone’s flight logs during an investigation?",
+            "options": [
+                "To determine the drone’s range",
+                "To trace the drone's flight path and actions",
+                "To identify the drone’s operator",
+                "To monitor battery performance"
+            ],
+            "correct_answer": "To trace the drone's flight path and actions"
+        },
+        {
+            "id": 12,
+            "question": "Which of the following is an example of a forensic tool used for drone investigations?",
+            "options": [
+                "Flight simulator",
+                "Forensic data acquisition tool",
+                "Anti-drone software",
+                "None of the above"
+            ],
+            "correct_answer": "Forensic data acquisition tool"
+        },
+        {
+            "id": 13,
+            "question": "Which component of a drone might provide critical evidence about the location of the drone during a crime?",
+            "options": [
+                "GPS system",
+                "Flight control board",
+                "Camera system",
+                "Battery compartment"
+            ],
+            "correct_answer": "GPS system"
+        },
+        {
+            "id": 14,
+            "question": "In drone forensics, what type of evidence can be obtained from analyzing drone communications?",
+            "options": [
+                "The identity of the drone operator",
+                "The location of the drone",
+                "The specific actions taken by the operator",
+                "All of the above"
+            ],
+            "correct_answer": "All of the above"
+        },
+        {
+            "id": 15,
+            "question": "What is one of the key challenges in drone forensics?",
+            "options": [
+                "Lack of standardization across drone models",
+                "Difficulty in accessing drone communications",
+                "Data encryption in flight logs",
+                "All of the above"
+            ],
+            "correct_answer": "All of the above"
+        },
+        {
+            "id": 16,
+            "question": "What type of data might be captured by a drone’s onboard camera during a forensic investigation?",
+            "options": [
+                "Images of specific locations",
+                "Video of criminal activities",
+                "Footage of vehicle movements",
+                "All of the above"
+            ],
+            "correct_answer": "All of the above"
+        },
+        {
+            "id": 17,
+            "question": "What role do flight logs play in drone forensic investigations?",
+            "options": [
+                "Providing details about the drone's battery usage",
+                "Capturing video footage of the environment",
+                "Recording flight patterns and behavior",
+                "Tracking the operator’s identity"
+            ],
+            "correct_answer": "Recording flight patterns and behavior"
+        },
+        {
+            "id": 18,
+            "question": "Which of the following data is stored in a drone’s telemetry system?",
+            "options": [
+                "Altitude",
+                "Speed",
+                "Battery levels",
+                "All of the above"
+            ],
+            "correct_answer": "All of the above"
+        },
+        {
+            "id": 19,
+            "question": "What forensic approach can be used to extract data from a drone’s memory?",
+            "options": [
+                "Memory dump analysis",
+                "Camera footage analysis",
+                "GPS data retrieval",
+                "None of the above"
+            ],
+            "correct_answer": "Memory dump analysis"
+        },
+        {
+            "id": 20,
+            "question": "Why is the GPS data from a drone critical in forensics?",
+            "options": [
+                "It helps to determine the drone’s altitude",
+                "It tracks the drone’s location and flight path",
+                "It records drone operator communication",
+                "It monitors the drone’s battery usage"
+            ],
+            "correct_answer": "It tracks the drone’s location and flight path"
+        }
+    ]
+}

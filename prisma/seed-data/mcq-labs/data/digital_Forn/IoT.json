@@ -1,0 +1,224 @@
+{
+    "questions": [
+        {
+            "id": 1,
+            "question": "What is the primary challenge in IoT forensics?",
+            "options": [
+                "Data encryption",
+                "Diverse devices and protocols",
+                "Lack of network access",
+                "Limited storage capacities"
+            ],
+            "correct_answer": "Diverse devices and protocols"
+        },
+        {
+            "id": 2,
+            "question": "Which of the following IoT devices is commonly analyzed in forensic investigations?",
+            "options": [
+                "Smartphones",
+                "Smart watches",
+                "Smart thermostats",
+                "All of the above"
+            ],
+            "correct_answer": "All of the above"
+        },
+        {
+            "id": 3,
+            "question": "What does IoT forensics primarily focus on?",
+            "options": [
+                "Recovering deleted files",
+                "Examining digital evidence from IoT devices",
+                "Analyzing network protocols",
+                "Enhancing device performance"
+            ],
+            "correct_answer": "Examining digital evidence from IoT devices"
+        },
+        {
+            "id": 4,
+            "question": "Which data is crucial in IoT forensics?",
+            "options": [
+                "Device logs",
+                "GPS data",
+                "Sensor readings",
+                "All of the above"
+            ],
+            "correct_answer": "All of the above"
+        },
+        {
+            "id": 5,
+            "question": "Which of the following IoT protocols might be involved in forensics investigations?",
+            "options": [
+                "MQTT",
+                "CoAP",
+                "HTTP",
+                "All of the above"
+            ],
+            "correct_answer": "All of the above"
+        },
+        {
+            "id": 6,
+            "question": "What is the first step in IoT forensic investigation?",
+            "options": [
+                "Preserving device data",
+                "Identifying connected devices",
+                "Analyzing network traffic",
+                "Recovering deleted files"
+            ],
+            "correct_answer": "Preserving device data"
+        },
+        {
+            "id": 7,
+            "question": "Which tool is commonly used in IoT forensics for data analysis?",
+            "options": [
+                "EnCase",
+                "Wireshark",
+                "X1 Search",
+                "All of the above"
+            ],
+            "correct_answer": "All of the above"
+        },
+        {
+            "id": 8,
+            "question": "Why is data preservation crucial in IoT forensics?",
+            "options": [
+                "To prevent data corruption",
+                "To ensure legal admissibility of evidence",
+                "To improve device performance",
+                "To avoid data duplication"
+            ],
+            "correct_answer": "To ensure legal admissibility of evidence"
+        },
+        {
+            "id": 9,
+            "question": "Which of the following IoT devices often has security vulnerabilities that can be exploited?",
+            "options": [
+                "Smart TVs",
+                "Security cameras",
+                "Smart home assistants",
+                "All of the above"
+            ],
+            "correct_answer": "All of the above"
+        },
+        {
+            "id": 10,
+            "question": "What is a major obstacle when analyzing data from IoT devices?",
+            "options": [
+                "Lack of network access",
+                "Inconsistent data formats",
+                "Data loss due to encryption",
+                "Limited device storage"
+            ],
+            "correct_answer": "Inconsistent data formats"
+        },
+        {
+            "id": 11,
+            "question": "Which data storage method is commonly used by IoT devices for evidence collection?",
+            "options": [
+                "Local device storage",
+                "Cloud storage",
+                "Both local and cloud storage",
+                "USB storage"
+            ],
+            "correct_answer": "Both local and cloud storage"
+        },
+        {
+            "id": 12,
+            "question": "What role does the Internet of Things (IoT) play in modern forensics investigations?",
+            "options": [
+                "Providing digital evidence from connected devices",
+                "Reducing the complexity of digital evidence",
+                "Increasing privacy during investigations",
+                "Preventing cybercrime"
+            ],
+            "correct_answer": "Providing digital evidence from connected devices"
+        },
+        {
+            "id": 13,
+            "question": "What is the purpose of examining the communication protocols used by IoT devices in forensics?",
+            "options": [
+                "To monitor network traffic",
+                "To extract data from devices",
+                "To investigate the data's origin and integrity",
+                "To identify device owners"
+            ],
+            "correct_answer": "To investigate the data's origin and integrity"
+        },
+        {
+            "id": 14,
+            "question": "Which type of data is commonly collected from IoT devices during a forensic investigation?",
+            "options": [
+                "User data",
+                "Device logs",
+                "Sensor readings",
+                "All of the above"
+            ],
+            "correct_answer": "All of the above"
+        },
+        {
+            "id": 15,
+            "question": "Which of the following is a key aspect of IoT forensics?",
+            "options": [
+                "Device authentication",
+                "Network traffic analysis",
+                "Firmware analysis",
+                "All of the above"
+            ],
+            "correct_answer": "All of the above"
+        },
+        {
+            "id": 16,
+            "question": "Which IoT component would be analyzed to gather data about a smart home device?",
+            "options": [
+                "Firmware",
+                "Cloud storage",
+                "Network traffic",
+                "All of the above"
+            ],
+            "correct_answer": "All of the above"
+        },
+        {
+            "id": 17,
+            "question": "Which type of IoT devices are most commonly involved in privacy-related forensic cases?",
+            "options": [
+                "Smart thermostats",
+                "Health trackers",
+                "Security cameras",
+                "Smart speakers"
+            ],
+            "correct_answer": "Smart speakers"
+        },
+        {
+            "id": 18,
+            "question": "What is one method for retrieving evidence from a smart vehicle during an IoT forensics investigation?",
+            "options": [
+                "Accessing vehicle diagnostics",
+                "Monitoring network traffic",
+                "Both accessing diagnostics and monitoring traffic",
+                "Connecting a USB storage device"
+            ],
+            "correct_answer": "Both accessing diagnostics and monitoring traffic"
+        },
+        {
+            "id": 19,
+            "question": "Which of the following is an important step in preserving IoT data during an investigation?",
+            "options": [
+                "Disconnecting the device from the network",
+                "Removing the device's battery",
+                "Changing device settings to prevent data loss",
+                "All of the above"
+            ],
+            "correct_answer": "All of the above"
+        },
+        {
+            "id": 20,
+            "question": "What is one challenge investigators face when collecting data from IoT devices?",
+            "options": [
+                "Finding the device's location",
+                "Lack of compatibility with forensic tools",
+                "Limited data transfer speeds",
+                "IoT devices are rarely connected to the internet"
+            ],
+            "correct_answer": "Lack of compatibility with forensic tools"
+        }
+    ]
+}
