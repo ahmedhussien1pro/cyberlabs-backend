@@ -245,6 +245,60 @@ enum TrackingEventType {
   START_COURSE
   COMPLETE_LESSON
   COMPLETE_LAB
+  VM_LAB_STARTED
+  VM_LAB_COMPLETED
+}
+
+// ============================================================================
+// VM LABS — NEW ENUMS (additive only — Step 1.1)
+// ============================================================================
+
+enum VmInstanceStatus {
+  QUEUED
+  PROVISIONING
+  STARTING
+  RUNNING
+  PAUSED
+  STOPPING
+  STOPPED
+  ERROR
+  EXPIRED
+}
+
+enum VmProviderType {
+  DOCKER_LOCAL
+  DIGITAL_OCEAN
+  CUSTOM
+}
+
+enum VmOsType {
+  KALI_LINUX
+  UBUNTU_22
+  UBUNTU_20
+  WINDOWS_SERVER
+  CUSTOM
+}
+
+enum VmNetworkMode {
+  ISOLATED
+  LIMITED_EGRESS
+  FULL_EGRESS
+}
+
+enum VmLabEventType {
+  INSTANCE_CREATED
+  INSTANCE_STARTED
+  INSTANCE_STOPPED
+  INSTANCE_EXPIRED
+  INSTANCE_ERROR
+  FLAG_SUBMITTED_CORRECT
+  FLAG_SUBMITTED_WRONG
+  HINT_UNLOCKED
+  SESSION_EXTENDED
+  ADMIN_TERMINATED
+  HEALTH_CHECK_FAILED
+  VNC_CONNECTED
+  VNC_DISCONNECTED
 }
 
 // ============================================================================
@@ -358,9 +412,12 @@ model User {
   // Admin-created referral links targeted at this user
   targetedReferralLinks ReferralLink[]
 
-  // NEW: lab audit relations
+  // lab audit relations
   labHintUsages  LabHintUsage[]
   labFlagRecords LabFlagRecord[]
+
+  // ─── VM Labs additive relation (Step 1.3) ─────────────────────────────
+  vmLabInstances VmLabInstance[]
 
   @@index([email])
   @@index([createdAt])
@@ -1265,9 +1322,12 @@ model Lab {
   genericContents LabGenericContent[]
   genericLogs     LabGenericLog[]
 
-  // NEW audit relations
+  // audit relations
   hintUsages      LabHintUsage[]
   flagRecords     LabFlagRecord[]
+
+  // ─── VM Labs additive relation (Step 1.3) ─────────────────────────────
+  vmLabTemplates  VmLabTemplate[]
 
   @@index([courseId])
   @@index([difficulty])
@@ -1378,7 +1438,7 @@ model UserLabProgress {
   @@map("user_lab_progress")
 }
 
-// ─── NEW: Lab Hint Audit Log ───────────────────────────────────────────────
+// ─── Lab Hint Audit Log ───────────────────────────────────────────────
 model LabHintUsage {
   id         String   @id @default(cuid())
   userId     String
@@ -1398,7 +1458,7 @@ model LabHintUsage {
   @@map("lab_hint_usages")
 }
 
-// ─── NEW: Lab Flag Record ──────────────────────────────────────────────────
+// ─── Lab Flag Record ──────────────────────────────────────────────────
 model LabFlagRecord {
   id          String    @id @default(cuid())
   userId      String
@@ -1936,8 +1996,13 @@ model LabSubmission {
   submittedAt DateTime @default(now())
   ipAddress   String?
 
+  // ─── VM Labs additive FK (Step 1.3) ───────────────────────────────────
+  vmInstanceId String?
+  vmInstance   VmLabInstance? @relation(fields: [vmInstanceId], references: [id], onDelete: SetNull)
+
   @@index([userId, labId])
   @@index([submittedAt])
+  @@index([vmInstanceId])
   @@map("lab_submissions")
 }
 
@@ -2006,4 +2071,208 @@ model LabGenericLog {
   lab  Lab  @relation(fields: [labId], references: [id], onDelete: Cascade)
 
   @@index([userId, labId])
+}
+
+// ============================================================================
+// VM LABS MODULE — NEW MODELS (additive only — Step 1.2)
+// ============================================================================
+
+// ─── VM Lab Template ─────────────────────────────────────────────────────────
+// Defines a reusable lab environment specification.
+// Inspired by CyberRanger scenario.yaml + 2dukes challenge_vars.yml
+model VmLabTemplate {
+  id              String         @id @default(uuid())
+  slug            String         @unique
+  title           String
+  ar_title        String?
+  description     String?        @db.Text
+  ar_description  String?        @db.Text
+
+  // Docker image to run (e.g., "cyberlabs/kali-log4j:latest")
+  dockerImage     String
+  osType          VmOsType       @default(KALI_LINUX)
+
+  // Resource limits per instance
+  cpuLimit        Float          @default(1.0)   // cores
+  ramLimitMb      Int            @default(1024)  // MB
+  diskLimitGb     Int            @default(10)    // GB
+
+  // Network
+  networkMode     VmNetworkMode  @default(ISOLATED)
+  exposedPorts    Json           @default("[]")  // [{ "containerPort": 6080, "label": "VNC" }]
+
+  // Environment variables injected at container start
+  // "FLAG" value = "auto-generated" → system generates unique flag per instance
+  envVarTemplate  Json           @default("{}")
+
+  // Lab scenario config (from CyberRanger YAML concept)
+  // Stores: scenario description, objectives, network topology, toolsIncluded
+  scenarioConfig  Json           @default("{}")
+
+  // Pool settings
+  poolSize        Int            @default(5)     // max concurrent instances allowed
+  instanceTtlMin  Int            @default(120)   // default session length in minutes
+  maxTtlMin       Int            @default(240)   // max after extensions
+  extensionMin    Int            @default(30)    // minutes added per extension
+
+  // Scoring
+  maxScore        Int            @default(100)
+  flagPolicyType  FlagPolicyType @default(PER_USER_PER_ATTEMPT)
+
+  // Linking to existing Lab model (optional — practice-lab counterpart)
+  labId           String?
+  lab             Lab?           @relation(fields: [labId], references: [id], onDelete: SetNull)
+
+  isActive        Boolean        @default(true)
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  instances       VmLabInstance[]
+  pool            VmLabPool?
+
+  @@index([slug])
+  @@index([isActive])
+  @@map("vm_lab_templates")
+}
+
+// ─── VM Lab Pool ──────────────────────────────────────────────────────────────
+// Tracks real-time capacity for a given template.
+model VmLabPool {
+  id                String         @id @default(uuid())
+  templateId        String         @unique
+  template          VmLabTemplate  @relation(fields: [templateId], references: [id], onDelete: Cascade)
+
+  maxSize           Int            @default(5)
+  activeCount       Int            @default(0)   // updated by cron
+  queuedCount       Int            @default(0)   // users waiting
+  provider          VmProviderType @default(DOCKER_LOCAL)
+
+  // DigitalOcean region if provider = DIGITAL_OCEAN
+  region            String?        // e.g. "fra1", "nyc1"
+
+  updatedAt         DateTime       @updatedAt
+
+  @@map("vm_lab_pools")
+}
+
+// ─── VM Lab Instance ─────────────────────────────────────────────────────────
+// One live container per user per attempt. Completely isolated.
+model VmLabInstance {
+  id              String              @id @default(uuid())
+  templateId      String
+  template        VmLabTemplate       @relation(fields: [templateId], references: [id], onDelete: Restrict)
+  userId          String
+  user            User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  status          VmInstanceStatus    @default(QUEUED)
+
+  // Provider-specific identifiers
+  containerId     String?             // Docker container ID or DO Droplet ID
+  containerIp     String?             // Internal IP of the container
+
+  // VNC access (served via noVNC proxy)
+  vncPort         Int?                // internal VNC port (5901)
+  vncProxyPort    Int?                // external noVNC port (6080+)
+  vncProxyHost    String?             // hostname of the proxy (e.g., vnc.cyberlabs.com)
+
+  // Flag for this specific instance (server-generated, per CyberRanger pattern)
+  // Stored as bcrypt hash — never returned in API responses
+  flag            String?             // bcrypt hash of FLAG{<hex>}
+  flagSubmitted   Boolean             @default(false)
+  flagSubmittedAt DateTime?
+
+  // Scoring
+  finalScore      Int?
+  hintsUsed       Int                 @default(0)
+  scoreDeduction  Int                 @default(0)
+
+  // Lifecycle timestamps
+  queuedAt        DateTime            @default(now())
+  startedAt       DateTime?
+  expiresAt       DateTime?           // set when status → RUNNING
+  stoppedAt       DateTime?
+
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+
+  sessions        VmLabSession[]
+  events          VmLabEvent[]
+  hintUsages      VmLabHintUsage[]
+  labSubmissions  LabSubmission[]     // additive back-relation from LabSubmission.vmInstanceId
+
+  @@index([userId])
+  @@index([templateId])
+  @@index([status])
+  @@index([expiresAt])
+  @@map("vm_lab_instances")
+}
+
+// ─── VM Lab Session ───────────────────────────────────────────────────────────
+// Tracks a student's active browser connection to a VM.
+// Inspired by CyberRanger per-session VNC token approach.
+model VmLabSession {
+  id              String         @id @default(uuid())
+  instanceId      String
+  instance        VmLabInstance  @relation(fields: [instanceId], references: [id], onDelete: Cascade)
+  userId          String
+
+  // One-time VNC access token (short-lived, tied to userId+instanceId)
+  vncToken        String         @unique @default(uuid())
+  vncTokenExpiresAt DateTime
+
+  // noVNC URL returned to frontend
+  // Format: https://vnc.cyberlabs.com/{instanceId}?token={vncToken}
+  accessUrl       String?
+
+  // Heartbeat tracking
+  lastHeartbeatAt DateTime?
+  disconnectedAt  DateTime?
+  isActive        Boolean        @default(true)
+
+  userAgent       String?
+  ip              String?
+
+  createdAt       DateTime       @default(now())
+
+  @@index([instanceId])
+  @@index([userId])
+  @@index([vncToken])
+  @@index([isActive])
+  @@map("vm_lab_sessions")
+}
+
+// ─── VM Lab Hint Usage ────────────────────────────────────────────────────────
+// Tracks hint usage per VM instance (separate from existing LabHintUsage)
+model VmLabHintUsage {
+  id          String         @id @default(uuid())
+  instanceId  String
+  instance    VmLabInstance  @relation(fields: [instanceId], references: [id], onDelete: Cascade)
+  userId      String
+  hintIndex   Int            // 0-based hint number
+  penalty     Int            // score points deducted
+  unlockedAt  DateTime       @default(now())
+
+  @@unique([instanceId, hintIndex])
+  @@index([instanceId])
+  @@index([userId])
+  @@map("vm_lab_hint_usages")
+}
+
+// ─── VM Lab Event ─────────────────────────────────────────────────────────────
+// Full audit log for every significant action on an instance.
+model VmLabEvent {
+  id          String           @id @default(uuid())
+  instanceId  String
+  instance    VmLabInstance    @relation(fields: [instanceId], references: [id], onDelete: Cascade)
+  userId      String?
+  eventType   VmLabEventType
+  meta        Json?            // additional context (e.g., wrong flag hash, admin userId)
+  ip          String?
+  userAgent   String?
+  createdAt   DateTime         @default(now())
+
+  @@index([instanceId])
+  @@index([eventType])
+  @@index([createdAt])
+  @@map("vm_lab_events")
 }
