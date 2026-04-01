@@ -76,6 +76,14 @@ function loadQuestions(meta: MCQLabMetadata): MCQQuestion[] {
   }
 }
 
+/** Safe double-cast: typed object → unknown → Prisma.InputJsonValue.
+ *  Required because Prisma's InputJsonValue union includes primitives,
+ *  so TypeScript rejects a direct cast from a complex object type.
+ */
+function toJson(value: unknown): Prisma.InputJsonValue {
+  return value as Prisma.InputJsonValue;
+}
+
 const ALL_MCQ_LABS: MCQLabMetadata[] = [
   // ─── Root ─────────────────────────────────────────────────────────────────
   apiHackingMCQMetadata,
@@ -122,16 +130,16 @@ export async function seedMCQLabs(prisma: PrismaClient): Promise<void> {
 
     const ptsPerQ = Math.floor(meta.pointsReward / meta.questionCount);
 
-    // ── Cast to Prisma.InputJsonValue to satisfy the Json column type ─────────
-    // Prisma requires Json fields to be cast explicitly when using typed objects.
-    const initialState = {
+    // toJson() does: value → unknown → Prisma.InputJsonValue
+    // This is the correct pattern when passing typed objects to Prisma Json columns.
+    const initialState = toJson({
       type:              'MCQ',
       jsonFile:          meta.jsonFile,
       questionCount:     meta.questionCount,
       passingScore:      meta.passingScore,
       pointsPerQuestion: ptsPerQ,
-      questions,          // ← stored here; mcq.service reads from here at runtime
-    } satisfies object as Prisma.InputJsonValue;
+      questions,          // ← stored in DB; mcq.service reads from here at runtime
+    });
 
     const shared = {
       title:          meta.title,
@@ -150,11 +158,11 @@ export async function seedMCQLabs(prisma: PrismaClient): Promise<void> {
       goal:           meta.goal,
       ar_goal:        meta.ar_goal,
       initialState,
-      briefing:       { en: meta.goal, ar: meta.ar_goal } as Prisma.InputJsonValue,
-      stepsOverview:  { en: [], ar: [] }                  as Prisma.InputJsonValue,
-      solution:       {}                                   as Prisma.InputJsonValue,
-      postSolve:      {}                                   as Prisma.InputJsonValue,
-      flagAnswer:     '',
+      briefing:      toJson({ en: meta.goal, ar: meta.ar_goal }),
+      stepsOverview: toJson({ en: [], ar: [] }),
+      solution:      toJson({}),
+      postSolve:     toJson({}),
+      flagAnswer:    '',
     };
 
     await prisma.lab.upsert({
