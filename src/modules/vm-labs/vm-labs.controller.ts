@@ -30,7 +30,7 @@ import { AdminVmQueryDto } from './dto/admin-query.dto';
 export class VmLabsController {
   constructor(private readonly orchestrator: VmLabsOrchestratorService) {}
 
-  // ── Student endpoints ──────────────────────────────────────────────────────
+  // ── Student endpoints ───────────────────────────────────────────────────────
 
   @Post('start')
   @ApiOperation({ summary: 'Start a new VM lab instance' })
@@ -88,13 +88,20 @@ export class VmLabsController {
     return this.orchestrator.unlockHint(user.id, instanceId, dto.hintIndex);
   }
 
-  // ── Admin endpoints ────────────────────────────────────────────────────────
+  // ── Admin endpoints ───────────────────────────────────────────────────────
 
   @Get('admin/instances')
   @Roles(UserRole.ADMIN)
   @ApiOperation({ summary: '[Admin] List all instances' })
   adminListInstances(@Query() query: AdminVmQueryDto) {
-    return this.orchestrator.adminListInstances(query.status, query.page, query.limit);
+    // fix TS2345: coerce optional numbers explicitly to avoid `number | undefined` mismatch
+    return this.orchestrator.adminListInstances(
+      query.status,
+      query.templateId,
+      query.userId,
+      query.page   !== undefined ? Number(query.page)  : 1,
+      query.limit  !== undefined ? Number(query.limit) : 20,
+    );
   }
 
   @Delete('admin/instances/:instanceId/terminate')
