@@ -15,6 +15,7 @@ import { ApiTags, ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../common/guards';
 import { CurrentUser } from '../../common/decorators';
 import { Roles } from '../../common/decorators';
+import { UserRole } from '../../common/enums/common.enums';
 import { VmLabsOrchestratorService } from './vm-labs-orchestrator.service';
 import { StartVmLabDto } from './dto/start-vm-lab.dto';
 import { SubmitFlagDto } from './dto/submit-flag.dto';
@@ -90,14 +91,14 @@ export class VmLabsController {
   // ── Admin endpoints ────────────────────────────────────────────────────────
 
   @Get('admin/instances')
-  @Roles('ADMIN')
+  @Roles(UserRole.ADMIN)
   @ApiOperation({ summary: '[Admin] List all instances' })
   adminListInstances(@Query() query: AdminVmQueryDto) {
     return this.orchestrator.adminListInstances(query.status, query.page, query.limit);
   }
 
   @Delete('admin/instances/:instanceId/terminate')
-  @Roles('ADMIN')
+  @Roles(UserRole.ADMIN)
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: '[Admin] Force terminate instance' })
   adminTerminate(@CurrentUser() user: any, @Param('instanceId') instanceId: string) {
@@ -105,14 +106,14 @@ export class VmLabsController {
   }
 
   @Get('admin/templates')
-  @Roles('ADMIN')
+  @Roles(UserRole.ADMIN)
   @ApiOperation({ summary: '[Admin] List all lab templates' })
   adminListTemplates() {
     return this.orchestrator.adminListTemplates();
   }
 
   @Post('admin/templates')
-  @Roles('ADMIN')
+  @Roles(UserRole.ADMIN)
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: '[Admin] Create lab template' })
   adminCreateTemplate(@Body() dto: any) {
@@ -120,7 +121,7 @@ export class VmLabsController {
   }
 
   @Patch('admin/templates/:id/toggle')
-  @Roles('ADMIN')
+  @Roles(UserRole.ADMIN)
   @ApiOperation({ summary: '[Admin] Toggle template active state' })
   adminToggleTemplate(
     @Param('id') id: string,

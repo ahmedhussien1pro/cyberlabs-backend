@@ -5,7 +5,7 @@ import {
   BadRequestException,
   ForbiddenException,
 } from '@nestjs/common';
-import { PrismaService } from '../../core/prisma/prisma.service';
+import { PrismaService } from '../../core/database/prisma.service';
 import { VmInstanceStatus, VmLabEventType } from '@prisma/client';
 import * as crypto from 'crypto';
 
