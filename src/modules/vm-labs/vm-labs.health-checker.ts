@@ -3,15 +3,12 @@ import { PrismaService } from '../../core/database/prisma.service';
 import { VmInstanceStatus } from '@prisma/client';
 import { VmProviderFactory } from './providers/vm-provider.factory';
 
-// ─────────────────────────────────────────────────────────────────────────────
+// ────────────────────────────────────────────────────────────────────────────
 // @nestjs/schedule is an OPTIONAL dependency.
-// Install it to activate Cron jobs:
-//   npm install @nestjs/schedule
-//   Then add ScheduleModule.forRoot() to AppModule imports.
-//
-// Until it is installed the file still compiles — decorators are inlined as
-// no-ops via the conditional shim below.
-// ─────────────────────────────────────────────────────────────────────────────
+// Install: npm install @nestjs/schedule
+// Then add ScheduleModule.forRoot() to AppModule imports.
+// Until installed, the runtime shim below keeps the file compilable.
+// ────────────────────────────────────────────────────────────────────────────
 let Cron: (expression: string) => MethodDecorator;
 let CronExpression: { EVERY_MINUTE: string; EVERY_5_MINUTES: string };
 
@@ -21,18 +18,19 @@ try {
   Cron = schedule.Cron;
   CronExpression = schedule.CronExpression;
 } catch {
-  // @nestjs/schedule not installed — use no-op stubs so the file compiles
-  Cron = (_expr: string) => (_target: object, _key: string | symbol, descriptor: PropertyDescriptor) => descriptor;
+  Cron = (_expr: string) =>
+    (_target: object, _key: string | symbol, descriptor: PropertyDescriptor) => descriptor;
   CronExpression = { EVERY_MINUTE: '* * * * *', EVERY_5_MINUTES: '*/5 * * * *' };
 }
 
 /**
  * VmLabsHealthChecker — periodic scheduler that:
- *   1. Detects expired instances and marks them EXPIRED / triggers cleanup
- *   2. Pings RUNNING instances to catch silent crashes (HEALTH_CHECK_FAILED)
- *   3. Logs every lifecycle event to VmLabEvent
+ *   1. Detects expired instances (expiresAt <= now) → destroys + marks EXPIRED
+ *   2. Pings RUNNING instances every 5 min  → marks ERROR on silent crash
  *
- * Requires @nestjs/schedule + ScheduleModule.forRoot() in AppModule.
+ * NOTE: VmLabInstance does NOT have `externalId` or `providerType` as direct
+ * fields. Those live on the linked VmLabTemplate. We join via `template`
+ * in every select to obtain them.
  */
 @Injectable()
 export class VmLabsHealthChecker {
@@ -43,7 +41,7 @@ export class VmLabsHealthChecker {
     private readonly providerFactory: VmProviderFactory,
   ) {}
 
-  // ── 1. Expire stale instances every minute ──────────────────────────────
+  // ── 1. Expire stale instances every minute ─────────────────────────────────
   @(Cron(CronExpression.EVERY_MINUTE))
   async expireStaleInstances(): Promise<void> {
     const now = new Date();
@@ -55,8 +53,13 @@ export class VmLabsHealthChecker {
       },
       select: {
         id: true,
-        externalId: true,
-        providerType: true,
+        // externalId and providerType live on the template, not the instance
+        template: {
+          select: {
+            providerType: true,
+            dockerImage: true, // used as externalId stub until real provisioner tracks it
+          },
+        },
       },
     });
 
@@ -66,8 +69,10 @@ export class VmLabsHealthChecker {
     await Promise.allSettled(
       expired.map(async (inst) => {
         try {
-          const provider = this.providerFactory.resolve(inst.providerType);
-          await provider.destroy(inst.externalId);
+          const provider = this.providerFactory.resolve(inst.template.providerType);
+          // Until a real externalId is stored per-instance, pass instance.id as the handle.
+          // DockerProvider.destroy() is a stub — this is safe.
+          await provider.destroy(inst.id);
 
           await this.prisma.vmLabInstance.update({
             where: { id: inst.id },
@@ -88,12 +93,15 @@ export class VmLabsHealthChecker {
     );
   }
 
-  // ── 2. Ping RUNNING instances every 5 minutes ───────────────────────────
+  // ── 2. Ping RUNNING instances every 5 minutes ──────────────────────────────
   @(Cron(CronExpression.EVERY_5_MINUTES))
   async pingRunningInstances(): Promise<void> {
     const running = await this.prisma.vmLabInstance.findMany({
       where: { status: VmInstanceStatus.RUNNING },
-      select: { id: true, externalId: true, providerType: true },
+      select: {
+        id: true,
+        template: { select: { providerType: true } },
+      },
     });
 
     if (running.length === 0) return;
@@ -102,8 +110,8 @@ export class VmLabsHealthChecker {
     await Promise.allSettled(
       running.map(async (inst) => {
         try {
-          const provider = this.providerFactory.resolve(inst.providerType);
-          const result = await provider.healthCheck(inst.externalId);
+          const provider = this.providerFactory.resolve(inst.template.providerType);
+          const result = await provider.healthCheck(inst.id);
 
           if (!result.healthy) {
             this.logger.warn(`[HealthChecker] Instance ${inst.id} failed health check`);
@@ -117,7 +125,10 @@ export class VmLabsHealthChecker {
               data: {
                 instanceId: inst.id,
                 eventType: 'HEALTH_CHECK_FAILED',
-                meta: { errorMessage: result.errorMessage, latencyMs: result.latencyMs },
+                meta: {
+                  errorMessage: result.errorMessage,
+                  latencyMs: result.latencyMs,
+                },
               },
             });
           }
