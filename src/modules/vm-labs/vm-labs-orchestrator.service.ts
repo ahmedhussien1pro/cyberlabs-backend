@@ -16,7 +16,8 @@ import {
   NotFoundException,
   BadRequestException,
   ForbiddenException,
-  TooManyRequestsException,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { PrismaService } from '../../core/database/prisma.service';
 import { VmInstanceStatus, VmLabEventType } from '@prisma/client';
@@ -49,7 +50,7 @@ export class VmLabsOrchestratorService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly poolService: VmPoolService,
-    private readonly throttler: VmLabsThrottler,  // [9.1] flag rate limiter
+    private readonly throttler: VmLabsThrottler, // [9.1] flag rate limiter
   ) {}
 
   // ─── Start / Provision ───────────────────────────────────────────────────────────
@@ -61,7 +62,6 @@ export class VmLabsOrchestratorService {
     if (!template) throw new NotFoundException('Lab template not found');
     if (!template.isActive) throw new BadRequestException('Lab is not active');
 
-    // [5.2] Return existing active instance if any
     const existingId = await this.poolService.getExistingUserInstance(userId, labTemplateId);
     if (existingId) {
       this.logger.log(`startLab: user ${userId} already has instance ${existingId}, returning it`);
@@ -164,8 +164,15 @@ export class VmLabsOrchestratorService {
     // [9.1] Enforce rate limit before any DB access
     if (!this.throttler.allow(userId, instanceId)) {
       const retryAfter = this.throttler.retryAfterSeconds(userId, instanceId);
-      throw new TooManyRequestsException(
-        `Too many flag attempts. Please wait ${retryAfter}s before trying again.`,
+      // HttpException with 429 — TooManyRequestsException not exported in this NestJS version
+      throw new HttpException(
+        {
+          statusCode: HttpStatus.TOO_MANY_REQUESTS,
+          message: `Too many flag attempts. Please wait ${retryAfter}s before trying again.`,
+          error: 'Too Many Requests',
+          retryAfterSeconds: retryAfter,
+        },
+        HttpStatus.TOO_MANY_REQUESTS,
       );
     }
 
@@ -193,8 +200,7 @@ export class VmLabsOrchestratorService {
       instanceId,
       userId,
       correct ? VmLabEventType.FLAG_SUBMITTED_CORRECT : VmLabEventType.FLAG_SUBMITTED_WRONG,
-      // [9.7] Never log the flag value itself
-      { attemptLength: submittedFlag.trim().length },
+      { attemptLength: submittedFlag.trim().length }, // [9.7] never log the flag value itself
     );
 
     if (correct) {
@@ -211,8 +217,7 @@ export class VmLabsOrchestratorService {
               userId,
               labId: template.labId,
               vmInstanceId: instanceId,
-              // [9.7] Store submitted flag for admin audit trail only — never echo to student
-              flagAnswer: submittedFlag.trim(),
+              flagAnswer: submittedFlag.trim(), // [9.7] admin audit trail only
               isCorrect: true,
               timeTaken: 0,
               pointsEarned: finalScore,
