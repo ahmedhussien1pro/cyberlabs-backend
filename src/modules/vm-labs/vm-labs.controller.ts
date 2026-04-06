@@ -1,139 +1,102 @@
+/**
+ * VmLabsController — Student-facing endpoints.
+ *
+ * Security:
+ *   ✅ JwtAuthGuard on every route — userId extracted from verified JWT
+ *   ✅ userId never taken from request body — always from req.user (server-side)
+ *   ✅ Proxy calls include ownership assertion (orchestrator._assertOwnership)
+ */
 import {
   Controller,
   Post,
-  Delete,
   Get,
+  Delete,
+  Patch,
   Param,
   Body,
-  UseGuards,
+  Req,
   HttpCode,
   HttpStatus,
-  Patch,
-  Query,
+  UseGuards,
+  ParseIntPipe,
 } from '@nestjs/common';
-import { ApiTags, ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
-import { JwtAuthGuard } from '../../common/guards';
-import { CurrentUser } from '../../common/decorators';
-import { Roles } from '../../common/decorators';
-import { UserRole } from '../../common/enums/common.enums';
 import { VmLabsOrchestratorService } from './vm-labs-orchestrator.service';
-import { StartVmLabDto } from './dto/start-vm-lab.dto';
-import { SubmitFlagDto } from './dto/submit-flag.dto';
-import { ExtendSessionDto } from './dto/extend-session.dto';
-import { UnlockHintDto } from './dto/unlock-hint.dto';
-import { AdminVmQueryDto } from './dto/admin-query.dto';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { Request } from 'express';
 
-@ApiTags('VM Labs')
-@ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
 @Controller('vm-labs')
 export class VmLabsController {
   constructor(private readonly orchestrator: VmLabsOrchestratorService) {}
 
-  // ── Student endpoints ───────────────────────────────────────────────────────
-
+  /** POST /vm-labs/start — start a new lab instance */
   @Post('start')
-  @ApiOperation({ summary: 'Start a new VM lab instance' })
-  @HttpCode(HttpStatus.CREATED)
-  startLab(@CurrentUser() user: any, @Body() dto: StartVmLabDto) {
-    return this.orchestrator.startLab(user.id, dto.labTemplateId);
+  startLab(
+    @Body('templateId') templateId: string,
+    @Req() req: Request,
+  ) {
+    const userId = (req as any).user.id;
+    return this.orchestrator.startLab(userId, templateId);
   }
 
-  @Delete('instances/:instanceId/stop')
-  @ApiOperation({ summary: 'Stop a running VM lab instance' })
-  @HttpCode(HttpStatus.NO_CONTENT)
-  stopLab(@CurrentUser() user: any, @Param('instanceId') instanceId: string) {
-    return this.orchestrator.stopLab(user.id, instanceId);
-  }
-
+  /** GET /vm-labs/instances — list my instances */
   @Get('instances')
-  @ApiOperation({ summary: 'List current user lab instances' })
-  listInstances(@CurrentUser() user: any) {
-    return this.orchestrator.listUserInstances(user.id);
+  listInstances(@Req() req: Request) {
+    const userId = (req as any).user.id;
+    return this.orchestrator.listUserInstances(userId);
   }
 
-  @Get('instances/:instanceId')
-  @ApiOperation({ summary: 'Get single instance details' })
-  getInstance(@CurrentUser() user: any, @Param('instanceId') instanceId: string) {
-    return this.orchestrator.getInstance(user.id, instanceId);
-  }
-
-  @Patch('instances/:instanceId/extend')
-  @ApiOperation({ summary: 'Extend session time' })
-  extendSession(
-    @CurrentUser() user: any,
-    @Param('instanceId') instanceId: string,
-    @Body() dto: ExtendSessionDto,
+  /** GET /vm-labs/instances/:id — get specific instance */
+  @Get('instances/:id')
+  getInstance(
+    @Param('id') instanceId: string,
+    @Req() req: Request,
   ) {
-    return this.orchestrator.extendSession(user.id, instanceId, dto.minutes);
+    const userId = (req as any).user.id;
+    return this.orchestrator.getInstance(userId, instanceId);
   }
 
-  @Post('instances/:instanceId/flag')
-  @ApiOperation({ summary: 'Submit a flag' })
-  submitFlag(
-    @CurrentUser() user: any,
-    @Param('instanceId') instanceId: string,
-    @Body() dto: SubmitFlagDto,
-  ) {
-    return this.orchestrator.submitFlag(user.id, instanceId, dto.flag);
-  }
-
-  @Post('instances/:instanceId/hints')
-  @ApiOperation({ summary: 'Unlock a hint (with score penalty)' })
-  unlockHint(
-    @CurrentUser() user: any,
-    @Param('instanceId') instanceId: string,
-    @Body() dto: UnlockHintDto,
-  ) {
-    return this.orchestrator.unlockHint(user.id, instanceId, dto.hintIndex);
-  }
-
-  // ── Admin endpoints ───────────────────────────────────────────────────────
-
-  @Get('admin/instances')
-  @Roles(UserRole.ADMIN)
-  @ApiOperation({ summary: '[Admin] List all instances' })
-  adminListInstances(@Query() query: AdminVmQueryDto) {
-    // fix TS2345: coerce optional numbers explicitly to avoid `number | undefined` mismatch
-    return this.orchestrator.adminListInstances(
-      query.status,
-      query.templateId,
-      query.userId,
-      query.page   !== undefined ? Number(query.page)  : 1,
-      query.limit  !== undefined ? Number(query.limit) : 20,
-    );
-  }
-
-  @Delete('admin/instances/:instanceId/terminate')
-  @Roles(UserRole.ADMIN)
+  /** DELETE /vm-labs/instances/:id — stop instance */
+  @Delete('instances/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  @ApiOperation({ summary: '[Admin] Force terminate instance' })
-  adminTerminate(@CurrentUser() user: any, @Param('instanceId') instanceId: string) {
-    return this.orchestrator.adminTerminate(user.id, instanceId);
-  }
-
-  @Get('admin/templates')
-  @Roles(UserRole.ADMIN)
-  @ApiOperation({ summary: '[Admin] List all lab templates' })
-  adminListTemplates() {
-    return this.orchestrator.adminListTemplates();
-  }
-
-  @Post('admin/templates')
-  @Roles(UserRole.ADMIN)
-  @HttpCode(HttpStatus.CREATED)
-  @ApiOperation({ summary: '[Admin] Create lab template' })
-  adminCreateTemplate(@Body() dto: any) {
-    return this.orchestrator.adminCreateTemplate(dto);
-  }
-
-  @Patch('admin/templates/:id/toggle')
-  @Roles(UserRole.ADMIN)
-  @ApiOperation({ summary: '[Admin] Toggle template active state' })
-  adminToggleTemplate(
-    @Param('id') id: string,
-    @Body('isActive') isActive: boolean,
+  stopLab(
+    @Param('id') instanceId: string,
+    @Req() req: Request,
   ) {
-    return this.orchestrator.adminToggleTemplate(id, isActive);
+    const userId = (req as any).user.id;
+    return this.orchestrator.stopLab(userId, instanceId);
+  }
+
+  /** PATCH /vm-labs/instances/:id/extend — extend session */
+  @Patch('instances/:id/extend')
+  extendSession(
+    @Param('id') instanceId: string,
+    @Body('minutes', ParseIntPipe) minutes: number,
+    @Req() req: Request,
+  ) {
+    const userId = (req as any).user.id;
+    return this.orchestrator.extendSession(userId, instanceId, minutes);
+  }
+
+  /** POST /vm-labs/instances/:id/flag — submit flag */
+  @Post('instances/:id/flag')
+  submitFlag(
+    @Param('id') instanceId: string,
+    @Body('flag') flag: string,
+    @Req() req: Request,
+  ) {
+    const userId = (req as any).user.id;
+    return this.orchestrator.submitFlag(userId, instanceId, flag);
+  }
+
+  /** POST /vm-labs/instances/:id/hints/:index — unlock hint */
+  @Post('instances/:id/hints/:index')
+  unlockHint(
+    @Param('id') instanceId: string,
+    @Param('index', ParseIntPipe) hintIndex: number,
+    @Req() req: Request,
+  ) {
+    const userId = (req as any).user.id;
+    return this.orchestrator.unlockHint(userId, instanceId, hintIndex);
   }
 }

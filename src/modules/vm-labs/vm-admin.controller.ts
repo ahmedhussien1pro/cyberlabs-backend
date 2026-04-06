@@ -1,104 +1,78 @@
+/**
+ * VmAdminController — Admin-only endpoints.
+ *
+ * Security:
+ *   ✅ JwtAuthGuard + AdminGuard on every route
+ *   ✅ adminId extracted from JWT — never from client body
+ */
 import {
   Controller,
   Get,
   Post,
-  Patch,
   Delete,
+  Patch,
   Param,
   Body,
   Query,
+  Req,
   UseGuards,
-  HttpCode,
-  HttpStatus,
 } from '@nestjs/common';
-import {
-  ApiTags,
-  ApiBearerAuth,
-  ApiOperation,
-  ApiResponse,
-} from '@nestjs/swagger';
-import { JwtAuthGuard } from '../../common/guards';
-import { RolesGuard } from '../../common/guards';
-import { Roles } from '../../common/decorators';
-import { CurrentUser } from '../../common/decorators';
-import { UserRole } from '../../common/enums/common.enums';
 import { VmLabsOrchestratorService } from './vm-labs-orchestrator.service';
-import { VmPoolService } from './vm-pool.service';
-import { AdminListInstancesDTO } from './dto/admin-list-instances.dto'; // fix: was AdminListInstancesDto
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { AdminGuard } from '../../common/guards/admin.guard';
+import { Request } from 'express';
 
-@ApiTags('Admin — VM Labs')
-@ApiBearerAuth()
-@UseGuards(JwtAuthGuard, RolesGuard)
-@Roles(UserRole.ADMIN)
-@Controller('admin/vm-labs')
+@UseGuards(JwtAuthGuard, AdminGuard)
+@Controller('vm-labs/admin')
 export class VmAdminController {
-  constructor(
-    private readonly orchestrator: VmLabsOrchestratorService,
-    private readonly poolService: VmPoolService,
-  ) {}
+  constructor(private readonly orchestrator: VmLabsOrchestratorService) {}
 
-  // ── Instances ────────────────────────────────────────────────────
-
+  /** GET /vm-labs/admin/instances */
   @Get('instances')
-  @ApiOperation({ summary: '[Admin] List all instances (filterable)' })
-  @ApiResponse({ status: 200, description: 'Paginated list of all VM instances' })
-  listInstances(@Query() query: AdminListInstancesDTO) {
+  listInstances(
+    @Query('status') status?: string,
+    @Query('templateId') templateId?: string,
+    @Query('userId') userId?: string,
+    @Query('page') page?: string,
+    @Query('limit') limit?: string,
+  ) {
     return this.orchestrator.adminListInstances(
-      query.status,
-      query.templateId,
-      query.userId,
-      query.page ?? 1,
-      query.limit ?? 20,
+      status as any,
+      templateId,
+      userId,
+      page ? parseInt(page, 10) : 1,
+      limit ? parseInt(limit, 10) : 20,
     );
   }
 
-  @Delete('instances/:instanceId/terminate')
-  @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: '[Admin] Force-terminate any instance' })
-  @ApiResponse({ status: 200, description: 'Instance terminated' })
-  terminate(
-    @CurrentUser() admin: any,
-    @Param('instanceId') instanceId: string,
+  /** DELETE /vm-labs/admin/instances/:id — force-terminate */
+  @Delete('instances/:id')
+  terminateInstance(
+    @Param('id') instanceId: string,
+    @Req() req: Request,
   ) {
-    return this.orchestrator.adminTerminate(admin.id, instanceId);
+    const adminId = (req as any).user.id;
+    return this.orchestrator.adminTerminate(adminId, instanceId);
   }
 
-  // ── Templates ────────────────────────────────────────────────────
-
+  /** GET /vm-labs/admin/templates */
   @Get('templates')
-  @ApiOperation({ summary: '[Admin] List all lab templates' })
   listTemplates() {
     return this.orchestrator.adminListTemplates();
   }
 
+  /** POST /vm-labs/admin/templates */
   @Post('templates')
-  @HttpCode(HttpStatus.CREATED)
-  @ApiOperation({ summary: '[Admin] Create a new VM lab template' })
   createTemplate(@Body() dto: any) {
     return this.orchestrator.adminCreateTemplate(dto);
   }
 
+  /** PATCH /vm-labs/admin/templates/:id/toggle */
   @Patch('templates/:id/toggle')
-  @ApiOperation({ summary: '[Admin] Toggle template active state' })
   toggleTemplate(
     @Param('id') id: string,
     @Body('isActive') isActive: boolean,
   ) {
     return this.orchestrator.adminToggleTemplate(id, isActive);
-  }
-
-  // ── Pool ────────────────────────────────────────────────────────────
-
-  @Get('pool')
-  @ApiOperation({ summary: '[Admin] Get pool capacity stats per template' })
-  getPoolStats() {
-    return this.poolService.getPoolStats();
-  }
-
-  @Post('pool/sync')
-  @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: '[Admin] Manually sync pool counts from DB' })
-  syncPool() {
-    return this.poolService.syncAllPoolCounts();
   }
 }
