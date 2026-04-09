@@ -1,147 +1,141 @@
+// src/modules/vm-labs/vm-labs.gateway.ts
+// ─── WebSocket Gateway — relays real-time events from vm-service to the browser ───
+//
+// Flow:
+//   Student browser  ──WS──►  cyberlabs-backend (this gateway)
+//   cyberlabs-backend ─push─►  browser (instanceId rooms)
+//
+// The vm-service pushes WS events directly to cyberlabs-frontend-labs via a
+// SEPARATE connection (vm-service → frontend). This gateway handles the case
+// where the frontend is configured to connect to cyberlabs-backend instead.
+//
+// Auth:
+//   - JWT token extracted from query param `?token=<jwt>` on WS handshake.
+//   - Falls back to Authorization header for non-browser clients.
+//   - Unauthenticated connections are immediately closed.
+//
 import {
   WebSocketGateway,
   WebSocketServer,
+  OnGatewayConnection,
+  OnGatewayDisconnect,
   SubscribeMessage,
   MessageBody,
   ConnectedSocket,
-  OnGatewayConnection,
-  OnGatewayDisconnect,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { Logger } from '@nestjs/common';
-import { PrismaService } from '../../core/database/prisma.service';
+import { JwtService } from '@nestjs/jwt';
 
-/**
- * VmLabsGateway — real-time status push to frontend.
- *
- * Plan reference: Step 7 (WebSocket Gateway)
- *
- * Client joins a room per instance:
- *   socket.emit('vm:join', { instanceId })
- *
- * Server pushes:
- *   'vm:status'         → { instanceId, status, expiresAt? }
- *   'vm:expiry_warning' → { instanceId, minutesLeft }
- *   'vm:flag_result'    → { correct, message }
- *   'vm:hint_unlocked'  → { hintIndex, hint, newScore }
- *   'vm:error'          → { instanceId, message }
- *
- * Heartbeat: client sends 'vm:heartbeat' every 30s.
- *   - Updates VmLabSession.lastHeartbeatAt
- *   - If no heartbeat for 5 min → set PAUSED (handled by cleanup cron)
- */
+interface WsClient extends Socket {
+  userId?: string;
+}
+
 @WebSocketGateway({
-  namespace: 'vm-labs',
-  cors: { origin: process.env.FRONTEND_ORIGIN ?? '*' },
+  namespace: '/vm-labs',
+  cors: {
+    origin:      (process.env.LABS_FRONTEND_URL ?? '*').split(','),
+    credentials: true,
+  },
+  transports: ['websocket', 'polling'],
 })
 export class VmLabsGateway implements OnGatewayConnection, OnGatewayDisconnect {
-  @WebSocketServer()
-  server: Server;
-
+  @WebSocketServer() private readonly server: Server;
   private readonly logger = new Logger(VmLabsGateway.name);
 
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly jwt: JwtService) {}
 
-  handleConnection(client: Socket) {
-    this.logger.debug(`[WS] Client connected: ${client.id}`);
-  }
+  // ── On connect: authenticate + join instance room ──────────────────────
+  async handleConnection(client: WsClient) {
+    const token =
+      (client.handshake.query['token'] as string | undefined) ??
+      client.handshake.headers.authorization?.replace(/^Bearer\s+/i, '');
 
-  handleDisconnect(client: Socket) {
-    this.logger.debug(`[WS] Client disconnected: ${client.id}`);
-  }
-
-  // ── Client → Server events ──────────────────────────────────────────────
-
-  @SubscribeMessage('vm:join')
-  handleJoin(
-    @ConnectedSocket() client: Socket,
-    @MessageBody() data: { instanceId: string },
-  ) {
-    client.join(`instance:${data.instanceId}`);
-    this.logger.debug(`[WS] ${client.id} joined room instance:${data.instanceId}`);
-    return { joined: data.instanceId };
-  }
-
-  @SubscribeMessage('vm:leave')
-  handleLeave(
-    @ConnectedSocket() client: Socket,
-    @MessageBody() data: { instanceId: string },
-  ) {
-    client.leave(`instance:${data.instanceId}`);
-    return { left: data.instanceId };
-  }
-
-  /**
-   * [7.2] Heartbeat: client sends every 30s to keep session alive.
-   * Updates lastHeartbeatAt on the active VmLabSession row.
-   */
-  @SubscribeMessage('vm:heartbeat')
-  async handleHeartbeat(
-    @ConnectedSocket() _client: Socket,
-    @MessageBody() data: { instanceId: string; userId: string },
-  ) {
-    try {
-      await this.prisma.vmLabSession.updateMany({
-        where: {
-          instanceId: data.instanceId,
-          userId: data.userId,
-          isActive: true,
-        },
-        data: { lastHeartbeatAt: new Date() },
-      });
-    } catch (err) {
-      this.logger.warn(`[WS:Heartbeat] Failed for instance ${data.instanceId}: ${err}`);
+    if (!token) {
+      this.logger.warn(`[WS] Rejected unauthenticated connection ${client.id}`);
+      client.emit('error', { message: 'No auth token provided' });
+      client.disconnect(true);
+      return;
     }
-    return { ok: true };
-  }
 
-  @SubscribeMessage('vm:disconnect_instance')
-  async handleExplicitDisconnect(
-    @ConnectedSocket() client: Socket,
-    @MessageBody() data: { instanceId: string; userId: string },
-  ) {
-    client.leave(`instance:${data.instanceId}`);
     try {
-      await this.prisma.vmLabSession.updateMany({
-        where: { instanceId: data.instanceId, userId: data.userId, isActive: true },
-        data: { isActive: false, disconnectedAt: new Date() },
+      const payload = this.jwt.verify<{ sub: string }>(token, {
+        secret: process.env.JWT_SECRET,
       });
-    } catch (err) {
-      this.logger.warn(`[WS:Disconnect] Session update failed: ${err}`);
+      client.userId = payload.sub;
+
+      const instanceId = client.handshake.query['instanceId'] as string | undefined;
+      if (instanceId) {
+        await client.join(`instance:${instanceId}`);
+        this.logger.log(`[WS] User ${client.userId} joined room instance:${instanceId}`);
+      }
+    } catch {
+      this.logger.warn(`[WS] Rejected invalid token from ${client.id}`);
+      client.emit('error', { message: 'Invalid or expired token' });
+      client.disconnect(true);
     }
-    return { disconnected: data.instanceId };
   }
 
-  // ── Server → Client push helpers (called from services/crons) ──────────
-
-  pushStatusUpdate(instanceId: string, status: string, expiresAt?: Date) {
-    this.server
-      .to(`instance:${instanceId}`)
-      .emit('vm:status', { instanceId, status, expiresAt });
+  handleDisconnect(client: WsClient) {
+    this.logger.log(`[WS] Client disconnected: ${client.id} (user=${client.userId ?? 'anon'})`);
   }
 
-  /** [7.2] Sent by sendExpiryWarnings cron exactly at 10 min before expiry */
-  pushExpiryWarning(instanceId: string, minutesLeft: number) {
-    this.server
-      .to(`instance:${instanceId}`)
-      .emit('vm:expiry_warning', { instanceId, minutesLeft });
+  // ── Subscribe to an instance room (client-initiated join) ──────────────
+  @SubscribeMessage('subscribe')
+  async handleSubscribe(
+    @MessageBody()  data:   { instanceId: string },
+    @ConnectedSocket() client: WsClient,
+  ) {
+    if (!client.userId) return;
+    await client.join(`instance:${data.instanceId}`);
+    client.emit('subscribed', { instanceId: data.instanceId });
+    this.logger.log(
+      `[WS] User ${client.userId} subscribed to instance:${data.instanceId}`,
+    );
   }
 
-  pushFlagResult(instanceId: string, correct: boolean, message: string) {
-    this.server
-      .to(`instance:${instanceId}`)
-      .emit('vm:flag_result', { correct, message });
+  // ── Push helpers (called by other services) ─────────────────────────────
+
+  /** Emit a VmLabWsEvent to all clients watching this instance */
+  emitToInstance(instanceId: string, event: Record<string, unknown>) {
+    this.server.to(`instance:${instanceId}`).emit('lab_event', event);
   }
 
-  pushHintUnlocked(instanceId: string, hintIndex: number, hint: string, newScore: number) {
-    this.server
-      .to(`instance:${instanceId}`)
-      .emit('vm:hint_unlocked', { hintIndex, hint, newScore });
+  provisioning(instanceId: string) {
+    this.emitToInstance(instanceId, { type: 'PROVISIONING', instanceId });
   }
 
-  pushError(instanceId: string, message: string) {
-    this.server
-      .to(`instance:${instanceId}`)
-      .emit('vm:error', { instanceId, message });
+  running(instanceId: string, accessUrl: string, secondsRemaining: number) {
+    this.emitToInstance(instanceId, {
+      type: 'RUNNING',
+      instanceId,
+      accessUrl,
+      secondsRemaining,
+    });
+  }
+
+  ttlUpdate(instanceId: string, secondsRemaining: number) {
+    this.emitToInstance(instanceId, { type: 'TTL_UPDATE', instanceId, secondsRemaining });
+  }
+
+  expired(instanceId: string) {
+    this.emitToInstance(instanceId, { type: 'EXPIRED', instanceId });
+  }
+
+  stopped(instanceId: string) {
+    this.emitToInstance(instanceId, { type: 'STOPPED', instanceId });
+  }
+
+  error(instanceId: string, message: string) {
+    this.emitToInstance(instanceId, { type: 'ERROR', instanceId, message });
+  }
+
+  flagResult(instanceId: string, correct: boolean, finalScore?: number) {
+    this.emitToInstance(instanceId, {
+      type:       'FLAG_RESULT',
+      instanceId,
+      flagCorrect: correct,
+      finalScore,
+    });
   }
 }
